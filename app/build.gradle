@@ -53,4 +53,6 @@ dependencies {
     testImplementation "junit:junit:$androidX.junit"
     androidTestImplementation "androidx.test.ext:junit:$androidX.extJunit"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidX.espressoCore"
+
+    implementation "com.github.topjohnwu.libsu:core:$thirdParties.libsuVersion"
 }
