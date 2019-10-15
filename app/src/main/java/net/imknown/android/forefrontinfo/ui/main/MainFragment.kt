@@ -19,10 +19,24 @@ class MainFragment : Fragment() {
         fun newInstance() = MainFragment()
 
         init {
-            Shell.Config.setFlags(FLAG_REDIRECT_STDERR);
-            Shell.Config.verboseLogging(BuildConfig.DEBUG);
-            Shell.Config.setTimeout(10);
+            Shell.Config.setFlags(FLAG_REDIRECT_STDERR)
+            Shell.Config.verboseLogging(BuildConfig.DEBUG)
+            Shell.Config.setTimeout(10)
         }
+
+        const val CMD_BOOT_PARTITION = "ls /dev/block/bootdevice/by-name | grep boot_"
+        const val CMD_AB_UPDATE = "getprop ro.build.ab_update"
+        const val CMD_SLOT_SUFFIX = "getprop ro.boot.slot_suffix"
+
+        const val CMD_TREBLE_ENABLED = "getprop ro.treble.enabled"
+
+        const val CMD_VNDK_LITE = "getprop ro.vndk.lite"
+        const val CMD_VNDK_VERSION = "getprop ro.vndk.version"
+
+        const val CMD_SAR = "mount | grep 'rootfs on / type rootfs'"
+
+        const val CMD_APEX_MOUNT = "mount | grep 'tmpfs on /apex type tmpfs'"
+        const val CMD_APEX_TZDATA = "mount | grep /apex/com.android.tzdata"
     }
 
     private lateinit var viewModel: MainViewModel
@@ -46,42 +60,62 @@ class MainFragment : Fragment() {
         var totalResult = ""
 
         // region [A/B]
-        // val bootPartitions = sh("ls /dev/block/bootdevice/by-name | grep boot_")[0]!!
-        val isAbUpdateSupported = sh("getprop ro.build.ab_update")[0]!!.toBoolean()
-        totalResult += "启用了 A/B 无缝升级? ${translate(isAbUpdateSupported)}\n"
+        // val bootPartitions = sh(CMD_BOOT_PARTITION)[0]
+        val isAbUpdateSupported = sh(CMD_AB_UPDATE)[0]!!.toBoolean()
+        totalResult += getString(
+            R.string.ab_seamless_update_enabled_result,
+            translate(isAbUpdateSupported)
+        )
         if (isAbUpdateSupported) {
-            val slotSuffixUsing = sh("getprop ro.boot.slot_suffix")[0]!!
-            totalResult += "当前使用的 A/B 槽位: $slotSuffixUsing\n"
+            val slotSuffixUsing = sh(CMD_SLOT_SUFFIX)[0]
+            totalResult += getString(
+                R.string.current_using_ab_slot_result,
+                slotSuffixUsing
+            )
         }
         // endregion [A/B]
 
         // region [Treble]
-        val isTrebleEnabled = sh("getprop ro.treble.enabled")[0]!!.toBoolean()
-        totalResult += "启用了 Project Treble? ${translate(isTrebleEnabled)}\n"
+        val isTrebleEnabled = sh(CMD_TREBLE_ENABLED)[0]!!.toBoolean()
+        totalResult += getString(
+            R.string.treble_enabled_result,
+            translate(isTrebleEnabled)
+        )
         // endregion [Treble]
 
         // region [VNDK]
-        val isVndkLite = sh("getprop ro.vndk.lite")[0]!!.toBoolean()
-        val vndkVersion = sh("getprop ro.vndk.version")[0]!!.toInt()
-        val isVndkBuiltIn = (isVndkLite || vndkVersion >= Build.VERSION_CODES.O)
-        totalResult += "内建了 Vendor NDK? ${translate(isVndkBuiltIn)}"
+        val isVndkLite = sh(CMD_VNDK_LITE)[0]!!.toBoolean()
+        val vndkVersion = sh(CMD_VNDK_VERSION)[0]
+        val vndkVersionInt = vndkVersion.toInt()
+        val isVndkBuiltIn = (isVndkLite || vndkVersionInt >= Build.VERSION_CODES.O)
+        totalResult += getString(
+            R.string.vndk_built_in_result,
+            translate(isVndkBuiltIn)
+        )
         if (isVndkBuiltIn) {
-            totalResult += " (等级: $vndkVersion)\n"
-        } else {
-            totalResult += "\n"
+            totalResult += getString(
+                R.string.built_in_vndk_version_result,
+                vndkVersion
+            )
         }
         // endregion [VNDK]
 
         // region [SAR]
-        val sarResult = sh("mount | grep 'rootfs on / type rootfs'")
+        val sarResult = sh(CMD_SAR)
         val isSar = sarResult.isEmpty() || sarResult[0].isEmpty()
-        totalResult += "启用了 System-as-root? ${translate(isSar)}\n"
+        totalResult += getString(
+            R.string.sar_enabled_result,
+            translate(isSar)
+        )
         // endregion [SAR]
 
         // region [APEX]
-        val isApexMounted = sh("mount | grep 'tmpfs on /apex type tmpfs'")[0]!!.isNotEmpty()
-        val isApexUsed = sh("mount | grep /apex/com.android.tzdata")[0]!!.isNotEmpty()
-        totalResult += "启用了 APEX? ${translate(isApexMounted && isApexUsed)}"
+        val isApexMounted = sh(CMD_APEX_MOUNT)[0].isNotEmpty()
+        val isApexUsed = sh(CMD_APEX_TZDATA)[0].isNotEmpty()
+        totalResult += getString(
+            R.string.apex_enabled_result,
+            translate(isApexMounted && isApexUsed)
+        )
         // endregion [APEX]
 
         message.text = totalResult
@@ -89,6 +123,12 @@ class MainFragment : Fragment() {
 
     private fun sh(cmd: String) = Shell.sh(cmd).exec().out
 
-    private fun translate(value: Boolean) = if (value) "✅" else "❌"
+    private fun translate(condition: Boolean) = getString(
+        if (condition) {
+            R.string.result_yes
+        } else {
+            R.string.result_no
+        }
+    )
 
 }
