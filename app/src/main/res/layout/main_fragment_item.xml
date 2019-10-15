@@ -4,15 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
-    android:layout_marginStart="16dp"
-    android:layout_marginTop="16dp"
-    android:layout_marginEnd="16dp"
-    android:layout_marginBottom="0dp"
+    android:layout_height="wrap_content"
+    android:minHeight="60dp"
     app:cardBackgroundColor="@color/colorSupport"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="8dp"
-    app:contentPadding="8dp">
+    app:cardCornerRadius="@dimen/item_card"
+    app:cardElevation="@dimen/item_card"
+    app:contentPadding="@dimen/item_divider_space"
+    tools:layout_margin="@dimen/item_divider_space">
 
     <TextView
         android:id="@+id/result"
