@@ -173,28 +173,27 @@ class MainFragment : Fragment() {
 
             itemAnimator = DefaultItemAnimator()
 
-            addItemDecoration(object : RecyclerView.ItemDecoration() {
-                override fun getItemOffsets(
-                    outRect: Rect,
-                    view: View,
-                    parent: RecyclerView,
-                    state: RecyclerView.State
-                ) {
-                    with(outRect) {
-                        val spaceHeight =
-                            resources.getDimensionPixelSize(R.dimen.item_divider_space)
-
-                        if (parent.getChildAdapterPosition(view) == 0) {
-                            top = spaceHeight
-                        }
-                        left = spaceHeight
-                        right = spaceHeight
-                        bottom = spaceHeight
-                    }
-                }
-            })
+            addItemDecoration(MyItemDecoration(resources.getDimensionPixelSize(R.dimen.item_divider_space)))
 
             adapter = MyAdapter(myDataset)
+        }
+    }
+
+    private class MyItemDecoration(val spaceHeight: Int) : RecyclerView.ItemDecoration() {
+        override fun getItemOffsets(
+            outRect: Rect,
+            view: View,
+            parent: RecyclerView,
+            state: RecyclerView.State
+        ) {
+            with(outRect) {
+                if (parent.getChildAdapterPosition(view) == 0) {
+                    top = spaceHeight
+                }
+                left = spaceHeight
+                right = spaceHeight
+                bottom = spaceHeight
+            }
         }
     }
 
