@@ -8,10 +8,10 @@
     <string name="result_yes">Yes</string>
     <string name="result_no">No</string>
     <string name="ab_seamless_update_enabled_result">Is A/B seamless update enable? %s</string>
-    <string name="current_using_ab_slot_result">\nCurrent using slot: %s</string>
-    <string name="treble_enabled_result">\nIs Project Treble enabled? %s</string>
-    <string name="vndk_built_in_result">\nIs Vendor NDK built in? %s</string>
+    <string name="current_using_ab_slot_result">Current using slot: %s</string>
+    <string name="treble_enabled_result">Is Project Treble enabled? %s</string>
+    <string name="vndk_built_in_result">Is Vendor NDK built in? %s</string>
     <string name="built_in_vndk_version_result">\u0020(Lv.: %s)</string>
-    <string name="sar_enabled_result">\nIs System-as-root enabled? %s</string>
-    <string name="apex_enabled_result">\nIs APEX enabled? %s</string>
+    <string name="sar_enabled_result">Is System-as-root enabled? %s</string>
+    <string name="apex_enabled_result">Is APEX enabled? %s</string>
 </resources>

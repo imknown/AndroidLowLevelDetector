@@ -19,7 +19,11 @@ buildscript {
                 appCompat            : '1.1.0',
                 coreKtx              : '1.1.0',
 
+                material             : "1.0.0",
+
                 constraintLayout     : '1.1.3',
+                cardView             : "1.0.0",
+                recyclerView         : "1.0.0",
 
                 lifecycleExtensions  : '2.1.0',
                 lifecycleViewmodelKtx: '2.1.0',

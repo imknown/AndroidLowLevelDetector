@@ -8,10 +8,10 @@
     <string name="result_yes">是</string>
     <string name="result_no">否</string>
     <string name="ab_seamless_update_enabled_result">启用了 A/B 无缝升级? %s</string>
-    <string name="current_using_ab_slot_result">\n当前使用的槽位: %s</string>
-    <string name="treble_enabled_result">\n启用了 Project Treble? %s</string>
-    <string name="vndk_built_in_result">\n内建了 Vendor NDK? %s</string>
+    <string name="current_using_ab_slot_result">当前使用的槽位: %s</string>
+    <string name="treble_enabled_result">启用了 Project Treble? %s</string>
+    <string name="vndk_built_in_result">内建了 Vendor NDK? %s</string>
     <string name="built_in_vndk_version_result">\u0020(等级: %s)</string>
-    <string name="sar_enabled_result">\n启用了 System-as-root? %s</string>
-    <string name="apex_enabled_result">\n启用了 APEX? %s</string>
+    <string name="sar_enabled_result">启用了 System-as-root? %s</string>
+    <string name="apex_enabled_result">启用了 APEX? %s</string>
 </resources>
