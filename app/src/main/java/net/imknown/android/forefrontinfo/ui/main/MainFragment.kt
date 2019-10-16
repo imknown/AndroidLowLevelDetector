@@ -38,7 +38,7 @@ class MainFragment : Fragment() {
         private const val CMD_VNDK_LITE = "getprop ro.vndk.lite"
         private const val CMD_VNDK_VERSION = "getprop ro.vndk.version"
 
-        private const val CMD_SAR = "mount | grep 'rootfs on / type rootfs'"
+        private const val CMD_SAR = "mount | grep -E 'rootfs on / type rootfs'\\|'rootfs / rootfs'"
 
         private const val CMD_APEX_MOUNT = "mount | grep 'tmpfs on /apex type tmpfs'"
         private const val CMD_APEX_TZDATA = "mount | grep /apex/com.android.tzdata"
