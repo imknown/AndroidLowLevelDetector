@@ -89,4 +89,6 @@ dependencies {
 
     // implementation "com.github.topjohnwu.libsu:core:$thirdParties.libsuVersion"
     implementation "com.jaredrummler:android-shell:$thirdParties.androidShellVersion"
+
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:$thirdParties.leakCanaryVersion"
 }
