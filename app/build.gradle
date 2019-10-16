@@ -20,10 +20,37 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        release {
+            storeFile file(keysConfig.release.storeFile)
+            storePassword keysConfig.release.storePassword
+            keyAlias keysConfig.release.keyAlias
+            keyPassword keysConfig.release.keyPassword
+        }
+
+        debug {
+            storeFile file(keysConfig.debug.storeFile)
+            storePassword keysConfig.debug.storePassword
+            keyAlias keysConfig.debug.keyAlias
+            keyPassword keysConfig.debug.keyPassword
+        }
+    }
+
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
+
+            signingConfig signingConfigs.release
+
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            debuggable true
+            jniDebuggable true
+
+            signingConfig signingConfigs.debug
         }
     }
 
