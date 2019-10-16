@@ -66,6 +66,9 @@ ext {
             libsuVersion       : '2.5.1',
 
             // https://github.com/jaredrummler/AndroidShell
-            androidShellVersion: '1.0.0'
+            androidShellVersion: '1.0.0',
+
+            // https://github.com/shwenzhang/AndResGuard
+            andResGuard        : '1.2.17'
     ]
 }
