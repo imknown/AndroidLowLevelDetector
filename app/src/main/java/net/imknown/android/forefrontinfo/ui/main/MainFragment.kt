@@ -1,7 +1,6 @@
 package net.imknown.android.forefrontinfo.ui.main
 
 import android.graphics.Rect
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -30,7 +29,7 @@ class MainFragment : Fragment() {
             Shell.Config.setTimeout(10)
         }
 
-        private const val CMD_BOOT_PARTITION = "ls /dev/block/bootdevice/by-name | grep boot_"
+        // /* root needed*/ private const val CMD_BOOT_PARTITION = "ls /dev/block/bootdevice/by-name | grep boot_"
         private const val CMD_AB_UPDATE = "getprop ro.build.ab_update"
         private const val CMD_SLOT_SUFFIX = "getprop ro.boot.slot_suffix"
 
@@ -95,7 +94,9 @@ class MainFragment : Fragment() {
 
         // region [A/B]
         // val bootPartitions = sh(CMD_BOOT_PARTITION)[0]
-        val isAbUpdateSupported = sh(CMD_AB_UPDATE)[0]!!.toBoolean()
+        val abUpdateSupportedResult = sh(CMD_AB_UPDATE)
+        val isAbUpdateSupported =
+            abUpdateSupportedResult.isNotEmpty() && abUpdateSupportedResult[0]!!.toBoolean()
         myDataset.add(
             MyModel(
                 getString(
@@ -105,6 +106,7 @@ class MainFragment : Fragment() {
                 getResultColor(isAbUpdateSupported)
             )
         )
+
         if (isAbUpdateSupported) {
             val slotSuffixUsing = sh(CMD_SLOT_SUFFIX)[0]
             myDataset.add(
@@ -117,7 +119,9 @@ class MainFragment : Fragment() {
         // endregion [A/B]
 
         // region [Treble]
-        val isTrebleEnabled = sh(CMD_TREBLE_ENABLED)[0]!!.toBoolean()
+        val trebleEnabledResult = sh(CMD_TREBLE_ENABLED)
+        val isTrebleEnabled =
+            trebleEnabledResult.isNotEmpty() && trebleEnabledResult[0]!!.toBoolean()
         myDataset.add(
             MyModel(
                 getString(R.string.treble_enabled_result, translate(isTrebleEnabled)),
@@ -127,12 +131,22 @@ class MainFragment : Fragment() {
         // endregion [Treble]
 
         // region [VNDK]
-        val isVndkLite = sh(CMD_VNDK_LITE)[0]!!.toBoolean()
-        val vndkVersion = sh(CMD_VNDK_VERSION)[0]
-        val vndkVersionInt = vndkVersion.toInt()
-        val isVndkBuiltIn = (isVndkLite || vndkVersionInt >= Build.VERSION_CODES.O)
+        val hasVndkLiteResult = sh(CMD_VNDK_LITE)
+        val hasVndkLite = hasVndkLiteResult.isNotEmpty() && hasVndkLiteResult[0]!!.toBoolean()
+
+        val vndkVersionResult = sh(CMD_VNDK_VERSION)
+        val hasVndkVersion = vndkVersionResult.isNotEmpty() && vndkVersionResult[0].isNotEmpty()
+
+        val isVndkBuiltIn = hasVndkLite || hasVndkVersion
+
         var isVndkBuiltInResult = translate(isVndkBuiltIn)
         if (isVndkBuiltIn) {
+            val vndkVersion = if (hasVndkVersion) {
+                vndkVersionResult[0]
+            } else {
+                getString(android.R.string.unknownName)
+            }
+
             isVndkBuiltInResult += getString(R.string.built_in_vndk_version_result, vndkVersion)
         }
         myDataset.add(
@@ -155,8 +169,11 @@ class MainFragment : Fragment() {
         // endregion [SAR]
 
         // region [APEX]
-        val isApexMounted = sh(CMD_APEX_MOUNT)[0].isNotEmpty()
-        val isApexUsed = sh(CMD_APEX_TZDATA)[0].isNotEmpty()
+        val apexMountedResult = sh(CMD_APEX_MOUNT)
+        val isApexMounted = apexMountedResult.isNotEmpty() && apexMountedResult[0].isNotEmpty()
+
+        val apexUsedResult = sh(CMD_APEX_TZDATA)
+        val isApexUsed = apexUsedResult.isNotEmpty() && apexUsedResult[0].isNotEmpty()
         val isApex = isApexMounted && isApexUsed
         myDataset.add(
             MyModel(
