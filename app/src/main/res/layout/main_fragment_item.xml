@@ -1,26 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="60dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
     app:cardCornerRadius="@dimen/item_card"
     app:cardElevation="@dimen/item_card"
-    app:contentPadding="@dimen/item_divider_space"
-    tools:cardBackgroundColor="@color/colorSupport"
     tools:layout_margin="@dimen/item_divider_space">
 
     <TextView
         android:id="@+id/result"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:textSize="21sp"
+        android:padding="@dimen/item_divider_space"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="hello" />
-</com.google.android.material.card.MaterialCardView>
+        tools:background="@color/colorSupport"
+        tools:text="Enabled?\nYes." />
+</androidx.cardview.widget.CardView>

@@ -5,13 +5,13 @@
     <string name="translation_author_more_info1">https://imknown.net</string>
     <string name="translation_author_more_info2">https://github.com/imknown</string>
 
-    <string name="result_yes">Yes</string>
-    <string name="result_no">No</string>
-    <string name="ab_seamless_update_enabled_result">Is A/B seamless update enable? %s</string>
-    <string name="current_using_ab_slot_result">Current using slot: %s</string>
-    <string name="treble_enabled_result">Is Project Treble enabled? %s</string>
-    <string name="vndk_built_in_result">Is Vendor NDK built in? %s</string>
-    <string name="built_in_vndk_version_result">\u0020(Lv.: %s)</string>
-    <string name="sar_enabled_result">Is System-as-root enabled? %s</string>
-    <string name="apex_enabled_result">Is APEX enabled? %s</string>
+    <string name="result_yes">Yes.</string>
+    <string name="result_no">No.</string>
+    <string name="ab_seamless_update_enabled_result">Is A/B seamless update enable?\n%s</string>
+    <string name="current_using_ab_slot_result">Current using slot\n%s</string>
+    <string name="treble_enabled_result">Is Project Treble enabled?\n%s</string>
+    <string name="vndk_built_in_result">Is Vendor NDK built in?\n%s</string>
+    <string name="built_in_vndk_version_result">\u0020(Level: %s)</string>
+    <string name="sar_enabled_result">Is System-as-root enabled?\n%s</string>
+    <string name="apex_enabled_result">Is APEX enabled?\n%s</string>
 </resources>

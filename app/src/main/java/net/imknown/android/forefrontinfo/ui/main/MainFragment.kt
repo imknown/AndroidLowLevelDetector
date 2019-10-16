@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.ColorRes
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -66,12 +65,7 @@ class MainFragment : Fragment() {
         }
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-            holder.itemView.card.setCardBackgroundColor(
-                ContextCompat.getColor(
-                    holder.itemView.context,
-                    myDataset[position].color
-                )
-            )
+            holder.itemView.result.setBackgroundResource(myDataset[position].color)
             holder.itemView.result.text = myDataset[position].result
         }
 
