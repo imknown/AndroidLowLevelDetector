@@ -8,6 +8,7 @@
     <string name="result_yes">是.</string>
     <string name="result_no">否.</string>
     <string name="ab_seamless_update_enabled_result">启用了 A/B 无缝升级?\n%s</string>
+    <string name="rom_total_size_result">\u0020(总 ROM: ~%sGB)</string>
     <string name="current_using_ab_slot_result">当前使用的槽位\n%s</string>
     <string name="treble_enabled_result">启用了 Project Treble?\n%s</string>
     <string name="vndk_built_in_result">内建了 Vendor NDK?\n%s</string>
