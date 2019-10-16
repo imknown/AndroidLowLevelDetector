@@ -59,7 +59,7 @@ class MainFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
 
-        showResult()
+        showResult(collectionDataset())
     }
 
     private class MyAdapter(private val myDataset: List<MyModel>) :
@@ -90,7 +90,7 @@ class MainFragment : Fragment() {
 
     private data class MyModel(val result: String, @ColorRes val color: Int)
 
-    private fun showResult() {
+    private fun collectionDataset(): ArrayList<MyModel> {
         val myDataset = ArrayList<MyModel>()
 
         // region [A/B]
@@ -166,6 +166,10 @@ class MainFragment : Fragment() {
         )
         // endregion [APEX]
 
+        return myDataset
+    }
+
+    private fun showResult(myDataset: ArrayList<MyModel>) {
         list.apply {
             setHasFixedSize(true)
 
