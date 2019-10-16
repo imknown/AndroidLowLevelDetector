@@ -47,10 +47,10 @@ ext {
 
     keysConfig = [
             debug  : [
-                storeFile    : "$rootDir/keys/debug.keystore",
-                storePassword: 'android',
-                keyAlias     : 'androiddebugkey',
-                keyPassword  : 'android'
+                    storeFile    : "$rootDir/keys/debug.keystore",
+                    storePassword: 'android',
+                    keyAlias     : 'androiddebugkey',
+                    keyPassword  : 'android'
             ],
 
             release: [
@@ -63,6 +63,9 @@ ext {
 
     thirdParties = [
             // https://github.com/topjohnwu/libsu
-            libsuVersion: '2.5.1'
+            libsuVersion       : '2.5.1',
+
+            // https://github.com/jaredrummler/AndroidShell
+            androidShellVersion: '1.0.0'
     ]
 }

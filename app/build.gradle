@@ -85,5 +85,6 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$androidX.extJunit"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidX.espressoCore"
 
-    implementation "com.github.topjohnwu.libsu:core:$thirdParties.libsuVersion"
+    // implementation "com.github.topjohnwu.libsu:core:$thirdParties.libsuVersion"
+    implementation "com.jaredrummler:android-shell:$thirdParties.androidShellVersion"
 }

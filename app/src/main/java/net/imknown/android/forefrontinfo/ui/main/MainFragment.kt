@@ -12,8 +12,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.topjohnwu.superuser.BuildConfig
-import com.topjohnwu.superuser.Shell
+import com.jaredrummler.android.shell.Shell
 import kotlinx.android.synthetic.main.main_fragment.*
 import kotlinx.android.synthetic.main.main_fragment_item.view.*
 import net.imknown.android.forefrontinfo.R
@@ -22,12 +21,6 @@ class MainFragment : Fragment() {
 
     companion object {
         fun newInstance() = MainFragment()
-
-        init {
-            Shell.Config.setFlags(Shell.FLAG_REDIRECT_STDERR)
-            Shell.Config.verboseLogging(BuildConfig.DEBUG)
-            Shell.Config.setTimeout(10)
-        }
 
         // /* root needed*/ private const val CMD_BOOT_PARTITION = "ls /dev/block/bootdevice/by-name | grep boot_"
         private const val CMD_AB_UPDATE = "getprop ro.build.ab_update"
@@ -96,7 +89,7 @@ class MainFragment : Fragment() {
         // val bootPartitions = sh(CMD_BOOT_PARTITION)[0]
         val abUpdateSupportedResult = sh(CMD_AB_UPDATE)
         val isAbUpdateSupported =
-            abUpdateSupportedResult.isNotEmpty() && abUpdateSupportedResult[0]!!.toBoolean()
+            abUpdateSupportedResult.isNotEmpty() && abUpdateSupportedResult[0].toBoolean()
         myDataset.add(
             MyModel(
                 getString(
@@ -121,7 +114,7 @@ class MainFragment : Fragment() {
         // region [Treble]
         val trebleEnabledResult = sh(CMD_TREBLE_ENABLED)
         val isTrebleEnabled =
-            trebleEnabledResult.isNotEmpty() && trebleEnabledResult[0]!!.toBoolean()
+            trebleEnabledResult.isNotEmpty() && trebleEnabledResult[0].toBoolean()
         myDataset.add(
             MyModel(
                 getString(R.string.treble_enabled_result, translate(isTrebleEnabled)),
@@ -132,7 +125,7 @@ class MainFragment : Fragment() {
 
         // region [VNDK]
         val hasVndkLiteResult = sh(CMD_VNDK_LITE)
-        val hasVndkLite = hasVndkLiteResult.isNotEmpty() && hasVndkLiteResult[0]!!.toBoolean()
+        val hasVndkLite = hasVndkLiteResult.isNotEmpty() && hasVndkLiteResult[0].toBoolean()
 
         val vndkVersionResult = sh(CMD_VNDK_VERSION)
         val hasVndkVersion = vndkVersionResult.isNotEmpty() && vndkVersionResult[0].isNotEmpty()
@@ -218,7 +211,15 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun sh(cmd: String) = Shell.sh(cmd).exec().out
+    private fun sh(cmd: String): List<String> {
+        val result = Shell.SH.run(cmd)
+
+        return if (result.isSuccessful) {
+            result.stdout
+        } else {
+            result.stderr
+        }
+    }
 
     private fun translate(condition: Boolean) = getString(
         if (condition) {
