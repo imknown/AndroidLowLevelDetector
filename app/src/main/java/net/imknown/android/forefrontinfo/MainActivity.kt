@@ -111,4 +111,10 @@ class MainActivity : AppCompatActivity() {
             .add(R.id.container, fragment, id.toString())
             .commitNow()
     }
+
+    override fun onBackPressed() {
+        // https://github.com/ChuckerTeam/chucker/issues/102
+        // https://issuetracker.google.com/issues/139738913
+        finishAfterTransition()
+    }
 }
