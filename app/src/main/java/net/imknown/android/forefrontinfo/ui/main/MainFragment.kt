@@ -30,8 +30,7 @@ class MainFragment : Fragment() {
         }
 
         // /* root needed*/ private const val CMD_BOOT_PARTITION = "ls /dev/block/bootdevice/by-name | grep boot_"
-        private const val CMD_ROM_TOTAL_SIZE =
-            "df | grep -v '/apex' | grep -v '/storage' | grep -E 'tmpfs'\\|'/dev'\\|'/data' | awk '{s+=\$2} END {print s/1000000}'"
+        // private const val CMD_ROM_TOTAL_SIZE = "df | grep -v '/apex' | grep -v '/storage' | grep -E 'tmpfs'\\|'/dev'\\|'/data' | awk '{s+=\$2} END {print s/1000000}'"
         private const val CMD_AB_UPDATE = "getprop ro.build.ab_update"
         private const val CMD_SLOT_SUFFIX = "getprop ro.boot.slot_suffix"
 
@@ -92,14 +91,14 @@ class MainFragment : Fragment() {
         // region [A/B]
         // val bootPartitions = sh(CMD_BOOT_PARTITION)[0]
 
-        val romTotalSizeResult = sh(CMD_ROM_TOTAL_SIZE)
-        val romTotalSize = kotlin.math.floor(romTotalSizeResult[0].toFloat()).toString()
+        // val romTotalSizeResult = sh(CMD_ROM_TOTAL_SIZE)
+        // val romTotalSize = kotlin.math.floor(romTotalSizeResult[0].toFloat()).toString()
 
         val abUpdateSupportedResult = sh(CMD_AB_UPDATE)
         val isAbUpdateSupported =
             abUpdateSupportedResult.isNotEmpty() && abUpdateSupportedResult[0]!!.toBoolean()
         val abUpdateSupportedArgs =
-            translate(isAbUpdateSupported) + getString(R.string.rom_total_size_result, romTotalSize)
+            translate(isAbUpdateSupported) /* + getString(R.string.rom_total_size_result, romTotalSize) */
         myDataset.add(
             MyModel(
                 getString(
