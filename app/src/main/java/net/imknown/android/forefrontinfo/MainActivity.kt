@@ -1,5 +1,6 @@
 package net.imknown.android.forefrontinfo
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +16,9 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val BUNDLE_ID_LAST_ID = "BUNDLE_ID_LAST_ID"
     }
+
+    private val isBroughtToFront
+        get() = intent.flags and Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT != 0
 
     @IdRes
     private var lastId = R.id.navigation_home
@@ -37,6 +41,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (isBroughtToFront) {
+            finish()
+            return
+        }
+
         setContentView(R.layout.main_activity)
 
         nav_view.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
