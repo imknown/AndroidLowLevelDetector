@@ -76,7 +76,7 @@ dependencies {
 
     implementation "androidx.constraintlayout:constraintlayout:$androidX.constraintLayout"
     implementation "androidx.cardview:cardview:$androidX.cardView"
-    // implementation "com.google.android.material:material:$androidX.material"
+    implementation "com.google.android.material:material:$androidX.material"
     implementation "androidx.recyclerview:recyclerview:$androidX.recyclerView"
     implementation "androidx.recyclerview:recyclerview-selection:$androidX.recyclerView"
 

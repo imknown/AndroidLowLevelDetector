@@ -5,6 +5,10 @@
     <string name="translation_author_more_info1">https://imknown.net</string>
     <string name="translation_author_more_info2">https://github.com/imknown</string>
 
+    <string name="title_home">Home</string>
+    <string name="title_others">Others</string>
+    <string name="title_settings">Settings</string>
+
     <string name="result_yes">Yes.</string>
     <string name="result_no">No.</string>
     <string name="ab_seamless_update_enabled_result">Is A/B seamless update enable?\n%s</string>
