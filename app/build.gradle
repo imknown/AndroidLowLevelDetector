@@ -80,9 +80,6 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:$androidX.recyclerView"
     implementation "androidx.recyclerview:recyclerview-selection:$androidX.recyclerView"
 
-    implementation "androidx.lifecycle:lifecycle-extensions:$androidX.lifecycleExtensions"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$androidX.lifecycleViewmodelKtx"
-
     testImplementation "junit:junit:$androidX.junit"
     androidTestImplementation "androidx.test.ext:junit:$androidX.extJunit"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidX.espressoCore"
