@@ -1,4 +1,4 @@
-package net.imknown.android.forefrontinfo.ui.main
+package net.imknown.android.forefrontinfo.ui.home
 
 import android.graphics.Rect
 import android.os.Bundle
@@ -12,15 +12,15 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.topjohnwu.superuser.Shell
-import kotlinx.android.synthetic.main.main_fragment.*
-import kotlinx.android.synthetic.main.main_fragment_item.view.*
+import kotlinx.android.synthetic.main.home_fragment.*
+import kotlinx.android.synthetic.main.home_fragment_item.view.*
 import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.R
 
-class MainFragment : Fragment() {
+class HomeFragment : Fragment() {
 
     companion object {
-        fun newInstance() = MainFragment()
+        fun newInstance() = HomeFragment()
 
         init {
             // Shell.Config.setFlags(Shell.FLAG_REDIRECT_STDERR)
@@ -45,19 +45,19 @@ class MainFragment : Fragment() {
         private const val CMD_APEX_TZDATA = "mount | grep /apex/com.android.tzdata"
     }
 
-    private lateinit var viewModel: MainViewModel
+    private lateinit var viewModel: HomeViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.main_fragment, container, false)
+        return inflater.inflate(R.layout.home_fragment, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        viewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
 
         showResult(collectionDataset())
     }
@@ -66,7 +66,7 @@ class MainFragment : Fragment() {
         RecyclerView.Adapter<MyViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(
-                R.layout.main_fragment_item,
+                R.layout.home_fragment_item,
                 parent,
                 false
             )

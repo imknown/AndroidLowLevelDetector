@@ -4,13 +4,13 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.MainFragment">
+    tools:context=".ui.home.HomeFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:itemCount="6"
-        tools:listitem="@layout/main_fragment_item" />
+        tools:listitem="@layout/home_fragment_item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
