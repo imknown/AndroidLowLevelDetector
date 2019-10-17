@@ -11,6 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:itemCount="6"
-        tools:listitem="@layout/home_fragment_item" />
+        tools:listitem="@layout/fragment_list_item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,5 @@
 package net.imknown.android.forefrontinfo.ui.home
 
-import android.os.Bundle
 import com.topjohnwu.superuser.Shell
 import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.R
@@ -34,13 +33,7 @@ class HomeFragment : BaseListFragment() {
         private const val CMD_APEX_TZDATA = "mount | grep /apex/com.android.tzdata"
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        showResult(collectionDataset())
-    }
-
-    private fun collectionDataset(): ArrayList<MyModel> {
+    override fun collectionDataset(): ArrayList<MyModel> {
         val myDataset = ArrayList<MyModel>()
 
         // region [A/B]

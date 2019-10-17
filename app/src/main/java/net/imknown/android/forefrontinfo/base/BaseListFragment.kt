@@ -9,8 +9,8 @@ import androidx.annotation.ColorRes
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.home_fragment.*
-import kotlinx.android.synthetic.main.home_fragment_item.view.*
+import kotlinx.android.synthetic.main.fragment_list.*
+import kotlinx.android.synthetic.main.fragment_list_item.view.*
 import net.imknown.android.forefrontinfo.R
 
 abstract class BaseListFragment : BaseFragment() {
@@ -19,10 +19,18 @@ abstract class BaseListFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.home_fragment, container, false)
+        return inflater.inflate(R.layout.fragment_list, container, false)
     }
 
-    protected fun showResult(myDataset: ArrayList<MyModel>) {
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        showResult(collectionDataset())
+    }
+
+    protected abstract fun collectionDataset(): ArrayList<MyModel>
+
+    private fun showResult(myDataset: ArrayList<MyModel>) {
         list.apply {
             setHasFixedSize(true)
 
@@ -40,7 +48,7 @@ abstract class BaseListFragment : BaseFragment() {
         RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(
-                R.layout.home_fragment_item,
+                R.layout.fragment_list_item,
                 parent,
                 false
             )
@@ -57,7 +65,13 @@ abstract class BaseListFragment : BaseFragment() {
         internal class MyViewHolder(view: View) : RecyclerView.ViewHolder(view)
     }
 
-    data class MyModel(val result: String, @ColorRes val color: Int)
+    protected data class MyModel(val result: String, @ColorRes val color: Int) {
+        companion object {
+            private const val ID_DEFAULT_STYLE = 0
+        }
+
+        constructor(result: String) : this(result, ID_DEFAULT_STYLE)
+    }
 
     private class MyItemDecoration(val spaceHeight: Int) : RecyclerView.ItemDecoration() {
         override fun getItemOffsets(
