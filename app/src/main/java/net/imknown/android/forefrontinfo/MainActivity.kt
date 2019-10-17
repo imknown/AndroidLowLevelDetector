@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.main_activity.*
 import net.imknown.android.forefrontinfo.ui.home.HomeFragment
@@ -73,7 +74,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun showFragment(@IdRes selectedId: Int) {
         supportFragmentManager.beginTransaction()
-            .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.fade_out)
+            .setCustomAnimations(R.anim.drop_scale, FragmentTransaction.TRANSIT_NONE)
             .hide(getFragmentInstance(lastId))
             .show(getFragmentInstance(selectedId))
             .commitNow()
@@ -118,6 +119,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun addFragment(fragment: Fragment, @IdRes id: Int) {
         supportFragmentManager.beginTransaction()
+            .setCustomAnimations(R.anim.drop_scale, FragmentTransaction.TRANSIT_NONE)
             .add(R.id.container, fragment, id.toString())
             .commitNow()
     }
