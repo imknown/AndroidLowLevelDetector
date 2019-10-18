@@ -27,7 +27,11 @@ class HomeFragment : BaseListFragment() {
         private const val CMD_VNDK_LITE = "getprop ro.vndk.lite"
         private const val CMD_VNDK_VERSION = "getprop ro.vndk.version"
 
-        private const val CMD_SAR = "mount | grep -E 'rootfs on / type rootfs'\\|'rootfs / rootfs'"
+        private const val CMD_SYSTEM_ROOT_IMAGE = "getprop ro.build.system_root_image"
+        // private const val FILE_INIT_RC = "/init.rc"
+        // /* root needed */ private const val CMD_LS_INIT_RC = "cat $FILE_INIT_RC"
+        private const val CMD_ROOTFS =
+            "mount | grep -E 'rootfs on / type rootfs'\\|'rootfs / rootfs'"
 
         private const val CMD_APEX_MOUNT = "mount | grep 'tmpfs on /apex type tmpfs'"
         private const val CMD_APEX_TZDATA = "mount | grep /apex/com.android.tzdata"
@@ -108,8 +112,17 @@ class HomeFragment : BaseListFragment() {
         // endregion [VNDK]
 
         // region [SAR]
-        val sarResult = sh(CMD_SAR)
-        val isSar = sarResult.isEmpty() || sarResult[0].isEmpty()
+        val systemRootImageResult = sh(CMD_SYSTEM_ROOT_IMAGE)
+        val hasSystemRootImage =
+            systemRootImageResult.isNotEmpty() && systemRootImageResult[0]!!.toBoolean()
+
+        // val lsInitRcResult = sh(CMD_LS_INIT_RC)
+        // val isInitRc = lsInitRcResult.isNotEmpty() && (lsInitRcResult[0] == FILE_INIT_RC)
+
+        val rootFsResult = sh(CMD_ROOTFS)
+        val isRootFs = rootFsResult.isNotEmpty() && rootFsResult[0].isNotEmpty()
+
+        val isSar = hasSystemRootImage || (/* isInitRc && */ isRootFs && isAtLeastAndroid9())
         myDataset.add(
             MyModel(
                 getString(R.string.sar_enabled_result, translate(isSar)),
