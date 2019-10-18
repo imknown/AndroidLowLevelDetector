@@ -28,10 +28,8 @@ class HomeFragment : BaseListFragment() {
         private const val CMD_VNDK_VERSION = "getprop ro.vndk.version"
 
         private const val CMD_SYSTEM_ROOT_IMAGE = "getprop ro.build.system_root_image"
-        // private const val FILE_INIT_RC = "/init.rc"
-        // /* root needed */ private const val CMD_LS_INIT_RC = "cat $FILE_INIT_RC"
-        private const val CMD_ROOTFS =
-            "mount | grep -E 'rootfs on / type rootfs'\\|'rootfs / rootfs'"
+        private const val CMD_SYSTEM =
+            "mount | grep -v 'tmpfs' | grep -v 'none' | grep -E ' on /system type'\\|' /system '"
 
         private const val CMD_APEX_MOUNT = "mount | grep 'tmpfs on /apex type tmpfs'"
         private const val CMD_APEX_TZDATA = "mount | grep /apex/com.android.tzdata"
@@ -112,17 +110,22 @@ class HomeFragment : BaseListFragment() {
         // endregion [VNDK]
 
         // region [SAR]
-        val systemRootImageResult = sh(CMD_SYSTEM_ROOT_IMAGE)
+        val systemRootImageResult = if (isAtLeastAndroid9()) {
+            sh(CMD_SYSTEM_ROOT_IMAGE)
+        } else {
+            emptyList()
+        }
         val hasSystemRootImage =
             systemRootImageResult.isNotEmpty() && systemRootImageResult[0]!!.toBoolean()
 
-        // val lsInitRcResult = sh(CMD_LS_INIT_RC)
-        // val isInitRc = lsInitRcResult.isNotEmpty() && (lsInitRcResult[0] == FILE_INIT_RC)
+        val systemResult = if (isAtLeastAndroid9() && !hasSystemRootImage) {
+            sh(CMD_SYSTEM)
+        } else {
+            emptyList()
+        }
+        val isSystem = systemResult.isNotEmpty() && systemResult[0].isNotEmpty()
 
-        val rootFsResult = sh(CMD_ROOTFS)
-        val isRootFs = rootFsResult.isNotEmpty() && rootFsResult[0].isNotEmpty()
-
-        val isSar = hasSystemRootImage || (/* isInitRc && */ isRootFs && isAtLeastAndroid9())
+        val isSar = isAtLeastAndroid9() && (hasSystemRootImage || !isSystem)
         myDataset.add(
             MyModel(
                 getString(R.string.sar_enabled_result, translate(isSar)),
