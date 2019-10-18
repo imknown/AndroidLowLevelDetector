@@ -33,7 +33,7 @@ class OthersFragment : BaseListFragment() {
         myDataset.add(MyModel("当前系统 API 等级\n${Build.VERSION.SDK_INT}"))
         myDataset.add(MyModel("当前系统 版本号\n${Build.VERSION.RELEASE}"))
         myDataset.add(MyModel("当前系统 版本\n${Build.DISPLAY}"))
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (isAtLeastAndroid6()) {
             myDataset.add(MyModel("当前系统 预览的 API 等级 (0 表示 正式)\n${Build.VERSION.PREVIEW_SDK_INT}"))
         }
 
@@ -42,7 +42,7 @@ class OthersFragment : BaseListFragment() {
         val time =
             SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date(Build.TIME))
         myDataset.add(MyModel("当前系统 构建时间\n$time"))
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (isAtLeastAndroid6()) {
             myDataset.add(MyModel("基于什么系统 二次开发\n${Build.VERSION.BASE_OS}"))
             myDataset.add(MyModel("当前系统 安全补丁版本\n${Build.VERSION.SECURITY_PATCH}"))
         }
