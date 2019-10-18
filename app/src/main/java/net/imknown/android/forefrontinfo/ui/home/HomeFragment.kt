@@ -44,7 +44,7 @@ class HomeFragment : BaseListFragment() {
         // val romTotalSizeResult = sh(CMD_ROM_TOTAL_SIZE)
         // val romTotalSize = kotlin.math.floor(romTotalSizeResult[0].toFloat()).toString()
 
-        val abUpdateSupportedResult = sh(CMD_AB_UPDATE)
+        val abUpdateSupportedResult = filterVersion(isAtLeastAndroid7(), CMD_AB_UPDATE)
         val isAbUpdateSupported =
             abUpdateSupportedResult.isNotEmpty() && abUpdateSupportedResult[0]!!.toBoolean()
         val abUpdateSupportedArgs =
@@ -71,7 +71,7 @@ class HomeFragment : BaseListFragment() {
         // endregion [A/B]
 
         // region [Treble]
-        val trebleEnabledResult = sh(CMD_TREBLE_ENABLED)
+        val trebleEnabledResult = filterVersion(isAtLeastAndroid8(), CMD_TREBLE_ENABLED)
         val isTrebleEnabled =
             trebleEnabledResult.isNotEmpty() && trebleEnabledResult[0]!!.toBoolean()
         myDataset.add(
@@ -83,10 +83,10 @@ class HomeFragment : BaseListFragment() {
         // endregion [Treble]
 
         // region [VNDK]
-        val hasVndkLiteResult = sh(CMD_VNDK_LITE)
+        val hasVndkLiteResult = filterVersion(isAtLeastAndroid8(), CMD_VNDK_LITE)
         val hasVndkLite = hasVndkLiteResult.isNotEmpty() && hasVndkLiteResult[0]!!.toBoolean()
 
-        val vndkVersionResult = sh(CMD_VNDK_VERSION)
+        val vndkVersionResult = filterVersion(isAtLeastAndroid8(), CMD_VNDK_VERSION)
         val hasVndkVersion = vndkVersionResult.isNotEmpty() && vndkVersionResult[0].isNotEmpty()
 
         val isVndkBuiltIn = hasVndkLite || hasVndkVersion
@@ -110,19 +110,11 @@ class HomeFragment : BaseListFragment() {
         // endregion [VNDK]
 
         // region [SAR]
-        val systemRootImageResult = if (isAtLeastAndroid9()) {
-            sh(CMD_SYSTEM_ROOT_IMAGE)
-        } else {
-            emptyList()
-        }
+        val systemRootImageResult = filterVersion(isAtLeastAndroid9(), CMD_SYSTEM_ROOT_IMAGE)
         val hasSystemRootImage =
             systemRootImageResult.isNotEmpty() && systemRootImageResult[0]!!.toBoolean()
 
-        val systemResult = if (isAtLeastAndroid9() && !hasSystemRootImage) {
-            sh(CMD_SYSTEM)
-        } else {
-            emptyList()
-        }
+        val systemResult = filterVersion(isAtLeastAndroid9() && !hasSystemRootImage, CMD_SYSTEM)
         val isSystem = systemResult.isNotEmpty() && systemResult[0].isNotEmpty()
 
         val isSar = isAtLeastAndroid9() && (hasSystemRootImage || !isSystem)
@@ -135,10 +127,10 @@ class HomeFragment : BaseListFragment() {
         // endregion [SAR]
 
         // region [APEX]
-        val apexMountedResult = sh(CMD_APEX_MOUNT)
+        val apexMountedResult = filterVersion(isAtLeastAndroid10(), CMD_APEX_MOUNT)
         val isApexMounted = apexMountedResult.isNotEmpty() && apexMountedResult[0].isNotEmpty()
 
-        val apexUsedResult = sh(CMD_APEX_TZDATA)
+        val apexUsedResult = filterVersion(isAtLeastAndroid10(), CMD_APEX_TZDATA)
         val isApexUsed = apexUsedResult.isNotEmpty() && apexUsedResult[0].isNotEmpty()
         val isApex = isApexMounted && isApexUsed
         myDataset.add(
@@ -151,6 +143,13 @@ class HomeFragment : BaseListFragment() {
 
         return myDataset
     }
+
+    private fun filterVersion(condition: Boolean, sh: String) =
+        if (condition) {
+            sh(sh)
+        } else {
+            emptyList()
+        }
 
     private fun sh(cmd: String) = Shell.sh(cmd).exec().out
 
