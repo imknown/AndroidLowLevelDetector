@@ -13,6 +13,10 @@
 - detect magisk
 - detect dm-verity (version)
 - detect FBE
+- outdate detect
+  - lastest stable Android version
+  - lastest alpha/beta Android version
+- more colors
 - more i18n
 - settings
   - root mode
@@ -22,7 +26,6 @@
 - documents
   - development references
   - user-readable explanation why mine not supported
-  - 
 - copy result
 - licenses and acknowledge
 - etc.
