@@ -49,25 +49,24 @@ class HomeFragment : BaseListFragment() {
             abUpdateSupportedResult.isNotEmpty() && abUpdateSupportedResult[0]!!.toBoolean()
         val abUpdateSupportedArgs =
             translate(isAbUpdateSupported) /* + getString(R.string.rom_total_size_result, romTotalSize) */
-        myDataset.add(
-            MyModel(
-                getString(
-                    R.string.ab_seamless_update_enabled_result,
-                    abUpdateSupportedArgs
-                ),
-                getResultColor(isAbUpdateSupported)
-            )
-        )
 
+        var abFinalResult =
+            getString(R.string.ab_seamless_update_enabled_result, abUpdateSupportedArgs)
         if (isAbUpdateSupported) {
-            val slotSuffixUsing = sh(CMD_SLOT_SUFFIX)[0]
-            myDataset.add(
-                MyModel(
-                    getString(R.string.current_using_ab_slot_result, slotSuffixUsing),
-                    R.color.colorSupport
-                )
-            )
+            val slotSuffixResult = sh(CMD_SLOT_SUFFIX)
+            val hasVndkVersion = slotSuffixResult.isNotEmpty() && slotSuffixResult[0].isNotEmpty()
+            val slotSuffixUsing = if (hasVndkVersion) {
+                slotSuffixResult[0]
+            } else {
+                getString(android.R.string.unknownName)
+            }
+
+            abFinalResult += getString(R.string.current_using_ab_slot_result, slotSuffixUsing)
         }
+
+        myDataset.add(
+            MyModel(abFinalResult, getResultColor(isAbUpdateSupported))
+        )
         // endregion [A/B]
 
         // region [Treble]
