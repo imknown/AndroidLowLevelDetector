@@ -5,10 +5,12 @@
     <string name="translation_author_more_info1">https://imknown.net</string>
     <string name="translation_author_more_info2">https://github.com/imknown</string>
 
+    <!-- Tab -->
     <string name="title_home">Home</string>
     <string name="title_others">Others</string>
     <string name="title_settings">Settings</string>
 
+    <!-- Home -->
     <string name="result_yes">Yes.</string>
     <string name="result_no">No.</string>
     <string name="ab_seamless_update_enabled_result">Is A/B seamless update enable?\n%s</string>
@@ -19,4 +21,40 @@
     <string name="built_in_vndk_version_result">\u0020(Level: %s)</string>
     <string name="sar_enabled_result">Is System-as-root enabled?\n%s</string>
     <string name="apex_enabled_result">Is APEX enabled?\n%s</string>
+
+    <!-- Others -->
+    <string name="build_brand">Brand\n%s</string>
+    <string name="build_manufacturer">Manufacturer/OEM\n%s</string>
+    <string name="build_model">Model name for sales\n%s</string>
+    <string name="build_device">Codename for the developer\n%s</string>
+    <string name="build_product">Name of overall product\n%s</string>
+    <string name="build_hardware">SoC/Kernel source provider\n%s</string>
+    <string name="build_board">SoC model\n%s</string>
+
+    <string name="build_cpu_abi">ROM current using ABI\n%s</string>
+    <string name="build_supported_32_bit_abis">Supported 32bit ABIs\n%s</string>
+    <string name="build_supported_64_bit_abis">Supported 64bit ABIs\n%s</string>
+
+    <string name="build_sdk_int">Android API level\n%s</string>
+    <string name="build_release">Android version\n%s</string>
+    <string name="build_preview_sdk_int">Android preview API level\n(0: not a preview version)\n%s</string>
+
+    <string name="build_user">ROM builder\n%s</string>
+    <string name="build_HOST">ROM build machine name\n%s</string>
+    <string name="build_time">ROM build time\n%s</string>
+    <string name="build_base_os">ROM based on\n(Secondary development)\n%s</string>
+    <string name="build_security_patch">ROM security patch level\n%s</string>
+    <string name="build_fingerprint">Stock ROM fingerprint\n%s</string>
+    <string name="build_display">Android build ID\n%s</string>
+    <string name="build_id">Android Git reversion\n%s</string>
+    <string name="build_incremental">Android Git commit hash\n%s</string>
+    <string name="build_type">ROM build type\n%s</string>
+    <string name="build_tags">ROM build tags\n%s</string>
+    <string name="build_codename">Android Git branch codename\n(REL: stable release version)\n%s</string>
+
+    <string name="build_bootloader">Bootloader version\n%s</string>
+    <string name="build_radio">Baseband version\n%s</string>
+
+    <string name="build_cannot_get">CANNOT GET</string>
 </resources>
+

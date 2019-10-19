@@ -9,6 +9,7 @@
     <string name="title_others">其他</string>
     <string name="title_settings">设置</string>
 
+    <!-- 首页 -->
     <string name="result_yes">是.</string>
     <string name="result_no">否.</string>
     <string name="ab_seamless_update_enabled_result">启用了 A/B 无缝升级?\n%s</string>
@@ -19,4 +20,39 @@
     <string name="built_in_vndk_version_result">\u0020(等级: %s)</string>
     <string name="sar_enabled_result">启用了 System-as-root?\n%s</string>
     <string name="apex_enabled_result">启用了 APEX?\n%s</string>
+
+    <!-- 其他 -->
+    <string name="build_brand">品牌\n%s</string>
+    <string name="build_manufacturer">代工/OEM\n%s</string>
+    <string name="build_model">销售型号\n%s</string>
+    <string name="build_device">开发代号\n%s</string>
+    <string name="build_product">总产品名称\n%s</string>
+    <string name="build_hardware">SoC/内核源码 提供商\n%s</string>
+    <string name="build_board">SoC 型号\n%s</string>
+
+    <string name="build_cpu_abi">系统正在使用的架构\n%s</string>
+    <string name="build_supported_32_bit_abis">支持的 32位 架构\n%s</string>
+    <string name="build_supported_64_bit_abis">支持的 64位 架构\n%s</string>
+
+    <string name="build_sdk_int">Android API 等级\n%s</string>
+    <string name="build_release">Android 版本号\n%s</string>
+    <string name="build_preview_sdk_int">Android 预览 API 等级\n(0: 非预览版)\n%s</string>
+
+    <string name="build_user">ROM 构建者\n%s</string>
+    <string name="build_HOST">ROM 构建的主机名\n%s</string>
+    <string name="build_time">ROM 构建时间\n%s</string>
+    <string name="build_base_os">基于的系统\n(二次开发)\n%s</string>
+    <string name="build_security_patch">ROM 安全补丁版本\n%s</string>
+    <string name="build_fingerprint">原机系统 指纹\n%s</string>
+    <string name="build_display">Android 构建 ID\n%s</string>
+    <string name="build_id">Android Git 修订号\n%s</string>
+    <string name="build_incremental">Android Git 提交的 Hash\n%s</string>
+    <string name="build_type">ROM 构建类型\n%s</string>
+    <string name="build_tags">ROM 构建描述标签\n%s</string>
+    <string name="build_codename">系统 构建分支名\n(REL: 正式)\n%s</string>
+
+    <string name="build_bootloader">Bootloader 版本\n%s</string>
+    <string name="build_radio">基带版本\n%s</string>
+
+    <string name="build_cannot_get">**无法获取**</string>
 </resources>
