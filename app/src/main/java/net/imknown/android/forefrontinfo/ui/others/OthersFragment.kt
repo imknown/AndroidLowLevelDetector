@@ -108,7 +108,7 @@ class OthersFragment : BaseListFragment() {
 
     private fun getResultString(@StringRes stringId: Int, value: String?): String {
         val finalValue = if (value.isNullOrEmpty()) {
-            getString(R.string.build_cannot_get)
+            getString(R.string.build_not_filled)
         } else {
             value
         }

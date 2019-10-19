@@ -37,12 +37,12 @@
 
     <string name="build_sdk_int">Android API level\n%s</string>
     <string name="build_release">Android version\n%s</string>
-    <string name="build_preview_sdk_int">Android preview API level\n(0: not a preview version)\n%s</string>
+    <string name="build_preview_sdk_int">Android preview API level (0: not a preview version)\n%s</string>
 
     <string name="build_user">ROM builder\n%s</string>
     <string name="build_HOST">ROM build machine name\n%s</string>
     <string name="build_time">ROM build time\n%s</string>
-    <string name="build_base_os">ROM based on\n(Secondary development)\n%s</string>
+    <string name="build_base_os">ROM based on (Secondary development)\n%s</string>
     <string name="build_security_patch">ROM security patch level\n%s</string>
     <string name="build_fingerprint">Stock ROM fingerprint\n%s</string>
     <string name="build_display">Android build ID\n%s</string>
@@ -50,11 +50,11 @@
     <string name="build_incremental">Android Git commit hash\n%s</string>
     <string name="build_type">ROM build type\n%s</string>
     <string name="build_tags">ROM build tags\n%s</string>
-    <string name="build_codename">Android Git branch codename\n(REL: stable release version)\n%s</string>
+    <string name="build_codename">Android Git branch codename (REL: stable release version)\n%s</string>
 
     <string name="build_bootloader">Bootloader version\n%s</string>
     <string name="build_radio">Baseband version\n%s</string>
 
-    <string name="build_cannot_get">CANNOT GET</string>
+    <string name="build_not_filled">**NOT FILLED**</string>
 </resources>
 
