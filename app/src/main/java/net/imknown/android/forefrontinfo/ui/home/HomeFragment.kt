@@ -118,6 +118,8 @@ class HomeFragment : BaseListFragment() {
 
         val isVndkBuiltIn = hasVndkLite || hasVndkVersion
 
+        val color: StateColor
+
         var isVndkBuiltInResult = translate(isVndkBuiltIn)
         if (isVndkBuiltIn) {
             val vndkVersion = if (hasVndkVersion) {
@@ -126,12 +128,21 @@ class HomeFragment : BaseListFragment() {
                 getString(android.R.string.unknownName)
             }
 
+            if (vndkVersion == Build.VERSION_CODES.Q.toString()) {
+                color = NoProblem
+            } else {
+                color = StateColor.Waring
+            }
+
             isVndkBuiltInResult += getString(R.string.built_in_vndk_version_result, vndkVersion)
+        } else {
+            color = StateColor.Critical
         }
+
         add(
             MyModel(
                 getString(R.string.vndk_built_in_result, isVndkBuiltInResult),
-                getResultColor(isVndkBuiltIn)
+                getResultColor(color)
             )
         )
         // endregion [VNDK]
