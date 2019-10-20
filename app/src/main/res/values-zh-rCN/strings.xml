@@ -12,6 +12,7 @@
     <!-- 首页 -->
     <string name="result_yes">是.</string>
     <string name="result_no">否.</string>
+    <string name="android_info">Android 版本\nAndroid %1$s (API 等级: %2$d)</string>
     <string name="ab_seamless_update_enabled_result">启用了 A/B 无缝升级?\n%s</string>
     <string name="rom_total_size_result">\u0020(总 ROM: ~%sGB)</string>
     <string name="current_using_ab_slot_result">\u0020(当前使用的槽位: %s)</string>
@@ -34,8 +35,6 @@
     <string name="build_supported_32_bit_abis">支持的 32位 架构\n%s</string>
     <string name="build_supported_64_bit_abis">支持的 64位 架构\n%s</string>
 
-    <string name="build_sdk_int">Android API 等级\n%s</string>
-    <string name="build_release">Android 版本号\n%s</string>
     <string name="build_preview_sdk_int">Android 预览 API 等级 (0: 非预览版)\n%s</string>
 
     <string name="build_user">ROM 构建者\n%s</string>

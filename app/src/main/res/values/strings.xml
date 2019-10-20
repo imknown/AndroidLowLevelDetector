@@ -13,6 +13,7 @@
     <!-- Home -->
     <string name="result_yes">Yes.</string>
     <string name="result_no">No.</string>
+    <string name="android_info">Android Version\nAndroid %1$s (API Level: %2$d)</string>
     <string name="ab_seamless_update_enabled_result">Is A/B seamless update enable?\n%s</string>
     <string name="rom_total_size_result">\u0020(Total ROM: ~%sGB)</string>
     <string name="current_using_ab_slot_result">\u0020(Current using slot: %s)</string>
@@ -35,8 +36,6 @@
     <string name="build_supported_32_bit_abis">Supported 32bit ABIs\n%s</string>
     <string name="build_supported_64_bit_abis">Supported 64bit ABIs\n%s</string>
 
-    <string name="build_sdk_int">Android API level\n%s</string>
-    <string name="build_release">Android version\n%s</string>
     <string name="build_preview_sdk_int">Android preview API level (0: not a preview version)\n%s</string>
 
     <string name="build_user">ROM builder\n%s</string>

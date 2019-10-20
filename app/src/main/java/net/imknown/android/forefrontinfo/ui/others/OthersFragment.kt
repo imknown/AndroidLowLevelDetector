@@ -1,7 +1,6 @@
 package net.imknown.android.forefrontinfo.ui.others
 
 import android.os.Build
-import androidx.annotation.StringRes
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.BaseListFragment
 import java.text.SimpleDateFormat
@@ -47,27 +46,6 @@ class OthersFragment : BaseListFragment() {
         )
 
         //
-        myDataset.add(
-            MyModel(
-                getResultString(
-                    R.string.build_sdk_int,
-                    Build.VERSION.SDK_INT.toString()
-                )
-            )
-        )
-        myDataset.add(MyModel(getResultString(R.string.build_release, Build.VERSION.RELEASE)))
-        if (isAtLeastAndroid6()) {
-            myDataset.add(
-                MyModel(
-                    getResultString(
-                        R.string.build_preview_sdk_int,
-                        Build.VERSION.PREVIEW_SDK_INT.toString()
-                    )
-                )
-            )
-        }
-
-        //
         myDataset.add(MyModel(getResultString(R.string.build_user, Build.USER)))
         myDataset.add(MyModel(getResultString(R.string.build_HOST, Build.HOST)))
         val time =
@@ -104,15 +82,5 @@ class OthersFragment : BaseListFragment() {
         myDataset.add(MyModel(getResultString(R.string.build_radio, Build.getRadioVersion())))
 
         return myDataset
-    }
-
-    private fun getResultString(@StringRes stringId: Int, value: String?): String {
-        val finalValue = if (value.isNullOrEmpty()) {
-            getString(R.string.build_not_filled)
-        } else {
-            value
-        }
-
-        return getString(stringId, finalValue)
     }
 }

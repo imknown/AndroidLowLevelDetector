@@ -1,5 +1,6 @@
 package net.imknown.android.forefrontinfo.ui.home
 
+import android.os.Build
 import com.topjohnwu.superuser.Shell
 import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.R
@@ -37,6 +38,18 @@ class HomeFragment : BaseListFragment() {
 
     override fun collectionDataset(): ArrayList<MyModel> {
         val myDataset = ArrayList<MyModel>()
+
+        // region [Android]
+        myDataset.add(
+            MyModel(
+                getResultString(
+                    R.string.android_info,
+                    Build.VERSION.RELEASE,
+                    Build.VERSION.SDK_INT
+                )
+            )
+        )
+        // endregion [Android]
 
         // region [A/B]
         // val bootPartitions = sh(CMD_BOOT_PARTITION)[0]
