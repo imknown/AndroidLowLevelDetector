@@ -14,6 +14,8 @@ import kotlinx.android.synthetic.main.fragment_list_item.view.*
 import net.imknown.android.forefrontinfo.R
 
 abstract class BaseListFragment : BaseFragment() {
+    private var myDataset = ArrayList<MyModel>()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -25,12 +27,14 @@ abstract class BaseListFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        showResult(collectionDataset())
+        collectionDataset()
+
+        showResult()
     }
 
-    protected abstract fun collectionDataset(): ArrayList<MyModel>
+    protected abstract fun collectionDataset()
 
-    private fun showResult(myDataset: ArrayList<MyModel>) {
+    private fun showResult() {
         list.apply {
             setHasFixedSize(true)
 
@@ -43,6 +47,8 @@ abstract class BaseListFragment : BaseFragment() {
             adapter = MyAdapter(myDataset)
         }
     }
+
+    protected fun add(myModel: MyModel) = myDataset.add(myModel)
 
     private class MyAdapter(private val myDataset: List<MyModel>) :
         RecyclerView.Adapter<MyAdapter.MyViewHolder>() {

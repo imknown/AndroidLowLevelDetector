@@ -5,7 +5,6 @@ import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.BaseListFragment
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 class OthersFragment : BaseListFragment() {
 
@@ -13,22 +12,20 @@ class OthersFragment : BaseListFragment() {
         fun newInstance() = OthersFragment()
     }
 
-    override fun collectionDataset(): ArrayList<MyModel> {
-        val myDataset = ArrayList<MyModel>()
-
+    override fun collectionDataset() {
         //
-        myDataset.add(MyModel(getResultString(R.string.build_brand, Build.BRAND)))
-        myDataset.add(MyModel(getResultString(R.string.build_manufacturer, Build.MANUFACTURER)))
-        myDataset.add(MyModel(getResultString(R.string.build_model, Build.MODEL)))
-        myDataset.add(MyModel(getResultString(R.string.build_device, Build.DEVICE)))
-        myDataset.add(MyModel(getResultString(R.string.build_product, Build.PRODUCT)))
-        myDataset.add(MyModel(getResultString(R.string.build_hardware, Build.HARDWARE)))
-        myDataset.add(MyModel(getResultString(R.string.build_board, Build.BOARD)))
+        add(MyModel(getResultString(R.string.build_brand, Build.BRAND)))
+        add(MyModel(getResultString(R.string.build_manufacturer, Build.MANUFACTURER)))
+        add(MyModel(getResultString(R.string.build_model, Build.MODEL)))
+        add(MyModel(getResultString(R.string.build_device, Build.DEVICE)))
+        add(MyModel(getResultString(R.string.build_product, Build.PRODUCT)))
+        add(MyModel(getResultString(R.string.build_hardware, Build.HARDWARE)))
+        add(MyModel(getResultString(R.string.build_board, Build.BOARD)))
 
         //
         @Suppress("DEPRECATION")
-        myDataset.add(MyModel(getResultString(R.string.build_cpu_abi, Build.CPU_ABI)))
-        myDataset.add(
+        add(MyModel(getResultString(R.string.build_cpu_abi, Build.CPU_ABI)))
+        add(
             MyModel(
                 getResultString(
                     R.string.build_supported_32_bit_abis,
@@ -36,7 +33,7 @@ class OthersFragment : BaseListFragment() {
                 )
             )
         )
-        myDataset.add(
+        add(
             MyModel(
                 getResultString(
                     R.string.build_supported_64_bit_abis,
@@ -46,14 +43,14 @@ class OthersFragment : BaseListFragment() {
         )
 
         //
-        myDataset.add(MyModel(getResultString(R.string.build_user, Build.USER)))
-        myDataset.add(MyModel(getResultString(R.string.build_HOST, Build.HOST)))
+        add(MyModel(getResultString(R.string.build_user, Build.USER)))
+        add(MyModel(getResultString(R.string.build_HOST, Build.HOST)))
         val time =
             SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date(Build.TIME))
-        myDataset.add(MyModel(getResultString(R.string.build_time, time)))
+        add(MyModel(getResultString(R.string.build_time, time)))
         if (isAtLeastAndroid6()) {
-            myDataset.add(MyModel(getResultString(R.string.build_base_os, Build.VERSION.BASE_OS)))
-            myDataset.add(
+            add(MyModel(getResultString(R.string.build_base_os, Build.VERSION.BASE_OS)))
+            add(
                 MyModel(
                     getResultString(
                         R.string.build_security_patch,
@@ -62,10 +59,10 @@ class OthersFragment : BaseListFragment() {
                 )
             )
         }
-        myDataset.add(MyModel(getResultString(R.string.build_fingerprint, Build.FINGERPRINT)))
-        myDataset.add(MyModel(getResultString(R.string.build_display, Build.DISPLAY)))
-        myDataset.add(MyModel(getResultString(R.string.build_id, Build.ID)))
-        myDataset.add(
+        add(MyModel(getResultString(R.string.build_fingerprint, Build.FINGERPRINT)))
+        add(MyModel(getResultString(R.string.build_display, Build.DISPLAY)))
+        add(MyModel(getResultString(R.string.build_id, Build.ID)))
+        add(
             MyModel(
                 getResultString(
                     R.string.build_incremental,
@@ -73,14 +70,12 @@ class OthersFragment : BaseListFragment() {
                 )
             )
         )
-        myDataset.add(MyModel(getResultString(R.string.build_type, Build.TYPE)))
-        myDataset.add(MyModel(getResultString(R.string.build_tags, Build.TAGS)))
-        myDataset.add(MyModel(getResultString(R.string.build_codename, Build.VERSION.CODENAME)))
+        add(MyModel(getResultString(R.string.build_type, Build.TYPE)))
+        add(MyModel(getResultString(R.string.build_tags, Build.TAGS)))
+        add(MyModel(getResultString(R.string.build_codename, Build.VERSION.CODENAME)))
 
         //
-        myDataset.add(MyModel(getResultString(R.string.build_bootloader, Build.BOOTLOADER)))
-        myDataset.add(MyModel(getResultString(R.string.build_radio, Build.getRadioVersion())))
-
-        return myDataset
+        add(MyModel(getResultString(R.string.build_bootloader, Build.BOOTLOADER)))
+        add(MyModel(getResultString(R.string.build_radio, Build.getRadioVersion())))
     }
 }

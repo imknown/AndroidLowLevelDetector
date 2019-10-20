@@ -5,6 +5,7 @@ import com.topjohnwu.superuser.Shell
 import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.BaseListFragment
+import net.imknown.android.forefrontinfo.ui.home.HomeFragment.StateColor.NoProblem
 
 class HomeFragment : BaseListFragment() {
 
@@ -36,19 +37,34 @@ class HomeFragment : BaseListFragment() {
         private const val CMD_APEX_TZDATA = "mount | grep /apex/com.android.tzdata"
     }
 
-    override fun collectionDataset(): ArrayList<MyModel> {
-        val myDataset = ArrayList<MyModel>()
-
+    override fun collectionDataset() {
         // region [Android]
-        myDataset.add(
+        val androidStateColor = when {
+            isLatestStableAndroid() -> NoProblem
+            isSupportedByUpstream() -> StateColor.Waring
+            else -> StateColor.Critical
+        }
+
+        add(
             MyModel(
                 getResultString(
                     R.string.android_info,
                     Build.VERSION.RELEASE,
                     Build.VERSION.SDK_INT
-                )
+                ), getResultColor(androidStateColor)
             )
         )
+
+//        if (isAtLeastAndroid6()) {
+//            add(
+//                MyModel(
+//                    getResultString(
+//                        R.string.build_preview_sdk_int,
+//                        Build.VERSION.PREVIEW_SDK_INT.toString()
+//                    )
+//                )
+//            )
+//        }
         // endregion [Android]
 
         // region [A/B]
@@ -77,16 +93,15 @@ class HomeFragment : BaseListFragment() {
             abFinalResult += getString(R.string.current_using_ab_slot_result, slotSuffixUsing)
         }
 
-        myDataset.add(
-            MyModel(abFinalResult, getResultColor(isAbUpdateSupported))
-        )
+        add(MyModel(abFinalResult, getResultColor(isAbUpdateSupported)))
         // endregion [A/B]
 
         // region [Treble]
         val trebleEnabledResult = filterVersion(isAtLeastAndroid8(), CMD_TREBLE_ENABLED)
         val isTrebleEnabled =
             trebleEnabledResult.isNotEmpty() && trebleEnabledResult[0]!!.toBoolean()
-        myDataset.add(
+
+        add(
             MyModel(
                 getString(R.string.treble_enabled_result, translate(isTrebleEnabled)),
                 getResultColor(isTrebleEnabled)
@@ -113,7 +128,7 @@ class HomeFragment : BaseListFragment() {
 
             isVndkBuiltInResult += getString(R.string.built_in_vndk_version_result, vndkVersion)
         }
-        myDataset.add(
+        add(
             MyModel(
                 getString(R.string.vndk_built_in_result, isVndkBuiltInResult),
                 getResultColor(isVndkBuiltIn)
@@ -130,7 +145,7 @@ class HomeFragment : BaseListFragment() {
         val isSystem = systemResult.isNotEmpty() && systemResult[0].isNotEmpty()
 
         val isSar = isAtLeastAndroid9() && (hasSystemRootImage || !isSystem)
-        myDataset.add(
+        add(
             MyModel(
                 getString(R.string.sar_enabled_result, translate(isSar)),
                 getResultColor(isSar)
@@ -145,15 +160,13 @@ class HomeFragment : BaseListFragment() {
         val apexUsedResult = filterVersion(isAtLeastAndroid10(), CMD_APEX_TZDATA)
         val isApexUsed = apexUsedResult.isNotEmpty() && apexUsedResult[0].isNotEmpty()
         val isApex = isApexMounted && isApexUsed
-        myDataset.add(
+        add(
             MyModel(
                 getString(R.string.apex_enabled_result, translate(isApex)),
                 getResultColor(isApex)
             )
         )
         // endregion [APEX]
-
-        return myDataset
     }
 
     private fun filterVersion(condition: Boolean, sh: String) =
@@ -173,10 +186,23 @@ class HomeFragment : BaseListFragment() {
         }
     )
 
+    private sealed class StateColor {
+        object NoProblem : StateColor()
+        object Waring : StateColor()
+        object Critical : StateColor()
+    }
+
     private fun getResultColor(condition: Boolean) =
         if (condition) {
-            R.color.colorSupport
+            R.color.colorNoProblem
         } else {
-            R.color.colorNotSupport
+            R.color.colorCritical
+        }
+
+    private fun getResultColor(stateColor: StateColor) =
+        when (stateColor) {
+            is NoProblem -> R.color.colorNoProblem
+            is StateColor.Waring -> R.color.colorWaring
+            is StateColor.Critical -> R.color.colorCritical
         }
 }

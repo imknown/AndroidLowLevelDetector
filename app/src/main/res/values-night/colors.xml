@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#25572D</color>
     <color name="colorAccent">#DF8841</color>
 
-    <color name="colorSupport">#356330</color>
-    <color name="colorNotSupport">#9E3836</color>
+    <color name="colorNoProblem">#356330</color>
+    <color name="colorWaring">#9E5C2E</color>
+    <color name="colorCritical">#9E3836</color>
 </resources>
