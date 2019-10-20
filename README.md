@@ -9,13 +9,13 @@
 - detect APEX
 
 ## Features todo
-- detect whether veriosns are up-to-date
+- detect whether versions are up-to-date
 - detect magisk
 - detect dm-verity (version)
 - detect FBE
 - outdate detect
-  - lastest stable Android version
-  - lastest alpha/beta Android version
+  - latest stable Android version
+  - latest alpha/beta Android version
 - more colors
 - more i18n
 - settings
