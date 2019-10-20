@@ -27,7 +27,7 @@ abstract class BaseFragment : Fragment() {
     protected fun isAtLeastAndroid9() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
     protected fun isAtLeastAndroid10() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
 
-    protected fun isLatestStableAndroid() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+    protected fun isLatestStableAndroid() = Build.VERSION.SDK_INT == Build.VERSION_CODES.Q
     protected fun isSupportedByUpstream() = isAtLeastAndroid7()
 
     protected fun getResultString(@StringRes stringId: Int, vararg value: Any?): String {
