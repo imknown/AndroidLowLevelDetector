@@ -1,20 +1,20 @@
 # AndroidForefrontInfo
-:)
+An open-source small utility to detect some Android low-level features.
 
 ## Features inside
+- detect Android version and whether is up-to-date
 - detect A/B or A-Only
 - detect Project Treble
-- detect Vendor NDK
+- detect Vendor NDK and whether up-to-date
 - detect System-as-root
 - detect APEX
 
 ## Features todo
-- detect whether versions are up-to-date
 - detect magisk
 - detect dm-verity (version)
 - detect FBE
-- outdate detect
-  - latest stable Android version
+- detect `getprop` from file, not from SDK API (option)
+- up-to-date detect
   - latest alpha/beta Android version
 - more colors
 - more i18n
@@ -28,4 +28,5 @@
   - user-readable explanation why mine not supported
 - copy result
 - licenses and acknowledge
+- getprop 
 - etc.
