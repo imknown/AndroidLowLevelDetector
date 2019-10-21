@@ -16,8 +16,6 @@ An open-source small utility to detect some Android low-level features.
 - detect `getprop` from file, not from SDK API (option)
 - up-to-date detect
   - latest alpha/beta Android version
-- more colors
-- more i18n
 - settings
   - root mode
   - show commands
