@@ -28,5 +28,4 @@ An open-source small utility to detect some Android low-level features.
   - user-readable explanation why mine not supported
 - copy result
 - licenses and acknowledge
-- getprop 
 - etc.
