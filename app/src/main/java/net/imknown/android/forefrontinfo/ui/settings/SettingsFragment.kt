@@ -1,23 +1,47 @@
 package net.imknown.android.forefrontinfo.ui.settings
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.widget.Toast
+import androidx.preference.Preference
+import androidx.preference.PreferenceFragmentCompat
+import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.R
-import net.imknown.android.forefrontinfo.base.BaseFragment
 
-class SettingsFragment : BaseFragment() {
+class SettingsFragment : PreferenceFragmentCompat() {
 
     companion object {
         fun newInstance() = SettingsFragment()
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_settings, container, false)
+    private var counter = 5
+
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        setPreferencesFromResource(R.xml.preferences, rootKey)
+
+        val versionPref = findPreference<Preference>("version")
+        versionPref?.let {
+            it.summary =
+                getString(
+                    R.string.about_version_summary,
+                    BuildConfig.VERSION_NAME,
+                    BuildConfig.VERSION_CODE
+                )
+        }
+
+        versionPref?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+            if (counter > 0) {
+                counter -= 1
+            } else if (counter == 0) {
+                counter -= 100
+
+                Toast.makeText(
+                    this@SettingsFragment.context,
+                    R.string.about_version_click,
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+
+            true
+        }
     }
 }

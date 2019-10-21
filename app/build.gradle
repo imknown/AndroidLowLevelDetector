@@ -73,6 +73,7 @@ dependencies {
 
     implementation "androidx.appcompat:appcompat:$androidX.appCompat"
     implementation "androidx.core:core-ktx:$androidX.coreKtx"
+    implementation "androidx.preference:preference:$androidX.preference"
 
     implementation "androidx.constraintlayout:constraintlayout:$androidX.constraintLayout"
     implementation "androidx.cardview:cardview:$androidX.cardView"
@@ -80,6 +81,9 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:$androidX.recyclerView"
     implementation "androidx.recyclerview:recyclerview-selection:$androidX.recyclerView"
 
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'com.google.android.material:material:1.0.0'
     testImplementation "junit:junit:$androidX.junit"
     androidTestImplementation "androidx.test.ext:junit:$androidX.extJunit"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidX.espressoCore"

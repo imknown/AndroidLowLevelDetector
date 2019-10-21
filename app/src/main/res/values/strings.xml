@@ -55,5 +55,14 @@
     <string name="build_radio">Baseband version\n%s</string>
 
     <string name="build_not_filled">**NOT FILLED**</string>
-</resources>
 
+    <!-- Settings -->
+    <string name="about_title">About</string>
+    <string name="about_source_title">Source code</string>
+    <string name="about_source_summary">Github address of the APP source code</string>
+    <string name="about_licenses_title">License</string>
+    <string name="about_licenses_summary">Referenced open-source repositories</string>
+    <string name="about_version_title">Version</string>
+    <string name="about_version_summary">Version: %1$s (Iteration times: %2$d)</string>
+    <string name="about_version_click">🐈==)  🐕===))</string>
+</resources>

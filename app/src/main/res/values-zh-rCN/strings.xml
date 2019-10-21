@@ -5,6 +5,7 @@
     <string name="translation_author_more_info1">https://imknown.net</string>
     <string name="translation_author_more_info2">https://github.com/imknown</string>
 
+    <!-- 选项卡 -->
     <string name="title_home">首页</string>
     <string name="title_others">其他</string>
     <string name="title_settings">设置</string>
@@ -54,4 +55,14 @@
     <string name="build_radio">基带版本\n%s</string>
 
     <string name="build_not_filled">**未填写**</string>
+
+    <!-- 设置 -->
+    <string name="about_title">关于</string>
+    <string name="about_source_title">源码</string>
+    <string name="about_source_summary">本程序源码的 Github 地址</string>
+    <string name="about_licenses_title">协议</string>
+    <string name="about_licenses_summary">引用的开源库</string>
+    <string name="about_version_title">版本</string>
+    <string name="about_version_summary">版本号: %1$s (迭代次数: %2$d)</string>
+    <string name="about_version_click">🐈==)  🐕===))</string>
 </resources>

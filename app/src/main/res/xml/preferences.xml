@@ -1,0 +1,35 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <PreferenceCategory android:title="@string/about_title">
+        <Preference
+            app:icon="@drawable/ic_code_black_24dp"
+            app:key="sources"
+            app:summary="@string/about_source_summary"
+            app:title="@string/about_source_title">
+
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://github.com/imknown/AndroidForefrontInfo" />
+        </Preference>
+
+        <Preference
+            app:icon="@drawable/ic_copyright_black_24dp"
+            app:key="licenses"
+            app:summary="@string/about_licenses_summary"
+            app:title="@string/about_licenses_title">
+
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://github.com/imknown/AndroidForefrontInfo/blob/master/gradle/buildScriptConfig.gradle" />
+        </Preference>
+
+        <Preference
+            app:icon="@drawable/ic_adb_black_24dp"
+            app:key="version"
+            app:title="@string/about_version_title"
+            tools:summary="@string/about_version_summary" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
