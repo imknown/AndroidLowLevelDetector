@@ -189,9 +189,9 @@ class HomeFragment : BaseListFragment() {
         // endregion [APEX]
     }
 
-    private fun filterVersion(condition: Boolean, sh: String) =
+    private fun filterVersion(condition: Boolean, cmd: String) =
         if (condition) {
-            sh(sh)
+            sh(cmd)
         } else {
             emptyList()
         }
