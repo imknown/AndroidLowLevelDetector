@@ -19,20 +19,29 @@ class HomeFragment : BaseListFragment() {
             // Shell.Config.setTimeout(10)
         }
 
+        // https://source.android.com/devices/tech/ota/ab?hl=en
         // /* root needed*/ private const val CMD_BOOT_PARTITION = "ls /dev/block/bootdevice/by-name | grep boot_"
         // private const val CMD_ROM_TOTAL_SIZE = "df | grep -v '/apex' | grep -v '/storage' | grep -E 'tmpfs'\\|'/dev'\\|'/data' | awk '{s+=\$2} END {print s/1000000}'"
         private const val CMD_AB_UPDATE = "getprop ro.build.ab_update"
         private const val CMD_SLOT_SUFFIX = "getprop ro.boot.slot_suffix"
 
+        // https://source.android.com/devices/architecture/?hl=en#hidl
         private const val CMD_TREBLE_ENABLED = "getprop ro.treble.enabled"
 
+        // https://source.android.com/devices/architecture/vndk?hl=en
         private const val CMD_VNDK_LITE = "getprop ro.vndk.lite"
         private const val CMD_VNDK_VERSION = "getprop ro.vndk.version"
 
+        // https://source.android.com/devices/bootloader/system-as-root?hl=en
+        // https://github.com/topjohnwu/magisk_files/blob/2d7ddefbe4946806de1875a18247b724f5e7d4a0/notes.md
+        // https://github.com/topjohnwu/Magisk/blob/master/scripts/util_functions.sh#L193
+        // https://github.com/opengapps/opengapps/blob/master/scripts/inc.installer.sh#L710
         private const val CMD_SYSTEM_ROOT_IMAGE = "getprop ro.build.system_root_image"
+        // private const val CMD_LS_INIT = "ls /init && echo 'true' || echo 'false'"
         private const val CMD_SYSTEM =
             "mount | grep -v 'tmpfs' | grep -v 'none' | grep -E ' on /system type'\\|' /system '"
 
+        // https://source.android.com/devices/tech/ota/apex?hl=en
         private const val CMD_APEX_MOUNT = "mount | grep 'tmpfs on /apex type tmpfs'"
         private const val CMD_APEX_TZDATA = "mount | grep /apex/com.android.tzdata"
     }
