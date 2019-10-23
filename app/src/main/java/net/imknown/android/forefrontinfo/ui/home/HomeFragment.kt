@@ -38,6 +38,7 @@ class HomeFragment : BaseListFragment() {
         // https://github.com/opengapps/opengapps/blob/master/scripts/inc.installer.sh#L710
         private const val CMD_SYSTEM_ROOT_IMAGE = "getprop ro.build.system_root_image"
         // private const val CMD_LS_INIT = "ls /init && echo 'true' || echo 'false'"
+        private const val CMD_DEV_ROOT = "cat /proc/mounts | grep '/dev/root / '"
         private const val CMD_SYSTEM =
             "cat /proc/mounts | grep -v 'tmpfs' | grep -v 'none' | grep ' /system '"
 
@@ -158,10 +159,13 @@ class HomeFragment : BaseListFragment() {
         val systemRootImageResult = filterVersion(isAtLeastAndroid9(), CMD_SYSTEM_ROOT_IMAGE)
         val hasSystemRootImage = isResultTrue(systemRootImageResult)
 
+        val devRootResult = filterVersion(isAtLeastAndroid9(), CMD_DEV_ROOT)
+        val hasDevRoot = hasResult(devRootResult)
+
         val systemResult = filterVersion(isAtLeastAndroid9() && !hasSystemRootImage, CMD_SYSTEM)
         val isSystem = hasResult(systemResult)
 
-        val isSar = isAtLeastAndroid9() && (hasSystemRootImage || !isSystem)
+        val isSar = isAtLeastAndroid9() && (hasSystemRootImage || hasDevRoot || !isSystem)
         add(
             MyModel(
                 getString(R.string.sar_enabled_result, translate(isSar)),
