@@ -83,8 +83,7 @@ class HomeFragment : BaseListFragment() {
         // val romTotalSize = kotlin.math.floor(romTotalSizeResult[0].toFloat()).toString()
 
         val abUpdateSupportedResult = filterVersion(isAtLeastAndroid7(), CMD_AB_UPDATE)
-        val isAbUpdateSupported =
-            abUpdateSupportedResult.isNotEmpty() && abUpdateSupportedResult[0]!!.toBoolean()
+        val isAbUpdateSupported = isResultTrue(abUpdateSupportedResult)
         val abUpdateSupportedArgs =
             translate(isAbUpdateSupported) /* + getString(R.string.rom_total_size_result, romTotalSize) */
 
@@ -92,7 +91,7 @@ class HomeFragment : BaseListFragment() {
             getString(R.string.ab_seamless_update_enabled_result, abUpdateSupportedArgs)
         if (isAbUpdateSupported) {
             val slotSuffixResult = sh(CMD_SLOT_SUFFIX)
-            val hasVndkVersion = slotSuffixResult.isNotEmpty() && slotSuffixResult[0].isNotEmpty()
+            val hasVndkVersion = hasResult(slotSuffixResult)
             val slotSuffixUsing = if (hasVndkVersion) {
                 slotSuffixResult[0]
             } else {
@@ -107,8 +106,7 @@ class HomeFragment : BaseListFragment() {
 
         // region [Treble]
         val trebleEnabledResult = filterVersion(isAtLeastAndroid8(), CMD_TREBLE_ENABLED)
-        val isTrebleEnabled =
-            trebleEnabledResult.isNotEmpty() && trebleEnabledResult[0]!!.toBoolean()
+        val isTrebleEnabled = isResultTrue(trebleEnabledResult)
 
         add(
             MyModel(
@@ -120,10 +118,10 @@ class HomeFragment : BaseListFragment() {
 
         // region [VNDK]
         val hasVndkLiteResult = filterVersion(isAtLeastAndroid8(), CMD_VNDK_LITE)
-        val hasVndkLite = hasVndkLiteResult.isNotEmpty() && hasVndkLiteResult[0]!!.toBoolean()
+        val hasVndkLite = isResultTrue(hasVndkLiteResult)
 
         val vndkVersionResult = filterVersion(isAtLeastAndroid8(), CMD_VNDK_VERSION)
-        val hasVndkVersion = vndkVersionResult.isNotEmpty() && vndkVersionResult[0].isNotEmpty()
+        val hasVndkVersion = hasResult(vndkVersionResult)
 
         val isVndkBuiltIn = hasVndkLite || hasVndkVersion
 
@@ -158,11 +156,10 @@ class HomeFragment : BaseListFragment() {
 
         // region [SAR]
         val systemRootImageResult = filterVersion(isAtLeastAndroid9(), CMD_SYSTEM_ROOT_IMAGE)
-        val hasSystemRootImage =
-            systemRootImageResult.isNotEmpty() && systemRootImageResult[0]!!.toBoolean()
+        val hasSystemRootImage = isResultTrue(systemRootImageResult)
 
         val systemResult = filterVersion(isAtLeastAndroid9() && !hasSystemRootImage, CMD_SYSTEM)
-        val isSystem = systemResult.isNotEmpty() && systemResult[0].isNotEmpty()
+        val isSystem = hasResult(systemResult)
 
         val isSar = isAtLeastAndroid9() && (hasSystemRootImage || !isSystem)
         add(
@@ -175,10 +172,10 @@ class HomeFragment : BaseListFragment() {
 
         // region [APEX]
         val apexMountedResult = filterVersion(isAtLeastAndroid10(), CMD_APEX_MOUNT)
-        val isApexMounted = apexMountedResult.isNotEmpty() && apexMountedResult[0].isNotEmpty()
+        val isApexMounted = hasResult(apexMountedResult)
 
         val apexUsedResult = filterVersion(isAtLeastAndroid10(), CMD_APEX_TZDATA)
-        val isApexUsed = apexUsedResult.isNotEmpty() && apexUsedResult[0].isNotEmpty()
+        val isApexUsed = hasResult(apexUsedResult)
         val isApex = isApexMounted && isApexUsed
         add(
             MyModel(
@@ -197,6 +194,10 @@ class HomeFragment : BaseListFragment() {
         }
 
     private fun sh(cmd: String) = Shell.sh(cmd).exec().out
+
+    private fun hasResult(result: List<String>) = result.isNotEmpty() && result[0].isNotEmpty()
+
+    private fun isResultTrue(result: List<String>) = result.isNotEmpty() && result[0].toBoolean()
 
     private fun translate(condition: Boolean) = getString(
         if (condition) {
