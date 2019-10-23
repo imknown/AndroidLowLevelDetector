@@ -37,13 +37,13 @@ class HomeFragment : BaseListFragment() {
         // https://github.com/topjohnwu/Magisk/blob/master/scripts/util_functions.sh#L193
         // https://github.com/opengapps/opengapps/blob/master/scripts/inc.installer.sh#L710
         private const val CMD_SYSTEM_ROOT_IMAGE = "getprop ro.build.system_root_image"
-        private const val CMD_DEV_ROOT = "cat /proc/mounts | grep '/dev/root / '"
+        private const val CMD_DEV_ROOT = "grep '/dev/root / ' /proc/mounts"
         private const val CMD_SYSTEM =
-            "cat /proc/mounts | grep -v 'tmpfs' | grep -v 'none' | grep ' /system '"
+            "grep ' /system ' /proc/mounts | grep -v 'tmpfs' | grep -v 'none'"
 
         // https://source.android.com/devices/tech/ota/apex?hl=en
-        private const val CMD_APEX_MOUNT = "cat /proc/mounts | grep 'tmpfs /apex tmpfs'"
-        private const val CMD_APEX_TZDATA = "cat /proc/mounts | grep /apex/com.android.tzdata"
+        private const val CMD_APEX_MOUNT = "grep 'tmpfs /apex tmpfs' /proc/mounts"
+        private const val CMD_APEX_TZDATA = "grep '/apex/com.android.tzdata' /proc/mounts"
     }
 
     override fun collectionDataset() {
