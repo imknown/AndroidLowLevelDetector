@@ -37,7 +37,6 @@ class HomeFragment : BaseListFragment() {
         // https://github.com/topjohnwu/Magisk/blob/master/scripts/util_functions.sh#L193
         // https://github.com/opengapps/opengapps/blob/master/scripts/inc.installer.sh#L710
         private const val CMD_SYSTEM_ROOT_IMAGE = "getprop ro.build.system_root_image"
-        // private const val CMD_LS_INIT = "ls /init && echo 'true' || echo 'false'"
         private const val CMD_DEV_ROOT = "cat /proc/mounts | grep '/dev/root / '"
         private const val CMD_SYSTEM =
             "cat /proc/mounts | grep -v 'tmpfs' | grep -v 'none' | grep ' /system '"
