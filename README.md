@@ -21,6 +21,8 @@ An open-source small utility to detect some Android low-level features.
   - show commands
   - custom commands
   - GAME???
+- data update from server (json)
+  - custom url
 - documents
   - development references
   - user-readable explanation why mine not supported
