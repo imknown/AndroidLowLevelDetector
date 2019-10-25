@@ -2,6 +2,7 @@
 
 buildscript {
     apply from: "gradle/buildScriptConfig.gradle"
+    apply from: "gradle/keysConfig.gradle"
 
     repositories {
         google()
