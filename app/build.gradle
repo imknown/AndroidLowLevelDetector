@@ -69,7 +69,7 @@ repositories {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinSdk.coreVersion"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinSdk.core"
 
     implementation "androidx.appcompat:appcompat:$androidX.appCompat"
     implementation "androidx.core:core-ktx:$androidX.coreKtx"
@@ -85,7 +85,7 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$androidX.extJunit"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidX.espressoCore"
 
-    implementation "com.github.topjohnwu.libsu:core:$thirdParties.libsuVersion"
+    implementation "com.github.topjohnwu.libsu:core:$thirdParties.libsu"
 
-    debugImplementation "com.squareup.leakcanary:leakcanary-android:$thirdParties.leakCanaryVersion"
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:$thirdParties.leakCanary"
 }
