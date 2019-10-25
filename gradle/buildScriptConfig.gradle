@@ -13,6 +13,9 @@ ext {
     ]
 
     androidX = [
+            // https://maven.google.com
+            // https://androidstudio.googleblog.com/
+            // https://developer.android.com/jetpack/androidx/versions
             appCompat       : '1.1.0',
             coreKtx         : '1.1.0',
             preference      : '1.1.0',
@@ -23,6 +26,7 @@ ext {
             cardView        : "1.0.0",
             recyclerView    : "1.0.0",
 
+            // https://developer.android.com/jetpack/androidx/releases/test
             junit           : '4.12',
             extJunit        : '1.1.1',
             espressoCore    : '3.2.0'
@@ -45,12 +49,12 @@ ext {
 
     thirdParties = [
             // https://github.com/topjohnwu/libsu
-            libsuVersion       : '2.5.1',
+            libsuVersion     : '2.5.1',
 
             // https://github.com/shwenzhang/AndResGuard
-            andResGuard        : '1.2.17',
+            andResGuard      : '1.2.17',
 
             // https://github.com/square/leakcanary
-            leakCanaryVersion  : '2.0-beta-3'
+            leakCanaryVersion: '2.0-beta-3'
     ]
 }
