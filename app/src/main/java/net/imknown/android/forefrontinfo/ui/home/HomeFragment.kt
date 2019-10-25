@@ -7,6 +7,14 @@ import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.BaseListFragment
 import net.imknown.android.forefrontinfo.ui.home.HomeFragment.StateColor.NoProblem
 
+/**
+ * Thanks to:
+ *
+ * https://github.com/topjohnwu/Magisk/blob/master/scripts/util_functions.sh
+ * https://github.com/opengapps/opengapps/blob/master/scripts/inc.installer.sh
+ * https://github.com/penn5/TrebleCheck
+ *
+ */
 class HomeFragment : BaseListFragment() {
 
     companion object {
