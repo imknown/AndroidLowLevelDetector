@@ -5,12 +5,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.ColorRes
+import androidx.annotation.ColorInt
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.android.synthetic.main.fragment_list_item.view.*
+import net.imknown.android.forefrontinfo.MainActivity.Companion.COLOR_STATE_LIST_CRITICAL
+import net.imknown.android.forefrontinfo.MainActivity.Companion.COLOR_STATE_LIST_DEFAULT_STYLE
+import net.imknown.android.forefrontinfo.MainActivity.Companion.COLOR_STATE_LIST_NO_PROBLEM
 import net.imknown.android.forefrontinfo.R
 
 abstract class BaseListFragment : BaseFragment() {
@@ -62,7 +65,7 @@ abstract class BaseListFragment : BaseFragment() {
         }
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-            holder.itemView.result.setBackgroundResource(myDataset[position].color)
+            holder.itemView.card.setCardBackgroundColor(myDataset[position].color)
             holder.itemView.result.text = myDataset[position].result
         }
 
@@ -71,12 +74,16 @@ abstract class BaseListFragment : BaseFragment() {
         internal class MyViewHolder(view: View) : RecyclerView.ViewHolder(view)
     }
 
-    protected data class MyModel(val result: String, @ColorRes val color: Int) {
-        companion object {
-            private const val ID_DEFAULT_STYLE = 0
-        }
+    protected data class MyModel(val result: String, @ColorInt val color: Int) {
+        constructor(result: String) : this(result, COLOR_STATE_LIST_DEFAULT_STYLE)
 
-        constructor(result: String) : this(result, ID_DEFAULT_STYLE)
+        constructor(result: String, condition: Boolean) : this(
+            result, if (condition) {
+                COLOR_STATE_LIST_NO_PROBLEM
+            } else {
+                COLOR_STATE_LIST_CRITICAL
+            }
+        )
     }
 
     private class MyItemDecoration(val spaceHeight: Int) : RecyclerView.ItemDecoration() {
