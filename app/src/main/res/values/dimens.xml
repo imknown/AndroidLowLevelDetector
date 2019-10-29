@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="item_card">8dp</dimen>
+    <dimen name="item_card_corner_radius">10dp</dimen>
+    <dimen name="item_card_elevation">5dp</dimen>
+    <dimen name="item_card_content_padding">14dp</dimen>
     <dimen name="item_divider_space">16dp</dimen>
 </resources>

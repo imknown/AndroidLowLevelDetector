@@ -8,20 +8,17 @@
     android:clickable="true"
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
-    app:cardCornerRadius="@dimen/item_card"
-    app:cardElevation="@dimen/item_card"
-    tools:layout_margin="@dimen/item_divider_space">
+    app:cardCornerRadius="@dimen/item_card_corner_radius"
+    app:cardElevation="@dimen/item_card_elevation"
+    app:contentPadding="@dimen/item_card_content_padding"
+    tools:cardBackgroundColor="@color/colorNoProblem">
 
     <TextView
         android:id="@+id/result"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="@dimen/item_divider_space"
+        android:layout_gravity="start|center_vertical"
+        android:minLines="2"
         android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:background="@color/colorSupport"
         tools:text="Enabled?\nYes." />
 </androidx.cardview.widget.CardView>
