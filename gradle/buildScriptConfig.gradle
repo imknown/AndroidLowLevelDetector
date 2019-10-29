@@ -20,6 +20,8 @@ ext {
             coreKtx         : '1.1.0',
             preference      : '1.1.0',
 
+            // https://mvnrepository.com/artifact/com.google.android.material/material
+            // https://github.com/material-components/material-components-android/releases
             material        : "1.0.0",
 
             constraintLayout: '1.1.3',
