@@ -11,7 +11,7 @@
 
             <intent
                 android:action="android.intent.action.VIEW"
-                android:data="https://github.com/imknown/AndroidForefrontInfo" />
+                android:data="https://github.com/imknown/AndroidLowLevelDetector" />
         </Preference>
 
         <Preference
@@ -22,7 +22,7 @@
 
             <intent
                 android:action="android.intent.action.VIEW"
-                android:data="https://github.com/imknown/AndroidForefrontInfo/blob/master/gradle/buildScriptConfig.gradle" />
+                android:data="https://github.com/imknown/AndroidLowLevelDetector/blob/master/gradle/buildScriptConfig.gradle" />
         </Preference>
 
         <Preference

@@ -1,4 +1,4 @@
-# AndroidForefrontInfo
+# AndroidLowLevelDetector
 An open-source small utility to detect some Android low-level features.
 
 ## Features inside
