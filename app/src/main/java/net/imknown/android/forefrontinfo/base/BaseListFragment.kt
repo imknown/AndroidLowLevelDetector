@@ -43,8 +43,6 @@ abstract class BaseListFragment : BaseFragment() {
 
             layoutManager = LinearLayoutManager(context)
 
-            itemAnimator = DefaultItemAnimator()
-
             addItemDecoration(MyItemDecoration(resources.getDimensionPixelSize(R.dimen.item_divider_space)))
 
             adapter = MyAdapter(myDataset)
