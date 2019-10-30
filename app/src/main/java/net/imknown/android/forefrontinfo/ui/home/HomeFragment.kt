@@ -66,23 +66,13 @@ class HomeFragment : BaseListFragment() {
         }
 
         add(
-            MyModel(
-                getResultString(
-                    R.string.android_info,
-                    Build.VERSION.RELEASE,
-                    Build.VERSION.SDK_INT
-                ), androidColor
-            )
+            getString(R.string.android_info, Build.VERSION.RELEASE, Build.VERSION.SDK_INT),
+            androidColor
         )
 
 //        if (isAtLeastAndroid6()) {
 //            add(
-//                MyModel(
-//                    getResultString(
-//                        R.string.build_preview_sdk_int,
-//                        Build.VERSION.PREVIEW_SDK_INT.toString()
-//                    )
-//                )
+//                getString(R.string.build_preview_sdk_int, Build.VERSION.PREVIEW_SDK_INT.toString())
 //            )
 //        }
         // endregion [Android]
@@ -112,19 +102,14 @@ class HomeFragment : BaseListFragment() {
             abFinalResult += getString(R.string.current_using_ab_slot_result, slotSuffixUsing)
         }
 
-        add(MyModel(abFinalResult, isAbUpdateSupported))
+        add(abFinalResult, isAbUpdateSupported)
         // endregion [A/B]
 
         // region [Treble]
         val trebleEnabledResult = filterVersion(isAtLeastAndroid8(), CMD_TREBLE_ENABLED)
         val isTrebleEnabled = isResultTrue(trebleEnabledResult)
 
-        add(
-            MyModel(
-                getString(R.string.treble_enabled_result, translate(isTrebleEnabled)),
-                isTrebleEnabled
-            )
-        )
+        add(getString(R.string.treble_enabled_result, translate(isTrebleEnabled)), isTrebleEnabled)
         // endregion [Treble]
 
         // region [VNDK]
@@ -157,7 +142,7 @@ class HomeFragment : BaseListFragment() {
             vndkColor = COLOR_STATE_LIST_CRITICAL
         }
 
-        add(MyModel(getString(R.string.vndk_built_in_result, isVndkBuiltInResult), vndkColor))
+        add(getString(R.string.vndk_built_in_result, isVndkBuiltInResult), vndkColor)
         // endregion [VNDK]
 
         // region [SAR]
@@ -171,7 +156,7 @@ class HomeFragment : BaseListFragment() {
         val isSystem = hasResult(systemResult)
 
         val isSar = isAtLeastAndroid9() && (hasSystemRootImage || hasDevRoot || !isSystem)
-        add(MyModel(getString(R.string.sar_enabled_result, translate(isSar)), isSar))
+        add(getString(R.string.sar_enabled_result, translate(isSar)), isSar)
         // endregion [SAR]
 
         // region [APEX]
@@ -181,7 +166,7 @@ class HomeFragment : BaseListFragment() {
         val apexUsedResult = filterVersion(isAtLeastAndroid10(), CMD_APEX_TZDATA)
         val isApexUsed = hasResult(apexUsedResult)
         val isApex = isApexMounted && isApexUsed
-        add(MyModel(getString(R.string.apex_enabled_result, translate(isApex)), isApex))
+        add(getString(R.string.apex_enabled_result, translate(isApex)), isApex)
         // endregion [APEX]
     }
 

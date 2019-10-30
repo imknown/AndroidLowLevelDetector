@@ -1,9 +1,7 @@
 package net.imknown.android.forefrontinfo.base
 
 import android.os.Build
-import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
-import net.imknown.android.forefrontinfo.R
 
 /**
  * https://en.wikipedia.org/wiki/Android_version_history
@@ -29,16 +27,4 @@ abstract class BaseFragment : Fragment() {
 
     protected fun isLatestStableAndroid() = Build.VERSION.SDK_INT == Build.VERSION_CODES.Q
     protected fun isSupportedByUpstream() = isAtLeastAndroid7()
-
-    protected fun getResultString(@StringRes stringId: Int, vararg value: Any?): String {
-        return if (
-            value.isNullOrEmpty()
-            || value[0] == null
-            || value[0].toString().isEmpty()
-        ) {
-            getString(stringId, getString(R.string.build_not_filled))
-        } else {
-            getString(stringId, *value)
-        }
-    }
 }
