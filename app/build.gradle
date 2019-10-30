@@ -87,5 +87,6 @@ dependencies {
 
     implementation "com.github.topjohnwu.libsu:core:$thirdParties.libsu"
 
-    debugImplementation "com.squareup.leakcanary:leakcanary-android:$thirdParties.leakCanary"
+    // debugImplementation "com.squareup.leakcanary:leakcanary-android:$thirdParties.leakCanary"
+    debugImplementation "com.squareup.leakcanary:leakcanary-android-process:$thirdParties.leakCanary"
 }

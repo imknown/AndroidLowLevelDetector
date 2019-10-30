@@ -3,6 +3,7 @@
     package="net.imknown.android.forefrontinfo">
 
     <application
+        android:name=".MyApplication"
         android:allowBackup="false"
         android:fullBackupContent="@null"
         android:icon="@mipmap/ic_launcher"
