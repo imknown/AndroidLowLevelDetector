@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import net.imknown.android.forefrontinfo.BuildConfig
+import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
 
 class SettingsFragment : PreferenceFragmentCompat() {
@@ -16,7 +17,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private var counter = 5
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        setPreferencesFromResource(R.xml.preferences, rootKey)
+        MyApplication.allowReads {
+            setPreferencesFromResource(R.xml.preferences, rootKey)
+        }
 
         val versionPref = findPreference<Preference>("version")
         versionPref?.let {
