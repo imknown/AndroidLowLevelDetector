@@ -29,6 +29,5 @@ An open-source small utility to detect some Android low-level features.
   - development references
   - user-readable explanation why mine not supported
 - copy result
-- online mode
 - licenses and acknowledge
 - etc.
