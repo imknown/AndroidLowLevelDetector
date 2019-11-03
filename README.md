@@ -10,13 +10,15 @@ An open-source small utility to detect some Android low-level features.
 - detect APEX
 
 ## Features todo
-- detect magisk
+- detect toybox
+- detect architecture
+- detect Linux kernel
 - detect dm-verity (version)
 - detect FBE
-- detect `getprop` from file, not from SDK API (option)
 - up-to-date detect
   - latest alpha/beta Android version
 - settings
+  - detect `getprop` from file, not from SDK API (option)
   - root mode
   - show commands
   - custom commands
@@ -27,5 +29,6 @@ An open-source small utility to detect some Android low-level features.
   - development references
   - user-readable explanation why mine not supported
 - copy result
+- online mode
 - licenses and acknowledge
 - etc.
