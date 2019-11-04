@@ -14,7 +14,7 @@ An open-source small utility to detect some Android low-level features.
 - detect architecture
 - detect Linux kernel
 - detect dm-verity (version)
-- detect FBE
+- detect FBE/FDE
 - up-to-date detect
   - latest alpha/beta Android version
 - settings
