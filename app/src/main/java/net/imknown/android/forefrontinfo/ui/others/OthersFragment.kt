@@ -42,8 +42,7 @@ class OthersFragment : BaseListFragment() {
         //
         add(getResultString(R.string.build_user, Build.USER))
         add(getResultString(R.string.build_HOST, Build.HOST))
-        val time =
-            SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date(Build.TIME))
+        val time = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH).format(Date(Build.TIME))
         add(getResultString(R.string.build_time, time))
         if (isAtLeastAndroid6()) {
             add(getResultString(R.string.build_base_os, Build.VERSION.BASE_OS))
