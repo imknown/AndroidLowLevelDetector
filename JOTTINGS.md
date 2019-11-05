@@ -2,6 +2,7 @@
 - https://source.android.com/
 - https://source.android.com/security/enhancements/enhancements9
 - https://source.android.com/setup/start/p-release-notes
+ -https://source.android.com/setup/start/build-numbers
 
 ---
 
@@ -9,8 +10,8 @@ https://android.googlesource.com/kernel/common/+refs
 
 ```
 adb shell uname -a
-uname -m
-uname -r
+adb shell uname -m
+adb shell uname -r
 ```
 
 ---
