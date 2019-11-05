@@ -14,7 +14,7 @@
     <string name="result_yes">Yes.</string>
     <string name="result_no">No.</string>
     <string name="android_info">Android Version\nAndroid %1$s (API Level: %2$d)</string>
-    <string name="ab_seamless_update_enabled_result">Is A/B seamless update enable?\n%s</string>
+    <string name="ab_seamless_update_enabled_result">Is A/B seamless update enabled?\n%s</string>
     <string name="rom_total_size_result">\u0020(Total ROM: ~%sGB)</string>
     <string name="current_using_ab_slot_result">\u0020(Current using slot: %s)</string>
     <string name="treble_enabled_result">Is Project Treble enabled?\n%s</string>
