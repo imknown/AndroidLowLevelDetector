@@ -18,6 +18,7 @@ An open-source small utility to detect some Android low-level features.
 - up-to-date detect
   - latest alpha/beta Android version
 - settings
+  - speed mode (no animations, no CardViews, etc.)
   - detect `getprop` from file, not from SDK API (option)
   - root mode
   - show commands
