@@ -1,13 +1,16 @@
 package net.imknown.android.forefrontinfo.ui.home
 
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import androidx.annotation.ColorInt
+import androidx.appcompat.app.AppCompatActivity
+import com.github.kittinunf.fuel.core.isSuccessful
 import com.topjohnwu.superuser.Shell
-import net.imknown.android.forefrontinfo.BuildConfig
+import net.imknown.android.forefrontinfo.*
 import net.imknown.android.forefrontinfo.MainActivity.Companion.COLOR_STATE_LIST_CRITICAL
 import net.imknown.android.forefrontinfo.MainActivity.Companion.COLOR_STATE_LIST_NO_PROBLEM
 import net.imknown.android.forefrontinfo.MainActivity.Companion.COLOR_STATE_LIST_WARNING
-import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.BaseListFragment
 
 /**
@@ -57,11 +60,45 @@ class HomeFragment : BaseListFragment() {
         private const val CMD_APEX_TZDATA = "grep '/apex/com.android.tzdata' /proc/mounts"
     }
 
+    private fun copyJson() {
+        JsonIo.copyJsonFromAssetsToContextFilesDir(
+            context?.assets!!,
+            GatewayApi.savedFile,
+            GatewayApi.LLD_JSON_NAME
+        )
+    }
+
     override fun collectionDataset() {
+        GatewayApi.downloadLldJsonFile { _, response, (byteArray, error) ->
+            val isOnline = response.isSuccessful && byteArray != null && error == null
+            if (!isOnline && !GatewayApi.savedFile.exists()) {
+                copyJson()
+            }
+
+            try {
+                val lld = GatewayApi.savedFile.getLld()
+                lld?.let { fillDataset(it) }
+            } catch (e: Exception) {
+                e.printStackTrace()
+
+                copyJson()
+            }
+
+            Handler(Looper.getMainLooper()).post {
+                (activity as AppCompatActivity?)?.let {
+                    showResult()
+                }
+            }
+        }
+    }
+
+    private fun fillDataset(lld: Lld) {
+        clear()
+
         // region [Android]
         val androidColor = when {
-            isLatestStableAndroid() -> COLOR_STATE_LIST_NO_PROBLEM
-            isSupportedByUpstream() -> COLOR_STATE_LIST_WARNING
+            isLatestStableAndroid(lld) -> COLOR_STATE_LIST_NO_PROBLEM
+            isSupportedByUpstream(lld) -> COLOR_STATE_LIST_WARNING
             else -> COLOR_STATE_LIST_CRITICAL
         }
 

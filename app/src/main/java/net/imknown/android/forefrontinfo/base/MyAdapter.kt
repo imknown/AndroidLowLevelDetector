@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_list_item.view.*
 import net.imknown.android.forefrontinfo.R
 
-internal class MyAdapter(private val myDataset: List<MyModel>) :
+internal class MyAdapter(internal val myDataset: MutableList<MyModel>) :
     RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(

@@ -1,0 +1,71 @@
+{
+  "version": "2019-11-05 16:48",
+  "versionLocale": "GMT+08:00",
+  "desc": "",
+  "url": "",
+  "android": {
+    "securityPatchLevel": "2019-11-05",
+    "stable": {
+      "active": true,
+      "version": "10",
+      "codename": "Android10(Q)",
+      "api": "29",
+      "desc": "",
+      "url": "https://www.android.com/"
+    },
+    "support": {
+      "active": true,
+      "version": "8.0.0",
+      "codename": "Oreo",
+      "api": "26",
+      "desc": "",
+      "url": "https://source.android.google.cn/security/bulletin"
+    },
+    "alpha": {
+      "active": true,
+      "version": "11",
+      "codename": "R",
+      "api": "29",
+      "desc": "",
+      "url": "https://ci.android.com"
+    },
+    "beta": {
+      "active": false,
+      "version": "",
+      "codename": "",
+      "api": "",
+      "desc": "",
+      "url": "https://developer.android.com/preview/overview"
+    }
+  },
+  "linux": {
+    "stable": {
+      "version": "4",
+      "patchLevel": "19",
+      "subLevel": "81",
+      "extraVersion": "",
+      "desc": "",
+      "url": "https://android.googlesource.com/kernel/common/+/refs/heads/android-4.19-q/Makefile"
+    },
+    "upstreamMaster": {
+      "version": "5",
+      "patchLevel": "4",
+      "subLevel": "0",
+      "extraVersion": "-rc6",
+      "desc": "",
+      "url": "https://android.googlesource.com/kernel/common/+/refs/heads/upstream-master/Makefile"
+    }
+  },
+  "toybox": {
+    "stable": {
+      "version": "0.8.0",
+      "desc": "",
+      "url": ""
+    },
+    "master": {
+      "version": "0.8.2",
+      "desc": "",
+      "url": ""
+    }
+  }
+}

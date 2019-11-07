@@ -14,6 +14,8 @@ class OthersFragment : BaseListFragment() {
     }
 
     override fun collectionDataset() {
+        clear()
+
         //
         add(getResultString(R.string.build_brand, Build.BRAND))
         add(getResultString(R.string.build_manufacturer, Build.MANUFACTURER))
@@ -59,6 +61,8 @@ class OthersFragment : BaseListFragment() {
         //
         add(getResultString(R.string.build_bootloader, Build.BOOTLOADER))
         add(getResultString(R.string.build_radio, Build.getRadioVersion()))
+
+        showResult()
     }
 
     private fun getResultString(@StringRes stringId: Int, vararg value: Any?): String {

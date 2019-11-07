@@ -10,8 +10,6 @@ import kotlinx.android.synthetic.main.fragment_list.*
 import net.imknown.android.forefrontinfo.R
 
 abstract class BaseListFragment : BaseFragment() {
-    private var myDataset = ArrayList<MyModel>()
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -23,14 +21,21 @@ abstract class BaseListFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        collectionDataset()
+        initViews()
 
-        showResult()
+        collectionDataset()
     }
 
-    protected abstract fun collectionDataset()
+    private fun initViews() {
+        swipeRefresh.setColorSchemeResources(R.color.colorAccent)
+        swipeRefresh.setProgressBackgroundColorSchemeResource(R.color.colorStateless)
 
-    private fun showResult() {
+        swipeRefresh.isRefreshing = true
+
+        swipeRefresh.setOnRefreshListener {
+            collectionDataset()
+        }
+
         list.apply {
             setHasFixedSize(true)
 
@@ -38,16 +43,28 @@ abstract class BaseListFragment : BaseFragment() {
 
             addItemDecoration(MyItemDecoration(resources.getDimensionPixelSize(R.dimen.item_divider_space)))
 
-            adapter = MyAdapter(myDataset)
+            adapter = MyAdapter(ArrayList())
         }
     }
 
+    protected abstract fun collectionDataset()
+
+    protected fun clear() = getDataset().clear()
+
+    private fun getDataset() = (list.adapter as MyAdapter).myDataset
+
     protected fun add(result: String) =
-        myDataset.add(MyModel(result))
+        getDataset().add(MyModel(result))
 
     protected fun add(result: String, condition: Boolean) =
-        myDataset.add(MyModel(result, condition))
+        getDataset().add(MyModel(result, condition))
 
     protected fun add(result: String, @ColorInt color: Int) =
-        myDataset.add(MyModel(result, color))
+        getDataset().add(MyModel(result, color))
+
+    protected fun showResult() {
+        list.adapter!!.notifyDataSetChanged()
+
+        swipeRefresh.isRefreshing = false
+    }
 }

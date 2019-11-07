@@ -90,4 +90,12 @@ dependencies {
 
     // debugImplementation "com.squareup.leakcanary:leakcanary-android:$thirdParties.leakCanary"
     debugImplementation "com.squareup.leakcanary:leakcanary-android-process:$thirdParties.leakCanary"
+
+    implementation "com.google.code.gson:gson:$thirdParties.gson"
+
+    implementation "com.github.kittinunf.fuel:fuel:$thirdParties.fuel"
+    // implementation "com.github.kittinunf.fuel:fuel-gson:$thirdParties.fuel"
+    // implementation "com.github.kittinunf.fuel:fuel-android:$thirdParties.fuel"
+    // implementation "com.github.kittinunf.fuel:fuel-coroutines:$thirdParties.fuel"
+    // implementation "com.github.kittinunf.fuel:fuel-livedata:$thirdParties.fuel"
 }
