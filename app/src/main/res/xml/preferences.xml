@@ -2,6 +2,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <PreferenceCategory android:title="@string/network_title">
+        <SwitchPreferenceCompat
+            app:icon="@drawable/ic_network_wifi_black_24dp"
+            app:key="@string/network_allow_network_data_key"
+            app:summary="@string/network_allow_network_data_summary"
+            app:title="@string/network_allow_network_data_title" />
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/about_title">
         <Preference
             app:icon="@drawable/ic_code_black_24dp"

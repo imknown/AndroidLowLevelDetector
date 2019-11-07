@@ -6,6 +6,7 @@ import android.os.Looper
 import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.PreferenceManager
 import com.github.kittinunf.fuel.core.isSuccessful
 import com.topjohnwu.superuser.Shell
 import net.imknown.android.forefrontinfo.*
@@ -76,9 +77,18 @@ class HomeFragment : BaseListFragment() {
     }
 
     override fun collectionDataset() {
-        GatewayApi.downloadLldJsonFile { _, response, (byteArray, error) ->
-            val isOnline = response.isSuccessful && byteArray != null && error == null
-            prepareResult(isOnline)
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+        val allowNetwork = sharedPreferences.getBoolean(
+            getString(R.string.network_allow_network_data_key), false
+        )
+
+        if (allowNetwork) {
+            GatewayApi.downloadLldJsonFile { _, response, (byteArray, error) ->
+                val isOnline = response.isSuccessful && byteArray != null && error == null
+                prepareResult(isOnline)
+            }
+        } else {
+            prepareResult(false)
         }
     }
 
