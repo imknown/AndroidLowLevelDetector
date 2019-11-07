@@ -5,6 +5,11 @@
     <string name="translation_author_more_info1">https://imknown.net</string>
     <string name="translation_author_more_info2">https://github.com/imknown</string>
 
+    <!-- Data -->
+    <string name="lld_json_checking">CHECKING DATA 📲</string>
+    <string name="lld_json_offline">OFFLINE DATA 📴 (%s)</string>
+    <string name="lld_json_online">ONLINE DATA 📱 (%s)</string>
+
     <!-- Tab -->
     <string name="title_home">Home</string>
     <string name="title_others">Others</string>

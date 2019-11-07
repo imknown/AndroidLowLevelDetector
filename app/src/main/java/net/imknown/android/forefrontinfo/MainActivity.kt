@@ -73,6 +73,9 @@ class MainActivity : AppCompatActivity() {
 
         initColors()
 
+        val actionBar = supportActionBar!!
+        actionBar.subtitle = getString(R.string.lld_json_checking)
+
         nav_view.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
 
         if (savedInstanceState == null) {

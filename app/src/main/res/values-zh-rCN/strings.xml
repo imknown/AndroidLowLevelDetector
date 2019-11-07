@@ -5,6 +5,11 @@
     <string name="translation_author_more_info1">https://imknown.net</string>
     <string name="translation_author_more_info2">https://github.com/imknown</string>
 
+    <!-- 数据 -->
+    <string name="lld_json_checking">检查数据中 📲</string>
+    <string name="lld_json_offline">离线数据 📴 (%s)</string>
+    <string name="lld_json_online">在线数据 📱 (%s)</string>
+
     <!-- 选项卡 -->
     <string name="title_home">首页</string>
     <string name="title_others">其他</string>

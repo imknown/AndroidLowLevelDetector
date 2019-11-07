@@ -4,6 +4,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import androidx.annotation.ColorInt
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import com.github.kittinunf.fuel.core.isSuccessful
 import com.topjohnwu.superuser.Shell
@@ -75,17 +76,36 @@ class HomeFragment : BaseListFragment() {
                 copyJson()
             }
 
+            @StringRes var lldDataModeResId: Int
+            var dataVersion: String
+
             try {
                 val lld = GatewayApi.savedFile.getLld()
-                lld?.let { fillDataset(it) }
+                dataVersion = if (lld != null) {
+                    fillDataset(lld)
+
+                    lld.version
+                } else {
+                    getString(android.R.string.unknownName)
+                }
+
+                lldDataModeResId = if (isOnline) {
+                    R.string.lld_json_online
+                } else {
+                    R.string.lld_json_offline
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
 
-                copyJson()
+                lldDataModeResId = R.string.lld_json_offline
+                dataVersion = getString(android.R.string.unknownName)
             }
 
             Handler(Looper.getMainLooper()).post {
                 (activity as AppCompatActivity?)?.let {
+                    val actionBar = it.supportActionBar!!
+                    actionBar.subtitle = getString(lldDataModeResId, dataVersion)
+
                     showResult()
                 }
             }
