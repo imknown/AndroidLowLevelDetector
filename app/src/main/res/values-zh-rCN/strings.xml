@@ -64,7 +64,7 @@
     <!-- 设置 -->
     <string name="network_title">网络</string>
     <string name="network_allow_network_data_title">(推荐) 允许网络数据</string>
-    <string name="network_allow_network_data_summary">若启用, 将优先从远端网络服务器获取数据, 下载下来的数据文件将被缓存在本地存储. <font color='red'>每次请求大概 2KB, 不会收集任何私人信息.</font></string>
+    <string name="network_allow_network_data_summary">若启用, 将优先从远端网络服务器获取数据, 下载下来的数据文件将被缓存在本地存储. 每次请求大概 2KB, 不会收集任何私人信息.</string>
     <string name="about_title">关于</string>
     <string name="about_source_title">源码</string>
     <string name="about_source_summary">本程序源码的 Github 地址</string>
