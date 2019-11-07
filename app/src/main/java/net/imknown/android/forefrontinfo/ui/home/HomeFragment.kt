@@ -69,45 +69,59 @@ class HomeFragment : BaseListFragment() {
         )
     }
 
+    private fun copyJsonIfNotExists() {
+        if (!GatewayApi.savedFile.exists()) {
+            copyJson()
+        }
+    }
+
     override fun collectionDataset() {
         GatewayApi.downloadLldJsonFile { _, response, (byteArray, error) ->
             val isOnline = response.isSuccessful && byteArray != null && error == null
-            if (!isOnline && !GatewayApi.savedFile.exists()) {
-                copyJson()
+            prepareResult(isOnline)
+        }
+    }
+
+    private fun prepareResult(isOnline: Boolean) {
+        if (!isOnline) {
+            copyJsonIfNotExists()
+        }
+
+        initSubtitle(isOnline)
+    }
+
+    private fun initSubtitle(isOnline: Boolean) {
+        @StringRes var lldDataModeResId: Int
+        var dataVersion: String
+
+        try {
+            val lld = GatewayApi.savedFile.getLld()
+            dataVersion = if (lld != null) {
+                fillDataset(lld)
+
+                lld.version
+            } else {
+                getString(android.R.string.unknownName)
             }
 
-            @StringRes var lldDataModeResId: Int
-            var dataVersion: String
-
-            try {
-                val lld = GatewayApi.savedFile.getLld()
-                dataVersion = if (lld != null) {
-                    fillDataset(lld)
-
-                    lld.version
-                } else {
-                    getString(android.R.string.unknownName)
-                }
-
-                lldDataModeResId = if (isOnline) {
-                    R.string.lld_json_online
-                } else {
-                    R.string.lld_json_offline
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-
-                lldDataModeResId = R.string.lld_json_offline
-                dataVersion = getString(android.R.string.unknownName)
+            lldDataModeResId = if (isOnline) {
+                R.string.lld_json_online
+            } else {
+                R.string.lld_json_offline
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
 
-            Handler(Looper.getMainLooper()).post {
-                (activity as AppCompatActivity?)?.let {
-                    val actionBar = it.supportActionBar!!
-                    actionBar.subtitle = getString(lldDataModeResId, dataVersion)
+            lldDataModeResId = R.string.lld_json_offline
+            dataVersion = getString(android.R.string.unknownName)
+        }
 
-                    showResult()
-                }
+        Handler(Looper.getMainLooper()).post {
+            (activity as AppCompatActivity?)?.let {
+                val actionBar = it.supportActionBar!!
+                actionBar.subtitle = getString(lldDataModeResId, dataVersion)
+
+                showResult()
             }
         }
     }
