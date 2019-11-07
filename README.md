@@ -8,6 +8,7 @@ An open-source small utility to detect some Android low-level features.
 - detect Vendor NDK and whether up-to-date
 - detect System-as-root
 - detect APEX
+- online/offline mode
 
 ## Features todo
 - detect toybox
@@ -25,7 +26,6 @@ An open-source small utility to detect some Android low-level features.
   - custom commands
   - GAME???
 - data update from server (json)
-  - online/offline mode
   - network cache logic
   - custom url
 - documents
@@ -34,4 +34,5 @@ An open-source small utility to detect some Android low-level features.
 - copy result
 - run custom commands
 - licenses and acknowledge
+- store download/vote page
 - etc.
