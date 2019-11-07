@@ -16,6 +16,8 @@ class JsonIo {
             assetName: String
         ) {
             assets.open(assetName).use { inStream ->
+                savedFile.parentFile?.mkdirs()
+
                 savedFile.outputStream().use { outStream ->
                     outStream.let {
                         inStream.copyTo(it)
