@@ -2,7 +2,7 @@ package net.imknown.android.forefrontinfo
 
 import android.content.res.AssetManager
 import com.google.gson.Gson
-import net.imknown.android.forefrontinfo.ui.home.Lld
+import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import java.io.File
 
 class JsonIo {

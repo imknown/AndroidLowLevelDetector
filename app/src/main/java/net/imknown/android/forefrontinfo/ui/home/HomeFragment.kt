@@ -14,6 +14,7 @@ import net.imknown.android.forefrontinfo.MainActivity.Companion.COLOR_STATE_LIST
 import net.imknown.android.forefrontinfo.MainActivity.Companion.COLOR_STATE_LIST_NO_PROBLEM
 import net.imknown.android.forefrontinfo.MainActivity.Companion.COLOR_STATE_LIST_WARNING
 import net.imknown.android.forefrontinfo.base.BaseListFragment
+import net.imknown.android.forefrontinfo.ui.home.model.Lld
 
 /**
  * Thanks to:

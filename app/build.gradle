@@ -45,7 +45,8 @@ android {
 
             signingConfig signingConfigs.release
 
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
+                    'proguard-rules.pro', 'proguard-gson-rules.pro'
         }
 
         debug {

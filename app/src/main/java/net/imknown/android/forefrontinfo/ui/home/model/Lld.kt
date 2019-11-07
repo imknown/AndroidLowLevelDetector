@@ -1,4 +1,4 @@
-package net.imknown.android.forefrontinfo.ui.home
+package net.imknown.android.forefrontinfo.ui.home.model
 
 data class Lld(
     val versionLocale: String,

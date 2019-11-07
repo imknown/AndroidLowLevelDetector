@@ -1,4 +1,4 @@
-package net.imknown.android.forefrontinfo.ui.home
+package net.imknown.android.forefrontinfo.ui.home.model
 
 open class BaseInfo {
     lateinit var version: String

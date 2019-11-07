@@ -3,7 +3,7 @@ package net.imknown.android.forefrontinfo.base
 import android.annotation.SuppressLint
 import android.os.Build
 import androidx.fragment.app.Fragment
-import net.imknown.android.forefrontinfo.ui.home.Lld
+import net.imknown.android.forefrontinfo.ui.home.model.Lld
 
 /**
  * https://en.wikipedia.org/wiki/Android_version_history
