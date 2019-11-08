@@ -7,8 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.*
 import net.imknown.android.forefrontinfo.MainActivity.Companion.COLOR_STATE_LIST_CRITICAL
@@ -78,18 +76,16 @@ class HomeFragment : BaseListFragment() {
         }
     }
 
-    override fun collectionDataset() {
-        GlobalScope.launch(Dispatchers.IO) {
-            val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
-            val allowNetwork = sharedPreferences.getBoolean(
-                getString(R.string.network_allow_network_data_key), false
-            )
+    override suspend fun collectionDataset() {
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+        val allowNetwork = sharedPreferences.getBoolean(
+            getString(R.string.network_allow_network_data_key), false
+        )
 
-            if (allowNetwork) {
-                prepareResult(GatewayApi.downloadLldJsonFile())
-            } else {
-                prepareResult(false)
-            }
+        if (allowNetwork) {
+            prepareResult(GatewayApi.downloadLldJsonFile())
+        } else {
+            prepareResult(false)
         }
     }
 
@@ -127,13 +123,13 @@ class HomeFragment : BaseListFragment() {
             dataVersion = getString(android.R.string.unknownName)
         }
 
-        withContext(Dispatchers.Main) {
-            (activity as AppCompatActivity?)?.let {
+        (activity as AppCompatActivity?)?.let {
+            withContext(Dispatchers.Main) {
                 val actionBar = it.supportActionBar!!
                 actionBar.subtitle = getString(lldDataModeResId, dataVersion)
-
-                showResult()
             }
+
+            showResult()
         }
     }
 

@@ -2,10 +2,6 @@ package net.imknown.android.forefrontinfo.ui.others
 
 import android.os.Build
 import androidx.annotation.StringRes
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.BaseListFragment
 import java.text.SimpleDateFormat
@@ -17,14 +13,10 @@ class OthersFragment : BaseListFragment() {
         fun newInstance() = OthersFragment()
     }
 
-    override fun collectionDataset() {
-        GlobalScope.launch(Dispatchers.IO) {
-            fillDataset()
+    override suspend fun collectionDataset() {
+        fillDataset()
 
-            withContext(Dispatchers.Main) {
-                showResult()
-            }
-        }
+        showResult()
     }
 
     private fun fillDataset() {

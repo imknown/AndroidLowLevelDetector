@@ -7,6 +7,10 @@ import android.view.ViewGroup
 import androidx.annotation.ColorInt
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_list.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.R
 
 abstract class BaseListFragment : BaseFragment() {
@@ -23,7 +27,7 @@ abstract class BaseListFragment : BaseFragment() {
 
         initViews()
 
-        collectionDataset()
+        collectionDatasetCaller()
     }
 
     private fun initViews() {
@@ -33,7 +37,7 @@ abstract class BaseListFragment : BaseFragment() {
         swipeRefresh.isRefreshing = true
 
         swipeRefresh.setOnRefreshListener {
-            collectionDataset()
+            collectionDatasetCaller()
         }
 
         list.apply {
@@ -47,7 +51,13 @@ abstract class BaseListFragment : BaseFragment() {
         }
     }
 
-    protected abstract fun collectionDataset()
+    private fun collectionDatasetCaller() {
+        GlobalScope.launch(Dispatchers.IO) {
+            collectionDataset()
+        }
+    }
+
+    protected abstract suspend fun collectionDataset()
 
     protected fun clear() = getDataset().clear()
 
@@ -62,7 +72,7 @@ abstract class BaseListFragment : BaseFragment() {
     protected fun add(result: String, @ColorInt color: Int) =
         getDataset().add(MyModel(result, color))
 
-    protected fun showResult() {
+    protected suspend fun showResult() = withContext(Dispatchers.Main) {
         list.adapter!!.notifyDataSetChanged()
 
         swipeRefresh.isRefreshing = false
