@@ -213,7 +213,7 @@ class HomeFragment : BaseListFragment() {
                 getString(android.R.string.unknownName)
             }
 
-            vndkColor = if (vndkVersion == Build.VERSION_CODES.Q.toString()) {
+            vndkColor = if (vndkVersion == lld.android.stable.api) {
                 COLOR_STATE_LIST_NO_PROBLEM
             } else {
                 COLOR_STATE_LIST_WARNING
