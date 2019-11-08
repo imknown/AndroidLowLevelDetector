@@ -54,8 +54,8 @@ class HomeFragment : BaseListFragment() {
         // https://github.com/topjohnwu/Magisk/blob/master/scripts/util_functions.sh#L193
         // https://github.com/opengapps/opengapps/blob/master/scripts/inc.installer.sh#L710
         private const val CMD_SYSTEM_ROOT_IMAGE = "getprop ro.build.system_root_image"
-        private const val CMD_DEV_ROOT = "grep '/dev/root / ' /proc/mounts"
-        private const val CMD_SYSTEM =
+        private const val CMD_MOUNT_DEV_ROOT = "grep '/dev/root / ' /proc/mounts"
+        private const val CMD_MOUNT_SYSTEM =
             "grep ' /system ' /proc/mounts | grep -v 'tmpfs' | grep -v 'none'"
 
         // https://source.android.com/devices/tech/ota/apex?hl=en
@@ -231,10 +231,10 @@ class HomeFragment : BaseListFragment() {
         val systemRootImageResult = sh(isAtLeastAndroid9(), CMD_SYSTEM_ROOT_IMAGE)
         val hasSystemRootImage = isResultTrue(systemRootImageResult)
 
-        val devRootResult = sh(isAtLeastAndroid9(), CMD_DEV_ROOT)
+        val devRootResult = sh(isAtLeastAndroid9(), CMD_MOUNT_DEV_ROOT)
         val hasDevRoot = hasResult(devRootResult)
 
-        val systemResult = sh(isAtLeastAndroid9() && !hasSystemRootImage, CMD_SYSTEM)
+        val systemResult = sh(isAtLeastAndroid9() && !hasSystemRootImage, CMD_MOUNT_SYSTEM)
         val isSystem = hasResult(systemResult)
 
         val isSar = isAtLeastAndroid9() && (hasSystemRootImage || hasDevRoot || !isSystem)
