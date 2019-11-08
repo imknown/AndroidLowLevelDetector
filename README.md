@@ -9,6 +9,8 @@ An open-source small utility to detect some Android low-level features.
 - detect System-as-root
 - detect (flattened) APEX
 - online/offline mode
+- MultiWindow/FreeForm/Landscape mode
+- Activity recreating protecting
 
 ## Features todo
 - detect toybox
