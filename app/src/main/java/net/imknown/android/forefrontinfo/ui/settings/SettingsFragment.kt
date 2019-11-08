@@ -8,7 +8,6 @@ import androidx.preference.PreferenceFragmentCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.R
 
@@ -32,7 +31,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
-    private suspend fun initViews() = withContext(Dispatchers.Main) {
+    private fun initViews() {
         val versionPref = findPreference<Preference>("version")
         versionPref?.let {
             it.summary =
