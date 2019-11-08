@@ -7,10 +7,7 @@ import android.view.ViewGroup
 import androidx.annotation.ColorInt
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_list.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import net.imknown.android.forefrontinfo.R
 
 abstract class BaseListFragment : BaseFragment() {
@@ -74,6 +71,8 @@ abstract class BaseListFragment : BaseFragment() {
 
     protected suspend fun showResult() = withContext(Dispatchers.Main) {
         list.adapter!!.notifyDataSetChanged()
+
+        delay(550)
 
         swipeRefresh.isRefreshing = false
     }
