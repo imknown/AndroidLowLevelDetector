@@ -11,6 +11,10 @@ import kotlinx.coroutines.*
 import net.imknown.android.forefrontinfo.R
 
 abstract class BaseListFragment : BaseFragment() {
+
+    private lateinit var myTempDataset: ArrayList<MyModel>
+    private val myAdapter = MyAdapter()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -44,7 +48,7 @@ abstract class BaseListFragment : BaseFragment() {
 
             addItemDecoration(MyItemDecoration(resources.getDimensionPixelSize(R.dimen.item_divider_space)))
 
-            adapter = MyAdapter(ArrayList())
+            adapter = myAdapter
         }
     }
 
@@ -56,21 +60,23 @@ abstract class BaseListFragment : BaseFragment() {
 
     protected abstract suspend fun collectionDataset()
 
-    protected fun clear() = getDataset().clear()
-
-    private fun getDataset() = (list.adapter as MyAdapter).myDataset
+    protected fun createNewTempDataset() {
+        myTempDataset = ArrayList()
+    }
 
     protected fun add(result: String) =
-        getDataset().add(MyModel(result))
+        myTempDataset.add(MyModel(result))
 
     protected fun add(result: String, condition: Boolean) =
-        getDataset().add(MyModel(result, condition))
+        myTempDataset.add(MyModel(result, condition))
 
     protected fun add(result: String, @ColorInt color: Int) =
-        getDataset().add(MyModel(result, color))
+        myTempDataset.add(MyModel(result, color))
 
     protected suspend fun showResult() = withContext(Dispatchers.Main) {
-        list.adapter!!.notifyDataSetChanged()
+        myAdapter.addAll(myTempDataset)
+
+        myAdapter.notifyDataSetChanged()
 
         delay(550)
 

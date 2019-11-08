@@ -7,8 +7,9 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_list_item.view.*
 import net.imknown.android.forefrontinfo.R
 
-internal class MyAdapter(internal val myDataset: MutableList<MyModel>) :
-    RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
+internal class MyAdapter : RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
+    private val myDataset = ArrayList<MyModel>()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(
             R.layout.fragment_list_item,
@@ -24,6 +25,11 @@ internal class MyAdapter(internal val myDataset: MutableList<MyModel>) :
     }
 
     override fun getItemCount() = myDataset.size
+
+    internal fun addAll(newDataset: ArrayList<MyModel>) {
+        myDataset.clear()
+        myDataset.addAll(newDataset)
+    }
 
     internal class MyViewHolder(view: View) : RecyclerView.ViewHolder(view)
 }

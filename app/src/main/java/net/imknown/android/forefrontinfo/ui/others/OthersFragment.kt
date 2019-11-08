@@ -22,7 +22,7 @@ class OthersFragment : BaseListFragment() {
     }
 
     private fun fillDataset() {
-        clear()
+        createNewTempDataset()
 
         //
         add(getResultString(R.string.build_brand, Build.BRAND))

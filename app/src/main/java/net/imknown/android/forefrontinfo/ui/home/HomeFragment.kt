@@ -134,7 +134,7 @@ class HomeFragment : BaseListFragment() {
     }
 
     private fun fillDataset(lld: Lld) {
-        clear()
+        createNewTempDataset()
 
         // region [Android]
         val androidColor = when {
