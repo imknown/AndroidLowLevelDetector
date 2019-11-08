@@ -17,6 +17,8 @@ class OthersFragment : BaseListFragment() {
         fillDataset()
 
         showResult()
+
+        disableSwipeRefresh()
     }
 
     private fun fillDataset() {

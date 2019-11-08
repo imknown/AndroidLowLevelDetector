@@ -77,4 +77,8 @@ abstract class BaseListFragment : BaseFragment() {
 
         swipeRefresh.isRefreshing = false
     }
+
+    protected suspend fun disableSwipeRefresh() = withContext(Dispatchers.Main) {
+        swipeRefresh.isEnabled = false
+    }
 }
