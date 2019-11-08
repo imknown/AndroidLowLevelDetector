@@ -27,6 +27,7 @@
     <string name="built_in_vndk_version_result">\u0020(Level: %s)</string>
     <string name="sar_enabled_result">Is System-as-root enabled?\n%s</string>
     <string name="apex_enabled_result">Is APEX enabled?\n%s</string>
+    <string name="apex_legacy_flattened">\u0020(Legacy flattened)</string>
 
     <!-- Others -->
     <string name="build_brand">Brand\n%s</string>

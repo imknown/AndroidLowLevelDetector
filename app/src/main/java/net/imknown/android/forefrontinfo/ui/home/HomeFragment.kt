@@ -59,8 +59,8 @@ class HomeFragment : BaseListFragment() {
             "grep ' /system ' /proc/mounts | grep -v 'tmpfs' | grep -v 'none'"
 
         // https://source.android.com/devices/tech/ota/apex?hl=en
-        private const val CMD_APEX_MOUNT = "grep 'tmpfs /apex tmpfs' /proc/mounts"
-        private const val CMD_APEX_TZDATA = "grep '/apex/com.android.tzdata' /proc/mounts"
+        private const val CMD_APEX_UPDATABLE = "getprop ro.apex.updatable"
+        private const val CMD_FLATTENED_APEX_MOUNT = "grep 'tmpfs /apex tmpfs' /proc/mounts"
     }
 
     private fun copyJson() {
@@ -242,13 +242,28 @@ class HomeFragment : BaseListFragment() {
         // endregion [SAR]
 
         // region [APEX]
-        val apexMountedResult = filterVersion(isAtLeastAndroid10(), CMD_APEX_MOUNT)
-        val isApexMounted = hasResult(apexMountedResult)
+        val apexUpdatableResult = filterVersion(isAtLeastAndroid10(), CMD_APEX_UPDATABLE)
+        val apexUpdatable = isResultTrue(apexUpdatableResult)
 
-        val apexUsedResult = filterVersion(isAtLeastAndroid10(), CMD_APEX_TZDATA)
-        val isApexUsed = hasResult(apexUsedResult)
-        val isApex = isApexMounted && isApexUsed
-        add(getString(R.string.apex_enabled_result, translate(isApex)), isApex)
+        val flattenedApexMountedResult =
+            filterVersion(isAtLeastAndroid10(), CMD_FLATTENED_APEX_MOUNT)
+        val isFlattenedApexMounted = hasResult(flattenedApexMountedResult)
+
+        val isApex = apexUpdatable || isFlattenedApexMounted
+        val isLegacyFlattenedApex = !apexUpdatable && isFlattenedApexMounted
+
+        var apexEnabledResult = translate(isApex)
+        if (isLegacyFlattenedApex) {
+            apexEnabledResult += getString(R.string.apex_legacy_flattened)
+        }
+
+        val apexColor = when {
+            apexUpdatable -> COLOR_STATE_LIST_NO_PROBLEM
+            isLegacyFlattenedApex -> COLOR_STATE_LIST_WARNING
+            else -> COLOR_STATE_LIST_CRITICAL
+        }
+
+        add(getString(R.string.apex_enabled_result, apexEnabledResult), apexColor)
         // endregion [APEX]
     }
 

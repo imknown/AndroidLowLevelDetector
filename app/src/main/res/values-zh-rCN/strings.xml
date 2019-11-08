@@ -27,6 +27,7 @@
     <string name="built_in_vndk_version_result">\u0020(等级: %s)</string>
     <string name="sar_enabled_result">启用了 System-as-root?\n%s</string>
     <string name="apex_enabled_result">启用了 APEX?\n%s</string>
+    <string name="apex_legacy_flattened">\u0020(旧式扁平的)</string>
 
     <!-- 其他 -->
     <string name="build_brand">品牌\n%s</string>
