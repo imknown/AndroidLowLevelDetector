@@ -75,8 +75,8 @@ abstract class BaseListFragment : BaseFragment() {
 
     protected suspend fun showResult() = withContext(Dispatchers.Main) {
         myAdapter.addAll(myTempDataset)
-
         myAdapter.notifyDataSetChanged()
+        myTempDataset.clear()
 
         delay(550)
 
