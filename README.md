@@ -7,7 +7,7 @@ An open-source small utility to detect some Android low-level features.
 - detect Project Treble
 - detect Vendor NDK and whether up-to-date
 - detect System-as-root
-- detect APEX
+- detect (flattened) APEX
 - online/offline mode
 
 ## Features todo
@@ -19,6 +19,7 @@ An open-source small utility to detect some Android low-level features.
 - up-to-date detect
   - latest alpha/beta Android version
 - settings
+  - In-App check up and upgrade
   - speed mode (no animations, no CardViews, etc.)
   - detect `getprop` from file, not from SDK API (option)
   - root mode
