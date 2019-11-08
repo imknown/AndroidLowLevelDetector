@@ -1,6 +1,7 @@
 package net.imknown.android.forefrontinfo
 
-import com.github.kittinunf.fuel.core.ResponseResultHandler
+import com.github.kittinunf.fuel.core.isSuccessful
+import com.github.kittinunf.fuel.coroutines.awaitByteArrayResponseResult
 import com.github.kittinunf.fuel.httpDownload
 import java.io.File
 import java.util.*
@@ -17,7 +18,7 @@ class GatewayApi {
 
         lateinit var savedFile: File
 
-        fun downloadLldJsonFile(handler: ResponseResultHandler<ByteArray>) {
+        internal suspend fun downloadLldJsonFile(): Boolean {
             val lD = Locale.getDefault()
             val lSC = Locale.SIMPLIFIED_CHINESE
             val url = if (lD.language == lSC.language && lD.country == lSC.country) {
@@ -26,10 +27,12 @@ class GatewayApi {
                 URL_LLD_JSON
             }
 
-            // /* Gson */ url.httpGet().responseObject<Lld>(handler)
-            url.httpDownload()
+            val (_, response, result) = url.httpDownload()
                 .fileDestination { _, _ -> savedFile }
-                .response(handler)
+                .awaitByteArrayResponseResult()
+            val (byteArray, error) = result
+
+            return response.isSuccessful && byteArray != null && error == null
         }
     }
 }

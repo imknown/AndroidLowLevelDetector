@@ -1,14 +1,15 @@
 package net.imknown.android.forefrontinfo.ui.home
 
 import android.os.Build
-import android.os.Handler
-import android.os.Looper
 import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
-import com.github.kittinunf.fuel.core.isSuccessful
 import com.topjohnwu.superuser.Shell
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.*
 import net.imknown.android.forefrontinfo.MainActivity.Companion.COLOR_STATE_LIST_CRITICAL
 import net.imknown.android.forefrontinfo.MainActivity.Companion.COLOR_STATE_LIST_NO_PROBLEM
@@ -78,22 +79,21 @@ class HomeFragment : BaseListFragment() {
     }
 
     override fun collectionDataset() {
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
-        val allowNetwork = sharedPreferences.getBoolean(
-            getString(R.string.network_allow_network_data_key), false
-        )
+        GlobalScope.launch(Dispatchers.IO) {
+            val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+            val allowNetwork = sharedPreferences.getBoolean(
+                getString(R.string.network_allow_network_data_key), false
+            )
 
-        if (allowNetwork) {
-            GatewayApi.downloadLldJsonFile { _, response, (byteArray, error) ->
-                val isOnline = response.isSuccessful && byteArray != null && error == null
-                prepareResult(isOnline)
+            if (allowNetwork) {
+                prepareResult(GatewayApi.downloadLldJsonFile())
+            } else {
+                prepareResult(false)
             }
-        } else {
-            prepareResult(false)
         }
     }
 
-    private fun prepareResult(isOnline: Boolean) {
+    private suspend fun prepareResult(isOnline: Boolean) {
         if (!isOnline) {
             copyJsonIfNotExists()
         }
@@ -101,7 +101,7 @@ class HomeFragment : BaseListFragment() {
         initSubtitle(isOnline)
     }
 
-    private fun initSubtitle(isOnline: Boolean) {
+    private suspend fun initSubtitle(isOnline: Boolean) {
         @StringRes var lldDataModeResId: Int
         var dataVersion: String
 
@@ -127,7 +127,7 @@ class HomeFragment : BaseListFragment() {
             dataVersion = getString(android.R.string.unknownName)
         }
 
-        Handler(Looper.getMainLooper()).post {
+        withContext(Dispatchers.Main) {
             (activity as AppCompatActivity?)?.let {
                 val actionBar = it.supportActionBar!!
                 actionBar.subtitle = getString(lldDataModeResId, dataVersion)
