@@ -21,6 +21,7 @@ data class Lld(
 
     data class Linuxes(
         val stable: Linux,
+        val support: Linux,
         val upstreamMaster: Linux
     ) {
         class Linux : BaseInfo()
