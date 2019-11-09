@@ -9,6 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import net.imknown.android.forefrontinfo.BuildConfig
+import net.imknown.android.forefrontinfo.JsonIo
 import net.imknown.android.forefrontinfo.R
 
 class SettingsFragment : PreferenceFragmentCompat() {
@@ -34,11 +35,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private fun initViews() {
         val versionPref = findPreference<Preference>("version")
         versionPref?.let {
+            val assetLldVersion = JsonIo.getAssetLldVersion(context?.assets!!)
+
             it.summary =
                 getString(
                     R.string.about_version_summary,
                     BuildConfig.VERSION_NAME,
-                    BuildConfig.VERSION_CODE
+                    BuildConfig.VERSION_CODE,
+                    assetLldVersion
                 )
         }
 

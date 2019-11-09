@@ -15,11 +15,7 @@ class JsonIo {
             if (GatewayApi.savedFile.exists()) {
                 val savedLldVersion = GatewayApi.savedFile
                     .getLld()?.version ?: ""
-                val assetLldVersion =
-                    assets.open(GatewayApi.LLD_JSON_NAME)
-                        .bufferedReader()
-                        .use(BufferedReader::readText)
-                        .getLld()?.version ?: ""
+                val assetLldVersion = getAssetLldVersion(assets)
 
                 if (savedLldVersion >= assetLldVersion) {
                     return false
@@ -47,6 +43,12 @@ class JsonIo {
                 }
             }
         }
+
+        fun getAssetLldVersion(assets: AssetManager) =
+            assets.open(GatewayApi.LLD_JSON_NAME)
+                .bufferedReader()
+                .use(BufferedReader::readText)
+                .getLld()?.version ?: ""
     }
 }
 

@@ -76,6 +76,6 @@
     <string name="about_licenses_title">协议</string>
     <string name="about_licenses_summary">引用的开源库</string>
     <string name="about_version_title">版本</string>
-    <string name="about_version_summary">版本号: %1$s (迭代次数: %2$d)</string>
+    <string name="about_version_summary">版本号: %1$s (迭代次数: %2$d)\n内建数据版本: %3$s</string>
     <string name="about_version_click">🐈==)  🐕===))</string>
 </resources>
