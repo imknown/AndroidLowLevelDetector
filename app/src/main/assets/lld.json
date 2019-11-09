@@ -58,12 +58,12 @@
     "stable": {
       "version": "0.8.0",
       "desc": "",
-      "url": ""
+      "url": "https://android.googlesource.com/platform/external/toybox/+refs"
     },
     "master": {
       "version": "0.8.2",
       "desc": "",
-      "url": ""
+      "url": "https://github.com/landley/toybox/releases"
     }
   }
 }
