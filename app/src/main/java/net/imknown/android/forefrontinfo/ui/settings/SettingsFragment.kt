@@ -33,7 +33,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     private fun initViews() {
-        val versionPref = findPreference<Preference>("version")
+        val versionPref = findPreference<Preference>(getString(R.string.about_version_key))
         versionPref?.let {
             val assetLldVersion = JsonIo.getAssetLldVersion(context?.assets!!)
 

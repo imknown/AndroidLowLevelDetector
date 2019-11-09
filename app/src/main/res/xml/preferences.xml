@@ -13,7 +13,6 @@
     <PreferenceCategory android:title="@string/about_title">
         <Preference
             app:icon="@drawable/ic_code_black_24dp"
-            app:key="sources"
             app:summary="@string/about_source_summary"
             app:title="@string/about_source_title">
 
@@ -24,7 +23,6 @@
 
         <Preference
             app:icon="@drawable/ic_copyright_black_24dp"
-            app:key="licenses"
             app:summary="@string/about_licenses_summary"
             app:title="@string/about_licenses_title">
 
@@ -35,7 +33,7 @@
 
         <Preference
             app:icon="@drawable/ic_adb_black_24dp"
-            app:key="version"
+            app:key="@string/about_version_key"
             app:title="@string/about_version_title"
             tools:summary="@string/about_version_summary" />
     </PreferenceCategory>
