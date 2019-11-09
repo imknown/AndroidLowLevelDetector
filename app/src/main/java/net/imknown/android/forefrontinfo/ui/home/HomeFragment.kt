@@ -107,6 +107,8 @@ class HomeFragment : BaseListFragment() {
             dataVersion = if (lld != null) {
                 fillDataset(lld)
 
+                showResult()
+
                 lld.version
             } else {
                 getString(android.R.string.unknownName)
@@ -129,8 +131,6 @@ class HomeFragment : BaseListFragment() {
                 val actionBar = (activity as AppCompatActivity).supportActionBar!!
                 actionBar.subtitle = getString(lldDataModeResId, dataVersion)
             }
-
-            showResult()
         }
     }
 
