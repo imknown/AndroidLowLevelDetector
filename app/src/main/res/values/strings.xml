@@ -28,6 +28,8 @@
     <string name="sar_enabled_result">Is System-as-root enabled?\n%s</string>
     <string name="apex_enabled_result">Is APEX enabled?\n%s</string>
     <string name="apex_legacy_flattened">\u0020(Legacy flattened)</string>
+    <string name="toybox_built_in_result">Is Toybox built in?\n%s</string>
+    <string name="built_in_toybox_version_result">\u0020(%s)</string>
 
     <!-- Others -->
     <string name="build_brand">Brand\n%s</string>

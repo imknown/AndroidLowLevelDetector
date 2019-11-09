@@ -28,6 +28,8 @@
     <string name="sar_enabled_result">启用了 System-as-root?\n%s</string>
     <string name="apex_enabled_result">启用了 APEX?\n%s</string>
     <string name="apex_legacy_flattened">\u0020(旧式扁平的)</string>
+    <string name="toybox_built_in_result">内建了 Toybox?\n%s</string>
+    <string name="built_in_toybox_version_result">\u0020(%s)</string>
 
     <!-- 其他 -->
     <string name="build_brand">品牌\n%s</string>

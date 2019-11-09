@@ -5,6 +5,7 @@ import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
+import com.g00fy2.versioncompare.Version
 import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -34,6 +35,8 @@ class HomeFragment : BaseListFragment() {
             Shell.Config.verboseLogging(BuildConfig.DEBUG)
             // Shell.Config.setTimeout(10)
         }
+
+        private const val CMD_TOYBOX_VERSION = "toybox --version"
 
         // https://source.android.com/devices/tech/ota/ab?hl=en
         // /* root needed*/ private const val CMD_BOOT_PARTITION = "ls /dev/block/bootdevice/by-name | grep boot_"
@@ -139,7 +142,7 @@ class HomeFragment : BaseListFragment() {
         createNewTempDataset()
 
         // region [Android]
-        val androidColor = when {
+        @ColorInt val androidColor = when {
             isLatestStableAndroid(lld) -> COLOR_STATE_LIST_NO_PROBLEM
             isSupportedByUpstream(lld) -> COLOR_STATE_LIST_WARNING
             else -> COLOR_STATE_LIST_CRITICAL
@@ -263,6 +266,33 @@ class HomeFragment : BaseListFragment() {
 
         add(getString(R.string.apex_enabled_result, apexEnabledResult), apexColor)
         // endregion [APEX]
+
+        // region [ToyBox]
+        val toyboxVersionResult = sh(isAtLeastAndroid6(), CMD_TOYBOX_VERSION)
+        val hasToyboxVersion = hasResult(toyboxVersionResult)
+        var hasToyboxResult = translate(hasToyboxVersion)
+
+        @ColorInt val toyboxColor = if (hasToyboxVersion) {
+            val toyboxVersion = toyboxVersionResult[0]
+            hasToyboxResult += getString(R.string.built_in_toybox_version_result, toyboxVersion)
+
+            val toyboxRealVersion = toyboxVersion
+                .replace("toybox ", "")
+                .split("-")
+            if (toyboxRealVersion.isNotEmpty()) {
+                if (Version(toyboxRealVersion[0]).isAtLeast(lld.toybox.stable.version)) {
+                    COLOR_STATE_LIST_NO_PROBLEM
+                } else {
+                    COLOR_STATE_LIST_WARNING
+                }
+            } else {
+                COLOR_STATE_LIST_CRITICAL
+            }
+        } else {
+            COLOR_STATE_LIST_CRITICAL
+        }
+        add(getString(R.string.toybox_built_in_result, hasToyboxResult), toyboxColor)
+        // endregion [ToyBox]
     }
 
     private fun sh(condition: Boolean, cmd: String) =
