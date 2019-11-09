@@ -38,9 +38,10 @@
     <string name="build_hardware">SoC/Kernel source provider\n%s</string>
     <string name="build_board">SoC model\n%s</string>
 
-    <string name="build_cpu_abi">ROM current using ABI\n%s</string>
-    <string name="build_supported_32_bit_abis">Supported 32bit ABIs\n%s</string>
-    <string name="build_supported_64_bit_abis">Supported 64bit ABIs\n%s</string>
+    <string name="os_arch">ROM current using ABI\n%s</string>
+    <string name="build_cpu_abi">CPU current using ABI\n%s</string>
+    <string name="build_supported_32_bit_abis">Supported 32bit CPU ABIs\n%s</string>
+    <string name="build_supported_64_bit_abis">Supported 64bit CPU ABIs\n%s</string>
 
     <string name="build_preview_sdk_int">Android preview API level (0: not a preview version)\n%s</string>
 

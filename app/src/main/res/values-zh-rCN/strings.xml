@@ -38,9 +38,10 @@
     <string name="build_hardware">SoC/内核源码 提供商\n%s</string>
     <string name="build_board">SoC 型号\n%s</string>
 
-    <string name="build_cpu_abi">系统正在使用的架构\n%s</string>
-    <string name="build_supported_32_bit_abis">支持的 32位 架构\n%s</string>
-    <string name="build_supported_64_bit_abis">支持的 64位 架构\n%s</string>
+    <string name="os_arch">系统正在使用的架构\n%s</string>
+    <string name="build_cpu_abi">CPU 正在使用的架构\n%s</string>
+    <string name="build_supported_32_bit_abis">支持的 32位 CPU 架构\n%s</string>
+    <string name="build_supported_64_bit_abis">支持的 64位 CPU 架构\n%s</string>
 
     <string name="build_preview_sdk_int">Android 预览 API 等级 (0: 非预览版)\n%s</string>
 

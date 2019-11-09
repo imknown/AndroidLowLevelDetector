@@ -34,6 +34,7 @@ class OthersFragment : BaseListFragment() {
         add(getResultString(R.string.build_board, Build.BOARD))
 
         //
+        add(getResultString(R.string.os_arch, System.getProperty("os.arch")))
         @Suppress("DEPRECATION")
         add(getResultString(R.string.build_cpu_abi, Build.CPU_ABI))
         add(
