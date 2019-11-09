@@ -13,6 +13,9 @@ An open-source small utility to detect some Android low-level features.
 - Activity recreating protecting
 
 ## Features todo
+- JetPack
+  - Architecture (MVVM, Lifecycle, ViewModel, LiveData, Navigation, etc.)
+  - Animation & transitions
 - detect toybox
 - detect architecture
 - detect Linux kernel
