@@ -3,11 +3,13 @@ An open-source small utility to detect some Android low-level features.
 
 ## Features inside
 - detect Android version and whether is up-to-date
+- detect Linux kernel
 - detect A/B or A-Only
 - detect Project Treble
 - detect Vendor NDK and whether up-to-date
 - detect System-as-root
 - detect (flattened) APEX
+- detect Toybox
 - online/offline mode
 - MultiWindow/FreeForm/Landscape mode
 - Activity recreating protecting
@@ -16,11 +18,9 @@ An open-source small utility to detect some Android low-level features.
 - JetPack
   - Architecture (MVVM, Lifecycle, ViewModel, LiveData, Navigation, etc.)
   - Animation & transitions
-- detect toybox
-- detect architecture
-- detect Linux kernel
 - detect dm-verity (version)
 - detect FBE/FDE
+- detect WebView implement
 - up-to-date detect
   - latest alpha/beta Android version
 - settings
