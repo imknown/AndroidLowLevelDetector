@@ -6,16 +6,6 @@
 
 ---
 
-https://android.googlesource.com/kernel/common/+refs
-
-```
-adb shell uname -a
-adb shell uname -m
-adb shell uname -r
-```
-
----
-
 ```
 adb shell getprop ro.boot.verifiedbootstate
 adb shell getprop ro.boot.flash.locked
@@ -28,16 +18,7 @@ https://chromium.googlesource.com/aosp/platform/system/core/+/upstream/shell_and
 
 ---
 
-toolbox toybox busybox
-
-- http://landley.net/toybox/index.html
-- http://landley.net/toybox/bin/
-- https://github.com/landley/toybox/releases
-- https://android.googlesource.com/platform/external/toybox/+/refs/heads/master/www/news.html
-
-```
-adb shell toybox --version
-```
+busybox
 
 https://busybox.net/downloads/binaries/
 
