@@ -7,7 +7,10 @@ import android.view.ViewGroup
 import androidx.annotation.ColorInt
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_list.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.R
 
 abstract class BaseListFragment : BaseFragment() {
@@ -78,9 +81,13 @@ abstract class BaseListFragment : BaseFragment() {
         myAdapter.notifyDataSetChanged()
         myTempDataset.clear()
 
-        delay(550)
-
         swipeRefresh.isRefreshing = false
+    }
+
+    protected fun isActivityAndFragmentOk() = with(activity) {
+        isAdded && this != null
+                && !this.isFinishing
+                && !this.isDestroyed
     }
 
     protected suspend fun disableSwipeRefresh() = withContext(Dispatchers.Main) {

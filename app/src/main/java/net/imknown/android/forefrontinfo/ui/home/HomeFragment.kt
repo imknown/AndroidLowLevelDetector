@@ -94,7 +94,9 @@ class HomeFragment : BaseListFragment() {
             copyJsonIfNotExists()
         }
 
-        initSubtitle(isOnline)
+        if (isActivityAndFragmentOk()) {
+            initSubtitle(isOnline)
+        }
     }
 
     private suspend fun initSubtitle(isOnline: Boolean) {
@@ -123,9 +125,9 @@ class HomeFragment : BaseListFragment() {
             dataVersion = getString(android.R.string.unknownName)
         }
 
-        (activity as AppCompatActivity?)?.let {
+        if (isActivityAndFragmentOk()) {
             withContext(Dispatchers.Main) {
-                val actionBar = it.supportActionBar!!
+                val actionBar = (activity as AppCompatActivity).supportActionBar!!
                 actionBar.subtitle = getString(lldDataModeResId, dataVersion)
             }
 
