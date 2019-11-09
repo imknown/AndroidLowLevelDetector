@@ -229,13 +229,14 @@ class HomeFragment : BaseListFragment() {
         val systemRootImageResult = sh(isAtLeastAndroid9(), CMD_SYSTEM_ROOT_IMAGE)
         val hasSystemRootImage = isResultTrue(systemRootImageResult)
 
-        val devRootResult = sh(isAtLeastAndroid9(), CMD_MOUNT_DEV_ROOT)
-        val hasDevRoot = hasResult(devRootResult)
+        val mountDevRootResult = sh(isAtLeastAndroid9(), CMD_MOUNT_DEV_ROOT)
+        val hasMountDevRoot = hasResult(mountDevRootResult)
 
-        val systemResult = sh(isAtLeastAndroid9() && !hasSystemRootImage, CMD_MOUNT_SYSTEM)
-        val isSystem = hasResult(systemResult)
+        val mountSystemResult = sh(isAtLeastAndroid9() && !hasSystemRootImage, CMD_MOUNT_SYSTEM)
+        val hasMountSystem = hasResult(mountSystemResult)
 
-        val isSar = isAtLeastAndroid9() && (hasSystemRootImage || hasDevRoot || !isSystem)
+        val isSar =
+            isAtLeastAndroid9() && (hasSystemRootImage || hasMountDevRoot || !hasMountSystem)
         add(getString(R.string.sar_enabled_result, translate(isSar)), isSar)
         // endregion [SAR]
 
