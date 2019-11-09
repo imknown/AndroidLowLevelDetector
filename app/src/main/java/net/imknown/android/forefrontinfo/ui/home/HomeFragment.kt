@@ -65,17 +65,13 @@ class HomeFragment : BaseListFragment() {
         private const val CMD_FLATTENED_APEX_MOUNT = "grep 'tmpfs /apex tmpfs' /proc/mounts"
     }
 
-    private fun copyJson() {
-        JsonIo.copyJsonFromAssetsToContextFilesDir(
-            context?.assets!!,
-            GatewayApi.savedFile,
-            GatewayApi.LLD_JSON_NAME
-        )
-    }
-
-    private fun copyJsonIfNotExists() {
-        if (!GatewayApi.savedFile.exists()) {
-            copyJson()
+    private fun copyJsonIfNeeded() {
+        if (JsonIo.whetherNeedCopyAssets(context?.assets!!)) {
+            JsonIo.copyJsonFromAssetsToContextFilesDir(
+                context?.assets!!,
+                GatewayApi.savedFile,
+                GatewayApi.LLD_JSON_NAME
+            )
         }
     }
 
@@ -94,7 +90,7 @@ class HomeFragment : BaseListFragment() {
 
     private suspend fun prepareResult(isOnline: Boolean) {
         if (!isOnline) {
-            copyJsonIfNotExists()
+            copyJsonIfNeeded()
         }
 
         if (isActivityAndFragmentOk()) {
