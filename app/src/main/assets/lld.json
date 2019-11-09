@@ -1,6 +1,5 @@
 {
-  "version": "2019-11-05 16:48",
-  "versionLocale": "GMT+08:00",
+  "version": "2019-11-09 18:15",
   "desc": "",
   "url": "",
   "android": {
@@ -40,18 +39,12 @@
   },
   "linux": {
     "stable": {
-      "version": "4",
-      "patchLevel": "19",
-      "subLevel": "81",
-      "extraVersion": "",
+      "version": "4.19.81",
       "desc": "",
       "url": "https://android.googlesource.com/kernel/common/+/refs/heads/android-4.19-q/Makefile"
     },
     "upstreamMaster": {
-      "version": "5",
-      "patchLevel": "4",
-      "subLevel": "0",
-      "extraVersion": "-rc6",
+      "version": "5.4.0-rc6",
       "desc": "",
       "url": "https://android.googlesource.com/kernel/common/+/refs/heads/upstream-master/Makefile"
     }

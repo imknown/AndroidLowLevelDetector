@@ -1,7 +1,6 @@
 package net.imknown.android.forefrontinfo.ui.home.model
 
 data class Lld(
-    val versionLocale: String,
     val android: Androids,
     val linux: Linuxes,
     val toybox: Toyboxes
@@ -24,11 +23,7 @@ data class Lld(
         val stable: Linux,
         val upstreamMaster: Linux
     ) {
-        data class Linux(
-            val patchLevel: Int,
-            val subLevel: Int,
-            val extraVersion: String
-        ) : BaseInfo()
+        class Linux : BaseInfo()
     }
 
     data class Toyboxes(

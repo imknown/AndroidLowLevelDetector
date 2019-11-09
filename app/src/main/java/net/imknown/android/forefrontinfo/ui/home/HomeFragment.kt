@@ -160,6 +160,17 @@ class HomeFragment : BaseListFragment() {
 //        }
         // endregion [Android]
 
+        // region [Kernel]
+        val linuxVersion = System.getProperty("os.version")
+        val isAtLeast = Version(linuxVersion).isAtLeast(lld.linux.stable.version)
+        @ColorInt val linuxColor = when {
+            isAtLeast -> COLOR_STATE_LIST_NO_PROBLEM
+            Version(linuxVersion).major == Version(lld.linux.stable.version).major -> COLOR_STATE_LIST_WARNING
+            else -> COLOR_STATE_LIST_CRITICAL
+        }
+        add(getString(R.string.linux_version, linuxVersion), linuxColor)
+        // endregion [Kernel]
+
         // region [A/B]
         // val bootPartitions = sh(CMD_BOOT_PARTITION)[0]
 
