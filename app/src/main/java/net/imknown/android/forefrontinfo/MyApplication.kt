@@ -11,6 +11,10 @@ open class MyApplication : Application() {
     companion object {
         lateinit var instance: MyApplication
 
+        internal fun getApkDir() = getDownloadDir().resolve(GatewayApi.DIR_APK)
+
+        internal fun getDownloadDir() = getFileDir(Environment.DIRECTORY_DOWNLOADS)
+
         private fun getFileDir(type: String): File {
             val externalFilesDir = instance.getExternalFilesDir(type)
             return if (externalFilesDir != null && externalFilesDir.exists()) {
@@ -26,7 +30,6 @@ open class MyApplication : Application() {
 
         instance = this
 
-        GatewayApi.savedLldJsonFile =
-            File(getFileDir(Environment.DIRECTORY_DOWNLOADS), GatewayApi.LLD_JSON_NAME)
+        GatewayApi.savedLldJsonFile = File(getDownloadDir(), GatewayApi.LLD_JSON_NAME)
     }
 }
