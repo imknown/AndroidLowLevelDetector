@@ -103,7 +103,7 @@ class HomeFragment : BaseListFragment() {
         var dataVersion: String
 
         try {
-            val lld = GatewayApi.savedFile.getLld()
+            val lld = GatewayApi.savedFile.fromJson<Lld>()
             dataVersion = if (lld != null) {
                 fillDataset(lld)
 
