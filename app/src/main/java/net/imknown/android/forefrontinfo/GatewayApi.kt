@@ -10,7 +10,7 @@ class GatewayApi {
     companion object {
         internal const val LLD_JSON_NAME = "lld.json"
 
-        private const val URL_LLD_JSON_CN_ZH =
+        private const val URL_LLD_JSON_ZH_CN =
             "https://coding.net/u/imknown/p/1/git/raw/master/$LLD_JSON_NAME"
 
         private const val URL_LLD_JSON =
@@ -19,10 +19,8 @@ class GatewayApi {
         lateinit var savedFile: File
 
         internal suspend fun downloadLldJsonFile(): Boolean {
-            val lD = Locale.getDefault()
-            val lSC = Locale.SIMPLIFIED_CHINESE
-            val url = if (lD.language == lSC.language && lD.country == lSC.country) {
-                URL_LLD_JSON_CN_ZH
+            val url = if (isZhCn()) {
+                URL_LLD_JSON_ZH_CN
             } else {
                 URL_LLD_JSON
             }
@@ -33,6 +31,12 @@ class GatewayApi {
             val (byteArray, error) = result
 
             return response.isSuccessful && byteArray != null && error == null
+        }
+
+        private fun isZhCn(): Boolean {
+            val lD = Locale.getDefault()
+            val lSC = Locale.SIMPLIFIED_CHINESE
+            return (lD.language == lSC.language && lD.country == lSC.country)
         }
     }
 }
