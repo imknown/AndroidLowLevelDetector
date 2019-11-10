@@ -30,6 +30,10 @@ class GatewayApi {
                 .awaitByteArrayResponseResult()
             val (byteArray, error) = result
 
+            if (BuildConfig.DEBUG && error != null) {
+                error.printStackTrace()
+            }
+
             return response.isSuccessful && byteArray != null && error == null
         }
 
