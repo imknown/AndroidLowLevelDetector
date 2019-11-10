@@ -15,6 +15,10 @@ class MyDebugApplication : MyApplication() {
             return
         }
 
+        // initStrictMode()
+    }
+
+    private fun initStrictMode() {
         StrictMode.setThreadPolicy(
             StrictMode.ThreadPolicy.Builder()
                 .detectAll()
