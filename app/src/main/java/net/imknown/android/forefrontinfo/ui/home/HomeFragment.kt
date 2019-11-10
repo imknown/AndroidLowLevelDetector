@@ -104,15 +104,10 @@ class HomeFragment : BaseListFragment() {
 
         try {
             val lld = GatewayApi.savedFile.fromJson<Lld>()
-            dataVersion = if (lld != null) {
-                fillDataset(lld)
+            dataVersion = lld.version
+            fillDataset(lld)
 
-                showResult()
-
-                lld.version
-            } else {
-                getString(android.R.string.unknownName)
-            }
+            showResult()
 
             lldDataModeResId = if (isOnline) {
                 R.string.lld_json_online

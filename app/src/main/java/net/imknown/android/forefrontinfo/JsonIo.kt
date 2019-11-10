@@ -13,8 +13,7 @@ class JsonIo {
          */
         fun whetherNeedCopyAssets(assets: AssetManager): Boolean {
             if (GatewayApi.savedFile.exists()) {
-                val savedLldVersion = GatewayApi.savedFile
-                    .fromJson<Lld>()?.version ?: ""
+                val savedLldVersion = GatewayApi.savedFile.fromJson<Lld>().version
                 val assetLldVersion = getAssetLldVersion(assets)
 
                 if (savedLldVersion >= assetLldVersion) {
@@ -48,12 +47,12 @@ class JsonIo {
             assets.open(GatewayApi.LLD_JSON_NAME)
                 .bufferedReader()
                 .use(BufferedReader::readText)
-                .fromJson<Lld>()?.version ?: ""
+                .fromJson<Lld>().version
     }
 }
 
-internal inline fun <reified T : Any> File.fromJson(): T? =
+internal inline fun <reified T : Any> File.fromJson(): T =
     Gson().fromJson(readText(), T::class.java)
 
-internal inline fun <reified T : Any> String.fromJson(): T? =
+internal inline fun <reified T : Any> String.fromJson(): T =
     Gson().fromJson(this, T::class.java)
