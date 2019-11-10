@@ -16,7 +16,7 @@ class GatewayApi {
         private const val URL_LLD_JSON =
             "https://raw.githubusercontent.com/imknown/AndroidLowLevelDetector/master/app/src/main/assets/$LLD_JSON_NAME"
 
-        lateinit var savedFile: File
+        lateinit var savedLldJsonFile: File
 
         internal suspend fun downloadLldJsonFile(): Boolean {
             val url = if (isZhCn()) {
@@ -26,7 +26,7 @@ class GatewayApi {
             }
 
             val (_, response, result) = url.httpDownload()
-                .fileDestination { _, _ -> savedFile }
+                .fileDestination { _, _ -> savedLldJsonFile }
                 .awaitByteArrayResponseResult()
             val (byteArray, error) = result
 

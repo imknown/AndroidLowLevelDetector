@@ -12,8 +12,8 @@ class JsonIo {
          * https://www.programiz.com/kotlin-programming/examples/string-date
          */
         fun whetherNeedCopyAssets(assets: AssetManager): Boolean {
-            if (GatewayApi.savedFile.exists()) {
-                val savedLldVersion = GatewayApi.savedFile.fromJson<Lld>().version
+            if (GatewayApi.savedLldJsonFile.exists()) {
+                val savedLldVersion = GatewayApi.savedLldJsonFile.fromJson<Lld>().version
                 val assetLldVersion = getAssetLldVersion(assets)
 
                 if (savedLldVersion >= assetLldVersion) {

@@ -69,7 +69,7 @@ class HomeFragment : BaseListFragment() {
         if (JsonIo.whetherNeedCopyAssets(context?.assets!!)) {
             JsonIo.copyJsonFromAssetsToContextFilesDir(
                 context?.assets!!,
-                GatewayApi.savedFile,
+                GatewayApi.savedLldJsonFile,
                 GatewayApi.LLD_JSON_NAME
             )
         }
@@ -103,7 +103,7 @@ class HomeFragment : BaseListFragment() {
         var dataVersion: String
 
         try {
-            val lld = GatewayApi.savedFile.fromJson<Lld>()
+            val lld = GatewayApi.savedLldJsonFile.fromJson<Lld>()
             dataVersion = lld.version
             fillDataset(lld)
 
