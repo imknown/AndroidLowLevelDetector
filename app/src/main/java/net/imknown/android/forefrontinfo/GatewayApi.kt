@@ -11,7 +11,7 @@ class GatewayApi {
         internal const val LLD_JSON_NAME = "lld.json"
 
         private const val URL_LLD_JSON_ZH_CN =
-            "https://coding.net/u/imknown/p/1/git/raw/master/$LLD_JSON_NAME"
+            "https://gitee.com/imknown/AndroidLowLevelDetector/raw/master/app/src/main/assets/$LLD_JSON_NAME"
 
         private const val URL_LLD_JSON =
             "https://raw.githubusercontent.com/imknown/AndroidLowLevelDetector/master/app/src/main/assets/$LLD_JSON_NAME"
