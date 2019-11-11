@@ -16,7 +16,8 @@ https://coolapk.com/apk/net.imknown.android.forefrontinfo
 - detect System-as-root
 - detect (flattened) APEX
 - detect Toybox
-- online/offline mode
+- online/offline mode (fetching data from remote server or local)
+- In-App check up and upgrade
 - MultiWindow/FreeForm/Landscape mode
 - Activity recreating protecting
 
@@ -30,21 +31,18 @@ https://coolapk.com/apk/net.imknown.android.forefrontinfo
 - up-to-date detect
   - latest alpha/beta Android version
 - settings
-  - In-App check up and upgrade
   - speed mode (no animations, no CardViews, etc.)
   - detect `getprop` from file, not from SDK API (option)
   - root mode
   - show commands
   - custom commands
   - GAME???
-- data update from server (json)
   - network cache logic
-  - custom url
+  - select json server
 - documents
   - development references
   - user-readable explanation why mine not supported
 - copy result
 - run custom commands
 - licenses and acknowledge
-- store download/vote page
 - etc.
