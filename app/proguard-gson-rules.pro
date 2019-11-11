@@ -11,6 +11,7 @@
 
 # Application classes that will be serialized/deserialized over Gson
 -keep class net.imknown.android.forefrontinfo.ui.home.model.** { <fields>; }
+-keep class net.imknown.android.forefrontinfo.ui.settings.model.** { <fields>; }
 
 # Prevent proguard from stripping interface information from TypeAdapter, TypeAdapterFactory,
 # JsonSerializer, JsonDeserializer instances (so they can be used in @JsonAdapter)

@@ -80,4 +80,12 @@
     <string name="about_version_title">Version</string>
     <string name="about_version_summary">Version: %1$s (Iteration times: %2$d)\nBuilt-in data version: %3$s</string>
     <string name="about_version_click">🐈==)  🐕===))</string>
+    <string name="about_check_for_update_key" translatable="false">about_check_for_update_key</string>
+    <string name="about_check_for_update_title">Check for update</string>
+    <string name="about_check_for_update_summary">Check whether there is a newer version</string>
+    <string name="about_check_for_update_new_version">New version detected: V%1$s (%2$sM)</string>
+    <string name="about_check_for_update_already_latest">Already the latest version.</string>
+    <string name="about_check_for_update_network_error">Network error: %s</string>
+    <string name="about_check_for_update_network_empty_file">Empty file. Maybe a server issue. Please try again.</string>
+    <string name="about_check_for_update_allow_network_data_first">Please allow network data first.</string>
 </resources>

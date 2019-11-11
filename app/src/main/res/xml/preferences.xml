@@ -36,6 +36,12 @@
             app:key="@string/about_version_key"
             app:title="@string/about_version_title"
             tools:summary="@string/about_version_summary" />
+
+        <Preference
+            app:icon="@drawable/ic_system_update_black_24dp"
+            app:key="@string/about_check_for_update_key"
+            app:summary="@string/about_check_for_update_summary"
+            app:title="@string/about_check_for_update_title" />
     </PreferenceCategory>
 
 </PreferenceScreen>
