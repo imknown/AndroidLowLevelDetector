@@ -5,7 +5,7 @@ An open-source small utility to detect some Android low-level features.
 - Approach 1
 https://github.com/imknown/AndroidLowLevelDetector/releases
 - Approach 2
-https://www.coolapk.com/apk/net.imknown.android.forefrontinfo
+https://coolapk.com/apk/net.imknown.android.forefrontinfo
 
 ## Features inside
 - detect Android version and whether is up-to-date
