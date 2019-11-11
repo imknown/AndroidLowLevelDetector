@@ -83,6 +83,9 @@
 
     <string name="about_title">About</string>
 
+    <string name="about_shop_title">Store page</string>
+    <string name="about_shop_summary">Open the page of current app in the store</string>
+
     <string name="about_source_title">Source code</string>
     <string name="about_source_summary">Github address of the APP source code</string>
 

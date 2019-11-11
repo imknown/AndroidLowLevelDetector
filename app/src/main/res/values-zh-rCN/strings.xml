@@ -81,6 +81,9 @@
 
     <string name="about_title">关于</string>
 
+    <string name="about_shop_title">应用商店页</string>
+    <string name="about_shop_summary">打开本程序商店所在的页面</string>
+
     <string name="about_source_title">源码</string>
     <string name="about_source_summary">本程序源码的 Github 地址</string>
 
