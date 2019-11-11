@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">LowLevelDetector</string>
+
     <string name="translation_language">English (USA)</string>
     <string name="translation_author_name">imknown</string>
     <string name="translation_author_more_info1">https://imknown.net</string>
@@ -18,17 +19,25 @@
     <!-- Home -->
     <string name="result_yes">Yes.</string>
     <string name="result_no">No.</string>
+
     <string name="android_info">Android Version\nAndroid %1$s (API Level: %2$d)</string>
+
     <string name="linux_version">Linux version\n%s</string>
+
     <string name="ab_seamless_update_enabled_result">Is A/B seamless update enabled?\n%s</string>
     <string name="rom_total_size_result">\u0020(Total ROM: ~%sGB)</string>
     <string name="current_using_ab_slot_result">\u0020(Current using slot: %s)</string>
+
     <string name="treble_enabled_result">Is Project Treble enabled?\n%s</string>
+
     <string name="vndk_built_in_result">Is Vendor NDK built in?\n%s</string>
     <string name="built_in_vndk_version_result">\u0020(Level: %s)</string>
+
     <string name="sar_enabled_result">Is System-as-root enabled?\n%s</string>
+
     <string name="apex_enabled_result">Is APEX enabled?\n%s</string>
     <string name="apex_legacy_flattened">\u0020(Legacy flattened)</string>
+
     <string name="toybox_built_in_result">Is Toybox built in?\n%s</string>
     <string name="built_in_toybox_version_result">\u0020(%s)</string>
 
@@ -71,15 +80,20 @@
     <string name="network_allow_network_data_key" translatable="false">about_allow_network_data_key</string>
     <string name="network_allow_network_data_title">(Recommend) Allow network data</string>
     <string name="network_allow_network_data_summary">When enabled, will prior fetching network data from remote server, and the downloaded data file will be cached on the local storage. About 2KB per request and no private information will be collected.</string>
+
     <string name="about_title">About</string>
+
     <string name="about_source_title">Source code</string>
     <string name="about_source_summary">Github address of the APP source code</string>
+
     <string name="about_licenses_title">License</string>
     <string name="about_licenses_summary">Referenced open-source repositories</string>
+
     <string name="about_version_key" translatable="false">about_version_key</string>
     <string name="about_version_title">Version</string>
     <string name="about_version_summary">Version: %1$s (Iteration times: %2$d)\nBuilt-in data version: %3$s</string>
     <string name="about_version_click">🐈==)  🐕===))</string>
+
     <string name="about_check_for_update_key" translatable="false">about_check_for_update_key</string>
     <string name="about_check_for_update_title">Check for update</string>
     <string name="about_check_for_update_summary">Check whether there is a newer version</string>

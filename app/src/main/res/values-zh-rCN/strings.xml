@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">底层探测器</string>
+
     <string name="translation_language">简体中文 (中国大陆)</string>
     <string name="translation_author_name">imknown</string>
     <string name="translation_author_more_info1">https://imknown.net</string>
@@ -18,17 +19,24 @@
     <!-- 首页 -->
     <string name="result_yes">是.</string>
     <string name="result_no">否.</string>
+
     <string name="android_info">Android 版本\nAndroid %1$s (API 等级: %2$d)</string>
+
     <string name="linux_version">Linux 版本\n%s</string>
+
     <string name="ab_seamless_update_enabled_result">启用了 A/B 无缝升级?\n%s</string>
     <string name="rom_total_size_result">\u0020(总 ROM: ~%sGB)</string>
     <string name="current_using_ab_slot_result">\u0020(当前使用的槽位: %s)</string>
+
     <string name="treble_enabled_result">启用了 Project Treble?\n%s</string>
+
     <string name="vndk_built_in_result">内建了 Vendor NDK?\n%s</string>
     <string name="built_in_vndk_version_result">\u0020(等级: %s)</string>
     <string name="sar_enabled_result">启用了 System-as-root?\n%s</string>
+
     <string name="apex_enabled_result">启用了 APEX?\n%s</string>
     <string name="apex_legacy_flattened">\u0020(旧式扁平的)</string>
+
     <string name="toybox_built_in_result">内建了 Toybox?\n%s</string>
     <string name="built_in_toybox_version_result">\u0020(%s)</string>
 
@@ -70,14 +78,19 @@
     <string name="network_title">网络</string>
     <string name="network_allow_network_data_title">(推荐) 允许网络数据</string>
     <string name="network_allow_network_data_summary">若启用, 将优先从远端网络服务器获取数据, 下载下来的数据文件将被缓存在本地存储. 每次请求大概 2KB, 不会收集任何私人信息.</string>
+
     <string name="about_title">关于</string>
+
     <string name="about_source_title">源码</string>
     <string name="about_source_summary">本程序源码的 Github 地址</string>
+
     <string name="about_licenses_title">协议</string>
     <string name="about_licenses_summary">引用的开源库</string>
+
     <string name="about_version_title">版本</string>
     <string name="about_version_summary">版本号: %1$s (迭代次数: %2$d)\n内建数据版本: %3$s</string>
     <string name="about_version_click">🐈==)  🐕===))</string>
+
     <string name="about_check_for_update_title">检查更新</string>
     <string name="about_check_for_update_summary">检查是否有新版本</string>
     <string name="about_check_for_update_new_version">探测到新版本: V%1$s (%2$sM)</string>
