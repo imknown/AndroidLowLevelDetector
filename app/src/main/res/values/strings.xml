@@ -77,8 +77,8 @@
     <!-- Settings -->
     <string name="network_title">Network</string>
     <string name="network_allow_network_data_key" translatable="false">about_allow_network_data_key</string>
-    <string name="network_allow_network_data_title">(Recommend) Allow network data</string>
-    <string name="network_allow_network_data_summary">When enabled, will prior fetching network data from remote server, and the downloaded data file will be cached on the local storage. About 2KB per request and no private information will be collected.</string>
+    <string name="network_allow_network_data_title">Allow network data</string>
+    <string name="network_allow_network_data_summary">When enabled, data will be prior fetched from remote network server, then be cached on the local storage. About 2KB per request. No private information will be collected.</string>
 
     <string name="about_title">About</string>
 
