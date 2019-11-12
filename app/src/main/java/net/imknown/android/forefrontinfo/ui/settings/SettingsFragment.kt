@@ -268,6 +268,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
         setClearApkFolderStatus(false)
 
         val result = GatewayApi.clearFolder(MyApplication.getApkDir())
+
+        // For better UX
+        delay(500)
+
         toast(
             if (result) {
                 R.string.about_clear_apk_folder_successfully
@@ -275,9 +279,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 R.string.about_clear_apk_folder_failed
             }
         )
-
-        // For better UX
-        delay(500)
 
         setClearApkFolderStatus(true)
     }
