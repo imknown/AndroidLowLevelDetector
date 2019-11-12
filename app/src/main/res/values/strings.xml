@@ -105,4 +105,11 @@
     <string name="about_check_for_update_network_error">Network error: %s</string>
     <string name="about_check_for_update_network_empty_file">Empty file. Maybe a server issue. Please try again.</string>
     <string name="about_check_for_update_allow_network_data_first">Please allow network data first.</string>
+
+    <string name="about_clear_apk_folder_key" translatable="false">about_clear_apk_folder_key</string>
+    <string name="about_clear_apk_folder_title">Clear apk folder</string>
+    <string name="about_clear_apk_folder_title_clearing">Clearing, please wait.</string>
+    <string name="about_clear_apk_folder_summary">Delete downloaded apk installer packages</string>
+    <string name="about_clear_apk_folder_successfully">Clear successfully</string>
+    <string name="about_clear_apk_folder_failed">Clear failed</string>
 </resources>

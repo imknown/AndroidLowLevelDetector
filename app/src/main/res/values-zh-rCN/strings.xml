@@ -101,4 +101,10 @@
     <string name="about_check_for_update_network_error">网络错误: %s</string>
     <string name="about_check_for_update_network_empty_file">空文件. 可能是服务器的问题. 请重试.</string>
     <string name="about_check_for_update_allow_network_data_first">请先开启 允许网络数据</string>
+
+    <string name="about_clear_apk_folder_title">清空 Apk 文件夹</string>
+    <string name="about_clear_apk_folder_title_clearing">正在清空, 请等待</string>
+    <string name="about_clear_apk_folder_summary">清空已下载的 Apk 安装包</string>
+    <string name="about_clear_apk_folder_successfully">清空成功</string>
+    <string name="about_clear_apk_folder_failed">清空失败</string>
 </resources>

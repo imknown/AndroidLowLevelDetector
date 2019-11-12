@@ -26,8 +26,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private var counter = 5
 
-    private lateinit var checkUpdatePref: Preference
     private lateinit var allowNetworkDataPref: SwitchPreferenceCompat
+    private lateinit var checkUpdatePref: Preference
+    private lateinit var clearApkFolderPref: Preference
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         GlobalScope.launch(Dispatchers.IO) {
@@ -79,20 +80,43 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
             true
         }
+
+        clearApkFolderPref = findPreference(getString(R.string.about_clear_apk_folder_key))!!
+        clearApkFolderPref.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+            GlobalScope.launch(Dispatchers.IO) {
+                clearApkFolder()
+            }
+
+            true
+        }
     }
 
-    private suspend fun setCheckUpdatePreferenceStatus(isEnabled: Boolean) =
-        withContext(Dispatchers.Main) {
-            checkUpdatePref.isEnabled = isEnabled
+    private suspend fun setPreferenceStatus(
+        preference: Preference,
+        isEnabled: Boolean,
+        @StringRes normalResId: Int,
+        @StringRes checkingResId: Int
+    ) = withContext(Dispatchers.Main) {
+        preference.isEnabled = isEnabled
 
-            checkUpdatePref.title = getString(
-                if (isEnabled) {
-                    R.string.about_check_for_update_title
-                } else {
-                    R.string.about_check_for_update_title_checking
-                }
-            )
-        }
+        preference.title = getString(
+            if (isEnabled) {
+                normalResId
+            } else {
+                checkingResId
+            }
+        )
+    }
+
+    // region [check for update]
+    private suspend fun setCheckUpdatePreferenceStatus(isEnabled: Boolean) {
+        setPreferenceStatus(
+            checkUpdatePref,
+            isEnabled,
+            R.string.about_check_for_update_title,
+            R.string.about_check_for_update_title_checking
+        )
+    }
 
     private suspend fun checkForUpdate() {
         setCheckUpdatePreferenceStatus(false)
@@ -227,6 +251,44 @@ class SettingsFragment : PreferenceFragmentCompat() {
         dismissProgressDialog()
     }
 
+    private suspend fun dismissProgressDialog() = withContext(Dispatchers.Main) {
+        progressDialog?.let {
+            if (it.isShowing) {
+                it.dismiss()
+            }
+        }
+    }
+    // endregion [check for update]
+
+    // region [clear apk folder]
+    private suspend fun setClearApkFolderStatus(isEnabled: Boolean) {
+        setPreferenceStatus(
+            clearApkFolderPref,
+            isEnabled,
+            R.string.about_clear_apk_folder_title,
+            R.string.about_clear_apk_folder_title_clearing
+        )
+    }
+
+    private suspend fun clearApkFolder() {
+        setClearApkFolderStatus(false)
+
+        val result = GatewayApi.clearFolder(MyApplication.getApkDir())
+        toast(
+            if (result) {
+                R.string.about_clear_apk_folder_successfully
+            } else {
+                R.string.about_clear_apk_folder_failed
+            }
+        )
+
+        // For better UX
+        delay(500)
+
+        setClearApkFolderStatus(true)
+    }
+    // endregion [clear apk folder]
+
     private fun showNetError(error: Throwable) {
         if (BuildConfig.DEBUG) {
             error.printStackTrace()
@@ -238,14 +300,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
             dismissProgressDialog()
 
             toast(getString(R.string.about_check_for_update_network_error, error.message))
-        }
-    }
-
-    private suspend fun dismissProgressDialog() = withContext(Dispatchers.Main) {
-        progressDialog?.let {
-            if (it.isShowing) {
-                it.dismiss()
-            }
         }
     }
 
