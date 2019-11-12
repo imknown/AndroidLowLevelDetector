@@ -63,8 +63,7 @@ class GatewayApi {
         ) {
             val (_, _, result) = url.httpDownload()
                 .fileDestination { _, _ ->
-                    MyApplication.getApkDir().deleteRecursively()
-                    // emptyDir(MyApplication.getApkDir())
+                    clearFolder(MyApplication.getApkDir())
                     MyApplication.getApkDir().mkdirs()
                     File(MyApplication.getApkDir(), fileName)
                 }
@@ -74,9 +73,12 @@ class GatewayApi {
             result.fold(success, failure)
         }
 
-        private fun emptyDir(dir: File, deleteItself: Boolean) {
-            dir.walkTopDown().forEach { it.delete() }
-            dir.takeIf { deleteItself }?.delete()
+        internal fun clearFolder(dir: File): Boolean {
+            if (!dir.exists()) {
+                return true
+            }
+
+            return dir.deleteRecursively()
         }
 
         private fun isZhCn(): Boolean {
