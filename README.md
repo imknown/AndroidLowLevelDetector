@@ -16,6 +16,7 @@ https://coolapk.com/apk/net.imknown.android.forefrontinfo
 - detect System-as-root
 - detect (flattened) APEX
 - detect Toybox
+- dark mode
 - online/offline mode (fetching data from remote server or local)
 - In-App check up and upgrade
 - MultiWindow/FreeForm/Landscape mode
