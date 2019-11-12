@@ -26,6 +26,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private var counter = 5
 
+    private lateinit var checkUpdatePref: Preference
+    private lateinit var allowNetworkDataPref: SwitchPreferenceCompat
+
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         GlobalScope.launch(Dispatchers.IO) {
             if (Looper.myLooper() == null) {
@@ -39,8 +42,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     private suspend fun initViews() = withContext(Dispatchers.Main) {
-        val versionPref = findPreference<Preference>(getString(R.string.about_version_key))
-        versionPref?.let {
+        allowNetworkDataPref = findPreference(getString(R.string.network_allow_network_data_key))!!
+
+        val versionPref = findPreference<Preference>(getString(R.string.about_version_key))!!
+        versionPref.let {
             val assetLldVersion = JsonIo.getAssetLldVersion(context?.assets!!)
 
             it.summary =
@@ -52,7 +57,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 )
         }
 
-        versionPref?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+        versionPref.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             GlobalScope.launch(Dispatchers.IO) {
                 if (counter > 0) {
                     counter -= 1
@@ -66,9 +71,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
 
-        val checkUpdatePref =
-            findPreference<Preference>(getString(R.string.about_check_for_update_key))
-        checkUpdatePref?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+        checkUpdatePref = findPreference(getString(R.string.about_check_for_update_key))!!
+        checkUpdatePref.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             GlobalScope.launch(Dispatchers.IO) {
                 checkForUpdate()
             }
@@ -77,11 +81,23 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
-    private suspend fun checkForUpdate() {
-        val allowNetworkDataPref =
-            findPreference<SwitchPreferenceCompat>(getString(R.string.network_allow_network_data_key))
+    private suspend fun setCheckUpdatePreferenceStatus(isEnabled: Boolean) =
+        withContext(Dispatchers.Main) {
+            checkUpdatePref.isEnabled = isEnabled
 
-        if (allowNetworkDataPref!!.isChecked) {
+            checkUpdatePref.title = getString(
+                if (isEnabled) {
+                    R.string.about_check_for_update_title
+                } else {
+                    R.string.about_check_for_update_title_checking
+                }
+            )
+        }
+
+    private suspend fun checkForUpdate() {
+        setCheckUpdatePreferenceStatus(false)
+
+        if (allowNetworkDataPref.isChecked) {
             GatewayApi.checkForUpdate({ data ->
                 isLatestVersion(data)
             }, { error ->
@@ -89,6 +105,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
             })
         } else {
             toast(R.string.about_check_for_update_allow_network_data_first)
+
+            setCheckUpdatePreferenceStatus(true)
         }
     }
 
@@ -102,6 +120,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
         } else {
             toast(R.string.about_check_for_update_already_latest)
         }
+
+        setCheckUpdatePreferenceStatus(true)
     }
 
     @Suppress("DEPRECATION")
@@ -213,6 +233,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
 
         runBlocking {
+            setCheckUpdatePreferenceStatus(true)
+
             dismissProgressDialog()
 
             toast(getString(R.string.about_check_for_update_network_error, error.message))

@@ -98,6 +98,7 @@
 
     <string name="about_check_for_update_key" translatable="false">about_check_for_update_key</string>
     <string name="about_check_for_update_title">Check for update</string>
+    <string name="about_check_for_update_title_checking">Checking, please wait.</string>
     <string name="about_check_for_update_summary">Check whether there is a newer version</string>
     <string name="about_check_for_update_new_version">New version detected: V%1$s (%2$sM)</string>
     <string name="about_check_for_update_already_latest">Already the latest version.</string>

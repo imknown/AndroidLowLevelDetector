@@ -94,6 +94,7 @@
     <string name="about_version_click">🐈==)  🐕===))</string>
 
     <string name="about_check_for_update_title">检查更新</string>
+    <string name="about_check_for_update_title_checking">正在检查, 请等待.</string>
     <string name="about_check_for_update_summary">检查是否有新版本</string>
     <string name="about_check_for_update_new_version">探测到新版本: V%1$s (%2$sM)</string>
     <string name="about_check_for_update_already_latest">已是最新版</string>
