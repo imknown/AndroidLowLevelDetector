@@ -60,13 +60,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         versionPref.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             GlobalScope.launch(Dispatchers.IO) {
-                if (counter > 0) {
-                    counter -= 1
-                } else if (counter == 0) {
-                    counter -= 100
-
-                    toast(R.string.about_version_click)
-                }
+                versionClicked()
             }
 
             true
@@ -288,6 +282,18 @@ class SettingsFragment : PreferenceFragmentCompat() {
         setClearApkFolderStatus(true)
     }
     // endregion [clear apk folder]
+
+    // region [version click]
+    private suspend fun versionClicked() {
+        if (counter > 0) {
+            counter -= 1
+        } else if (counter == 0) {
+            counter -= 100
+
+            toast(R.string.about_version_click)
+        }
+    }
+    // endregion [version click]
 
     private fun showNetError(error: Throwable) {
         if (BuildConfig.DEBUG) {
