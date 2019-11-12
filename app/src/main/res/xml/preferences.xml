@@ -42,6 +42,16 @@
         </Preference>
 
         <Preference
+            app:icon="@drawable/ic_translate_black_24dp"
+            app:summary="@string/translator_more_info"
+            app:title="@string/translation_language_and_translator">
+
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/translator_website" />
+        </Preference>
+
+        <Preference
             app:icon="@drawable/ic_adb_black_24dp"
             app:key="@string/about_version_key"
             app:title="@string/about_version_title"

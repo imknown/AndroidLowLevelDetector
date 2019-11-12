@@ -1,10 +1,9 @@
 <resources>
     <string name="app_name">底层探测器</string>
 
-    <string name="translation_language">简体中文 (中国大陆)</string>
-    <string name="translation_author_name">imknown</string>
-    <string name="translation_author_more_info1">https://imknown.net</string>
-    <string name="translation_author_more_info2">https://github.com/imknown</string>
+    <string name="translation_language_and_translator">简体中文 (中国), 翻译: imknown</string>
+    <string name="translator_website">https://imknown.net</string>
+    <string name="translator_more_info">https://github.com/imknown</string>
 
     <!-- 数据 -->
     <string name="lld_json_checking">检查数据中 📲</string>
