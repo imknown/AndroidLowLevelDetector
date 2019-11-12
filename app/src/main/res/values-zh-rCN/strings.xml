@@ -99,7 +99,7 @@
     <string name="about_check_for_update_new_version">探测到新版本: V%1$s (%2$sM)</string>
     <string name="about_check_for_update_already_latest">已是最新版</string>
     <string name="about_check_for_update_network_error">网络错误: %s</string>
-    <string name="about_check_for_update_network_empty_file">空文件. 可能是服务器的问题. 请重试.</string>
+    <string name="about_check_for_update_network_empty_file">下载的是空文件. 可能连接超时了 (默认 15 秒). 请重试.</string>
     <string name="about_check_for_update_allow_network_data_first">请先开启 允许网络数据</string>
 
     <string name="about_clear_apk_folder_title">清空 Apk 文件夹</string>
