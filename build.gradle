@@ -8,6 +8,8 @@ buildscript {
         google()
         jcenter()
         // maven { url 'https://maven.aliyun.com/repository/jcenter' }
+
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
     }
 
     dependencies {
@@ -25,6 +27,8 @@ allprojects {
         google()
         jcenter()
         // maven { url 'https://maven.aliyun.com/repository/jcenter' }
+
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
     }
 }
 
