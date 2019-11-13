@@ -12,15 +12,15 @@ ext {
             versionName              : '1.1.0'
     ]
 
+    // https://maven.google.com
+    // https://androidstudio.googleblog.com/
+    // https://developer.android.com/jetpack/androidx/versions
+    // https://mvnrepository.com/
     androidX = [
-            // https://maven.google.com
-            // https://androidstudio.googleblog.com/
-            // https://developer.android.com/jetpack/androidx/versions
             appCompat       : '1.1.0',
             coreKtx         : '1.1.0',
             preference      : '1.1.0',
 
-            // https://mvnrepository.com/artifact/com.google.android.material/material
             // https://github.com/material-components/material-components-android/releases
             material        : "1.0.0",
 
