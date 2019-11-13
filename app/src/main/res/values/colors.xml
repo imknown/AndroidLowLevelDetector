@@ -2,8 +2,8 @@
 <resources>
     <color name="ic_launcher_background">#39A078</color>
 
-    <color name="colorPrimary">#3C8749</color>
-    <color name="colorPrimaryDark">#3C8749</color>
+    <color name="colorPrimary">#61AA71</color>
+    <color name="colorPrimaryDark">#61AA71</color>
     <color name="colorAccent">#EFC158</color>
 
     <!-- Copied from androidx.cardview.R.attr.cardBackgroundColor -->
