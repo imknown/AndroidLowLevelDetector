@@ -45,3 +45,9 @@ ro.config.low_ram
 icu
 
 https://developer.android.com/guide/topics/resources/internationalization
+
+------
+
+vendor patch version
+
+OpenGL ES/Vulkan/GPU Driver version
