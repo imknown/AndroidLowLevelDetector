@@ -76,15 +76,13 @@ dependencies {
     // endregion [Kotlin]
 
     // region [AndroidX]
-    implementation "androidx.appcompat:appcompat:$androidX.appCompat"
-    implementation "androidx.core:core-ktx:$androidX.coreKtx"
+    implementation "com.google.android.material:material:$androidX.material"
+
     implementation "androidx.preference:preference:$androidX.preference"
 
     implementation "androidx.constraintlayout:constraintlayout:$androidX.constraintLayout"
-    implementation "androidx.cardview:cardview:$androidX.cardView"
-    implementation "com.google.android.material:material:$androidX.material"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$androidX.swipeRefreshLayout"
     implementation "androidx.recyclerview:recyclerview:$androidX.recyclerView"
-    implementation "androidx.recyclerview:recyclerview-selection:$androidX.recyclerView"
     // endregion [AndroidX]
 
     // region [Test]

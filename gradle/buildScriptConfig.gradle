@@ -17,21 +17,19 @@ ext {
     // https://developer.android.com/jetpack/androidx/versions
     // https://mvnrepository.com/
     androidX = [
-            appCompat       : '1.1.0',
-            coreKtx         : '1.1.0',
-            preference      : '1.1.0',
-
             // https://github.com/material-components/material-components-android/releases
-            material        : "1.0.0",
+            material          : '1.1.0-beta02',
 
-            constraintLayout: '1.1.3',
-            cardView        : "1.0.0",
-            recyclerView    : "1.0.0",
+            preference        : '1.1.0',
+
+            constraintLayout  : '1.1.3',
+            swipeRefreshLayout: '1.0.0',
+            recyclerView      : '1.0.0',
 
             // https://developer.android.com/jetpack/androidx/releases/test
-            junit           : '4.12',
-            extJunit        : '1.1.1',
-            espressoCore    : '3.2.0'
+            junit             : '4.12',
+            extJunit          : '1.1.1',
+            espressoCore      : '3.2.0'
     ]
 
     kotlinSdk = [
