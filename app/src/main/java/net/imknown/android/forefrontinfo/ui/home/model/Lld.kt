@@ -2,8 +2,8 @@ package net.imknown.android.forefrontinfo.ui.home.model
 
 data class Lld(
     val android: Androids,
-    val linux: Linuxes,
-    val toybox: Toyboxes
+    val linux: Types<BaseInfo>,
+    val toybox: Types<BaseInfo>
 ) : BaseInfo() {
     data class Androids(
         val securityPatchLevel: String,
@@ -19,18 +19,9 @@ data class Lld(
         ) : BaseInfo()
     }
 
-    data class Linuxes(
-        val stable: Linux,
-        val support: Linux,
-        val upstreamMaster: Linux
-    ) {
-        class Linux : BaseInfo()
-    }
-
-    data class Toyboxes(
-        val stable: Toybox,
-        val master: Toybox
-    ) {
-        class Toybox : BaseInfo()
-    }
+    data class Types<T>(
+        val stable: T,
+        val support: T,
+        val master: T
+    ) : BaseInfo() where T : BaseInfo
 }

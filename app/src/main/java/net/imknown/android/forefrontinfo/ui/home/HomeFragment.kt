@@ -305,17 +305,12 @@ class HomeFragment : BaseListFragment() {
             val toyboxVersion = toyboxVersionResult[0]
             hasToyboxResult += getString(R.string.built_in_toybox_version_result, toyboxVersion)
 
-            val toyboxRealVersion = toyboxVersion
-                .replace("toybox ", "")
-                .split("-")
-            if (toyboxRealVersion.isNotEmpty()) {
-                if (Version(toyboxRealVersion[0]).isAtLeast(lld.toybox.stable.version)) {
-                    COLOR_STATE_LIST_NO_PROBLEM
-                } else {
-                    COLOR_STATE_LIST_WARNING
-                }
-            } else {
-                COLOR_STATE_LIST_CRITICAL
+            val toyboxRealVersionString = toyboxVersion.replace("toybox ", "")
+            val toyboxRealVersion = Version(toyboxRealVersionString)
+            when {
+                toyboxRealVersion.isAtLeast(lld.toybox.stable.version) -> COLOR_STATE_LIST_NO_PROBLEM
+                toyboxRealVersion.isAtLeast(lld.toybox.support.version) -> COLOR_STATE_LIST_WARNING
+                else -> COLOR_STATE_LIST_CRITICAL
             }
         } else {
             COLOR_STATE_LIST_CRITICAL

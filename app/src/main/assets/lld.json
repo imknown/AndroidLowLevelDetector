@@ -1,5 +1,5 @@
 {
-  "version": "2019-11-09 19:45",
+  "version": "2019-11-14 13:55",
   "desc": "",
   "url": "",
   "android": {
@@ -7,10 +7,10 @@
     "stable": {
       "active": true,
       "version": "10",
-      "codename": "Android10(Q)",
+      "codename": "Q",
       "api": "29",
       "desc": "",
-      "url": "https://www.android.com/"
+      "url": "https://www.android.com/android-10/"
     },
     "support": {
       "active": true,
@@ -18,7 +18,7 @@
       "codename": "Oreo",
       "api": "26",
       "desc": "",
-      "url": "https://source.android.google.cn/security/bulletin"
+      "url": "https://source.android.com/security/bulletin/2019-11-01"
     },
     "alpha": {
       "active": true,
@@ -41,29 +41,34 @@
     "stable": {
       "version": "4.19.81",
       "desc": "",
-      "url": "https://android.googlesource.com/kernel/common/+/refs"
+      "url": "https://android.googlesource.com/kernel/common/+/refs/tags/ASB-2019-11-05_4.19/Makefile"
     },
     "support": {
       "version": "3.18.140",
       "desc": "",
-      "url": "https://android.googlesource.com/kernel/common/+refs"
+      "url": "https://android.googlesource.com/kernel/common/+/refs/tags/ASB-2019-11-05_3.18/Makefile"
     },
-    "upstreamMaster": {
+    "master": {
       "version": "5.4.0-rc6",
       "desc": "",
-      "url": "https://android.googlesource.com/kernel/common/+/refs/heads/upstream-master/Makefile"
+      "url": "https://android.googlesource.com/kernel/common/+/refs/tags/ASB-2019-11-05_mainline/Makefile"
     }
   },
   "toybox": {
     "stable": {
       "version": "0.8.0",
       "desc": "",
-      "url": "https://android.googlesource.com/platform/external/toybox/+refs"
+      "url": "https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-10.0.0_r14/www/news.html"
+    },
+    "support": {
+      "version": "0.7.3",
+      "desc": "",
+      "url": "https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-8.0.0_r40/www/news.html"
     },
     "master": {
       "version": "0.8.2",
       "desc": "",
-      "url": "https://github.com/landley/toybox/releases"
+      "url": "https://android.googlesource.com/platform/external/toybox/+/refs/heads/master/www/news.html"
     }
   }
 }
