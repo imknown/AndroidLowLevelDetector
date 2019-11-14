@@ -2,6 +2,7 @@ package net.imknown.android.forefrontinfo.base
 
 import android.widget.Toast
 import androidx.annotation.StringRes
+import androidx.fragment.app.Fragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.BuildConfig
@@ -20,5 +21,11 @@ interface IView {
 
     suspend fun toast(text: String?) = withContext(Dispatchers.Main) {
         Toast.makeText(MyApplication.instance, text, Toast.LENGTH_LONG).show()
+    }
+
+    fun isActivityAndFragmentOk(fragment: Fragment) = with(fragment) {
+        isAdded && fragment.activity != null
+                && !fragment.activity!!.isFinishing
+                && !fragment.activity!!.isDestroyed
     }
 }

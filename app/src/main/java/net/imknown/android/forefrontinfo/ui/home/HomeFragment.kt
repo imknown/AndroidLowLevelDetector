@@ -105,7 +105,7 @@ class HomeFragment : BaseListFragment() {
     }
 
     private suspend fun prepareResult(isOnline: Boolean) {
-        if (!isActivityAndFragmentOk()) {
+        if (!isActivityAndFragmentOk(this)) {
             return
         }
 
@@ -113,7 +113,7 @@ class HomeFragment : BaseListFragment() {
             copyJsonIfNeeded()
         }
 
-        if (isActivityAndFragmentOk()) {
+        if (isActivityAndFragmentOk(this)) {
             initSubtitle(isOnline)
         }
     }
@@ -141,7 +141,7 @@ class HomeFragment : BaseListFragment() {
             dataVersion = getString(android.R.string.unknownName)
         }
 
-        if (isActivityAndFragmentOk()) {
+        if (isActivityAndFragmentOk(this)) {
             withContext(Dispatchers.Main) {
                 val actionBar = (activity as AppCompatActivity).supportActionBar!!
                 actionBar.subtitle = getString(lldDataModeResId, dataVersion)

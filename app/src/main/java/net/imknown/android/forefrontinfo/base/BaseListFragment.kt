@@ -82,12 +82,6 @@ abstract class BaseListFragment : BaseFragment(), IView {
         swipeRefresh.isRefreshing = false
     }
 
-    protected fun isActivityAndFragmentOk() = with(activity) {
-        isAdded && this != null
-                && !this.isFinishing
-                && !this.isDestroyed
-    }
-
     protected suspend fun disableSwipeRefresh() = withContext(Dispatchers.Main) {
         swipeRefresh.isEnabled = false
     }
