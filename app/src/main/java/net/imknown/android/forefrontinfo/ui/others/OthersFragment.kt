@@ -58,12 +58,6 @@ class OthersFragment : BaseListFragment() {
         add(getResultString(R.string.build_time, time))
         if (isAtLeastAndroid6()) {
             add(getResultString(R.string.build_base_os, Build.VERSION.BASE_OS))
-            add(
-                getResultString(
-                    R.string.build_security_patch,
-                    Build.VERSION.SECURITY_PATCH
-                )
-            )
         }
         add(getResultString(R.string.build_fingerprint, Build.FINGERPRINT))
         add(getResultString(R.string.build_display, Build.DISPLAY))

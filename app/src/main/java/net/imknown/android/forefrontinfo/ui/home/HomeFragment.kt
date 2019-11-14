@@ -36,6 +36,8 @@ class HomeFragment : BaseListFragment() {
             // Shell.Config.setTimeout(10)
         }
 
+        private const val CMD_SECURITY_PATCH = "getprop ro.build.version.security_patch"
+
         private const val CMD_TOYBOX_VERSION = "toybox --version"
 
         // https://source.android.com/devices/tech/ota/ab?hl=en
@@ -129,6 +131,9 @@ class HomeFragment : BaseListFragment() {
         }
     }
 
+    private fun getSecurityPatchYearMonth(securityPatch: String) =
+        securityPatch.substringBeforeLast('-')
+
     private fun fillDataset(lld: Lld) {
         createNewTempDataset()
 
@@ -150,6 +155,23 @@ class HomeFragment : BaseListFragment() {
 //            )
 //        }
         // endregion [Android]
+
+        // region [Security patch]
+        val securityPatch = if (isAtLeastAndroid6()) {
+            Build.VERSION.SECURITY_PATCH
+        } else {
+            sh(CMD_SECURITY_PATCH)[0]
+        }
+
+        val lldSecurityPatch = lld.android.securityPatchLevel
+        @ColorInt val securityPatchColor = when {
+            securityPatch >= lldSecurityPatch -> COLOR_STATE_LIST_NO_PROBLEM
+            getSecurityPatchYearMonth(securityPatch) >= getSecurityPatchYearMonth(lldSecurityPatch) -> COLOR_STATE_LIST_WARNING
+            else -> COLOR_STATE_LIST_CRITICAL
+        }
+
+        add(getString(R.string.build_security_patch, securityPatch), securityPatchColor)
+        // endregion [Security patch]
 
         // region [Kernel]
         val linuxVersion = System.getProperty("os.version")
