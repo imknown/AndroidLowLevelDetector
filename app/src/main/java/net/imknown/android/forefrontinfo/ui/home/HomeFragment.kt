@@ -68,9 +68,9 @@ class HomeFragment : BaseListFragment() {
     }
 
     private fun copyJsonIfNeeded() {
-        if (JsonIo.whetherNeedCopyAssets(context?.assets!!)) {
+        if (JsonIo.whetherNeedCopyAssets(context!!.assets)) {
             JsonIo.copyJsonFromAssetsToContextFilesDir(
-                context?.assets!!,
+                context!!.assets,
                 GatewayApi.savedLldJsonFile,
                 GatewayApi.LLD_JSON_NAME
             )
@@ -91,6 +91,10 @@ class HomeFragment : BaseListFragment() {
     }
 
     private suspend fun prepareResult(isOnline: Boolean) {
+        if (!isActivityAndFragmentOk()) {
+            return
+        }
+
         if (!isOnline) {
             copyJsonIfNeeded()
         }
