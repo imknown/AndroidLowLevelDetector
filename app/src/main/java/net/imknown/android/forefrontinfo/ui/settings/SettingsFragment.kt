@@ -173,7 +173,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IView {
             GlobalScope.launch(Dispatchers.IO) {
                 dialog.dismiss()
 
-                showProgressDialog(title, message, size, sizeInMb)
+                showProgressDialog(title, size, sizeInMb)
 
                 val url = asset.browser_download_url
                 val fileName = asset.name
@@ -192,7 +192,6 @@ class SettingsFragment : PreferenceFragmentCompat(), IView {
     @Suppress("DEPRECATION")
     private suspend fun showProgressDialog(
         title: String,
-        message: String,
         size: Int,
         sizeInMb: Float
     ) = withContext(Dispatchers.Main) {
@@ -203,7 +202,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IView {
             setCancelable(false)
             setCanceledOnTouchOutside(false)
             setTitle(title)
-            setMessage(message)
+            // setMessage(message)
             progress = 0
             max = size
             setProgressNumberFormat(String.format("0M/%.2fM", sizeInMb))
