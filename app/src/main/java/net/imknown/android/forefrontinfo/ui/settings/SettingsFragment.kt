@@ -116,7 +116,11 @@ class SettingsFragment : PreferenceFragmentCompat(), IView {
         setCheckUpdatePreferenceStatus(false)
 
         if (allowNetworkDataPref.isChecked) {
-            GatewayApi.checkForUpdate({ data ->
+            GatewayApi.checkForUpdate(GatewayApiCheckForUpdate@{ data ->
+                if (!isActivityAndFragmentOk(this)) {
+                    return@GatewayApiCheckForUpdate
+                }
+
                 isLatestVersion(data)
             }, { error ->
                 showNetError(error)
