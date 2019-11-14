@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Looper
-import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
@@ -15,10 +14,11 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import kotlinx.coroutines.*
 import net.imknown.android.forefrontinfo.*
+import net.imknown.android.forefrontinfo.base.IView
 import net.imknown.android.forefrontinfo.ui.settings.model.GithubReleaseInfo
 import java.io.File
 
-class SettingsFragment : PreferenceFragmentCompat() {
+class SettingsFragment : PreferenceFragmentCompat(), IView {
 
     companion object {
         fun newInstance() = SettingsFragment()
@@ -296,10 +296,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
     // endregion [version click]
 
-    private fun showNetError(error: Throwable) {
-        if (BuildConfig.DEBUG) {
-            error.printStackTrace()
-        }
+    override fun showNetError(error: Throwable) {
+        super.showNetError(error)
 
         runBlocking {
             setCheckUpdatePreferenceStatus(true)
@@ -308,13 +306,5 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
             toast(getString(R.string.about_check_for_update_network_error, error.message))
         }
-    }
-
-    private suspend fun toast(@StringRes resId: Int) = withContext(Dispatchers.Main) {
-        Toast.makeText(context, resId, Toast.LENGTH_LONG).show()
-    }
-
-    private suspend fun toast(text: String?) = withContext(Dispatchers.Main) {
-        Toast.makeText(context, text, Toast.LENGTH_LONG).show()
     }
 }

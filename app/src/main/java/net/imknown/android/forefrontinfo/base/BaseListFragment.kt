@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.R
 
-abstract class BaseListFragment : BaseFragment() {
+abstract class BaseListFragment : BaseFragment(), IView {
 
     private lateinit var myTempDataset: ArrayList<MyModel>
     private val myAdapter = MyAdapter()
@@ -55,10 +55,8 @@ abstract class BaseListFragment : BaseFragment() {
         }
     }
 
-    private fun collectionDatasetCaller() {
-        GlobalScope.launch(Dispatchers.IO) {
-            collectionDataset()
-        }
+    private fun collectionDatasetCaller() = GlobalScope.launch(Dispatchers.IO) {
+        collectionDataset()
     }
 
     protected abstract suspend fun collectionDataset()

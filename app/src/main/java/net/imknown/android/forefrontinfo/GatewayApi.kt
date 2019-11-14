@@ -2,8 +2,7 @@ package net.imknown.android.forefrontinfo
 
 import com.github.kittinunf.fuel.core.FuelError
 import com.github.kittinunf.fuel.core.ProgressCallback
-import com.github.kittinunf.fuel.core.isSuccessful
-import com.github.kittinunf.fuel.coroutines.awaitByteArrayResponseResult
+import com.github.kittinunf.fuel.coroutines.awaitByteArrayResult
 import com.github.kittinunf.fuel.coroutines.awaitStringResult
 import com.github.kittinunf.fuel.httpDownload
 import com.github.kittinunf.fuel.httpGet
@@ -25,25 +24,20 @@ class GatewayApi {
 
         internal const val DIR_APK = "Apk"
 
-        lateinit var savedLldJsonFile: File
+        internal lateinit var savedLldJsonFile: File
 
-        internal suspend fun downloadLldJsonFile(): Boolean {
+        internal suspend fun downloadLldJsonFile(
+            success: (ByteArray) -> Unit,
+            failure: (FuelError) -> Unit
+        ) {
             val url = if (isZhCn()) {
                 URL_LLD_JSON_ZH_CN
             } else {
                 URL_LLD_JSON
             }
 
-            val (_, response, result) = url.httpDownload()
-                .fileDestination { _, _ -> savedLldJsonFile }
-                .awaitByteArrayResponseResult()
-            val (byteArray, error) = result
-
-            if (BuildConfig.DEBUG && error != null) {
-                error.printStackTrace()
-            }
-
-            return response.isSuccessful && byteArray != null && error == null
+            url.httpDownload().fileDestination { _, _ -> savedLldJsonFile }
+                .awaitByteArrayResult().fold(success, failure)
         }
 
         internal suspend fun checkForUpdate(
@@ -61,16 +55,14 @@ class GatewayApi {
             success: (ByteArray) -> Unit,
             failure: (FuelError) -> Unit
         ) {
-            val (_, _, result) = url.httpDownload()
+            url.httpDownload()
                 .fileDestination { _, _ ->
                     clearFolder(MyApplication.getApkDir())
                     MyApplication.getApkDir().mkdirs()
                     File(MyApplication.getApkDir(), fileName)
                 }
                 .responseProgress(progressCallback)
-                .awaitByteArrayResponseResult()
-
-            result.fold(success, failure)
+                .awaitByteArrayResult().fold(success, failure)
         }
 
         internal fun clearFolder(dir: File): Boolean {

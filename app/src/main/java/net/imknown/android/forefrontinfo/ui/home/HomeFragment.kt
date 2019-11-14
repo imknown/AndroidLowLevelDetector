@@ -8,6 +8,8 @@ import androidx.preference.PreferenceManager
 import com.g00fy2.versioncompare.Version
 import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.*
 import net.imknown.android.forefrontinfo.MainActivity.Companion.COLOR_STATE_LIST_CRITICAL
@@ -84,7 +86,19 @@ class HomeFragment : BaseListFragment() {
         )
 
         if (allowNetwork) {
-            prepareResult(GatewayApi.downloadLldJsonFile())
+            GatewayApi.downloadLldJsonFile({
+                GlobalScope.launch(Dispatchers.IO) {
+                    prepareResult(true)
+                }
+            }, {
+                GlobalScope.launch(Dispatchers.IO) {
+                    showNetError(it)
+
+                    toast(R.string.lld_json_download_failed)
+
+                    prepareResult(false)
+                }
+            })
         } else {
             prepareResult(false)
         }
