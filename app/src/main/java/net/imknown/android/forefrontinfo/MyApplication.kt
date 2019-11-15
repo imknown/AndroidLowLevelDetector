@@ -46,6 +46,17 @@ open class MyApplication : Application() {
 
         instance = this
 
+        GlobalScope.launch(Dispatchers.IO) {
+            initTheme()
+        }
+
         GatewayApi.savedLldJsonFile = File(getDownloadDir(), GatewayApi.LLD_JSON_NAME)
+    }
+
+    private suspend fun initTheme() {
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val themesValue =
+            sharedPreferences.getString(getString(R.string.interface_themes_key), "")!!
+        setTheme(themesValue)
     }
 }
