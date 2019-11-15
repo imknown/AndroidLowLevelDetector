@@ -3,6 +3,12 @@ package net.imknown.android.forefrontinfo
 import android.annotation.SuppressLint
 import android.app.Application
 import android.os.Environment
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.preference.PreferenceManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 @SuppressLint("Registered")
@@ -21,6 +27,16 @@ open class MyApplication : Application() {
                 externalFilesDir
             } else {
                 instance.filesDir.resolve(type)
+            }
+        }
+
+        internal suspend fun setTheme(themesValue: String) {
+            val clazz = AppCompatDelegate::class.java
+            val field = clazz.getDeclaredField(themesValue)
+            @AppCompatDelegate.NightMode val mode = field.getInt(null)
+
+            withContext(Dispatchers.Main) {
+                AppCompatDelegate.setDefaultNightMode(mode)
             }
         }
     }
