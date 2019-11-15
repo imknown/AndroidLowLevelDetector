@@ -8,7 +8,9 @@ import android.os.Bundle
 import android.os.Looper
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.FileProvider
+import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
@@ -44,6 +46,17 @@ class SettingsFragment : PreferenceFragmentCompat(), IView {
 
     private suspend fun initViews() = withContext(Dispatchers.Main) {
         allowNetworkDataPref = findPreference(getString(R.string.network_allow_network_data_key))!!
+
+        val themesPref = findPreference<ListPreference>(getString(R.string.interface_themes_key))!!
+        themesPref.onPreferenceChangeListener =
+            Preference.OnPreferenceChangeListener { _: Preference, newValue: Any ->
+                val clazz = AppCompatDelegate::class.java
+                val field = clazz.getDeclaredField(newValue.toString())
+                @AppCompatDelegate.NightMode val mode = field.getInt(null)
+                AppCompatDelegate.setDefaultNightMode(mode)
+
+                true
+            }
 
         val versionPref = findPreference<Preference>(getString(R.string.about_version_key))!!
         versionPref.let {
