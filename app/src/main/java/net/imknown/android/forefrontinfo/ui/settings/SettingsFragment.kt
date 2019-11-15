@@ -260,7 +260,11 @@ class SettingsFragment : PreferenceFragmentCompat(), IView {
     }
 
     private suspend fun dismissProgressDialog() = withContext(Dispatchers.Main) {
-        progressDialog.takeIf { ::progressDialog.isInitialized && it.isShowing }?.dismiss()
+        if (::progressDialog.isInitialized) {
+            if (progressDialog.isShowing) {
+                progressDialog.dismiss()
+            }
+        }
     }
     // endregion [check for update]
 
