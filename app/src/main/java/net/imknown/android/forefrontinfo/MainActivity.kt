@@ -109,38 +109,34 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getFragmentInstance(@IdRes id: Int): Fragment {
-        val fragmentInstance: Fragment
+        var fragment = supportFragmentManager.findFragmentByTag(id.toString())
 
-        when (id) {
+        if (fragment == null) {
+            fragment = createFragment(id)
+            addFragment(fragment, id)
+        }
+
+        return fragment
+    }
+
+    private fun createFragment(@IdRes id: Int): Fragment {
+        return when (id) {
             R.id.navigation_home -> {
-                fragmentInstance = HomeFragment.newInstance()
+                HomeFragment.newInstance()
             }
 
             R.id.navigation_others -> {
-                fragmentInstance = OthersFragment.newInstance()
+                OthersFragment.newInstance()
             }
 
             R.id.navigation_settings -> {
-                fragmentInstance = SettingsFragment.newInstance()
+                SettingsFragment.newInstance()
             }
 
             else -> {
                 throw Exception()
             }
         }
-
-        return createOrReuseFragment(fragmentInstance, id)
-    }
-
-    private fun createOrReuseFragment(fragmentInstance: Fragment, @IdRes id: Int): Fragment {
-        var fragment = supportFragmentManager.findFragmentByTag(id.toString())
-
-        if (fragment == null) {
-            fragment = fragmentInstance
-            addFragment(fragment, id)
-        }
-
-        return fragment
     }
 
     private fun addFragment(fragment: Fragment, @IdRes id: Int) {
