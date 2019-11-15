@@ -160,7 +160,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IView {
     }
 
     @Suppress("DEPRECATION")
-    private var progressDialog: android.app.ProgressDialog? = null
+    private lateinit var progressDialog: android.app.ProgressDialog
 
     private suspend fun showDownloadConfirmDialog(githubReleaseInfo: GithubReleaseInfo) {
         val version = githubReleaseInfo.tag_name
@@ -209,7 +209,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IView {
         sizeInMb: Float
     ) = withContext(Dispatchers.Main) {
         progressDialog = android.app.ProgressDialog(context)
-        with(progressDialog!!) {
+        with(progressDialog) {
             setProgressStyle(android.app.ProgressDialog.STYLE_HORIZONTAL)
             isIndeterminate = false
             setCancelable(false)
@@ -227,10 +227,10 @@ class SettingsFragment : PreferenceFragmentCompat(), IView {
     private suspend fun downloadApk(url: String, fileName: String, sizeInMb: Float) {
         try {
             GatewayApi.downloadApk(url, fileName, { readBytes, _ ->
-                progressDialog?.setProgressNumberFormat(
+                progressDialog.setProgressNumberFormat(
                     String.format("%.2fM/%.2fM", readBytes / 1_048_576F, sizeInMb)
                 )
-                progressDialog?.progress = readBytes.toInt()
+                progressDialog.progress = readBytes.toInt()
             }, { data ->
                 if (data.isEmpty()) {
                     showNetError(Exception(getString(R.string.about_check_for_update_network_empty_file)))
@@ -262,11 +262,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IView {
     }
 
     private suspend fun dismissProgressDialog() = withContext(Dispatchers.Main) {
-        progressDialog?.let {
-            if (it.isShowing) {
-                it.dismiss()
-            }
-        }
+        progressDialog.takeIf { ::progressDialog.isInitialized && it.isShowing }?.dismiss()
     }
     // endregion [check for update]
 
