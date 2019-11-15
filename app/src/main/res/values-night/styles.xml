@@ -3,6 +3,7 @@
     <style name="AppTheme" parent="BaseAppTheme">
         <item name="android:windowLightStatusBar" tools:targetApi="M">false</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="O_MR1">false</item>
+        <item name="android:windowBackground">@android:color/black</item>
     </style>
 
 </resources>

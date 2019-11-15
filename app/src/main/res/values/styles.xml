@@ -11,6 +11,7 @@
     <style name="AppTheme" parent="BaseAppTheme">
         <item name="android:windowLightStatusBar" tools:targetApi="M">true</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="O_MR1">false</item>
+        <item name="android:windowBackground">@android:color/white</item>
     </style>
 
 </resources>
