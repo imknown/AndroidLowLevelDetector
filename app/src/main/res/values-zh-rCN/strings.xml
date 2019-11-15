@@ -77,6 +77,7 @@
     <!-- 设置 -->
     <string name="interface_title">界面</string>
     <string name="interface_themes_title">主题</string>
+    <string name="interface_themes_summary">点击以显示主题选择器</string>
     <string name="interface_themes_follow_system_key">跟随系统</string>
     <string name="interface_themes_always_light_key">总是亮色</string>
     <string name="interface_themes_always_dark_key">总是暗色</string>

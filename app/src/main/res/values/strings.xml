@@ -79,6 +79,7 @@
     <string name="interface_title">Interface</string>
     <string name="interface_themes_key" translatable="false">interface_themes_key</string>
     <string name="interface_themes_title">Themes</string>
+    <string name="interface_themes_summary">Click to show the theme chooser</string>
     <string name="interface_themes_follow_system_key">Follow system</string>
     <string name="interface_themes_always_light_key">Always light</string>
     <string name="interface_themes_always_dark_key">Always dark</string>
