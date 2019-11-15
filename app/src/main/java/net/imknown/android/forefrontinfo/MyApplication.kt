@@ -64,6 +64,8 @@ open class MyApplication : Application() {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         val themesValue =
             sharedPreferences.getString(getMyString(R.string.interface_themes_key), "")!!
-        setMyTheme(themesValue)
+        if (themesValue.isNotEmpty()) {
+            setMyTheme(themesValue)
+        }
     }
 }
