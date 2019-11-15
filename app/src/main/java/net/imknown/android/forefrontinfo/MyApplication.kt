@@ -3,6 +3,7 @@ package net.imknown.android.forefrontinfo
 import android.annotation.SuppressLint
 import android.app.Application
 import android.os.Environment
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
 import kotlinx.coroutines.Dispatchers
@@ -30,7 +31,7 @@ open class MyApplication : Application() {
             }
         }
 
-        internal suspend fun setTheme(themesValue: String) {
+        internal suspend fun setMyTheme(themesValue: String) {
             val clazz = AppCompatDelegate::class.java
             val field = clazz.getDeclaredField(themesValue)
             @AppCompatDelegate.NightMode val mode = field.getInt(null)
@@ -39,6 +40,12 @@ open class MyApplication : Application() {
                 AppCompatDelegate.setDefaultNightMode(mode)
             }
         }
+
+        fun getMyString(@StringRes resId: Int) =
+            instance.getString(resId)
+
+        fun getMyString(@StringRes resId: Int, vararg formatArgs: Any?) =
+            instance.getString(resId, *formatArgs)
     }
 
     override fun onCreate() {
@@ -56,7 +63,7 @@ open class MyApplication : Application() {
     private suspend fun initTheme() {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         val themesValue =
-            sharedPreferences.getString(getString(R.string.interface_themes_key), "")!!
-        setTheme(themesValue)
+            sharedPreferences.getString(getMyString(R.string.interface_themes_key), "")!!
+        setMyTheme(themesValue)
     }
 }

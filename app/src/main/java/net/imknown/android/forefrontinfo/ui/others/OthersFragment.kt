@@ -2,6 +2,7 @@ package net.imknown.android.forefrontinfo.ui.others
 
 import android.os.Build
 import androidx.annotation.StringRes
+import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.BaseListFragment
 import java.text.SimpleDateFormat
@@ -16,9 +17,11 @@ class OthersFragment : BaseListFragment() {
     override suspend fun collectionDataset() {
         fillDataset()
 
-        showResult()
+        if (isActivityAndFragmentOk(this)) {
+            showResult()
 
-        disableSwipeRefresh()
+            disableSwipeRefresh()
+        }
     }
 
     private fun fillDataset() {
@@ -78,9 +81,12 @@ class OthersFragment : BaseListFragment() {
             || value[0] == null
             || value[0].toString().isEmpty()
         ) {
-            getString(stringId, getString(R.string.build_not_filled))
+            MyApplication.getMyString(
+                stringId,
+                MyApplication.getMyString(R.string.build_not_filled)
+            )
         } else {
-            getString(stringId, *value)
+            MyApplication.getMyString(stringId, *value)
         }
     }
 }

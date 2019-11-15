@@ -44,24 +44,27 @@ class SettingsFragment : PreferenceFragmentCompat(), IView {
     }
 
     private suspend fun initViews() = withContext(Dispatchers.Main) {
-        allowNetworkDataPref = findPreference(getString(R.string.network_allow_network_data_key))!!
+        allowNetworkDataPref =
+            findPreference(MyApplication.getMyString(R.string.network_allow_network_data_key))!!
 
-        val themesPref = findPreference<ListPreference>(getString(R.string.interface_themes_key))!!
+        val themesPref =
+            findPreference<ListPreference>(MyApplication.getMyString(R.string.interface_themes_key))!!
         themesPref.onPreferenceChangeListener =
             Preference.OnPreferenceChangeListener { _: Preference, newValue: Any ->
                 GlobalScope.launch(Dispatchers.IO) {
-                    MyApplication.setTheme(newValue.toString())
+                    MyApplication.setMyTheme(newValue.toString())
                 }
 
                 true
             }
 
-        val versionPref = findPreference<Preference>(getString(R.string.about_version_key))!!
+        val versionPref =
+            findPreference<Preference>(MyApplication.getMyString(R.string.about_version_key))!!
         versionPref.let {
-            val assetLldVersion = JsonIo.getAssetLldVersion(context?.assets!!)
+            val assetLldVersion = JsonIo.getAssetLldVersion(MyApplication.instance.assets)
 
             it.summary =
-                getString(
+                MyApplication.getMyString(
                     R.string.about_version_summary,
                     BuildConfig.VERSION_NAME,
                     BuildConfig.VERSION_CODE,
@@ -77,7 +80,8 @@ class SettingsFragment : PreferenceFragmentCompat(), IView {
             true
         }
 
-        checkUpdatePref = findPreference(getString(R.string.about_check_for_update_key))!!
+        checkUpdatePref =
+            findPreference(MyApplication.getMyString(R.string.about_check_for_update_key))!!
         checkUpdatePref.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             GlobalScope.launch(Dispatchers.IO) {
                 checkForUpdate()
@@ -86,7 +90,8 @@ class SettingsFragment : PreferenceFragmentCompat(), IView {
             true
         }
 
-        clearApkFolderPref = findPreference(getString(R.string.about_clear_apk_folder_key))!!
+        clearApkFolderPref =
+            findPreference(MyApplication.getMyString(R.string.about_clear_apk_folder_key))!!
         clearApkFolderPref.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             GlobalScope.launch(Dispatchers.IO) {
                 clearApkFolder()
@@ -104,7 +109,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IView {
     ) = withContext(Dispatchers.Main) {
         preference.isEnabled = isEnabled
 
-        preference.title = getString(
+        preference.title = MyApplication.getMyString(
             if (isEnabled) {
                 normalResId
             } else {
@@ -170,14 +175,14 @@ class SettingsFragment : PreferenceFragmentCompat(), IView {
         val desc = githubReleaseInfo.name
         val log = githubReleaseInfo.body
 
-        val title = getString(
+        val title = MyApplication.getMyString(
             R.string.about_check_for_update_new_version,
             version,
             sizeInMbString
         )
         val message = "$date\n$desc\n$log"
 
-        val builder = AlertDialog.Builder(context!!)
+        val builder = AlertDialog.Builder(MyApplication.instance)
         builder.setTitle(title)
         builder.setMessage(message)
         builder.setPositiveButton(android.R.string.ok) { dialog: DialogInterface, _: Int ->
@@ -231,7 +236,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IView {
                 progressDialog.progress = readBytes.toInt()
             }, { data ->
                 if (data.isEmpty()) {
-                    showNetError(Exception(getString(R.string.about_check_for_update_network_empty_file)))
+                    showNetError(Exception(MyApplication.getMyString(R.string.about_check_for_update_network_empty_file)))
                 } else {
                     install(fileName)
                 }
@@ -248,7 +253,11 @@ class SettingsFragment : PreferenceFragmentCompat(), IView {
         val file = File(MyApplication.getApkDir(), fileName)
         val data = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            FileProvider.getUriForFile(context!!, context!!.packageName + ".provider", file)
+            FileProvider.getUriForFile(
+                MyApplication.instance,
+                MyApplication.instance.packageName + ".provider",
+                file
+            )
         } else {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             Uri.fromFile(file)
@@ -318,7 +327,12 @@ class SettingsFragment : PreferenceFragmentCompat(), IView {
 
             dismissProgressDialog()
 
-            toast(getString(R.string.about_check_for_update_network_error, error.message))
+            toast(
+                MyApplication.getMyString(
+                    R.string.about_check_for_update_network_error,
+                    error.message
+                )
+            )
         }
     }
 }
