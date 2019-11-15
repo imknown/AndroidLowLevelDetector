@@ -19,7 +19,7 @@ interface IView {
         Toast.makeText(MyApplication.instance, resId, Toast.LENGTH_LONG).show()
     }
 
-    suspend fun toast(text: String?) = withContext(Dispatchers.Main) {
+    suspend fun toast(text: String) = withContext(Dispatchers.Main) {
         Toast.makeText(MyApplication.instance, text, Toast.LENGTH_LONG).show()
     }
 
