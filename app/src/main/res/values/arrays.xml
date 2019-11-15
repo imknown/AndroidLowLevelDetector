@@ -2,15 +2,15 @@
 <resources>
     <string-array name="themeKeys">
         <item>@string/interface_themes_follow_system_key</item>
+        <item>@string/interface_themes_power_saver_key</item>
         <item>@string/interface_themes_always_light_key</item>
         <item>@string/interface_themes_always_dark_key</item>
-        <item>@string/interface_themes_power_saver_key</item>
     </string-array>
 
     <string-array name="themeValues">
         <item>@string/interface_themes_follow_system_value</item>
+        <item>@string/interface_themes_power_saver_value</item>
         <item>@string/interface_themes_always_light_value</item>
         <item>@string/interface_themes_always_dark_value</item>
-        <item>@string/interface_themes_power_saver_value</item>
     </string-array>
 </resources>
