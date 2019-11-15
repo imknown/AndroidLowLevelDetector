@@ -24,8 +24,8 @@ interface IView {
     }
 
     fun isActivityAndFragmentOk(fragment: Fragment) = with(fragment) {
-        isAdded && fragment.activity != null
-                && !fragment.activity!!.isFinishing
-                && !fragment.activity!!.isDestroyed
+        isAdded && activity != null
+                && !activity!!.isFinishing
+                && !activity!!.isDestroyed
     }
 }
