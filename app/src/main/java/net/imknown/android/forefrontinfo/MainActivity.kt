@@ -140,6 +140,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun addFragment(fragment: Fragment, @IdRes id: Int) {
+        if (fragment.isAdded) {
+            return
+        }
+
         supportFragmentManager.beginTransaction()
             .setCustomAnimations(R.anim.drop_scale, FragmentTransaction.TRANSIT_NONE)
             .add(R.id.container, fragment, id.toString())
