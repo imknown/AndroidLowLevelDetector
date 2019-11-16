@@ -11,6 +11,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import kotlin.reflect.full.staticProperties
 
 @SuppressLint("Registered")
 open class MyApplication : Application() {
@@ -32,9 +33,12 @@ open class MyApplication : Application() {
         }
 
         internal suspend fun setMyTheme(themesValue: String) {
-            val clazz = AppCompatDelegate::class.java
-            val field = clazz.getDeclaredField(themesValue)
-            @AppCompatDelegate.NightMode val mode = field.getInt(null)
+//            @AppCompatDelegate.NightMode val mode =
+//                AppCompatDelegate::class.java.getDeclaredField(themesValue).getInt(null)
+
+            @AppCompatDelegate.NightMode val mode = AppCompatDelegate::class.staticProperties
+                .find { it.name == themesValue }!!
+                .getter.call() as Int
 
             withContext(Dispatchers.Main) {
                 AppCompatDelegate.setDefaultNightMode(mode)
