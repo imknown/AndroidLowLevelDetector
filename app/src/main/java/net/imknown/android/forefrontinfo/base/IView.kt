@@ -9,7 +9,7 @@ import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.MyApplication
 
 interface IView {
-    fun showNetError(error: Throwable) {
+    fun showError(error: Throwable) {
         if (BuildConfig.DEBUG) {
             error.printStackTrace()
         }

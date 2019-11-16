@@ -139,7 +139,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IView {
 
                 isLatestVersion(data)
             }, { error ->
-                showNetError(error)
+                showError(error)
             })
         } else {
             toast(R.string.about_check_for_update_allow_network_data_first)
@@ -236,15 +236,15 @@ class SettingsFragment : PreferenceFragmentCompat(), IView {
                 progressDialog.progress = readBytes.toInt()
             }, { data ->
                 if (data.isEmpty()) {
-                    showNetError(Exception(MyApplication.getMyString(R.string.about_check_for_update_network_empty_file)))
+                    showError(Exception(MyApplication.getMyString(R.string.about_check_for_update_network_empty_file)))
                 } else {
                     install(fileName)
                 }
             }, { error ->
-                showNetError(error)
+                showError(error)
             })
         } catch (t: Throwable) {
-            showNetError(t)
+            showError(t)
         }
     }
 
@@ -319,8 +319,8 @@ class SettingsFragment : PreferenceFragmentCompat(), IView {
     }
     // endregion [version click]
 
-    override fun showNetError(error: Throwable) {
-        super.showNetError(error)
+    override fun showError(error: Throwable) {
+        super.showError(error)
 
         runBlocking {
             setCheckUpdatePreferenceStatus(true)

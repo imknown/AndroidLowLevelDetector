@@ -92,7 +92,7 @@ class HomeFragment : BaseListFragment() {
                 }
             }, {
                 GlobalScope.launch(Dispatchers.IO) {
-                    showNetError(it)
+                    showError(it)
 
                     toast(R.string.lld_json_download_failed)
 
