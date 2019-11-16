@@ -145,6 +145,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         supportFragmentManager.beginTransaction()
+            .setCustomAnimations(R.anim.drop_scale, FragmentTransaction.TRANSIT_NONE)
             .add(R.id.container, fragment, id.toString())
             .commitNow()
     }
