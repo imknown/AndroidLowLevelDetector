@@ -149,9 +149,9 @@ class MainActivity : AppCompatActivity() {
             .commitNow()
     }
 
-    override fun onBackPressed() {
-        // https://github.com/ChuckerTeam/chucker/issues/102
-        // https://issuetracker.google.com/issues/139738913
-        finishAfterTransition()
+    override fun onDestroy() {
+        super.onDestroy()
+
+        android.os.Process.killProcess(android.os.Process.myPid())
     }
 }
