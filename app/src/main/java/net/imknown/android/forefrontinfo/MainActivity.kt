@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
         COLOR_STATE_LIST_CRITICAL = getMyColor(R.color.colorCritical)
     }
 
-    private fun getMyColor(@ColorRes id: Int) = ContextCompat.getColor(this, id)
+    private fun getMyColor(@ColorRes id: Int) = ContextCompat.getColor(MyApplication.instance, id)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
