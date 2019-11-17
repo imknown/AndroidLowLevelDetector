@@ -73,7 +73,15 @@ class OthersFragment : BaseListFragment() {
         //
         add(getResultString(R.string.build_bootloader, Build.BOOTLOADER))
         add(getResultString(R.string.build_radio, Build.getRadioVersion()))
+
+        sh("getprop").forEach {
+            val a = it.split(": ")
+            add("${removeSquareBrackets(a[0])}\n${removeSquareBrackets(a[1])}")
+        }
     }
+
+    private fun removeSquareBrackets(text: String) =
+        text.substringAfter("[").substringBefore(']').trimIndent()
 
     private fun getResultString(@StringRes stringId: Int, vararg value: Any?): String {
         return if (
