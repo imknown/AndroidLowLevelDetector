@@ -43,7 +43,29 @@ class SettingsFragment : PreferenceFragmentCompat(), IView {
         }
     }
 
+    private lateinit var fastScroller: Any
+
+    override fun getFastScroller(): Any {
+        return if (!::fastScroller.isInitialized) {
+            createFastScrollerSingletonInstanceAndEnableIt(listView)
+        } else {
+            fastScroller
+        }
+    }
+
     private suspend fun initViews() = withContext(Dispatchers.Main) {
+        val fastScrollPref =
+            findPreference<SwitchPreferenceCompat>(MyApplication.getMyString(R.string.interface_fast_scroll_key))!!
+        fastScrollPref.setOnPreferenceChangeListener { _: Preference, newValue: Any ->
+            if (isActivityAndFragmentOk(this@SettingsFragment)) {
+                setFastScrollerStatus(listView, newValue.toString().toBoolean())
+            }
+            true
+        }
+        if (fastScrollPref.isChecked) {
+            fastScroller = createFastScrollerSingletonInstanceAndEnableIt(listView)
+        }
+
         allowNetworkDataPref =
             findPreference(MyApplication.getMyString(R.string.network_allow_network_data_key))!!
 

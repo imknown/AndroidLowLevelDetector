@@ -77,6 +77,10 @@
 
     <!-- Settings -->
     <string name="interface_title">Interface</string>
+    <string name="interface_fast_scroll_key" translatable="false">interface_fast_scroll_key</string>
+    <string name="interface_fast_scroll_title">Fast scroll (EXPERIMENTAL)</string>
+    <string name="interface_fast_scroll_summary">Use a draggable interactive scroll bar</string>
+
     <string name="interface_themes_key" translatable="false">interface_themes_key</string>
     <string name="interface_themes_title">Themes</string>
     <string name="interface_themes_summary">Click to show the theme chooser</string>

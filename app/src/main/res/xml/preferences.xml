@@ -11,6 +11,12 @@
             app:key="@string/interface_themes_key"
             app:summary="@string/interface_themes_summary"
             app:title="@string/interface_themes_title" />
+
+        <SwitchPreferenceCompat
+            app:icon="@drawable/ic_format_list_bulleted_black_24dp"
+            app:key="@string/interface_fast_scroll_key"
+            app:summary="@string/interface_fast_scroll_summary"
+            app:title="@string/interface_fast_scroll_title" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/network_title">

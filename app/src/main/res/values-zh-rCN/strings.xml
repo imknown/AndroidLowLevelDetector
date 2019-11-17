@@ -76,6 +76,8 @@
 
     <!-- 设置 -->
     <string name="interface_title">界面</string>
+    <string name="interface_fast_scroll_title">快速滚动 (实验性)</string>
+    <string name="interface_fast_scroll_summary">使用可拖拽交互的滚动条</string>
     <string name="interface_themes_title">主题</string>
     <string name="interface_themes_summary">点击以显示主题选择器</string>
     <string name="interface_themes_follow_system_key">跟随系统</string>
