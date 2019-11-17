@@ -38,34 +38,34 @@ class HomeFragment : BaseListFragment() {
             // Shell.Config.setTimeout(10)
         }
 
-        private const val CMD_SECURITY_PATCH = "getprop ro.build.version.security_patch"
+        private const val PROP_SECURITY_PATCH = "ro.build.version.security_patch"
 
         private const val CMD_TOYBOX_VERSION = "toybox --version"
 
         // https://source.android.com/devices/tech/ota/ab?hl=en
         // /* root needed*/ private const val CMD_BOOT_PARTITION = "ls /dev/block/bootdevice/by-name | grep boot_"
         // private const val CMD_ROM_TOTAL_SIZE = "df | grep -v '/apex' | grep -v '/storage' | grep -E 'tmpfs'\\|'/dev'\\|'/data' | awk '{s+=\$2} END {print s/1000000}'"
-        private const val CMD_AB_UPDATE = "getprop ro.build.ab_update"
-        private const val CMD_SLOT_SUFFIX = "getprop ro.boot.slot_suffix"
+        private const val PROP_AB_UPDATE = "ro.build.ab_update"
+        private const val PROP_SLOT_SUFFIX = "ro.boot.slot_suffix"
 
         // https://source.android.com/devices/architecture/?hl=en#hidl
-        private const val CMD_TREBLE_ENABLED = "getprop ro.treble.enabled"
+        private const val PROP_TREBLE_ENABLED = "ro.treble.enabled"
 
         // https://source.android.com/devices/architecture/vndk?hl=en
-        private const val CMD_VNDK_LITE = "getprop ro.vndk.lite"
-        private const val CMD_VNDK_VERSION = "getprop ro.vndk.version"
+        private const val PROP_VNDK_LITE = "ro.vndk.lite"
+        private const val PROP_VNDK_VERSION = "ro.vndk.version"
 
         // https://source.android.com/devices/bootloader/system-as-root?hl=en
         // https://github.com/topjohnwu/magisk_files/blob/2d7ddefbe4946806de1875a18247b724f5e7d4a0/notes.md
         // https://github.com/topjohnwu/Magisk/blob/master/scripts/util_functions.sh#L193
         // https://github.com/opengapps/opengapps/blob/master/scripts/inc.installer.sh#L710
-        private const val CMD_SYSTEM_ROOT_IMAGE = "getprop ro.build.system_root_image"
+        private const val PROP_SYSTEM_ROOT_IMAGE = "ro.build.system_root_image"
         private const val CMD_MOUNT_DEV_ROOT = "grep '/dev/root / ' /proc/mounts"
         private const val CMD_MOUNT_SYSTEM =
             "grep ' /system ' /proc/mounts | grep -v 'tmpfs' | grep -v 'none'"
 
         // https://source.android.com/devices/tech/ota/apex?hl=en
-        private const val CMD_APEX_UPDATABLE = "getprop ro.apex.updatable"
+        private const val PROP_APEX_UPDATABLE = "ro.apex.updatable"
         private const val CMD_FLATTENED_APEX_MOUNT = "grep 'tmpfs /apex tmpfs' /proc/mounts"
     }
 
@@ -183,7 +183,7 @@ class HomeFragment : BaseListFragment() {
         val securityPatch = if (isAtLeastAndroid6()) {
             Build.VERSION.SECURITY_PATCH
         } else {
-            sh(CMD_SECURITY_PATCH)[0]
+            getStringProperty(PROP_SECURITY_PATCH)
         }
 
         val lldSecurityPatch = lld.android.securityPatchLevel
@@ -217,8 +217,7 @@ class HomeFragment : BaseListFragment() {
         // val romTotalSizeResult = sh(CMD_ROM_TOTAL_SIZE)
         // val romTotalSize = kotlin.math.floor(romTotalSizeResult[0].toFloat()).toString()
 
-        val abUpdateSupportedResult = sh(isAtLeastAndroid7(), CMD_AB_UPDATE)
-        val isAbUpdateSupported = isResultTrue(abUpdateSupportedResult)
+        val isAbUpdateSupported = getBooleanProperty(PROP_AB_UPDATE, isAtLeastAndroid7())
         val abUpdateSupportedArgs =
             translate(isAbUpdateSupported) /* + MyApplication.getMyString(R.string.rom_total_size_result, romTotalSize) */
 
@@ -228,8 +227,8 @@ class HomeFragment : BaseListFragment() {
                 abUpdateSupportedArgs
             )
         if (isAbUpdateSupported) {
-            val slotSuffixResult = sh(CMD_SLOT_SUFFIX)
-            val hasVndkVersion = hasResult(slotSuffixResult)
+            val slotSuffixResult = getStringProperty(PROP_SLOT_SUFFIX)
+            val hasVndkVersion = slotSuffixResult.isNotEmpty()
             val slotSuffixUsing = if (hasVndkVersion) {
                 slotSuffixResult[0]
             } else {
@@ -246,8 +245,7 @@ class HomeFragment : BaseListFragment() {
         // endregion [A/B]
 
         // region [Treble]
-        val trebleEnabledResult = sh(isAtLeastAndroid8(), CMD_TREBLE_ENABLED)
-        val isTrebleEnabled = isResultTrue(trebleEnabledResult)
+        val isTrebleEnabled = getBooleanProperty(PROP_TREBLE_ENABLED, isAtLeastAndroid8())
 
         add(
             MyApplication.getMyString(R.string.treble_enabled_result, translate(isTrebleEnabled)),
@@ -256,11 +254,10 @@ class HomeFragment : BaseListFragment() {
         // endregion [Treble]
 
         // region [VNDK]
-        val hasVndkLiteResult = sh(isAtLeastAndroid8(), CMD_VNDK_LITE)
-        val hasVndkLite = isResultTrue(hasVndkLiteResult)
+        val hasVndkLite = getBooleanProperty(PROP_VNDK_LITE, isAtLeastAndroid8())
 
-        val vndkVersionResult = sh(isAtLeastAndroid8(), CMD_VNDK_VERSION)
-        val hasVndkVersion = hasResult(vndkVersionResult)
+        val vndkVersionResult = getStringProperty(PROP_VNDK_VERSION, isAtLeastAndroid8())
+        val hasVndkVersion = vndkVersionResult.isNotEmpty()
 
         val isVndkBuiltIn = hasVndkLite || hasVndkVersion
 
@@ -295,13 +292,12 @@ class HomeFragment : BaseListFragment() {
         // endregion [VNDK]
 
         // region [SAR]
-        val systemRootImageResult = sh(isAtLeastAndroid9(), CMD_SYSTEM_ROOT_IMAGE)
-        val hasSystemRootImage = isResultTrue(systemRootImageResult)
+        val hasSystemRootImage = getBooleanProperty(PROP_SYSTEM_ROOT_IMAGE, isAtLeastAndroid9())
 
-        val mountDevRootResult = sh(isAtLeastAndroid9(), CMD_MOUNT_DEV_ROOT)
+        val mountDevRootResult = sh(CMD_MOUNT_DEV_ROOT, isAtLeastAndroid9())
         val hasMountDevRoot = hasResult(mountDevRootResult)
 
-        val mountSystemResult = sh(isAtLeastAndroid9() && !hasSystemRootImage, CMD_MOUNT_SYSTEM)
+        val mountSystemResult = sh(CMD_MOUNT_SYSTEM, isAtLeastAndroid9() && !hasSystemRootImage)
         val hasMountSystem = hasResult(mountSystemResult)
 
         val isSar =
@@ -310,10 +306,9 @@ class HomeFragment : BaseListFragment() {
         // endregion [SAR]
 
         // region [APEX]
-        val apexUpdatableResult = sh(isAtLeastAndroid10(), CMD_APEX_UPDATABLE)
-        val apexUpdatable = isResultTrue(apexUpdatableResult)
+        val apexUpdatable = getBooleanProperty(PROP_APEX_UPDATABLE, isAtLeastAndroid10())
 
-        val flattenedApexMountedResult = sh(isAtLeastAndroid10(), CMD_FLATTENED_APEX_MOUNT)
+        val flattenedApexMountedResult = sh(CMD_FLATTENED_APEX_MOUNT, isAtLeastAndroid10())
         val isFlattenedApexMounted = hasResult(flattenedApexMountedResult)
 
         val isApex = apexUpdatable || isFlattenedApexMounted
@@ -334,7 +329,7 @@ class HomeFragment : BaseListFragment() {
         // endregion [APEX]
 
         // region [ToyBox]
-        val toyboxVersionResult = sh(isAtLeastAndroid6(), CMD_TOYBOX_VERSION)
+        val toyboxVersionResult = sh(CMD_TOYBOX_VERSION, isAtLeastAndroid6())
         val hasToyboxVersion = hasResult(toyboxVersionResult)
         var hasToyboxResult = translate(hasToyboxVersion)
 
@@ -362,18 +357,7 @@ class HomeFragment : BaseListFragment() {
         // endregion [ToyBox]
     }
 
-    private fun sh(condition: Boolean, cmd: String) =
-        if (condition) {
-            sh(cmd)
-        } else {
-            emptyList()
-        }
-
-    private fun sh(cmd: String) = Shell.sh(cmd).exec().out
-
     private fun hasResult(result: List<String>) = result.isNotEmpty() && result[0].isNotEmpty()
-
-    private fun isResultTrue(result: List<String>) = result.isNotEmpty() && result[0].toBoolean()
 
     private fun translate(condition: Boolean) = MyApplication.getMyString(
         if (condition) {
