@@ -11,6 +11,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.main_activity.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import net.imknown.android.forefrontinfo.ui.home.HomeFragment
 import net.imknown.android.forefrontinfo.ui.others.OthersFragment
 import net.imknown.android.forefrontinfo.ui.settings.SettingsFragment
@@ -148,5 +152,15 @@ class MainActivity : AppCompatActivity() {
             .setCustomAnimations(R.anim.drop_scale, FragmentTransaction.TRANSIT_NONE)
             .add(R.id.container, fragment, id.toString())
             .commitNow()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+
+        GlobalScope.launch(Dispatchers.IO) {
+            delay(16)
+
+            android.os.Process.killProcess(android.os.Process.myPid())
+        }
     }
 }
