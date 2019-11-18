@@ -24,15 +24,7 @@ abstract class BaseListFragment : BaseFragment(), IView,
     private lateinit var myTempDataset: ArrayList<MyModel>
     private val myAdapter = MyAdapter()
 
-    private lateinit var fastScroller: Any
-
-    override fun getFastScroller(): Any {
-        return if (!::fastScroller.isInitialized) {
-            createFastScrollerSingletonInstanceAndEnableIt(list)
-        } else {
-            fastScroller
-        }
-    }
+    override var fastScroller: Any? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,12 +41,11 @@ abstract class BaseListFragment : BaseFragment(), IView,
 
         GlobalScope.launch(Dispatchers.IO) {
             val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
-            val isFastScrollEnabled = sharedPreferences.getBoolean(
-                MyApplication.getMyString(R.string.interface_fast_scroll_key), false
-            )
-            if (isFastScrollEnabled) {
-                fastScroller = createFastScrollerSingletonInstanceAndEnableIt(list)
-            }
+            val scrollBarMode = sharedPreferences.getString(
+                MyApplication.getMyString(R.string.interface_scroll_bar_key),
+                MyApplication.getMyString(R.string.interface_no_scroll_bar_value)
+            )!!
+            setScrollBarMode(list, scrollBarMode)
 
             PreferenceManager.getDefaultSharedPreferences(context)
                 .registerOnSharedPreferenceChangeListener(this@BaseListFragment)
@@ -67,11 +58,14 @@ abstract class BaseListFragment : BaseFragment(), IView,
         sharedPreferences: SharedPreferences,
         key: String
     ) {
-        if (key == MyApplication.getMyString(R.string.interface_fast_scroll_key)) {
-            setFastScrollerStatus(
-                list,
-                sharedPreferences.getBoolean(key, false).toString().toBoolean()
-            )
+        if (key == MyApplication.getMyString(R.string.interface_scroll_bar_key)
+            && isActivityAndFragmentOk(this)
+        ) {
+            val scrollBarMode = sharedPreferences.getString(
+                key,
+                MyApplication.getMyString(R.string.interface_no_scroll_bar_value)
+            )!!
+            setScrollBarMode(list, scrollBarMode)
         }
     }
 

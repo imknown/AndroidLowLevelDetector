@@ -43,36 +43,26 @@ class SettingsFragment : PreferenceFragmentCompat(), IView {
         }
     }
 
-    private lateinit var fastScroller: Any
-
-    override fun getFastScroller(): Any {
-        return if (!::fastScroller.isInitialized) {
-            createFastScrollerSingletonInstanceAndEnableIt(listView)
-        } else {
-            fastScroller
-        }
-    }
+    override var fastScroller: Any? = null
 
     private suspend fun initViews() = withContext(Dispatchers.Main) {
-        val fastScrollPref =
-            findPreference<SwitchPreferenceCompat>(MyApplication.getMyString(R.string.interface_fast_scroll_key))!!
-        fastScrollPref.setOnPreferenceChangeListener { _: Preference, newValue: Any ->
+        val scrollBarModePref =
+            findPreference<ListPreference>(MyApplication.getMyString(R.string.interface_scroll_bar_key))!!
+        scrollBarModePref.setOnPreferenceChangeListener { _: Preference, newValue: Any ->
             if (isActivityAndFragmentOk(this@SettingsFragment)) {
-                setFastScrollerStatus(listView, newValue.toString().toBoolean())
+                setScrollBarMode(listView, newValue.toString())
             }
             true
         }
-        if (fastScrollPref.isChecked) {
-            fastScroller = createFastScrollerSingletonInstanceAndEnableIt(listView)
-        }
+
+        setScrollBarMode(listView, scrollBarModePref.value)
 
         allowNetworkDataPref =
             findPreference(MyApplication.getMyString(R.string.network_allow_network_data_key))!!
 
         val themesPref =
             findPreference<ListPreference>(MyApplication.getMyString(R.string.interface_themes_key))!!
-        themesPref.onPreferenceChangeListener =
-            Preference.OnPreferenceChangeListener { _: Preference, newValue: Any ->
+        themesPref.setOnPreferenceChangeListener { _: Preference, newValue: Any ->
                 GlobalScope.launch(Dispatchers.IO) {
                     MyApplication.setMyTheme(newValue.toString())
                 }

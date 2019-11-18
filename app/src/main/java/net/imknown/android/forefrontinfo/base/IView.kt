@@ -42,7 +42,7 @@ interface IView {
     }
 
     @SuppressLint("PrivateResource")
-    fun createFastScrollerSingletonInstanceAndEnableIt(recyclerView: RecyclerView): Any {
+    private fun createFastScrollerSingletonInstanceAndEnableIt(recyclerView: RecyclerView): Any {
         recyclerView.isVerticalScrollBarEnabled = false
         recyclerView.isHorizontalScrollBarEnabled = false
 
@@ -77,21 +77,42 @@ interface IView {
             )
     }
 
-    fun getFastScroller(): Any
+    var fastScroller: Any?
 
-    fun setFastScrollerStatus(
-        recyclerView: RecyclerView,
-        enable: Boolean
-    ) {
-        recyclerView.isVerticalScrollBarEnabled = !enable
-        recyclerView.isHorizontalScrollBarEnabled = !enable
+    private fun setFastScrollerStatus(recyclerView: RecyclerView?) {
+        if (fastScroller != null) {
+            Class.forName(fastScrollerClassPath).getDeclaredMethod(
+                "attachToRecyclerView",
+                RecyclerView::class.java
+            ).apply {
+                isAccessible = true
+                invoke(
+                    fastScroller,
+                    recyclerView
+                )
+            }
+        } else if (recyclerView != null) {
+            fastScroller = createFastScrollerSingletonInstanceAndEnableIt(recyclerView)
+        }
+    }
 
-        Class.forName(fastScrollerClassPath).getDeclaredMethod(
-            "attachToRecyclerView",
-            RecyclerView::class.java
-        ).apply {
-            isAccessible = true
-            invoke(getFastScroller(), if (enable) recyclerView else null)
+    fun setScrollBarMode(recyclerView: RecyclerView, scrollBarMode: String) {
+        when (scrollBarMode) {
+            MyApplication.getMyString(R.string.interface_no_scroll_bar_value) -> {
+                recyclerView.isVerticalScrollBarEnabled = false
+                recyclerView.isHorizontalScrollBarEnabled = false
+                setFastScrollerStatus(null)
+            }
+            MyApplication.getMyString(R.string.interface_normal_scroll_bar_value) -> {
+                recyclerView.isVerticalScrollBarEnabled = true
+                recyclerView.isHorizontalScrollBarEnabled = true
+                setFastScrollerStatus(null)
+            }
+            MyApplication.getMyString(R.string.interface_fast_scroll_bar_value) -> {
+                recyclerView.isVerticalScrollBarEnabled = false
+                recyclerView.isHorizontalScrollBarEnabled = false
+                setFastScrollerStatus(recyclerView)
+            }
         }
     }
 }

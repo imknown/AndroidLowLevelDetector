@@ -12,11 +12,14 @@
             app:summary="@string/interface_themes_summary"
             app:title="@string/interface_themes_title" />
 
-        <SwitchPreferenceCompat
+        <ListPreference
+            app:defaultValue="@string/interface_no_scroll_bar_value"
+            app:entries="@array/scrollBarKeys"
+            app:entryValues="@array/scrollBarValues"
             app:icon="@drawable/ic_format_list_bulleted_black_24dp"
-            app:key="@string/interface_fast_scroll_key"
-            app:summary="@string/interface_fast_scroll_summary"
-            app:title="@string/interface_fast_scroll_title" />
+            app:key="@string/interface_scroll_bar_key"
+            app:summary="@string/interface_scroll_bar_summary"
+            app:title="@string/interface_scroll_bar_title" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/network_title">
