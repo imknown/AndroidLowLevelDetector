@@ -158,7 +158,7 @@ class MainActivity : AppCompatActivity() {
         super.onBackPressed()
 
         GlobalScope.launch(Dispatchers.IO) {
-            delay(16)
+            delay(21)
 
             android.os.Process.killProcess(android.os.Process.myPid())
         }
