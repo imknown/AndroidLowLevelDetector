@@ -74,10 +74,25 @@ class OthersFragment : BaseListFragment() {
         add(getResultString(R.string.build_bootloader, Build.BOOTLOADER))
         add(getResultString(R.string.build_radio, Build.getRadioVersion()))
 
+        var temp = ""
         sh("getprop").forEach {
-            val a = it.split(": ")
-            add("${removeSquareBrackets(a[0])}\n${removeSquareBrackets(a[1])}")
+            if (it.startsWith("[") && it.endsWith("]")) {
+                addRawProp(it)
+            } else {
+                temp += "$it\n"
+
+                if (it.endsWith("]")) {
+                    addRawProp(temp)
+
+                    temp = ""
+                }
+            }
         }
+    }
+
+    private fun addRawProp(text: String) {
+        val result = text.split(": ")
+        add("${removeSquareBrackets(result[0])}\n${removeSquareBrackets(result[1])}")
     }
 
     private fun removeSquareBrackets(text: String) =
