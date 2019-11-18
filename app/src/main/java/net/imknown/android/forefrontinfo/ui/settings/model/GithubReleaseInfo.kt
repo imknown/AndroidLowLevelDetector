@@ -1,5 +1,8 @@
 package net.imknown.android.forefrontinfo.ui.settings.model
 
+import androidx.annotation.Keep
+
+@Keep
 data class GithubReleaseInfo(
     val tag_name: String,
     val name: String,
@@ -9,6 +12,7 @@ data class GithubReleaseInfo(
     val published_at: String,
     val assets: List<Asset>
 ) {
+    @Keep
     data class Asset(
         val name: String,
         val size: Int,

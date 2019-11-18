@@ -1,10 +1,14 @@
 package net.imknown.android.forefrontinfo.ui.home.model
 
+import androidx.annotation.Keep
+
+@Keep
 data class Lld(
     val android: Androids,
     val linux: Types<BaseInfo>,
     val toybox: Types<BaseInfo>
 ) : BaseInfo() {
+    @Keep
     data class Androids(
         val securityPatchLevel: String,
         val stable: Android,
@@ -12,6 +16,7 @@ data class Lld(
         val alpha: Android,
         val beta: Android
     ) {
+        @Keep
         data class Android(
             val active: Boolean,
             val codename: String,
@@ -19,6 +24,7 @@ data class Lld(
         ) : BaseInfo()
     }
 
+    @Keep
     data class Types<T>(
         val stable: T,
         val support: T,
