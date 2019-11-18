@@ -104,7 +104,7 @@
     <string name="about_shop_summary">Open the page of current app in the store</string>
 
     <string name="about_source_title">Source code</string>
-    <string name="about_source_summary">Github address of the APP source code</string>
+    <string name="about_source_summary">Github address of the app source code</string>
 
     <string name="about_licenses_title">License</string>
     <string name="about_licenses_summary">Referenced open-source repositories</string>
