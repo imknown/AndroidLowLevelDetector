@@ -20,6 +20,8 @@ android {
         versionName androidBuild.versionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        resConfigs 'zh-rCN'
     }
 
     signingConfigs {
