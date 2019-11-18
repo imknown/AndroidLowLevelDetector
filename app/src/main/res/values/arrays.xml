@@ -17,7 +17,7 @@
     <string-array name="scrollBarKeys">
         <item>@string/interface_no_scroll_bar_key</item>
         <item>@string/interface_normal_scroll_bar_key</item>
-        <item>@string/interface_fast_scroll_bar_key</item>
+        <!-- <item>@string/interface_fast_scroll_bar_key</item> -->
     </string-array>
 
     <string-array name="scrollBarValues">
