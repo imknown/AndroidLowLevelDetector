@@ -78,7 +78,7 @@
     <!-- Settings -->
     <string name="interface_title">Interface</string>
     <string name="interface_scroll_bar_key" translatable="false">interface_scroll_bar_key</string>
-    <string name="interface_scroll_bar_title">Scroll bar mode (EXPERIMENTAL)</string>
+    <string name="interface_scroll_bar_title">Scroll bar mode</string>
     <string name="interface_scroll_bar_summary">Click to show the scroll bar mode</string>
     <string name="interface_no_scroll_bar_key">None (High performance)</string>
     <string name="interface_normal_scroll_bar_key">Normal</string>

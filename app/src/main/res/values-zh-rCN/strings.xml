@@ -76,7 +76,7 @@
 
     <!-- 设置 -->
     <string name="interface_title">界面</string>
-    <string name="interface_scroll_bar_title">滚动条模式 (实验性)</string>
+    <string name="interface_scroll_bar_title">滚动条模式</string>
     <string name="interface_scroll_bar_summary">点击以显示滚动条模式</string>
     <string name="interface_no_scroll_bar_key">无 (高效)</string>
     <string name="interface_normal_scroll_bar_key">普通</string>
