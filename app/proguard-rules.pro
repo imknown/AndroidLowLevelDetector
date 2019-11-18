@@ -19,3 +19,8 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keep class androidx.appcompat.app.AppCompatDelegate { public static final int MODE_NIGHT_FOLLOW_SYSTEM; }
+-keep class androidx.appcompat.app.AppCompatDelegate { public static final int MODE_NIGHT_NO; }
+-keep class androidx.appcompat.app.AppCompatDelegate { public static final int MODE_NIGHT_YES; }
+-keep class androidx.appcompat.app.AppCompatDelegate { public static final int MODE_NIGHT_AUTO_BATTERY; }
