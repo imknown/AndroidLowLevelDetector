@@ -35,10 +35,6 @@ open class MyApplication : Application() {
             @AppCompatDelegate.NightMode val mode =
                 AppCompatDelegate::class.java.getDeclaredField(themesValue).getInt(null)
 
-//            @AppCompatDelegate.NightMode val mode = AppCompatDelegate::class.staticProperties
-//                .find { it.name == themesValue }!!
-//                .getter.call() as Int
-
             withContext(Dispatchers.Main) {
                 AppCompatDelegate.setDefaultNightMode(mode)
             }
