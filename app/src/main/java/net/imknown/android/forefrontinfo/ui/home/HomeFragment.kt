@@ -142,8 +142,8 @@ class HomeFragment : BaseListFragment() {
             lldDataModeResId = R.string.lld_json_offline
         }
 
-        if (isActivityAndFragmentOk(this)) {
-            withContext(Dispatchers.Main) {
+        withContext(Dispatchers.Main) {
+            if (isActivityAndFragmentOk(this@HomeFragment)) {
                 val actionBar = (activity as AppCompatActivity).supportActionBar
                 actionBar?.subtitle = MyApplication.getMyString(lldDataModeResId, dataVersion)
             }
