@@ -24,8 +24,6 @@ abstract class BaseListFragment : BaseFragment(), IView,
     private lateinit var myTempDataset: ArrayList<MyModel>
     private val myAdapter = MyAdapter()
 
-    override var fastScroller: Any? = null
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

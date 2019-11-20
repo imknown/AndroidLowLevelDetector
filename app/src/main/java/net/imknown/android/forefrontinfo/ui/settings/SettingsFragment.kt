@@ -43,8 +43,6 @@ class SettingsFragment : PreferenceFragmentCompat(), IView {
         }
     }
 
-    override var fastScroller: Any? = null
-
     private suspend fun initViews() = withContext(Dispatchers.Main) {
         val scrollBarModePref =
             findPreference<ListPreference>(MyApplication.getMyString(R.string.interface_scroll_bar_key))!!
