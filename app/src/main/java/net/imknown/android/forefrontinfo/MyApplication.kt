@@ -32,8 +32,23 @@ open class MyApplication : Application() {
         }
 
         internal suspend fun setMyTheme(themesValue: String) {
-            @AppCompatDelegate.NightMode val mode =
-                AppCompatDelegate::class.java.getDeclaredField(themesValue).getInt(null)
+            @AppCompatDelegate.NightMode val mode = when (themesValue) {
+                getMyString(R.string.interface_themes_follow_system_value) -> {
+                    AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+                }
+                getMyString(R.string.interface_themes_power_saver_value) -> {
+                    AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY
+                }
+                getMyString(R.string.interface_themes_always_light_value) -> {
+                    AppCompatDelegate.MODE_NIGHT_NO
+                }
+                getMyString(R.string.interface_themes_always_dark_value) -> {
+                    AppCompatDelegate.MODE_NIGHT_YES
+                }
+                else -> {
+                    AppCompatDelegate.MODE_NIGHT_YES
+                }
+            }
 
             withContext(Dispatchers.Main) {
                 AppCompatDelegate.setDefaultNightMode(mode)
