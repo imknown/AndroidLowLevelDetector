@@ -15,11 +15,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import net.imknown.android.forefrontinfo.base.IView
 import net.imknown.android.forefrontinfo.ui.home.HomeFragment
 import net.imknown.android.forefrontinfo.ui.others.OthersFragment
 import net.imknown.android.forefrontinfo.ui.settings.SettingsFragment
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), IView {
 
     companion object {
         private const val BUNDLE_ID_LAST_ID = "BUNDLE_ID_LAST_ID"

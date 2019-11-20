@@ -18,7 +18,7 @@ import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
 
-abstract class BaseListFragment : BaseFragment(), IView,
+abstract class BaseListFragment : BaseFragment(),
     SharedPreferences.OnSharedPreferenceChangeListener {
 
     private lateinit var myTempDataset: ArrayList<MyModel>

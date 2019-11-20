@@ -15,11 +15,11 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import kotlinx.coroutines.*
 import net.imknown.android.forefrontinfo.*
-import net.imknown.android.forefrontinfo.base.IView
+import net.imknown.android.forefrontinfo.base.IFragmentView
 import net.imknown.android.forefrontinfo.ui.settings.model.GithubReleaseInfo
 import java.io.File
 
-class SettingsFragment : PreferenceFragmentCompat(), IView {
+class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
 
     companion object {
         fun newInstance() = SettingsFragment()

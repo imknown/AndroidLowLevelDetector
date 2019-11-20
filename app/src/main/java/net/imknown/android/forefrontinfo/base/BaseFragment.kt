@@ -15,13 +15,7 @@ import net.imknown.android.forefrontinfo.ui.home.model.Lld
  * https://ci.android.com/builds/branches/aosp-master/grid?
  * https://android.googlesource.com/platform/frameworks/base.git/+refs
  */
-abstract class BaseFragment : Fragment() {
-    protected fun isAtLeastAndroid6() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-    protected fun isAtLeastAndroid7() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-    protected fun isAtLeastAndroid8() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
-    protected fun isAtLeastAndroid9() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
-    protected fun isAtLeastAndroid10() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
-
+abstract class BaseFragment : Fragment(), IFragmentView {
     @SuppressLint("ObsoleteSdkInt")
     protected fun isLatestStableAndroid(lld: Lld) =
         Build.VERSION.SDK_INT == lld.android.stable.api.toInt()
