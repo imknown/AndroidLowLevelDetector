@@ -55,7 +55,7 @@ ext {
             andResGuard   : '1.2.17',
 
             // https://github.com/square/leakcanary
-            leakCanary    : '2.0-beta-4-SNAPSHOT',
+            leakCanary    : '2.0-beta-4',
 
             // https://github.com/kittinunf/fuel
             fuel          : '2.2.1',
