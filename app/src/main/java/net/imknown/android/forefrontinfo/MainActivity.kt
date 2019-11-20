@@ -159,7 +159,13 @@ class MainActivity : AppCompatActivity(), IView {
         super.onBackPressed()
 
         GlobalScope.launch(Dispatchers.IO) {
-            delay(21)
+            delay(
+                if (isAtLeastAndroid6()) {
+                    21
+                } else {
+                    256
+                }
+            )
 
             android.os.Process.killProcess(android.os.Process.myPid())
         }
