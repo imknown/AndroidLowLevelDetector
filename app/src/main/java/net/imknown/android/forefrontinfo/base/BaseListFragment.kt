@@ -122,6 +122,12 @@ abstract class BaseListFragment : BaseFragment(),
         swipeRefresh.isRefreshing = false
     }
 
+    override fun showError(error: Throwable) {
+        super.showError(error)
+
+        swipeRefresh.isRefreshing = false
+    }
+
     protected suspend fun disableSwipeRefresh() = withContext(Dispatchers.Main) {
         swipeRefresh.isEnabled = false
     }

@@ -71,7 +71,13 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
         val versionPref =
             findPreference<Preference>(MyApplication.getMyString(R.string.about_version_key))!!
         versionPref.let {
-            val assetLldVersion = JsonIo.getAssetLldVersion(MyApplication.instance.assets)
+            val assetLldVersion = try {
+                JsonIo.getAssetLldVersion(MyApplication.instance.assets)
+            } catch (e: Exception) {
+                e.printStackTrace()
+
+                MyApplication.getMyString(android.R.string.unknownName)
+            }
 
             it.summary =
                 MyApplication.getMyString(

@@ -110,7 +110,11 @@ class HomeFragment : BaseListFragment() {
         }
 
         if (!isOnline) {
-            copyJsonIfNeeded()
+            try {
+                copyJsonIfNeeded()
+            } catch (e: Exception) {
+                showError(e)
+            }
         }
 
         if (isActivityAndFragmentOk(this)) {
@@ -120,7 +124,7 @@ class HomeFragment : BaseListFragment() {
 
     private suspend fun initSubtitle(isOnline: Boolean) {
         @StringRes var lldDataModeResId: Int
-        var dataVersion: String = MyApplication.getMyString(android.R.string.unknownName)
+        var dataVersion: String
 
         try {
             val lld = GatewayApi.savedLldJsonFile.fromJson<Lld>()
@@ -137,9 +141,11 @@ class HomeFragment : BaseListFragment() {
                 R.string.lld_json_offline
             }
         } catch (e: Exception) {
-            e.printStackTrace()
+            showError(e)
 
             lldDataModeResId = R.string.lld_json_offline
+
+            dataVersion = MyApplication.getMyString(android.R.string.unknownName)
         }
 
         withContext(Dispatchers.Main) {
