@@ -8,7 +8,6 @@ import androidx.preference.PreferenceManager
 import com.g00fy2.versioncompare.Version
 import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.*
@@ -87,16 +86,20 @@ class HomeFragment : BaseListFragment() {
 
         if (allowNetwork) {
             GatewayApi.downloadLldJsonFile({
-                GlobalScope.launch(Dispatchers.IO) {
-                    prepareResult(true)
+                launch {
+                    withContext(Dispatchers.IO) {
+                        prepareResult(true)
+                    }
                 }
             }, {
-                GlobalScope.launch(Dispatchers.IO) {
-                    showError(it)
+                launch {
+                    withContext(Dispatchers.IO) {
+                        showError(it)
 
-                    toast(R.string.lld_json_download_failed)
+                        toast(R.string.lld_json_download_failed)
 
-                    prepareResult(false)
+                        prepareResult(false)
+                    }
                 }
             })
         } else {

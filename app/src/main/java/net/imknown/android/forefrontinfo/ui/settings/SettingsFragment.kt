@@ -19,7 +19,7 @@ import net.imknown.android.forefrontinfo.base.IFragmentView
 import net.imknown.android.forefrontinfo.ui.settings.model.GithubReleaseInfo
 import java.io.File
 
-class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
+class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineScope by MainScope() {
 
     companion object {
         fun newInstance() = SettingsFragment()
@@ -32,24 +32,27 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
     private lateinit var clearApkFolderPref: Preference
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        GlobalScope.launch(Dispatchers.IO) {
-            if (Looper.myLooper() == null) {
-                Looper.prepare()
-            }
-            setPreferencesFromResource(R.xml.preferences, rootKey)
-            Looper.myLooper()?.quit()
+        launch {
+            withContext(Dispatchers.IO) {
+                if (Looper.myLooper() == null) {
+                    Looper.prepare()
+                }
+                setPreferencesFromResource(R.xml.preferences, rootKey)
+                Looper.myLooper()?.quit()
 
-            initViews()
+                initViews()
+            }
         }
     }
 
-    private suspend fun initViews() = withContext(Dispatchers.Main) {
+    private fun initViews() {
         val scrollBarModePref =
             findPreference<ListPreference>(MyApplication.getMyString(R.string.interface_scroll_bar_key))!!
         scrollBarModePref.setOnPreferenceChangeListener { _: Preference, newValue: Any ->
             if (isActivityAndFragmentOk(this@SettingsFragment)) {
                 setScrollBarMode(listView, newValue.toString())
             }
+
             true
         }
 
@@ -61,12 +64,14 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
         val themesPref =
             findPreference<ListPreference>(MyApplication.getMyString(R.string.interface_themes_key))!!
         themesPref.setOnPreferenceChangeListener { _: Preference, newValue: Any ->
-                GlobalScope.launch(Dispatchers.IO) {
+            launch {
+                withContext(Dispatchers.IO) {
                     MyApplication.setMyTheme(newValue.toString())
                 }
-
-                true
             }
+
+            true
+        }
 
         val versionPref =
             findPreference<Preference>(MyApplication.getMyString(R.string.about_version_key))!!
@@ -79,18 +84,24 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
                 MyApplication.getMyString(android.R.string.unknownName)
             }
 
-            it.summary =
-                MyApplication.getMyString(
-                    R.string.about_version_summary,
-                    BuildConfig.VERSION_NAME,
-                    BuildConfig.VERSION_CODE,
-                    assetLldVersion
-                )
+            launch {
+                withContext(Dispatchers.Main) {
+                    it.summary =
+                        MyApplication.getMyString(
+                            R.string.about_version_summary,
+                            BuildConfig.VERSION_NAME,
+                            BuildConfig.VERSION_CODE,
+                            assetLldVersion
+                        )
+                }
+            }
         }
 
         versionPref.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            GlobalScope.launch(Dispatchers.IO) {
-                versionClicked()
+            launch {
+                withContext(Dispatchers.IO) {
+                    versionClicked()
+                }
             }
 
             true
@@ -99,8 +110,10 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
         checkUpdatePref =
             findPreference(MyApplication.getMyString(R.string.about_check_for_update_key))!!
         checkUpdatePref.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            GlobalScope.launch(Dispatchers.IO) {
-                checkForUpdate()
+            launch {
+                withContext(Dispatchers.IO) {
+                    checkForUpdate()
+                }
             }
 
             true
@@ -109,12 +122,20 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
         clearApkFolderPref =
             findPreference(MyApplication.getMyString(R.string.about_clear_apk_folder_key))!!
         clearApkFolderPref.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            GlobalScope.launch(Dispatchers.IO) {
-                clearApkFolder()
+            launch {
+                withContext(Dispatchers.IO) {
+                    clearApkFolder()
+                }
             }
 
             true
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        cancel()
     }
 
     private suspend fun setPreferenceStatus(
@@ -164,24 +185,26 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
         }
     }
 
-    private fun isLatestVersion(data: String) = GlobalScope.launch(Dispatchers.IO) {
-        val githubReleaseInfo = data.fromJson<GithubReleaseInfo>()
-        val remoteVersion = githubReleaseInfo.tag_name
-        val currentVersion = BuildConfig.VERSION_NAME
+    private fun isLatestVersion(data: String) = launch {
+        withContext(Dispatchers.IO) {
+            val githubReleaseInfo = data.fromJson<GithubReleaseInfo>()
+            val remoteVersion = githubReleaseInfo.tag_name
+            val currentVersion = BuildConfig.VERSION_NAME
 
-        if (remoteVersion > currentVersion) {
-            showDownloadConfirmDialog(githubReleaseInfo)
-        } else {
-            toast(R.string.about_check_for_update_already_latest)
+            if (remoteVersion > currentVersion) {
+                showDownloadConfirmDialog(githubReleaseInfo)
+            } else {
+                toast(R.string.about_check_for_update_already_latest)
+            }
+
+            setCheckUpdatePreferenceStatus(true)
         }
-
-        setCheckUpdatePreferenceStatus(true)
     }
 
     @Suppress("DEPRECATION")
     private lateinit var progressDialog: android.app.ProgressDialog
 
-    private suspend fun showDownloadConfirmDialog(githubReleaseInfo: GithubReleaseInfo) {
+    private fun showDownloadConfirmDialog(githubReleaseInfo: GithubReleaseInfo) {
         val version = githubReleaseInfo.tag_name
         val asset = githubReleaseInfo.assets[0]
         val size = asset.size
@@ -202,22 +225,26 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
         builder.setTitle(title)
         builder.setMessage(message)
         builder.setPositiveButton(android.R.string.ok) { dialog: DialogInterface, _: Int ->
-            GlobalScope.launch(Dispatchers.IO) {
-                dialog.dismiss()
+            launch {
+                withContext(Dispatchers.IO) {
+                    dialog.dismiss()
 
-                showProgressDialog(title, size, sizeInMb)
+                    showProgressDialog(title, size, sizeInMb)
 
-                val url = asset.browser_download_url
-                val fileName = asset.name
-                downloadApk(url, fileName, sizeInMb)
+                    val url = asset.browser_download_url
+                    val fileName = asset.name
+                    downloadApk(url, fileName, sizeInMb)
+                }
             }
         }
         builder.setNegativeButton(android.R.string.cancel) { dialog: DialogInterface, _: Int ->
             dialog.dismiss()
         }
 
-        withContext(Dispatchers.Main) {
-            builder.show()
+        launch {
+            withContext(Dispatchers.Main) {
+                builder.show()
+            }
         }
     }
 
@@ -264,24 +291,26 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
         }
     }
 
-    private fun install(fileName: String) = GlobalScope.launch(Dispatchers.IO) {
-        val intent = Intent(Intent.ACTION_VIEW)
-        val file = File(MyApplication.getApkDir(), fileName)
-        val data = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            FileProvider.getUriForFile(
-                MyApplication.instance,
-                MyApplication.instance.packageName + ".provider",
-                file
-            )
-        } else {
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            Uri.fromFile(file)
-        }
-        intent.setDataAndType(data, "application/vnd.android.package-archive")
-        startActivity(intent)
+    private fun install(fileName: String) = launch {
+        withContext(Dispatchers.IO) {
+            val intent = Intent(Intent.ACTION_VIEW)
+            val file = File(MyApplication.getApkDir(), fileName)
+            val data = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                FileProvider.getUriForFile(
+                    MyApplication.instance,
+                    MyApplication.instance.packageName + ".provider",
+                    file
+                )
+            } else {
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                Uri.fromFile(file)
+            }
+            intent.setDataAndType(data, "application/vnd.android.package-archive")
+            startActivity(intent)
 
-        dismissProgressDialog()
+            dismissProgressDialog()
+        }
     }
 
     private suspend fun dismissProgressDialog() = withContext(Dispatchers.Main) {
@@ -338,17 +367,19 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
     override fun showError(error: Throwable) {
         super.showError(error)
 
-        runBlocking {
-            setCheckUpdatePreferenceStatus(true)
+        launch {
+            withContext(Dispatchers.IO) {
+                setCheckUpdatePreferenceStatus(true)
 
-            dismissProgressDialog()
+                dismissProgressDialog()
 
-            toast(
-                MyApplication.getMyString(
-                    R.string.about_check_for_update_network_error,
-                    error.message
+                toast(
+                    MyApplication.getMyString(
+                        R.string.about_check_for_update_network_error,
+                        error.message
+                    )
                 )
-            )
+            }
         }
     }
 }

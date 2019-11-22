@@ -11,14 +11,11 @@ import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.topjohnwu.superuser.Shell
 import kotlinx.android.synthetic.main.fragment_list.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
 
-abstract class BaseListFragment : BaseFragment(),
+abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
     SharedPreferences.OnSharedPreferenceChangeListener {
 
     private lateinit var myTempDataset: ArrayList<MyModel>
@@ -37,16 +34,18 @@ abstract class BaseListFragment : BaseFragment(),
 
         initViews()
 
-        GlobalScope.launch(Dispatchers.IO) {
-            val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
-            val scrollBarMode = sharedPreferences.getString(
-                MyApplication.getMyString(R.string.interface_scroll_bar_key),
-                MyApplication.getMyString(R.string.interface_no_scroll_bar_value)
-            )!!
-            setScrollBarMode(list, scrollBarMode)
+        launch {
+            withContext(Dispatchers.IO) {
+                val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+                val scrollBarMode = sharedPreferences.getString(
+                    MyApplication.getMyString(R.string.interface_scroll_bar_key),
+                    MyApplication.getMyString(R.string.interface_no_scroll_bar_value)
+                )!!
+                setScrollBarMode(list, scrollBarMode)
 
-            PreferenceManager.getDefaultSharedPreferences(context)
-                .registerOnSharedPreferenceChangeListener(this@BaseListFragment)
+                PreferenceManager.getDefaultSharedPreferences(context)
+                    .registerOnSharedPreferenceChangeListener(this@BaseListFragment)
+            }
         }
 
         collectionDatasetCaller()
@@ -56,14 +55,18 @@ abstract class BaseListFragment : BaseFragment(),
         sharedPreferences: SharedPreferences,
         key: String
     ) {
-        if (key == MyApplication.getMyString(R.string.interface_scroll_bar_key)
-            && isActivityAndFragmentOk(this)
-        ) {
-            val scrollBarMode = sharedPreferences.getString(
-                key,
-                MyApplication.getMyString(R.string.interface_no_scroll_bar_value)
-            )!!
-            setScrollBarMode(list, scrollBarMode)
+        launch {
+            withContext(Dispatchers.IO) {
+                if (key == MyApplication.getMyString(R.string.interface_scroll_bar_key)
+                    && isActivityAndFragmentOk(this@BaseListFragment)
+                ) {
+                    val scrollBarMode = sharedPreferences.getString(
+                        key,
+                        MyApplication.getMyString(R.string.interface_no_scroll_bar_value)
+                    )!!
+                    setScrollBarMode(list, scrollBarMode)
+                }
+            }
         }
     }
 
@@ -72,6 +75,8 @@ abstract class BaseListFragment : BaseFragment(),
 
         PreferenceManager.getDefaultSharedPreferences(context)
             .unregisterOnSharedPreferenceChangeListener(this)
+
+        cancel()
     }
 
     private fun initViews() {
@@ -95,8 +100,10 @@ abstract class BaseListFragment : BaseFragment(),
         }
     }
 
-    private fun collectionDatasetCaller() = GlobalScope.launch(Dispatchers.IO) {
-        collectionDataset()
+    private fun collectionDatasetCaller() = launch {
+        withContext(Dispatchers.IO) {
+            collectionDataset()
+        }
     }
 
     protected abstract suspend fun collectionDataset()
@@ -125,7 +132,11 @@ abstract class BaseListFragment : BaseFragment(),
     override fun showError(error: Throwable) {
         super.showError(error)
 
-        swipeRefresh.isRefreshing = false
+        launch {
+            withContext(Dispatchers.Main) {
+                swipeRefresh.isRefreshing = false
+            }
+        }
     }
 
     protected suspend fun disableSwipeRefresh() = withContext(Dispatchers.Main) {

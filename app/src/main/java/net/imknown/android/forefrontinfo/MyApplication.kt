@@ -6,14 +6,11 @@ import android.os.Environment
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import java.io.File
 
 @SuppressLint("Registered")
-open class MyApplication : Application() {
+open class MyApplication : Application(), CoroutineScope by MainScope() {
 
     companion object {
         lateinit var instance: MyApplication
@@ -67,8 +64,10 @@ open class MyApplication : Application() {
 
         instance = this
 
-        GlobalScope.launch(Dispatchers.IO) {
-            initTheme()
+        launch {
+            withContext(Dispatchers.IO) {
+                initTheme()
+            }
         }
 
         GatewayApi.savedLldJsonFile = File(getDownloadDir(), GatewayApi.LLD_JSON_NAME)
