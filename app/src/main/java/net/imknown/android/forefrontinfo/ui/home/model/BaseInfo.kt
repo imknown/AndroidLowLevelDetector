@@ -6,5 +6,5 @@ import androidx.annotation.Keep
 open class BaseInfo {
     lateinit var version: String
     lateinit var desc: String
-    lateinit var url: String
+    lateinit var url: List<String>
 }

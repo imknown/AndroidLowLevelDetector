@@ -1,7 +1,7 @@
 {
-  "version": "2019-11-14 13:55",
+  "version": "2019-11-22 12:58",
   "desc": "",
-  "url": "",
+  "url": [],
   "android": {
     "securityPatchLevel": "2019-11-05",
     "stable": {
@@ -10,7 +10,9 @@
       "codename": "Q",
       "api": "29",
       "desc": "",
-      "url": "https://www.android.com/android-10/"
+      "url": [
+        "https://www.android.com/android-10/"
+      ]
     },
     "support": {
       "active": true,
@@ -18,7 +20,9 @@
       "codename": "Oreo",
       "api": "26",
       "desc": "",
-      "url": "https://source.android.com/security/bulletin/2019-11-01"
+      "url": [
+        "https://source.android.com/security/bulletin/2019-11-01"
+      ]
     },
     "alpha": {
       "active": true,
@@ -26,7 +30,9 @@
       "codename": "R",
       "api": "29",
       "desc": "",
-      "url": "https://ci.android.com"
+      "url": [
+        "https://ci.android.com"
+      ]
     },
     "beta": {
       "active": false,
@@ -34,41 +40,56 @@
       "codename": "",
       "api": "",
       "desc": "",
-      "url": "https://developer.android.com/preview/overview"
+      "url": [
+        "https://developer.android.com/preview/overview"
+      ]
     }
   },
   "linux": {
     "stable": {
-      "version": "4.19.81",
+      "version": "4.14.155",
       "desc": "",
-      "url": "https://android.googlesource.com/kernel/common/+/refs/tags/ASB-2019-11-05_4.19/Makefile"
+      "url": [
+        "https://android.googlesource.com/kernel/common/+/refs/tags/ASB-2019-11-05_4.14/Makefile",
+        "https://source.android.com/setup/build/building-kernels#downloading"
+      ]
     },
     "support": {
       "version": "3.18.140",
       "desc": "",
-      "url": "https://android.googlesource.com/kernel/common/+/refs/tags/ASB-2019-11-05_3.18/Makefile"
+      "url": [
+        "https://android.googlesource.com/kernel/common/+/refs/tags/ASB-2019-11-05_3.18/Makefile"
+      ]
     },
     "master": {
       "version": "5.4.0-rc6",
       "desc": "",
-      "url": "https://android.googlesource.com/kernel/common/+/refs/tags/ASB-2019-11-05_mainline/Makefile"
+      "url": [
+        "https://android.googlesource.com/kernel/common/+/refs/tags/ASB-2019-11-05_mainline/Makefile"
+      ]
     }
   },
   "toybox": {
     "stable": {
       "version": "0.8.0",
       "desc": "",
-      "url": "https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-10.0.0_r14/www/news.html"
+      "url": [
+        "https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-10.0.0_r14/www/news.html"
+      ]
     },
     "support": {
       "version": "0.7.3",
       "desc": "",
-      "url": "https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-8.0.0_r40/www/news.html"
+      "url": [
+        "https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-8.0.0_r40/www/news.html"
+      ]
     },
     "master": {
       "version": "0.8.2",
       "desc": "",
-      "url": "https://android.googlesource.com/platform/external/toybox/+/refs/heads/master/www/news.html"
+      "url": [
+        "https://android.googlesource.com/platform/external/toybox/+/refs/heads/master/www/news.html"
+      ]
     }
   }
 }
