@@ -12,12 +12,11 @@ import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.coroutines.*
-import net.imknown.android.forefrontinfo.base.IView
 import net.imknown.android.forefrontinfo.ui.home.HomeFragment
 import net.imknown.android.forefrontinfo.ui.others.OthersFragment
 import net.imknown.android.forefrontinfo.ui.settings.SettingsFragment
 
-class MainActivity : AppCompatActivity(), IView, CoroutineScope by MainScope() {
+class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
 
     companion object {
         private const val BUNDLE_ID_LAST_ID = "BUNDLE_ID_LAST_ID"
@@ -157,13 +156,7 @@ class MainActivity : AppCompatActivity(), IView, CoroutineScope by MainScope() {
 
         launch {
             withContext(Dispatchers.IO) {
-                delay(
-                    if (isAtLeastAndroid6()) {
-                        21
-                    } else {
-                        256
-                    }
-                )
+                delay(300)
 
                 android.os.Process.killProcess(android.os.Process.myPid())
             }
