@@ -119,11 +119,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
         }
 
         versionPref.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            launch {
-                withContext(Dispatchers.IO) {
-                    versionClicked()
-                }
-            }
+            versionClicked()
 
             true
         }
@@ -131,11 +127,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
         checkUpdatePref =
             findPreference(MyApplication.getMyString(R.string.about_check_for_update_key))!!
         checkUpdatePref.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            launch {
-                withContext(Dispatchers.IO) {
-                    checkForUpdate()
-                }
-            }
+            checkForUpdate()
 
             true
         }
@@ -143,11 +135,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
         clearApkFolderPref =
             findPreference(MyApplication.getMyString(R.string.about_clear_apk_folder_key))!!
         clearApkFolderPref.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            launch {
-                withContext(Dispatchers.IO) {
-                    clearApkFolder()
-                }
-            }
+            clearApkFolder()
 
             true
         }
@@ -190,7 +178,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
     }
     // endregion [Raw build]
 
-    // region [check for update]
+    // region [Check for update]
     private suspend fun setCheckUpdatePreferenceStatus(isEnabled: Boolean) {
         setPreferenceStatus(
             checkUpdatePref,
@@ -200,23 +188,25 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
         )
     }
 
-    private suspend fun checkForUpdate() {
-        setCheckUpdatePreferenceStatus(false)
+    private fun checkForUpdate() = launch {
+        withContext(Dispatchers.IO) {
+            setCheckUpdatePreferenceStatus(false)
 
-        if (allowNetworkDataPref.isChecked) {
-            GatewayApi.checkForUpdate(GatewayApiCheckForUpdate@{ data ->
-                if (!isActivityAndFragmentOk(this)) {
-                    return@GatewayApiCheckForUpdate
-                }
+            if (allowNetworkDataPref.isChecked) {
+                GatewayApi.checkForUpdate(GatewayApiCheckForUpdate@{ data ->
+                    if (!isActivityAndFragmentOk(this@SettingsFragment)) {
+                        return@GatewayApiCheckForUpdate
+                    }
 
-                isLatestVersion(data)
-            }, { error ->
-                showError(error)
-            })
-        } else {
-            toast(R.string.about_check_for_update_allow_network_data_first)
+                    isLatestVersion(data)
+                }, { error ->
+                    showError(error)
+                })
+            } else {
+                toast(R.string.about_check_for_update_allow_network_data_first)
 
-            setCheckUpdatePreferenceStatus(true)
+                setCheckUpdatePreferenceStatus(true)
+            }
         }
     }
 
@@ -352,9 +342,9 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
             }
         }
     }
-    // endregion [check for update]
+    // endregion [Check for update]
 
-    // region [clear apk folder]
+    // region [Clear apk folder]
     private suspend fun setClearApkFolderStatus(isEnabled: Boolean) {
         setPreferenceStatus(
             clearApkFolderPref,
@@ -364,37 +354,41 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
         )
     }
 
-    private suspend fun clearApkFolder() {
-        setClearApkFolderStatus(false)
+    private fun clearApkFolder() = launch {
+        withContext(Dispatchers.IO) {
+            setClearApkFolderStatus(false)
 
-        val result = GatewayApi.clearFolder(MyApplication.getApkDir())
+            val result = GatewayApi.clearFolder(MyApplication.getApkDir())
 
-        // For better UX
-        delay(500)
+            // For better UX
+            delay(500)
 
-        toast(
-            if (result) {
-                R.string.about_clear_apk_folder_successfully
-            } else {
-                R.string.about_clear_apk_folder_failed
-            }
-        )
+            toast(
+                if (result) {
+                    R.string.about_clear_apk_folder_successfully
+                } else {
+                    R.string.about_clear_apk_folder_failed
+                }
+            )
 
-        setClearApkFolderStatus(true)
-    }
-    // endregion [clear apk folder]
-
-    // region [version click]
-    private suspend fun versionClicked() {
-        if (counter > 0) {
-            counter -= 1
-        } else if (counter == 0) {
-            counter -= 100
-
-            toast(R.string.about_version_click)
+            setClearApkFolderStatus(true)
         }
     }
-    // endregion [version click]
+    // endregion [Clear apk folder]
+
+    // region [Version click]
+    private fun versionClicked() = launch {
+        withContext(Dispatchers.IO) {
+            if (counter > 0) {
+                counter -= 1
+            } else if (counter == 0) {
+                counter -= 100
+
+                toast(R.string.about_version_click)
+            }
+        }
+    }
+    // endregion [Version click]
 
     override fun showError(error: Throwable) {
         super.showError(error)
