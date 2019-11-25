@@ -24,7 +24,7 @@ class OthersFragment : BaseListFragment() {
         if (isActivityAndFragmentOk(this)) {
             showResult()
 
-            disableSwipeRefresh()
+            // disableSwipeRefresh()
         }
     }
 
