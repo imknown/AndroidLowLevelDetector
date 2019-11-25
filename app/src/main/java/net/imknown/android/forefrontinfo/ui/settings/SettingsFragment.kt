@@ -10,6 +10,8 @@ import android.os.Looper
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
@@ -17,6 +19,7 @@ import androidx.preference.SwitchPreferenceCompat
 import kotlinx.coroutines.*
 import net.imknown.android.forefrontinfo.*
 import net.imknown.android.forefrontinfo.base.IFragmentView
+import net.imknown.android.forefrontinfo.base.SharedViewModel
 import net.imknown.android.forefrontinfo.ui.settings.model.GithubReleaseInfo
 import java.io.File
 
@@ -29,8 +32,11 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
     private var counter = 5
 
     private lateinit var allowNetworkDataPref: SwitchPreferenceCompat
+    private lateinit var rawBuildPropPref: SwitchPreferenceCompat
     private lateinit var checkUpdatePref: Preference
     private lateinit var clearApkFolderPref: Preference
+
+    private val sharedViewModel: SharedViewModel by activityViewModels()
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         launch {
@@ -44,6 +50,12 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
                 initViews()
             }
         }
+
+        sharedViewModel.isSucceed.observe(this@SettingsFragment, Observer<Boolean> {
+            if (::rawBuildPropPref.isInitialized) {
+                rawBuildPropPref.isEnabled = true
+            }
+        })
     }
 
     private fun initViews() {
@@ -58,6 +70,14 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
         }
 
         setScrollBarMode(listView, scrollBarModePref.value)
+
+        rawBuildPropPref =
+            findPreference<SwitchPreferenceCompat>(MyApplication.getMyString(R.string.interface_raw_build_prop_key))!!
+        rawBuildPropPref.setOnPreferenceChangeListener { _: Preference, _: Any ->
+            onRawBuildPropChanged()
+
+            true
+        }
 
         allowNetworkDataPref =
             findPreference(MyApplication.getMyString(R.string.network_allow_network_data_key))!!
@@ -155,6 +175,20 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
             }
         )
     }
+
+    // region [Raw build]
+    private fun onRawBuildPropChanged() = launch {
+        withContext(Dispatchers.IO) {
+            val fragment =
+                activity?.supportFragmentManager?.findFragmentByTag(R.id.navigation_others.toString())
+            if (fragment != null) {
+                withContext(Dispatchers.Main) {
+                    rawBuildPropPref.isEnabled = false
+                }
+            }
+        }
+    }
+    // endregion [Raw build]
 
     // region [check for update]
     private suspend fun setCheckUpdatePreferenceStatus(isEnabled: Boolean) {

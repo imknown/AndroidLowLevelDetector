@@ -20,6 +20,7 @@ ext {
             // https://github.com/material-components/material-components-android/releases
             material          : '1.1.0-beta02',
 
+            fragment          : '1.1.0',
             preference        : '1.1.0',
 
             constraintLayout  : '1.1.3',

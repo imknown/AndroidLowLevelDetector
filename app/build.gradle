@@ -81,6 +81,7 @@ dependencies {
     // region [AndroidX]
     implementation "com.google.android.material:material:$androidX.material"
 
+    implementation "androidx.fragment:fragment-ktx:$androidX.fragment"
     implementation "androidx.preference:preference:$androidX.preference"
 
     implementation "androidx.constraintlayout:constraintlayout:$androidX.constraintLayout"

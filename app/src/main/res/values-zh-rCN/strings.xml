@@ -82,6 +82,9 @@
     <string name="interface_normal_scroll_bar_key">普通</string>
     <string name="interface_fast_scroll_bar_key">可拖拽</string>
 
+    <string name="interface_raw_build_prop_title">显示原始 build.prop</string>
+    <string name="interface_raw_build_prop_summary">显示 build.prop 文件中的原始数据</string>
+
     <string name="interface_themes_title">主题</string>
     <string name="interface_themes_summary">点击以显示主题选择器</string>
     <string name="interface_themes_follow_system_key">跟随系统</string>

@@ -20,6 +20,12 @@
             app:key="@string/interface_scroll_bar_key"
             app:summary="@string/interface_scroll_bar_summary"
             app:title="@string/interface_scroll_bar_title" />
+
+        <SwitchPreferenceCompat
+            app:icon="@drawable/ic_more_horizontal_black_24dp"
+            app:key="@string/interface_raw_build_prop_key"
+            app:summary="@string/interface_raw_build_prop_summary"
+            app:title="@string/interface_raw_build_prop_title" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/network_title">

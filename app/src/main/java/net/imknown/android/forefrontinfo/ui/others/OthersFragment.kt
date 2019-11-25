@@ -1,7 +1,11 @@
 package net.imknown.android.forefrontinfo.ui.others
 
+import android.content.SharedPreferences
 import android.os.Build
 import androidx.annotation.StringRes
+import androidx.preference.PreferenceManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.BaseListFragment
@@ -24,7 +28,7 @@ class OthersFragment : BaseListFragment() {
         }
     }
 
-    private fun fillDataset() {
+    private suspend fun fillDataset() {
         createNewTempDataset()
 
         //
@@ -74,6 +78,23 @@ class OthersFragment : BaseListFragment() {
         add(getResultString(R.string.build_bootloader, Build.BOOTLOADER))
         add(getResultString(R.string.build_radio, Build.getRadioVersion()))
 
+        getProp()
+    }
+
+    private suspend fun getProp() {
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+        val rawBuildProp = sharedPreferences.getBoolean(
+            MyApplication.getMyString(R.string.interface_raw_build_prop_key), false
+        )
+
+        if (!rawBuildProp) {
+            withContext(Dispatchers.Main) {
+                sharedViewModel.onGetPropFinish(false)
+            }
+
+            return
+        }
+
         var temp = ""
         sh("getprop").forEach {
             if (it.startsWith("[") && it.endsWith("]")) {
@@ -87,6 +108,10 @@ class OthersFragment : BaseListFragment() {
                     temp = ""
                 }
             }
+        }
+
+        withContext(Dispatchers.Main) {
+            sharedViewModel.onGetPropFinish(true)
         }
     }
 
@@ -110,6 +135,12 @@ class OthersFragment : BaseListFragment() {
             )
         } else {
             MyApplication.getMyString(stringId, *value)
+        }
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
+        if (key == MyApplication.getMyString(R.string.interface_raw_build_prop_key)) {
+            collectionDatasetCaller(500)
         }
     }
 }
