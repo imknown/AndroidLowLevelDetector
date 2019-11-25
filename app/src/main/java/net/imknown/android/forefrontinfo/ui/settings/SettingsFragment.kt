@@ -1,5 +1,6 @@
 package net.imknown.android.forefrontinfo.ui.settings
 
+import android.app.ProgressDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
@@ -201,8 +202,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
         }
     }
 
-    @Suppress("DEPRECATION")
-    private lateinit var progressDialog: android.app.ProgressDialog
+    private lateinit var progressDialog: ProgressDialog
 
     private fun showDownloadConfirmDialog(githubReleaseInfo: GithubReleaseInfo) {
         val version = githubReleaseInfo.tag_name
@@ -248,15 +248,14 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
         }
     }
 
-    @Suppress("DEPRECATION")
     private suspend fun showProgressDialog(
         title: String,
         size: Int,
         sizeInMb: Float
     ) = withContext(Dispatchers.Main) {
-        progressDialog = android.app.ProgressDialog(context)
+        progressDialog = ProgressDialog(context)
         with(progressDialog) {
-            setProgressStyle(android.app.ProgressDialog.STYLE_HORIZONTAL)
+            setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
             isIndeterminate = false
             setCancelable(false)
             setCanceledOnTouchOutside(false)
@@ -269,7 +268,6 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
         }
     }
 
-    @Suppress("DEPRECATION")
     private suspend fun downloadApk(url: String, fileName: String, sizeInMb: Float) {
         try {
             GatewayApi.downloadApk(url, fileName, { readBytes, _ ->
