@@ -28,7 +28,37 @@ open class MyApplication : Application(), CoroutineScope by MainScope() {
             }
         }
 
-        internal suspend fun setMyTheme(themesValue: String) {
+        fun getMyString(@StringRes resId: Int) =
+            instance.getString(resId)
+
+        fun getMyString(@StringRes resId: Int, vararg formatArgs: Any?) =
+            instance.getString(resId, *formatArgs)
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+
+        instance = this
+
+        initTheme()
+
+        GatewayApi.savedLldJsonFile = File(getDownloadDir(), GatewayApi.LLD_JSON_NAME)
+    }
+
+    private fun initTheme() = launch {
+        withContext(Dispatchers.IO) {
+            val sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(this@MyApplication)
+            val themesValue =
+                sharedPreferences.getString(getMyString(R.string.interface_themes_key), "")!!
+            if (themesValue.isNotEmpty()) {
+                setMyTheme(themesValue)
+            }
+        }
+    }
+
+    internal fun setMyTheme(themesValue: String) = launch {
+        withContext(Dispatchers.IO) {
             @AppCompatDelegate.NightMode val mode = when (themesValue) {
                 getMyString(R.string.interface_themes_follow_system_value) -> {
                     AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
@@ -50,35 +80,6 @@ open class MyApplication : Application(), CoroutineScope by MainScope() {
             withContext(Dispatchers.Main) {
                 AppCompatDelegate.setDefaultNightMode(mode)
             }
-        }
-
-        fun getMyString(@StringRes resId: Int) =
-            instance.getString(resId)
-
-        fun getMyString(@StringRes resId: Int, vararg formatArgs: Any?) =
-            instance.getString(resId, *formatArgs)
-    }
-
-    override fun onCreate() {
-        super.onCreate()
-
-        instance = this
-
-        launch {
-            withContext(Dispatchers.IO) {
-                initTheme()
-            }
-        }
-
-        GatewayApi.savedLldJsonFile = File(getDownloadDir(), GatewayApi.LLD_JSON_NAME)
-    }
-
-    private suspend fun initTheme() {
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-        val themesValue =
-            sharedPreferences.getString(getMyString(R.string.interface_themes_key), "")!!
-        if (themesValue.isNotEmpty()) {
-            setMyTheme(themesValue)
         }
     }
 }

@@ -50,15 +50,9 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
                 initViews()
             }
         }
-
-        sharedViewModel.isSucceed.observe(this@SettingsFragment, Observer<Boolean> {
-            if (::rawBuildPropPref.isInitialized) {
-                rawBuildPropPref.isEnabled = true
-            }
-        })
     }
 
-    private fun initViews() {
+    private suspend fun initViews() {
         val scrollBarModePref =
             findPreference<ListPreference>(MyApplication.getMyString(R.string.interface_scroll_bar_key))!!
         scrollBarModePref.setOnPreferenceChangeListener { _: Preference, newValue: Any ->
@@ -79,45 +73,28 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
             true
         }
 
+        withContext(Dispatchers.Main) {
+            sharedViewModel.isSucceed.observe(viewLifecycleOwner, Observer<Boolean> {
+                if (::rawBuildPropPref.isInitialized) {
+                    rawBuildPropPref.isEnabled = true
+                }
+            })
+        }
+
         allowNetworkDataPref =
             findPreference(MyApplication.getMyString(R.string.network_allow_network_data_key))!!
 
         val themesPref =
             findPreference<ListPreference>(MyApplication.getMyString(R.string.interface_themes_key))!!
         themesPref.setOnPreferenceChangeListener { _: Preference, newValue: Any ->
-            launch {
-                withContext(Dispatchers.IO) {
-                    MyApplication.setMyTheme(newValue.toString())
-                }
-            }
+            MyApplication.instance.setMyTheme(newValue.toString())
 
             true
         }
 
         val versionPref =
             findPreference<Preference>(MyApplication.getMyString(R.string.about_version_key))!!
-        versionPref.let {
-            val assetLldVersion = try {
-                JsonIo.getAssetLldVersion(MyApplication.instance.assets)
-            } catch (e: Exception) {
-                e.printStackTrace()
-
-                MyApplication.getMyString(android.R.string.unknownName)
-            }
-
-            launch {
-                withContext(Dispatchers.Main) {
-                    it.summary =
-                        MyApplication.getMyString(
-                            R.string.about_version_summary,
-                            BuildConfig.VERSION_NAME,
-                            BuildConfig.VERSION_CODE,
-                            assetLldVersion
-                        )
-                }
-            }
-        }
-
+        setBuiltInDataVersion(versionPref)
         versionPref.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             versionClicked()
 
@@ -187,6 +164,27 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
             R.string.about_check_for_update_title_checking
         )
     }
+
+    private suspend fun setBuiltInDataVersion(versionPref: Preference) =
+        withContext(Dispatchers.IO) {
+            val assetLldVersion = try {
+                JsonIo.getAssetLldVersion(MyApplication.instance.assets)
+            } catch (e: Exception) {
+                e.printStackTrace()
+
+                MyApplication.getMyString(android.R.string.unknownName)
+            }
+
+            withContext(Dispatchers.Main) {
+                versionPref.summary =
+                    MyApplication.getMyString(
+                        R.string.about_version_summary,
+                        BuildConfig.VERSION_NAME,
+                        BuildConfig.VERSION_CODE,
+                        assetLldVersion
+                    )
+            }
+        }
 
     private fun checkForUpdate() = launch {
         withContext(Dispatchers.IO) {
