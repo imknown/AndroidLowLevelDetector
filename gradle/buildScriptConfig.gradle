@@ -37,7 +37,7 @@ ext {
             // https://github.com/JetBrains/kotlin/releases
             // https://bintray.com/kotlin/kotlin-dev/kotlin
             // http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.jetbrains.kotlin%22
-            core      : '1.3.60',
+            core      : '1.3.61',
 
             // https://github.com/Kotlin/anko/releases
             // https://bintray.com/jetbrains/anko/anko
