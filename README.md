@@ -7,6 +7,9 @@ https://github.com/imknown/AndroidLowLevelDetector/releases
 - Approach 2
 https://coolapk.com/apk/net.imknown.android.forefrontinfo
 
+## Screenshots
+![Home](art/home.png "Home") ![Others](art/others.png "Others") ![Settings](art/settings.png "Settings")
+
 ## Features inside
 - detect Android version
 - detect Security patch level
