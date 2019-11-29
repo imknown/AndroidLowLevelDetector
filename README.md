@@ -8,7 +8,8 @@ https://github.com/imknown/AndroidLowLevelDetector/releases
 https://coolapk.com/apk/net.imknown.android.forefrontinfo
 
 ## Features inside
-- detect Android version and whether is up-to-date
+- detect Android version
+- detect Security patch level
 - detect Linux kernel
 - detect A/B or A-Only
 - detect Project Treble
@@ -16,11 +17,10 @@ https://coolapk.com/apk/net.imknown.android.forefrontinfo
 - detect System-as-root
 - detect (flattened) APEX
 - detect Toybox
-- dark mode
+- dark mode supported
 - online/offline mode (fetching data from remote server or local)
-- In-App check up and upgrade
-- MultiWindow/FreeForm/Landscape mode
-- Activity recreating protecting
+- in-app check up and upgrade
+- MultiWindow/FreeForm/Landscape supported
 
 ## Features todo
 - JetPack
