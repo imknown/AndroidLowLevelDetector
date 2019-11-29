@@ -104,7 +104,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
             .setCustomAnimations(R.anim.drop_scale, FragmentTransaction.TRANSIT_NONE)
             .hide(getFragmentInstance(lastId))
             .show(getFragmentInstance(selectedId))
-            .commitNow()
+            .commitNowAllowingStateLoss()
 
         lastId = selectedId
     }
@@ -148,7 +148,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
         supportFragmentManager.beginTransaction()
             .setCustomAnimations(R.anim.drop_scale, FragmentTransaction.TRANSIT_NONE)
             .add(R.id.container, fragment, id.toString())
-            .commitNow()
+            .commitNowAllowingStateLoss()
     }
 
     override fun onBackPressed() {
