@@ -7,7 +7,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import androidx.annotation.StringRes
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -15,6 +14,7 @@ import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.*
 import net.imknown.android.forefrontinfo.*
 import net.imknown.android.forefrontinfo.base.IFragmentView
@@ -243,7 +243,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
         )
         val message = "$date\n$desc\n$log"
 
-        val builder = AlertDialog.Builder(MyApplication.instance)
+        val builder = MaterialAlertDialogBuilder(context)
         builder.setTitle(title)
         builder.setMessage(message)
         builder.setPositiveButton(android.R.string.ok) { dialog: DialogInterface, _: Int ->
