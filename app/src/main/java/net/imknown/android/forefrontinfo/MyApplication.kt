@@ -5,7 +5,6 @@ import android.app.Application
 import android.os.Environment
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.preference.PreferenceManager
 import kotlinx.coroutines.*
 import java.io.File
 
@@ -40,21 +39,7 @@ open class MyApplication : Application(), CoroutineScope by MainScope() {
 
         instance = this
 
-        initTheme()
-
         GatewayApi.savedLldJsonFile = File(getDownloadDir(), GatewayApi.LLD_JSON_NAME)
-    }
-
-    private fun initTheme() = launch {
-        withContext(Dispatchers.IO) {
-            val sharedPreferences =
-                PreferenceManager.getDefaultSharedPreferences(this@MyApplication)
-            val themesValue =
-                sharedPreferences.getString(getMyString(R.string.interface_themes_key), "")!!
-            if (themesValue.isNotEmpty()) {
-                setMyTheme(themesValue)
-            }
-        }
     }
 
     internal fun setMyTheme(themesValue: String) = launch {

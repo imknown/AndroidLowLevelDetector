@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.preference.PreferenceManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.coroutines.*
@@ -62,6 +63,19 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
 
     private fun getMyColor(@ColorRes id: Int) = ContextCompat.getColor(this, id)
 
+    private fun initTheme() {
+        val sharedPreferences =
+            PreferenceManager.getDefaultSharedPreferences(this@MainActivity)
+        val themesValue =
+            sharedPreferences.getString(
+                MyApplication.getMyString(R.string.interface_themes_key),
+                MyApplication.getMyString(R.string.interface_themes_follow_system_value)
+            )!!
+        MyApplication.instance.setMyTheme(themesValue)
+
+        initColors()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -72,19 +86,25 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
 
         setContentView(R.layout.main_activity)
 
-        initColors()
-
         val actionBar = supportActionBar
         actionBar?.subtitle = MyApplication.getMyString(R.string.lld_json_checking)
 
         nav_view.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
 
-        if (savedInstanceState == null) {
-            showFragment(lastId)
+        launch {
+            withContext(Dispatchers.IO) {
+                initTheme()
+
+                withContext(Dispatchers.Main) {
+                    if (savedInstanceState == null) {
+                        showFragment(lastId)
+                    }
+//                    else {
+//                        val fragment = supportFragmentManager.findFragmentById(R.id.container)
+//                    }
+                }
+            }
         }
-//        else {
-//            val fragment = supportFragmentManager.findFragmentById(R.id.container)
-//        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
