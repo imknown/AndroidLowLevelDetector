@@ -1,6 +1,5 @@
 package net.imknown.android.forefrontinfo.ui.settings
 
-import android.app.ProgressDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
@@ -224,7 +223,8 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
         }
     }
 
-    private lateinit var progressDialog: ProgressDialog
+    @Suppress("DEPRECATION")
+    private lateinit var progressDialog: android.app.ProgressDialog
 
     private fun showDownloadConfirmDialog(githubReleaseInfo: GithubReleaseInfo) {
         val version = githubReleaseInfo.tag_name
@@ -270,14 +270,15 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
         }
     }
 
+    @Suppress("DEPRECATION")
     private suspend fun showProgressDialog(
         title: String,
         size: Int,
         sizeInMb: Float
     ) = withContext(Dispatchers.Main) {
-        progressDialog = ProgressDialog(context)
+        progressDialog = android.app.ProgressDialog(context)
         with(progressDialog) {
-            setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
+            setProgressStyle(android.app.ProgressDialog.STYLE_HORIZONTAL)
             isIndeterminate = false
             setCancelable(false)
             setCanceledOnTouchOutside(false)
@@ -293,10 +294,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
     private suspend fun downloadApk(url: String, fileName: String, sizeInMb: Float) {
         try {
             GatewayApi.downloadApk(url, fileName, { readBytes, _ ->
-                progressDialog.setProgressNumberFormat(
-                    String.format("%.2fM/%.2fM", readBytes / 1_048_576F, sizeInMb)
-                )
-                progressDialog.progress = readBytes.toInt()
+                setProgress(readBytes, sizeInMb)
             }, { data ->
                 if (data.isEmpty()) {
                     showError(Exception(MyApplication.getMyString(R.string.about_check_for_update_network_empty_file)))
@@ -309,6 +307,14 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
         } catch (t: Throwable) {
             showError(t)
         }
+    }
+
+    @Suppress("DEPRECATION")
+    private fun setProgress(readBytes: Long, sizeInMb: Float) {
+        progressDialog.setProgressNumberFormat(
+            String.format("%.2fM/%.2fM", readBytes / 1_048_576F, sizeInMb)
+        )
+        progressDialog.progress = readBytes.toInt()
     }
 
     private fun install(fileName: String) = launch {
