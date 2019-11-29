@@ -27,10 +27,10 @@ open class MyApplication : Application(), CoroutineScope by MainScope() {
             }
         }
 
-        fun getMyString(@StringRes resId: Int) =
+        internal fun getMyString(@StringRes resId: Int) =
             instance.getString(resId)
 
-        fun getMyString(@StringRes resId: Int, vararg formatArgs: Any?) =
+        internal fun getMyString(@StringRes resId: Int, vararg formatArgs: Any?) =
             instance.getString(resId, *formatArgs)
     }
 
