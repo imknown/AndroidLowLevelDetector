@@ -82,7 +82,8 @@ class OthersFragment : BaseListFragment() {
     }
 
     private suspend fun getProp() {
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+        val sharedPreferences =
+            PreferenceManager.getDefaultSharedPreferences(MyApplication.instance)
         val rawBuildProp = sharedPreferences.getBoolean(
             MyApplication.getMyString(R.string.interface_raw_build_prop_key), false
         )

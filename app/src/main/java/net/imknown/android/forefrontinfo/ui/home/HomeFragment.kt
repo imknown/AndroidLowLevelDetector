@@ -79,7 +79,8 @@ class HomeFragment : BaseListFragment() {
     }
 
     override suspend fun collectionDataset() {
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+        val sharedPreferences =
+            PreferenceManager.getDefaultSharedPreferences(MyApplication.instance)
         val allowNetwork = sharedPreferences.getBoolean(
             MyApplication.getMyString(R.string.network_allow_network_data_key), false
         )

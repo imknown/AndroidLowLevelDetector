@@ -39,14 +39,15 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
 
         launch {
             withContext(Dispatchers.IO) {
-                val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+                val sharedPreferences =
+                    PreferenceManager.getDefaultSharedPreferences(MyApplication.instance)
                 val scrollBarMode = sharedPreferences.getString(
                     MyApplication.getMyString(R.string.interface_scroll_bar_key),
                     MyApplication.getMyString(R.string.interface_no_scroll_bar_value)
                 )!!
                 setScrollBarMode(list, scrollBarMode)
 
-                PreferenceManager.getDefaultSharedPreferences(context)
+                PreferenceManager.getDefaultSharedPreferences(MyApplication.instance)
                     .registerOnSharedPreferenceChangeListener(this@BaseListFragment)
             }
         }
@@ -76,7 +77,7 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
     override fun onDestroyView() {
         super.onDestroyView()
 
-        PreferenceManager.getDefaultSharedPreferences(context)
+        PreferenceManager.getDefaultSharedPreferences(MyApplication.instance)
             .unregisterOnSharedPreferenceChangeListener(this)
 
         cancel()
@@ -95,7 +96,7 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
         list.apply {
             setHasFixedSize(true)
 
-            layoutManager = LinearLayoutManager(context)
+            layoutManager = LinearLayoutManager(MyApplication.instance)
 
             addItemDecoration(MyItemDecoration(resources.getDimensionPixelSize(R.dimen.item_divider_space)))
 
