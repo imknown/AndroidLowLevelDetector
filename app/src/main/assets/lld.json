@@ -1,5 +1,5 @@
 {
-  "version": "2019-11-22 13:30",
+  "version": "2019-11-30 23:02",
   "desc": "",
   "url": "",
   "android": {
@@ -39,7 +39,7 @@
   },
   "linux": {
     "stable": {
-      "version": "4.14.155",
+      "version": "4.14.151",
       "desc": "",
       "url": "https://android.googlesource.com/kernel/common/+/refs/tags/ASB-2019-11-05_4.14/Makefile, https://source.android.com/setup/build/building-kernels#downloading"
     },
