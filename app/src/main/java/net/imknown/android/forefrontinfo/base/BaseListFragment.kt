@@ -68,7 +68,10 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
                         key,
                         MyApplication.getMyString(R.string.interface_no_scroll_bar_value)
                     )!!
-                    setScrollBarMode(list, scrollBarMode)
+
+                    withContext(Dispatchers.Main) {
+                        setScrollBarMode(list, scrollBarMode)
+                    }
                 }
             }
         }
