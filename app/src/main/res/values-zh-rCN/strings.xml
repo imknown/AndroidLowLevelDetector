@@ -9,7 +9,7 @@
     <string name="lld_json_checking">检查数据中 📲</string>
     <string name="lld_json_offline">离线数据 📴 (%s)</string>
     <string name="lld_json_online">在线数据 📱 (%s)</string>
-    <string name="lld_json_download_failed">在现数据获取失败.\n使用离线数据代替.</string>
+    <string name="lld_json_download_failed">在线数据获取失败.\n使用离线数据代替.</string>
 
     <!-- 选项卡 -->
     <string name="title_home">首页</string>
