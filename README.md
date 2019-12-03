@@ -32,8 +32,9 @@ https://coolapk.com/apk/net.imknown.android.forefrontinfo
 - detect dm-verity (version)
 - detect FBE/FDE
 - detect WebView implement
-- up-to-date detect
-  - latest alpha/beta Android version
+- detect latest alpha/beta Android version
+- Android version market share
+- Flat list all supported Android/Linux/etc.
 - settings
   - speed mode (no animations, no CardViews, etc.)
   - detect `getprop` from file, not from SDK API (option)
