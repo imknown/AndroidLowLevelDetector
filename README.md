@@ -34,6 +34,7 @@ https://coolapk.com/apk/net.imknown.android.forefrontinfo
 - detect dm-verity (version)
 - detect FBE/FDE
 - detect WebView implement
+- detect GApps version
 - detect latest alpha/beta Android version
 - Android version market share
 - Flat list all supported Android/Linux/etc.
