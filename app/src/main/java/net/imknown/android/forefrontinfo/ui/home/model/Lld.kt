@@ -28,6 +28,7 @@ data class Lld(
     data class Types<T>(
         val stable: T,
         val support: T,
+        val mainline: T,
         val master: T
     ) : BaseInfo() where T : BaseInfo
 }
