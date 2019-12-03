@@ -1,5 +1,7 @@
 # AndroidLowLevelDetector
 An open-source small utility to detect some Android low-level features.
+- https://github.com/imknown/AndroidLowLevelDetector
+- https://gitee.com/imknown/AndroidLowLevelDetector (Mirror)
 
 ## Download
 - Approach 1
