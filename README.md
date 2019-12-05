@@ -35,6 +35,7 @@ https://coolapk.com/apk/net.imknown.android.forefrontinfo
 - detect FBE/FDE
 - detect WebView implement
 - detect latest alpha/beta Android version
+- detect HAL
 - Android version market share
 - Flat list all supported Android/Linux/etc.
 - settings
