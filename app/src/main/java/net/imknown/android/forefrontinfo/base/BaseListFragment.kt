@@ -19,7 +19,7 @@ import net.imknown.android.forefrontinfo.R
 abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
     SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private lateinit var myTempDataset: ArrayList<MyModel>
+    private var myTempDataset: ArrayList<MyModel> = ArrayList()
     private val myAdapter = MyAdapter()
 
     protected val sharedViewModel: SharedViewModel by activityViewModels()
@@ -124,6 +124,7 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
     protected abstract suspend fun collectionDataset()
 
     protected fun createNewTempDataset() {
+        myTempDataset.clear()
         myTempDataset = ArrayList()
     }
 
