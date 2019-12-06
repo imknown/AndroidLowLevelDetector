@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
 
     private fun initTheme() {
         val sharedPreferences =
-            PreferenceManager.getDefaultSharedPreferences(this@MainActivity)
+            PreferenceManager.getDefaultSharedPreferences(MyApplication.instance)
         val themesValue =
             sharedPreferences.getString(
                 MyApplication.getMyString(R.string.interface_themes_key),
