@@ -154,9 +154,9 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
         }
     }
 
-    protected suspend fun disableSwipeRefresh() = withContext(Dispatchers.Main) {
-        swipeRefresh.isEnabled = false
-    }
+//    protected suspend fun disableSwipeRefresh() = withContext(Dispatchers.Main) {
+//        swipeRefresh.isEnabled = false
+//    }
 
     protected fun sh(cmd: String, condition: Boolean = true): List<String> =
         if (condition) {
