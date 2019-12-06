@@ -175,16 +175,18 @@ class HomeFragment : BaseListFragment() {
     private fun getSecurityPatchYearMonth(securityPatch: String) =
         securityPatch.substringBeforeLast('-')
 
-    private fun detectWebView(lld: Lld) {
-        val builtInWebViewPackageInfo = try {
-            MyApplication.instance.packageManager?.getPackageInfo(
-                WEB_VIEW_BUILT_IN_PACKAGE_NAME,
-                0
-            )
+    private fun getPackageInfo(packageName: String) =
+        try {
+            MyApplication.instance.packageManager?.getPackageInfo(packageName, 0)
         } catch (e: Exception) {
             e.printStackTrace()
             null
         }
+
+    private fun detectWebView(lld: Lld) {
+        val builtInWebViewPackageInfo =
+            getPackageInfo(WEB_VIEW_BUILT_IN_PACKAGE_NAME)
+                ?: getPackageInfo(WEB_VIEW_STABLE_PACKAGE_NAME)
         val builtInWebViewVersion = builtInWebViewPackageInfo?.versionName ?: ""
 
         val implementWebViewPackageInfo =
@@ -200,7 +202,7 @@ class HomeFragment : BaseListFragment() {
 
         add(
             """
-            |${collectWebViewInfo(builtInWebViewPackageInfo)}
+            |${collectWebViewInfo(builtInWebViewPackageInfo, R.string.webview_built_in_version)}
             |
             |${collectWebViewInfo(implementWebViewPackageInfo, R.string.webview_implement_version)}
             """.trimMargin(),
@@ -226,18 +228,13 @@ class HomeFragment : BaseListFragment() {
         }
     )
 
-    private fun collectWebViewInfo(packageInfo: PackageInfo?): String {
+    private fun collectWebViewInfo(packageInfo: PackageInfo?, @StringRes descId: Int): String {
+        val desc = MyApplication.getMyString(descId)
         val appName = getWebViewAppName(packageInfo?.packageName)
         val versionName =
             packageInfo?.versionName ?: MyApplication.getMyString(android.R.string.unknownName)
 
-        return "$appName\n$versionName"
-    }
-
-    private fun collectWebViewInfo(packageInfo: PackageInfo?, @StringRes descId: Int): String {
-        val desc = MyApplication.getMyString(descId)
-
-        return "$desc\n${collectWebViewInfo(packageInfo)}"
+        return "$desc\n$appName\n$versionName"
     }
 
     private fun fillDataset(lld: Lld) {
