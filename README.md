@@ -34,10 +34,13 @@ https://coolapk.com/apk/net.imknown.android.forefrontinfo
 - detect dm-verity (version)
 - detect FBE/FDE
 - detect WebView implement
+- detect GApps version
 - detect latest alpha/beta Android version
 - detect HAL
 - Android version market share
-- Flat list all supported Android/Linux/etc.
+- Flat list all supported Android/Linux/etc. (V2.0 ?)
+- CoordinatorLayout, etc.
+- kotlinPoet, googleAutoService (V2.0 ?)
 - settings
   - speed mode (no animations, no CardViews, etc.)
   - detect `getprop` from file, not from SDK API (option)
