@@ -41,6 +41,18 @@
     <string name="toybox_built_in_result">Is Toybox built in?\n%s</string>
     <string name="built_in_toybox_version_result">\u0020(%s)</string>
 
+    <string name="webview_built_in_version">AOSP built-in WebView</string>
+    <string name="webview_implement_version">WebView implementation</string>
+    <string name="webview_built_in">Built-in WebView</string>
+    <string name="webview_stable">WebView Stable</string>
+    <string name="webview_beta">WebView Beta</string>
+    <string name="webview_developer">WebView Developer</string>
+    <string name="webview_canary">WebView Canary</string>
+    <string name="chrome_stable">Chrome Stable</string>
+    <string name="chrome_beta">Chrome Beta</string>
+    <string name="chrome_developer">Chrome Developer</string>
+    <string name="chrome_canary">Chrome Canary</string>
+
     <!-- Others -->
     <string name="build_brand">Brand\n%s</string>
     <string name="build_manufacturer">Manufacturer/OEM\n%s</string>

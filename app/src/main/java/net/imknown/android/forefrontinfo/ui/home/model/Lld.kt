@@ -6,7 +6,8 @@ import androidx.annotation.Keep
 data class Lld(
     val android: Androids,
     val linux: Types<BaseInfo>,
-    val toybox: Types<BaseInfo>
+    val toybox: Types<BaseInfo>,
+    val webView: WebViews
 ) : BaseInfo() {
     @Keep
     data class Androids(
@@ -31,4 +32,12 @@ data class Lld(
         val mainline: T,
         val master: T
     ) : BaseInfo() where T : BaseInfo
+
+    @Keep
+    data class WebViews(
+        val stable: BaseInfo,
+        val beta: BaseInfo,
+        val dev: BaseInfo,
+        val canary: BaseInfo
+    )
 }

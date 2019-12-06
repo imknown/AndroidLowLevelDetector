@@ -40,6 +40,18 @@
     <string name="toybox_built_in_result">内建了 Toybox?\n%s</string>
     <string name="built_in_toybox_version_result">\u0020(%s)</string>
 
+    <string name="webview_built_in_version">AOSP 内建 WebView</string>
+    <string name="webview_implement_version">WebView 实现</string>
+    <string name="webview_built_in">内建 WebView</string>
+    <string name="webview_stable">WebView 稳定版</string>
+    <string name="webview_beta">WebView 测试版</string>
+    <string name="webview_developer">WebView 开发者版</string>
+    <string name="webview_canary">WebView Canary</string>
+    <string name="chrome_stable">Chrome 稳定版</string>
+    <string name="chrome_beta">Chrome 测试版</string>
+    <string name="chrome_developer">Chrome 开发者版</string>
+    <string name="chrome_canary">Chrome Canary</string>
+
     <!-- 其他 -->
     <string name="build_brand">品牌\n%s</string>
     <string name="build_manufacturer">代工/OEM\n%s</string>

@@ -1,5 +1,5 @@
 {
-  "version": "2019-12-03 09:38",
+  "version": "2019-12-06 18:38",
   "desc": "",
   "url": "",
   "android": {
@@ -79,6 +79,28 @@
       "version": "0.8.2",
       "desc": "",
       "url": "https://android.googlesource.com/platform/external/toybox/+/refs/heads/master/www/news.html"
+    }
+  },
+  "webView": {
+    "stable": {
+      "version": "78.0.3904.108",
+      "desc": "",
+      "url": "https://www.chromium.org/developers/calendar"
+    },
+    "beta": {
+      "version": "79.0.3945.71",
+      "desc": "",
+      "url": "https://www.chromium.org/developers/calendar"
+    },
+    "dev": {
+      "version": "80.0.3983.0",
+      "desc": "",
+      "url": "https://www.chromium.org/developers/calendar"
+    },
+    "canary": {
+      "version": "80.0.3986.0",
+      "desc": "",
+      "url": "https://www.chromium.org/developers/calendar"
     }
   }
 }

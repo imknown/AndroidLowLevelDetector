@@ -83,6 +83,7 @@ dependencies {
 
     implementation "androidx.fragment:fragment-ktx:$androidX.fragment"
     implementation "androidx.preference:preference:$androidX.preference"
+    implementation "androidx.webkit:webkit:$androidX.webkit"
 
     implementation "androidx.constraintlayout:constraintlayout:$androidX.constraintLayout"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:$androidX.swipeRefreshLayout"

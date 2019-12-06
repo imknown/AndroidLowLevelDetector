@@ -1,10 +1,12 @@
 package net.imknown.android.forefrontinfo.ui.home
 
+import android.content.pm.PackageInfo
 import android.os.Build
 import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
+import androidx.webkit.WebViewCompat
 import com.g00fy2.versioncompare.Version
 import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.Dispatchers
@@ -66,6 +68,16 @@ class HomeFragment : BaseListFragment() {
         // https://source.android.com/devices/tech/ota/apex?hl=en
         private const val PROP_APEX_UPDATABLE = "ro.apex.updatable"
         private const val CMD_FLATTENED_APEX_MOUNT = "grep 'tmpfs /apex tmpfs' /proc/mounts"
+
+        private const val WEB_VIEW_BUILT_IN_PACKAGE_NAME = "com.android.webview"
+        private const val WEB_VIEW_STABLE_PACKAGE_NAME = "com.google.android.webview"
+        private const val WEB_VIEW_BETA_PACKAGE_NAME = "com.google.android.webview.beta"
+        private const val WEB_VIEW_DEV_IN_PACKAGE_NAME = "com.google.android.webview.dev"
+        private const val WEB_VIEW_CANARY_PACKAGE_NAME = "com.google.android.webview.canary"
+        private const val CHROME_STABLE_PACKAGE_NAME = "com.android.chrome"
+        private const val CHROME_BETA_PACKAGE_NAME = "com.chrome.beta"
+        private const val CHROME_DEV_IN_PACKAGE_NAME = "com.chrome.dev"
+        private const val CHROME_CANARY_PACKAGE_NAME = "com.chrome.canary"
     }
 
     private fun copyJsonIfNeeded() {
@@ -162,6 +174,71 @@ class HomeFragment : BaseListFragment() {
 
     private fun getSecurityPatchYearMonth(securityPatch: String) =
         securityPatch.substringBeforeLast('-')
+
+    private fun detectWebView(lld: Lld) {
+        val builtInWebViewPackageInfo = try {
+            MyApplication.instance.packageManager?.getPackageInfo(
+                WEB_VIEW_BUILT_IN_PACKAGE_NAME,
+                0
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+        val builtInWebViewVersion = builtInWebViewPackageInfo?.versionName ?: ""
+
+        val implementWebViewPackageInfo =
+            WebViewCompat.getCurrentWebViewPackage(MyApplication.instance)
+        val implementWebViewVersion = implementWebViewPackageInfo?.versionName ?: ""
+
+        val lldWebViewStable = lld.webView.stable.version
+        @ColorInt val webViewColor = when {
+            Version(builtInWebViewVersion).isAtLeast(lldWebViewStable) -> COLOR_STATE_LIST_NO_PROBLEM
+            Version(implementWebViewVersion).isAtLeast(lldWebViewStable) -> COLOR_STATE_LIST_WARNING
+            else -> COLOR_STATE_LIST_CRITICAL
+        }
+
+        add(
+            """
+            |${collectWebViewInfo(builtInWebViewPackageInfo)}
+            |
+            |${collectWebViewInfo(implementWebViewPackageInfo, R.string.webview_implement_version)}
+            """.trimMargin(),
+            webViewColor
+        )
+    }
+
+    private fun getWebViewAppName(packageName: String?) = MyApplication.getMyString(
+        when (packageName) {
+            WEB_VIEW_BUILT_IN_PACKAGE_NAME -> R.string.webview_built_in
+
+            WEB_VIEW_STABLE_PACKAGE_NAME -> R.string.webview_stable
+            WEB_VIEW_BETA_PACKAGE_NAME -> R.string.webview_beta
+            WEB_VIEW_DEV_IN_PACKAGE_NAME -> R.string.webview_developer
+            WEB_VIEW_CANARY_PACKAGE_NAME -> R.string.webview_canary
+
+            CHROME_STABLE_PACKAGE_NAME -> R.string.chrome_stable
+            CHROME_BETA_PACKAGE_NAME -> R.string.chrome_beta
+            CHROME_DEV_IN_PACKAGE_NAME -> R.string.chrome_developer
+            CHROME_CANARY_PACKAGE_NAME -> R.string.chrome_canary
+
+            else -> android.R.string.unknownName
+        }
+    )
+
+    private fun collectWebViewInfo(packageInfo: PackageInfo?): String {
+        val appName = getWebViewAppName(packageInfo?.packageName)
+        val versionName =
+            packageInfo?.versionName ?: MyApplication.getMyString(android.R.string.unknownName)
+
+        return "$appName\n$versionName"
+    }
+
+    private fun collectWebViewInfo(packageInfo: PackageInfo?, @StringRes descId: Int): String {
+        val desc = MyApplication.getMyString(descId)
+
+        return "$desc\n${collectWebViewInfo(packageInfo)}"
+    }
 
     private fun fillDataset(lld: Lld) {
         createNewTempDataset()
@@ -367,6 +444,8 @@ class HomeFragment : BaseListFragment() {
             toyboxColor
         )
         // endregion [ToyBox]
+
+        detectWebView(lld)
     }
 
     private fun hasResult(result: String) =
