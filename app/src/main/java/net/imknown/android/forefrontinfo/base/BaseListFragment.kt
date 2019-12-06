@@ -80,6 +80,10 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
     override fun onDestroyView() {
         super.onDestroyView()
 
+        myTempDataset.clear()
+        myAdapter.addAll(myTempDataset)
+        myAdapter.notifyDataSetChanged()
+
         PreferenceManager.getDefaultSharedPreferences(MyApplication.instance)
             .unregisterOnSharedPreferenceChangeListener(this)
 
