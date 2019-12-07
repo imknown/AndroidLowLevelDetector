@@ -11,7 +11,4 @@
     <color name="colorNoProblem">#71C784</color>
     <color name="colorWaring">#FFCC80</color>
     <color name="colorCritical">#FF9999</color>
-
-    <color name="colorScrollBar">#AAAAAAAA</color>
-    <color name="colorScrollBarPressed">#AAEFC158</color>
 </resources>
