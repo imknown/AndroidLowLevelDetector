@@ -22,6 +22,7 @@ https://coolapk.com/apk/net.imknown.android.forefrontinfo
 - detect System-as-root
 - detect (flattened) APEX
 - detect Toybox
+- detect WebView implement
 - dark mode supported
 - online/offline mode (fetching data from remote server or local)
 - in-app check up and upgrade
@@ -33,10 +34,9 @@ https://coolapk.com/apk/net.imknown.android.forefrontinfo
   - Animation & transitions
 - detect dm-verity (version)
 - detect FBE/FDE
-- detect WebView implement
-- detect GApps version
 - detect latest alpha/beta Android version
 - detect HAL
+- detect targetSdkVersion
 - Android version market share
 - Flat list all supported Android/Linux/etc. (V2.0 ?)
 - CoordinatorLayout, etc.
