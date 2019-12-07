@@ -2,6 +2,7 @@ package net.imknown.android.forefrontinfo.ui.home
 
 import android.content.pm.PackageInfo
 import android.os.Build
+import android.util.Log
 import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
@@ -204,7 +205,7 @@ class HomeFragment : BaseListFragment() {
         try {
             MyApplication.instance.packageManager?.getPackageInfo(packageName, 0)
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.d(javaClass.simpleName, "$packageName not found.")
             null
         }
 
