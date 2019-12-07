@@ -3,7 +3,6 @@ package net.imknown.android.forefrontinfo.ui.settings
 import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import androidx.annotation.StringRes
@@ -321,7 +320,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
         withContext(Dispatchers.IO) {
             val intent = Intent(Intent.ACTION_VIEW)
             val file = File(MyApplication.getApkDir(), fileName)
-            val data = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            val data = if (isAtLeastAndroid7()) {
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 FileProvider.getUriForFile(
                     MyApplication.instance,
