@@ -1,20 +1,9 @@
-- https://developer.android.com/about/versions/10
-- https://source.android.com/
-- https://source.android.com/security/enhancements/enhancements9
-- https://source.android.com/setup/start/p-release-notes
-- https://source.android.com/setup/start/build-numbers
-
-------
 
 ```
 adb shell getprop ro.boot.verifiedbootstate
 adb shell getprop ro.boot.flash.locked
 adb shell getprop ro.oem_unlock_supported
 ```
-
-------
-
-https://chromium.googlesource.com/aosp/platform/system/core/+/upstream/shell_and_utilities/
 
 ------
 

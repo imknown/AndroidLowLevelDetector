@@ -19,14 +19,6 @@ import net.imknown.android.forefrontinfo.MainActivity.Companion.COLOR_STATE_LIST
 import net.imknown.android.forefrontinfo.base.BaseListFragment
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 
-/**
- * Thanks to:
- *
- * https://github.com/topjohnwu/Magisk/blob/master/scripts/util_functions.sh
- * https://github.com/opengapps/opengapps/blob/master/scripts/inc.installer.sh
- * https://github.com/penn5/TrebleCheck
- *
- */
 class HomeFragment : BaseListFragment() {
 
     companion object {
@@ -39,12 +31,39 @@ class HomeFragment : BaseListFragment() {
             // Shell.Config.setTimeout(10)
         }
 
+        // https://source.android.com/setup/start/build-numbers
+        // https://source.android.com/security/enhancements/enhancements9
+        // https://source.android.com/setup/start/p-release-notes
+        // https://developer.android.com/about/versions/10
+        //
+        // https://www.android.com
+        // https://source.android.com/security/bulletin
+        // https://ci.android.com
+        // https://developer.android.com/preview/overview
+        //
+        // https://en.wikipedia.org/wiki/Android_version_history
+        // https://developer.android.com/about/dashboards/?hl=en
+        // https://www.bidouille.org/misc/androidcharts
+        //
+        // https://mta.qq.com/mta/data/device/os
+        // https://compass.umeng.com/#hardwareList
+        // https://tongji.baidu.com/research/app
+        private val BUILD_VERSION_RELEASE = Build.VERSION.RELEASE
+        private val BUILD_VERSION_SDK_INT = Build.VERSION.SDK_INT
+
+        // https://source.android.com/security/bulletin
+        private val BUILD_VERSION_SECURITY_PATCH by lazy {
+            // Suppress because of lazy already
+            @Suppress Build.VERSION.SECURITY_PATCH
+        }
         private const val PROP_SECURITY_PATCH = "ro.build.version.security_patch"
 
-        private const val CMD_TOYBOX_VERSION = "toybox --version"
+        // https://android.googlesource.com/kernel/common/+refs
+        // https://source.android.com/setup/build/building-kernels#downloading
+        private val SYSTEM_PROPERTY_LINUX_VERSION = System.getProperty("os.version")
 
         // https://source.android.com/devices/tech/ota/ab?hl=en
-        // /* root needed*/ private const val CMD_BOOT_PARTITION = "ls /dev/block/bootdevice/by-name | grep boot_"
+        // /* root needed */ private const val CMD_BOOT_PARTITION = "ls /dev/block/bootdevice/by-name | grep boot_"
         // private const val CMD_ROM_TOTAL_SIZE = "df | grep -v '/apex' | grep -v '/storage' | grep -E 'tmpfs'\\|'/dev'\\|'/data' | awk '{s+=\$2} END {print s/1000000}'"
         private const val PROP_AB_UPDATE = "ro.build.ab_update"
         private const val PROP_SLOT_SUFFIX = "ro.boot.slot_suffix"
@@ -57,9 +76,9 @@ class HomeFragment : BaseListFragment() {
         private const val PROP_VNDK_VERSION = "ro.vndk.version"
 
         // https://source.android.com/devices/bootloader/system-as-root?hl=en
-        // https://github.com/topjohnwu/magisk_files/blob/2d7ddefbe4946806de1875a18247b724f5e7d4a0/notes.md
         // https://github.com/topjohnwu/Magisk/blob/master/scripts/util_functions.sh#L193
         // https://github.com/opengapps/opengapps/blob/master/scripts/inc.installer.sh#L710
+        // https://github.com/penn5/TrebleCheck/blob/master/app/src/main/java/tk/hack5/treblecheck/MountDetector.kt
         private const val PROP_SYSTEM_ROOT_IMAGE = "ro.build.system_root_image"
         private const val CMD_MOUNT_DEV_ROOT = "grep '/dev/root / ' /proc/mounts"
         private const val CMD_MOUNT_SYSTEM =
@@ -69,6 +88,16 @@ class HomeFragment : BaseListFragment() {
         private const val PROP_APEX_UPDATABLE = "ro.apex.updatable"
         private const val CMD_FLATTENED_APEX_MOUNT = "grep 'tmpfs /apex tmpfs' /proc/mounts"
 
+        // https://github.com/landley/toybox
+        // https://android.googlesource.com/platform/external/toybox/+refs
+        // https://chromium.googlesource.com/aosp/platform/system/core/+/upstream/shell_and_utilities/
+        private const val CMD_TOYBOX_VERSION = "toybox --version"
+
+        // https://www.chromium.org/developers/calendar
+        //
+        // https://en.wikipedia.org/wiki/Google_Chrome_version_history
+        // https://en.wikipedia.org/wiki/WebKit
+        // https://en.wikipedia.org/wiki/Chromium_(web_browser)
         private const val WEB_VIEW_BUILT_IN_PACKAGE_NAME = "com.android.webview"
         private const val WEB_VIEW_STABLE_PACKAGE_NAME = "com.google.android.webview"
         private const val WEB_VIEW_BETA_PACKAGE_NAME = "com.google.android.webview.beta"
@@ -250,8 +279,8 @@ class HomeFragment : BaseListFragment() {
         add(
             MyApplication.getMyString(
                 R.string.android_info,
-                Build.VERSION.RELEASE,
-                Build.VERSION.SDK_INT
+                BUILD_VERSION_RELEASE,
+                BUILD_VERSION_SDK_INT
             ),
             androidColor
         )
@@ -265,7 +294,7 @@ class HomeFragment : BaseListFragment() {
 
         // region [Security patch]
         val securityPatch = if (isAtLeastAndroid6()) {
-            Build.VERSION.SECURITY_PATCH
+            BUILD_VERSION_SECURITY_PATCH
         } else {
             getStringProperty(PROP_SECURITY_PATCH)
         }
@@ -284,7 +313,7 @@ class HomeFragment : BaseListFragment() {
         // endregion [Security patch]
 
         // region [Kernel]
-        val linuxVersion = System.getProperty("os.version")
+        val linuxVersion = SYSTEM_PROPERTY_LINUX_VERSION
         val isAtLeast = Version(linuxVersion).isAtLeast(lld.linux.stable.version)
         val isSupported = Version(linuxVersion).isAtLeast(lld.linux.support.version)
         @ColorInt val linuxColor = when {
