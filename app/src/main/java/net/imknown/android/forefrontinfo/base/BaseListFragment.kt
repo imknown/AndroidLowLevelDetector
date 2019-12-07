@@ -37,19 +37,17 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
 
         initViews()
 
-        launch {
-            withContext(Dispatchers.IO) {
-                val sharedPreferences =
-                    PreferenceManager.getDefaultSharedPreferences(MyApplication.instance)
-                val scrollBarMode = sharedPreferences.getString(
-                    MyApplication.getMyString(R.string.interface_scroll_bar_key),
-                    MyApplication.getMyString(R.string.interface_no_scroll_bar_value)
-                )!!
-                setScrollBarMode(list, scrollBarMode)
-
+        launch(Dispatchers.IO) {
+            val sharedPreferences =
                 PreferenceManager.getDefaultSharedPreferences(MyApplication.instance)
-                    .registerOnSharedPreferenceChangeListener(this@BaseListFragment)
-            }
+            val scrollBarMode = sharedPreferences.getString(
+                MyApplication.getMyString(R.string.interface_scroll_bar_key),
+                MyApplication.getMyString(R.string.interface_no_scroll_bar_value)
+            )!!
+            setScrollBarMode(list, scrollBarMode)
+
+            PreferenceManager.getDefaultSharedPreferences(MyApplication.instance)
+                .registerOnSharedPreferenceChangeListener(this@BaseListFragment)
         }
 
         collectionDatasetCaller()
@@ -59,20 +57,16 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
         sharedPreferences: SharedPreferences,
         key: String
     ) {
-        launch {
-            withContext(Dispatchers.IO) {
-                if (key == MyApplication.getMyString(R.string.interface_scroll_bar_key)
-                    && isActivityAndFragmentOk(this@BaseListFragment)
-                ) {
-                    val scrollBarMode = sharedPreferences.getString(
-                        key,
-                        MyApplication.getMyString(R.string.interface_no_scroll_bar_value)
-                    )!!
+        launch(Dispatchers.IO) {
+            if (key == MyApplication.getMyString(R.string.interface_scroll_bar_key)
+                && isActivityAndFragmentOk(this@BaseListFragment)
+            ) {
+                val scrollBarMode = sharedPreferences.getString(
+                    key,
+                    MyApplication.getMyString(R.string.interface_no_scroll_bar_value)
+                )!!
 
-                    withContext(Dispatchers.Main) {
-                        setScrollBarMode(list, scrollBarMode)
-                    }
-                }
+                setScrollBarMode(list, scrollBarMode)
             }
         }
     }
@@ -111,14 +105,12 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
         }
     }
 
-    protected fun collectionDatasetCaller(delay: Long = 0) = launch {
-        withContext(Dispatchers.IO) {
-            if (delay > 0) {
-                delay(delay)
-            }
-
-            collectionDataset()
+    protected fun collectionDatasetCaller(delay: Long = 0) = launch(Dispatchers.IO) {
+        if (delay > 0) {
+            delay(delay)
         }
+
+        collectionDataset()
     }
 
     protected abstract suspend fun collectionDataset()
@@ -148,10 +140,8 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
     override fun showError(error: Throwable) {
         super.showError(error)
 
-        launch {
-            withContext(Dispatchers.Main) {
-                swipeRefresh.isRefreshing = false
-            }
+        launch(Dispatchers.Main) {
+            swipeRefresh.isRefreshing = false
         }
     }
 

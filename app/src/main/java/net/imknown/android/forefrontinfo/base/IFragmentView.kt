@@ -26,26 +26,29 @@ interface IFragmentView : IView {
         Toast.makeText(MyApplication.instance, text, Toast.LENGTH_LONG).show()
     }
 
-    fun isActivityAndFragmentOk(fragment: Fragment) = with(fragment) {
-        isAdded && activity != null
-                && !activity!!.isFinishing
-                && !activity!!.isDestroyed
-    }
-
-    fun setScrollBarMode(recyclerView: RecyclerView, scrollBarMode: String) {
-        when (scrollBarMode) {
-            MyApplication.getMyString(R.string.interface_no_scroll_bar_value) -> {
-                recyclerView.isVerticalScrollBarEnabled = false
-                recyclerView.isHorizontalScrollBarEnabled = false
-            }
-            MyApplication.getMyString(R.string.interface_normal_scroll_bar_value) -> {
-                recyclerView.isVerticalScrollBarEnabled = true
-                recyclerView.isHorizontalScrollBarEnabled = true
-            }
-            MyApplication.getMyString(R.string.interface_fast_scroll_bar_value) -> {
-                recyclerView.isVerticalScrollBarEnabled = false
-                recyclerView.isHorizontalScrollBarEnabled = false
-            }
+    suspend fun isActivityAndFragmentOk(fragment: Fragment) = withContext(Dispatchers.IO) {
+        with(fragment) {
+            isAdded && activity != null
+                    && !activity!!.isFinishing
+                    && !activity!!.isDestroyed
         }
     }
+
+    suspend fun setScrollBarMode(recyclerView: RecyclerView, scrollBarMode: String) =
+        withContext(Dispatchers.Main) {
+            when (scrollBarMode) {
+                MyApplication.getMyString(R.string.interface_no_scroll_bar_value) -> {
+                    recyclerView.isVerticalScrollBarEnabled = false
+                    recyclerView.isHorizontalScrollBarEnabled = false
+                }
+                MyApplication.getMyString(R.string.interface_normal_scroll_bar_value) -> {
+                    recyclerView.isVerticalScrollBarEnabled = true
+                    recyclerView.isHorizontalScrollBarEnabled = true
+                }
+                MyApplication.getMyString(R.string.interface_fast_scroll_bar_value) -> {
+                    recyclerView.isVerticalScrollBarEnabled = false
+                    recyclerView.isHorizontalScrollBarEnabled = false
+                }
+            }
+        }
 }

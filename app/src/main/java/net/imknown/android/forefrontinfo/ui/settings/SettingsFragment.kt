@@ -37,25 +37,29 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
     private val sharedViewModel: SharedViewModel by activityViewModels()
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        launch {
-            withContext(Dispatchers.IO) {
-                if (Looper.myLooper() == null) {
-                    Looper.prepare()
-                }
-                setPreferencesFromResource(R.xml.preferences, rootKey)
-                Looper.myLooper()?.quit()
-
-                initViews()
+        launch(Dispatchers.IO) {
+            if (Looper.myLooper() == null) {
+                Looper.prepare()
             }
+            setPreferencesFromResource(R.xml.preferences, rootKey)
+            Looper.myLooper()?.quit()
+
+            initViews()
         }
     }
 
-    private suspend fun initViews() {
+    private fun initViews() = launch(Dispatchers.Main) {
+        if (!isActivityAndFragmentOk(this@SettingsFragment)) {
+            return@launch
+        }
+
         val scrollBarModePref =
             findPreference<ListPreference>(MyApplication.getMyString(R.string.interface_scroll_bar_key))!!
         scrollBarModePref.setOnPreferenceChangeListener { _: Preference, newValue: Any ->
-            if (isActivityAndFragmentOk(this@SettingsFragment)) {
-                setScrollBarMode(listView, newValue.toString())
+            launch {
+                if (isActivityAndFragmentOk(this@SettingsFragment)) {
+                    setScrollBarMode(listView, newValue.toString())
+                }
             }
 
             true
@@ -71,13 +75,11 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
             true
         }
 
-        withContext(Dispatchers.Main) {
-            sharedViewModel.isSucceed.observe(viewLifecycleOwner, Observer<Boolean> {
-                if (::rawBuildPropPref.isInitialized) {
-                    rawBuildPropPref.isEnabled = true
-                }
-            })
-        }
+        sharedViewModel.isSucceed.observe(viewLifecycleOwner, Observer<Boolean> {
+            if (::rawBuildPropPref.isInitialized) {
+                rawBuildPropPref.isEnabled = true
+            }
+        })
 
         allowNetworkDataPref =
             findPreference(MyApplication.getMyString(R.string.network_allow_network_data_key))!!
@@ -140,14 +142,12 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
     }
 
     // region [Raw build]
-    private fun onRawBuildPropChanged() = launch {
-        withContext(Dispatchers.IO) {
-            val fragment =
-                activity?.supportFragmentManager?.findFragmentByTag(R.id.navigation_others.toString())
-            if (fragment != null) {
-                withContext(Dispatchers.Main) {
-                    rawBuildPropPref.isEnabled = false
-                }
+    private fun onRawBuildPropChanged() = launch(Dispatchers.IO) {
+        val fragment =
+            activity?.supportFragmentManager?.findFragmentByTag(R.id.navigation_others.toString())
+        if (fragment != null) {
+            withContext(Dispatchers.Main) {
+                rawBuildPropPref.isEnabled = false
             }
         }
     }
@@ -184,42 +184,40 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
             }
         }
 
-    private fun checkForUpdate() = launch {
-        withContext(Dispatchers.IO) {
-            setCheckUpdatePreferenceStatus(false)
+    private fun checkForUpdate() = launch(Dispatchers.IO) {
+        setCheckUpdatePreferenceStatus(false)
 
-            if (allowNetworkDataPref.isChecked) {
-                GatewayApi.checkForUpdate(GatewayApiCheckForUpdate@{ data ->
+        if (allowNetworkDataPref.isChecked) {
+            GatewayApi.checkForUpdate(GatewayApiCheckForUpdate@{ data ->
+                launch success@{
                     if (!isActivityAndFragmentOk(this@SettingsFragment)) {
-                        return@GatewayApiCheckForUpdate
+                        return@success
                     }
 
                     isLatestVersion(data)
-                }, { error ->
-                    showError(error)
-                })
-            } else {
-                toast(R.string.about_check_for_update_allow_network_data_first)
-
-                setCheckUpdatePreferenceStatus(true)
-            }
-        }
-    }
-
-    private fun isLatestVersion(data: String) = launch {
-        withContext(Dispatchers.IO) {
-            val githubReleaseInfo = data.fromJson<GithubReleaseInfo>()
-            val remoteVersion = githubReleaseInfo.tag_name
-            val currentVersion = BuildConfig.VERSION_NAME
-
-            if (remoteVersion > currentVersion) {
-                showDownloadConfirmDialog(githubReleaseInfo)
-            } else {
-                toast(R.string.about_check_for_update_already_latest)
-            }
+                }
+            }, { error ->
+                showError(error)
+            })
+        } else {
+            toast(R.string.about_check_for_update_allow_network_data_first)
 
             setCheckUpdatePreferenceStatus(true)
         }
+    }
+
+    private fun isLatestVersion(data: String) = launch(Dispatchers.IO) {
+        val githubReleaseInfo = data.fromJson<GithubReleaseInfo>()
+        val remoteVersion = githubReleaseInfo.tag_name
+        val currentVersion = BuildConfig.VERSION_NAME
+
+        if (remoteVersion > currentVersion) {
+            showDownloadConfirmDialog(githubReleaseInfo)
+        } else {
+            toast(R.string.about_check_for_update_already_latest)
+        }
+
+        setCheckUpdatePreferenceStatus(true)
     }
 
     @Suppress("DEPRECATION")
@@ -246,26 +244,22 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
         builder.setTitle(title)
         builder.setMessage(message)
         builder.setPositiveButton(android.R.string.ok) { dialog: DialogInterface, _: Int ->
-            launch {
-                withContext(Dispatchers.IO) {
-                    dialog.dismiss()
+            launch(Dispatchers.IO) {
+                dialog.dismiss()
 
-                    showProgressDialog(title, size, sizeInMb)
+                showProgressDialog(title, size, sizeInMb)
 
-                    val url = asset.browser_download_url
-                    val fileName = asset.name
-                    downloadApk(url, fileName, sizeInMb)
-                }
+                val url = asset.browser_download_url
+                val fileName = asset.name
+                downloadApk(url, fileName, sizeInMb)
             }
         }
         builder.setNegativeButton(android.R.string.cancel) { dialog: DialogInterface, _: Int ->
             dialog.dismiss()
         }
 
-        launch {
-            withContext(Dispatchers.Main) {
-                builder.show()
-            }
+        launch(Dispatchers.Main) {
+            builder.show()
         }
     }
 
@@ -316,26 +310,24 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
         progressDialog.progress = readBytes.toInt()
     }
 
-    private fun install(fileName: String) = launch {
-        withContext(Dispatchers.IO) {
-            val intent = Intent(Intent.ACTION_VIEW)
-            val file = File(MyApplication.getApkDir(), fileName)
-            val data = if (isAtLeastAndroid7()) {
-                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                FileProvider.getUriForFile(
-                    MyApplication.instance,
-                    MyApplication.instance.packageName + ".provider",
-                    file
-                )
-            } else {
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                Uri.fromFile(file)
-            }
-            intent.setDataAndType(data, "application/vnd.android.package-archive")
-            startActivity(intent)
-
-            dismissProgressDialog()
+    private fun install(fileName: String) = launch(Dispatchers.IO) {
+        val intent = Intent(Intent.ACTION_VIEW)
+        val file = File(MyApplication.getApkDir(), fileName)
+        val data = if (isAtLeastAndroid7()) {
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            FileProvider.getUriForFile(
+                MyApplication.instance,
+                MyApplication.instance.packageName + ".provider",
+                file
+            )
+        } else {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            Uri.fromFile(file)
         }
+        intent.setDataAndType(data, "application/vnd.android.package-archive")
+        startActivity(intent)
+
+        dismissProgressDialog()
     }
 
     private suspend fun dismissProgressDialog() = withContext(Dispatchers.Main) {
@@ -357,38 +349,34 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
         )
     }
 
-    private fun clearApkFolder() = launch {
-        withContext(Dispatchers.IO) {
-            setClearApkFolderStatus(false)
+    private fun clearApkFolder() = launch(Dispatchers.IO) {
+        setClearApkFolderStatus(false)
 
-            val result = GatewayApi.clearFolder(MyApplication.getApkDir())
+        val result = GatewayApi.clearFolder(MyApplication.getApkDir())
 
-            // For better UX
-            delay(500)
+        // For better UX
+        delay(500)
 
-            toast(
-                if (result) {
-                    R.string.about_clear_apk_folder_successfully
-                } else {
-                    R.string.about_clear_apk_folder_failed
-                }
-            )
+        toast(
+            if (result) {
+                R.string.about_clear_apk_folder_successfully
+            } else {
+                R.string.about_clear_apk_folder_failed
+            }
+        )
 
-            setClearApkFolderStatus(true)
-        }
+        setClearApkFolderStatus(true)
     }
     // endregion [Clear apk folder]
 
     // region [Version click]
-    private fun versionClicked() = launch {
-        withContext(Dispatchers.IO) {
-            if (counter > 0) {
-                counter -= 1
-            } else if (counter == 0) {
-                counter -= 100
+    private fun versionClicked() = launch(Dispatchers.IO) {
+        if (counter > 0) {
+            counter -= 1
+        } else if (counter == 0) {
+            counter -= 100
 
-                toast(R.string.about_version_click)
-            }
+            toast(R.string.about_version_click)
         }
     }
     // endregion [Version click]
@@ -396,19 +384,17 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
     override fun showError(error: Throwable) {
         super.showError(error)
 
-        launch {
-            withContext(Dispatchers.IO) {
-                setCheckUpdatePreferenceStatus(true)
+        launch(Dispatchers.IO) {
+            setCheckUpdatePreferenceStatus(true)
 
-                dismissProgressDialog()
+            dismissProgressDialog()
 
-                toast(
-                    MyApplication.getMyString(
-                        R.string.about_check_for_update_network_error,
-                        error.message
-                    )
+            toast(
+                MyApplication.getMyString(
+                    R.string.about_check_for_update_network_error,
+                    error.message
                 )
-            }
+            )
         }
     }
 }

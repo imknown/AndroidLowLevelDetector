@@ -42,29 +42,27 @@ open class MyApplication : Application(), CoroutineScope by MainScope() {
         GatewayApi.savedLldJsonFile = File(getDownloadDir(), GatewayApi.LLD_JSON_NAME)
     }
 
-    internal fun setMyTheme(themesValue: String) = launch {
-        withContext(Dispatchers.IO) {
-            @AppCompatDelegate.NightMode val mode = when (themesValue) {
-                getMyString(R.string.interface_themes_follow_system_value) -> {
-                    AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-                }
-                getMyString(R.string.interface_themes_power_saver_value) -> {
-                    AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY
-                }
-                getMyString(R.string.interface_themes_always_light_value) -> {
-                    AppCompatDelegate.MODE_NIGHT_NO
-                }
-                getMyString(R.string.interface_themes_always_dark_value) -> {
-                    AppCompatDelegate.MODE_NIGHT_YES
-                }
-                else -> {
-                    AppCompatDelegate.MODE_NIGHT_YES
-                }
+    internal fun setMyTheme(themesValue: String) = launch(Dispatchers.IO) {
+        @AppCompatDelegate.NightMode val mode = when (themesValue) {
+            getMyString(R.string.interface_themes_follow_system_value) -> {
+                AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
             }
+            getMyString(R.string.interface_themes_power_saver_value) -> {
+                AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY
+            }
+            getMyString(R.string.interface_themes_always_light_value) -> {
+                AppCompatDelegate.MODE_NIGHT_NO
+            }
+            getMyString(R.string.interface_themes_always_dark_value) -> {
+                AppCompatDelegate.MODE_NIGHT_YES
+            }
+            else -> {
+                AppCompatDelegate.MODE_NIGHT_YES
+            }
+        }
 
-            withContext(Dispatchers.Main) {
-                AppCompatDelegate.setDefaultNightMode(mode)
-            }
+        withContext(Dispatchers.Main) {
+            AppCompatDelegate.setDefaultNightMode(mode)
         }
     }
 }

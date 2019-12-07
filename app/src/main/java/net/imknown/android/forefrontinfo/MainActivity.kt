@@ -91,18 +91,16 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
 
         nav_view.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
 
-        launch {
-            withContext(Dispatchers.IO) {
-                initTheme()
+        launch(Dispatchers.IO) {
+            initTheme()
 
-                withContext(Dispatchers.Main) {
-                    if (savedInstanceState == null) {
-                        showFragment(lastId)
-                    }
+            withContext(Dispatchers.Main) {
+                if (savedInstanceState == null) {
+                    showFragment(lastId)
+                }
 //                    else {
 //                        val fragment = supportFragmentManager.findFragmentById(R.id.container)
 //                    }
-                }
             }
         }
     }
@@ -172,28 +170,26 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     }
 
     override fun onBackPressed() {
-        launch {
-            withContext(Dispatchers.IO) {
-                val sharedPreferences =
-                    PreferenceManager.getDefaultSharedPreferences(MyApplication.instance)
-                val letSystemManagesProcessProp = sharedPreferences.getBoolean(
-                    MyApplication.getMyString(R.string.function_let_system_manages_process_key),
-                    false
-                )
+        launch(Dispatchers.IO) {
+            val sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(MyApplication.instance)
+            val letSystemManagesProcessProp = sharedPreferences.getBoolean(
+                MyApplication.getMyString(R.string.function_let_system_manages_process_key),
+                false
+            )
 
-                if (letSystemManagesProcessProp) {
-                    // https://github.com/ChuckerTeam/chucker/issues/102
-                    // https://issuetracker.google.com/issues/139738913
-                    finishAfterTransition()
-                } else {
-                    withContext(Dispatchers.Main) {
-                        super.onBackPressed()
-                    }
-
-                    delay(300)
-
-                    android.os.Process.killProcess(android.os.Process.myPid())
+            if (letSystemManagesProcessProp) {
+                // https://github.com/ChuckerTeam/chucker/issues/102
+                // https://issuetracker.google.com/issues/139738913
+                finishAfterTransition()
+            } else {
+                withContext(Dispatchers.Main) {
+                    super.onBackPressed()
                 }
+
+                delay(300)
+
+                android.os.Process.killProcess(android.os.Process.myPid())
             }
         }
     }

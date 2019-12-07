@@ -128,20 +128,16 @@ class HomeFragment : BaseListFragment() {
 
         if (allowNetwork) {
             GatewayApi.downloadLldJsonFile({
-                launch {
-                    withContext(Dispatchers.IO) {
-                        prepareResult(true)
-                    }
+                launch(Dispatchers.IO) {
+                    prepareResult(true)
                 }
             }, {
-                launch {
-                    withContext(Dispatchers.IO) {
-                        showError(it)
+                launch(Dispatchers.IO) {
+                    showError(it)
 
-                        toast(R.string.lld_json_download_failed)
+                    toast(R.string.lld_json_download_failed)
 
-                        prepareResult(false)
-                    }
+                    prepareResult(false)
                 }
             })
         } else {
