@@ -172,13 +172,28 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
-
         launch {
             withContext(Dispatchers.IO) {
-                delay(300)
+                val sharedPreferences =
+                    PreferenceManager.getDefaultSharedPreferences(MyApplication.instance)
+                val letSystemManagesProcessProp = sharedPreferences.getBoolean(
+                    MyApplication.getMyString(R.string.function_let_system_manages_process_key),
+                    false
+                )
 
-                android.os.Process.killProcess(android.os.Process.myPid())
+                if (letSystemManagesProcessProp) {
+                    // https://github.com/ChuckerTeam/chucker/issues/102
+                    // https://issuetracker.google.com/issues/139738913
+                    finishAfterTransition()
+                } else {
+                    withContext(Dispatchers.Main) {
+                        super.onBackPressed()
+                    }
+
+                    delay(300)
+
+                    android.os.Process.killProcess(android.os.Process.myPid())
+                }
             }
         }
     }

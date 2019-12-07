@@ -115,6 +115,11 @@
     <string name="interface_themes_always_light_value" translatable="false">2</string>
     <string name="interface_themes_always_dark_value" translatable="false">3</string>
 
+    <string name="function_title">Function</string>
+    <string name="function_let_system_manages_process_key" translatable="false">Function</string>
+    <string name="function_let_system_manages_process_title">Let system manages process</string>
+    <string name="function_let_system_manages_process_summary">When enable, the process of this app will be killed immediately when closed. Otherwise it will be managed by Android system. Managing by system will not release all the backend memory, so the time of next hot booting will be reduced. This option does not influence swiping this app from recent task list, or going back to the launcher home.</string>
+
     <string name="network_title">Network</string>
     <string name="network_allow_network_data_key" translatable="false">about_allow_network_data_key</string>
     <string name="network_allow_network_data_title">Allow network data</string>

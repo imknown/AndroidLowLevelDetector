@@ -31,6 +31,17 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        android:title="@string/function_title"
+        app:iconSpaceReserved="false">
+
+        <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
+            app:key="@string/function_let_system_manages_process_key"
+            app:summary="@string/function_let_system_manages_process_summary"
+            app:title="@string/function_let_system_manages_process_title" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:title="@string/network_title"
         app:iconSpaceReserved="false">
         <SwitchPreferenceCompat
