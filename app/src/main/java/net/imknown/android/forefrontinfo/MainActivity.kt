@@ -13,11 +13,12 @@ import androidx.preference.PreferenceManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.coroutines.*
+import net.imknown.android.forefrontinfo.base.IView
 import net.imknown.android.forefrontinfo.ui.home.HomeFragment
 import net.imknown.android.forefrontinfo.ui.others.OthersFragment
 import net.imknown.android.forefrontinfo.ui.settings.SettingsFragment
 
-class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
+class MainActivity : AppCompatActivity(), IView, CoroutineScope by MainScope() {
 
     companion object {
         private const val BUNDLE_ID_LAST_ID = "BUNDLE_ID_LAST_ID"
@@ -179,9 +180,15 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
             )
 
             if (letSystemManagesProcessProp) {
-                // https://github.com/ChuckerTeam/chucker/issues/102
-                // https://issuetracker.google.com/issues/139738913
-                finishAfterTransition()
+                if (isAtLeastAndroid10()) {
+                    // https://github.com/ChuckerTeam/chucker/issues/102
+                    // https://issuetracker.google.com/issues/139738913
+                    finishAfterTransition()
+                } else {
+                    withContext(Dispatchers.Main) {
+                        super.onBackPressed()
+                    }
+                }
             } else {
                 withContext(Dispatchers.Main) {
                     super.onBackPressed()
