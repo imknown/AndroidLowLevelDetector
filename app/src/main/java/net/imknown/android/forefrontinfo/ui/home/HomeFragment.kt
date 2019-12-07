@@ -368,24 +368,22 @@ class HomeFragment : BaseListFragment() {
         // endregion [Treble]
 
         // region [VNDK]
-        val hasVndkLite = getStringProperty(PROP_VNDK_LITE, isAtLeastAndroid8()).toBoolean()
-
         val vndkVersionResult = getStringProperty(PROP_VNDK_VERSION, isAtLeastAndroid8())
         val hasVndkVersion = hasResult(vndkVersionResult)
 
-        val isVndkBuiltIn = hasVndkLite || hasVndkVersion
-
         @ColorInt val vndkColor: Int
 
-        var isVndkBuiltInResult = translate(isVndkBuiltIn)
-        if (isVndkBuiltIn) {
+        var isVndkBuiltInResult = translate(hasVndkVersion)
+        if (hasVndkVersion) {
             val vndkVersion = if (hasVndkVersion) {
                 vndkVersionResult
             } else {
                 MyApplication.getMyString(android.R.string.unknownName)
             }
 
-            vndkColor = if (vndkVersion == lld.android.stable.api) {
+            val hasVndkLite = getStringProperty(PROP_VNDK_LITE).toBoolean()
+
+            vndkColor = if (vndkVersion == lld.android.stable.api && !hasVndkLite) {
                 COLOR_STATE_LIST_NO_PROBLEM
             } else {
                 COLOR_STATE_LIST_WARNING
@@ -393,7 +391,7 @@ class HomeFragment : BaseListFragment() {
 
             isVndkBuiltInResult += MyApplication.getMyString(
                 R.string.built_in_vndk_version_result,
-                vndkVersion
+                if (hasVndkLite) "$vndkVersion, Lite" else vndkVersion
             )
         } else {
             vndkColor = COLOR_STATE_LIST_CRITICAL
