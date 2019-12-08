@@ -227,6 +227,7 @@ class HomeFragment : BaseListFragment() {
         }
 
         add(
+            MyApplication.getMyString(R.string.webview_status),
             """
             |${collectWebViewInfo(builtInWebViewPackageInfo, R.string.webview_built_in_version)}
             |
@@ -275,6 +276,9 @@ class HomeFragment : BaseListFragment() {
 
         add(
             MyApplication.getMyString(
+                R.string.android_info_title
+            ),
+            MyApplication.getMyString(
                 R.string.android_info,
                 BUILD_VERSION_RELEASE,
                 BUILD_VERSION_SDK_INT
@@ -304,7 +308,8 @@ class HomeFragment : BaseListFragment() {
         }
 
         add(
-            MyApplication.getMyString(R.string.build_security_patch, securityPatch),
+            MyApplication.getMyString(R.string.build_security_patch),
+            securityPatch,
             securityPatchColor
         )
         // endregion [Security patch]
@@ -318,7 +323,7 @@ class HomeFragment : BaseListFragment() {
             isSupported -> COLOR_STATE_LIST_WARNING
             else -> COLOR_STATE_LIST_CRITICAL
         }
-        add(MyApplication.getMyString(R.string.linux_version, linuxVersion), linuxColor)
+        add(MyApplication.getMyString(R.string.linux_version), linuxVersion.toString(), linuxColor)
         // endregion [Kernel]
 
         // region [A/B]
@@ -333,8 +338,7 @@ class HomeFragment : BaseListFragment() {
 
         var abFinalResult =
             MyApplication.getMyString(
-                R.string.ab_seamless_update_enabled_result,
-                abUpdateSupportedArgs
+                R.string.ab_seamless_update_enabled_result
             )
         if (isAbUpdateSupported) {
             val slotSuffixResult = getStringProperty(PROP_SLOT_SUFFIX)
@@ -351,7 +355,7 @@ class HomeFragment : BaseListFragment() {
             )
         }
 
-        add(abFinalResult, isAbUpdateSupported)
+        add(abFinalResult, abUpdateSupportedArgs, isAbUpdateSupported)
         // endregion [A/B]
 
         // region [Treble]
@@ -359,7 +363,8 @@ class HomeFragment : BaseListFragment() {
             getStringProperty(PROP_TREBLE_ENABLED, isAtLeastAndroid8()).toBoolean()
 
         add(
-            MyApplication.getMyString(R.string.treble_enabled_result, translate(isTrebleEnabled)),
+            MyApplication.getMyString(R.string.treble_enabled_result),
+            translate(isTrebleEnabled),
             isTrebleEnabled
         )
         // endregion [Treble]
@@ -395,7 +400,8 @@ class HomeFragment : BaseListFragment() {
         }
 
         add(
-            MyApplication.getMyString(R.string.vndk_built_in_result, isVndkBuiltInResult),
+            MyApplication.getMyString(R.string.vndk_built_in_result),
+            isVndkBuiltInResult,
             vndkColor
         )
         // endregion [VNDK]
@@ -412,7 +418,7 @@ class HomeFragment : BaseListFragment() {
 
         val isSar =
             isAtLeastAndroid9() && (hasSystemRootImage || hasMountDevRoot || !hasMountSystem)
-        add(MyApplication.getMyString(R.string.sar_enabled_result, translate(isSar)), isSar)
+        add(MyApplication.getMyString(R.string.sar_enabled_result), translate(isSar), isSar)
         // endregion [SAR]
 
         // region [APEX]
@@ -435,7 +441,7 @@ class HomeFragment : BaseListFragment() {
             else -> COLOR_STATE_LIST_CRITICAL
         }
 
-        add(MyApplication.getMyString(R.string.apex_enabled_result, apexEnabledResult), apexColor)
+        add(MyApplication.getMyString(R.string.apex_enabled_result), apexEnabledResult, apexColor)
         // endregion [APEX]
 
         // region [ToyBox]
@@ -461,7 +467,8 @@ class HomeFragment : BaseListFragment() {
             COLOR_STATE_LIST_CRITICAL
         }
         add(
-            MyApplication.getMyString(R.string.toybox_built_in_result, hasToyboxResult),
+            MyApplication.getMyString(R.string.toybox_built_in_result),
+            hasToyboxResult,
             toyboxColor
         )
         // endregion [ToyBox]
@@ -476,9 +483,9 @@ class HomeFragment : BaseListFragment() {
 
     private fun translate(condition: Boolean) = MyApplication.getMyString(
         if (condition) {
-            R.string.result_yes
+            R.string.result_enabled
         } else {
-            R.string.result_no
+            R.string.result_disabled_or_not_supported
         }
     )
 }

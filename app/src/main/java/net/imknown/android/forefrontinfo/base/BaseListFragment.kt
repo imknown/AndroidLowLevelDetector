@@ -44,7 +44,7 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
                 MyApplication.getMyString(R.string.interface_scroll_bar_key),
                 MyApplication.getMyString(R.string.interface_no_scroll_bar_value)
             )!!
-            setScrollBarMode(list, scrollBarMode)
+            setScrollBarMode(recyclerView, scrollBarMode)
 
             PreferenceManager.getDefaultSharedPreferences(MyApplication.instance)
                 .registerOnSharedPreferenceChangeListener(this@BaseListFragment)
@@ -66,7 +66,7 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
                     MyApplication.getMyString(R.string.interface_no_scroll_bar_value)
                 )!!
 
-                setScrollBarMode(list, scrollBarMode)
+                setScrollBarMode(recyclerView, scrollBarMode)
             }
         }
     }
@@ -85,16 +85,16 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
     }
 
     private fun initViews() {
-        swipeRefresh.setColorSchemeResources(R.color.colorAccent)
-        swipeRefresh.setProgressBackgroundColorSchemeResource(R.color.colorStateless)
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent)
+        swipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.colorStateless)
 
-        swipeRefresh.isRefreshing = true
+        swipeRefreshLayout.isRefreshing = true
 
-        swipeRefresh.setOnRefreshListener {
+        swipeRefreshLayout.setOnRefreshListener {
             collectionDatasetCaller()
         }
 
-        list.apply {
+        recyclerView.apply {
             setHasFixedSize(true)
 
             layoutManager = LinearLayoutManager(MyApplication.instance)
@@ -120,28 +120,28 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
         myTempDataset = ArrayList()
     }
 
-    protected fun add(result: String) =
-        myTempDataset.add(MyModel(result))
+    protected fun add(title: String, detail: String?) =
+        myTempDataset.add(MyModel(title, detail.toString()))
 
-    protected fun add(result: String, condition: Boolean) =
-        myTempDataset.add(MyModel(result, condition))
+    protected fun add(title: String, detail: String?, condition: Boolean) =
+        myTempDataset.add(MyModel(title, detail.toString(), condition))
 
-    protected fun add(result: String, @ColorInt color: Int) =
-        myTempDataset.add(MyModel(result, color))
+    protected fun add(title: String, detail: String?, @ColorInt color: Int) =
+        myTempDataset.add(MyModel(title, detail.toString(), color))
 
     protected suspend fun showResult() = withContext(Dispatchers.Main) {
         myAdapter.addAll(myTempDataset)
         myAdapter.notifyDataSetChanged()
         myTempDataset.clear()
 
-        swipeRefresh.isRefreshing = false
+        swipeRefreshLayout.isRefreshing = false
     }
 
     override fun showError(error: Throwable) {
         super.showError(error)
 
         launch(Dispatchers.Main) {
-            swipeRefresh.isRefreshing = false
+            swipeRefreshLayout.isRefreshing = false
         }
     }
 

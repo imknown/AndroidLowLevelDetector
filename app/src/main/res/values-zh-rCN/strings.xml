@@ -17,29 +17,31 @@
     <string name="title_settings">设置</string>
 
     <!-- 首页 -->
-    <string name="result_yes">是.</string>
-    <string name="result_no">否.</string>
+    <string name="result_enabled">已启用.</string>
+    <string name="result_disabled_or_not_supported">已禁用 或 不支持.</string>
 
-    <string name="android_info">Android 版本\nAndroid %1$s (API 等级: %2$d)</string>
+    <string name="android_info_title">Android 版本</string>
+    <string name="android_info">Android %1$s (API 等级: %2$d)</string>
 
-    <string name="linux_version">Linux 版本\n%s</string>
+    <string name="linux_version">Linux 版本 状态</string>
 
-    <string name="ab_seamless_update_enabled_result">启用了 A/B 无缝升级?\n%s</string>
+    <string name="ab_seamless_update_enabled_result">启用了 A/B 无缝升级 状态</string>
     <string name="rom_total_size_result">\u0020(总 ROM: ~%sGB)</string>
     <string name="current_using_ab_slot_result">\u0020(当前使用的槽位: %s)</string>
 
-    <string name="treble_enabled_result">启用了 Project Treble?\n%s</string>
+    <string name="treble_enabled_result">Project Treble 状态</string>
 
-    <string name="vndk_built_in_result">内建了 Vendor NDK?\n%s</string>
+    <string name="vndk_built_in_result">内建 Vendor NDK 状态</string>
     <string name="built_in_vndk_version_result">\u0020(等级: %s)</string>
-    <string name="sar_enabled_result">启用了 System-as-root?\n%s</string>
+    <string name="sar_enabled_result">System-as-root 状态</string>
 
-    <string name="apex_enabled_result">启用了 APEX?\n%s</string>
+    <string name="apex_enabled_result">APEX 状态</string>
     <string name="apex_legacy_flattened">\u0020(旧式扁平的)</string>
 
-    <string name="toybox_built_in_result">内建了 Toybox?\n%s</string>
+    <string name="toybox_built_in_result">内建 Toybox 状态</string>
     <string name="built_in_toybox_version_result">\u0020(%s)</string>
 
+    <string name="webview_status">WebView 状态</string>
     <string name="webview_built_in_version">AOSP 内建 WebView</string>
     <string name="webview_implement_version">WebView 实现</string>
     <string name="webview_built_in">内建 WebView</string>
@@ -53,36 +55,36 @@
     <string name="chrome_canary">Chrome Canary</string>
 
     <!-- 其他 -->
-    <string name="build_brand">品牌\n%s</string>
-    <string name="build_manufacturer">代工/OEM\n%s</string>
-    <string name="build_model">销售型号\n%s</string>
-    <string name="build_device">开发代号\n%s</string>
-    <string name="build_product">总产品名称\n%s</string>
-    <string name="build_hardware">SoC/内核源码 提供商\n%s</string>
-    <string name="build_board">SoC 型号\n%s</string>
+    <string name="build_brand">品牌 状态</string>
+    <string name="build_manufacturer">代工/OEM 状态</string>
+    <string name="build_model">销售型号 状态</string>
+    <string name="build_device">开发代号 状态</string>
+    <string name="build_product">总产品名称 状态</string>
+    <string name="build_hardware">SoC/内核源码 提供商 状态</string>
+    <string name="build_board">SoC 型号 状态</string>
 
-    <string name="os_arch">系统正在使用的架构\n%s</string>
-    <string name="build_cpu_abi">CPU 正在使用的架构\n%s</string>
-    <string name="build_supported_32_bit_abis">支持的 32位 CPU 架构\n%s</string>
-    <string name="build_supported_64_bit_abis">支持的 64位 CPU 架构\n%s</string>
+    <string name="os_arch">系统正在使用的架构 状态</string>
+    <string name="build_cpu_abi">CPU 正在使用的架构 状态</string>
+    <string name="build_supported_32_bit_abis">支持的 32位 CPU 架构 状态</string>
+    <string name="build_supported_64_bit_abis">支持的 64位 CPU 架构 状态</string>
 
-    <string name="build_preview_sdk_int">Android 预览 API 等级 (0: 非预览版)\n%s</string>
+    <string name="build_preview_sdk_int">Android 预览 API 等级 (0: 非预览版) 状态</string>
 
-    <string name="build_user">ROM 构建者\n%s</string>
-    <string name="build_HOST">ROM 构建的主机名\n%s</string>
-    <string name="build_time">ROM 构建时间\n%s</string>
-    <string name="build_base_os">基于的系统 (二次开发)\n%s</string>
-    <string name="build_security_patch">ROM 安全补丁版本\n%s</string>
-    <string name="build_fingerprint">原机系统 指纹\n%s</string>
-    <string name="build_display">Android 构建 ID\n%s</string>
-    <string name="build_id">Android Git 修订号\n%s</string>
-    <string name="build_incremental">Android Git 提交的 Hash\n%s</string>
-    <string name="build_type">ROM 构建类型\n%s</string>
-    <string name="build_tags">ROM 构建描述标签\n%s</string>
-    <string name="build_codename">系统 构建分支名 (REL: 正式)\n%s</string>
+    <string name="build_user">ROM 构建者 状态</string>
+    <string name="build_HOST">ROM 构建的主机名 状态</string>
+    <string name="build_time">ROM 构建时间 状态</string>
+    <string name="build_base_os">基于的系统 (二次开发) 状态</string>
+    <string name="build_security_patch">ROM 安全补丁版本 状态</string>
+    <string name="build_fingerprint">原机系统 指纹 状态</string>
+    <string name="build_display">Android 构建 ID 状态</string>
+    <string name="build_id">Android Git 修订号 状态</string>
+    <string name="build_incremental">Android Git 提交的 Hash 状态</string>
+    <string name="build_type">ROM 构建类型 状态</string>
+    <string name="build_tags">ROM 构建描述标签 状态</string>
+    <string name="build_codename">系统 构建分支名 (REL: 正式) 状态</string>
 
-    <string name="build_bootloader">Bootloader 版本\n%s</string>
-    <string name="build_radio">基带版本\n%s</string>
+    <string name="build_bootloader">Bootloader 版本 状态</string>
+    <string name="build_radio">基带版本 状态</string>
 
     <string name="build_not_filled">**未填写**</string>
 

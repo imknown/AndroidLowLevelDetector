@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity(), IView, CoroutineScope by MainScope() {
         setSupportActionBar(toolbar)
         supportActionBar?.subtitle = MyApplication.getMyString(R.string.lld_json_checking)
 
-        nav_view.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+        bottomNavigationView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
 
         launch(Dispatchers.IO) {
             initTheme()

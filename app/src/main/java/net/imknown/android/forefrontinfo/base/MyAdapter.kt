@@ -20,8 +20,9 @@ internal class MyAdapter : RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.itemView.card.setCardBackgroundColor(myDataset[position].color)
-        holder.itemView.result.text = myDataset[position].result
+        holder.itemView.tvTitle.setBackgroundColor(myDataset[position].color)
+        holder.itemView.tvTitle.text = myDataset[position].title
+        holder.itemView.tvDetail.text = myDataset[position].detail
     }
 
     override fun getItemCount() = myDataset.size

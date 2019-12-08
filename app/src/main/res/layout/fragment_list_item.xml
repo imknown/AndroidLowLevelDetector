@@ -2,23 +2,44 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
     app:cardCornerRadius="@dimen/item_card_corner_radius"
-    app:cardElevation="@dimen/item_card_elevation"
-    app:contentPadding="@dimen/item_card_content_padding"
-    tools:cardBackgroundColor="@color/colorNoProblem">
+    app:cardElevation="@dimen/item_card_elevation">
 
-    <TextView
-        android:id="@+id/result"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start|center_vertical"
-        android:minLines="2"
-        android:textSize="24sp"
-        tools:text="Enabled?\nYes." />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:paddingStart="@dimen/item_card_title_padding_horizontal"
+            android:paddingTop="@dimen/item_card_title_padding_vertical"
+            android:paddingEnd="@dimen/item_card_title_padding_horizontal"
+            android:paddingBottom="@dimen/item_card_title_padding_vertical"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            tools:background="@color/colorNoProblem"
+            tools:text="Android version" />
+
+        <TextView
+            android:id="@+id/tvDetail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:background="@color/colorDetail"
+            android:paddingStart="@dimen/item_card_detail_padding_horizontal"
+            android:paddingTop="@dimen/item_card_detail_padding_vertical"
+            android:paddingEnd="@dimen/item_card_detail_padding_horizontal"
+            android:paddingBottom="@dimen/item_card_detail_padding_vertical"
+            android:textSize="22sp"
+            tools:text="Mine: 10 (Q, API Level 29)\nLatest: 11 (R, API Level 29)" />
+    </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

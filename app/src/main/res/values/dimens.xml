@@ -2,6 +2,9 @@
 <resources>
     <dimen name="item_card_corner_radius">6dp</dimen>
     <dimen name="item_card_elevation">3dp</dimen>
-    <dimen name="item_card_content_padding">14dp</dimen>
+    <dimen name="item_card_title_padding_horizontal">12dp</dimen>
+    <dimen name="item_card_title_padding_vertical">8dp</dimen>
+    <dimen name="item_card_detail_padding_horizontal">16dp</dimen>
+    <dimen name="item_card_detail_padding_vertical">12dp</dimen>
     <dimen name="item_divider_space">16dp</dimen>
 </resources>

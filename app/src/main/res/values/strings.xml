@@ -17,30 +17,32 @@
     <string name="title_settings">Settings</string>
 
     <!-- Home -->
-    <string name="result_yes">Yes.</string>
-    <string name="result_no">No.</string>
+    <string name="result_enabled">Enabled.</string>
+    <string name="result_disabled_or_not_supported">Disabled or not supported.</string>
 
-    <string name="android_info">Android Version\nAndroid %1$s (API Level: %2$d)</string>
+    <string name="android_info_title">Android Version</string>
+    <string name="android_info">Android %1$s (API Level: %2$d)</string>
 
-    <string name="linux_version">Linux version\n%s</string>
+    <string name="linux_version">Linux version</string>
 
-    <string name="ab_seamless_update_enabled_result">Is A/B seamless update enabled?\n%s</string>
+    <string name="ab_seamless_update_enabled_result">A/B seamless update status</string>
     <string name="rom_total_size_result">\u0020(Total ROM: ~%sGB)</string>
     <string name="current_using_ab_slot_result">\u0020(Current using slot: %s)</string>
 
-    <string name="treble_enabled_result">Is Project Treble enabled?\n%s</string>
+    <string name="treble_enabled_result">Project Treble status</string>
 
-    <string name="vndk_built_in_result">Is Vendor NDK built in?\n%s</string>
+    <string name="vndk_built_in_result">Built-in Vendor NDK status</string>
     <string name="built_in_vndk_version_result">\u0020(Level: %s)</string>
 
-    <string name="sar_enabled_result">Is System-as-root enabled?\n%s</string>
+    <string name="sar_enabled_result">System-as-root status</string>
 
-    <string name="apex_enabled_result">Is APEX enabled?\n%s</string>
+    <string name="apex_enabled_result">APEX status</string>
     <string name="apex_legacy_flattened">\u0020(Legacy flattened)</string>
 
-    <string name="toybox_built_in_result">Is Toybox built in?\n%s</string>
+    <string name="toybox_built_in_result">Built-in Toybox status</string>
     <string name="built_in_toybox_version_result">\u0020(%s)</string>
 
+    <string name="webview_status">WebView status</string>
     <string name="webview_built_in_version">AOSP built-in WebView</string>
     <string name="webview_implement_version">WebView implementation</string>
     <string name="webview_built_in">Built-in WebView</string>
@@ -54,36 +56,36 @@
     <string name="chrome_canary">Chrome Canary</string>
 
     <!-- Others -->
-    <string name="build_brand">Brand\n%s</string>
-    <string name="build_manufacturer">Manufacturer/OEM\n%s</string>
-    <string name="build_model">Model name for sales\n%s</string>
-    <string name="build_device">Codename for the developer\n%s</string>
-    <string name="build_product">Name of overall product\n%s</string>
-    <string name="build_hardware">SoC/Kernel source provider\n%s</string>
-    <string name="build_board">SoC model\n%s</string>
+    <string name="build_brand">Brand</string>
+    <string name="build_manufacturer">Manufacturer/OEM</string>
+    <string name="build_model">Model name for sales</string>
+    <string name="build_device">Codename for the developer</string>
+    <string name="build_product">Name of overall product</string>
+    <string name="build_hardware">SoC/Kernel source provider</string>
+    <string name="build_board">SoC model</string>
 
-    <string name="os_arch">ROM current using ABI\n%s</string>
-    <string name="build_cpu_abi">CPU current using ABI\n%s</string>
-    <string name="build_supported_32_bit_abis">Supported 32bit CPU ABIs\n%s</string>
-    <string name="build_supported_64_bit_abis">Supported 64bit CPU ABIs\n%s</string>
+    <string name="os_arch">ROM current using ABI</string>
+    <string name="build_cpu_abi">CPU current using ABI</string>
+    <string name="build_supported_32_bit_abis">Supported 32bit CPU ABIs</string>
+    <string name="build_supported_64_bit_abis">Supported 64bit CPU ABIs</string>
 
-    <string name="build_preview_sdk_int">Android preview API level (0: not a preview version)\n%s</string>
+    <string name="build_preview_sdk_int">Android preview API level (0: not a preview version)</string>
 
-    <string name="build_user">ROM builder\n%s</string>
-    <string name="build_HOST">ROM build machine name\n%s</string>
-    <string name="build_time">ROM build time\n%s</string>
-    <string name="build_base_os">ROM based on (Secondary development)\n%s</string>
-    <string name="build_security_patch">ROM security patch level\n%s</string>
-    <string name="build_fingerprint">Stock ROM fingerprint\n%s</string>
-    <string name="build_display">Android build ID\n%s</string>
-    <string name="build_id">Android Git reversion\n%s</string>
-    <string name="build_incremental">Android Git commit hash\n%s</string>
-    <string name="build_type">ROM build type\n%s</string>
-    <string name="build_tags">ROM build tags\n%s</string>
-    <string name="build_codename">Android Git branch codename (REL: stable release version)\n%s</string>
+    <string name="build_user">ROM builder</string>
+    <string name="build_HOST">ROM build machine name</string>
+    <string name="build_time">ROM build time</string>
+    <string name="build_base_os">ROM based on (Secondary development)</string>
+    <string name="build_security_patch">ROM security patch level</string>
+    <string name="build_fingerprint">Stock ROM fingerprint</string>
+    <string name="build_display">Android build ID</string>
+    <string name="build_id">Android Git reversion</string>
+    <string name="build_incremental">Android Git commit hash</string>
+    <string name="build_type">ROM build type</string>
+    <string name="build_tags">ROM build tags</string>
+    <string name="build_codename">Android Git branch codename (REL: stable release version)</string>
 
-    <string name="build_bootloader">Bootloader version\n%s</string>
-    <string name="build_radio">Baseband version\n%s</string>
+    <string name="build_bootloader">Bootloader version</string>
+    <string name="build_radio">Baseband version</string>
 
     <string name="build_not_filled">**NOT FILLED**</string>
 
