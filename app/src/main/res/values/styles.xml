@@ -4,7 +4,8 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
+        <item name="android:statusBarColor">@color/colorStatusBar</item>
+        <item name="android:navigationBarColor">@color/colorNavigationBar</item>
         <!--<item name="android:navigationBarDividerColor">@android:color/darker_gray</item>-->
 
         <item name="android:windowEnableSplitTouch">false</item>
@@ -13,7 +14,7 @@
 
     <style name="AppTheme" parent="BaseAppTheme">
         <item name="android:windowLightStatusBar" tools:targetApi="M">true</item>
-        <item name="android:windowLightNavigationBar" tools:targetApi="O_MR1">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="O_MR1">true</item>
         <item name="android:windowBackground">@android:color/white</item>
     </style>
 

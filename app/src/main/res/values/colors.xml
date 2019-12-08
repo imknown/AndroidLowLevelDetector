@@ -2,12 +2,14 @@
 <resources>
     <color name="ic_launcher_background">#39A078</color>
 
-    <color name="colorPrimary">#6DB67D</color>
-    <color name="colorPrimaryDark">#6DB67D</color>
-    <color name="colorAccent">#EFC158</color>
+    <color name="colorPrimary">@android:color/white</color>
+    <color name="colorPrimaryDark">@android:color/secondary_text_dark</color>
+    <color name="colorAccent">#4AA85E</color>
 
-    <!-- Copied from androidx.cardview.R.attr.cardBackgroundColor -->
-    <color name="colorStateless">#FFFFFF</color>
+    <color name="colorStatusBar">@android:color/secondary_text_dark</color>
+    <color name="colorNavigationBar">@android:color/secondary_text_dark</color>
+
+    <color name="colorStateless">#FCFCFC</color>
     <color name="colorNoProblem">#71C784</color>
     <color name="colorWaring">#FFCC80</color>
     <color name="colorCritical">#FF9999</color>

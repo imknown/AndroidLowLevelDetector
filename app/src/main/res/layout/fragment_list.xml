@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="vertical"
-            tools:itemCount="6"
+            tools:itemCount="10"
             tools:listitem="@layout/fragment_list_item" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
