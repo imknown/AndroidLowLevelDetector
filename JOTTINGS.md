@@ -7,9 +7,7 @@ adb shell getprop ro.oem_unlock_supported
 
 ------
 
-busybox
-
-https://busybox.net/downloads/binaries/
+busybox (https://busybox.net/downloads/binaries/)
 
 ------
 
@@ -28,15 +26,3 @@ https://android.googlesource.com/platform/system/sepolicy/+/refs/heads/master/po
 ```
 ro.config.low_ram
 ```
-
-------
-
-icu
-
-https://developer.android.com/guide/topics/resources/internationalization
-
-------
-
-vendor patch version
-
-OpenGL ES/Vulkan/GPU Driver version

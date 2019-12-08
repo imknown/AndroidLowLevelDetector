@@ -18,7 +18,7 @@ https://coolapk.com/apk/net.imknown.android.forefrontinfo
 - detect Linux kernel
 - detect A/B or A-Only
 - detect Project Treble
-- detect Vendor NDK and whether up-to-date
+- detect Vendor NDK
 - detect System-as-root
 - detect (flattened) APEX
 - detect Toybox
@@ -34,16 +34,15 @@ https://coolapk.com/apk/net.imknown.android.forefrontinfo
   - Animation & transitions
 - detect dm-verity (version)
 - detect FBE/FDE
-- detect latest alpha/beta Android version
 - detect HAL
 - detect targetSdkVersion
 - Android version market share
-- Flat list all supported Android/Linux/etc. (V2.0 ?)
-- CoordinatorLayout, etc.
+- vendor patch version
+- OpenGL ES/Vulkan/GPU Driver version
+- icu (https://developer.android.com/guide/topics/resources/internationalization)
 - kotlinPoet, googleAutoService (V2.0 ?)
 - settings
   - speed mode (no animations, no CardViews, etc.)
-  - detect `getprop` from file, not from SDK API (option)
   - root mode
   - show commands
   - custom commands
