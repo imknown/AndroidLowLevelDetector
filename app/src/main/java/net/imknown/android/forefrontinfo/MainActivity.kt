@@ -87,8 +87,8 @@ class MainActivity : AppCompatActivity(), IView, CoroutineScope by MainScope() {
 
         setContentView(R.layout.main_activity)
 
-        val actionBar = supportActionBar
-        actionBar?.subtitle = MyApplication.getMyString(R.string.lld_json_checking)
+        setSupportActionBar(toolbar)
+        supportActionBar?.subtitle = MyApplication.getMyString(R.string.lld_json_checking)
 
         nav_view.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
 
