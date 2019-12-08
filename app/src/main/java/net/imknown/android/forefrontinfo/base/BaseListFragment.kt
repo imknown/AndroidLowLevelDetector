@@ -120,8 +120,15 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
         myTempDataset = ArrayList()
     }
 
-    protected fun add(title: String, detail: String?) =
-        myTempDataset.add(MyModel(title, detail.toString()))
+    protected fun add(title: String, detail: String?) {
+        val translatedDetail = if (detail.isNullOrEmpty()) {
+            MyApplication.getMyString(R.string.build_not_filled)
+        } else {
+            detail.toString()
+        }
+
+        myTempDataset.add(MyModel(title, translatedDetail))
+    }
 
     protected fun add(title: String, detail: String?, condition: Boolean) =
         myTempDataset.add(MyModel(title, detail.toString(), condition))

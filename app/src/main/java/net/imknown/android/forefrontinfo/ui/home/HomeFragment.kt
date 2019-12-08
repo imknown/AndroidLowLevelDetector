@@ -227,11 +227,19 @@ class HomeFragment : BaseListFragment() {
         }
 
         add(
-            MyApplication.getMyString(R.string.webview_status),
+            MyApplication.getMyString(R.string.webview_title),
             """
             |${collectWebViewInfo(builtInWebViewPackageInfo, R.string.webview_built_in_version)}
             |
             |${collectWebViewInfo(implementWebViewPackageInfo, R.string.webview_implement_version)}
+            |
+            |${MyApplication.getMyString(
+                R.string.webview_detail,
+                lld.webView.stable.version,
+                lld.webView.beta.version,
+                lld.webView.dev.version,
+                lld.webView.canary.version
+            )}
             """.trimMargin(),
             webViewColor
         )
@@ -274,23 +282,41 @@ class HomeFragment : BaseListFragment() {
             else -> COLOR_STATE_LIST_CRITICAL
         }
 
+        val previewType: String
+        val previewVersion: String
+        val previewApi: String
+        if (lld.android.beta.api.isNotEmpty()) {
+            previewType = "Beta"
+            previewVersion = lld.android.beta.version
+            previewApi = lld.android.beta.api
+        } else {
+            previewType = "Alpha"
+            previewVersion = lld.android.alpha.version
+            previewApi = lld.android.alpha.api
+        }
+
         add(
             MyApplication.getMyString(
                 R.string.android_info_title
             ),
             MyApplication.getMyString(
-                R.string.android_info,
-                BUILD_VERSION_RELEASE,
-                BUILD_VERSION_SDK_INT
+                R.string.android_info_detail,
+                MyApplication.getMyString(
+                    R.string.android_info, BUILD_VERSION_RELEASE, BUILD_VERSION_SDK_INT
+                ),
+                MyApplication.getMyString(
+                    R.string.android_info, lld.android.stable.version, lld.android.stable.api
+                ),
+                MyApplication.getMyString(
+                    R.string.android_info, lld.android.support.version, lld.android.support.api
+                ),
+                previewType,
+                MyApplication.getMyString(
+                    R.string.android_info, previewVersion, previewApi
+                )
             ),
             androidColor
         )
-
-//        if (isAtLeastAndroid6()) {
-//            add(
-//                MyApplication.getMyString(R.string.build_preview_sdk_int, Build.VERSION.PREVIEW_SDK_INT.toString())
-//            )
-//        }
         // endregion [Android]
 
         // region [Security patch]
@@ -308,8 +334,12 @@ class HomeFragment : BaseListFragment() {
         }
 
         add(
-            MyApplication.getMyString(R.string.build_security_patch),
-            securityPatch,
+            MyApplication.getMyString(R.string.security_patch_level_title),
+            MyApplication.getMyString(
+                R.string.security_patch_level_detail,
+                securityPatch,
+                lld.android.securityPatchLevel
+            ),
             securityPatchColor
         )
         // endregion [Security patch]
@@ -323,7 +353,17 @@ class HomeFragment : BaseListFragment() {
             isSupported -> COLOR_STATE_LIST_WARNING
             else -> COLOR_STATE_LIST_CRITICAL
         }
-        add(MyApplication.getMyString(R.string.linux_version), linuxVersion.toString(), linuxColor)
+        add(
+            MyApplication.getMyString(R.string.linux_title),
+            MyApplication.getMyString(
+                R.string.linux_version_detail,
+                linuxVersion,
+                lld.linux.stable.version,
+                lld.linux.support.version,
+                lld.linux.mainline.version
+            ),
+            linuxColor
+        )
         // endregion [Kernel]
 
         // region [A/B]
@@ -338,7 +378,7 @@ class HomeFragment : BaseListFragment() {
 
         var abFinalResult =
             MyApplication.getMyString(
-                R.string.ab_seamless_update_enabled_result
+                R.string.ab_seamless_update_enabled_title
             )
         if (isAbUpdateSupported) {
             val slotSuffixResult = getStringProperty(PROP_SLOT_SUFFIX)
@@ -363,7 +403,7 @@ class HomeFragment : BaseListFragment() {
             getStringProperty(PROP_TREBLE_ENABLED, isAtLeastAndroid8()).toBoolean()
 
         add(
-            MyApplication.getMyString(R.string.treble_enabled_result),
+            MyApplication.getMyString(R.string.treble_enabled_title),
             translate(isTrebleEnabled),
             isTrebleEnabled
         )
@@ -400,7 +440,7 @@ class HomeFragment : BaseListFragment() {
         }
 
         add(
-            MyApplication.getMyString(R.string.vndk_built_in_result),
+            MyApplication.getMyString(R.string.vndk_built_in_title),
             isVndkBuiltInResult,
             vndkColor
         )
@@ -418,7 +458,7 @@ class HomeFragment : BaseListFragment() {
 
         val isSar =
             isAtLeastAndroid9() && (hasSystemRootImage || hasMountDevRoot || !hasMountSystem)
-        add(MyApplication.getMyString(R.string.sar_enabled_result), translate(isSar), isSar)
+        add(MyApplication.getMyString(R.string.sar_enabled_title), translate(isSar), isSar)
         // endregion [SAR]
 
         // region [APEX]
@@ -441,21 +481,20 @@ class HomeFragment : BaseListFragment() {
             else -> COLOR_STATE_LIST_CRITICAL
         }
 
-        add(MyApplication.getMyString(R.string.apex_enabled_result), apexEnabledResult, apexColor)
+        add(MyApplication.getMyString(R.string.apex_enabled_title), apexEnabledResult, apexColor)
         // endregion [APEX]
 
         // region [ToyBox]
         val toyboxVersionResult = sh(CMD_TOYBOX_VERSION, isAtLeastAndroid6())
         val hasToyboxVersion = hasResult(toyboxVersionResult)
-        var hasToyboxResult = translate(hasToyboxVersion)
+
+        val toyboxVersion = if (hasToyboxVersion) {
+            toyboxVersionResult[0]
+        } else {
+            translate(false)
+        }
 
         @ColorInt val toyboxColor = if (hasToyboxVersion) {
-            val toyboxVersion = toyboxVersionResult[0]
-            hasToyboxResult += MyApplication.getMyString(
-                R.string.built_in_toybox_version_result,
-                toyboxVersion
-            )
-
             val toyboxRealVersionString = toyboxVersion.replace("toybox ", "")
             val toyboxRealVersion = Version(toyboxRealVersionString)
             when {
@@ -467,8 +506,15 @@ class HomeFragment : BaseListFragment() {
             COLOR_STATE_LIST_CRITICAL
         }
         add(
-            MyApplication.getMyString(R.string.toybox_built_in_result),
-            hasToyboxResult,
+            MyApplication.getMyString(R.string.toybox_built_in_title),
+            MyApplication.getMyString(
+                R.string.toybox_built_in_detail,
+                toyboxVersion,
+                lld.toybox.stable.version,
+                lld.toybox.support.version,
+                lld.toybox.mainline.version,
+                lld.toybox.master.version
+            ),
             toyboxColor
         )
         // endregion [ToyBox]

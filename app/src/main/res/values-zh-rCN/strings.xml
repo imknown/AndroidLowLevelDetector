@@ -21,29 +21,37 @@
     <string name="result_disabled_or_not_supported">已禁用 或 不支持.</string>
 
     <string name="android_info_title">Android 版本</string>
-    <string name="android_info">Android %1$s (API 等级: %2$d)</string>
+    <string name="android_info">Android %1$s, API %2$s</string>
+    <string name="android_info_detail">我的: %1$s\n最新稳定: %2$s\n最低支持: %3$s\n%4$s: %5$s</string>
 
-    <string name="linux_version">Linux 版本 状态</string>
+    <string name="security_patch_level_title">ROM 安全补丁等级</string>
+    <string name="security_patch_level_detail">我的: %1$s\n最新: %2$s</string>
 
-    <string name="ab_seamless_update_enabled_result">启用了 A/B 无缝升级 状态</string>
+    <string name="linux_title">Linux 版本</string>
+    <string name="linux_version_detail">我的: %1$s\n最新稳定: %2$s\n最低支持: %3$s\n主线: %4$s</string>
+
+    <string name="ab_seamless_update_enabled_title">A/B 无缝升级 状态</string>
     <string name="rom_total_size_result">\u0020(总 ROM: ~%sGB)</string>
     <string name="current_using_ab_slot_result">\u0020(当前使用的槽位: %s)</string>
 
-    <string name="treble_enabled_result">Project Treble 状态</string>
+    <string name="treble_enabled_title">Project Treble 状态</string>
 
-    <string name="vndk_built_in_result">内建 Vendor NDK 状态</string>
+    <string name="vndk_built_in_title">内建 Vendor NDK 状态</string>
     <string name="built_in_vndk_version_result">\u0020(等级: %s)</string>
-    <string name="sar_enabled_result">System-as-root 状态</string>
 
-    <string name="apex_enabled_result">APEX 状态</string>
+    <string name="sar_enabled_title">System-as-root 状态</string>
+
+    <string name="apex_enabled_title">APEX 状态</string>
     <string name="apex_legacy_flattened">\u0020(旧式扁平的)</string>
 
-    <string name="toybox_built_in_result">内建 Toybox 状态</string>
+    <string name="toybox_built_in_title">内建 Toybox 版本</string>
     <string name="built_in_toybox_version_result">\u0020(%s)</string>
+    <string name="toybox_built_in_detail">我的: %1$s\n最新稳定: %2$s\n最低支持: %3$s\n主线: %4$s\nMaster: %5$s</string>
 
-    <string name="webview_status">WebView 状态</string>
-    <string name="webview_built_in_version">AOSP 内建 WebView</string>
-    <string name="webview_implement_version">WebView 实现</string>
+    <string name="webview_title">WebView 版本</string>
+    <string name="webview_detail">稳定版: %1$s\n测试版: %2$s\n开发者版: %3$s\nCanary: %4$s</string>
+    <string name="webview_built_in_version">我的 AOSP 内建 WebView</string>
+    <string name="webview_implement_version">我的 WebView 实现</string>
     <string name="webview_built_in">内建 WebView</string>
     <string name="webview_stable">WebView 稳定版</string>
     <string name="webview_beta">WebView 测试版</string>

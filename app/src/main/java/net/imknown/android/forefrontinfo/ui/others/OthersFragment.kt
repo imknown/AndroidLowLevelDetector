@@ -2,7 +2,6 @@ package net.imknown.android.forefrontinfo.ui.others
 
 import android.content.SharedPreferences
 import android.os.Build
-import androidx.annotation.StringRes
 import androidx.preference.PreferenceManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -32,53 +31,47 @@ class OthersFragment : BaseListFragment() {
         createNewTempDataset()
 
         //
-        add(getResultString(R.string.build_brand), Build.BRAND)
-        add(getResultString(R.string.build_manufacturer), Build.MANUFACTURER)
-        add(getResultString(R.string.build_model), Build.MODEL)
-        add(getResultString(R.string.build_device), Build.DEVICE)
-        add(getResultString(R.string.build_product), Build.PRODUCT)
-        add(getResultString(R.string.build_hardware), Build.HARDWARE)
-        add(getResultString(R.string.build_board), Build.BOARD)
+        add(MyApplication.getMyString(R.string.build_brand), Build.BRAND)
+        add(MyApplication.getMyString(R.string.build_manufacturer), Build.MANUFACTURER)
+        add(MyApplication.getMyString(R.string.build_model), Build.MODEL)
+        add(MyApplication.getMyString(R.string.build_device), Build.DEVICE)
+        add(MyApplication.getMyString(R.string.build_product), Build.PRODUCT)
+        add(MyApplication.getMyString(R.string.build_hardware), Build.HARDWARE)
+        add(MyApplication.getMyString(R.string.build_board), Build.BOARD)
 
         //
-        add(getResultString(R.string.os_arch), System.getProperty("os.arch").toString())
+        add(MyApplication.getMyString(R.string.os_arch), System.getProperty("os.arch").toString())
         @Suppress("DEPRECATION")
-        add(getResultString(R.string.build_cpu_abi), Build.CPU_ABI)
+        add(MyApplication.getMyString(R.string.build_cpu_abi), Build.CPU_ABI)
         add(
-            getResultString(
-                R.string.build_supported_32_bit_abis
-            ),
-                Build.SUPPORTED_32_BIT_ABIS.asList().toString()
-            )
-
+            MyApplication.getMyString(R.string.build_supported_32_bit_abis),
+            Build.SUPPORTED_32_BIT_ABIS.asList().toString()
+        )
         add(
-            getResultString(
-                R.string.build_supported_64_bit_abis
-            ),
-                Build.SUPPORTED_64_BIT_ABIS.asList().toString()
-            )
-
+            MyApplication.getMyString(R.string.build_supported_64_bit_abis),
+            Build.SUPPORTED_64_BIT_ABIS.asList().toString()
+        )
 
         //
-        add(getResultString(R.string.build_user), Build.USER)
-        add(getResultString(R.string.build_HOST), Build.HOST)
+        add(MyApplication.getMyString(R.string.build_user), Build.USER)
+        add(MyApplication.getMyString(R.string.build_HOST), Build.HOST)
         val time =
             SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH).format(Date(Build.TIME))
-        add(getResultString(R.string.build_time), time)
+        add(MyApplication.getMyString(R.string.build_time), time)
         if (isAtLeastAndroid6()) {
-            add(getResultString(R.string.build_base_os), Build.VERSION.BASE_OS)
+            add(MyApplication.getMyString(R.string.build_base_os), Build.VERSION.BASE_OS)
         }
-        add(getResultString(R.string.build_fingerprint), Build.FINGERPRINT)
-        add(getResultString(R.string.build_display), Build.DISPLAY)
-        add(getResultString(R.string.build_id), Build.ID)
-        add(getResultString(R.string.build_incremental), Build.VERSION.INCREMENTAL)
-        add(getResultString(R.string.build_type), Build.TYPE)
-        add(getResultString(R.string.build_tags), Build.TAGS)
-        add(getResultString(R.string.build_codename), Build.VERSION.CODENAME)
+        add(MyApplication.getMyString(R.string.build_fingerprint), Build.FINGERPRINT)
+        add(MyApplication.getMyString(R.string.build_display), Build.DISPLAY)
+        add(MyApplication.getMyString(R.string.build_id), Build.ID)
+        add(MyApplication.getMyString(R.string.build_incremental), Build.VERSION.INCREMENTAL)
+        add(MyApplication.getMyString(R.string.build_type), Build.TYPE)
+        add(MyApplication.getMyString(R.string.build_tags), Build.TAGS)
+        add(MyApplication.getMyString(R.string.build_codename), Build.VERSION.CODENAME)
 
         //
-        add(getResultString(R.string.build_bootloader), Build.BOOTLOADER)
-        add(getResultString(R.string.build_radio), Build.getRadioVersion())
+        add(MyApplication.getMyString(R.string.build_bootloader), Build.BOOTLOADER)
+        add(MyApplication.getMyString(R.string.build_radio), Build.getRadioVersion())
 
         getProp()
     }
@@ -125,21 +118,6 @@ class OthersFragment : BaseListFragment() {
 
     private fun removeSquareBrackets(text: String) =
         text.substringAfter("[").substringBefore(']').trimIndent()
-
-    private fun getResultString(@StringRes stringId: Int, vararg value: Any?): String {
-        return if (
-            value.isNullOrEmpty()
-            || value[0] == null
-            || value[0].toString().isEmpty()
-        ) {
-            MyApplication.getMyString(
-                stringId,
-                MyApplication.getMyString(R.string.build_not_filled)
-            )
-        } else {
-            MyApplication.getMyString(stringId, *value)
-        }
-    }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
         if (key == MyApplication.getMyString(R.string.interface_raw_build_prop_key)) {
