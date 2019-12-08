@@ -55,36 +55,35 @@
     <string name="chrome_canary">Chrome Canary</string>
 
     <!-- 其他 -->
-    <string name="build_brand">品牌 状态</string>
-    <string name="build_manufacturer">代工/OEM 状态</string>
-    <string name="build_model">销售型号 状态</string>
-    <string name="build_device">开发代号 状态</string>
-    <string name="build_product">总产品名称 状态</string>
-    <string name="build_hardware">SoC/内核源码 提供商 状态</string>
-    <string name="build_board">SoC 型号 状态</string>
+    <string name="build_brand">品牌</string>
+    <string name="build_manufacturer">代工/OEM</string>
+    <string name="build_model">销售型号</string>
+    <string name="build_device">开发代号</string>
+    <string name="build_product">总产品名称</string>
+    <string name="build_hardware">SoC/内核源码 提供商</string>
+    <string name="build_board">SoC 型号</string>
 
-    <string name="os_arch">系统正在使用的架构 状态</string>
-    <string name="build_cpu_abi">CPU 正在使用的架构 状态</string>
-    <string name="build_supported_32_bit_abis">支持的 32位 CPU 架构 状态</string>
-    <string name="build_supported_64_bit_abis">支持的 64位 CPU 架构 状态</string>
+    <string name="os_arch">系统正在使用的架构</string>
+    <string name="build_cpu_abi">CPU 正在使用的架构</string>
+    <string name="build_supported_32_bit_abis">支持的 32位 CPU 架构</string>
+    <string name="build_supported_64_bit_abis">支持的 64位 CPU 架构</string>
 
-    <string name="build_preview_sdk_int">Android 预览 API 等级 (0: 非预览版) 状态</string>
+    <string name="build_preview_sdk_int">Android 预览 API 等级 (0: 非预览版)</string>
 
-    <string name="build_user">ROM 构建者 状态</string>
-    <string name="build_HOST">ROM 构建的主机名 状态</string>
-    <string name="build_time">ROM 构建时间 状态</string>
-    <string name="build_base_os">基于的系统 (二次开发) 状态</string>
-    <string name="build_security_patch">ROM 安全补丁版本 状态</string>
-    <string name="build_fingerprint">原机系统 指纹 状态</string>
-    <string name="build_display">Android 构建 ID 状态</string>
-    <string name="build_id">Android Git 修订号 状态</string>
-    <string name="build_incremental">Android Git 提交的 Hash 状态</string>
-    <string name="build_type">ROM 构建类型 状态</string>
-    <string name="build_tags">ROM 构建描述标签 状态</string>
-    <string name="build_codename">系统 构建分支名 (REL: 正式) 状态</string>
+    <string name="build_user">ROM 构建者</string>
+    <string name="build_HOST">ROM 构建的主机名</string>
+    <string name="build_time">ROM 构建时间</string>
+    <string name="build_base_os">基于的系统 (二次开发)</string>
+    <string name="build_fingerprint">原机系统 指纹</string>
+    <string name="build_display">Android 构建 ID</string>
+    <string name="build_id">Android Git 修订号</string>
+    <string name="build_incremental">Android Git 提交的 Hash</string>
+    <string name="build_type">ROM 构建类型</string>
+    <string name="build_tags">ROM 构建描述标签</string>
+    <string name="build_codename">系统 构建分支名 (REL: 正式)</string>
 
-    <string name="build_bootloader">Bootloader 版本 状态</string>
-    <string name="build_radio">基带版本 状态</string>
+    <string name="build_bootloader">Bootloader 版本</string>
+    <string name="build_radio">基带版本</string>
 
     <string name="build_not_filled">**未填写**</string>
 
