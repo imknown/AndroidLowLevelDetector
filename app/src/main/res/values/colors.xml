@@ -9,7 +9,7 @@
     <color name="colorStatusBar">@android:color/secondary_text_dark</color>
     <color name="colorNavigationBar">@android:color/secondary_text_dark</color>
 
-    <color name="colorStateless">#FCFCFC</color>
+    <color name="colorStateless">#F8F8F8</color>
     <color name="colorNoProblem">#71C784</color>
     <color name="colorWaring">#FFCC80</color>
     <color name="colorCritical">#FF9999</color>
