@@ -24,7 +24,8 @@
     <string name="android_info">%1$s, API %2$s</string>
     <string name="android_info_detail">我的: %1$s\n最新稳定: %2$s\n最低支持: %3$s\n%4$s: %5$s</string>
 
-    <string name="security_patch_level_title">ROM 安全补丁等级</string>
+    <string name="security_patch_level_title">Android 安全补丁等级</string>
+    <string name="vendor_security_patch_level_title">供应商 安全补丁等级</string>
     <string name="security_patch_level_detail">我的: %1$s\n最新: %2$s</string>
 
     <string name="linux_title">Linux 版本</string>

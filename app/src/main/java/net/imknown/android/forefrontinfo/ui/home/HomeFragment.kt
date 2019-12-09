@@ -59,6 +59,8 @@ class HomeFragment : BaseListFragment() {
         }
         private const val PROP_SECURITY_PATCH = "ro.build.version.security_patch"
 
+        private const val PROP_VENDOR_SECURITY_PATCH = "ro.vendor.build.security_patch"
+
         // https://android.googlesource.com/kernel/common/+refs
         // https://source.android.com/setup/build/building-kernels#downloading
         private val SYSTEM_PROPERTY_LINUX_VERSION = System.getProperty("os.version")
@@ -242,13 +244,7 @@ class HomeFragment : BaseListFragment() {
         )
     }
 
-    private fun detectSecurityPatch(lld: Lld) {
-        val securityPatch = if (isAtLeastAndroid6()) {
-            BUILD_VERSION_SECURITY_PATCH
-        } else {
-            getStringProperty(PROP_SECURITY_PATCH)
-        }
-
+    private fun detectSecurityPatch(lld: Lld, securityPatch: String, @StringRes titleId: Int) {
         val lldSecurityPatch = lld.android.securityPatchLevel
         @ColorInt val securityPatchColor = when {
             securityPatch >= lldSecurityPatch -> COLOR_STATE_LIST_NO_PROBLEM
@@ -257,7 +253,7 @@ class HomeFragment : BaseListFragment() {
         }
 
         add(
-            MyApplication.getMyString(R.string.security_patch_level_title),
+            MyApplication.getMyString(titleId),
             MyApplication.getMyString(
                 R.string.security_patch_level_detail,
                 securityPatch,
@@ -521,7 +517,15 @@ class HomeFragment : BaseListFragment() {
 
         detectAndroid(lld)
 
-        detectSecurityPatch(lld)
+        var securityPatch = if (isAtLeastAndroid6()) {
+            BUILD_VERSION_SECURITY_PATCH
+        } else {
+            getStringProperty(PROP_SECURITY_PATCH)
+        }
+        detectSecurityPatch(lld, securityPatch, R.string.security_patch_level_title)
+
+        securityPatch = getStringProperty(PROP_VENDOR_SECURITY_PATCH)
+        detectSecurityPatch(lld, securityPatch, R.string.vendor_security_patch_level_title)
 
         detectKernel(lld)
 

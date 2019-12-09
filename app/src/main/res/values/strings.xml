@@ -24,7 +24,8 @@
     <string name="android_info">%1$s, API %2$s</string>
     <string name="android_info_detail">Mine: %1$s\nLatest stable: %2$s\nLowest support: %3$s\n%4$s: %5$s</string>
 
-    <string name="security_patch_level_title">ROM security patch level</string>
+    <string name="security_patch_level_title">Android security patch level</string>
+    <string name="vendor_security_patch_level_title">Vendor security patch level</string>
     <string name="security_patch_level_detail">Mine: %1$s\nLatest: %2$s</string>
 
     <string name="linux_title">Linux version</string>
