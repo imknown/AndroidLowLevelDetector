@@ -37,7 +37,7 @@ https://coolapk.com/apk/net.imknown.android.forefrontinfo
 - detect HAL
 - detect targetSdkVersion
 - Android version market share
-- vendor patch version
+- vendor patch version (From Android 9)
 - OpenGL ES/Vulkan/GPU Driver version
 - icu (https://developer.android.com/guide/topics/resources/internationalization)
 - kotlinPoet, googleAutoService (V2.0 ?)
