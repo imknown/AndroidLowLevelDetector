@@ -21,7 +21,7 @@
     <string name="result_disabled_or_not_supported">Disabled or not supported.</string>
 
     <string name="android_info_title">Android version</string>
-    <string name="android_info">Android %1$s, API %2$s</string>
+    <string name="android_info">%1$s, API %2$s</string>
     <string name="android_info_detail">Mine: %1$s\nLatest stable: %2$s\nLowest support: %3$s\n%4$s: %5$s</string>
 
     <string name="security_patch_level_title">ROM security patch level</string>
