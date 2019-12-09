@@ -198,8 +198,252 @@ class HomeFragment : BaseListFragment() {
         }
     }
 
+    private fun detectAndroid(lld: Lld) {
+        @ColorInt val androidColor = when {
+            isLatestStableAndroid(lld) -> COLOR_STATE_LIST_NO_PROBLEM
+            isSupportedByUpstream(lld) -> COLOR_STATE_LIST_WARNING
+            else -> COLOR_STATE_LIST_CRITICAL
+        }
+
+        val previewType: String
+        val previewVersion: String
+        val previewApi: String
+        if (lld.android.beta.api.isNotEmpty()) {
+            previewType = "Beta"
+            previewVersion = lld.android.beta.version
+            previewApi = lld.android.beta.api
+        } else {
+            previewType = "Alpha"
+            previewVersion = lld.android.alpha.version
+            previewApi = lld.android.alpha.api
+        }
+
+        add(
+            MyApplication.getMyString(
+                R.string.android_info_title
+            ),
+            MyApplication.getMyString(
+                R.string.android_info_detail,
+                MyApplication.getMyString(
+                    R.string.android_info, BUILD_VERSION_RELEASE, BUILD_VERSION_SDK_INT
+                ),
+                MyApplication.getMyString(
+                    R.string.android_info, lld.android.stable.version, lld.android.stable.api
+                ),
+                MyApplication.getMyString(
+                    R.string.android_info, lld.android.support.version, lld.android.support.api
+                ),
+                previewType,
+                MyApplication.getMyString(
+                    R.string.android_info, previewVersion, previewApi
+                )
+            ),
+            androidColor
+        )
+    }
+
+    private fun detectSecurityPatch(lld: Lld) {
+        val securityPatch = if (isAtLeastAndroid6()) {
+            BUILD_VERSION_SECURITY_PATCH
+        } else {
+            getStringProperty(PROP_SECURITY_PATCH)
+        }
+
+        val lldSecurityPatch = lld.android.securityPatchLevel
+        @ColorInt val securityPatchColor = when {
+            securityPatch >= lldSecurityPatch -> COLOR_STATE_LIST_NO_PROBLEM
+            getSecurityPatchYearMonth(securityPatch) >= getSecurityPatchYearMonth(lldSecurityPatch) -> COLOR_STATE_LIST_WARNING
+            else -> COLOR_STATE_LIST_CRITICAL
+        }
+
+        add(
+            MyApplication.getMyString(R.string.security_patch_level_title),
+            MyApplication.getMyString(
+                R.string.security_patch_level_detail,
+                securityPatch,
+                lld.android.securityPatchLevel
+            ),
+            securityPatchColor
+        )
+    }
+
     private fun getSecurityPatchYearMonth(securityPatch: String) =
         securityPatch.substringBeforeLast('-')
+
+    private fun detectKernel(lld: Lld) {
+        val linuxVersion = SYSTEM_PROPERTY_LINUX_VERSION
+        val isAtLeast = Version(linuxVersion).isAtLeast(lld.linux.stable.version)
+        val isSupported = Version(linuxVersion).isAtLeast(lld.linux.support.version)
+        @ColorInt val linuxColor = when {
+            isAtLeast -> COLOR_STATE_LIST_NO_PROBLEM
+            isSupported -> COLOR_STATE_LIST_WARNING
+            else -> COLOR_STATE_LIST_CRITICAL
+        }
+        add(
+            MyApplication.getMyString(R.string.linux_title),
+            MyApplication.getMyString(
+                R.string.linux_version_detail,
+                linuxVersion,
+                lld.linux.stable.version,
+                lld.linux.support.version,
+                lld.linux.mainline.version
+            ),
+            linuxColor
+        )
+    }
+
+    private fun detectAb() {
+        // val bootPartitions = sh(CMD_BOOT_PARTITION)[0]
+
+        // val romTotalSizeResult = sh(CMD_ROM_TOTAL_SIZE)
+        // val romTotalSize = kotlin.math.floor(romTotalSizeResult[0].toFloat()).toString()
+
+        val isAbUpdateSupported = getStringProperty(PROP_AB_UPDATE, isAtLeastAndroid7()).toBoolean()
+        val abUpdateSupportedArgs =
+            translate(isAbUpdateSupported) /* + MyApplication.getMyString(R.string.rom_total_size_result, romTotalSize) */
+
+        var abFinalResult =
+            MyApplication.getMyString(
+                R.string.ab_seamless_update_enabled_title
+            )
+        if (isAbUpdateSupported) {
+            val slotSuffixResult = getStringProperty(PROP_SLOT_SUFFIX)
+            val hasVndkVersion = slotSuffixResult.isNotEmpty()
+            val slotSuffixUsing = if (hasVndkVersion) {
+                slotSuffixResult
+            } else {
+                MyApplication.getMyString(android.R.string.unknownName)
+            }
+
+            abFinalResult += MyApplication.getMyString(
+                R.string.current_using_ab_slot_result,
+                slotSuffixUsing
+            )
+        }
+
+        add(abFinalResult, abUpdateSupportedArgs, isAbUpdateSupported)
+    }
+
+    private fun detectTreble() {
+        val isTrebleEnabled =
+            getStringProperty(PROP_TREBLE_ENABLED, isAtLeastAndroid8()).toBoolean()
+
+        add(
+            MyApplication.getMyString(R.string.treble_enabled_title),
+            translate(isTrebleEnabled),
+            isTrebleEnabled
+        )
+    }
+
+    private fun detectVndk(lld: Lld) {
+        val vndkVersionResult = getStringProperty(PROP_VNDK_VERSION, isAtLeastAndroid8())
+        val hasVndkVersion = hasResult(vndkVersionResult)
+
+        @ColorInt val vndkColor: Int
+
+        var isVndkBuiltInResult = translate(hasVndkVersion)
+        if (hasVndkVersion) {
+            val vndkVersion = if (hasVndkVersion) {
+                vndkVersionResult
+            } else {
+                MyApplication.getMyString(android.R.string.unknownName)
+            }
+
+            val hasVndkLite = getStringProperty(PROP_VNDK_LITE).toBoolean()
+
+            vndkColor = if (vndkVersion == lld.android.stable.api && !hasVndkLite) {
+                COLOR_STATE_LIST_NO_PROBLEM
+            } else {
+                COLOR_STATE_LIST_WARNING
+            }
+
+            isVndkBuiltInResult += MyApplication.getMyString(
+                R.string.built_in_vndk_version_result,
+                if (hasVndkLite) "$vndkVersion, Lite" else vndkVersion
+            )
+        } else {
+            vndkColor = COLOR_STATE_LIST_CRITICAL
+        }
+
+        add(
+            MyApplication.getMyString(R.string.vndk_built_in_title),
+            isVndkBuiltInResult,
+            vndkColor
+        )
+    }
+
+    private fun detectSar() {
+        val hasSystemRootImage =
+            getStringProperty(PROP_SYSTEM_ROOT_IMAGE, isAtLeastAndroid9()).toBoolean()
+
+        val mountDevRootResult = sh(CMD_MOUNT_DEV_ROOT, isAtLeastAndroid9())
+        val hasMountDevRoot = hasResult(mountDevRootResult)
+
+        val mountSystemResult = sh(CMD_MOUNT_SYSTEM, isAtLeastAndroid9() && !hasSystemRootImage)
+        val hasMountSystem = hasResult(mountSystemResult)
+
+        val isSar =
+            isAtLeastAndroid9() && (hasSystemRootImage || hasMountDevRoot || !hasMountSystem)
+        add(MyApplication.getMyString(R.string.sar_enabled_title), translate(isSar), isSar)
+    }
+
+    private fun detectApex() {
+        val apexUpdatable = getStringProperty(PROP_APEX_UPDATABLE, isAtLeastAndroid10()).toBoolean()
+
+        val flattenedApexMountedResult = sh(CMD_FLATTENED_APEX_MOUNT, isAtLeastAndroid10())
+        val isFlattenedApexMounted = hasResult(flattenedApexMountedResult)
+
+        val isApex = apexUpdatable || isFlattenedApexMounted
+        val isLegacyFlattenedApex = !apexUpdatable && isFlattenedApexMounted
+
+        var apexEnabledResult = translate(isApex)
+        if (isLegacyFlattenedApex) {
+            apexEnabledResult += MyApplication.getMyString(R.string.apex_legacy_flattened)
+        }
+
+        val apexColor = when {
+            apexUpdatable -> COLOR_STATE_LIST_NO_PROBLEM
+            isLegacyFlattenedApex -> COLOR_STATE_LIST_WARNING
+            else -> COLOR_STATE_LIST_CRITICAL
+        }
+
+        add(MyApplication.getMyString(R.string.apex_enabled_title), apexEnabledResult, apexColor)
+    }
+
+    private fun detectToybox(lld: Lld) {
+        val toyboxVersionResult = sh(CMD_TOYBOX_VERSION, isAtLeastAndroid6())
+        val hasToyboxVersion = hasResult(toyboxVersionResult)
+
+        val toyboxVersion = if (hasToyboxVersion) {
+            toyboxVersionResult[0]
+        } else {
+            translate(false)
+        }
+
+        @ColorInt val toyboxColor = if (hasToyboxVersion) {
+            val toyboxRealVersionString = toyboxVersion.replace("toybox ", "")
+            val toyboxRealVersion = Version(toyboxRealVersionString)
+            when {
+                toyboxRealVersion.isAtLeast(lld.toybox.stable.version) -> COLOR_STATE_LIST_NO_PROBLEM
+                toyboxRealVersion.isAtLeast(lld.toybox.support.version) -> COLOR_STATE_LIST_WARNING
+                else -> COLOR_STATE_LIST_CRITICAL
+            }
+        } else {
+            COLOR_STATE_LIST_CRITICAL
+        }
+        add(
+            MyApplication.getMyString(R.string.toybox_built_in_title),
+            MyApplication.getMyString(
+                R.string.toybox_built_in_detail,
+                toyboxVersion,
+                lld.toybox.stable.version,
+                lld.toybox.support.version,
+                lld.toybox.mainline.version,
+                lld.toybox.master.version
+            ),
+            toyboxColor
+        )
+    }
 
     private fun getPackageInfo(packageName: String) =
         try {
@@ -275,249 +519,23 @@ class HomeFragment : BaseListFragment() {
     private fun fillDataset(lld: Lld) {
         createNewTempDataset()
 
-        // region [Android]
-        @ColorInt val androidColor = when {
-            isLatestStableAndroid(lld) -> COLOR_STATE_LIST_NO_PROBLEM
-            isSupportedByUpstream(lld) -> COLOR_STATE_LIST_WARNING
-            else -> COLOR_STATE_LIST_CRITICAL
-        }
+        detectAndroid(lld)
 
-        val previewType: String
-        val previewVersion: String
-        val previewApi: String
-        if (lld.android.beta.api.isNotEmpty()) {
-            previewType = "Beta"
-            previewVersion = lld.android.beta.version
-            previewApi = lld.android.beta.api
-        } else {
-            previewType = "Alpha"
-            previewVersion = lld.android.alpha.version
-            previewApi = lld.android.alpha.api
-        }
+        detectSecurityPatch(lld)
 
-        add(
-            MyApplication.getMyString(
-                R.string.android_info_title
-            ),
-            MyApplication.getMyString(
-                R.string.android_info_detail,
-                MyApplication.getMyString(
-                    R.string.android_info, BUILD_VERSION_RELEASE, BUILD_VERSION_SDK_INT
-                ),
-                MyApplication.getMyString(
-                    R.string.android_info, lld.android.stable.version, lld.android.stable.api
-                ),
-                MyApplication.getMyString(
-                    R.string.android_info, lld.android.support.version, lld.android.support.api
-                ),
-                previewType,
-                MyApplication.getMyString(
-                    R.string.android_info, previewVersion, previewApi
-                )
-            ),
-            androidColor
-        )
-        // endregion [Android]
+        detectKernel(lld)
 
-        // region [Security patch]
-        val securityPatch = if (isAtLeastAndroid6()) {
-            BUILD_VERSION_SECURITY_PATCH
-        } else {
-            getStringProperty(PROP_SECURITY_PATCH)
-        }
+        detectAb()
 
-        val lldSecurityPatch = lld.android.securityPatchLevel
-        @ColorInt val securityPatchColor = when {
-            securityPatch >= lldSecurityPatch -> COLOR_STATE_LIST_NO_PROBLEM
-            getSecurityPatchYearMonth(securityPatch) >= getSecurityPatchYearMonth(lldSecurityPatch) -> COLOR_STATE_LIST_WARNING
-            else -> COLOR_STATE_LIST_CRITICAL
-        }
+        detectTreble()
 
-        add(
-            MyApplication.getMyString(R.string.security_patch_level_title),
-            MyApplication.getMyString(
-                R.string.security_patch_level_detail,
-                securityPatch,
-                lld.android.securityPatchLevel
-            ),
-            securityPatchColor
-        )
-        // endregion [Security patch]
+        detectVndk(lld)
 
-        // region [Kernel]
-        val linuxVersion = SYSTEM_PROPERTY_LINUX_VERSION
-        val isAtLeast = Version(linuxVersion).isAtLeast(lld.linux.stable.version)
-        val isSupported = Version(linuxVersion).isAtLeast(lld.linux.support.version)
-        @ColorInt val linuxColor = when {
-            isAtLeast -> COLOR_STATE_LIST_NO_PROBLEM
-            isSupported -> COLOR_STATE_LIST_WARNING
-            else -> COLOR_STATE_LIST_CRITICAL
-        }
-        add(
-            MyApplication.getMyString(R.string.linux_title),
-            MyApplication.getMyString(
-                R.string.linux_version_detail,
-                linuxVersion,
-                lld.linux.stable.version,
-                lld.linux.support.version,
-                lld.linux.mainline.version
-            ),
-            linuxColor
-        )
-        // endregion [Kernel]
+        detectSar()
 
-        // region [A/B]
-        // val bootPartitions = sh(CMD_BOOT_PARTITION)[0]
+        detectApex()
 
-        // val romTotalSizeResult = sh(CMD_ROM_TOTAL_SIZE)
-        // val romTotalSize = kotlin.math.floor(romTotalSizeResult[0].toFloat()).toString()
-
-        val isAbUpdateSupported = getStringProperty(PROP_AB_UPDATE, isAtLeastAndroid7()).toBoolean()
-        val abUpdateSupportedArgs =
-            translate(isAbUpdateSupported) /* + MyApplication.getMyString(R.string.rom_total_size_result, romTotalSize) */
-
-        var abFinalResult =
-            MyApplication.getMyString(
-                R.string.ab_seamless_update_enabled_title
-            )
-        if (isAbUpdateSupported) {
-            val slotSuffixResult = getStringProperty(PROP_SLOT_SUFFIX)
-            val hasVndkVersion = slotSuffixResult.isNotEmpty()
-            val slotSuffixUsing = if (hasVndkVersion) {
-                slotSuffixResult
-            } else {
-                MyApplication.getMyString(android.R.string.unknownName)
-            }
-
-            abFinalResult += MyApplication.getMyString(
-                R.string.current_using_ab_slot_result,
-                slotSuffixUsing
-            )
-        }
-
-        add(abFinalResult, abUpdateSupportedArgs, isAbUpdateSupported)
-        // endregion [A/B]
-
-        // region [Treble]
-        val isTrebleEnabled =
-            getStringProperty(PROP_TREBLE_ENABLED, isAtLeastAndroid8()).toBoolean()
-
-        add(
-            MyApplication.getMyString(R.string.treble_enabled_title),
-            translate(isTrebleEnabled),
-            isTrebleEnabled
-        )
-        // endregion [Treble]
-
-        // region [VNDK]
-        val vndkVersionResult = getStringProperty(PROP_VNDK_VERSION, isAtLeastAndroid8())
-        val hasVndkVersion = hasResult(vndkVersionResult)
-
-        @ColorInt val vndkColor: Int
-
-        var isVndkBuiltInResult = translate(hasVndkVersion)
-        if (hasVndkVersion) {
-            val vndkVersion = if (hasVndkVersion) {
-                vndkVersionResult
-            } else {
-                MyApplication.getMyString(android.R.string.unknownName)
-            }
-
-            val hasVndkLite = getStringProperty(PROP_VNDK_LITE).toBoolean()
-
-            vndkColor = if (vndkVersion == lld.android.stable.api && !hasVndkLite) {
-                COLOR_STATE_LIST_NO_PROBLEM
-            } else {
-                COLOR_STATE_LIST_WARNING
-            }
-
-            isVndkBuiltInResult += MyApplication.getMyString(
-                R.string.built_in_vndk_version_result,
-                if (hasVndkLite) "$vndkVersion, Lite" else vndkVersion
-            )
-        } else {
-            vndkColor = COLOR_STATE_LIST_CRITICAL
-        }
-
-        add(
-            MyApplication.getMyString(R.string.vndk_built_in_title),
-            isVndkBuiltInResult,
-            vndkColor
-        )
-        // endregion [VNDK]
-
-        // region [SAR]
-        val hasSystemRootImage =
-            getStringProperty(PROP_SYSTEM_ROOT_IMAGE, isAtLeastAndroid9()).toBoolean()
-
-        val mountDevRootResult = sh(CMD_MOUNT_DEV_ROOT, isAtLeastAndroid9())
-        val hasMountDevRoot = hasResult(mountDevRootResult)
-
-        val mountSystemResult = sh(CMD_MOUNT_SYSTEM, isAtLeastAndroid9() && !hasSystemRootImage)
-        val hasMountSystem = hasResult(mountSystemResult)
-
-        val isSar =
-            isAtLeastAndroid9() && (hasSystemRootImage || hasMountDevRoot || !hasMountSystem)
-        add(MyApplication.getMyString(R.string.sar_enabled_title), translate(isSar), isSar)
-        // endregion [SAR]
-
-        // region [APEX]
-        val apexUpdatable = getStringProperty(PROP_APEX_UPDATABLE, isAtLeastAndroid10()).toBoolean()
-
-        val flattenedApexMountedResult = sh(CMD_FLATTENED_APEX_MOUNT, isAtLeastAndroid10())
-        val isFlattenedApexMounted = hasResult(flattenedApexMountedResult)
-
-        val isApex = apexUpdatable || isFlattenedApexMounted
-        val isLegacyFlattenedApex = !apexUpdatable && isFlattenedApexMounted
-
-        var apexEnabledResult = translate(isApex)
-        if (isLegacyFlattenedApex) {
-            apexEnabledResult += MyApplication.getMyString(R.string.apex_legacy_flattened)
-        }
-
-        val apexColor = when {
-            apexUpdatable -> COLOR_STATE_LIST_NO_PROBLEM
-            isLegacyFlattenedApex -> COLOR_STATE_LIST_WARNING
-            else -> COLOR_STATE_LIST_CRITICAL
-        }
-
-        add(MyApplication.getMyString(R.string.apex_enabled_title), apexEnabledResult, apexColor)
-        // endregion [APEX]
-
-        // region [ToyBox]
-        val toyboxVersionResult = sh(CMD_TOYBOX_VERSION, isAtLeastAndroid6())
-        val hasToyboxVersion = hasResult(toyboxVersionResult)
-
-        val toyboxVersion = if (hasToyboxVersion) {
-            toyboxVersionResult[0]
-        } else {
-            translate(false)
-        }
-
-        @ColorInt val toyboxColor = if (hasToyboxVersion) {
-            val toyboxRealVersionString = toyboxVersion.replace("toybox ", "")
-            val toyboxRealVersion = Version(toyboxRealVersionString)
-            when {
-                toyboxRealVersion.isAtLeast(lld.toybox.stable.version) -> COLOR_STATE_LIST_NO_PROBLEM
-                toyboxRealVersion.isAtLeast(lld.toybox.support.version) -> COLOR_STATE_LIST_WARNING
-                else -> COLOR_STATE_LIST_CRITICAL
-            }
-        } else {
-            COLOR_STATE_LIST_CRITICAL
-        }
-        add(
-            MyApplication.getMyString(R.string.toybox_built_in_title),
-            MyApplication.getMyString(
-                R.string.toybox_built_in_detail,
-                toyboxVersion,
-                lld.toybox.stable.version,
-                lld.toybox.support.version,
-                lld.toybox.mainline.version,
-                lld.toybox.master.version
-            ),
-            toyboxColor
-        )
-        // endregion [ToyBox]
+        detectToybox(lld)
 
         detectWebView(lld)
     }
