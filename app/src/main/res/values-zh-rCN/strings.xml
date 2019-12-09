@@ -37,7 +37,7 @@
 
     <string name="treble_enabled_title">Project Treble 状态</string>
 
-    <string name="vndk_built_in_title">内建 Vendor NDK 状态</string>
+    <string name="vndk_built_in_title">内建 供应商 NDK 状态</string>
     <string name="built_in_vndk_version_result">\u0020(等级: %s)</string>
 
     <string name="sar_enabled_title">System-as-root 状态</string>
