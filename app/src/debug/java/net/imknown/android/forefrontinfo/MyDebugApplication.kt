@@ -2,8 +2,6 @@ package net.imknown.android.forefrontinfo
 
 import android.annotation.SuppressLint
 import android.os.StrictMode
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import leakcanary.LeakCanaryProcess
 
 @SuppressLint("Registered")
@@ -17,9 +15,7 @@ class MyDebugApplication : MyApplication() {
             return
         }
 
-        launch(Dispatchers.IO) {
-            initStrictMode()
-        }
+        initStrictMode()
     }
 
     private fun initStrictMode() {
