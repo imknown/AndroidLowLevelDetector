@@ -136,9 +136,11 @@ class HomeFragment : BaseListFragment() {
                 }
             }, {
                 launch(Dispatchers.IO) {
-                    showError(it)
-
-                    toast(R.string.lld_json_download_failed)
+                    showError(
+                        Exception(
+                            MyApplication.getMyString(R.string.lld_json_download_failed, it.message)
+                        )
+                    )
 
                     prepareResult(false)
                 }
@@ -162,11 +164,11 @@ class HomeFragment : BaseListFragment() {
         }
 
         if (isActivityAndFragmentOk(this)) {
-            initSubtitle(isOnline)
+            prepareResultWhenOk(isOnline)
         }
     }
 
-    private suspend fun initSubtitle(isOnline: Boolean) {
+    private suspend fun prepareResultWhenOk(isOnline: Boolean) {
         @StringRes var lldDataModeResId: Int
         var dataVersion: String
 
@@ -185,7 +187,9 @@ class HomeFragment : BaseListFragment() {
                 R.string.lld_json_offline
             }
         } catch (e: Exception) {
-            showError(e)
+            showError(
+                Exception(MyApplication.getMyString(R.string.lld_json_parse_failed, e.message))
+            )
 
             lldDataModeResId = R.string.lld_json_offline
 

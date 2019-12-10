@@ -9,7 +9,8 @@
     <string name="lld_json_checking">CHECKING DATA 📲</string>
     <string name="lld_json_offline">OFFLINE DATA 📴 (%s)</string>
     <string name="lld_json_online">ONLINE DATA 📱 (%s)</string>
-    <string name="lld_json_download_failed">Online data fetched failed.\nUsing local data instead.</string>
+    <string name="lld_json_download_failed">Online data fetched failed.\nUsing local data instead.\n\n%s</string>
+    <string name="lld_json_parse_failed">Data parsed failed.\nPlease try to upgrade this app.\n\n%s</string>
 
     <!-- Tab -->
     <string name="title_home">Home</string>

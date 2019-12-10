@@ -147,6 +147,10 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
     override fun showError(error: Throwable) {
         super.showError(error)
 
+        launch {
+            toast(error.message.toString())
+        }
+
         launch(Dispatchers.Main) {
             swipeRefreshLayout.isRefreshing = false
         }
