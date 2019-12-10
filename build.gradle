@@ -15,7 +15,6 @@ buildscript {
     dependencies {
         classpath "com.android.tools.build:gradle:$androidBuild.androidStudioGradlePlugin"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinSdk.core"
-        classpath "com.tencent.mm:AndResGuard-gradle-plugin:$thirdParties.andResGuard"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
