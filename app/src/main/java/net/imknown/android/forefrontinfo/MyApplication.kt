@@ -37,9 +37,11 @@ open class MyApplication : Application(), CoroutineScope by MainScope() {
     override fun onCreate() {
         super.onCreate()
 
-        instance = this
+        launch(Dispatchers.IO) {
+            instance = this@MyApplication
 
-        GatewayApi.savedLldJsonFile = File(getDownloadDir(), GatewayApi.LLD_JSON_NAME)
+            GatewayApi.savedLldJsonFile = File(getDownloadDir(), GatewayApi.LLD_JSON_NAME)
+        }
     }
 
     internal fun setMyTheme(themesValue: String) = launch(Dispatchers.IO) {
