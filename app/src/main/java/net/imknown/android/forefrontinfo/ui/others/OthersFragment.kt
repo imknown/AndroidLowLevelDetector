@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import android.os.Build
 import androidx.preference.PreferenceManager
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
@@ -121,7 +122,9 @@ class OthersFragment : BaseListFragment() {
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
         if (key == MyApplication.getMyString(R.string.function_raw_build_prop_key)) {
-            collectionDatasetCaller(500)
+            launch(Dispatchers.IO) {
+                collectionDatasetCaller(500)
+            }
         }
     }
 }

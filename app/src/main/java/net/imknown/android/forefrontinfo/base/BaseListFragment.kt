@@ -48,9 +48,9 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
 
             PreferenceManager.getDefaultSharedPreferences(MyApplication.instance)
                 .registerOnSharedPreferenceChangeListener(this@BaseListFragment)
-        }
 
-        collectionDatasetCaller()
+            collectionDatasetCaller()
+        }
     }
 
     override fun onSharedPreferenceChanged(
@@ -91,7 +91,9 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
         swipeRefreshLayout.isRefreshing = true
 
         swipeRefreshLayout.setOnRefreshListener {
-            collectionDatasetCaller()
+            launch(Dispatchers.IO) {
+                collectionDatasetCaller()
+            }
         }
 
         recyclerView.apply {
@@ -105,7 +107,7 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
         }
     }
 
-    protected fun collectionDatasetCaller(delay: Long = 0) = launch(Dispatchers.IO) {
+    protected suspend fun collectionDatasetCaller(delay: Long = 0) {
         if (delay > 0) {
             delay(delay)
         }
