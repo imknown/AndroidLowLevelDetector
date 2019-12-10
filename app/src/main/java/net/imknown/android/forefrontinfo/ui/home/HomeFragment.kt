@@ -524,7 +524,11 @@ class HomeFragment : BaseListFragment() {
         }
         detectSecurityPatch(lld, securityPatch, R.string.security_patch_level_title)
 
-        securityPatch = getStringProperty(PROP_VENDOR_SECURITY_PATCH)
+        securityPatch = if (isAtLeastAndroid9()) {
+            MyApplication.getMyString(R.string.build_not_filled)
+        } else {
+            getStringProperty(PROP_VENDOR_SECURITY_PATCH)
+        }
         detectSecurityPatch(lld, securityPatch, R.string.vendor_security_patch_level_title)
 
         detectKernel(lld)
