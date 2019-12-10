@@ -105,9 +105,6 @@
     <string name="interface_normal_scroll_bar_key">普通</string>
     <string name="interface_fast_scroll_bar_key">可拖拽</string>
 
-    <string name="interface_raw_build_prop_title">显示原始 build.prop</string>
-    <string name="interface_raw_build_prop_summary">显示 build.prop 文件中的原始数据</string>
-
     <string name="interface_themes_title">主题</string>
     <string name="interface_themes_summary">点击以显示主题选择器</string>
     <string name="interface_themes_follow_system_key">跟随系统</string>
@@ -116,6 +113,9 @@
     <string name="interface_themes_always_dark_key">总是暗色</string>
 
     <string name="function_title">功能</string>
+    <string name="function_raw_build_prop_title">显示原始 build.prop</string>
+    <string name="function_raw_build_prop_summary">显示 build.prop 文件中的原始数据</string>
+
     <string name="function_let_system_manages_process_title">让系统管理进程</string>
     <string name="function_let_system_manages_process_summary">若启用, 当关闭本程序时, 本程序的进程将被立即杀死. 否则它将被 Android 系统管理. 被系统管理并不会释放所有后台内存, 因此下次热启动的时间将会减少. 本选项不会影响从最近任务列表划掉本程序, 或者返回到启动器首页.</string>
 

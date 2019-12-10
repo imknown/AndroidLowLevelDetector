@@ -68,7 +68,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
         setScrollBarMode(listView, scrollBarModePref.value)
 
         rawBuildPropPref =
-            findPreference<SwitchPreferenceCompat>(MyApplication.getMyString(R.string.interface_raw_build_prop_key))!!
+            findPreference<SwitchPreferenceCompat>(MyApplication.getMyString(R.string.function_raw_build_prop_key))!!
         rawBuildPropPref.setOnPreferenceChangeListener { _: Preference, _: Any ->
             onRawBuildPropChanged()
 

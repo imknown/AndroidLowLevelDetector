@@ -80,7 +80,7 @@ class OthersFragment : BaseListFragment() {
         val sharedPreferences =
             PreferenceManager.getDefaultSharedPreferences(MyApplication.instance)
         val rawBuildProp = sharedPreferences.getBoolean(
-            MyApplication.getMyString(R.string.interface_raw_build_prop_key), false
+            MyApplication.getMyString(R.string.function_raw_build_prop_key), false
         )
 
         if (!rawBuildProp) {
@@ -120,7 +120,7 @@ class OthersFragment : BaseListFragment() {
         text.substringAfter("[").substringBefore(']').trimIndent()
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
-        if (key == MyApplication.getMyString(R.string.interface_raw_build_prop_key)) {
+        if (key == MyApplication.getMyString(R.string.function_raw_build_prop_key)) {
             collectionDatasetCaller(500)
         }
     }
