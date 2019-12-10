@@ -1,5 +1,9 @@
 # AndroidLowLevelDetector
 An open-source small utility to detect some Android low-level features.
+
+Detect some low-level info like System-as-root, A/B, Treble, APEX, etc..  
+Help you finding out whether your phone provider had implement the latest features of Android conveniently.
+
 - https://github.com/imknown/AndroidLowLevelDetector
 - https://gitee.com/imknown/AndroidLowLevelDetector (Mirror)
 
