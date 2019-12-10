@@ -549,7 +549,7 @@ class HomeFragment : BaseListFragment() {
     }
 
     private fun hasResult(result: String) =
-        result != MyApplication.getMyString(R.string.build_not_filled)
+        result.isNotEmpty() && result != MyApplication.getMyString(R.string.build_not_filled)
 
     private fun hasResult(result: List<String>) = result.isNotEmpty() && result[0].isNotEmpty()
 
