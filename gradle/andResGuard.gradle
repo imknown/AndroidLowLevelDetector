@@ -22,7 +22,9 @@ andResGuard {
 
     whiteList = [
             // your icon
-            "R.drawable.icon",
+            "R.mipmap.ic_launcher",
+            "R.mipmap.ic_launcher_foreground",
+            "R.mipmap.ic_launcher_round",
 
             // for fabric
             "R.string.com.crashlytics.*",
