@@ -6,7 +6,7 @@
     <string name="translator_more_info">https://github.com/imknown</string>
 
     <!-- 数据 -->
-    <string name="lld_json_checking">检查数据中 📲</string>
+    <string name="lld_json_downloading">数据下载中 📲</string>
     <string name="lld_json_offline">离线数据 📴 (%s)</string>
     <string name="lld_json_online">在线数据 📱 (%s)</string>
     <string name="lld_json_download_failed">在线数据获取失败.\n使用离线数据代替.\n\n%s</string>
