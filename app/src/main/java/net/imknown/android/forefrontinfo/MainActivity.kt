@@ -95,14 +95,14 @@ class MainActivity : AppCompatActivity(), IView, CoroutineScope by MainScope() {
         launch(Dispatchers.Default) {
             initTheme()
 
-            withContext(Dispatchers.Main) {
-                if (savedInstanceState == null) {
+            if (savedInstanceState == null) {
+                withContext(Dispatchers.Main) {
                     showFragment(lastId)
                 }
-//                    else {
-//                        val fragment = supportFragmentManager.findFragmentById(R.id.container)
-//                    }
             }
+//            else {
+//                val fragment = supportFragmentManager.findFragmentById(R.id.container)
+//            }
         }
     }
 
