@@ -15,9 +15,7 @@ class MyDebugApplication : MyApplication() {
             return
         }
 
-        Runnable {
-            initStrictMode()
-        }
+        initStrictMode()
     }
 
     private fun initStrictMode() {
