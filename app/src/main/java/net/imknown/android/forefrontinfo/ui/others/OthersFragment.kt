@@ -121,8 +121,10 @@ class OthersFragment : BaseListFragment() {
         text.substringAfter("[").substringBefore(']').trimIndent()
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
-        if (key == MyApplication.getMyString(R.string.function_raw_build_prop_key)) {
-            launch(Dispatchers.IO) {
+        super.onSharedPreferenceChanged(sharedPreferences, key)
+
+        launch(Dispatchers.IO) {
+            if (key == MyApplication.getMyString(R.string.function_raw_build_prop_key)) {
                 collectionDatasetCaller(500)
             }
         }

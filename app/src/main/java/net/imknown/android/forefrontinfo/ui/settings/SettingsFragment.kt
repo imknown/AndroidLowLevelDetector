@@ -56,11 +56,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
         val scrollBarModePref =
             findPreference<ListPreference>(MyApplication.getMyString(R.string.interface_scroll_bar_key))!!
         scrollBarModePref.setOnPreferenceChangeListener { _: Preference, newValue: Any ->
-            launch {
-                if (isActivityAndFragmentOk(this@SettingsFragment)) {
-                    setScrollBarMode(listView, newValue.toString())
-                }
-            }
+            onScrollBarChanged(newValue.toString())
 
             true
         }
@@ -140,6 +136,14 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
             }
         )
     }
+
+    // region [Scroll bar]
+    private fun onScrollBarChanged(value: String) = launch(Dispatchers.IO) {
+        if (isActivityAndFragmentOk(this@SettingsFragment)) {
+            setScrollBarMode(listView, value)
+        }
+    }
+    // endregion [Scroll bar]
 
     // region [Raw build]
     private fun onRawBuildPropChanged() = launch(Dispatchers.IO) {
