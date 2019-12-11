@@ -44,7 +44,7 @@ open class MyApplication : Application(), CoroutineScope by MainScope() {
         }
     }
 
-    internal fun setMyTheme(themesValue: String) = launch(Dispatchers.IO) {
+    internal fun setMyTheme(themesValue: String) = launch(Dispatchers.Default) {
         @AppCompatDelegate.NightMode val mode = when (themesValue) {
             getMyString(R.string.interface_themes_follow_system_value) -> {
                 AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM

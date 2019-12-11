@@ -26,7 +26,7 @@ interface IFragmentView : IView {
         Toast.makeText(MyApplication.instance, text, Toast.LENGTH_LONG).show()
     }
 
-    suspend fun isActivityAndFragmentOk(fragment: Fragment) = withContext(Dispatchers.IO) {
+    suspend fun isActivityAndFragmentOk(fragment: Fragment) = withContext(Dispatchers.Default) {
         with(fragment) {
             isAdded && activity != null
                     && !activity!!.isFinishing

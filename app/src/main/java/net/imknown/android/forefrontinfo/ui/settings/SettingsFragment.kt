@@ -138,7 +138,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
     }
 
     // region [Scroll bar]
-    private fun onScrollBarChanged(value: String) = launch(Dispatchers.IO) {
+    private fun onScrollBarChanged(value: String) = launch(Dispatchers.Default) {
         if (isActivityAndFragmentOk(this@SettingsFragment)) {
             setScrollBarMode(listView, value)
         }
@@ -210,7 +210,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
         }
     }
 
-    private fun isLatestVersion(data: String) = launch(Dispatchers.IO) {
+    private fun isLatestVersion(data: String) = launch(Dispatchers.Default) {
         val githubReleaseInfo = data.fromJson<GithubReleaseInfo>()
         val remoteVersion = githubReleaseInfo.tag_name
         val currentVersion = BuildConfig.VERSION_NAME
@@ -374,7 +374,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
     // endregion [Clear apk folder]
 
     // region [Version click]
-    private fun versionClicked() = launch(Dispatchers.IO) {
+    private fun versionClicked() = launch(Dispatchers.Default) {
         if (counter > 0) {
             counter -= 1
         } else if (counter == 0) {
@@ -388,7 +388,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
     override fun showError(error: Throwable) {
         super.showError(error)
 
-        launch(Dispatchers.IO) {
+        launch(Dispatchers.Default) {
             setCheckUpdatePreferenceStatus(true)
 
             dismissProgressDialog()

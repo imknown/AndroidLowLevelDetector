@@ -92,7 +92,7 @@ class MainActivity : AppCompatActivity(), IView, CoroutineScope by MainScope() {
 
         bottomNavigationView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
 
-        launch(Dispatchers.IO) {
+        launch(Dispatchers.Default) {
             initTheme()
 
             withContext(Dispatchers.Main) {
