@@ -183,4 +183,13 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
             notFilledString
         }
     }
+
+//    @SuppressLint("PrivateApi", "DiscouragedPrivateApi")
+//    protected fun setStringProperty(key: String, value: String) {
+//        Class.forName("android.os.SystemProperties").getDeclaredMethod(
+//            "set",
+//            String::class.java,
+//            String::class.java
+//        ).invoke(null, key, value)
+//    }
 }
