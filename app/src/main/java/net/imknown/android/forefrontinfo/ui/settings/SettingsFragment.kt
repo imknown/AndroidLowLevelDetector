@@ -48,9 +48,9 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
         }
     }
 
-    private fun initViews() = launch(Dispatchers.Main) {
+    private suspend fun initViews() = withContext(Dispatchers.Main) {
         if (!isActivityAndFragmentOk(this@SettingsFragment)) {
-            return@launch
+            return@withContext
         }
 
         val scrollBarModePref =
