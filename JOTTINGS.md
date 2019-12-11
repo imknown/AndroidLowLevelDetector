@@ -50,7 +50,7 @@ busybox (https://busybox.net/downloads/binaries/)
 ------
 
 ``` sh
-adb shell getforce
+adb shell getenforce
 ```
 
 - root: `/sys/fc/selinux/policyvers`
