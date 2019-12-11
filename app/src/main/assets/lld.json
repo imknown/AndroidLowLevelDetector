@@ -1,5 +1,5 @@
 {
-  "version": "2019-12-08 21:52",
+  "version": "2019-12-11 14:22",
   "desc": "",
   "url": "",
   "android": {
@@ -83,12 +83,12 @@
   },
   "webView": {
     "stable": {
-      "version": "78.0.3904.108",
+      "version": "79.0.3945.79",
       "desc": "",
       "url": "https://www.chromium.org/developers/calendar"
     },
     "beta": {
-      "version": "79.0.3945.71",
+      "version": "79.0.3945.79",
       "desc": "",
       "url": "https://www.chromium.org/developers/calendar"
     },
@@ -98,7 +98,7 @@
       "url": "https://www.chromium.org/developers/calendar"
     },
     "canary": {
-      "version": "81.0.3989.0",
+      "version": "81.0.3991.0",
       "desc": "",
       "url": "https://www.chromium.org/developers/calendar"
     }
