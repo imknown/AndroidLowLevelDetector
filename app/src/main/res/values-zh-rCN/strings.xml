@@ -25,7 +25,7 @@
     <string name="android_info">%1$s, API %2$s</string>
     <string name="android_info_detail">我的: %1$s\n\n最新稳定: %2$s\n最低支持: %3$s\n%4$s: %5$s</string>
 
-    <string name="android_build_id_title">Android 构建 ids</string>
+    <string name="android_build_id_title">Android 构建 id</string>
     <string name="android_build_id_detail">我的: %1$s\n我的系统: %2$s\n我的供应商: %3$s\n我的 ODM: %4$s\n\n最新稳定: %5$s\n%6$s</string>
     <string name="android_build_id">%1$s (%2$s)</string>
 
