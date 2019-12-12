@@ -68,8 +68,9 @@
     <string name="chrome_developer">Chrome Developer</string>
     <string name="chrome_canary">Chrome Canary</string>
 
+    <string name="outdated_target_version_sdk_version_apk_my_first_api_level">My factory Android API level: %s\n\n</string>
     <string name="outdated_target_version_sdk_version_apk_title">Outdated targetSdkVersion system apps</string>
-    <string name="outdated_target_version_sdk_version_apk_result_none">None</string>
+    <string name="outdated_target_version_sdk_version_apk_result_none">No outdated system apps</string>
 
     <!-- Others -->
     <string name="build_brand">Brand</string>

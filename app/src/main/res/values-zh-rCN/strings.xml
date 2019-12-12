@@ -68,8 +68,9 @@
     <string name="chrome_developer">Chrome 开发者版</string>
     <string name="chrome_canary">Chrome Canary</string>
 
+    <string name="outdated_target_version_sdk_version_apk_my_first_api_level">我的出厂 Android API 等级: %s\n\n</string>
     <string name="outdated_target_version_sdk_version_apk_title">过时 targetSdkVersion 系统程序</string>
-    <string name="outdated_target_version_sdk_version_apk_result_none">无</string>
+    <string name="outdated_target_version_sdk_version_apk_result_none">没有过时的系统程序</string>
 
     <!-- 其他 -->
     <string name="build_brand">品牌</string>

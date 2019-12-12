@@ -569,42 +569,55 @@ class HomeFragment : BaseListFragment() {
     }
 
     private fun detectOutdatedTargetSdkVersionApk() {
-        var result = ""
+        val systemApkList = context?.packageManager?.getInstalledApplications(0)?.filter {
+            it.flags and (ApplicationInfo.FLAG_UPDATED_SYSTEM_APP or ApplicationInfo.FLAG_SYSTEM) > 0
+        }?.sortedBy {
+            it.targetSdkVersion
+        }
 
-        val infoList = context?.packageManager?.getInstalledApplications(0)?.filter {
-            (it.flags and (ApplicationInfo.FLAG_UPDATED_SYSTEM_APP or ApplicationInfo.FLAG_SYSTEM) > 0)
-                    && (it.targetSdkVersion < Build.VERSION.SDK_INT)
-        }?.sortedBy { it.targetSdkVersion }
+        val firstApiLevelProp = getStringProperty("ro.product.first_api_level")
 
-        infoList?.forEachIndexed { index, applicationInfo ->
+        val firstApiLevelLine = "My first API level: " + firstApiLevelProp + "\n\n"
+        var result = firstApiLevelLine
+
+        val outdatedSystemApkList = systemApkList?.filter {
+            it.targetSdkVersion < Build.VERSION.SDK_INT
+        }
+
+        outdatedSystemApkList?.forEachIndexed { index, applicationInfo ->
             result += "(${applicationInfo.targetSdkVersion}) ${applicationInfo.packageName}"
 
-            if (index != infoList.size - 1) {
+            if (index != outdatedSystemApkList.size - 1) {
                 result += "\n"
             }
         }
 
-        val allNew = result.isEmpty()
+        val noOutdatedTotally = (result == firstApiLevelLine)
 
-        @ColorInt val targetSdkVersionColor = when {
-            allNew -> {
-                COLOR_STATE_LIST_NO_PROBLEM
-            }
-            (infoList?.filter { it.targetSdkVersion < Build.VERSION_CODES.M }?.size ?: 0) > 0 -> {
+        @ColorInt val targetSdkVersionColor = if (noOutdatedTotally) {
+            result += MyApplication.getMyString(R.string.outdated_target_version_sdk_version_apk_result_none)
+
+            COLOR_STATE_LIST_NO_PROBLEM
+        } else {
+            val outdatedFirstApiLevelSystemApkList =
+                if (hasResult(firstApiLevelProp) && firstApiLevelProp != "0") {
+                    systemApkList?.filter {
+                        it.targetSdkVersion < firstApiLevelProp.toInt()
+                    }
+                } else {
+                    outdatedSystemApkList
+                }
+
+            if ((outdatedFirstApiLevelSystemApkList?.size ?: 1) > 0) {
                 COLOR_STATE_LIST_CRITICAL
-            }
-            else -> {
+            } else {
                 COLOR_STATE_LIST_WARNING
             }
         }
 
         add(
             MyApplication.getMyString(R.string.outdated_target_version_sdk_version_apk_title),
-            if (allNew) {
-                MyApplication.getMyString(R.string.outdated_target_version_sdk_version_apk_result_none)
-            } else {
-                result
-            },
+            result,
             targetSdkVersionColor
         )
     }
