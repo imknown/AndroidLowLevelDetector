@@ -12,6 +12,7 @@ data class Lld(
     @Keep
     data class Androids(
         val securityPatchLevel: String,
+        val build: Build,
         val stable: Android,
         val support: Android,
         val alpha: Android,
@@ -23,6 +24,17 @@ data class Lld(
             val codename: String,
             val api: String
         ) : BaseInfo()
+
+        @Keep
+        data class Build(
+            val details: List<Detail>
+        ) : BaseInfo() {
+            @Keep
+            data class Detail(
+                val id: String,
+                val revision: String
+            )
+        }
     }
 
     @Keep

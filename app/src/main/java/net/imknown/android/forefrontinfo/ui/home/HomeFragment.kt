@@ -248,6 +248,49 @@ class HomeFragment : BaseListFragment() {
         )
     }
 
+    private fun detectBuildId(lld: Lld) {
+        val buildIdResult = getStringProperty("ro.build.id")
+        val systemBuildIdResult = getStringProperty("ro.system.build.id")
+        val vendorBuildIdResult = getStringProperty("ro.vendor.build.id")
+        val odmBuildIdResult = getStringProperty("ro.odm.build.id")
+
+        var builds = ""
+        val details = lld.android.build.details
+        details.forEachIndexed { index, detail ->
+            builds += MyApplication.getMyString(
+                R.string.android_build_id,
+                detail.id,
+                detail.revision
+            )
+
+            if (index != details.size - 1) {
+                builds += "\n"
+            }
+        }
+
+        @ColorInt val buildIdColor = when {
+            details.map { it.id }.contains(buildIdResult) -> COLOR_STATE_LIST_NO_PROBLEM
+            isLatestStableAndroid(lld) -> COLOR_STATE_LIST_WARNING
+            else -> COLOR_STATE_LIST_CRITICAL
+        }
+
+        add(
+            MyApplication.getMyString(
+                R.string.android_build_id_title
+            ),
+            MyApplication.getMyString(
+                R.string.android_build_id_detail,
+                buildIdResult,
+                systemBuildIdResult,
+                vendorBuildIdResult,
+                odmBuildIdResult,
+                lld.android.build.version,
+                builds
+            ),
+            buildIdColor
+        )
+    }
+
     private fun detectSecurityPatch(lld: Lld, securityPatch: String, @StringRes titleId: Int) {
         val lldSecurityPatch = lld.android.securityPatchLevel
         @ColorInt val securityPatchColor = when {
@@ -520,6 +563,8 @@ class HomeFragment : BaseListFragment() {
         createNewTempDataset()
 
         detectAndroid(lld)
+
+        detectBuildId(lld)
 
         var securityPatch = if (isAtLeastAndroid6()) {
             BUILD_VERSION_SECURITY_PATCH

@@ -1,9 +1,28 @@
 {
-  "version": "2019-12-12 10:55",
+  "version": "2019-12-12 17:50",
   "desc": "",
   "url": "",
   "android": {
     "securityPatchLevel": "2019-12-05",
+    "build": {
+      "version": "2019-12-10",
+      "desc": "",
+      "url": "https://source.android.com/setup/start/build-numbers?hl=en#source-code-tags-and-builds, https://android.googlesource.com/platform/frameworks/base/+refs",
+      "details": [
+        {
+          "id": "QQ1C.191205.016.A1",
+          "revision": "r20"
+        },
+        {
+          "id": "QQ1B.191205.012.A1",
+          "revision": "r19"
+        },
+        {
+          "id": "QQ1B.191205.011",
+          "revision": "r18"
+        }
+      ]
+    },
     "stable": {
       "active": true,
       "codename": "Q",
