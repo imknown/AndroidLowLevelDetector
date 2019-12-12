@@ -1,5 +1,5 @@
 {
-  "version": "2019-12-12 17:50",
+  "version": "2019-12-12 20:28",
   "desc": "",
   "url": "",
   "android": {
@@ -118,12 +118,12 @@
       "url": "https://www.chromium.org/developers/calendar"
     },
     "dev": {
-      "version": "80.0.3983.0",
+      "version": "80.0.3987.9",
       "desc": "",
       "url": "https://www.chromium.org/developers/calendar"
     },
     "canary": {
-      "version": "81.0.3991.0",
+      "version": "81.0.3993.0",
       "desc": "",
       "url": "https://www.chromium.org/developers/calendar"
     }
