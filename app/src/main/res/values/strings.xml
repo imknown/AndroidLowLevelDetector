@@ -77,7 +77,7 @@
     <string name="build_hardware">SoC/Kernel source provider</string>
     <string name="build_board">SoC model</string>
 
-    <string name="os_arch">ROM current using ABI</string>
+    <string name="os_arch">ROM current using architecture</string>
     <string name="build_cpu_abi">CPU current using ABI</string>
     <string name="build_supported_32_bit_abis">Supported 32bit CPU ABIs</string>
     <string name="build_supported_64_bit_abis">Supported 64bit CPU ABIs</string>
@@ -89,8 +89,7 @@
     <string name="build_time">ROM build time</string>
     <string name="build_base_os">ROM based on (Secondary development)</string>
     <string name="build_fingerprint">Stock ROM fingerprint</string>
-    <string name="build_display">Android build ID</string>
-    <string name="build_id">Android Git reversion</string>
+    <string name="build_display">Android display id</string>
     <string name="build_incremental">Android Git commit hash</string>
     <string name="build_type">ROM build type</string>
     <string name="build_tags">ROM build tags</string>

@@ -31,7 +31,7 @@ class OthersFragment : BaseListFragment() {
     private suspend fun fillDataset() {
         createNewTempDataset()
 
-        //
+        // region [Basic]
         add(MyApplication.getMyString(R.string.build_brand), Build.BRAND)
         add(MyApplication.getMyString(R.string.build_manufacturer), Build.MANUFACTURER)
         add(MyApplication.getMyString(R.string.build_model), Build.MODEL)
@@ -39,8 +39,9 @@ class OthersFragment : BaseListFragment() {
         add(MyApplication.getMyString(R.string.build_product), Build.PRODUCT)
         add(MyApplication.getMyString(R.string.build_hardware), Build.HARDWARE)
         add(MyApplication.getMyString(R.string.build_board), Build.BOARD)
+        // endregion [Basic]
 
-        //
+        // region [Arch & ABI]
         add(MyApplication.getMyString(R.string.os_arch), System.getProperty("os.arch").toString())
         @Suppress("DEPRECATION")
         add(MyApplication.getMyString(R.string.build_cpu_abi), Build.CPU_ABI)
@@ -52,8 +53,9 @@ class OthersFragment : BaseListFragment() {
             MyApplication.getMyString(R.string.build_supported_64_bit_abis),
             Build.SUPPORTED_64_BIT_ABIS.asList().toString()
         )
+        // endregion [Arch & ABI]
 
-        //
+        // endregion [ROM]
         add(MyApplication.getMyString(R.string.build_user), Build.USER)
         add(MyApplication.getMyString(R.string.build_HOST), Build.HOST)
         val time =
@@ -64,15 +66,16 @@ class OthersFragment : BaseListFragment() {
         }
         add(MyApplication.getMyString(R.string.build_fingerprint), Build.FINGERPRINT)
         add(MyApplication.getMyString(R.string.build_display), Build.DISPLAY)
-        add(MyApplication.getMyString(R.string.build_id), Build.ID)
         add(MyApplication.getMyString(R.string.build_incremental), Build.VERSION.INCREMENTAL)
         add(MyApplication.getMyString(R.string.build_type), Build.TYPE)
         add(MyApplication.getMyString(R.string.build_tags), Build.TAGS)
         add(MyApplication.getMyString(R.string.build_codename), Build.VERSION.CODENAME)
+        // endregion [ROM]
 
-        //
+        // endregion [Others]
         add(MyApplication.getMyString(R.string.build_bootloader), Build.BOOTLOADER)
         add(MyApplication.getMyString(R.string.build_radio), Build.getRadioVersion())
+        // endregion [Others]
 
         getProp()
     }

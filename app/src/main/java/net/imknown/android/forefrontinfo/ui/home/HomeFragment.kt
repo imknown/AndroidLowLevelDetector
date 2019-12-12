@@ -54,7 +54,7 @@ class HomeFragment : BaseListFragment() {
 
         // https://source.android.com/setup/start/build-numbers?hl=en#source-code-tags-and-builds
         // https://android.googlesource.com/platform/frameworks/base/+refs"
-        private const val PROP_RO_BUILD_ID = "ro.build.id"
+        private val BUILD_RO_BUILD_ID = Build.ID
         private const val PROP_RO_SYSTEM_BUILD_ID = "ro.system.build.id"
         private const val PROP_RO_VENDOR_BUILD_ID = "ro.vendor.build.id"
         private const val PROP_RO_ODM_BUILD_ID = "ro.odm.build.id"
@@ -256,7 +256,7 @@ class HomeFragment : BaseListFragment() {
     }
 
     private fun detectBuildId(lld: Lld) {
-        val buildIdResult = getStringProperty(PROP_RO_BUILD_ID)
+        val buildIdResult = BUILD_RO_BUILD_ID
         val systemBuildIdResult = getStringProperty(PROP_RO_SYSTEM_BUILD_ID, isAtLeastAndroid9())
         val vendorBuildIdResult = getStringProperty(PROP_RO_VENDOR_BUILD_ID, isAtLeastAndroid9())
         val odmBuildIdResult = getStringProperty(PROP_RO_ODM_BUILD_ID, isAtLeastAndroid9())

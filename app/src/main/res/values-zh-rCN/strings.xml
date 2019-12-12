@@ -78,9 +78,9 @@
     <string name="build_board">SoC 型号</string>
 
     <string name="os_arch">系统正在使用的架构</string>
-    <string name="build_cpu_abi">CPU 正在使用的架构</string>
-    <string name="build_supported_32_bit_abis">支持的 32位 CPU 架构</string>
-    <string name="build_supported_64_bit_abis">支持的 64位 CPU 架构</string>
+    <string name="build_cpu_abi">CPU 正在使用的应用二进制接口</string>
+    <string name="build_supported_32_bit_abis">支持的 32位 CPU 应用二进制接口</string>
+    <string name="build_supported_64_bit_abis">支持的 64位 CPU 应用二进制接口</string>
 
     <string name="build_preview_sdk_int">Android 预览 API 等级 (0: 非预览版)</string>
 
@@ -89,8 +89,7 @@
     <string name="build_time">ROM 构建时间</string>
     <string name="build_base_os">基于的系统 (二次开发)</string>
     <string name="build_fingerprint">原机系统 指纹</string>
-    <string name="build_display">Android 构建 ID</string>
-    <string name="build_id">Android Git 修订号</string>
+    <string name="build_display">Android 展示 id</string>
     <string name="build_incremental">Android Git 提交的 Hash</string>
     <string name="build_type">ROM 构建类型</string>
     <string name="build_tags">ROM 构建描述标签</string>
