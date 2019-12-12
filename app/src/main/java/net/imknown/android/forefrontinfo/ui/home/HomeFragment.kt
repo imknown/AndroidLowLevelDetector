@@ -257,9 +257,9 @@ class HomeFragment : BaseListFragment() {
 
     private fun detectBuildId(lld: Lld) {
         val buildIdResult = getStringProperty(PROP_RO_BUILD_ID)
-        val systemBuildIdResult = getStringProperty(PROP_RO_SYSTEM_BUILD_ID, isAtLeastAndroid8())
-        val vendorBuildIdResult = getStringProperty(PROP_RO_VENDOR_BUILD_ID, isAtLeastAndroid8())
-        val odmBuildIdResult = getStringProperty(PROP_RO_ODM_BUILD_ID, isAtLeastAndroid8())
+        val systemBuildIdResult = getStringProperty(PROP_RO_SYSTEM_BUILD_ID, isAtLeastAndroid9())
+        val vendorBuildIdResult = getStringProperty(PROP_RO_VENDOR_BUILD_ID, isAtLeastAndroid9())
+        val odmBuildIdResult = getStringProperty(PROP_RO_ODM_BUILD_ID, isAtLeastAndroid9())
 
         var builds = ""
         val details = lld.android.build.details
