@@ -8,10 +8,9 @@ Help you finding out whether your phone provider had implement the latest featur
 - https://gitee.com/imknown/AndroidLowLevelDetector (Mirror)
 
 ## Download
-- Approach 1
-https://github.com/imknown/AndroidLowLevelDetector/releases
-- Approach 2
-https://coolapk.com/apk/net.imknown.android.forefrontinfo
+1. https://play.google.com/store/apps/details?id=net.imknown.android.forefrontinfo
+2. https://github.com/imknown/AndroidLowLevelDetector/releases
+3. https://coolapk.com/apk/net.imknown.android.forefrontinfo
 
 ## Screenshots
 ![Home](art/home.png "Home") ![Others](art/others.png "Others") ![Settings](art/settings.png "Settings")
