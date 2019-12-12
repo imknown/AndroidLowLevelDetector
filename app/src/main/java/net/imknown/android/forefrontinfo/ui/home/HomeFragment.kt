@@ -52,6 +52,13 @@ class HomeFragment : BaseListFragment() {
         private val BUILD_VERSION_RELEASE = Build.VERSION.RELEASE
         private val BUILD_VERSION_SDK_INT = Build.VERSION.SDK_INT
 
+        // https://source.android.com/setup/start/build-numbers?hl=en#source-code-tags-and-builds
+        // https://android.googlesource.com/platform/frameworks/base/+refs"
+        private const val PROP_RO_BUILD_ID = "ro.build.id"
+        private const val PROP_RO_SYSTEM_BUILD_ID = "ro.system.build.id"
+        private const val PROP_RO_VENDOR_BUILD_ID = "ro.vendor.build.id"
+        private const val PROP_RO_ODM_BUILD_ID = "ro.odm.build.id"
+
         // https://source.android.com/security/bulletin
         private val BUILD_VERSION_SECURITY_PATCH by lazy {
             // Suppress because of lazy already
@@ -249,10 +256,10 @@ class HomeFragment : BaseListFragment() {
     }
 
     private fun detectBuildId(lld: Lld) {
-        val buildIdResult = getStringProperty("ro.build.id")
-        val systemBuildIdResult = getStringProperty("ro.system.build.id")
-        val vendorBuildIdResult = getStringProperty("ro.vendor.build.id")
-        val odmBuildIdResult = getStringProperty("ro.odm.build.id")
+        val buildIdResult = getStringProperty(PROP_RO_BUILD_ID)
+        val systemBuildIdResult = getStringProperty(PROP_RO_SYSTEM_BUILD_ID, isAtLeastAndroid8())
+        val vendorBuildIdResult = getStringProperty(PROP_RO_VENDOR_BUILD_ID, isAtLeastAndroid8())
+        val odmBuildIdResult = getStringProperty(PROP_RO_ODM_BUILD_ID, isAtLeastAndroid8())
 
         var builds = ""
         val details = lld.android.build.details
