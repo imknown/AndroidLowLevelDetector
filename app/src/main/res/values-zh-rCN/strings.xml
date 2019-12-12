@@ -125,7 +125,7 @@
 
     <string name="network_title">网络</string>
     <string name="network_allow_network_data_title">允许网络数据</string>
-    <string name="network_allow_network_data_summary">若启用, 数据将优先从远端网络服务器获取, 并被缓存在本地存储. 每次请求大概 2KB, 不会收集任何私人信息.</string>
+    <string name="network_allow_network_data_summary">若启用, 数据将优先从远端网络服务器获取, 并被缓存在本地存储.</string>
 
     <string name="about_title">关于</string>
 
@@ -135,6 +135,10 @@
 
     <string name="about_source_title">源码</string>
     <string name="about_source_summary">本程序源码的 Github 地址</string>
+
+    <string name="about_privacy_policy_title">隐私政策</string>
+    <string name="about_privacy_policy_summary">看看使用本程序时会发生什么</string>
+    <string name="about_privacy_policy">https://github.com/imknown/AndroidLowLevelDetector/blob/master/GOOGLE_PLAY_PRIVACY_POLICY.md</string>
 
     <string name="about_licenses_title">协议</string>
     <string name="about_licenses_summary">引用的开源库</string>

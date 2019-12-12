@@ -76,6 +76,16 @@
 
         <Preference
             app:iconSpaceReserved="false"
+            app:summary="@string/about_privacy_policy_summary"
+            app:title="@string/about_privacy_policy_title">
+
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/about_privacy_policy" />
+        </Preference>
+
+        <Preference
+            app:iconSpaceReserved="false"
             app:summary="@string/about_licenses_summary"
             app:title="@string/about_licenses_title">
 
