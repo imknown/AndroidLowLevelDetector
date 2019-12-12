@@ -18,8 +18,8 @@
     <string name="title_settings">Settings</string>
 
     <!-- Home -->
-    <string name="result_enabled">Enabled.</string>
-    <string name="result_disabled_or_not_supported">Disabled or not supported.</string>
+    <string name="result_supported">Supported</string>
+    <string name="result_not_supported">Not supported</string>
 
     <string name="android_info_title">Android version</string>
     <string name="android_info">%1$s, API %2$s</string>

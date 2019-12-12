@@ -18,8 +18,8 @@
     <string name="title_settings">设置</string>
 
     <!-- 首页 -->
-    <string name="result_enabled">已启用.</string>
-    <string name="result_disabled_or_not_supported">已禁用 或 不支持.</string>
+    <string name="result_supported">支持</string>
+    <string name="result_not_supported">不支持</string>
 
     <string name="android_info_title">Android 版本</string>
     <string name="android_info">%1$s, API %2$s</string>
