@@ -301,6 +301,7 @@ class HomeFragment : BaseListFragment() {
     private fun detectSecurityPatch(lld: Lld, securityPatch: String, @StringRes titleId: Int) {
         val lldSecurityPatch = lld.android.securityPatchLevel
         @ColorInt val securityPatchColor = when {
+            !hasResult(securityPatch) -> COLOR_STATE_LIST_CRITICAL
             securityPatch >= lldSecurityPatch -> COLOR_STATE_LIST_NO_PROBLEM
             getSecurityPatchYearMonth(securityPatch) >= getSecurityPatchYearMonth(lldSecurityPatch) -> COLOR_STATE_LIST_WARNING
             else -> COLOR_STATE_LIST_CRITICAL
@@ -580,11 +581,7 @@ class HomeFragment : BaseListFragment() {
         }
         detectSecurityPatch(lld, securityPatch, R.string.security_patch_level_title)
 
-        securityPatch = if (isAtLeastAndroid9()) {
-            MyApplication.getMyString(R.string.build_not_filled)
-        } else {
-            getStringProperty(PROP_VENDOR_SECURITY_PATCH)
-        }
+        securityPatch = getStringProperty(PROP_VENDOR_SECURITY_PATCH, isAtLeastAndroid9())
         detectSecurityPatch(lld, securityPatch, R.string.vendor_security_patch_level_title)
 
         detectKernel(lld)
