@@ -1,5 +1,5 @@
 {
-  "version": "2019-12-11 14:22",
+  "version": "2019-12-12 10:55",
   "desc": "",
   "url": "",
   "android": {
@@ -38,10 +38,13 @@
     }
   },
   "linux": {
+    "version": "",
+    "desc": "",
+    "url": "https://source.android.com/setup/build/building-kernels#downloading, https://source.android.com/devices/architecture/kernel/android-common",
     "stable": {
       "version": "4.14.157",
       "desc": "",
-      "url": "https://android.googlesource.com/kernel/common/+/refs/tags/ASB-2019-12-05_4.14/Makefile, https://source.android.com/setup/build/building-kernels#downloading"
+      "url": "https://android.googlesource.com/kernel/common/+/refs/tags/ASB-2019-12-05_4.14/Makefile"
     },
     "support": {
       "version": "3.18.140",
@@ -60,6 +63,9 @@
     }
   },
   "toybox": {
+    "version": "",
+    "desc": "",
+    "url": "",
     "stable": {
       "version": "0.8.0",
       "desc": "",
