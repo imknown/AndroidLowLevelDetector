@@ -171,16 +171,14 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
 
     @SuppressLint("PrivateApi")
     protected fun getStringProperty(key: String, condition: Boolean = true): String {
-        val notFilledString = MyApplication.getMyString(R.string.build_not_filled)
-
         return if (condition) {
             Class.forName("android.os.SystemProperties").getDeclaredMethod(
                 "get",
                 String::class.java,
                 String::class.java
-            ).invoke(null, key, notFilledString) as String
+            ).invoke(null, key, MyApplication.getMyString(R.string.build_not_filled)) as String
         } else {
-            notFilledString
+            MyApplication.getMyString(R.string.result_not_supported)
         }
     }
 

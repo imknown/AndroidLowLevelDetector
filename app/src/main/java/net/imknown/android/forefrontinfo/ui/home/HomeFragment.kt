@@ -598,15 +598,17 @@ class HomeFragment : BaseListFragment() {
     }
 
     private fun hasResult(result: String) =
-        result.isNotEmpty() && result != MyApplication.getMyString(R.string.build_not_filled)
+        result.isNotEmpty()
+                && result != MyApplication.getMyString(R.string.result_not_supported)
+                && result != MyApplication.getMyString(R.string.build_not_filled)
 
     private fun hasResult(result: List<String>) = result.isNotEmpty() && result[0].isNotEmpty()
 
     private fun translate(condition: Boolean) = MyApplication.getMyString(
         if (condition) {
-            R.string.result_enabled
+            R.string.result_supported
         } else {
-            R.string.result_disabled_or_not_supported
+            R.string.result_not_supported
         }
     )
 }
