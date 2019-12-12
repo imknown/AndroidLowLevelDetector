@@ -23,7 +23,7 @@
 
     <string name="android_info_title">Android 版本</string>
     <string name="android_info">%1$s, API %2$s</string>
-    <string name="android_info_detail">我的: %1$s\n最新稳定: %2$s\n最低支持: %3$s\n%4$s: %5$s</string>
+    <string name="android_info_detail">我的: %1$s\n\n最新稳定: %2$s\n最低支持: %3$s\n%4$s: %5$s</string>
 
     <string name="android_build_id_title">Android 构建 ids</string>
     <string name="android_build_id_detail">我的: %1$s\n我的系统: %2$s\n我的供应商: %3$s\n我的 ODM: %4$s\n\n最新稳定: %5$s\n%6$s</string>
@@ -31,10 +31,10 @@
 
     <string name="security_patch_level_title">Android 安全补丁等级</string>
     <string name="vendor_security_patch_level_title">供应商 安全补丁等级</string>
-    <string name="security_patch_level_detail">我的: %1$s\n最新: %2$s</string>
+    <string name="security_patch_level_detail">我的: %1$s\n\n最新: %2$s</string>
 
     <string name="linux_title">Linux 版本</string>
-    <string name="linux_version_detail">我的: %1$s\n最新稳定: %2$s\n最低支持: %3$s\n主线: %4$s</string>
+    <string name="linux_version_detail">我的: %1$s\n\n最新稳定: %2$s\n最低支持: %3$s\n主线: %4$s</string>
 
     <string name="ab_seamless_update_enabled_title">A/B 无缝升级 状态</string>
     <string name="rom_total_size_result">\u0020(总 ROM: ~%sGB)</string>
@@ -52,7 +52,7 @@
 
     <string name="toybox_built_in_title">内建 Toybox 版本</string>
     <string name="built_in_toybox_version_result">\u0020(%s)</string>
-    <string name="toybox_built_in_detail">我的: %1$s\n最新稳定: %2$s\n最低支持: %3$s\n主线: %4$s\nMaster: %5$s</string>
+    <string name="toybox_built_in_detail">我的: %1$s\n\n最新稳定: %2$s\n最低支持: %3$s\n主线: %4$s\nMaster: %5$s</string>
 
     <string name="webview_title">WebView 版本</string>
     <string name="webview_detail">稳定版: %1$s\n测试版: %2$s\n开发者版: %3$s\nCanary: %4$s</string>
