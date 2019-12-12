@@ -1,5 +1,6 @@
 package net.imknown.android.forefrontinfo.ui.home
 
+import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.os.Build
 import android.util.Log
@@ -567,6 +568,47 @@ class HomeFragment : BaseListFragment() {
         return "$desc\n$appName\n$versionName"
     }
 
+    private fun detectOutdatedTargetSdkVersionApk() {
+        var result = ""
+
+        val infoList = context?.packageManager?.getInstalledApplications(0)?.filter {
+            (it.flags and (ApplicationInfo.FLAG_UPDATED_SYSTEM_APP or ApplicationInfo.FLAG_SYSTEM) > 0)
+                    && (it.targetSdkVersion < Build.VERSION.SDK_INT)
+        }?.sortedBy { it.targetSdkVersion }
+
+        infoList?.forEachIndexed { index, applicationInfo ->
+            result += "(${applicationInfo.targetSdkVersion}) ${applicationInfo.packageName}"
+
+            if (index != infoList.size - 1) {
+                result += "\n"
+            }
+        }
+
+        val allNew = result.isEmpty()
+
+        @ColorInt val targetSdkVersionColor = when {
+            allNew -> {
+                COLOR_STATE_LIST_NO_PROBLEM
+            }
+            (infoList?.filter { it.targetSdkVersion < Build.VERSION_CODES.M }?.size ?: 0) > 0 -> {
+                COLOR_STATE_LIST_CRITICAL
+            }
+            else -> {
+                COLOR_STATE_LIST_WARNING
+            }
+        }
+
+        add(
+            MyApplication.getMyString(R.string.outdated_target_version_sdk_version_apk_title),
+            if (allNew) {
+                MyApplication.getMyString(R.string.outdated_target_version_sdk_version_apk_result_none)
+            } else {
+                result
+            },
+            targetSdkVersionColor
+        )
+    }
+
     private fun fillDataset(lld: Lld) {
         createNewTempDataset()
 
@@ -599,6 +641,8 @@ class HomeFragment : BaseListFragment() {
         detectToybox(lld)
 
         detectWebView(lld)
+
+        detectOutdatedTargetSdkVersionApk()
     }
 
     private fun hasResult(result: String) =

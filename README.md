@@ -27,6 +27,7 @@ Help you finding out whether your phone provider had implement the latest featur
 - detect (flattened) APEX
 - detect Toybox
 - detect WebView implement
+- detect outdatedTargetSdkVersion apk
 - dark mode supported
 - online/offline mode (fetching data from remote server or local)
 - in-app check up and upgrade
@@ -39,7 +40,6 @@ Help you finding out whether your phone provider had implement the latest featur
 - detect dm-verity (version)
 - detect FBE/FDE
 - detect HAL
-- detect targetSdkVersion
 - Android version market share
 - OpenGL ES/Vulkan/GPU Driver version
 - icu (https://developer.android.com/guide/topics/resources/internationalization)
