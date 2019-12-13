@@ -118,6 +118,8 @@ class HomeFragment : BaseListFragment() {
         private const val CHROME_BETA_PACKAGE_NAME = "com.chrome.beta"
         private const val CHROME_DEV_IN_PACKAGE_NAME = "com.chrome.dev"
         private const val CHROME_CANARY_PACKAGE_NAME = "com.chrome.canary"
+
+        private const val PROP_RO_PRODUCT_FIRST_API_LEVEL = "ro.product.first_api_level"
     }
 
     private fun copyJsonIfNeeded() {
@@ -575,9 +577,12 @@ class HomeFragment : BaseListFragment() {
             it.targetSdkVersion
         }
 
-        val firstApiLevelProp = getStringProperty("ro.product.first_api_level")
+        val firstApiLevelProp = getStringProperty(PROP_RO_PRODUCT_FIRST_API_LEVEL)
 
-        val firstApiLevelLine = "My first API level: " + firstApiLevelProp + "\n\n"
+        val firstApiLevelLine = MyApplication.getMyString(
+            R.string.outdated_target_version_sdk_version_apk_my_first_api_level,
+            firstApiLevelProp
+        )
         var result = firstApiLevelLine
 
         val outdatedSystemApkList = systemApkList?.filter {
