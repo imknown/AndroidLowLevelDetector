@@ -16,7 +16,8 @@
   
 - android.permission.REQUEST_INSTALL_PACKAGES
   - User uses this permission to upgrade the app
-  - This permission is only used when user download and install the latest version apk in settings manually
+  - This permission is only used when user downloads and installs the latest version apk in settings manually
+  - This permission does not influence the apk distributed by Google Play Store
 
 ## Security
 
