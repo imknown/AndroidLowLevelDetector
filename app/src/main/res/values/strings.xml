@@ -55,7 +55,7 @@
     <string name="toybox_built_in_detail">Mine: %1$s\n\nLatest stable: %2$s\nLowest support: %3$s\nMainline: %4$s\nMaster: %5$s</string>
 
     <string name="webview_title">WebView version</string>
-    <string name="webview_detail">WebView\nStable: %1$s\nBeta: %2$s\nDeveloper: %3$s\nCanary: %4$s</string>
+    <string name="webview_detail">WebView\nLatest stable: %1$s\nLatest beta: %2$s\nLatest developer: %3$s\nLatest Canary: %4$s</string>
     <string name="webview_built_in_version">My AOSP built-in WebView</string>
     <string name="webview_implement_version">My WebView implementation</string>
     <string name="webview_built_in">Built-in WebView</string>
