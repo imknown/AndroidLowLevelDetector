@@ -1,0 +1,167 @@
+<resources>
+    <string name="app_name">LowLevelDetector</string>
+
+    <string name="translation_language_and_translator">Français (FR), traducteur: LiteApplication</string>
+    <string name="translator_website">https://litepress.ddns.net</string>
+    <string name="translator_more_info">https://github.com/LiteApplication</string>
+
+    <!-- Data -->
+    <string name="lld_json_loading">CHARGEMENT DES DONNÉES 📲</string>
+    <string name="lld_json_offline">DONNÉES HORS-LIGNE 📴 (%s)</string>
+    <string name="lld_json_online">DONNÉES ENLIGNE 📱 (%s)</string>
+    <string name="lld_json_download_failed">Impossible d\'atteindre les données en ligne.\nUtilisation des données locales.\n\n%s</string>
+    <string name="lld_json_parse_failed">Impossible de parser les données.\nEssayez de mettre à jour l\'application.\n\n%s</string>
+
+    <!-- Tab -->
+    <string name="title_home">Menu</string>
+    <string name="title_others">Autres</string>
+    <string name="title_settings">Paramètres</string>
+
+    <!-- Home -->
+    <string name="result_supported">Supporté</string>
+    <string name="result_not_supported">Non supporté</string>
+
+    <string name="android_info_title">Version d\'Android</string>
+    <string name="android_info">%1$s, API %2$s</string>
+    <string name="android_info_detail">Moi: %1$s\n\nDernière stable: %2$s\nPlus faible prise en charge: %3$s\n%4$s: %5$s</string>
+
+    <string name="android_build_id_title">Id de build Android</string>
+    <string name="android_build_id_detail">Moi: %1$s\nMon system: %2$s\nMon vendor: %3$s\nMon ODM: %4$s\n\nDernière stable: %5$s\n%6$s</string>
+    <string name="android_build_id">%1$s (%2$s)</string>
+
+    <string name="security_patch_level_title">Niveau du patch de sécurité Android</string>
+    <string name="vendor_security_patch_level_title">Niveau du patch de sécurité Vendor</string>
+    <string name="security_patch_level_detail">Moi: %1$s\n\nDernier: %2$s</string>
+
+    <string name="linux_title">Version de Linux</string>
+    <string name="linux_version_detail">Moi: %1$s\n\nDernière stable: %2$s\nPlus faible support: %3$s\nLigne principale: %4$s</string>
+
+    <string name="ab_seamless_update_enabled_title">Mise à jour A/B seamless</string>
+    <string name="rom_total_size_result">\u0020(Total ROM: ~%sGB)</string>
+    <string name="current_using_ab_slot_result">\u0020(Slot utilisé: %s)</string>
+
+    <string name="treble_enabled_title">Status du Projet Treble</string>
+
+    <string name="vndk_built_in_title">Status du NDK VEndor integré</string>
+    <string name="built_in_vndk_version_result">\u0020(Niveau: %s)</string>
+
+    <string name="sar_enabled_title">Status System-as-root</string>
+
+    <string name="apex_enabled_title">Status APEX</string>
+    <string name="apex_legacy_flattened">\u0020(Legacy flattened)</string>
+
+    <string name="toybox_built_in_title">Version de Toybox intégrée</string>
+    <string name="built_in_toybox_version_result">\u0020(%s)</string>
+    <string name="toybox_built_in_detail">Moi: %1$s\n\nDernier stable: %2$s\nPlus faible support: %3$s\nLgne principale: %4$s\nMaster: %5$s</string>
+
+    <string name="webview_title">Version WebView</string>
+    <string name="webview_detail">WebView\nDernier stable: %1$s\nDernier béta: %2$s\nDernier développer: %3$s\nDernier Canary: %4$s</string>
+    <string name="webview_built_in_version">Mon system WebView integré à AOSP</string>
+    <string name="webview_implement_version">Mon implémentation de WebView</string>
+    <string name="webview_built_in">WebView intégré</string>
+    <string name="webview_stable">WebView Stable</string>
+    <string name="webview_beta">WebView Beta</string>
+    <string name="webview_developer">WebView Developer</string>
+    <string name="webview_canary">WebView Canary</string>
+    <string name="chrome_stable">Chrome Stable</string>
+    <string name="chrome_beta">Chrome Beta</string>
+    <string name="chrome_developer">Chrome Developer</string>
+    <string name="chrome_canary">Chrome Canary</string>
+
+    <string name="outdated_target_version_sdk_version_apk_my_first_api_level">Niveau d\'API Android à la sortie d\'usine: %s\n\n</string>
+    <string name="outdated_target_version_sdk_version_apk_title">Les application system avec targetVersionSdk dépassé</string>
+    <string name="outdated_target_version_sdk_version_apk_result_none">Pas d\'application dépassé</string>
+
+    <!-- Others -->
+    <string name="build_brand">Marque</string>
+    <string name="build_manufacturer">Constructeur/OEM</string>
+    <string name="build_model">Nom du model</string>
+    <string name="build_device">Nom de code</string>
+    <string name="build_product">Nom global du produit</string>
+    <string name="build_hardware">Fournisseur du SoC/Kernel</string>
+    <string name="build_board">Modèle SoC</string>
+
+    <string name="os_arch">Architecture de l\'OS</string>
+    <string name="build_cpu_abi">ABI utisisé par le CPU</string>
+    <string name="build_supported_32_bit_abis">32bit CPU ABIs supportés</string>
+    <string name="build_supported_64_bit_abis">64bit CPU ABIs supportés</string>
+
+    <string name="build_preview_sdk_int"> Niveau d\'API de la prévisualisation (0: pas une version de prev.)</string>
+
+    <string name="build_user">Constructeur de la ROM</string>
+    <string name="build_HOST">Nom de la machine lors du build</string>
+    <string name="build_time">Date du build</string>
+    <string name="build_base_os">ROM basé sur (Développement secondaire)</string>
+    <string name="build_fingerprint">Empreinte de la ROM originale</string>
+    <string name="build_display">ID d\'Android</string>
+    <string name="build_incremental">Android Git commit hash</string>
+    <string name="build_type">Type de build </string>
+    <string name="build_tags">Tags de build</string>
+    <string name="build_codename">Nom de code de la branche Git d\'Android  (REL: Version stable de production)</string>
+
+    <string name="build_bootloader">Version du Bootloader</string>
+    <string name="build_radio">Version de la bande de base</string>
+
+    <string name="build_not_filled">**NON REMPLI**</string>
+
+    <!-- Settings -->
+    <string name="interface_title">Interface</string>
+    <string name="interface_scroll_bar_title">Mode de défilement</string>
+    <string name="interface_scroll_bar_summary">Cliquez ici pour voir le mode de défilement</string>
+    <string name="interface_no_scroll_bar_key">Aucun (Boones performances)</string>
+    <string name="interface_normal_scroll_bar_key">Normale</string>
+    <string name="interface_fast_scroll_bar_key">Tirrable</string>
+
+    <string name="interface_themes_title">Thème</string>
+    <string name="interface_themes_summary">Cliquez pour voir le selecteur de thème</string>
+    <string name="interface_themes_follow_system_key">Système</string>
+    <string name="interface_themes_power_saver_key">Economiseur de batterie</string>
+    <string name="interface_themes_always_light_key">Toujours clair</string>
+    <string name="interface_themes_always_dark_key">Toujours Sombre (AMOLED)</string>
+
+    <string name="function_title">Fonctions</string>
+    <string name="function_raw_build_prop_title">Voir build.prop directement</string>
+    <string name="function_raw_build_prop_summary">Voir directement les valeurs de build.prop</string>
+
+    <string name="function_let_system_manages_process_title">Laisser le système gérer les processus</string>
+    <string name="function_let_system_manages_process_summary">Lorsqu\'il est activé, le processus de cette application ne sera pas tué immédiatement lors de la fermeture de cette application, et il sera géré par le système Android. La mémoire principale ne sera pas complètement libérée, donc le temps du prochain démarrage à chaud sera réduit. Cette option n\'influence pas le glissement de cette application à partir de la liste des tâches récentes ou le retour au lanceur.</string>
+
+    <string name="network_title">Réseau</string>
+    <string name="network_allow_network_data_title">Activer les données en ligne</string>
+    <string name="network_allow_network_data_summary">Lorsque cette option est activée, les données seront préalablement extraites du serveur réseau distant, puis mises en cache sur le stockage local.</string>
+
+    <string name="about_title">À propos</string>
+
+    <string name="about_shop_title">Play Store</string>
+    <string name="about_shop_summary">Ouvre la page de l\'application dans Play Store</string>
+    <string name="about_shop">https://play.google.com/store/apps/details?id=net.imknown.android.forefrontinfo</string>
+
+    <string name="about_source_title">Code source</string>
+    <string name="about_source_summary">L\'adresse GitHub du code sourcce de l\'application</string>
+
+    <string name="about_privacy_policy_title">Politique de confidentialité</string>
+    <string name="about_privacy_policy_summary">Voyez ce qui se passe quand vous utilisez l\'application</string>
+    <string name="about_privacy_policy">https://github.com/imknown/AndroidLowLevelDetector/blob/master/GOOGLE_PLAY_PRIVACY_POLICY.md</string>
+
+    <string name="about_licenses_title">Licences</string>
+    <string name="about_licenses_summary">Les dépots open-source.</string>
+
+    <string name="about_version_title">Version</string>
+    <string name="about_version_summary">Version: %1$s (Iteration times: %2$d)\nDonnées intégrées: %3$s</string>
+    <string name="about_version_click">🐈==)  🐕===))</string>
+
+    <string name="about_check_for_update_title">Verifier les mise-à-jour</string>
+    <string name="about_check_for_update_title_checking">Verification, veuillez patienter.</string>
+    <string name="about_check_for_update_summary">Verifier si une nouvelle verion est disponible au téléchargement.</string>
+    <string name="about_check_for_update_new_version">Une nouvelle verion (V%1$s) est disponible. (%2$sM)</string>
+    <string name="about_check_for_update_already_latest">C\'est déjà la dernière version, rééssayez plus tard.</string>
+    <string name="about_check_for_update_network_error">Erreur réseau: %s</string>
+    <string name="about_check_for_update_network_empty_file">Le fichier téléchargé est vide (puet-être un timeout), veuillez verifier la qualité de votre connexion et rééssayer.</string>
+    <string name="about_check_for_update_allow_network_data_first">Autorisez les données en ligne d\'abord.</string>
+
+    <string name="about_clear_apk_folder_title">Effacer le dossier d\'APK</string>
+    <string name="about_clear_apk_folder_title_clearing">Effacement en cours…</string>
+    <string name="about_clear_apk_folder_summary">Supprime le dossier de téléchargement des installeurs</string>
+    <string name="about_clear_apk_folder_successfully">Effacement terminé</string>
+    <string name="about_clear_apk_folder_failed">Erreur lors de l\'éffacement</string>
+</resources>

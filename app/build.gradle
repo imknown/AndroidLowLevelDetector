@@ -19,7 +19,7 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        resConfigs 'zh-rCN'
+        resConfigs 'zh-rCN', 'fr-rFR'
     }
 
     signingConfigs {
