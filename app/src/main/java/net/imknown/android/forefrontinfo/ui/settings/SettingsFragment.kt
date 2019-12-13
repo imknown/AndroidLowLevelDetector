@@ -2,6 +2,7 @@ package net.imknown.android.forefrontinfo.ui.settings
 
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Looper
@@ -20,11 +21,16 @@ import net.imknown.android.forefrontinfo.base.IFragmentView
 import net.imknown.android.forefrontinfo.base.SharedViewModel
 import net.imknown.android.forefrontinfo.ui.settings.model.GithubReleaseInfo
 import java.io.File
+import java.security.MessageDigest
+import java.util.*
 
 class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineScope by MainScope() {
 
     companion object {
         fun newInstance() = SettingsFragment()
+
+        private const val GOOGLE_PUBLIC_SHA_256 =
+            "A7:0C:41:07:C1:FD:F0:3E:9A:F9:C4:6F:4B:38:18:1C:04:D0:F6:46:DA:E6:09:8C:22:45:3D:9E:D2:69:72:6C"
     }
 
     private var counter = 5
@@ -105,6 +111,8 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
             true
         }
 
+        checkUpdatePref.isVisible = !isSignedByGooglePlayStore()
+
         clearApkFolderPref =
             findPreference(MyApplication.getMyString(R.string.about_clear_apk_folder_key))!!
         clearApkFolderPref.onPreferenceClickListener = Preference.OnPreferenceClickListener {
@@ -112,6 +120,30 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
 
             true
         }
+    }
+
+    private suspend fun isSignedByGooglePlayStore() = withContext(Dispatchers.Default) {
+        val messageDigest = MessageDigest.getInstance("SHA-256")
+        val myPublicSha256 = context?.let {
+            if (isAtLeastAndroid9()) {
+                it.packageManager?.getPackageInfo(
+                    it.packageName,
+                    PackageManager.GET_SIGNING_CERTIFICATES
+                )?.signingInfo?.apkContentsSigners
+            } else {
+                @Suppress("DEPRECATION")
+                it.packageManager?.getPackageInfo(
+                    it.packageName,
+                    PackageManager.GET_SIGNATURES
+                )?.signatures
+            }
+        }?.get(0)?.let {
+            messageDigest.digest(it.toByteArray())
+                .joinToString(":") { byte -> "%02x".format(byte) }
+                .toUpperCase(Locale.ENGLISH)
+        }
+
+        return@withContext (myPublicSha256 == GOOGLE_PUBLIC_SHA_256)
     }
 
     override fun onDestroyView() {
