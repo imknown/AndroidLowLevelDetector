@@ -1,5 +1,5 @@
 {
-  "version": "2019-12-12 20:28",
+  "version": "2019-12-16 10:14",
   "desc": "",
   "url": "",
   "android": {
@@ -59,26 +59,21 @@
   "linux": {
     "version": "",
     "desc": "",
-    "url": "https://source.android.com/setup/build/building-kernels#downloading, https://source.android.com/devices/architecture/kernel/android-common",
+    "url": "https://source.android.com/setup/build/building-kernels#downloading, https://source.android.com/devices/architecture/kernel/android-common, https://www.kernel.org/",
     "stable": {
-      "version": "4.14.157",
+      "version": "4.14.158",
       "desc": "",
-      "url": "https://android.googlesource.com/kernel/common/+/refs/tags/ASB-2019-12-05_4.14/Makefile"
+      "url": "https://android.googlesource.com/kernel/common/+/refs/heads/android-4.14/Makefile"
     },
     "support": {
       "version": "3.18.140",
       "desc": "",
-      "url": "https://android.googlesource.com/kernel/common/+/refs/tags/ASB-2019-12-05_3.18/Makefile"
+      "url": "https://android.googlesource.com/kernel/common/+/refs/heads/android-3.18/Makefile"
     },
     "mainline": {
-      "version": "5.4.0",
+      "version": "5.5.0-rc1",
       "desc": "",
-      "url": "https://android.googlesource.com/kernel/common/+/refs/tags/ASB-2019-12-05_mainline/Makefile"
-    },
-    "master": {
-      "version": "",
-      "desc": "",
-      "url": ""
+      "url": "https://android.googlesource.com/kernel/common/+/refs/heads/android-mainline/Makefile"
     }
   },
   "toybox": {
@@ -88,7 +83,7 @@
     "stable": {
       "version": "0.8.0",
       "desc": "",
-      "url": "https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-10.0.0_r17/www/news.html"
+      "url": "https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-10.0.0_r20/www/news.html"
     },
     "support": {
       "version": "0.7.3",
@@ -98,7 +93,7 @@
     "mainline": {
       "version": "0.8.0",
       "desc": "",
-      "url": "https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-mainline-10.0.0_r4/www/news.html"
+      "url": "https://android.googlesource.com/platform/external/toybox/+/refs/heads/android10-mainline-release"
     },
     "master": {
       "version": "0.8.2",
