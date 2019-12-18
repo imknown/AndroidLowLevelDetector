@@ -2,7 +2,7 @@ package net.imknown.android.forefrontinfo.base
 
 import android.os.Build
 
-interface IView {
+interface IAndroidVersion {
     fun isAtLeastAndroid6() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
     fun isAtLeastAndroid7() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
     fun isAtLeastAndroid8() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O

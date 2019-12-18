@@ -10,7 +10,7 @@ import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
 
-interface IFragmentView : IView {
+interface IFragmentView : IAndroidVersion {
 
     fun showError(error: Throwable) {
         if (BuildConfig.DEBUG) {
