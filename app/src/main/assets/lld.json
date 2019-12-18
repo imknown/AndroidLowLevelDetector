@@ -1,5 +1,5 @@
 {
-  "version": "2019-12-16 10:14",
+  "version": "2019-12-18 10:34",
   "desc": "",
   "url": "",
   "android": {
@@ -61,7 +61,7 @@
     "desc": "",
     "url": "https://source.android.com/setup/build/building-kernels#downloading, https://source.android.com/devices/architecture/kernel/android-common, https://www.kernel.org/",
     "stable": {
-      "version": "4.14.158",
+      "version": "4.14.159",
       "desc": "",
       "url": "https://android.googlesource.com/kernel/common/+/refs/heads/android-4.14/Makefile"
     },
@@ -71,7 +71,7 @@
       "url": "https://android.googlesource.com/kernel/common/+/refs/heads/android-3.18/Makefile"
     },
     "mainline": {
-      "version": "5.5.0-rc1",
+      "version": "5.5.0-rc2",
       "desc": "",
       "url": "https://android.googlesource.com/kernel/common/+/refs/heads/android-mainline/Makefile"
     }
@@ -103,12 +103,12 @@
   },
   "webView": {
     "stable": {
-      "version": "79.0.3945.79",
+      "version": "79.0.3945.93",
       "desc": "",
       "url": "https://www.chromium.org/developers/calendar"
     },
     "beta": {
-      "version": "79.0.3945.79",
+      "version": "79.0.3945.93",
       "desc": "",
       "url": "https://www.chromium.org/developers/calendar"
     },
@@ -118,7 +118,7 @@
       "url": "https://www.chromium.org/developers/calendar"
     },
     "canary": {
-      "version": "81.0.3993.0",
+      "version": "81.0.3999.0",
       "desc": "",
       "url": "https://www.chromium.org/developers/calendar"
     }
