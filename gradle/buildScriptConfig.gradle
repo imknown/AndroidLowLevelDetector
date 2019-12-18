@@ -42,7 +42,7 @@ ext {
 
             // https://github.com/Kotlin/kotlinx.coroutines/releases
             // https://bintray.com/kotlin/kotlinx/kotlinx.coroutines
-            coroutines: '1.3.2'
+            coroutines: '1.3.3'
     ]
 
     thirdParties = [
