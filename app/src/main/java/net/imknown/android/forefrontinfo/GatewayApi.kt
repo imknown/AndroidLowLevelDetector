@@ -30,7 +30,7 @@ class GatewayApi {
             success: (ByteArray) -> Unit,
             failure: (FuelError) -> Unit
         ) {
-            val url = if (isZhCn()) {
+            val url = if (isChinaMainlandTimezone()) {
                 URL_LLD_JSON_ZH_CN
             } else {
                 URL_LLD_JSON
@@ -78,5 +78,8 @@ class GatewayApi {
             val lSC = Locale.SIMPLIFIED_CHINESE
             return (lD.language == lSC.language && lD.country == lSC.country)
         }
+
+        private fun isChinaMainlandTimezone() =
+            TimeZone.getDefault().id == "Asia/Shanghai" || TimeZone.getDefault().id == "Asia/Urumqi"
     }
 }
