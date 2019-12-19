@@ -27,7 +27,9 @@ import java.util.*
 class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineScope by MainScope() {
 
     companion object {
-        fun newInstance() = SettingsFragment()
+        suspend fun newInstance() = withContext(Dispatchers.Main) {
+            SettingsFragment()
+        }
 
         private const val GOOGLE_PUBLIC_SHA_256 =
             "A7:0C:41:07:C1:FD:F0:3E:9A:F9:C4:6F:4B:38:18:1C:04:D0:F6:46:DA:E6:09:8C:22:45:3D:9E:D2:69:72:6C"

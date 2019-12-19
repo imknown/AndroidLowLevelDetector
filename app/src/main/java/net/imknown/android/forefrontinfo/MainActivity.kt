@@ -96,9 +96,7 @@ class MainActivity : AppCompatActivity(), IAndroidVersion, CoroutineScope by Mai
             initTheme()
 
             if (savedInstanceState == null) {
-                withContext(Dispatchers.Main) {
-                    showFragment(lastId)
-                }
+                showFragment(lastId)
             }
 //            else {
 //                val fragment = supportFragmentManager.findFragmentById(R.id.container)
@@ -118,17 +116,20 @@ class MainActivity : AppCompatActivity(), IAndroidVersion, CoroutineScope by Mai
         lastId = savedInstanceState.getInt(BUNDLE_ID_LAST_ID)
     }
 
-    private fun showFragment(@IdRes selectedId: Int) {
-        supportFragmentManager.beginTransaction()
+    private fun showFragment(@IdRes selectedId: Int) = launch(Dispatchers.Default) {
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
             .setCustomAnimations(R.anim.drop_scale, FragmentTransaction.TRANSIT_NONE)
             .hide(getFragmentInstance(lastId))
             .show(getFragmentInstance(selectedId))
-            .commitNowAllowingStateLoss()
+
+        withContext(Dispatchers.Main) {
+            fragmentTransaction.commitNowAllowingStateLoss()
+        }
 
         lastId = selectedId
     }
 
-    private fun getFragmentInstance(@IdRes id: Int): Fragment {
+    private suspend fun getFragmentInstance(@IdRes id: Int): Fragment {
         var fragment = supportFragmentManager.findFragmentByTag(id.toString())
 
         if (fragment == null) {
@@ -139,7 +140,7 @@ class MainActivity : AppCompatActivity(), IAndroidVersion, CoroutineScope by Mai
         return fragment
     }
 
-    private fun createFragment(@IdRes id: Int): Fragment {
+    private suspend fun createFragment(@IdRes id: Int): Fragment {
         return when (id) {
             R.id.navigation_home -> {
                 HomeFragment.newInstance()
@@ -159,15 +160,18 @@ class MainActivity : AppCompatActivity(), IAndroidVersion, CoroutineScope by Mai
         }
     }
 
-    private fun addFragment(fragment: Fragment, @IdRes id: Int) {
+    private suspend fun addFragment(fragment: Fragment, @IdRes id: Int) {
         if (fragment.isAdded) {
             return
         }
 
-        supportFragmentManager.beginTransaction()
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
             .setCustomAnimations(R.anim.drop_scale, FragmentTransaction.TRANSIT_NONE)
             .add(R.id.container, fragment, id.toString())
-            .commitNowAllowingStateLoss()
+
+        withContext(Dispatchers.Main) {
+            fragmentTransaction.commitNowAllowingStateLoss()
+        }
     }
 
     override fun onBackPressed() {
