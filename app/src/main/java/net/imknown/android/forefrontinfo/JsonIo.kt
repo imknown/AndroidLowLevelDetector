@@ -51,8 +51,8 @@ class JsonIo {
     }
 }
 
-internal inline fun <reified T : Any> File.fromJson(): T =
+inline fun <reified T : Any> File.fromJson(): T =
     Gson().fromJson(readText(), T::class.java)
 
-internal inline fun <reified T : Any> String.fromJson(): T =
+inline fun <reified T : Any> String.fromJson(): T =
     Gson().fromJson(this, T::class.java)

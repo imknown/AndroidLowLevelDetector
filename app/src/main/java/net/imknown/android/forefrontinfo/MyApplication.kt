@@ -14,9 +14,9 @@ open class MyApplication : Application(), CoroutineScope by MainScope() {
     companion object {
         lateinit var instance: MyApplication
 
-        internal fun getApkDir() = getDownloadDir().resolve(GatewayApi.DIR_APK)
+        fun getApkDir() = getDownloadDir().resolve(GatewayApi.DIR_APK)
 
-        internal fun getDownloadDir() = getFileDir(Environment.DIRECTORY_DOWNLOADS)
+        fun getDownloadDir() = getFileDir(Environment.DIRECTORY_DOWNLOADS)
 
         private fun getFileDir(type: String): File {
             val externalFilesDir = instance.getExternalFilesDir(type)
@@ -27,10 +27,10 @@ open class MyApplication : Application(), CoroutineScope by MainScope() {
             }
         }
 
-        internal fun getMyString(@StringRes resId: Int) =
+        fun getMyString(@StringRes resId: Int) =
             instance.getString(resId)
 
-        internal fun getMyString(@StringRes resId: Int, vararg formatArgs: Any?) =
+        fun getMyString(@StringRes resId: Int, vararg formatArgs: Any?) =
             instance.getString(resId, *formatArgs)
     }
 
@@ -44,7 +44,7 @@ open class MyApplication : Application(), CoroutineScope by MainScope() {
         }
     }
 
-    internal fun setMyTheme(themesValue: String) = launch(Dispatchers.Default) {
+    fun setMyTheme(themesValue: String) = launch(Dispatchers.Default) {
         @AppCompatDelegate.NightMode val mode = when (themesValue) {
             getMyString(R.string.interface_themes_follow_system_value) -> {
                 AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM

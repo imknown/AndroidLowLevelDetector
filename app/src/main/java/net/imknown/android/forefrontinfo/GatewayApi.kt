@@ -11,7 +11,7 @@ import java.util.*
 
 class GatewayApi {
     companion object {
-        internal const val LLD_JSON_NAME = "lld.json"
+        const val LLD_JSON_NAME = "lld.json"
 
         private const val URL_LLD_JSON_ZH_CN =
             "https://gitee.com/imknown/AndroidLowLevelDetector/raw/master/app/src/main/assets/$LLD_JSON_NAME"
@@ -22,11 +22,11 @@ class GatewayApi {
         private const val URL_GITHUB_CHECK_FOR_UPDATE =
             "https://api.github.com/repos/imknown/AndroidLowLevelDetector/releases/latest"
 
-        internal const val DIR_APK = "Apk"
+        const val DIR_APK = "Apk"
 
-        internal lateinit var savedLldJsonFile: File
+        lateinit var savedLldJsonFile: File
 
-        internal suspend fun downloadLldJsonFile(
+        suspend fun downloadLldJsonFile(
             success: (ByteArray) -> Unit,
             failure: (FuelError) -> Unit
         ) {
@@ -40,7 +40,7 @@ class GatewayApi {
                 .awaitByteArrayResult().fold(success, failure)
         }
 
-        internal suspend fun checkForUpdate(
+        suspend fun checkForUpdate(
             success: (String) -> Unit,
             failure: (FuelError) -> Unit
         ) {
@@ -48,7 +48,7 @@ class GatewayApi {
             url.httpGet().awaitStringResult().fold(success, failure)
         }
 
-        internal suspend fun downloadApk(
+        suspend fun downloadApk(
             url: String,
             fileName: String,
             progressCallback: ProgressCallback,
@@ -65,7 +65,7 @@ class GatewayApi {
                 .awaitByteArrayResult().fold(success, failure)
         }
 
-        internal fun clearFolder(dir: File): Boolean {
+        fun clearFolder(dir: File): Boolean {
             if (!dir.exists()) {
                 return true
             }
