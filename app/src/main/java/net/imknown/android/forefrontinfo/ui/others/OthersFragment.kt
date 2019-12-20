@@ -89,7 +89,7 @@ class OthersFragment : BaseListFragment() {
 
         if (!rawBuildProp) {
             withContext(Dispatchers.Main) {
-                sharedViewModel.onGetPropFinish(false)
+                sharedViewModel.onGetPropFinish()
             }
 
             return
@@ -111,7 +111,7 @@ class OthersFragment : BaseListFragment() {
         }
 
         withContext(Dispatchers.Main) {
-            sharedViewModel.onGetPropFinish(true)
+            sharedViewModel.onGetPropFinish()
         }
     }
 

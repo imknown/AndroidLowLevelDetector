@@ -85,7 +85,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
             true
         }
 
-        sharedViewModel.isSucceed.observe(viewLifecycleOwner, Observer<Boolean> {
+        sharedViewModel.isGetPropFinish.observe(viewLifecycleOwner, Observer<Boolean> {
             rawBuildPropPref.isEnabled = true
         })
 

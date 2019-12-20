@@ -4,9 +4,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class SharedViewModel : ViewModel() {
-    val isSucceed = MutableLiveData<Boolean>()
+    val isGetPropFinish = MutableLiveData<Boolean>()
 
-    fun onGetPropFinish(value: Boolean) {
-        isSucceed.value = value
+    fun onGetPropFinish() {
+        isGetPropFinish.value = true
     }
 }
