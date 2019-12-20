@@ -68,7 +68,7 @@
     <string name="chrome_developer">Chrome Developer</string>
     <string name="chrome_canary">Chrome Canary</string>
 
-    <string name="outdated_target_version_sdk_version_apk_my_first_api_level">Niveau d\'API Android à la sortie d\'usine: %s\n\n</string>
+    <string name="outdated_target_version_sdk_version_apk_my_first_api_level">API Android à la sortie d\'usine: %s\n\n</string>
     <string name="outdated_target_version_sdk_version_apk_title">Les application system avec targetVersionSdk dépassé</string>
     <string name="outdated_target_version_sdk_version_apk_result_none">Pas d\'application dépassé</string>
 
