@@ -37,10 +37,18 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
 
     private var counter = 5
 
-    private lateinit var allowNetworkDataPref: SwitchPreferenceCompat
-    private lateinit var rawBuildPropPref: SwitchPreferenceCompat
-    private lateinit var checkUpdatePref: Preference
-    private lateinit var clearApkFolderPref: Preference
+    private val allowNetworkDataPref by lazy {
+        findPreference<SwitchPreferenceCompat>(MyApplication.getMyString(R.string.network_allow_network_data_key))!!
+    }
+    private val rawBuildPropPref by lazy {
+        findPreference<SwitchPreferenceCompat>(MyApplication.getMyString(R.string.function_raw_build_prop_key))!!
+    }
+    private val checkUpdatePref by lazy {
+        findPreference<Preference>(MyApplication.getMyString(R.string.about_check_for_update_key))!!
+    }
+    private val clearApkFolderPref by lazy {
+        findPreference<Preference>(MyApplication.getMyString(R.string.about_clear_apk_folder_key))!!
+    }
 
     private val sharedViewModel: SharedViewModel by activityViewModels()
 
@@ -71,8 +79,6 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
 
         setScrollBarMode(listView, scrollBarModePref.value)
 
-        rawBuildPropPref =
-            findPreference<SwitchPreferenceCompat>(MyApplication.getMyString(R.string.function_raw_build_prop_key))!!
         rawBuildPropPref.setOnPreferenceChangeListener { _: Preference, _: Any ->
             onRawBuildPropChanged()
 
@@ -80,13 +86,8 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
         }
 
         sharedViewModel.isSucceed.observe(viewLifecycleOwner, Observer<Boolean> {
-            if (::rawBuildPropPref.isInitialized) {
-                rawBuildPropPref.isEnabled = true
-            }
+            rawBuildPropPref.isEnabled = true
         })
-
-        allowNetworkDataPref =
-            findPreference(MyApplication.getMyString(R.string.network_allow_network_data_key))!!
 
         val themesPref =
             findPreference<ListPreference>(MyApplication.getMyString(R.string.interface_themes_key))!!
@@ -105,8 +106,6 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
             true
         }
 
-        checkUpdatePref =
-            findPreference(MyApplication.getMyString(R.string.about_check_for_update_key))!!
         checkUpdatePref.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             checkForUpdate()
 
@@ -115,8 +114,6 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
 
         checkUpdatePref.isVisible = !isSignedByGooglePlayStore()
 
-        clearApkFolderPref =
-            findPreference(MyApplication.getMyString(R.string.about_clear_apk_folder_key))!!
         clearApkFolderPref.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             clearApkFolder()
 
