@@ -24,7 +24,9 @@ class GatewayApi {
 
         const val DIR_APK = "Apk"
 
-        lateinit var savedLldJsonFile: File
+        val savedLldJsonFile: File by lazy {
+            File(MyApplication.getDownloadDir(), LLD_JSON_NAME)
+        }
 
         suspend fun downloadLldJsonFile(
             success: (ByteArray) -> Unit,

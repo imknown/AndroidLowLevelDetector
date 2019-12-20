@@ -39,8 +39,6 @@ open class MyApplication : Application(), CoroutineScope by MainScope() {
 
         launch(Dispatchers.IO) {
             instance = this@MyApplication
-
-            GatewayApi.savedLldJsonFile = File(getDownloadDir(), GatewayApi.LLD_JSON_NAME)
         }
     }
 
