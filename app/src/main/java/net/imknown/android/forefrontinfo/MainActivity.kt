@@ -41,18 +41,13 @@ class MainActivity : AppCompatActivity(), IAndroidVersion, CoroutineScope by Mai
 
     private val onNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener listener@{
-            if (it.itemId != lastId) {
-                when (it.itemId) {
-                    R.id.navigation_home,
-                    R.id.navigation_others,
-                    R.id.navigation_settings -> {
-                        showFragment(it.itemId)
-                        return@listener true
-                    }
+            launch(Dispatchers.Default) {
+                if (it.itemId != lastId) {
+                    switchFragment(it.itemId)
                 }
             }
 
-            false
+            true
         }
 
     private fun initColors() {
@@ -96,11 +91,9 @@ class MainActivity : AppCompatActivity(), IAndroidVersion, CoroutineScope by Mai
             initTheme()
 
             if (savedInstanceState == null) {
-                showFragment(lastId)
+                // This is not the activity which is recreated
+                showFirstFragment()
             }
-//            else {
-//                val fragment = supportFragmentManager.findFragmentById(R.id.container)
-//            }
         }
     }
 
@@ -116,32 +109,47 @@ class MainActivity : AppCompatActivity(), IAndroidVersion, CoroutineScope by Mai
         lastId = savedInstanceState.getInt(BUNDLE_ID_LAST_ID)
     }
 
-    private fun showFragment(@IdRes selectedId: Int) = launch(Dispatchers.Default) {
+    /**
+     * 'first' means the first fragment in the stack, not the first tab in the BottomNavigationView
+     * This is because of the recreation of Activity
+     */
+    private suspend fun showFirstFragment() {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
             .setCustomAnimations(R.anim.drop_scale, FragmentTransaction.TRANSIT_NONE)
-            .hide(getFragmentInstance(lastId))
-            .show(getFragmentInstance(selectedId))
 
-        withContext(Dispatchers.Main) {
-            fragmentTransaction.commitNowAllowingStateLoss()
+        createFragment(fragmentTransaction, lastId)
+
+        fragmentTransaction.commitAllowingStateLoss()
+    }
+
+    private suspend fun switchFragment(@IdRes selectedId: Int) {
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+            .setCustomAnimations(R.anim.drop_scale, FragmentTransaction.TRANSIT_NONE)
+
+        val isFragmentCreated = isFragmentCreated(selectedId)
+        val selectedFragment = getFragment(fragmentTransaction, selectedId)
+
+        if (isFragmentCreated) {
+            fragmentTransaction.show(selectedFragment)
         }
+
+        val lastFragment = getFragment(fragmentTransaction, lastId)
+        fragmentTransaction.hide(lastFragment).commitAllowingStateLoss()
 
         lastId = selectedId
     }
 
-    private suspend fun getFragmentInstance(@IdRes id: Int): Fragment {
-        var fragment = supportFragmentManager.findFragmentByTag(id.toString())
+    private fun findFragmentByTag(@IdRes id: Int) =
+        supportFragmentManager.findFragmentByTag(id.toString())
 
-        if (fragment == null) {
-            fragment = createFragment(id)
-            addFragment(fragment, id)
-        }
+    private fun isFragmentCreated(@IdRes id: Int) =
+        findFragmentByTag(id) != null
 
-        return fragment
-    }
+    private suspend fun getFragment(fragmentTransaction: FragmentTransaction, @IdRes id: Int) =
+        findFragmentByTag(id) ?: createFragment(fragmentTransaction, id)
 
-    private suspend fun createFragment(@IdRes id: Int): Fragment {
-        return when (id) {
+    private suspend fun createFragment(fragmentTransaction: FragmentTransaction, @IdRes id: Int): Fragment {
+        val fragment: Fragment = when (id) {
             R.id.navigation_home -> {
                 HomeFragment.newInstance()
             }
@@ -158,20 +166,10 @@ class MainActivity : AppCompatActivity(), IAndroidVersion, CoroutineScope by Mai
                 throw Exception()
             }
         }
-    }
 
-    private suspend fun addFragment(fragment: Fragment, @IdRes id: Int) {
-        if (fragment.isAdded) {
-            return
-        }
+        fragmentTransaction.add(R.id.container, fragment, id.toString())
 
-        val fragmentTransaction = supportFragmentManager.beginTransaction()
-            .setCustomAnimations(R.anim.drop_scale, FragmentTransaction.TRANSIT_NONE)
-            .add(R.id.container, fragment, id.toString())
-
-        withContext(Dispatchers.Main) {
-            fragmentTransaction.commitNowAllowingStateLoss()
-        }
+        return fragment
     }
 
     override fun onBackPressed() {
