@@ -42,7 +42,7 @@
 
     <string name="treble_enabled_title">Status du Projet Treble</string>
 
-    <string name="vndk_built_in_title">Status du NDK VEndor integré</string>
+    <string name="vndk_built_in_title">Status du NDK Vendor integré</string>
     <string name="built_in_vndk_version_result">\u0020(Niveau: %s)</string>
 
     <string name="sar_enabled_title">Status System-as-root</string>
