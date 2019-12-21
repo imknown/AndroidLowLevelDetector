@@ -47,7 +47,7 @@ class MyDebugApplication : MyApplication(), IAndroidVersion {
 
         StrictMode.setVmPolicy(
             StrictMode.VmPolicy.Builder()
-                .detectActivityLeaks()
+//                .detectActivityLeaks()
                 .detectFileUriExposure()
                 .detectLeakedClosableObjects()
                 .detectLeakedRegistrationObjects()
