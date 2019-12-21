@@ -123,10 +123,6 @@
     <string name="function_raw_build_prop_title">显示原始 build.prop</string>
     <string name="function_raw_build_prop_summary">显示 build.prop 文件中的原始数据</string>
 
-    <string name="function_let_system_manages_process_title">让系统管理进程</string>
-    <string name="function_let_system_manages_process_summary">若启用, 当关闭本程序时, 本程序的进程将不会被立即杀死, 而是被 Android 系统管理. 后台内存并不会被全部释放, 因此下次热启动的时间将会减少. 本选项不会影响从最近任务列表划掉本程序, 或者返回到启动器首页.</string>
-
-    <string name="network_title">网络</string>
     <string name="network_allow_network_data_title">允许网络数据</string>
     <string name="network_allow_network_data_summary">若启用, 数据将优先从远端网络服务器获取, 并被缓存在本地存储.</string>
 

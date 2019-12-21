@@ -174,31 +174,14 @@ class MainActivity : AppCompatActivity(), IAndroidVersion, CoroutineScope by Mai
 
     override fun onBackPressed() {
         launch(Dispatchers.IO) {
-            val sharedPreferences =
-                PreferenceManager.getDefaultSharedPreferences(MyApplication.instance)
-            val letSystemManagesProcessProp = sharedPreferences.getBoolean(
-                MyApplication.getMyString(R.string.function_let_system_manages_process_key),
-                false
-            )
-
-            if (letSystemManagesProcessProp) {
-                if (isAtLeastAndroid10()) {
-                    // https://github.com/ChuckerTeam/chucker/issues/102
-                    // https://issuetracker.google.com/issues/139738913
-                    finishAfterTransition()
-                } else {
-                    withContext(Dispatchers.Main) {
-                        super.onBackPressed()
-                    }
-                }
+            if (isAtLeastAndroid10()) {
+                // https://github.com/ChuckerTeam/chucker/issues/102
+                // https://issuetracker.google.com/issues/139738913
+                finishAfterTransition()
             } else {
                 withContext(Dispatchers.Main) {
                     super.onBackPressed()
                 }
-
-                delay(300)
-
-                android.os.Process.killProcess(android.os.Process.myPid())
             }
         }
     }

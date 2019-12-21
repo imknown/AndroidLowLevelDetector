@@ -123,10 +123,6 @@
     <string name="function_raw_build_prop_title">Voir build.prop directement</string>
     <string name="function_raw_build_prop_summary">Voir directement les valeurs de build.prop</string>
 
-    <string name="function_let_system_manages_process_title">Laisser le système gérer les processus</string>
-    <string name="function_let_system_manages_process_summary">Lorsqu\'il est activé, le processus de cette application ne sera pas tué immédiatement lors de la fermeture de cette application, et il sera géré par le système Android. La mémoire principale ne sera pas complètement libérée, donc le temps du prochain démarrage à chaud sera réduit. Cette option n\'influence pas le glissement de cette application à partir de la liste des tâches récentes ou le retour au lanceur.</string>
-
-    <string name="network_title">Réseau</string>
     <string name="network_allow_network_data_title">Activer les données en ligne</string>
     <string name="network_allow_network_data_summary">Lorsque cette option est activée, les données seront préalablement extraites du serveur réseau distant, puis mises en cache sur le stockage local.</string>
 

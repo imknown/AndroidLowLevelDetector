@@ -25,30 +25,20 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="@string/network_title"
+        android:title="@string/function_title"
         app:iconSpaceReserved="false">
+
         <SwitchPreferenceCompat
             app:iconSpaceReserved="false"
             app:key="@string/network_allow_network_data_key"
             app:summary="@string/network_allow_network_data_summary"
             app:title="@string/network_allow_network_data_title" />
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        android:title="@string/function_title"
-        app:iconSpaceReserved="false">
 
         <SwitchPreferenceCompat
             app:iconSpaceReserved="false"
             app:key="@string/function_raw_build_prop_key"
             app:summary="@string/function_raw_build_prop_summary"
             app:title="@string/function_raw_build_prop_title" />
-
-        <SwitchPreferenceCompat
-            app:iconSpaceReserved="false"
-            app:key="@string/function_let_system_manages_process_key"
-            app:summary="@string/function_let_system_manages_process_summary"
-            app:title="@string/function_let_system_manages_process_title" />
     </PreferenceCategory>
 
     <PreferenceCategory

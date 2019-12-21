@@ -133,11 +133,6 @@
     <string name="function_raw_build_prop_title">Show raw build.prop</string>
     <string name="function_raw_build_prop_summary">Show the raw data of file build.prop</string>
 
-    <string name="function_let_system_manages_process_key" translatable="false">Function</string>
-    <string name="function_let_system_manages_process_title">Let system manages process</string>
-    <string name="function_let_system_manages_process_summary">When enable, the process of this app will not be killed immediately when close this app, and it will be managed by the Android system. The backend memory will not be released completely, so the time of next hot booting will be reduced. This option does not influence swiping this app from recent task list, or going back to the launcher home.</string>
-
-    <string name="network_title">Network</string>
     <string name="network_allow_network_data_key" translatable="false">about_allow_network_data_key</string>
     <string name="network_allow_network_data_title">Allow network data</string>
     <string name="network_allow_network_data_summary">When enabled, data will be prior fetched from remote network server, then be cached on the local storage.</string>
