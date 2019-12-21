@@ -59,7 +59,7 @@ class MyDebugApplication : MyApplication(), IAndroidVersion {
                 }.also {
                     if (isAtLeastAndroid8()) {
                         it.detectContentUriWithoutPermission()
-                        it.detectUntaggedSockets()
+//                        it.detectUntaggedSockets()
                     }
 //                }.also {
 //                    if (isAtLeastAndroid9()) {
