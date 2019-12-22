@@ -350,7 +350,7 @@ class HomeFragment : BaseListFragment() {
             MyApplication.getMyString(
                 R.string.linux_version_detail,
                 linuxVersionString,
-                versionsSupported.joinToString(", "),
+                versionsSupported.joinToString("｜"),
                 lld.linux.mainline.version
             ),
             linuxColor
