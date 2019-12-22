@@ -34,7 +34,7 @@
     <string name="security_patch_level_detail">我的: %1$s\n\n最新: %2$s</string>
 
     <string name="linux_title">Linux 版本</string>
-    <string name="linux_version_detail">我的: %1$s\n\n最新稳定: %2$s\n最低支持: %3$s\n主线: %4$s</string>
+    <string name="linux_version_detail">我的: %1$s\n\n最新支持: %2$s\n主线: %3$s</string>
 
     <string name="ab_seamless_update_enabled_title">A/B 无缝升级 状态</string>
     <string name="rom_total_size_result">\u0020(总 ROM: ~%sGB)</string>

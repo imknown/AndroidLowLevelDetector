@@ -34,7 +34,7 @@
     <string name="security_patch_level_detail">Mine: %1$s\n\nLatest: %2$s</string>
 
     <string name="linux_title">Linux version</string>
-    <string name="linux_version_detail">Mine: %1$s\n\nLatest stable: %2$s\nLowest support: %3$s\nMainline: %4$s</string>
+    <string name="linux_version_detail">Mine: %1$s\n\nLatest support: %2$s\nMainline: %3$s</string>
 
     <string name="ab_seamless_update_enabled_title">A/B seamless update status</string>
     <string name="rom_total_size_result">\u0020(Total ROM: ~%sGB)</string>

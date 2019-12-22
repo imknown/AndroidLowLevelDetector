@@ -325,21 +325,32 @@ class HomeFragment : BaseListFragment() {
         securityPatch.substringBeforeLast('-')
 
     private fun detectKernel(lld: Lld) {
-        val linuxVersion = SYSTEM_PROPERTY_LINUX_VERSION
-        val isAtLeast = Version(linuxVersion).isAtLeast(lld.linux.stable.version)
-        val isSupported = Version(linuxVersion).isAtLeast(lld.linux.support.version)
-        @ColorInt val linuxColor = when {
-            isAtLeast -> COLOR_STATE_LIST_NO_PROBLEM
-            isSupported -> COLOR_STATE_LIST_WARNING
-            else -> COLOR_STATE_LIST_CRITICAL
+        val linuxVersionString = SYSTEM_PROPERTY_LINUX_VERSION
+        val linuxVersion = Version(linuxVersionString)
+
+        @ColorInt var linuxColor = COLOR_STATE_LIST_CRITICAL
+
+        val versionsSupported = lld.linux.google.versions
+        versionsSupported.forEach {
+            if (linuxVersion.major == Version(it).major
+                && linuxVersion.minor == Version(it).minor
+            ) {
+                linuxColor = if (linuxVersion.isAtLeast(it)) {
+                    COLOR_STATE_LIST_NO_PROBLEM
+                } else {
+                    COLOR_STATE_LIST_WARNING
+                }
+
+                return@forEach
+            }
         }
+
         add(
             MyApplication.getMyString(R.string.linux_title),
             MyApplication.getMyString(
                 R.string.linux_version_detail,
-                linuxVersion,
-                lld.linux.stable.version,
-                lld.linux.support.version,
+                linuxVersionString,
+                versionsSupported.joinToString(", "),
                 lld.linux.mainline.version
             ),
             linuxColor

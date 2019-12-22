@@ -50,17 +50,22 @@ data class Lld(
     // https://www.kernel.org
     @Keep
     data class Linuxes(
-        val stable: BaseInfo,
         // https://android.googlesource.com/kernel/common/+/refs/heads/android-5.4/Makefile
         // https://android.googlesource.com/kernel/common/+/refs/heads/android-4.19/Makefile
         // https://android.googlesource.com/kernel/common/+/refs/heads/android-4.14/Makefile
         // https://android.googlesource.com/kernel/common/+/refs/heads/android-4.9-q/Makefile
         // https://android.googlesource.com/kernel/common/+/refs/heads/android-4.4-p/Makefile
         // https://android.googlesource.com/kernel/common/+/refs/heads/android-3.18/Makefile
-        val support: BaseInfo,
+        // https://en.wikipedia.org/wiki/Linux_kernel_version_history
+        val google: Versions,
         // https://android.googlesource.com/kernel/common/+/refs/heads/android-mainline/Makefile
         val mainline: BaseInfo
-    )
+    ) {
+        @Keep
+        data class Versions(
+            val versions: List<String>
+        )
+    }
 
     @Keep
     data class Toyboxes(
