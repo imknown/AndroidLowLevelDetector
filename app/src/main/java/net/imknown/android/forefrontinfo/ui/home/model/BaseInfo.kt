@@ -5,6 +5,4 @@ import androidx.annotation.Keep
 @Keep
 open class BaseInfo {
     lateinit var version: String
-    lateinit var desc: String
-    lateinit var url: String
 }

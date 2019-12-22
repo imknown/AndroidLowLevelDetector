@@ -11,11 +11,19 @@ data class Lld(
 ) : BaseInfo() {
     @Keep
     data class Androids(
+        // https://source.android.com/security/bulletin/
+        // https://source.android.com/setup/start/build-numbers?hl=en#source-code-tags-and-builds
         val securityPatchLevel: String,
+        // https://source.android.com/setup/start/build-numbers?hl=en#source-code-tags-and-builds
+        // https://android.googlesource.com/platform/frameworks/base/+refs
         val build: Build,
+        // https://www.android.com
         val stable: Android,
+        // https://source.android.com/security/bulletin/
         val support: Android,
+        // https://ci.android.com
         val alpha: Android,
+        // https://developer.android.com/preview/overview
         val beta: Android
     ) {
         @Keep
@@ -37,21 +45,36 @@ data class Lld(
         }
     }
 
+    // https://source.android.com/setup/build/building-kernels#downloading
+    // https://source.android.com/devices/architecture/kernel/android-common
+    // https://www.kernel.org
     @Keep
     data class Linuxes(
         val stable: BaseInfo,
+        // https://android.googlesource.com/kernel/common/+/refs/heads/android-5.4/Makefile
+        // https://android.googlesource.com/kernel/common/+/refs/heads/android-4.19/Makefile
+        // https://android.googlesource.com/kernel/common/+/refs/heads/android-4.14/Makefile
+        // https://android.googlesource.com/kernel/common/+/refs/heads/android-4.9-q/Makefile
+        // https://android.googlesource.com/kernel/common/+/refs/heads/android-4.4-p/Makefile
+        // https://android.googlesource.com/kernel/common/+/refs/heads/android-3.18/Makefile
         val support: BaseInfo,
+        // https://android.googlesource.com/kernel/common/+/refs/heads/android-mainline/Makefile
         val mainline: BaseInfo
-    ) : BaseInfo()
+    )
 
     @Keep
     data class Toyboxes(
+        // https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-10.0.0_r20/www/news.html
         val stable: BaseInfo,
+        // https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-8.0.0_r41/www/news.html
         val support: BaseInfo,
+        // https://android.googlesource.com/platform/external/toybox/+/refs/heads/android10-mainline-release
         val mainline: BaseInfo,
+        // https://android.googlesource.com/platform/external/toybox/+/refs/heads/master/www/news.html
         val master: BaseInfo
-    ) : BaseInfo()
+    )
 
+    // https://www.chromium.org/developers/calendar
     @Keep
     data class WebViews(
         val stable: BaseInfo,
