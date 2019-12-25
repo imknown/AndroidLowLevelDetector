@@ -590,7 +590,7 @@ class HomeFragment : BaseListFragment() {
         var result = firstApiLevelLine
 
         val outdatedSystemApkList = systemApkList?.filter {
-            it.targetSdkVersion < Build.VERSION.SDK_INT
+            it.targetSdkVersion < BUILD_VERSION_SDK_INT
         }
 
         outdatedSystemApkList?.forEachIndexed { index, applicationInfo ->
