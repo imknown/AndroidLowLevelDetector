@@ -75,7 +75,6 @@ class HomeFragment : BaseListFragment() {
 
         // https://source.android.com/devices/tech/ota/ab?hl=en
         // /* root needed */ private const val CMD_BOOT_PARTITION = "ls /dev/block/bootdevice/by-name | grep boot_"
-        // private const val CMD_ROM_TOTAL_SIZE = "df | grep -v '/apex' | grep -v '/storage' | grep -E 'tmpfs'\\|'/dev'\\|'/data' | awk '{s+=\$2} END {print s/1000000}'"
         private const val PROP_AB_UPDATE = "ro.build.ab_update"
         private const val PROP_SLOT_SUFFIX = "ro.boot.slot_suffix"
 
@@ -360,12 +359,8 @@ class HomeFragment : BaseListFragment() {
     private fun detectAb() {
         // val bootPartitions = sh(CMD_BOOT_PARTITION)[0]
 
-        // val romTotalSizeResult = sh(CMD_ROM_TOTAL_SIZE)
-        // val romTotalSize = kotlin.math.floor(romTotalSizeResult[0].toFloat()).toString()
-
         val isAbUpdateSupported = getStringProperty(PROP_AB_UPDATE, isAtLeastAndroid7()).toBoolean()
-        val abUpdateSupportedArgs =
-            translate(isAbUpdateSupported) /* + MyApplication.getMyString(R.string.rom_total_size_result, romTotalSize) */
+        val abUpdateSupportedArgs = translate(isAbUpdateSupported)
 
         var abFinalResult =
             MyApplication.getMyString(

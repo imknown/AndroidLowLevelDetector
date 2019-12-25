@@ -37,7 +37,6 @@
     <string name="linux_version_detail">Moi: %1$s\n\nDernière support: %2$s\nLigne principale: %3$s</string>
 
     <string name="ab_seamless_update_enabled_title">Mise à jour A/B seamless</string>
-    <string name="rom_total_size_result">\u0020(Total ROM: ~%sGB)</string>
     <string name="current_using_ab_slot_result">\u0020(Slot utilisé: %s)</string>
 
     <string name="treble_enabled_title">Status du Projet Treble</string>
@@ -51,7 +50,6 @@
     <string name="apex_legacy_flattened">\u0020(Legacy flattened)</string>
 
     <string name="toybox_built_in_title">Version de Toybox intégrée</string>
-    <string name="built_in_toybox_version_result">\u0020(%s)</string>
     <string name="toybox_built_in_detail">Moi: %1$s\n\nDernier stable: %2$s\nPlus faible support: %3$s\nLgne principale: %4$s\nMaster: %5$s</string>
 
     <string name="webview_title">Version WebView</string>
@@ -86,8 +84,6 @@
     <string name="build_supported_32_bit_abis">32bit CPU ABIs supportés</string>
     <string name="build_supported_64_bit_abis">64bit CPU ABIs supportés</string>
 
-    <string name="build_preview_sdk_int"> Niveau d\'API de la prévisualisation (0: pas une version de prev.)</string>
-
     <string name="build_user">Constructeur de la ROM</string>
     <string name="build_HOST">Nom de la machine lors du build</string>
     <string name="build_time">Date du build</string>
@@ -110,7 +106,7 @@
     <string name="interface_scroll_bar_summary">Cliquez ici pour voir le mode de défilement</string>
     <string name="interface_no_scroll_bar_key">Aucun (Boones performances)</string>
     <string name="interface_normal_scroll_bar_key">Normale</string>
-    <string name="interface_fast_scroll_bar_key">Tirrable</string>
+    <!--<string name="interface_fast_scroll_bar_key">Tirrable</string>-->
 
     <string name="interface_themes_title">Thème</string>
     <string name="interface_themes_summary">Cliquez pour voir le selecteur de thème</string>

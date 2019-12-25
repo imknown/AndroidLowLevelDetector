@@ -37,7 +37,6 @@
     <string name="linux_version_detail">Mine: %1$s\n\nLatest support: %2$s\nMainline: %3$s</string>
 
     <string name="ab_seamless_update_enabled_title">A/B seamless update status</string>
-    <string name="rom_total_size_result">\u0020(Total ROM: ~%sGB)</string>
     <string name="current_using_ab_slot_result">\u0020(Current using slot: %s)</string>
 
     <string name="treble_enabled_title">Project Treble status</string>
@@ -51,7 +50,6 @@
     <string name="apex_legacy_flattened">\u0020(Legacy flattened)</string>
 
     <string name="toybox_built_in_title">Built-in Toybox version</string>
-    <string name="built_in_toybox_version_result">\u0020(%s)</string>
     <string name="toybox_built_in_detail">Mine: %1$s\n\nLatest stable: %2$s\nLowest support: %3$s\nMainline: %4$s\nMaster: %5$s</string>
 
     <string name="webview_title">WebView version</string>
@@ -86,8 +84,6 @@
     <string name="build_supported_32_bit_abis">Supported 32bit CPU ABIs</string>
     <string name="build_supported_64_bit_abis">Supported 64bit CPU ABIs</string>
 
-    <string name="build_preview_sdk_int">Android preview API level (0: not a preview version)</string>
-
     <string name="build_user">ROM builder</string>
     <string name="build_HOST">ROM build machine name</string>
     <string name="build_time">ROM build time</string>
@@ -111,7 +107,7 @@
     <string name="interface_scroll_bar_summary">Click to show the scroll bar mode</string>
     <string name="interface_no_scroll_bar_key">None (High performance)</string>
     <string name="interface_normal_scroll_bar_key">Normal</string>
-    <string name="interface_fast_scroll_bar_key">Draggable</string>
+    <!--<string name="interface_fast_scroll_bar_key">Draggable</string>-->
     <string name="interface_no_scroll_bar_value" translatable="false">0</string>
     <string name="interface_normal_scroll_bar_value" translatable="false">1</string>
     <string name="interface_fast_scroll_bar_value" translatable="false">2</string>

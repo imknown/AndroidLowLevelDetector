@@ -37,7 +37,6 @@
     <string name="linux_version_detail">我的: %1$s\n\n最新支持: %2$s\n主线: %3$s</string>
 
     <string name="ab_seamless_update_enabled_title">A/B 无缝升级 状态</string>
-    <string name="rom_total_size_result">\u0020(总 ROM: ~%sGB)</string>
     <string name="current_using_ab_slot_result">\u0020(当前使用的槽位: %s)</string>
 
     <string name="treble_enabled_title">Project Treble 状态</string>
@@ -51,7 +50,6 @@
     <string name="apex_legacy_flattened">\u0020(旧式扁平的)</string>
 
     <string name="toybox_built_in_title">内建 Toybox 版本</string>
-    <string name="built_in_toybox_version_result">\u0020(%s)</string>
     <string name="toybox_built_in_detail">我的: %1$s\n\n最新稳定: %2$s\n最低支持: %3$s\n主线: %4$s\nMaster: %5$s</string>
 
     <string name="webview_title">WebView 版本</string>
@@ -86,8 +84,6 @@
     <string name="build_supported_32_bit_abis">支持的 32位 CPU 应用二进制接口</string>
     <string name="build_supported_64_bit_abis">支持的 64位 CPU 应用二进制接口</string>
 
-    <string name="build_preview_sdk_int">Android 预览 API 等级 (0: 非预览版)</string>
-
     <string name="build_user">ROM 构建者</string>
     <string name="build_HOST">ROM 构建的主机名</string>
     <string name="build_time">ROM 构建时间</string>
@@ -110,7 +106,7 @@
     <string name="interface_scroll_bar_summary">点击以显示滚动条模式</string>
     <string name="interface_no_scroll_bar_key">无 (高效)</string>
     <string name="interface_normal_scroll_bar_key">普通</string>
-    <string name="interface_fast_scroll_bar_key">可拖拽</string>
+    <!--<string name="interface_fast_scroll_bar_key">可拖拽</string>-->
 
     <string name="interface_themes_title">主题</string>
     <string name="interface_themes_summary">点击以显示主题选择器</string>

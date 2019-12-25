@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_name">底层探测器 调试</string>
-    <string name="leak_canary_display_activity_label">底层探测器 内存泄漏检测</string>
-</resources>
