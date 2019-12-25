@@ -579,9 +579,7 @@ class HomeFragment : BaseListFragment() {
     private fun detectOutdatedTargetSdkVersionApk() {
         val systemApkList = context?.packageManager?.getInstalledApplications(0)?.filter {
             it.flags and (ApplicationInfo.FLAG_UPDATED_SYSTEM_APP or ApplicationInfo.FLAG_SYSTEM) > 0
-        }?.sortedBy {
-            it.targetSdkVersion
-        }
+        }?.sortedWith(compareBy(ApplicationInfo::targetSdkVersion, ApplicationInfo::packageName))
 
         val firstApiLevelProp = getStringProperty(PROP_RO_PRODUCT_FIRST_API_LEVEL)
 
