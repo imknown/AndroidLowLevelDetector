@@ -145,19 +145,4 @@
     <string name="about_version_title">版本</string>
     <string name="about_version_summary">版本号: %1$s (迭代次数: %2$d)\n内建数据版本: %3$s</string>
     <string name="about_version_click">🐈==)  🐕===))</string>
-
-    <string name="about_check_for_update_title">检查更新</string>
-    <string name="about_check_for_update_title_checking">正在检查, 请等待.</string>
-    <string name="about_check_for_update_summary">检查是否有新版本</string>
-    <string name="about_check_for_update_new_version">探测到新版本: V%1$s (%2$sM)</string>
-    <string name="about_check_for_update_already_latest">已是最新版</string>
-    <string name="about_check_for_update_network_error">网络错误: %s</string>
-    <string name="about_check_for_update_network_empty_file">下载的是空文件. 可能连接超时了 (默认 15 秒). 请重试.</string>
-    <string name="about_check_for_update_allow_network_data_first">请先开启 允许网络数据</string>
-
-    <string name="about_clear_apk_folder_title">清空 Apk 文件夹</string>
-    <string name="about_clear_apk_folder_title_clearing">正在清空, 请等待</string>
-    <string name="about_clear_apk_folder_summary">清空已下载的 Apk 安装包</string>
-    <string name="about_clear_apk_folder_successfully">清空成功</string>
-    <string name="about_clear_apk_folder_failed">清空失败</string>
 </resources>

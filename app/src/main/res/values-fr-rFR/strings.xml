@@ -145,19 +145,4 @@
     <string name="about_version_title">Version</string>
     <string name="about_version_summary">Version: %1$s (Iteration times: %2$d)\nDonnées intégrées: %3$s</string>
     <string name="about_version_click">🐈==)  🐕===))</string>
-
-    <string name="about_check_for_update_title">Verifier les mise-à-jour</string>
-    <string name="about_check_for_update_title_checking">Verification, veuillez patienter.</string>
-    <string name="about_check_for_update_summary">Verifier si une nouvelle verion est disponible au téléchargement.</string>
-    <string name="about_check_for_update_new_version">Une nouvelle verion (V%1$s) est disponible. (%2$sM)</string>
-    <string name="about_check_for_update_already_latest">C\'est déjà la dernière version, rééssayez plus tard.</string>
-    <string name="about_check_for_update_network_error">Erreur réseau: %s</string>
-    <string name="about_check_for_update_network_empty_file">Le fichier téléchargé est vide (puet-être un timeout), veuillez verifier la qualité de votre connexion et rééssayer.</string>
-    <string name="about_check_for_update_allow_network_data_first">Autorisez les données en ligne d\'abord.</string>
-
-    <string name="about_clear_apk_folder_title">Effacer le dossier d\'APK</string>
-    <string name="about_clear_apk_folder_title_clearing">Effacement en cours…</string>
-    <string name="about_clear_apk_folder_summary">Supprime le dossier de téléchargement des installeurs</string>
-    <string name="about_clear_apk_folder_successfully">Effacement terminé</string>
-    <string name="about_clear_apk_folder_failed">Erreur lors de l\'éffacement</string>
 </resources>

@@ -1,28 +1,20 @@
 package net.imknown.android.forefrontinfo.ui.settings
 
-import android.content.DialogInterface
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
 import android.os.Looper
-import androidx.annotation.StringRes
-import androidx.core.content.FileProvider
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.*
-import net.imknown.android.forefrontinfo.*
+import net.imknown.android.forefrontinfo.BuildConfig
+import net.imknown.android.forefrontinfo.JsonIo
+import net.imknown.android.forefrontinfo.MyApplication
+import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.IFragmentView
 import net.imknown.android.forefrontinfo.base.SharedViewModel
-import net.imknown.android.forefrontinfo.ui.settings.model.GithubReleaseInfo
-import java.io.File
-import java.security.MessageDigest
-import java.util.*
 
 class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineScope by MainScope() {
 
@@ -30,24 +22,12 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
         suspend fun newInstance() = withContext(Dispatchers.Main) {
             SettingsFragment()
         }
-
-        private const val GOOGLE_PUBLIC_SHA_256 =
-            "A7:0C:41:07:C1:FD:F0:3E:9A:F9:C4:6F:4B:38:18:1C:04:D0:F6:46:DA:E6:09:8C:22:45:3D:9E:D2:69:72:6C"
     }
 
     private var counter = 5
 
-    private val allowNetworkDataPref by lazy {
-        findPreference<SwitchPreferenceCompat>(MyApplication.getMyString(R.string.network_allow_network_data_key))!!
-    }
     private val rawBuildPropPref by lazy {
         findPreference<SwitchPreferenceCompat>(MyApplication.getMyString(R.string.function_raw_build_prop_key))!!
-    }
-    private val checkUpdatePref by lazy {
-        findPreference<Preference>(MyApplication.getMyString(R.string.about_check_for_update_key))!!
-    }
-    private val clearApkFolderPref by lazy {
-        findPreference<Preference>(MyApplication.getMyString(R.string.about_clear_apk_folder_key))!!
     }
 
     private val sharedViewModel: SharedViewModel by activityViewModels()
@@ -105,67 +85,12 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
 
             true
         }
-
-        checkUpdatePref.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            checkForUpdate()
-
-            true
-        }
-
-        checkUpdatePref.isVisible = !isSignedByGooglePlayStore()
-
-        clearApkFolderPref.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            clearApkFolder()
-
-            true
-        }
-    }
-
-    private suspend fun isSignedByGooglePlayStore() = withContext(Dispatchers.Default) {
-        val messageDigest = MessageDigest.getInstance("SHA-256")
-        val myPublicSha256 = context?.let {
-            if (isAtLeastAndroid9()) {
-                it.packageManager?.getPackageInfo(
-                    it.packageName,
-                    PackageManager.GET_SIGNING_CERTIFICATES
-                )?.signingInfo?.apkContentsSigners
-            } else {
-                @Suppress("DEPRECATION")
-                it.packageManager?.getPackageInfo(
-                    it.packageName,
-                    PackageManager.GET_SIGNATURES
-                )?.signatures
-            }
-        }?.get(0)?.let {
-            messageDigest.digest(it.toByteArray())
-                .joinToString(":") { byte -> "%02x".format(byte) }
-                .toUpperCase(Locale.ENGLISH)
-        }
-
-        return@withContext (myPublicSha256 == GOOGLE_PUBLIC_SHA_256)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
 
         cancel()
-    }
-
-    private suspend fun setPreferenceStatus(
-        preference: Preference,
-        isEnabled: Boolean,
-        @StringRes normalResId: Int,
-        @StringRes checkingResId: Int
-    ) = withContext(Dispatchers.Main) {
-        preference.isEnabled = isEnabled
-
-        preference.title = MyApplication.getMyString(
-            if (isEnabled) {
-                normalResId
-            } else {
-                checkingResId
-            }
-        )
     }
 
     // region [Scroll bar]
@@ -189,15 +114,6 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
     // endregion [Raw build]
 
     // region [Check for update]
-    private suspend fun setCheckUpdatePreferenceStatus(isEnabled: Boolean) {
-        setPreferenceStatus(
-            checkUpdatePref,
-            isEnabled,
-            R.string.about_check_for_update_title,
-            R.string.about_check_for_update_title_checking
-        )
-    }
-
     private suspend fun setBuiltInDataVersion(versionPref: Preference) =
         withContext(Dispatchers.IO) {
             val assetLldVersion = try {
@@ -219,191 +135,6 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
             }
         }
 
-    private fun checkForUpdate() = launch(Dispatchers.IO) {
-        setCheckUpdatePreferenceStatus(false)
-
-        if (allowNetworkDataPref.isChecked) {
-            GatewayApi.checkForUpdate(GatewayApiCheckForUpdate@{ data ->
-                launch success@{
-                    if (!isActivityAndFragmentOk(this@SettingsFragment)) {
-                        return@success
-                    }
-
-                    isLatestVersion(data)
-                }
-            }, { error ->
-                showError(error)
-            })
-        } else {
-            toast(R.string.about_check_for_update_allow_network_data_first)
-
-            setCheckUpdatePreferenceStatus(true)
-        }
-    }
-
-    private fun isLatestVersion(data: String) = launch(Dispatchers.Default) {
-        val githubReleaseInfo = data.fromJson<GithubReleaseInfo>()
-        val remoteVersion = githubReleaseInfo.tag_name
-        val currentVersion = BuildConfig.VERSION_NAME
-
-        if (remoteVersion > currentVersion) {
-            showDownloadConfirmDialog(githubReleaseInfo)
-        } else {
-            toast(R.string.about_check_for_update_already_latest)
-        }
-
-        setCheckUpdatePreferenceStatus(true)
-    }
-
-    @Suppress("DEPRECATION")
-    private lateinit var progressDialog: android.app.ProgressDialog
-
-    private fun showDownloadConfirmDialog(githubReleaseInfo: GithubReleaseInfo) {
-        val version = githubReleaseInfo.tag_name
-        val asset = githubReleaseInfo.assets[0]
-        val size = asset.size
-        val sizeInMb = size / 1_048_576F
-        val sizeInMbString = "%.2f".format(sizeInMb)
-        val date = githubReleaseInfo.published_at.replace("T", " ").replace("Z", "")
-        val desc = githubReleaseInfo.name
-        val log = githubReleaseInfo.body
-
-        val title = MyApplication.getMyString(
-            R.string.about_check_for_update_new_version,
-            version,
-            sizeInMbString
-        )
-        val message = "$date\n$desc\n$log"
-
-        val builder = MaterialAlertDialogBuilder(context)
-        builder.setTitle(title)
-        builder.setMessage(message)
-        builder.setPositiveButton(android.R.string.ok) { dialog: DialogInterface, _: Int ->
-            launch(Dispatchers.IO) {
-                dialog.dismiss()
-
-                showProgressDialog(title, size, sizeInMb)
-
-                val url = asset.browser_download_url
-                val fileName = asset.name
-                downloadApk(url, fileName, sizeInMb)
-            }
-        }
-        builder.setNegativeButton(android.R.string.cancel) { dialog: DialogInterface, _: Int ->
-            dialog.dismiss()
-        }
-
-        launch(Dispatchers.Main) {
-            builder.show()
-        }
-    }
-
-    @Suppress("DEPRECATION")
-    private suspend fun showProgressDialog(
-        title: String,
-        size: Int,
-        sizeInMb: Float
-    ) = withContext(Dispatchers.Main) {
-        progressDialog = android.app.ProgressDialog(context)
-        with(progressDialog) {
-            setProgressStyle(android.app.ProgressDialog.STYLE_HORIZONTAL)
-            isIndeterminate = false
-            setCancelable(false)
-            setCanceledOnTouchOutside(false)
-            setTitle(title)
-            // setMessage(message)
-            progress = 0
-            max = size
-            setProgressNumberFormat(String.format("0M/%.2fM", sizeInMb))
-            show()
-        }
-    }
-
-    private suspend fun downloadApk(url: String, fileName: String, sizeInMb: Float) {
-        try {
-            GatewayApi.downloadApk(url, fileName, { readBytes, _ ->
-                setProgress(readBytes, sizeInMb)
-            }, { data ->
-                if (data.isEmpty()) {
-                    showError(Exception(MyApplication.getMyString(R.string.about_check_for_update_network_empty_file)))
-                } else {
-                    install(fileName)
-                }
-            }, { error ->
-                showError(error)
-            })
-        } catch (t: Throwable) {
-            showError(t)
-        }
-    }
-
-    @Suppress("DEPRECATION")
-    private fun setProgress(readBytes: Long, sizeInMb: Float) {
-        progressDialog.setProgressNumberFormat(
-            String.format("%.2fM/%.2fM", readBytes / 1_048_576F, sizeInMb)
-        )
-        progressDialog.progress = readBytes.toInt()
-    }
-
-    private fun install(fileName: String) = launch(Dispatchers.IO) {
-        val intent = Intent(Intent.ACTION_VIEW)
-        val file = File(MyApplication.getApkDir(), fileName)
-        val data = if (isAtLeastAndroid7()) {
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            FileProvider.getUriForFile(
-                MyApplication.instance,
-                MyApplication.instance.packageName + ".provider",
-                file
-            )
-        } else {
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            Uri.fromFile(file)
-        }
-        intent.setDataAndType(data, "application/vnd.android.package-archive")
-        startActivity(intent)
-
-        dismissProgressDialog()
-    }
-
-    private suspend fun dismissProgressDialog() = withContext(Dispatchers.Main) {
-        if (::progressDialog.isInitialized) {
-            if (progressDialog.isShowing) {
-                progressDialog.dismiss()
-            }
-        }
-    }
-    // endregion [Check for update]
-
-    // region [Clear apk folder]
-    private suspend fun setClearApkFolderStatus(isEnabled: Boolean) {
-        setPreferenceStatus(
-            clearApkFolderPref,
-            isEnabled,
-            R.string.about_clear_apk_folder_title,
-            R.string.about_clear_apk_folder_title_clearing
-        )
-    }
-
-    private fun clearApkFolder() = launch(Dispatchers.IO) {
-        setClearApkFolderStatus(false)
-
-        val result = GatewayApi.clearFolder(MyApplication.getApkDir())
-
-        // For better UX
-        delay(500)
-
-        toast(
-            if (result) {
-                R.string.about_clear_apk_folder_successfully
-            } else {
-                R.string.about_clear_apk_folder_failed
-            }
-        )
-
-        setClearApkFolderStatus(true)
-    }
-    // endregion [Clear apk folder]
-
     // region [Version click]
     private fun versionClicked() = launch(Dispatchers.Default) {
         if (counter > 0) {
@@ -415,21 +146,4 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
         }
     }
     // endregion [Version click]
-
-    override fun showError(error: Throwable) {
-        super.showError(error)
-
-        launch(Dispatchers.Default) {
-            setCheckUpdatePreferenceStatus(true)
-
-            dismissProgressDialog()
-
-            toast(
-                MyApplication.getMyString(
-                    R.string.about_check_for_update_network_error,
-                    error.message
-                )
-            )
-        }
-    }
 }

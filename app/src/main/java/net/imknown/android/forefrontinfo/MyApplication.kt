@@ -14,8 +14,6 @@ open class MyApplication : Application(), CoroutineScope by MainScope() {
     companion object {
         lateinit var instance: MyApplication
 
-        fun getApkDir() = getDownloadDir().resolve(GatewayApi.DIR_APK)
-
         fun getDownloadDir() = getFileDir(Environment.DIRECTORY_DOWNLOADS)
 
         private fun getFileDir(type: String): File {
