@@ -116,11 +116,11 @@
     <string name="interface_themes_always_dark_key">总是暗色</string>
 
     <string name="function_title">功能</string>
+    <string name="function_allow_network_data_title">允许网络数据</string>
+    <string name="function_allow_network_data_summary">若启用, 数据将优先从远端网络服务器获取, 并被缓存在本地存储.</string>
+
     <string name="function_raw_build_prop_title">显示原始 build.prop</string>
     <string name="function_raw_build_prop_summary">显示 build.prop 文件中的原始数据</string>
-
-    <string name="network_allow_network_data_title">允许网络数据</string>
-    <string name="network_allow_network_data_summary">若启用, 数据将优先从远端网络服务器获取, 并被缓存在本地存储.</string>
 
     <string name="about_title">关于</string>
 

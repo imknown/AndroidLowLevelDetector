@@ -135,7 +135,7 @@ class HomeFragment : BaseListFragment() {
         val sharedPreferences =
             PreferenceManager.getDefaultSharedPreferences(MyApplication.instance)
         val allowNetwork = sharedPreferences.getBoolean(
-            MyApplication.getMyString(R.string.network_allow_network_data_key), false
+            MyApplication.getMyString(R.string.function_allow_network_data_key), false
         )
 
         if (allowNetwork) {

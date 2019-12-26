@@ -125,13 +125,13 @@
     <string name="interface_themes_always_dark_value" translatable="false">3</string>
 
     <string name="function_title">Function</string>
+    <string name="function_allow_network_data_key" translatable="false">about_allow_network_data_key</string>
+    <string name="function_allow_network_data_title">Allow network data</string>
+    <string name="function_allow_network_data_summary">When enabled, data will be prior fetched from remote network server, then be cached on the local storage.</string>
+
     <string name="function_raw_build_prop_key" translatable="false">interface_verbose_prop_key</string>
     <string name="function_raw_build_prop_title">Show raw build.prop</string>
     <string name="function_raw_build_prop_summary">Show the raw data of file build.prop</string>
-
-    <string name="network_allow_network_data_key" translatable="false">about_allow_network_data_key</string>
-    <string name="network_allow_network_data_title">Allow network data</string>
-    <string name="network_allow_network_data_summary">When enabled, data will be prior fetched from remote network server, then be cached on the local storage.</string>
 
     <string name="about_title">About</string>
 

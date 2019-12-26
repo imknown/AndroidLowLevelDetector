@@ -30,9 +30,9 @@
 
         <SwitchPreferenceCompat
             app:iconSpaceReserved="false"
-            app:key="@string/network_allow_network_data_key"
-            app:summary="@string/network_allow_network_data_summary"
-            app:title="@string/network_allow_network_data_title" />
+            app:key="@string/function_allow_network_data_key"
+            app:summary="@string/function_allow_network_data_summary"
+            app:title="@string/function_allow_network_data_title" />
 
         <SwitchPreferenceCompat
             app:iconSpaceReserved="false"
