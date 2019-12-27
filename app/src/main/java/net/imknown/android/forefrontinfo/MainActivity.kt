@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import androidx.preference.PreferenceManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.coroutines.*
@@ -59,19 +58,6 @@ class MainActivity : AppCompatActivity(), IAndroidVersion, CoroutineScope by Mai
 
     private fun getMyColor(@ColorRes id: Int) = ContextCompat.getColor(this, id)
 
-    private fun initTheme() {
-        val sharedPreferences =
-            PreferenceManager.getDefaultSharedPreferences(MyApplication.instance)
-        val themesValue =
-            sharedPreferences.getString(
-                MyApplication.getMyString(R.string.interface_themes_key),
-                MyApplication.getMyString(R.string.interface_themes_follow_system_value)
-            )!!
-        MyApplication.instance.setMyTheme(themesValue)
-
-        initColors()
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -88,7 +74,7 @@ class MainActivity : AppCompatActivity(), IAndroidVersion, CoroutineScope by Mai
         bottomNavigationView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
 
         launch(Dispatchers.Default) {
-            initTheme()
+            initColors()
 
             if (savedInstanceState == null) {
                 // This is not the activity which is recreated

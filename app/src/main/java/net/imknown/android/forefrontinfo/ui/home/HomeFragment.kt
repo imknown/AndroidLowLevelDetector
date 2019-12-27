@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import androidx.webkit.WebViewCompat
 import com.g00fy2.versioncompare.Version
-import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -25,13 +24,6 @@ class HomeFragment : BaseListFragment() {
 
     companion object {
         fun newInstance() = HomeFragment()
-
-        init {
-            // Shell.Config.setFlags(Shell.FLAG_REDIRECT_STDERR)
-            Shell.Config.setFlags(Shell.FLAG_NON_ROOT_SHELL)
-            Shell.Config.verboseLogging(BuildConfig.DEBUG)
-            // Shell.Config.setTimeout(10)
-        }
 
         // https://source.android.com/setup/start/build-numbers
         // https://source.android.com/security/enhancements/enhancements9

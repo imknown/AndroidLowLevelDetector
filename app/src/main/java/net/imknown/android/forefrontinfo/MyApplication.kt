@@ -5,6 +5,8 @@ import android.app.Application
 import android.os.Environment
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.preference.PreferenceManager
+import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.*
 import java.io.File
 
@@ -37,7 +39,29 @@ open class MyApplication : Application(), CoroutineScope by MainScope() {
 
         launch(Dispatchers.IO) {
             instance = this@MyApplication
+
+            initShell()
+
+            initTheme()
         }
+    }
+
+    private fun initShell() {
+        // Shell.Config.setFlags(Shell.FLAG_REDIRECT_STDERR)
+        Shell.Config.setFlags(Shell.FLAG_NON_ROOT_SHELL)
+        Shell.Config.verboseLogging(BuildConfig.DEBUG)
+        // Shell.Config.setTimeout(10)
+    }
+
+    private fun initTheme() {
+        val sharedPreferences =
+            PreferenceManager.getDefaultSharedPreferences(instance)
+        val themesValue =
+            sharedPreferences.getString(
+                getMyString(R.string.interface_themes_key),
+                getMyString(R.string.interface_themes_follow_system_value)
+            )!!
+        setMyTheme(themesValue)
     }
 
     fun setMyTheme(themesValue: String) = launch(Dispatchers.Default) {
