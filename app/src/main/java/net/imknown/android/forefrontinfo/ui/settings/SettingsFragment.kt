@@ -13,8 +13,8 @@ import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.JsonIo
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
+import net.imknown.android.forefrontinfo.base.GetRawPropEventViewModel
 import net.imknown.android.forefrontinfo.base.IFragmentView
-import net.imknown.android.forefrontinfo.base.SharedViewModel
 
 class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineScope by MainScope() {
 
@@ -30,7 +30,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
         findPreference<SwitchPreferenceCompat>(MyApplication.getMyString(R.string.function_raw_build_prop_key))!!
     }
 
-    private val sharedViewModel: SharedViewModel by activityViewModels()
+    private val getRawPropEventViewModel: GetRawPropEventViewModel by activityViewModels()
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         launch(Dispatchers.IO) {
@@ -65,7 +65,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
             true
         }
 
-        sharedViewModel.isGetPropFinish.observe(viewLifecycleOwner, Observer<Boolean> {
+        getRawPropEventViewModel.isGetPropFinish.observe(viewLifecycleOwner, Observer {
             rawBuildPropPref.isEnabled = true
         })
 

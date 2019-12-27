@@ -22,7 +22,7 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
     private var myTempDataset: ArrayList<MyModel> = ArrayList()
     private val myAdapter = MyAdapter()
 
-    protected val sharedViewModel: SharedViewModel by activityViewModels()
+    protected val getRawPropEventViewModel: GetRawPropEventViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
