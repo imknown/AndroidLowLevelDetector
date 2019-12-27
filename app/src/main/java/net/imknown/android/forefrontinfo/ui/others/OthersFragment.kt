@@ -47,11 +47,12 @@ class OthersFragment : BaseListFragment() {
         add(MyApplication.getMyString(R.string.build_cpu_abi), Build.CPU_ABI)
         add(
             MyApplication.getMyString(R.string.build_supported_32_bit_abis),
-            Build.SUPPORTED_32_BIT_ABIS.asList().toString()
+            Build.SUPPORTED_32_BIT_ABIS.joinToString()
         )
         add(
             MyApplication.getMyString(R.string.build_supported_64_bit_abis),
-            Build.SUPPORTED_64_BIT_ABIS.asList().toString()
+            Build.SUPPORTED_64_BIT_ABIS.joinToString().takeIf { it.isNotEmpty() }
+                ?: MyApplication.getMyString(R.string.result_not_supported)
         )
         // endregion [Arch & ABI]
 
