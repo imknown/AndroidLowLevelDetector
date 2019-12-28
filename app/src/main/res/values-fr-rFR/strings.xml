@@ -53,7 +53,7 @@
     <string name="toybox_built_in_detail">Moi: %1$s\n\nDernier stable: %2$s\nPlus faible support: %3$s\nLgne principale: %4$s\nMaster: %5$s</string>
 
     <string name="webview_title">Version WebView</string>
-    <string name="webview_detail">WebView\nDernier stable: %1$s\nDernier béta: %2$s\nDernier développer: %3$s\nDernier Canary: %4$s</string>
+    <string name="webview_detail">Dernier stable: %1$s\nDernier béta: %2$s</string>
     <string name="webview_built_in_version">Mon system WebView integré à AOSP</string>
     <string name="webview_implement_version">Mon implémentation de WebView</string>
     <string name="webview_built_in">WebView intégré</string>

@@ -532,9 +532,7 @@ class HomeFragment : BaseListFragment() {
             |${MyApplication.getMyString(
                 R.string.webview_detail,
                 lld.webView.stable.version,
-                lld.webView.beta.version,
-                lld.webView.dev.version,
-                lld.webView.canary.version
+                lld.webView.beta.version
             )}
             """.trimMargin(),
             webViewColor
