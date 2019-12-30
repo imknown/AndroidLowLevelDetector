@@ -13,11 +13,6 @@
 - android.permission.INTERNET
   - User uses this permission to fetch data from remote server
   - This permission is only used when user turns on the switch in settings manually
-  
-- android.permission.REQUEST_INSTALL_PACKAGES
-  - User uses this permission to upgrade the app
-  - This permission is only used when user downloads and installs the latest version apk in settings manually
-  - This permission does not influence the apk distributed by Google Play Store
 
 ## Security
 
