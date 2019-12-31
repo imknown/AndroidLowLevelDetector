@@ -73,7 +73,7 @@ data class Lld(
         val stable: BaseInfo,
         // https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-8.0.0_r41/www/news.html
         val support: BaseInfo,
-        // https://android.googlesource.com/platform/external/toybox/+/refs/heads/android10-mainline-release
+        // https://android.googlesource.com/platform/external/toybox/+/refs/heads/android10-mainline-release/www/news.html
         val mainline: BaseInfo,
         // https://android.googlesource.com/platform/external/toybox/+/refs/heads/master/www/news.html
         val master: BaseInfo
