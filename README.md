@@ -18,7 +18,7 @@ Help you finding out whether your phone provider had implement the latest featur
 ## Features
 - Detect Android version
 - Detect Android security patch level
-- Detect Vendor security patch version
+- Detect Vendor security patch level
 - Detect Linux kernel
 - Detect A/B or A-Only
 - Detect Project Treble
