@@ -83,8 +83,6 @@ data class Lld(
     @Keep
     data class WebViews(
         val stable: BaseInfo,
-        val beta: BaseInfo,
-        val dev: BaseInfo,
-        val canary: BaseInfo
+        val beta: BaseInfo
     )
 }
