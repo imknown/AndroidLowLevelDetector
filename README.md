@@ -15,47 +15,20 @@ Help you finding out whether your phone provider had implement the latest featur
 ## Screenshots
 ![Home](art/home.png "Home") ![Others](art/others.png "Others") ![Settings](art/settings.png "Settings")
 
-## Features inside
-- detect Android version
-- detect Android security patch level
-- detect Vendor security patch version
-- detect Linux kernel
-- detect A/B or A-Only
-- detect Project Treble
-- detect Vendor NDK
-- detect System-as-root
-- detect (flattened) APEX
-- detect Toybox
-- detect WebView implement
-- detect outdatedTargetSdkVersion apk
-- dark mode supported
-- online/offline mode (fetching data from remote server or local)
-- in-app check up and upgrade
+## Features
+- Detect Android version
+- Detect Android security patch level
+- Detect Vendor security patch version
+- Detect Linux kernel
+- Detect A/B or A-Only
+- Detect Project Treble
+- Detect Vendor NDK
+- Detect System-as-root
+- Detect (flattened) APEX
+- Detect Toybox
+- Detect WebView implement
+- Detect outdatedTargetSdkVersion apk
+- Dark mode supported
+- Online/offline mode (fetching data from remote server or local)
 - MultiWindow/FreeForm/Landscape supported
-
-## Features todo
-- JetPack
-  - Architecture (MVVM, Lifecycle, ViewModel, LiveData, Navigation, etc.)
-  - Animation & transitions
-- detect dm-verity (version)
-- detect FBE/FDE
-- detect HAL
-- Android version market share
-- OpenGL ES/Vulkan/GPU Driver version
-- icu (https://developer.android.com/guide/topics/resources/internationalization)
-- kotlinPoet, googleAutoService (V2.0 ?)
-- settings
-  - speed mode (no animations, no CardViews, etc.)
-  - root mode
-  - show commands
-  - custom commands
-  - GAME???
-  - network cache logic
-  - select json server
-- documents
-  - development references
-  - user-readable explanation why mine not supported
-- copy result
-- run custom commands
-- licenses and acknowledge
-- etc.
+- Etc.

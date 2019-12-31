@@ -1,12 +1,38 @@
+# JOTTINGS
+Minds
 
-------
+## Features todo
+
+- JetPack
+  - Architecture (MVVM, Lifecycle, ViewModel, LiveData, Navigation, etc.)
+  - Animation & transitions
+- detect dm-verity (version)
+- detect FBE/FDE
+- detect HAL
+- Android version market share
+- OpenGL ES/Vulkan/GPU Driver version
+- icu (https://developer.android.com/guide/topics/resources/internationalization)
+- kotlinPoet, googleAutoService, custom commands (V2.0 ?)
+- settings
+  - root mode
+  - show commands
+  - network cache logic
+  - select json server
+- documents
+  - development references
+  - user-readable explanation why mine not supported
+- copy result
+- acknowledge
+- etc.
+
+## external
 
 https://android.googlesource.com/platform/external/
 
-------
+## avb
 
-https://android.googlesource.com/platform/external/avb/+/refs/tags/android-10.0.0_r17/avbtool
-https://android.googlesource.com/platform/external/avb/+/refs/tags/android-10.0.0_r17/libavb/avb_version.h
+https://android.googlesource.com/platform/external/avb/+/refs/tags/android-10.0.0_r20/avbtool
+https://android.googlesource.com/platform/external/avb/+/refs/tags/android-10.0.0_r20/libavb/avb_version.h
 
 ``` sh
 adb shell "grep dm- /proc/mounts"
@@ -22,8 +48,7 @@ adb shell ro.boot.vbmeta.avb_version # required (lib)avb version
 adb shell ro.boot.vbmeta.device_state
 ```
 
-------
-
+## Settings
 
 - https://developer.android.com/studio/command-line/adb#shellcommands
 - https://stackoverflow.com/questions/40624222/how-does-adb-shell-getprop-and-setprop-work
@@ -43,11 +68,11 @@ adb shell settings list secure
 # adb shell cat /data/property/persistent_properties
 ```
 
-------
+## busybox
 
 busybox (https://busybox.net/downloads/binaries/)
 
-------
+## selinux
 
 ``` sh
 adb shell getenforce
@@ -58,9 +83,3 @@ adb shell getenforce
 
 https://android.googlesource.com/platform/system/sepolicy/+/refs/heads/master/Android.bp#15
 https://android.googlesource.com/platform/system/sepolicy/+/refs/heads/master/policy_version.mk#4
-
-------
-
-``` sh
-adb shell ro.config.low_ram
-```
