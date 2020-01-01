@@ -25,34 +25,14 @@ class HomeFragment : BaseListFragment() {
     companion object {
         fun newInstance() = HomeFragment()
 
-        // https://source.android.com/setup/start/build-numbers
-        // https://source.android.com/security/enhancements/enhancements9
-        // https://source.android.com/setup/start/p-release-notes
-        // https://developer.android.com/about/versions/10
-        //
-        // https://www.android.com
-        // https://source.android.com/security/bulletin
-        // https://ci.android.com
-        // https://developer.android.com/preview/overview
-        //
-        // https://en.wikipedia.org/wiki/Android_version_history
-        // https://developer.android.com/about/dashboards/?hl=en
-        // https://www.bidouille.org/misc/androidcharts
-        //
-        // https://mta.qq.com/mta/data/device/os
-        // https://compass.umeng.com/#hardwareList
-        // https://tongji.baidu.com/research/app
         private val BUILD_VERSION_RELEASE = Build.VERSION.RELEASE
         private val BUILD_VERSION_SDK_INT = Build.VERSION.SDK_INT
 
-        // https://source.android.com/setup/start/build-numbers?hl=en#source-code-tags-and-builds
-        // https://android.googlesource.com/platform/frameworks/base/+refs"
         private val BUILD_RO_BUILD_ID = Build.ID
         private const val PROP_RO_SYSTEM_BUILD_ID = "ro.system.build.id"
         private const val PROP_RO_VENDOR_BUILD_ID = "ro.vendor.build.id"
         private const val PROP_RO_ODM_BUILD_ID = "ro.odm.build.id"
 
-        // https://source.android.com/security/bulletin
         private val BUILD_VERSION_SECURITY_PATCH by lazy {
             // Suppress because of lazy already
             @Suppress Build.VERSION.SECURITY_PATCH
@@ -61,8 +41,6 @@ class HomeFragment : BaseListFragment() {
 
         private const val PROP_VENDOR_SECURITY_PATCH = "ro.vendor.build.security_patch"
 
-        // https://android.googlesource.com/kernel/common/+refs
-        // https://source.android.com/setup/build/building-kernels#downloading
         private val SYSTEM_PROPERTY_LINUX_VERSION = System.getProperty("os.version")
 
         // https://source.android.com/devices/tech/ota/ab?hl=en
@@ -70,7 +48,7 @@ class HomeFragment : BaseListFragment() {
         private const val PROP_AB_UPDATE = "ro.build.ab_update"
         private const val PROP_SLOT_SUFFIX = "ro.boot.slot_suffix"
 
-        // https://source.android.com/devices/architecture/?hl=en#hidl
+        // https://source.android.com/devices/architecture?hl=en#hidl
         private const val PROP_TREBLE_ENABLED = "ro.treble.enabled"
 
         // https://source.android.com/devices/architecture/vndk?hl=en
@@ -90,16 +68,8 @@ class HomeFragment : BaseListFragment() {
         private const val PROP_APEX_UPDATABLE = "ro.apex.updatable"
         private const val CMD_FLATTENED_APEX_MOUNT = "grep 'tmpfs /apex tmpfs' /proc/mounts"
 
-        // https://github.com/landley/toybox
-        // https://android.googlesource.com/platform/external/toybox/+refs
-        // https://chromium.googlesource.com/aosp/platform/system/core/+/upstream/shell_and_utilities/
         private const val CMD_TOYBOX_VERSION = "toybox --version"
 
-        // https://www.chromium.org/developers/calendar
-        //
-        // https://en.wikipedia.org/wiki/Google_Chrome_version_history
-        // https://en.wikipedia.org/wiki/WebKit
-        // https://en.wikipedia.org/wiki/Chromium_(web_browser)
         private const val WEB_VIEW_BUILT_IN_PACKAGE_NAME = "com.android.webview"
         private const val WEB_VIEW_STABLE_PACKAGE_NAME = "com.google.android.webview"
         private const val WEB_VIEW_BETA_PACKAGE_NAME = "com.google.android.webview.beta"

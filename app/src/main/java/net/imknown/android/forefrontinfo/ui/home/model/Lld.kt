@@ -9,6 +9,19 @@ data class Lld(
     val toybox: Toyboxes,
     val webView: WebViews
 ) : BaseInfo() {
+    // https://source.android.com/security/enhancements/enhancements9
+    // https://source.android.com/setup/start/p-release-notes
+    // https://developer.android.com/about/versions/10
+    //
+    // https://en.wikipedia.org/wiki/Android_version_history
+    // https://developer.android.com/about/dashboards?hl=en
+    // https://www.bidouille.org/misc/androidcharts
+    //
+    // https://mta.qq.com/mta/data/device/os
+    // https://compass.umeng.com/#hardwareList
+    // https://tongji.baidu.com/research/app
+    // http://appbrain.com/stats/top-android-sdk-versions
+    // https://gs.statcounter.com/android-version-market-share/
     @Keep
     data class Androids(
         // https://source.android.com/security/bulletin/
@@ -33,6 +46,10 @@ data class Lld(
             val api: String
         ) : BaseInfo()
 
+        // https://android.googlesource.com/platform/build/+/refs/tags/android-10.0.0_r20/core/build_id.mk
+        // https://android.googlesource.com/platform/build/+/refs/tags/android-10.0.0_r19/core/build_id.mk
+        // https://android.googlesource.com/platform/build/+/refs/tags/android-10.0.0_r18/core/build_id.mk
+        // https://android.googlesource.com/platform/build/+/refs/heads/master/core/build_id.mk
         @Keep
         data class Build(
             val details: List<Detail>
@@ -67,6 +84,9 @@ data class Lld(
         )
     }
 
+    // https://github.com/landley/toybox
+    // https://android.googlesource.com/platform/external/toybox/+refs
+    // https://chromium.googlesource.com/aosp/platform/system/core/+/upstream/shell_and_utilities/
     @Keep
     data class Toyboxes(
         // https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-10.0.0_r20/www/news.html
@@ -80,6 +100,8 @@ data class Lld(
     )
 
     // https://www.chromium.org/developers/calendar
+    //
+    // https://en.wikipedia.org/wiki/Google_Chrome_version_history
     @Keep
     data class WebViews(
         val stable: BaseInfo,
