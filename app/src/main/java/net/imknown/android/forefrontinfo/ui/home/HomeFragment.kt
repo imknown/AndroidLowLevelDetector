@@ -177,22 +177,23 @@ class HomeFragment : BaseListFragment() {
 
     private fun detectAndroid(lld: Lld) {
         @ColorInt val androidColor = when {
-            isLatestStableAndroid(lld) -> COLOR_STATE_LIST_NO_PROBLEM
-            isSupportedByUpstream(lld) -> COLOR_STATE_LIST_WARNING
+            isLatestStableAndroid(lld) || isLatestPreviewAndroid(lld) -> COLOR_STATE_LIST_NO_PROBLEM
+            isSupportedByUpstreamAndroid(lld) -> COLOR_STATE_LIST_WARNING
             else -> COLOR_STATE_LIST_CRITICAL
         }
 
-        val previewType: String
+        val previewName = lld.android.alpha.name
         val previewVersion: String
         val previewApi: String
+        val previewType: String
         if (lld.android.beta.api.isNotEmpty()) {
-            previewType = "Beta"
             previewVersion = lld.android.beta.version
             previewApi = lld.android.beta.api
+            previewType = "Beta"
         } else {
-            previewType = "Alpha"
             previewVersion = lld.android.alpha.version
             previewApi = lld.android.alpha.api
+            previewType = "Alpha"
         }
 
         add(
@@ -210,9 +211,11 @@ class HomeFragment : BaseListFragment() {
                 MyApplication.getMyString(
                     R.string.android_info, lld.android.support.version, lld.android.support.api
                 ),
-                previewType,
+                MyApplication.getMyString(R.string.android_info_preview),
                 MyApplication.getMyString(
-                    R.string.android_info, previewVersion, previewApi
+                    R.string.android_info,
+                    "$previewName ($previewVersion)",
+                    "$previewApi, $previewType"
                 )
             ),
             androidColor
@@ -240,7 +243,7 @@ class HomeFragment : BaseListFragment() {
         }
 
         @ColorInt val buildIdColor = when {
-            details.map { it.id }.contains(buildIdResult) -> COLOR_STATE_LIST_NO_PROBLEM
+            details.map { it.id }.contains(buildIdResult) || isLatestPreviewAndroid(lld) -> COLOR_STATE_LIST_NO_PROBLEM
             isLatestStableAndroid(lld) -> COLOR_STATE_LIST_WARNING
             else -> COLOR_STATE_LIST_CRITICAL
         }

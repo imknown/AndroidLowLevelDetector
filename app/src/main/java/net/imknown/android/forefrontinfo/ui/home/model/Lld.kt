@@ -41,8 +41,7 @@ data class Lld(
     ) {
         @Keep
         data class Android(
-            val active: Boolean,
-            val codename: String,
+            val name: String,
             val api: String
         ) : BaseInfo()
 
