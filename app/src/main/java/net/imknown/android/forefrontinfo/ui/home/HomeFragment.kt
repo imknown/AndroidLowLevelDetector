@@ -214,8 +214,8 @@ class HomeFragment : BaseListFragment() {
                 MyApplication.getMyString(R.string.android_info_preview),
                 MyApplication.getMyString(
                     R.string.android_info,
-                    "$previewName ($previewVersion)",
-                    "$previewApi, $previewType"
+                    "$previewName ($previewVersion, $previewType)",
+                    previewApi
                 )
             ),
             androidColor
