@@ -325,9 +325,9 @@ class HomeFragment : BaseListFragment() {
         // val bootPartitions = sh(CMD_BOOT_PARTITION)[0]
 
         val isAbUpdateSupported = getStringProperty(PROP_AB_UPDATE, isAtLeastAndroid7()).toBoolean()
-        val abUpdateSupportedArgs = translate(isAbUpdateSupported)
+        var abUpdateSupportedArgs = translate(isAbUpdateSupported)
 
-        var abFinalResult =
+        val abFinalResult =
             MyApplication.getMyString(
                 R.string.ab_seamless_update_enabled_title
             )
@@ -340,7 +340,7 @@ class HomeFragment : BaseListFragment() {
                 MyApplication.getMyString(android.R.string.unknownName)
             }
 
-            abFinalResult += MyApplication.getMyString(
+            abUpdateSupportedArgs += MyApplication.getMyString(
                 R.string.current_using_ab_slot_result,
                 slotSuffixUsing
             )
