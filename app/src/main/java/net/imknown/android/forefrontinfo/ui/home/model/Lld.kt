@@ -20,7 +20,7 @@ data class Lld(
     // https://mta.qq.com/mta/data/device/os
     // https://compass.umeng.com/#hardwareList
     // https://tongji.baidu.com/research/app
-    // http://appbrain.com/stats/top-android-sdk-versions
+    // https://www.appbrain.com/stats/top-android-sdk-versions
     // https://gs.statcounter.com/android-version-market-share/
     @Keep
     data class Androids(
