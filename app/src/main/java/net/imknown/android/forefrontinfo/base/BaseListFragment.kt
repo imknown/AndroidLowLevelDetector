@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.ColorInt
-import androidx.fragment.app.activityViewModels
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.topjohnwu.superuser.Shell
@@ -21,8 +20,6 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
 
     private var myTempDataset: ArrayList<MyModel> = ArrayList()
     private val myAdapter = MyAdapter()
-
-    protected val getRawPropEventViewModel: GetRawPropEventViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,

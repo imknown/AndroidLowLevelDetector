@@ -2,6 +2,7 @@ package net.imknown.android.forefrontinfo.ui.others
 
 import android.content.SharedPreferences
 import android.os.Build
+import androidx.fragment.app.activityViewModels
 import androidx.preference.PreferenceManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -9,6 +10,7 @@ import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.BaseListFragment
+import net.imknown.android.forefrontinfo.base.GetRawPropEventViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -17,6 +19,8 @@ class OthersFragment : BaseListFragment() {
     companion object {
         fun newInstance() = OthersFragment()
     }
+
+    private val getRawPropEventViewModel: GetRawPropEventViewModel by activityViewModels()
 
     override suspend fun collectionDataset() {
         fillDataset()
