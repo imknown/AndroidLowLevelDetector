@@ -50,7 +50,7 @@ ext {
             libsu         : '2.5.1',
 
             // https://github.com/square/leakcanary
-            leakCanary    : '2.0',
+            leakCanary    : '2.1',
 
             // https://github.com/kittinunf/fuel
             fuel          : '2.2.1',
