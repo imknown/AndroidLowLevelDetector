@@ -1,10 +1,11 @@
-package net.imknown.android.forefrontinfo.base
+package net.imknown.android.forefrontinfo.ui
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class GetRawPropEventViewModel : ViewModel() {
-    val isGetPropFinish = MutableLiveData<Nothing?>()
+    var isGetPropFinish = MutableLiveData<Nothing?>()
+        private set
 
     fun onFinish() {
         isGetPropFinish.value = null

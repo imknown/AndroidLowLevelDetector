@@ -13,8 +13,8 @@ import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.JsonIo
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
-import net.imknown.android.forefrontinfo.base.GetRawPropEventViewModel
 import net.imknown.android.forefrontinfo.base.IFragmentView
+import net.imknown.android.forefrontinfo.ui.GetRawPropEventViewModel
 
 class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineScope by MainScope() {
 
@@ -45,10 +45,6 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
     }
 
     private suspend fun initViews() = withContext(Dispatchers.Main) {
-        if (!isActivityAndFragmentOk(this@SettingsFragment)) {
-            return@withContext
-        }
-
         val scrollBarModePref =
             findPreference<ListPreference>(MyApplication.getMyString(R.string.interface_scroll_bar_key))!!
         scrollBarModePref.setOnPreferenceChangeListener { _: Preference, newValue: Any ->
@@ -95,9 +91,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
 
     // region [Scroll bar]
     private fun onScrollBarChanged(value: String) = launch(Dispatchers.Default) {
-        if (isActivityAndFragmentOk(this@SettingsFragment)) {
-            setScrollBarMode(listView, value)
-        }
+        setScrollBarMode(listView, value)
     }
     // endregion [Scroll bar]
 

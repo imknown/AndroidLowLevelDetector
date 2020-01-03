@@ -1,24 +1,21 @@
 package net.imknown.android.forefrontinfo.base
 
-import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.ColorInt
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.topjohnwu.superuser.Shell
 import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.coroutines.*
+import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
 
 abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
     SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private var myTempDataset: ArrayList<MyModel> = ArrayList()
     private val myAdapter = MyAdapter()
 
     override fun onCreateView(
@@ -34,6 +31,8 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
 
         initViews()
 
+        init()
+
         launch(Dispatchers.IO) {
             val sharedPreferences =
                 PreferenceManager.getDefaultSharedPreferences(MyApplication.instance)
@@ -46,18 +45,13 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
             PreferenceManager.getDefaultSharedPreferences(MyApplication.instance)
                 .registerOnSharedPreferenceChangeListener(this@BaseListFragment)
 
-            collectionDatasetCaller()
+            collectModels()
         }
     }
 
-    override fun onSharedPreferenceChanged(
-        sharedPreferences: SharedPreferences,
-        key: String
-    ) {
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
         launch(Dispatchers.IO) {
-            if (key == MyApplication.getMyString(R.string.interface_scroll_bar_key)
-                && isActivityAndFragmentOk(this@BaseListFragment)
-            ) {
+            if (key == MyApplication.getMyString(R.string.interface_scroll_bar_key)) {
                 val scrollBarMode = sharedPreferences.getString(
                     key,
                     MyApplication.getMyString(R.string.interface_no_scroll_bar_value)
@@ -70,10 +64,6 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
 
     override fun onDestroyView() {
         super.onDestroyView()
-
-        myTempDataset.clear()
-        myAdapter.addAll(myTempDataset)
-        myAdapter.notifyDataSetChanged()
 
         PreferenceManager.getDefaultSharedPreferences(MyApplication.instance)
             .unregisterOnSharedPreferenceChangeListener(this)
@@ -89,7 +79,7 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
 
         swipeRefreshLayout.setOnRefreshListener {
             launch(Dispatchers.IO) {
-                collectionDatasetCaller()
+                collectModels()
             }
         }
 
@@ -104,87 +94,41 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
         }
     }
 
-    protected suspend fun collectionDatasetCaller(delay: Long = 0) {
-        if (delay > 0) {
-            delay(delay)
+    abstract fun init()
+
+    protected suspend fun collectModelsCaller(delay: Long) {
+        delay(delay)
+
+        collectModels()
+    }
+
+    protected abstract suspend fun collectModels()
+
+    protected fun showModels(newModels: java.util.ArrayList<MyModel>) {
+        launch {
+            myAdapter.addAll(newModels)
+
+            withContext(Dispatchers.Main) {
+                myAdapter.notifyDataSetChanged()
+
+                swipeRefreshLayout.isRefreshing = false
+            }
         }
-
-        collectionDataset()
     }
 
-    protected abstract suspend fun collectionDataset()
-
-    protected fun createNewTempDataset() {
-        myTempDataset.clear()
-        myTempDataset = ArrayList()
-    }
-
-    protected fun add(title: String, detail: String?) {
-        val translatedDetail = if (detail.isNullOrEmpty()) {
-            MyApplication.getMyString(R.string.build_not_filled)
-        } else {
-            detail.toString()
-        }
-
-        myTempDataset.add(MyModel(title, translatedDetail))
-    }
-
-    protected fun add(title: String, detail: String?, condition: Boolean) =
-        myTempDataset.add(MyModel(title, detail.toString(), condition))
-
-    protected fun add(title: String, detail: String?, @ColorInt color: Int) =
-        myTempDataset.add(MyModel(title, detail.toString(), color))
-
-    protected suspend fun showResult() = withContext(Dispatchers.Main) {
-        myAdapter.addAll(myTempDataset)
-        myAdapter.notifyDataSetChanged()
-        myTempDataset.clear()
+    protected fun showError(error: Exception) = launch {
+        toast(error.message.toString())
 
         swipeRefreshLayout.isRefreshing = false
-    }
 
-    override fun showError(error: Throwable) {
-        super.showError(error)
-
-        launch {
-            toast(error.message.toString())
-        }
-
-        launch(Dispatchers.Main) {
-            swipeRefreshLayout.isRefreshing = false
+        withContext(Dispatchers.Default) {
+            if (BuildConfig.DEBUG) {
+                error.printStackTrace()
+            }
         }
     }
 
 //    protected suspend fun disableSwipeRefresh() = withContext(Dispatchers.Main) {
 //        swipeRefresh.isEnabled = false
-//    }
-
-    protected fun sh(cmd: String, condition: Boolean = true): List<String> =
-        if (condition) {
-            Shell.sh(cmd).exec().out
-        } else {
-            emptyList()
-        }
-
-    @SuppressLint("PrivateApi")
-    protected fun getStringProperty(key: String, condition: Boolean = true): String {
-        return if (condition) {
-            Class.forName("android.os.SystemProperties").getDeclaredMethod(
-                "get",
-                String::class.java,
-                String::class.java
-            ).invoke(null, key, MyApplication.getMyString(R.string.build_not_filled)) as String
-        } else {
-            MyApplication.getMyString(R.string.result_not_supported)
-        }
-    }
-
-//    @SuppressLint("PrivateApi", "DiscouragedPrivateApi")
-//    protected fun setStringProperty(key: String, value: String) {
-//        Class.forName("android.os.SystemProperties").getDeclaredMethod(
-//            "set",
-//            String::class.java,
-//            String::class.java
-//        ).invoke(null, key, value)
 //    }
 }

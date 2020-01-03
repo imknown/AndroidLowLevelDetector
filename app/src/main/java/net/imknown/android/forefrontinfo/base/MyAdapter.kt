@@ -5,10 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_list_item.view.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.R
 
 class MyAdapter : RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
-    private val myDataset = ArrayList<MyModel>()
+    private val myModels = ArrayList<MyModel>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(
@@ -20,16 +22,16 @@ class MyAdapter : RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.itemView.tvTitle.setBackgroundColor(myDataset[position].color)
-        holder.itemView.tvTitle.text = myDataset[position].title
-        holder.itemView.tvDetail.text = myDataset[position].detail
+        holder.itemView.tvTitle.setBackgroundColor(myModels[position].color)
+        holder.itemView.tvTitle.text = myModels[position].title
+        holder.itemView.tvDetail.text = myModels[position].detail
     }
 
-    override fun getItemCount() = myDataset.size
+    override fun getItemCount() = myModels.size
 
-    fun addAll(newDataset: ArrayList<MyModel>) {
-        myDataset.clear()
-        myDataset.addAll(newDataset)
+    suspend fun addAll(newModels: ArrayList<MyModel>) = withContext(Dispatchers.Default) {
+        myModels.clear()
+        myModels.addAll(newModels)
     }
 
     class MyViewHolder(view: View) : RecyclerView.ViewHolder(view)
