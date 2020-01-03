@@ -11,7 +11,7 @@ abstract class BaseListViewModel : ViewModel(), IAndroidVersion {
     var models = MutableLiveData<ArrayList<MyModel>>()
         private set
 
-    protected suspend fun sh(cmd: String, condition: Boolean = true) =
+    protected suspend fun sh(cmd: String, condition: Boolean = true): MutableList<String> =
         withContext(Dispatchers.IO) {
             if (condition) {
                 Shell.sh(cmd).exec().out
