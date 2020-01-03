@@ -16,8 +16,8 @@ class OthersFragment : BaseListFragment() {
         fun newInstance() = OthersFragment()
     }
 
-    private val getRawPropEventViewModel: GetRawPropEventViewModel by activityViewModels()
-    private val othersViewModel = OthersViewModel()
+    private val getRawPropEventViewModel by activityViewModels<GetRawPropEventViewModel>()
+    private val othersViewModel by activityViewModels<OthersViewModel>()
 
     override fun init() {
         othersViewModel.models.observe(viewLifecycleOwner, Observer {

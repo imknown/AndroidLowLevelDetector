@@ -30,7 +30,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineSco
         findPreference<SwitchPreferenceCompat>(MyApplication.getMyString(R.string.function_raw_build_prop_key))!!
     }
 
-    private val getRawPropEventViewModel: GetRawPropEventViewModel by activityViewModels()
+    private val getRawPropEventViewModel by activityViewModels<GetRawPropEventViewModel>()
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         launch(Dispatchers.IO) {

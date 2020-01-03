@@ -1,6 +1,7 @@
 package net.imknown.android.forefrontinfo.ui.home
 
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.base.BaseListFragment
@@ -11,7 +12,7 @@ class HomeFragment : BaseListFragment() {
         fun newInstance() = HomeFragment()
     }
 
-    private val homeViewModel = HomeViewModel()
+    private val homeViewModel by activityViewModels<HomeViewModel>()
 
     override fun init() {
         homeViewModel.subtitle.observe(viewLifecycleOwner, Observer {
