@@ -539,7 +539,7 @@ class HomeViewModel : BaseListViewModel() {
 
     private fun getPackageInfo(packageName: String) =
         try {
-            MyApplication.instance.packageManager?.getPackageInfo(packageName, 0)
+            MyApplication.instance.packageManager.getPackageInfo(packageName, 0)
         } catch (e: Exception) {
             Log.d(javaClass.simpleName, "$packageName not found.")
             null
