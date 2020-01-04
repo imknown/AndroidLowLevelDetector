@@ -4,8 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class GetRawPropEventViewModel : ViewModel() {
-    var isGetPropFinish = MutableLiveData<Nothing?>()
-        private set
+    val isGetPropFinish by lazy { MutableLiveData<ArrayList<Nothing>>() }
 
     fun onFinish() {
         isGetPropFinish.value = null

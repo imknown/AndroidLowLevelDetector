@@ -6,11 +6,9 @@ import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.withContext
-import java.util.*
 
 abstract class BaseListViewModel : ViewModel(), IAndroidVersion {
-    var models = MutableLiveData<ArrayList<MyModel>>()
-        private set
+    val models by lazy { MutableLiveData<ArrayList<MyModel>>() }
 
     abstract suspend fun collectModels(): Job
 

@@ -83,11 +83,9 @@ class HomeViewModel : BaseListViewModel() {
         private const val PROP_RO_PRODUCT_FIRST_API_LEVEL = "ro.product.first_api_level"
     }
 
-    var subtitle = MutableLiveData<Subtitle>()
-        private set
+    val subtitle by lazy { MutableLiveData<Subtitle>() }
 
-    var error = MutableLiveData<Exception>()
-        private set
+    val error by lazy { MutableLiveData<Exception>() }
 
     private fun copyJsonIfNeeded() {
         if (JsonIo.whetherNeedCopyAssets(MyApplication.instance.assets)) {
