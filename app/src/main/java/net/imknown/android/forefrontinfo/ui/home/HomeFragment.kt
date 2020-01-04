@@ -25,7 +25,9 @@ class HomeFragment : BaseListFragment() {
         })
 
         listViewModel.error.observe(viewLifecycleOwner, Observer {
-            showError(it)
+            it.getContentIfNotHandled()?.let {
+                showError(it)
+            }
         })
     }
 }

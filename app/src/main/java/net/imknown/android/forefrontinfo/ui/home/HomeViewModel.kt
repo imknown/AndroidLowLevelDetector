@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.*
 import net.imknown.android.forefrontinfo.base.BaseListViewModel
+import net.imknown.android.forefrontinfo.base.EventHandler
 import net.imknown.android.forefrontinfo.base.MyModel
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.home.model.Subtitle
@@ -85,7 +86,7 @@ class HomeViewModel : BaseListViewModel() {
 
     val subtitle by lazy { MutableLiveData<Subtitle>() }
 
-    val error by lazy { MutableLiveData<Exception>() }
+    val error by lazy { MutableLiveData<EventHandler<Exception>>() }
 
     private fun copyJsonIfNeeded() {
         if (JsonIo.whetherNeedCopyAssets(MyApplication.instance.assets)) {
@@ -130,7 +131,7 @@ class HomeViewModel : BaseListViewModel() {
         }
 
     private suspend fun onError(exception: Exception) = withContext(Dispatchers.Main) {
-        error.value = exception
+        error.value = EventHandler(exception)
     }
 
     private suspend fun prepareResult(isOnline: Boolean) {
