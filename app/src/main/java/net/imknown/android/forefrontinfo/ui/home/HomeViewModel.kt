@@ -99,7 +99,7 @@ class HomeViewModel : BaseListViewModel() {
         }
     }
 
-    fun collectModels() =
+    override suspend fun collectModels() =
         viewModelScope.launch(Dispatchers.IO) {
             val sharedPreferences =
                 PreferenceManager.getDefaultSharedPreferences(MyApplication.instance)

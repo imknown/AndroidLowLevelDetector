@@ -12,24 +12,20 @@ class HomeFragment : BaseListFragment() {
         fun newInstance() = HomeFragment()
     }
 
-    private val homeViewModel by activityViewModels<HomeViewModel>()
+    override val listViewModel by activityViewModels<HomeViewModel>()
 
     override fun init() {
-        homeViewModel.subtitle.observe(viewLifecycleOwner, Observer {
+        listViewModel.subtitle.observe(viewLifecycleOwner, Observer {
             val actionBar = (activity as AppCompatActivity).supportActionBar
             actionBar?.subtitle = MyApplication.getMyString(it.lldDataModeResId, it.dataVersion)
         })
 
-        homeViewModel.models.observe(viewLifecycleOwner, Observer {
+        listViewModel.models.observe(viewLifecycleOwner, Observer {
             showModels(it)
         })
 
-        homeViewModel.error.observe(viewLifecycleOwner, Observer {
+        listViewModel.error.observe(viewLifecycleOwner, Observer {
             showError(it)
         })
-    }
-
-    override suspend fun collectModels() {
-        homeViewModel.collectModels()
     }
 }

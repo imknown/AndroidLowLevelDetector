@@ -17,18 +17,14 @@ class OthersFragment : BaseListFragment() {
     }
 
     private val getRawPropEventViewModel by activityViewModels<GetRawPropEventViewModel>()
-    private val othersViewModel by activityViewModels<OthersViewModel>()
+    override val listViewModel by activityViewModels<OthersViewModel>()
 
     override fun init() {
-        othersViewModel.models.observe(viewLifecycleOwner, Observer {
+        listViewModel.models.observe(viewLifecycleOwner, Observer {
             getRawPropEventViewModel.onFinish()
 
             showModels(it)
         })
-    }
-
-    override suspend fun collectModels() {
-        othersViewModel.collectModels()
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {

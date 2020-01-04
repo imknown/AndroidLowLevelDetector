@@ -19,7 +19,7 @@ class OthersViewModel : BaseListViewModel() {
         private const val CMD_GETPROP = "getprop"
     }
 
-    fun collectModels() = viewModelScope.launch(Dispatchers.IO) {
+    override suspend fun collectModels() = viewModelScope.launch(Dispatchers.IO) {
         val tempModels = ArrayList<MyModel>()
 
         // region [Basic]

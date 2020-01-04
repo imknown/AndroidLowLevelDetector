@@ -18,6 +18,8 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
 
     private val myAdapter = MyAdapter()
 
+    protected abstract val listViewModel: BaseListViewModel
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -45,7 +47,7 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
             PreferenceManager.getDefaultSharedPreferences(MyApplication.instance)
                 .registerOnSharedPreferenceChangeListener(this@BaseListFragment)
 
-            collectModels()
+            listViewModel.collectModels()
         }
     }
 
@@ -79,7 +81,7 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
 
         swipeRefreshLayout.setOnRefreshListener {
             launch(Dispatchers.IO) {
-                collectModels()
+                listViewModel.collectModels()
             }
         }
 
@@ -99,10 +101,8 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
     protected suspend fun collectModelsCaller(delay: Long) {
         delay(delay)
 
-        collectModels()
+        listViewModel.collectModels()
     }
-
-    protected abstract suspend fun collectModels()
 
     protected fun showModels(newModels: java.util.ArrayList<MyModel>) {
         launch {
