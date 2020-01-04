@@ -104,7 +104,7 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
         listViewModel.collectModels()
     }
 
-    protected fun showModels(newModels: java.util.ArrayList<MyModel>) {
+    protected fun showModels(newModels: ArrayList<MyModel>) {
         launch {
             myAdapter.addAll(newModels)
 
