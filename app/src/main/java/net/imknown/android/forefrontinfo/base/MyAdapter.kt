@@ -10,7 +10,7 @@ import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.R
 
 class MyAdapter : RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
-    private val myModels = ArrayList<MyModel>()
+    private val myModels by lazy { ArrayList<MyModel>() }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(
