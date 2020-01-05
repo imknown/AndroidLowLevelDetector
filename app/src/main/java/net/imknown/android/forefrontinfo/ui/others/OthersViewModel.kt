@@ -112,7 +112,6 @@ class OthersViewModel : BaseListViewModel() {
         }
     }
 
-
     private fun addRawProp(tempModels: ArrayList<MyModel>, text: String) {
         val result = text.split(": ")
         add(tempModels, removeSquareBrackets(result[0]), removeSquareBrackets(result[1]))
