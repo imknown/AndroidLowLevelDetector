@@ -136,7 +136,7 @@ class MainActivity : AppCompatActivity(), IAndroidVersion, CoroutineScope by Mai
     }
 
     override fun onBackPressed() {
-        launch(Dispatchers.IO) {
+        launch(Dispatchers.Default) {
             if (isAtLeastAndroid10()) {
                 // https://github.com/ChuckerTeam/chucker/issues/102
                 // https://issuetracker.google.com/issues/139738913
