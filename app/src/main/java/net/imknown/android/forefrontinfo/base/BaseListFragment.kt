@@ -109,15 +109,13 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
         listViewModel.collectModels()
     }
 
-    protected fun showModels(newModels: ArrayList<MyModel>) {
-        launch {
-            myAdapter.addAll(newModels)
+    protected fun showModels(myModels: ArrayList<MyModel>) = launch(Dispatchers.Default) {
+        myAdapter.addAll(myModels)
 
-            withContext(Dispatchers.Main) {
-                myAdapter.notifyDataSetChanged()
+        withContext(Dispatchers.Main) {
+            myAdapter.notifyDataSetChanged()
 
-                swipeRefreshLayout.isRefreshing = false
-            }
+            swipeRefreshLayout.isRefreshing = false
         }
     }
 
