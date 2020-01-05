@@ -4,16 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.preference.PreferenceManager
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.coroutines.*
 import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
+import net.imknown.android.forefrontinfo.ui.settings.stringLiveData
 
-abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
-    SharedPreferences.OnSharedPreferenceChangeListener {
+abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope() {
 
     private val myAdapter = MyAdapter()
 
@@ -34,15 +34,21 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
 
         init()
 
+        val key = MyApplication.getMyString(R.string.interface_scroll_bar_key)
+        val defValue = MyApplication.getMyString(R.string.interface_no_scroll_bar_value)
+        MyApplication.sharedPreferences.stringLiveData(key, defValue)
+            .observe(viewLifecycleOwner, Observer { scrollBarMode ->
+                launch(Dispatchers.IO) {
+                    setScrollBarMode(recyclerView, scrollBarMode)
+                }
+            })
+
         launch(Dispatchers.IO) {
             val scrollBarMode = MyApplication.sharedPreferences.getString(
                 MyApplication.getMyString(R.string.interface_scroll_bar_key),
                 MyApplication.getMyString(R.string.interface_no_scroll_bar_value)
             )!!
             setScrollBarMode(recyclerView, scrollBarMode)
-
-            PreferenceManager.getDefaultSharedPreferences(MyApplication.instance)
-                .registerOnSharedPreferenceChangeListener(this@BaseListFragment)
 
             // When activity is recreated, use LiveData to restore the data
             if (hasNoData(savedInstanceState)) {
@@ -54,24 +60,8 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
     private fun hasNoData(savedInstanceState: Bundle?) =
         savedInstanceState == null || listViewModel.models.value.isNullOrEmpty()
 
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
-        launch(Dispatchers.IO) {
-            if (key == MyApplication.getMyString(R.string.interface_scroll_bar_key)) {
-                val scrollBarMode = sharedPreferences.getString(
-                    key,
-                    MyApplication.getMyString(R.string.interface_no_scroll_bar_value)
-                )!!
-
-                setScrollBarMode(recyclerView, scrollBarMode)
-            }
-        }
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
-
-        PreferenceManager.getDefaultSharedPreferences(MyApplication.instance)
-            .unregisterOnSharedPreferenceChangeListener(this)
 
         cancel()
     }

@@ -1,6 +1,5 @@
 package net.imknown.android.forefrontinfo.ui.others
 
-import android.content.SharedPreferences
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.Dispatchers
@@ -9,6 +8,7 @@ import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.BaseListFragment
 import net.imknown.android.forefrontinfo.ui.GetRawPropEventViewModel
+import net.imknown.android.forefrontinfo.ui.settings.booleanLiveData
 
 class OthersFragment : BaseListFragment() {
 
@@ -25,15 +25,14 @@ class OthersFragment : BaseListFragment() {
 
             showModels(it)
         })
-    }
 
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
-        super.onSharedPreferenceChanged(sharedPreferences, key)
-
-        launch(Dispatchers.IO) {
-            if (key == MyApplication.getMyString(R.string.function_raw_build_prop_key)) {
-                collectModelsCaller(500)
-            }
-        }
+        val key = MyApplication.getMyString(R.string.function_raw_build_prop_key)
+        val defValue = false
+        MyApplication.sharedPreferences.booleanLiveData(key, defValue)
+            .observe(viewLifecycleOwner, Observer {
+                launch(Dispatchers.IO) {
+                    collectModelsCaller(500)
+                }
+            })
     }
 }
