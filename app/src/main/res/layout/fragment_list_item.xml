@@ -8,7 +8,8 @@
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
     app:cardCornerRadius="@dimen/item_card_corner_radius"
-    app:cardElevation="@dimen/item_card_elevation">
+    app:cardElevation="@dimen/item_card_elevation"
+    tools:context=".base.MyAdapter">
 
     <LinearLayout
         android:layout_width="match_parent"
