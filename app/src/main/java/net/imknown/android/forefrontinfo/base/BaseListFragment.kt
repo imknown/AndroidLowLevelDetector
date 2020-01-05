@@ -31,7 +31,7 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        initViews()
+        initViews(savedInstanceState)
 
         init()
 
@@ -47,7 +47,8 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
             PreferenceManager.getDefaultSharedPreferences(MyApplication.instance)
                 .registerOnSharedPreferenceChangeListener(this@BaseListFragment)
 
-            listViewModel.collectModels()
+            // When activity is recreated, use LiveData to restore the data
+            savedInstanceState ?: listViewModel.collectModels()
         }
     }
 
@@ -73,11 +74,15 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
         cancel()
     }
 
-    private fun initViews() {
+    private fun initViews(savedInstanceState: Bundle?) {
         swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent)
         swipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.colorStateless)
 
-        swipeRefreshLayout.isRefreshing = true
+        if (savedInstanceState == null) {
+            // When activity is recreated, data is filled by memory.
+            // It is fast. No progress indicator needed indeed.
+            swipeRefreshLayout.isRefreshing = true
+        }
 
         swipeRefreshLayout.setOnRefreshListener {
             launch(Dispatchers.IO) {

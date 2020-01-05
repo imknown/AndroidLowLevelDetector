@@ -2,11 +2,8 @@ package net.imknown.android.forefrontinfo
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.annotation.ColorInt
-import androidx.annotation.ColorRes
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -21,15 +18,6 @@ class MainActivity : AppCompatActivity(), IAndroidVersion, CoroutineScope by Mai
 
     companion object {
         private const val BUNDLE_ID_LAST_ID = "BUNDLE_ID_LAST_ID"
-
-        @ColorInt
-        var COLOR_STATE_LIST_DEFAULT_STYLE: Int = 0
-        @ColorInt
-        var COLOR_STATE_LIST_NO_PROBLEM: Int = 0
-        @ColorInt
-        var COLOR_STATE_LIST_WARNING: Int = 0
-        @ColorInt
-        var COLOR_STATE_LIST_CRITICAL: Int = 0
     }
 
     private val isBroughtToFront
@@ -49,15 +37,6 @@ class MainActivity : AppCompatActivity(), IAndroidVersion, CoroutineScope by Mai
             true
         }
 
-    private fun initColors() {
-        COLOR_STATE_LIST_DEFAULT_STYLE = getMyColor(R.color.colorStateless)
-        COLOR_STATE_LIST_NO_PROBLEM = getMyColor(R.color.colorNoProblem)
-        COLOR_STATE_LIST_WARNING = getMyColor(R.color.colorWaring)
-        COLOR_STATE_LIST_CRITICAL = getMyColor(R.color.colorCritical)
-    }
-
-    private fun getMyColor(@ColorRes id: Int) = ContextCompat.getColor(this, id)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -74,8 +53,6 @@ class MainActivity : AppCompatActivity(), IAndroidVersion, CoroutineScope by Mai
         bottomNavigationView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
 
         launch(Dispatchers.Default) {
-            initColors()
-
             if (savedInstanceState == null) {
                 // This is not the activity which is recreated
                 showFirstFragment()

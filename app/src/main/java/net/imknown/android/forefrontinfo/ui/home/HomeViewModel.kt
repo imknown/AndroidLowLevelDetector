@@ -5,7 +5,7 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.os.Build
 import android.util.Log
-import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -220,10 +220,10 @@ class HomeViewModel : BaseListViewModel() {
     }
 
     private fun detectAndroid(tempModels: ArrayList<MyModel>, lld: Lld) {
-        @ColorInt val androidColor = when {
-            isLatestStableAndroid(lld) || isLatestPreviewAndroid(lld) -> MainActivity.COLOR_STATE_LIST_NO_PROBLEM
-            isSupportedByUpstreamAndroid(lld) -> MainActivity.COLOR_STATE_LIST_WARNING
-            else -> MainActivity.COLOR_STATE_LIST_CRITICAL
+        @ColorRes val androidColor = when {
+            isLatestStableAndroid(lld) || isLatestPreviewAndroid(lld) -> R.color.colorNoProblem
+            isSupportedByUpstreamAndroid(lld) -> R.color.colorWaring
+            else -> R.color.colorCritical
         }
 
         val previewName = lld.android.alpha.name
@@ -289,10 +289,10 @@ class HomeViewModel : BaseListViewModel() {
             }
         }
 
-        @ColorInt val buildIdColor = when {
-            details.map { it.id }.contains(buildIdResult) || isLatestPreviewAndroid(lld) -> MainActivity.COLOR_STATE_LIST_NO_PROBLEM
-            isLatestStableAndroid(lld) -> MainActivity.COLOR_STATE_LIST_WARNING
-            else -> MainActivity.COLOR_STATE_LIST_CRITICAL
+        @ColorRes val buildIdColor = when {
+            details.map { it.id }.contains(buildIdResult) || isLatestPreviewAndroid(lld) -> R.color.colorNoProblem
+            isLatestStableAndroid(lld) -> R.color.colorWaring
+            else -> R.color.colorCritical
         }
 
         add(
@@ -319,11 +319,11 @@ class HomeViewModel : BaseListViewModel() {
         securityPatch: String, @StringRes titleId: Int
     ) {
         val lldSecurityPatch = lld.android.securityPatchLevel
-        @ColorInt val securityPatchColor = when {
-            !hasResult(securityPatch) -> MainActivity.COLOR_STATE_LIST_CRITICAL
-            securityPatch >= lldSecurityPatch -> MainActivity.COLOR_STATE_LIST_NO_PROBLEM
-            getSecurityPatchYearMonth(securityPatch) >= getSecurityPatchYearMonth(lldSecurityPatch) -> MainActivity.COLOR_STATE_LIST_WARNING
-            else -> MainActivity.COLOR_STATE_LIST_CRITICAL
+        @ColorRes val securityPatchColor = when {
+            !hasResult(securityPatch) -> R.color.colorCritical
+            securityPatch >= lldSecurityPatch -> R.color.colorNoProblem
+            getSecurityPatchYearMonth(securityPatch) >= getSecurityPatchYearMonth(lldSecurityPatch) -> R.color.colorWaring
+            else -> R.color.colorCritical
         }
 
         add(
@@ -345,7 +345,7 @@ class HomeViewModel : BaseListViewModel() {
         val linuxVersionString = SYSTEM_PROPERTY_LINUX_VERSION
         val linuxVersion = Version(linuxVersionString)
 
-        @ColorInt var linuxColor = MainActivity.COLOR_STATE_LIST_CRITICAL
+        @ColorRes var linuxColor = R.color.colorCritical
 
         val versionsSupported = lld.linux.google.versions
         versionsSupported.forEach {
@@ -353,9 +353,9 @@ class HomeViewModel : BaseListViewModel() {
                 && linuxVersion.minor == Version(it).minor
             ) {
                 linuxColor = if (linuxVersion.isAtLeast(it)) {
-                    MainActivity.COLOR_STATE_LIST_NO_PROBLEM
+                    R.color.colorNoProblem
                 } else {
-                    MainActivity.COLOR_STATE_LIST_WARNING
+                    R.color.colorWaring
                 }
 
                 return@forEach
@@ -419,7 +419,7 @@ class HomeViewModel : BaseListViewModel() {
         val vndkVersionResult = getStringProperty(PROP_VNDK_VERSION, isAtLeastAndroid8())
         val hasVndkVersion = hasResult(vndkVersionResult)
 
-        @ColorInt val vndkColor: Int
+        @ColorRes val vndkColor: Int
 
         var isVndkBuiltInResult = translate(hasVndkVersion)
         if (hasVndkVersion) {
@@ -432,9 +432,9 @@ class HomeViewModel : BaseListViewModel() {
             val hasVndkLite = getStringProperty(PROP_VNDK_LITE).toBoolean()
 
             vndkColor = if (vndkVersion == lld.android.stable.api && !hasVndkLite) {
-                MainActivity.COLOR_STATE_LIST_NO_PROBLEM
+                R.color.colorNoProblem
             } else {
-                MainActivity.COLOR_STATE_LIST_WARNING
+                R.color.colorWaring
             }
 
             isVndkBuiltInResult += MyApplication.getMyString(
@@ -442,7 +442,7 @@ class HomeViewModel : BaseListViewModel() {
                 if (hasVndkLite) "$vndkVersion, Lite" else vndkVersion
             )
         } else {
-            vndkColor = MainActivity.COLOR_STATE_LIST_CRITICAL
+            vndkColor = R.color.colorCritical
         }
 
         add(
@@ -488,9 +488,9 @@ class HomeViewModel : BaseListViewModel() {
         }
 
         val apexColor = when {
-            apexUpdatable -> MainActivity.COLOR_STATE_LIST_NO_PROBLEM
-            isLegacyFlattenedApex -> MainActivity.COLOR_STATE_LIST_WARNING
-            else -> MainActivity.COLOR_STATE_LIST_CRITICAL
+            apexUpdatable -> R.color.colorNoProblem
+            isLegacyFlattenedApex -> R.color.colorWaring
+            else -> R.color.colorCritical
         }
 
         add(
@@ -511,16 +511,16 @@ class HomeViewModel : BaseListViewModel() {
             translate(false)
         }
 
-        @ColorInt val toyboxColor = if (hasToyboxVersion) {
+        @ColorRes val toyboxColor = if (hasToyboxVersion) {
             val toyboxRealVersionString = toyboxVersion.replace("toybox ", "")
             val toyboxRealVersion = Version(toyboxRealVersionString)
             when {
-                toyboxRealVersion.isAtLeast(lld.toybox.stable.version) -> MainActivity.COLOR_STATE_LIST_NO_PROBLEM
-                toyboxRealVersion.isAtLeast(lld.toybox.support.version) -> MainActivity.COLOR_STATE_LIST_WARNING
-                else -> MainActivity.COLOR_STATE_LIST_CRITICAL
+                toyboxRealVersion.isAtLeast(lld.toybox.stable.version) -> R.color.colorNoProblem
+                toyboxRealVersion.isAtLeast(lld.toybox.support.version) -> R.color.colorWaring
+                else -> R.color.colorCritical
             }
         } else {
-            MainActivity.COLOR_STATE_LIST_CRITICAL
+            R.color.colorCritical
         }
         add(
             tempModels,
@@ -556,10 +556,10 @@ class HomeViewModel : BaseListViewModel() {
         val implementWebViewVersion = implementWebViewPackageInfo?.versionName ?: ""
 
         val lldWebViewStable = lld.webView.stable.version
-        @ColorInt val webViewColor = when {
-            Version(builtInWebViewVersion).isAtLeast(lldWebViewStable) -> MainActivity.COLOR_STATE_LIST_NO_PROBLEM
-            Version(implementWebViewVersion).isAtLeast(lldWebViewStable) -> MainActivity.COLOR_STATE_LIST_WARNING
-            else -> MainActivity.COLOR_STATE_LIST_CRITICAL
+        @ColorRes val webViewColor = when {
+            Version(builtInWebViewVersion).isAtLeast(lldWebViewStable) -> R.color.colorNoProblem
+            Version(implementWebViewVersion).isAtLeast(lldWebViewStable) -> R.color.colorWaring
+            else -> R.color.colorCritical
         }
 
         add(
@@ -635,10 +635,10 @@ class HomeViewModel : BaseListViewModel() {
 
         val noOutdatedTotally = (result == firstApiLevelLine)
 
-        @ColorInt val targetSdkVersionColor = if (noOutdatedTotally) {
+        @ColorRes val targetSdkVersionColor = if (noOutdatedTotally) {
             result += MyApplication.getMyString(R.string.outdated_target_version_sdk_version_apk_result_none)
 
-            MainActivity.COLOR_STATE_LIST_NO_PROBLEM
+            R.color.colorNoProblem
         } else {
             val outdatedFirstApiLevelSystemApkList =
                 if (hasResult(firstApiLevelProp) && firstApiLevelProp != "0") {
@@ -650,9 +650,9 @@ class HomeViewModel : BaseListViewModel() {
                 }
 
             if (outdatedFirstApiLevelSystemApkList.isNotEmpty()) {
-                MainActivity.COLOR_STATE_LIST_CRITICAL
+                R.color.colorCritical
             } else {
-                MainActivity.COLOR_STATE_LIST_WARNING
+                R.color.colorWaring
             }
         }
 
@@ -712,9 +712,9 @@ class HomeViewModel : BaseListViewModel() {
             title,
             detail.toString(),
             if (condition) {
-                MainActivity.COLOR_STATE_LIST_NO_PROBLEM
+                R.color.colorNoProblem
             } else {
-                MainActivity.COLOR_STATE_LIST_CRITICAL
+                R.color.colorCritical
             }
         )
     )
@@ -722,7 +722,8 @@ class HomeViewModel : BaseListViewModel() {
     private fun add(
         tempModels: ArrayList<MyModel>,
         title: String,
-        detail: String?, @ColorInt color: Int
+        detail: String?,
+        @ColorRes color: Int
     ) =
         tempModels.add(MyModel(title, detail.toString(), color))
 }

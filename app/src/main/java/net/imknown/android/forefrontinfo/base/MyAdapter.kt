@@ -22,7 +22,7 @@ class MyAdapter : RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.itemView.tvTitle.setBackgroundColor(myModels[position].color)
+        holder.itemView.tvTitle.setBackgroundResource(myModels[position].color)
         holder.itemView.tvTitle.text = myModels[position].title
         holder.itemView.tvDetail.text = myModels[position].detail
     }
