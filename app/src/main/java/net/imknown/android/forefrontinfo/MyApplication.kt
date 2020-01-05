@@ -2,6 +2,7 @@ package net.imknown.android.forefrontinfo
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.content.SharedPreferences
 import android.os.Environment
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
@@ -15,6 +16,10 @@ open class MyApplication : Application(), CoroutineScope by MainScope() {
 
     companion object {
         lateinit var instance: MyApplication
+
+        val sharedPreferences: SharedPreferences by lazy {
+            PreferenceManager.getDefaultSharedPreferences(instance)
+        }
 
         fun getDownloadDir() = getFileDir(Environment.DIRECTORY_DOWNLOADS)
 
@@ -54,10 +59,7 @@ open class MyApplication : Application(), CoroutineScope by MainScope() {
     }
 
     private fun initTheme() {
-        val sharedPreferences =
-            PreferenceManager.getDefaultSharedPreferences(instance)
-        val themesValue =
-            sharedPreferences.getString(
+        val themesValue = sharedPreferences.getString(
                 getMyString(R.string.interface_themes_key),
                 getMyString(R.string.interface_themes_follow_system_value)
             )!!

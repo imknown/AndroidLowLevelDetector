@@ -9,7 +9,6 @@ import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import androidx.preference.PreferenceManager
 import androidx.webkit.WebViewCompat
 import com.g00fy2.versioncompare.Version
 import kotlinx.coroutines.Dispatchers
@@ -99,9 +98,7 @@ class HomeViewModel : BaseListViewModel() {
 
     override suspend fun collectModels() =
         viewModelScope.launch(Dispatchers.IO) {
-            val sharedPreferences =
-                PreferenceManager.getDefaultSharedPreferences(MyApplication.instance)
-            val allowNetwork = sharedPreferences.getBoolean(
+            val allowNetwork = MyApplication.sharedPreferences.getBoolean(
                 MyApplication.getMyString(R.string.function_allow_network_data_key), false
             )
 

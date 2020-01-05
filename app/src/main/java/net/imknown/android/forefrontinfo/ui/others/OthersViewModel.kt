@@ -2,7 +2,6 @@ package net.imknown.android.forefrontinfo.ui.others
 
 import android.os.Build
 import androidx.lifecycle.viewModelScope
-import androidx.preference.PreferenceManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -86,9 +85,7 @@ class OthersViewModel : BaseListViewModel() {
     }
 
     private suspend fun getProp(tempModels: ArrayList<MyModel>) {
-        val sharedPreferences =
-            PreferenceManager.getDefaultSharedPreferences(MyApplication.instance)
-        val rawBuildProp = sharedPreferences.getBoolean(
+        val rawBuildProp = MyApplication.sharedPreferences.getBoolean(
             MyApplication.getMyString(R.string.function_raw_build_prop_key), false
         )
 

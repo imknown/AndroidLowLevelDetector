@@ -1,6 +1,5 @@
 package net.imknown.android.forefrontinfo.base
 
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -36,9 +35,7 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope(),
         init()
 
         launch(Dispatchers.IO) {
-            val sharedPreferences =
-                PreferenceManager.getDefaultSharedPreferences(MyApplication.instance)
-            val scrollBarMode = sharedPreferences.getString(
+            val scrollBarMode = MyApplication.sharedPreferences.getString(
                 MyApplication.getMyString(R.string.interface_scroll_bar_key),
                 MyApplication.getMyString(R.string.interface_no_scroll_bar_value)
             )!!
