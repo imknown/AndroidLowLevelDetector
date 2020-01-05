@@ -11,7 +11,6 @@ import kotlinx.coroutines.*
 import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
-import net.imknown.android.forefrontinfo.ui.settings.stringLiveData
 
 abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope() {
 
@@ -34,10 +33,7 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope() 
 
         init()
 
-        val key = MyApplication.getMyString(R.string.interface_scroll_bar_key)
-        val defValue = MyApplication.getMyString(R.string.interface_no_scroll_bar_value)
-        MyApplication.sharedPreferences.stringLiveData(key, defValue)
-            .observe(viewLifecycleOwner, Observer { scrollBarMode ->
+        listViewModel.scrollBarMode.observe(viewLifecycleOwner, Observer { scrollBarMode ->
                 launch(Dispatchers.IO) {
                     setScrollBarMode(recyclerView, scrollBarMode)
                 }

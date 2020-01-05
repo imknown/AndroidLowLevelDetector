@@ -4,11 +4,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import net.imknown.android.forefrontinfo.MyApplication
-import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.BaseListFragment
 import net.imknown.android.forefrontinfo.ui.GetRawPropEventViewModel
-import net.imknown.android.forefrontinfo.ui.settings.booleanLiveData
 
 class OthersFragment : BaseListFragment() {
 
@@ -26,13 +23,10 @@ class OthersFragment : BaseListFragment() {
             showModels(it)
         })
 
-        val key = MyApplication.getMyString(R.string.function_raw_build_prop_key)
-        val defValue = false
-        MyApplication.sharedPreferences.booleanLiveData(key, defValue)
-            .observe(viewLifecycleOwner, Observer {
-                launch(Dispatchers.IO) {
-                    collectModelsCaller(500)
-                }
-            })
+        listViewModel.rawProp.observe(viewLifecycleOwner, Observer {
+            launch(Dispatchers.IO) {
+                collectModelsCaller(500)
+            }
+        })
     }
 }
