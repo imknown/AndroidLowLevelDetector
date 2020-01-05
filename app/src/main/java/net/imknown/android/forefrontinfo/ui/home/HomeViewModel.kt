@@ -253,10 +253,14 @@ class HomeViewModel : BaseListViewModel() {
                     BUILD_VERSION_SDK_INT
                 ),
                 MyApplication.getMyString(
-                    R.string.android_info, lld.android.stable.version, lld.android.stable.api
+                    R.string.android_info,
+                    lld.android.stable.version,
+                    lld.android.stable.api
                 ),
                 MyApplication.getMyString(
-                    R.string.android_info, lld.android.support.version, lld.android.support.api
+                    R.string.android_info,
+                    lld.android.support.version,
+                    lld.android.support.api
                 ),
                 MyApplication.getMyString(R.string.android_info_preview),
                 MyApplication.getMyString(
