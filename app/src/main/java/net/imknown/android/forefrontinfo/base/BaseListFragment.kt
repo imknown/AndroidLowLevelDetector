@@ -11,6 +11,7 @@ import kotlinx.coroutines.*
 import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
+import net.imknown.android.forefrontinfo.ui.LanguageBroadcastLiveData
 
 abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope() {
 
@@ -32,6 +33,10 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope() 
         initViews(savedInstanceState)
 
         init()
+
+        LanguageBroadcastLiveData().observe(viewLifecycleOwner, Observer {
+            listViewModel.models.value?.clear()
+        })
 
         listViewModel.scrollBarMode.observe(viewLifecycleOwner, Observer {
             it.getContentIfNotHandled()?.let { scrollBarMode ->
