@@ -24,8 +24,10 @@ class OthersFragment : BaseListFragment() {
         })
 
         listViewModel.rawProp.observe(viewLifecycleOwner, Observer {
-            launch(Dispatchers.IO) {
-                collectModelsCaller(500)
+            it.getContentIfNotHandled()?.let {
+                launch(Dispatchers.IO) {
+                    collectModelsCaller(500)
+                }
             }
         })
     }

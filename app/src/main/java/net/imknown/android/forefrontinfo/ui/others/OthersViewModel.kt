@@ -9,7 +9,7 @@ import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.BaseListViewModel
 import net.imknown.android.forefrontinfo.base.MyModel
-import net.imknown.android.forefrontinfo.ui.settings.booleanLiveData
+import net.imknown.android.forefrontinfo.ui.settings.booleanEventLiveData
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -20,7 +20,7 @@ class OthersViewModel : BaseListViewModel() {
     }
 
     val rawProp by lazy {
-        MyApplication.sharedPreferences.booleanLiveData(
+        MyApplication.sharedPreferences.booleanEventLiveData(
             MyApplication.getMyString(R.string.function_raw_build_prop_key),
             false
         )

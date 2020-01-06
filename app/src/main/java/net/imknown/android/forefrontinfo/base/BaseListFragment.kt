@@ -33,11 +33,13 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope() 
 
         init()
 
-        listViewModel.scrollBarMode.observe(viewLifecycleOwner, Observer { scrollBarMode ->
+        listViewModel.scrollBarMode.observe(viewLifecycleOwner, Observer {
+            it.getContentIfNotHandled()?.let { scrollBarMode ->
                 launch(Dispatchers.IO) {
                     setScrollBarMode(recyclerView, scrollBarMode)
                 }
-            })
+            }
+        })
 
         launch(Dispatchers.IO) {
             val scrollBarMode = MyApplication.sharedPreferences.getString(

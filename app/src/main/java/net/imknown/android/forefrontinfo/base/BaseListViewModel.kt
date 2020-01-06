@@ -8,13 +8,13 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
-import net.imknown.android.forefrontinfo.ui.settings.stringLiveData
+import net.imknown.android.forefrontinfo.ui.settings.stringEventLiveData
 
 abstract class BaseListViewModel : ViewModel(), IAndroidVersion {
     val models by lazy { MutableLiveData<ArrayList<MyModel>>() }
 
     val scrollBarMode by lazy {
-        MyApplication.sharedPreferences.stringLiveData(
+        MyApplication.sharedPreferences.stringEventLiveData(
             MyApplication.getMyString(R.string.interface_scroll_bar_key),
             MyApplication.getMyString(R.string.interface_no_scroll_bar_value)
         )
