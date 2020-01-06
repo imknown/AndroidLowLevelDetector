@@ -1,11 +1,10 @@
-package net.imknown.android.forefrontinfo.ui
+package net.imknown.android.forefrontinfo
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import androidx.lifecycle.LiveData
-import net.imknown.android.forefrontinfo.MyApplication
 
 class LanguageBroadcastLiveData : LiveData<Nothing>() {
     override fun onActive() {
