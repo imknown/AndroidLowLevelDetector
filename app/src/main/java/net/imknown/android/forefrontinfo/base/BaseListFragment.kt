@@ -129,6 +129,10 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope() 
     }
 
     protected fun showModels(myModels: ArrayList<MyModel>) = launch(Dispatchers.Default) {
+        if (myModels.isNullOrEmpty()) {
+            return@launch
+        }
+
         myAdapter.addAll(myModels)
 
         withContext(Dispatchers.Main) {
