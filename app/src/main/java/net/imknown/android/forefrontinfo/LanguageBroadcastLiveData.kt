@@ -5,12 +5,11 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import androidx.lifecycle.LiveData
+import net.imknown.android.forefrontinfo.base.SingleEvent
 
-class LanguageBroadcastLiveData : LiveData<Nothing>() {
+class LanguageBroadcastLiveData : LiveData<SingleEvent<Int>>() {
     override fun onActive() {
         super.onActive()
-
-        value = null
 
         MyApplication.instance.registerReceiver(
             receiver, IntentFilter(Intent.ACTION_LOCALE_CHANGED)
@@ -24,7 +23,7 @@ class LanguageBroadcastLiveData : LiveData<Nothing>() {
 
     private val receiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            value = null
+            value = SingleEvent(0)
         }
     }
 }
