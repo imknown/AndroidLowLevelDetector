@@ -6,7 +6,6 @@ import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.withContext
-import net.imknown.android.forefrontinfo.LanguageBroadcastLiveData
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.ui.settings.stringEventLiveData
@@ -20,8 +19,6 @@ abstract class BaseListViewModel : ViewModel(), IAndroidVersion {
             MyApplication.getMyString(R.string.interface_no_scroll_bar_value)
         )
     }
-
-    val language by lazy { LanguageBroadcastLiveData() }
 
     abstract suspend fun collectModels(): Job
 

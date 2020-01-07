@@ -1,12 +1,10 @@
 package net.imknown.android.forefrontinfo.base
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_list.*
@@ -21,22 +19,6 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope() 
 
     protected abstract val listViewModel: BaseListViewModel
 
-    private class MyLongLifeCycleOwner : LifecycleOwner {
-        private val lifecycleRegistry = LifecycleRegistry(this)
-
-        fun startListening() {
-            lifecycleRegistry.currentState = Lifecycle.State.RESUMED
-        }
-
-        fun stopListening() {
-            lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
-        }
-
-        override fun getLifecycle() = lifecycleRegistry
-    }
-
-    private val myLongLifeCycleOwner = MyLongLifeCycleOwner()
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -49,14 +31,6 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope() 
         super.onActivityCreated(savedInstanceState)
 
         initViews(savedInstanceState)
-
-        myLongLifeCycleOwner.startListening()
-
-        listViewModel.language.observe(myLongLifeCycleOwner, Observer {
-            it.getContentIfNotHandled()?.let {
-                listViewModel.models.value?.clear()
-            }
-        })
 
         listViewModel.scrollBarMode.observe(viewLifecycleOwner, Observer {
             it.getContentIfNotHandled()?.let { scrollBarMode ->
@@ -88,9 +62,15 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope() 
     override fun onDestroyView() {
         super.onDestroyView()
 
-        myLongLifeCycleOwner.stopListening()
-
         cancel()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+
+        listViewModel.models.value?.clear()
+
+        activity?.recreate()
     }
 
     private fun initViews(savedInstanceState: Bundle?) {
