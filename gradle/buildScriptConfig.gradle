@@ -9,7 +9,11 @@ ext {
             targetSdkVersion         : 29,
 
             versionCode              : 11,
-            versionName              : '1.4.3'
+            versionName              : '1.4.3',
+
+            versionBetaCode          : 12,
+            versionBetaName          : '1.5.0',
+            versionBetaIteration     : 1
     ]
 
     // https://maven.google.com

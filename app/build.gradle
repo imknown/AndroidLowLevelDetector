@@ -14,9 +14,6 @@ android {
         minSdkVersion androidBuild.minSdkVersion
         targetSdkVersion androidBuild.targetSdkVersion
 
-        versionCode androidBuild.versionCode
-        versionName androidBuild.versionName
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         resConfigs 'zh-rCN', 'fr-rFR'
@@ -54,6 +51,28 @@ android {
             jniDebuggable true
 
             signingConfig signingConfigs.debug
+        }
+    }
+
+    def version = 'version'
+    flavorDimensions version
+
+    productFlavors {
+        stable {
+            dimension version
+
+            versionCode androidBuild.versionCode
+            versionName androidBuild.versionName
+        }
+
+        beta {
+            dimension version
+
+            versionCode androidBuild.versionBetaCode
+            versionName androidBuild.versionBetaName
+            versionNameSuffix "-beta$androidBuild.versionBetaIteration"
+
+            applicationIdSuffix ".beta"
         }
     }
 
