@@ -59,7 +59,7 @@ class OthersViewModel : BaseListViewModel() {
         add(tempModels, MyApplication.getMyString(R.string.build_user), Build.USER)
         add(tempModels, MyApplication.getMyString(R.string.build_HOST), Build.HOST)
         val time =
-            SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH).format(Date(Build.TIME))
+            SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US).format(Date(Build.TIME))
         add(tempModels, MyApplication.getMyString(R.string.build_time), time)
         if (isAtLeastAndroid6()) {
             add(
