@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">底层探测器</string>
+    <string name="app_beta_name">底层探测器 Beta</string>
 
     <string name="translation_language_and_translator">简体中文 (中国), 翻译: imknown</string>
     <string name="translator_website">https://imknown.net</string>
