@@ -16,6 +16,7 @@ import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.IFragmentView
 import net.imknown.android.forefrontinfo.ui.GetRawPropEventViewModel
 
+// TODO: Consider async to avoid StrictMode
 class SettingsFragment : PreferenceFragmentCompat(), IFragmentView, CoroutineScope by MainScope() {
 
     companion object {
