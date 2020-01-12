@@ -10,11 +10,10 @@ class GatewayApi {
     companion object {
         const val LLD_JSON_NAME = "lld.json"
 
-        private const val URL_LLD_JSON_ZH_CN =
-            "https://gitee.com/imknown/AndroidLowLevelDetector/raw/master/app/src/main/assets/$LLD_JSON_NAME"
+        private const val REPOSITORY_NAME = "imknown/AndroidLowLevelDetector"
 
-        private const val URL_LLD_JSON =
-            "https://raw.githubusercontent.com/imknown/AndroidLowLevelDetector/master/app/src/main/assets/$LLD_JSON_NAME"
+        private const val URL_PREFIX_LLD_JSON_ZH_CN = "gitee.com/$REPOSITORY_NAME/raw"
+        private const val URL_PREFIX_LLD_JSON = "raw.githubusercontent.com/$REPOSITORY_NAME"
 
         val savedLldJsonFile: File by lazy {
             File(MyApplication.getDownloadDir(), LLD_JSON_NAME)
@@ -24,11 +23,14 @@ class GatewayApi {
             success: (ByteArray) -> Unit,
             failure: (FuelError) -> Unit
         ) {
-            val url = if (isChinaMainlandTimezone()) {
-                URL_LLD_JSON_ZH_CN
+            val urlPrefixLldJson = if (isChinaMainlandTimezone()) {
+                URL_PREFIX_LLD_JSON_ZH_CN
             } else {
-                URL_LLD_JSON
+                URL_PREFIX_LLD_JSON
             }
+
+            val url =
+                "https://$urlPrefixLldJson/${BuildConfig.FLAVOR}/app/src/main/assets/$LLD_JSON_NAME"
 
             url.httpDownload().fileDestination { _, _ -> savedLldJsonFile }
                 .awaitByteArrayResult().fold(success, failure)
