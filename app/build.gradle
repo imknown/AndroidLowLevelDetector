@@ -13,6 +13,9 @@ android {
 
         manifestPlaceholders = [appName: "@string/app_name"]
 
+        // setProperty("archivesBaseName", "lld-$versionName")
+        archivesBaseName = "lld"
+
         versionCode androidBuild.versionCode
         versionName androidBuild.versionName
 
