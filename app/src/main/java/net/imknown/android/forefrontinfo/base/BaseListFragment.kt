@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_list.*
@@ -70,7 +71,9 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope() 
 
         listViewModel.models.value?.clear()
 
-        activity?.recreate()
+        activity?.let {
+            ActivityCompat.recreate(it)
+        }
     }
 
     private fun initViews(savedInstanceState: Bundle?) {
