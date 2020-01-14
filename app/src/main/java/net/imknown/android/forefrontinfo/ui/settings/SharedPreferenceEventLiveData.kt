@@ -35,14 +35,14 @@ abstract class SharedPreferenceEventLiveData<T>(
     }
 }
 
-// TODO: Need async
+// TODO: Need async to avoid StrictMode
 fun SharedPreferences.stringEventLiveData(key: String, defValue: String) =
     object : SharedPreferenceEventLiveData<String?>(this, key, defValue) {
         override fun getValueFromPreferences(key: String, defValue: String?) =
             SingleEvent(sharedPrefs.getString(key, defValue))
     }
 
-// TODO: Consider async to avoid StrictMode
+// TODO: Need async to avoid StrictMode
 fun SharedPreferences.booleanEventLiveData(key: String, defValue: Boolean) =
     object : SharedPreferenceEventLiveData<Boolean>(this, key, defValue) {
         override fun getValueFromPreferences(key: String, defValue: Boolean) =
