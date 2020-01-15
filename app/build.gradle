@@ -9,12 +9,12 @@ android {
     buildToolsVersion androidBuild.buildToolsVersion
 
     defaultConfig {
-        applicationId "net.imknown.android.forefrontinfo"
+        applicationId 'net.imknown.android.forefrontinfo'
 
-        manifestPlaceholders = [appName: "@string/app_name"]
+        manifestPlaceholders = [appName: '@string/app_name']
 
-        // setProperty("archivesBaseName", "lld-$versionName")
-        archivesBaseName = "lld"
+        // setProperty('archivesBaseName', 'lld-$versionName')
+        archivesBaseName = 'lld'
 
         versionCode androidBuild.versionCode
         versionName androidBuild.versionName
@@ -22,7 +22,7 @@ android {
         minSdkVersion androidBuild.minSdkVersion
         targetSdkVersion androidBuild.targetSdkVersion
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 
         resConfigs 'zh-rCN', 'fr-rFR'
     }
@@ -73,18 +73,18 @@ android {
         beta {
             dimension version
 
-            manifestPlaceholders = [appName: "@string/app_beta_name"]
+            manifestPlaceholders = [appName: '@string/app_beta_name']
 
             versionCode androidBuild.versionBetaCode
             versionName androidBuild.versionBetaName
             versionNameSuffix "-beta$androidBuild.versionBetaIteration"
 
-            applicationIdSuffix ".beta"
+            applicationIdSuffix '.beta'
         }
     }
 
     applicationVariants.all { variant ->
-        if (variant.buildType.name != "debug") {
+        if (variant.buildType.name != 'debug') {
             return
         }
 
