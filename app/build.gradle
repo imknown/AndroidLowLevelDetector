@@ -88,11 +88,21 @@ android {
             return
         }
 
-        def flavorInfix = " ${capFirstLetter(variant.getFlavorName())}"
-        if (flavorInfix == ' Stable') {
+        def appName
+        def flavorInfix
+        def flavorName = variant.getFlavorName()
+        if (flavorName == 'stable') {
+            appName = '@string/app_debug_name'
+            flavorInfix = ''
+        } else if (flavorName == 'beta') {
+            appName = '@string/app_beta_debug_name'
+            flavorInfix = " ${capFirstLetter(flavorName)}"
+        } else {
+            appName = ''
             flavorInfix = ''
         }
 
+        variant.getMergedFlavor().manifestPlaceholders = [appName: appName]
         resValue 'string', 'leak_canary_display_activity_label', "LLD${flavorInfix} Leaks"
     }
 
