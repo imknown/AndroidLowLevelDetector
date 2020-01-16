@@ -66,11 +66,13 @@ android {
     flavorDimensions version
 
     productFlavors {
-        stable {
+        // stable
+        master {
             dimension version
         }
 
-        beta {
+        // beta
+        develop {
             dimension version
 
             manifestPlaceholders = [appName: '@string/app_beta_name']
@@ -91,10 +93,10 @@ android {
         def appName
         def flavorInfix
         def flavorName = variant.getFlavorName()
-        if (flavorName == 'stable') {
+        if (flavorName == 'master') {
             appName = '@string/app_debug_name'
             flavorInfix = ''
-        } else if (flavorName == 'beta') {
+        } else if (flavorName == 'develop') {
             appName = '@string/app_beta_debug_name'
             flavorInfix = " ${capFirstLetter(flavorName)}"
         } else {
