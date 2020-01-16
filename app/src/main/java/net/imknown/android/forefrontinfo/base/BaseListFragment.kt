@@ -4,9 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_list.*
@@ -21,22 +18,6 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope() 
 
     protected abstract val listViewModel: BaseListViewModel
 
-    private class MyLongLifeCycleOwner : LifecycleOwner {
-        private val lifecycleRegistry = LifecycleRegistry(this)
-
-        fun startListening() {
-            lifecycleRegistry.currentState = Lifecycle.State.RESUMED
-        }
-
-        fun stopListening() {
-            lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
-        }
-
-        override fun getLifecycle() = lifecycleRegistry
-    }
-
-    private val myLongLifeCycleOwner = MyLongLifeCycleOwner()
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -45,18 +26,18 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope() 
         return inflater.inflate(R.layout.fragment_list, container, false)
     }
 
+    private val languageObserver = Observer<SingleEvent<Int>> {
+        it.getContentIfNotHandled()?.let {
+            listViewModel.models.value?.clear()
+        }
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         initViews(savedInstanceState)
 
-        myLongLifeCycleOwner.startListening()
-
-        listViewModel.language.observe(myLongLifeCycleOwner, Observer {
-            it.getContentIfNotHandled()?.let {
-                listViewModel.models.value?.clear()
-            }
-        })
+        listViewModel.language.observeForever(languageObserver)
 
         listViewModel.scrollBarMode.observe(viewLifecycleOwner, Observer {
             it.getContentIfNotHandled()?.let { scrollBarMode ->
@@ -88,7 +69,7 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope() 
     override fun onDestroyView() {
         super.onDestroyView()
 
-        myLongLifeCycleOwner.stopListening()
+        listViewModel.language.removeObserver(languageObserver)
 
         cancel()
     }
