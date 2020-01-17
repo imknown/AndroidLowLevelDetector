@@ -223,7 +223,6 @@ class HomeViewModel : BaseListViewModel() {
             else -> R.color.colorCritical
         }
 
-        val previewName = lld.android.alpha.name
         val previewVersion: String
         val previewApi: String
         val previewType: String
@@ -262,7 +261,7 @@ class HomeViewModel : BaseListViewModel() {
                 MyApplication.getMyString(R.string.android_info_preview),
                 MyApplication.getMyString(
                     R.string.android_info,
-                    "$previewName ($previewVersion, $previewType)",
+                    "$previewVersion $previewType",
                     previewApi
                 )
             ),
