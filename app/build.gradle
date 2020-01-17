@@ -81,7 +81,7 @@ android {
             versionName androidBuild.versionBetaName
             versionNameSuffix "-beta$androidBuild.versionBetaIteration"
 
-            applicationIdSuffix '.beta'
+            // applicationIdSuffix '.beta'
         }
     }
 
