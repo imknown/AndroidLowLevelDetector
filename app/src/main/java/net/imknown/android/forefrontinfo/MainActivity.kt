@@ -2,8 +2,10 @@ package net.imknown.android.forefrontinfo
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.TextView
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -47,10 +49,7 @@ class MainActivity : AppCompatActivity(), IAndroidVersion, CoroutineScope by Mai
 
         setContentView(R.layout.main_activity)
 
-        setSupportActionBar(toolbar)
-        supportActionBar?.subtitle = MyApplication.getMyString(R.string.lld_json_loading)
-
-        bottomNavigationView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+        initViews()
 
         launch(Dispatchers.Default) {
             if (savedInstanceState == null) {
@@ -64,6 +63,23 @@ class MainActivity : AppCompatActivity(), IAndroidVersion, CoroutineScope by Mai
         super.onSaveInstanceState(outState)
 
         outState.putInt(BUNDLE_ID_LAST_ID, lastId)
+    }
+
+    private fun initViews() {
+        initSubtitle()
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+    }
+
+    private fun initSubtitle() {
+        setSupportActionBar(toolbar)
+        supportActionBar?.subtitle = MyApplication.getMyString(R.string.lld_json_loading)
+
+        val subtitleTextView = Toolbar::class.java
+            .getDeclaredField("mSubtitleTextView")
+            .also { it.isAccessible = true }
+            .get(toolbar) as TextView
+        subtitleTextView.isVerticalScrollBarEnabled = false
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
