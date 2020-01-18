@@ -9,7 +9,7 @@ import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.LanguageBroadcastLiveData
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
-import net.imknown.android.forefrontinfo.ui.settings.stringEventLiveData
+import net.imknown.android.forefrontinfo.stringEventLiveData
 
 abstract class BaseListViewModel : ViewModel(), IAndroidVersion {
     val models by lazy { MutableLiveData<ArrayList<MyModel>>() }

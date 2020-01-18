@@ -9,7 +9,7 @@ import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.BaseListViewModel
 import net.imknown.android.forefrontinfo.base.MyModel
-import net.imknown.android.forefrontinfo.ui.settings.booleanEventLiveData
+import net.imknown.android.forefrontinfo.booleanEventLiveData
 import java.text.SimpleDateFormat
 import java.util.*
 

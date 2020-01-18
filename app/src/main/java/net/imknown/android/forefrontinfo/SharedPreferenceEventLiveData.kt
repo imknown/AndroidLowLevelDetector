@@ -1,4 +1,4 @@
-package net.imknown.android.forefrontinfo.ui.settings
+package net.imknown.android.forefrontinfo
 
 import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
