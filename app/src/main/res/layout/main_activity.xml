@@ -16,6 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:layout_scrollFlags="scroll|enterAlways|snap"
+            app:subtitle="@string/lld_json_loading"
             tools:title="@string/app_name" />
     </com.google.android.material.appbar.AppBarLayout>
 

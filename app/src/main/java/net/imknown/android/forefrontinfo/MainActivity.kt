@@ -73,7 +73,6 @@ class MainActivity : AppCompatActivity(), IAndroidVersion, CoroutineScope by Mai
 
     private fun initSubtitle() {
         setSupportActionBar(toolbar)
-        supportActionBar?.subtitle = MyApplication.getMyString(R.string.lld_json_loading)
 
         val subtitleTextView = Toolbar::class.java
             .getDeclaredField("mSubtitleTextView")
