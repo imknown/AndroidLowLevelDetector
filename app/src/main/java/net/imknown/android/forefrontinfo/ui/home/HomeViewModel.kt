@@ -96,35 +96,34 @@ class HomeViewModel : BaseListViewModel() {
         }
     }
 
-    override suspend fun collectModels() =
-        viewModelScope.launch(Dispatchers.IO) {
-            val allowNetwork = MyApplication.sharedPreferences.getBoolean(
-                MyApplication.getMyString(R.string.function_allow_network_data_key), false
-            )
+    override fun collectModels() = viewModelScope.launch(Dispatchers.IO) {
+        val allowNetwork = MyApplication.sharedPreferences.getBoolean(
+            MyApplication.getMyString(R.string.function_allow_network_data_key), false
+        )
 
-            if (allowNetwork) {
-                GatewayApi.downloadLldJsonFile({
-                    launch(Dispatchers.IO) {
-                        prepareResult(true)
-                    }
-                }, {
-                    launch(Dispatchers.IO) {
-                        onError(
-                            Exception(
-                                MyApplication.getMyString(
-                                    R.string.lld_json_download_failed,
-                                    it.message
-                                )
+        if (allowNetwork) {
+            GatewayApi.downloadLldJsonFile({
+                launch(Dispatchers.IO) {
+                    prepareResult(true)
+                }
+            }, {
+                launch(Dispatchers.IO) {
+                    onError(
+                        Exception(
+                            MyApplication.getMyString(
+                                R.string.lld_json_download_failed,
+                                it.message
                             )
                         )
+                    )
 
-                        prepareResult(false)
-                    }
-                })
-            } else {
-                prepareResult(false)
-            }
+                    prepareResult(false)
+                }
+            })
+        } else {
+            prepareResult(false)
         }
+    }
 
     private suspend fun onError(exception: Exception) = withContext(Dispatchers.Main) {
         error.value = SingleEvent(exception)
@@ -461,10 +460,11 @@ class HomeViewModel : BaseListViewModel() {
         val hasSystemRootImage =
             getStringProperty(PROP_SYSTEM_ROOT_IMAGE, isAtLeastAndroid9()).toBoolean()
 
-        val mountDevRootResult = sh(CMD_MOUNT_DEV_ROOT, isAtLeastAndroid9())
+        val mountDevRootResult = shAsync(CMD_MOUNT_DEV_ROOT, isAtLeastAndroid9()).await()
         val hasMountDevRoot = hasResult(mountDevRootResult)
 
-        val mountSystemResult = sh(CMD_MOUNT_SYSTEM, isAtLeastAndroid9() && !hasSystemRootImage)
+        val mountSystemResult =
+            shAsync(CMD_MOUNT_SYSTEM, isAtLeastAndroid9() && !hasSystemRootImage).await()
         val hasMountSystem = hasResult(mountSystemResult)
 
         val isSar =
@@ -480,7 +480,8 @@ class HomeViewModel : BaseListViewModel() {
     private suspend fun detectApex(tempModels: ArrayList<MyModel>) {
         val apexUpdatable = getStringProperty(PROP_APEX_UPDATABLE, isAtLeastAndroid10()).toBoolean()
 
-        val flattenedApexMountedResult = sh(CMD_FLATTENED_APEX_MOUNT, isAtLeastAndroid10())
+        val flattenedApexMountedResult =
+            shAsync(CMD_FLATTENED_APEX_MOUNT, isAtLeastAndroid10()).await()
         val isFlattenedApexMounted = hasResult(flattenedApexMountedResult)
 
         val isApex = apexUpdatable || isFlattenedApexMounted
@@ -506,7 +507,7 @@ class HomeViewModel : BaseListViewModel() {
     }
 
     private suspend fun detectToybox(tempModels: ArrayList<MyModel>, lld: Lld) {
-        val toyboxVersionResult = sh(CMD_TOYBOX_VERSION, isAtLeastAndroid6())
+        val toyboxVersionResult = shAsync(CMD_TOYBOX_VERSION, isAtLeastAndroid6()).await()
         val hasToyboxVersion = hasResult(toyboxVersionResult)
 
         val toyboxVersion = if (hasToyboxVersion) {

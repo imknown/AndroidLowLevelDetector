@@ -26,7 +26,7 @@ class OthersViewModel : BaseListViewModel() {
         )
     }
 
-    override suspend fun collectModels() = viewModelScope.launch(Dispatchers.IO) {
+    override fun collectModels() = viewModelScope.launch(Dispatchers.IO) {
         val tempModels = ArrayList<MyModel>()
 
         // region [Basic]
@@ -102,7 +102,7 @@ class OthersViewModel : BaseListViewModel() {
         }
 
         var temp = ""
-        sh(CMD_GETPROP).forEach {
+        shAsync(CMD_GETPROP).await().forEach {
             if (it.startsWith("[") && it.endsWith("]")) {
                 addRawProp(tempModels, it)
             } else {

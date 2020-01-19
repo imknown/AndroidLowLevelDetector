@@ -8,11 +8,14 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
 import com.topjohnwu.superuser.Shell
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 @SuppressLint("Registered")
-open class MyApplication : Application(), CoroutineScope by MainScope() {
+open class MyApplication : Application() {
 
     companion object {
         lateinit var instance: MyApplication
@@ -42,7 +45,7 @@ open class MyApplication : Application(), CoroutineScope by MainScope() {
     override fun onCreate() {
         super.onCreate()
 
-        launch(Dispatchers.IO) {
+        GlobalScope.launch(Dispatchers.IO) {
             instance = this@MyApplication
 
             initShell()
@@ -58,7 +61,7 @@ open class MyApplication : Application(), CoroutineScope by MainScope() {
         // Shell.Config.setTimeout(10)
     }
 
-    private fun initTheme() {
+    private suspend fun initTheme() {
         val themesValue = sharedPreferences.getString(
                 getMyString(R.string.interface_themes_key),
                 getMyString(R.string.interface_themes_follow_system_value)
@@ -66,7 +69,7 @@ open class MyApplication : Application(), CoroutineScope by MainScope() {
         setMyTheme(themesValue)
     }
 
-    fun setMyTheme(themesValue: String) = launch(Dispatchers.Default) {
+    suspend fun setMyTheme(themesValue: String) = withContext(Dispatchers.Default) {
         @AppCompatDelegate.NightMode val mode = when (themesValue) {
             getMyString(R.string.interface_themes_follow_system_value) -> {
                 AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM

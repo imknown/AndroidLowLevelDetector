@@ -7,14 +7,12 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_list.*
-import kotlinx.coroutines.*
-import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
 
-abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope() {
+abstract class BaseListFragment : BaseFragment() {
 
-    private val myAdapter = MyAdapter()
+    protected val myAdapter = MyAdapter()
 
     protected abstract val listViewModel: BaseListViewModel
 
@@ -39,55 +37,58 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope() 
 
         listViewModel.language.observeForever(languageObserver)
 
+        listViewModel.changeScrollBarModeEvent.observe(viewLifecycleOwner, Observer {
+            it.getContentIfNotHandled()?.let { isVerticalScrollBarEnabled ->
+                recyclerView.isVerticalScrollBarEnabled = isVerticalScrollBarEnabled
+            }
+        })
+
+        listViewModel.showModelsEvent.observe(viewLifecycleOwner, Observer {
+            it.getContentIfNotHandled()?.let {
+                myAdapter.notifyDataSetChanged()
+
+                swipeRefreshLayout.isRefreshing = false
+            }
+        })
+
+        listViewModel.showErrorEvent.observe(viewLifecycleOwner, Observer {
+            it.getContentIfNotHandled()?.let { errorMessage ->
+                toast(errorMessage)
+
+                swipeRefreshLayout.isRefreshing = false
+            }
+        })
+
         listViewModel.scrollBarMode.observe(viewLifecycleOwner, Observer {
             it.getContentIfNotHandled()?.let { scrollBarMode ->
-                launch(Dispatchers.IO) {
-                    setScrollBarMode(recyclerView, scrollBarMode)
-                }
+                listViewModel.setScrollBarMode(scrollBarMode)
             }
         })
 
         init()
 
-        launch(Dispatchers.IO) {
-            val scrollBarMode = MyApplication.sharedPreferences.getString(
-                MyApplication.getMyString(R.string.interface_scroll_bar_key),
-                MyApplication.getMyString(R.string.interface_no_scroll_bar_value)
-            )!!
-            setScrollBarMode(recyclerView, scrollBarMode)
-
-            // When activity is recreated, use LiveData to restore the data
-            if (hasNoData(savedInstanceState)) {
-                listViewModel.collectModels()
-            }
-        }
+        listViewModel.init(savedInstanceState)
     }
-
-    private fun hasNoData(savedInstanceState: Bundle?) =
-        savedInstanceState == null || listViewModel.models.value.isNullOrEmpty()
 
     override fun onDestroyView() {
         super.onDestroyView()
 
         listViewModel.language.removeObserver(languageObserver)
-
-        cancel()
     }
 
     private fun initViews(savedInstanceState: Bundle?) {
         swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent)
         swipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.colorStateless)
 
-        if (hasNoData(savedInstanceState)) {
+        // TODO: Need async
+        if (listViewModel.hasNoData(savedInstanceState)) {
             // When activity is recreated, data is filled by memory.
             // It is fast. No progress indicator needed indeed.
             swipeRefreshLayout.isRefreshing = true
         }
 
         swipeRefreshLayout.setOnRefreshListener {
-            launch(Dispatchers.IO) {
-                listViewModel.collectModels()
-            }
+            listViewModel.collectModels()
         }
 
         recyclerView.apply {
@@ -102,40 +103,4 @@ abstract class BaseListFragment : BaseFragment(), CoroutineScope by MainScope() 
     }
 
     abstract fun init()
-
-    protected suspend fun collectModelsCaller(delay: Long) {
-        delay(delay)
-
-        listViewModel.collectModels()
-    }
-
-    protected fun showModels(myModels: ArrayList<MyModel>) = launch(Dispatchers.Default) {
-        if (myModels.isNullOrEmpty()) {
-            return@launch
-        }
-
-        myAdapter.addAll(myModels)
-
-        withContext(Dispatchers.Main) {
-            myAdapter.notifyDataSetChanged()
-
-            swipeRefreshLayout.isRefreshing = false
-        }
-    }
-
-    protected fun showError(error: Exception) = launch {
-        toast(error.message.toString())
-
-        swipeRefreshLayout.isRefreshing = false
-
-        withContext(Dispatchers.Default) {
-            if (BuildConfig.DEBUG) {
-                error.printStackTrace()
-            }
-        }
-    }
-
-//    protected suspend fun disableSwipeRefresh() = withContext(Dispatchers.Main) {
-//        swipeRefresh.isEnabled = false
-//    }
 }

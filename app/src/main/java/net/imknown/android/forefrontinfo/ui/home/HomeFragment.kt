@@ -21,12 +21,12 @@ class HomeFragment : BaseListFragment() {
         })
 
         listViewModel.models.observe(viewLifecycleOwner, Observer {
-            showModels(it)
+            listViewModel.showModels(myAdapter, it)
         })
 
         listViewModel.error.observe(viewLifecycleOwner, Observer {
             it.getContentIfNotHandled()?.let { exception ->
-                showError(exception)
+                listViewModel.showError(exception)
             }
         })
     }
