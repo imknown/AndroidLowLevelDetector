@@ -59,6 +59,8 @@ android {
             jniDebuggable true
 
             signingConfig signingConfigs.debug
+
+            applicationIdSuffix '.debug'
         }
     }
 
@@ -80,8 +82,6 @@ android {
             versionCode androidBuild.versionBetaCode
             versionName androidBuild.versionBetaName
             versionNameSuffix "-beta$androidBuild.versionBetaIteration"
-
-            // applicationIdSuffix '.beta'
         }
     }
 
