@@ -142,5 +142,6 @@
 
     <string name="about_version_title">Version</string>
     <string name="about_version_summary">Version: %1$s (Iteration times: %2$d)\nDonnées intégrées: %3$s</string>
-    <string name="about_version_click">🐈==)  🐕===))</string>
+
+    <string name="about_distributor">Distributeur</string>
 </resources>
