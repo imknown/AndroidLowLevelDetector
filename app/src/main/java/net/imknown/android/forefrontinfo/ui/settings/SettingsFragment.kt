@@ -15,7 +15,6 @@ import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.IFragmentView
 
-// TODO: Need async to avoid StrictMode
 class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
 
     companion object {

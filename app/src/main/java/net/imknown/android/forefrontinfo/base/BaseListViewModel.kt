@@ -15,6 +15,7 @@ abstract class BaseListViewModel : BaseViewModel(), IAndroidVersion {
 
     val scrollBarMode by lazy {
         MyApplication.sharedPreferences.stringEventLiveData(
+            viewModelScope,
             MyApplication.getMyString(R.string.interface_scroll_bar_key),
             MyApplication.getMyString(R.string.interface_no_scroll_bar_value)
         )

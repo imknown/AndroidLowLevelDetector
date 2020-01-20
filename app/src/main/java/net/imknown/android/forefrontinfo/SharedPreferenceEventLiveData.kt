@@ -2,6 +2,10 @@ package net.imknown.android.forefrontinfo
 
 import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.base.SingleEvent
 
 /**
@@ -9,6 +13,7 @@ import net.imknown.android.forefrontinfo.base.SingleEvent
  * https://gist.github.com/rharter/1df1cd72ce4e9d1801bd2d49f2a96810
  */
 abstract class SharedPreferenceEventLiveData<T>(
+    private val scope: CoroutineScope,
     protected val sharedPrefs: SharedPreferences,
     private val key: String,
     private val defValue: T
@@ -16,12 +21,18 @@ abstract class SharedPreferenceEventLiveData<T>(
 
     private val preferenceChangeListener =
         SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-            if (key == this.key) {
-                value = getValueFromPreferences(key, defValue)
+            scope.launch(Dispatchers.IO) {
+                if (key == this@SharedPreferenceEventLiveData.key) {
+                    val event = getValueFromPreferences(key, defValue)
+
+                    withContext(Dispatchers.Main) {
+                        value = event
+                    }
+                }
             }
         }
 
-    abstract fun getValueFromPreferences(key: String, defValue: T): SingleEvent<T>
+    abstract suspend fun getValueFromPreferences(key: String, defValue: T): SingleEvent<T>
 
     override fun onActive() {
         super.onActive()
@@ -35,16 +46,14 @@ abstract class SharedPreferenceEventLiveData<T>(
     }
 }
 
-// TODO: Need async to avoid StrictMode
-fun SharedPreferences.stringEventLiveData(key: String, defValue: String) =
-    object : SharedPreferenceEventLiveData<String?>(this, key, defValue) {
-        override fun getValueFromPreferences(key: String, defValue: String?) =
+fun SharedPreferences.stringEventLiveData(scope: CoroutineScope, key: String, defValue: String) =
+    object : SharedPreferenceEventLiveData<String?>(scope, this, key, defValue) {
+        override suspend fun getValueFromPreferences(key: String, defValue: String?) =
             SingleEvent(sharedPrefs.getString(key, defValue))
     }
 
-// TODO: Need async to avoid StrictMode
-fun SharedPreferences.booleanEventLiveData(key: String, defValue: Boolean) =
-    object : SharedPreferenceEventLiveData<Boolean>(this, key, defValue) {
-        override fun getValueFromPreferences(key: String, defValue: Boolean) =
+fun SharedPreferences.booleanEventLiveData(scope: CoroutineScope, key: String, defValue: Boolean) =
+    object : SharedPreferenceEventLiveData<Boolean>(scope, this, key, defValue) {
+        override suspend fun getValueFromPreferences(key: String, defValue: Boolean) =
             SingleEvent(sharedPrefs.getBoolean(key, defValue))
     }

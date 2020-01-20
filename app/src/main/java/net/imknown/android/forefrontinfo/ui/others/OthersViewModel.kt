@@ -21,6 +21,7 @@ class OthersViewModel : BaseListViewModel() {
 
     val rawProp by lazy {
         MyApplication.sharedPreferences.booleanEventLiveData(
+            viewModelScope,
             MyApplication.getMyString(R.string.function_raw_build_prop_key),
             false
         )
