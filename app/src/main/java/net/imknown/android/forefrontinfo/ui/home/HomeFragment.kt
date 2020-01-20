@@ -20,10 +20,6 @@ class HomeFragment : BaseListFragment() {
             actionBar?.subtitle = MyApplication.getMyString(it.lldDataModeResId, it.dataVersion)
         })
 
-        listViewModel.models.observe(viewLifecycleOwner, Observer {
-            listViewModel.showModels(myAdapter, it)
-        })
-
         listViewModel.error.observe(viewLifecycleOwner, Observer {
             it.getContentIfNotHandled()?.let { exception ->
                 listViewModel.showError(exception)

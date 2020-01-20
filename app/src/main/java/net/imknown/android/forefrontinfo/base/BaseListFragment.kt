@@ -12,7 +12,7 @@ import net.imknown.android.forefrontinfo.R
 
 abstract class BaseListFragment : BaseFragment() {
 
-    protected val myAdapter by lazy { MyAdapter() }
+    private val myAdapter by lazy { MyAdapter() }
 
     protected abstract val listViewModel: BaseListViewModel
 
@@ -41,6 +41,10 @@ abstract class BaseListFragment : BaseFragment() {
             it.getContentIfNotHandled()?.let { isVerticalScrollBarEnabled ->
                 recyclerView.isVerticalScrollBarEnabled = isVerticalScrollBarEnabled
             }
+        })
+
+        listViewModel.models.observe(viewLifecycleOwner, Observer {
+            listViewModel.showModels(myAdapter, it)
         })
 
         listViewModel.showModelsEvent.observe(viewLifecycleOwner, Observer {

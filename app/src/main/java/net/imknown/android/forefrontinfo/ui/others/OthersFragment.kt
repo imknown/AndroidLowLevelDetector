@@ -13,10 +13,6 @@ class OthersFragment : BaseListFragment() {
     override val listViewModel by activityViewModels<OthersViewModel>()
 
     override fun init() {
-        listViewModel.models.observe(viewLifecycleOwner, Observer {
-            listViewModel.showModels(myAdapter, it)
-        })
-
         listViewModel.rawProp.observe(viewLifecycleOwner, Observer {
             it.getContentIfNotHandled()?.let {
                 listViewModel.collectModels()
