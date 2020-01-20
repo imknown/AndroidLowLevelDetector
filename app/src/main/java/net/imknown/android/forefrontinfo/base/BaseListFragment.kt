@@ -12,7 +12,7 @@ import net.imknown.android.forefrontinfo.R
 
 abstract class BaseListFragment : BaseFragment() {
 
-    protected val myAdapter = MyAdapter()
+    protected val myAdapter by lazy { MyAdapter() }
 
     protected abstract val listViewModel: BaseListViewModel
 
@@ -74,6 +74,10 @@ abstract class BaseListFragment : BaseFragment() {
         super.onDestroyView()
 
         listViewModel.language.removeObserver(languageObserver)
+
+        if (recyclerView.adapter != null) {
+            recyclerView.adapter = null
+        }
     }
 
     private fun initViews(savedInstanceState: Bundle?) {
@@ -98,7 +102,9 @@ abstract class BaseListFragment : BaseFragment() {
 
             addItemDecoration(MyItemDecoration(resources.getDimensionPixelSize(R.dimen.item_divider_space)))
 
-            adapter = myAdapter
+            if (adapter == null) {
+                adapter = myAdapter
+            }
         }
     }
 
