@@ -61,10 +61,4 @@ class MainActivity : AppCompatActivity() {
 
         mainViewModel.restoreInstanceState(savedInstanceState)
     }
-
-    override fun onBackPressed() {
-        // https://github.com/ChuckerTeam/chucker/issues/102
-        // https://issuetracker.google.com/issues/139738913
-        finishAfterTransition()
-    }
 }
