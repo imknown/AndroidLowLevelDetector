@@ -30,11 +30,8 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
     private val settingsViewModel by activityViewModels<SettingsViewModel>()
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        // TODO: Use ViewModel's scope instead of MainScope
         MainScope().launch(Dispatchers.IO) {
-            if (Looper.myLooper() == null) {
-                Looper.prepare()
-            }
+            Looper.myLooper() ?: Looper.prepare()
             setPreferencesFromResource(R.xml.preferences, rootKey)
             Looper.myLooper()?.quit()
 
@@ -53,6 +50,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
             true
         }
 
+        // TODO: MultiWindow/FreeForm raises error 'ViewModel can be accessed only when Fragment is attached'. Maybe a framework bug?
         settingsViewModel.changeScrollBarModeEvent.observe(viewLifecycleOwner, Observer {
             it.getContentIfNotHandled()?.let { isVerticalScrollBarEnabled ->
                 listView.isVerticalScrollBarEnabled = isVerticalScrollBarEnabled

@@ -84,7 +84,6 @@ abstract class BaseListFragment : BaseFragment() {
         swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent)
         swipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.colorStateless)
 
-        // TODO: Need async
         if (listViewModel.hasNoData(savedInstanceState)) {
             // When activity is recreated, data is filled by memory.
             // It is fast. No progress indicator needed indeed.
