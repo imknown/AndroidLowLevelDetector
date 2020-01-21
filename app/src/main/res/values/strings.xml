@@ -133,7 +133,7 @@
 
     <string name="function_raw_build_prop_key" translatable="false">interface_verbose_prop_key</string>
     <string name="function_raw_build_prop_title">Show raw build.prop</string>
-    <string name="function_raw_build_prop_summary">Show the raw data of file build.prop</string>
+    <string name="function_raw_build_prop_summary">Show the raw data of file build.prop in \"Others\"</string>
 
     <string name="about_title">About</string>
 

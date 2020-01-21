@@ -122,7 +122,7 @@
     <string name="function_allow_network_data_summary">Lorsque cette option est activée, les données seront préalablement extraites du serveur réseau distant, puis mises en cache sur le stockage local.</string>
 
     <string name="function_raw_build_prop_title">Voir build.prop directement</string>
-    <string name="function_raw_build_prop_summary">Voir directement les valeurs de build.prop</string>
+    <string name="function_raw_build_prop_summary">Voir directement les valeurs de build.prop dans \"Autres\"</string>
 
     <string name="about_title">À propos</string>
 
