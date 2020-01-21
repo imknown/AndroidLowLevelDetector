@@ -24,18 +24,18 @@ abstract class BaseListFragment : BaseFragment() {
         return inflater.inflate(R.layout.fragment_list, container, false)
     }
 
-    private val languageObserver = Observer<SingleEvent<Int>> {
-        it.getContentIfNotHandled()?.let {
-            listViewModel.models.value?.clear()
-        }
-    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         initViews(savedInstanceState)
 
-        listViewModel.language.observeForever(languageObserver)
+        MyApplication.languageEvent.observe(viewLifecycleOwner, Observer {
+            it.getContentIfNotHandled()?.let {
+                swipeRefreshLayout.isRefreshing = true
+
+                listViewModel.collectModels()
+            }
+        })
 
         listViewModel.changeScrollBarModeEvent.observe(viewLifecycleOwner, Observer {
             it.getContentIfNotHandled()?.let { isVerticalScrollBarEnabled ->
@@ -76,8 +76,6 @@ abstract class BaseListFragment : BaseFragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-
-        listViewModel.language.removeObserver(languageObserver)
 
         if (recyclerView.adapter != null) {
             recyclerView.adapter = null

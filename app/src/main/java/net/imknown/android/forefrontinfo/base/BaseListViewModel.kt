@@ -5,7 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.*
-import net.imknown.android.forefrontinfo.*
+import net.imknown.android.forefrontinfo.BuildConfig
+import net.imknown.android.forefrontinfo.MyApplication
+import net.imknown.android.forefrontinfo.R
+import net.imknown.android.forefrontinfo.stringEventLiveData
 
 abstract class BaseListViewModel : BaseViewModel(), IAndroidVersion {
     val models by lazy { MutableLiveData<ArrayList<MyModel>>() }
@@ -20,8 +23,6 @@ abstract class BaseListViewModel : BaseViewModel(), IAndroidVersion {
             MyApplication.getMyString(R.string.interface_no_scroll_bar_value)
         )
     }
-
-    val language by lazy { LanguageBroadcastLiveData() }
 
     abstract fun collectModels(): Job
 

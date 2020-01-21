@@ -6,12 +6,14 @@ import android.content.SharedPreferences
 import android.os.Environment
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.lifecycle.MutableLiveData
 import androidx.preference.PreferenceManager
 import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import net.imknown.android.forefrontinfo.base.SingleEvent
 import java.io.File
 
 @SuppressLint("Registered")
@@ -19,6 +21,8 @@ open class MyApplication : Application() {
 
     companion object {
         lateinit var instance: MyApplication
+
+        val languageEvent by lazy { MutableLiveData<SingleEvent<Int>>() }
 
         val sharedPreferences: SharedPreferences by lazy {
             PreferenceManager.getDefaultSharedPreferences(instance)
@@ -51,6 +55,8 @@ open class MyApplication : Application() {
             initShell()
 
             initTheme()
+
+            initLanguage()
         }
     }
 
@@ -90,6 +96,12 @@ open class MyApplication : Application() {
 
         withContext(Dispatchers.Main) {
             AppCompatDelegate.setDefaultNightMode(mode)
+        }
+    }
+
+    private suspend fun initLanguage() = withContext(Dispatchers.Main) {
+        LanguageBroadcastLiveData().observeForever {
+            languageEvent.value = SingleEvent(0)
         }
     }
 }
