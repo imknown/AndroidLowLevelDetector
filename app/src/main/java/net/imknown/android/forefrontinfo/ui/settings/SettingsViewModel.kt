@@ -6,10 +6,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import net.imknown.android.forefrontinfo.BuildConfig
-import net.imknown.android.forefrontinfo.JsonIo
-import net.imknown.android.forefrontinfo.MyApplication
-import net.imknown.android.forefrontinfo.R
+import net.imknown.android.forefrontinfo.*
 import net.imknown.android.forefrontinfo.base.BaseViewModel
 import net.imknown.android.forefrontinfo.base.IAndroidVersion
 import net.imknown.android.forefrontinfo.base.SingleEvent
@@ -34,6 +31,22 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
 
     val version by lazy { MutableLiveData<String>() }
     val versionClick by lazy { MutableLiveData<SingleEvent<Int>>() }
+
+    val themesPrefChangeEvent by lazy {
+        MyApplication.sharedPreferences.stringEventLiveData(
+            viewModelScope,
+            MyApplication.getMyString(R.string.interface_themes_key),
+            MyApplication.getMyString(R.string.interface_themes_follow_system_value)
+        )
+    }
+
+    val scrollBarModeChangeEvent by lazy {
+        MyApplication.sharedPreferences.stringEventLiveData(
+            viewModelScope,
+            MyApplication.getMyString(R.string.interface_scroll_bar_key),
+            MyApplication.getMyString(R.string.interface_no_scroll_bar_value)
+        )
+    }
 
     fun setMyTheme(themesValue: Any) = viewModelScope.launch(Dispatchers.IO) {
         MyApplication.instance.setMyTheme(themesValue.toString())

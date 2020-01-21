@@ -23,10 +23,6 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
         }
     }
 
-    private val versionPref by lazy {
-        findPreference<Preference>(MyApplication.getMyString(R.string.about_version_key))!!
-    }
-
     private val settingsViewModel by activityViewModels<SettingsViewModel>()
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -42,13 +38,11 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
     }
 
     private fun initViews() {
-        val scrollBarModePref =
-            findPreference<ListPreference>(MyApplication.getMyString(R.string.interface_scroll_bar_key))!!
-        scrollBarModePref.setOnPreferenceChangeListener { _: Preference, newValue: Any ->
-            settingsViewModel.setScrollBarMode(newValue.toString())
-
-            true
-        }
+        settingsViewModel.scrollBarModeChangeEvent.observe(viewLifecycleOwner, Observer {
+            it.getContentIfNotHandled()?.let { themesValue ->
+                settingsViewModel.setScrollBarMode(themesValue)
+            }
+        })
 
         // TODO: MultiWindow/FreeForm raises error 'ViewModel can be accessed only when Fragment is attached'. Maybe a framework bug?
         settingsViewModel.changeScrollBarModeEvent.observe(viewLifecycleOwner, Observer {
@@ -57,8 +51,8 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
             }
         })
 
-        settingsViewModel.setScrollBarMode(scrollBarModePref.value)
-
+        val versionPref =
+            findPreference<Preference>(MyApplication.getMyString(R.string.about_version_key))!!
         settingsViewModel.version.observe(viewLifecycleOwner, Observer {
             versionPref.summary = it
         })
@@ -69,22 +63,22 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
             }
         })
 
-        // TODO: Use LiveData
-        val themesPref =
-            findPreference<ListPreference>(MyApplication.getMyString(R.string.interface_themes_key))!!
-        themesPref.setOnPreferenceChangeListener { _: Preference, newValue: Any ->
-            settingsViewModel.setMyTheme(newValue)
+        settingsViewModel.themesPrefChangeEvent.observe(viewLifecycleOwner, Observer {
+            it.getContentIfNotHandled()?.let { themesValue ->
+                settingsViewModel.setMyTheme(themesValue)
+            }
+        })
 
-            true
-        }
-
-        settingsViewModel.setBuiltInDataVersion()
-
-        // TODO: Use LiveData
-        versionPref.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+        versionPref.setOnPreferenceClickListener {
             settingsViewModel.versionClicked()
 
             true
         }
+
+        val scrollBarModePref =
+            findPreference<ListPreference>(MyApplication.getMyString(R.string.interface_scroll_bar_key))!!
+        settingsViewModel.setScrollBarMode(scrollBarModePref.value)
+
+        settingsViewModel.setBuiltInDataVersion()
     }
 }
