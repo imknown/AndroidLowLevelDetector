@@ -54,7 +54,14 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
         val versionPref =
             findPreference<Preference>(MyApplication.getMyString(R.string.about_version_key))!!
         settingsViewModel.version.observe(viewLifecycleOwner, Observer {
-            versionPref.summary = it
+            versionPref.summary = MyApplication.getMyString(
+                it.id,
+                it.versionName,
+                it.versionCode,
+                it.assetLldVersion,
+                it.distributor,
+                it.installer
+            )
         })
 
         settingsViewModel.versionClick.observe(viewLifecycleOwner, Observer {
@@ -79,6 +86,9 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
             findPreference<ListPreference>(MyApplication.getMyString(R.string.interface_scroll_bar_key))!!
         settingsViewModel.setScrollBarMode(scrollBarModePref.value)
 
-        settingsViewModel.setBuiltInDataVersion()
+        settingsViewModel.setBuiltInDataVersion(
+            MyApplication.instance.packageName,
+            MyApplication.instance.packageManager
+        )
     }
 }

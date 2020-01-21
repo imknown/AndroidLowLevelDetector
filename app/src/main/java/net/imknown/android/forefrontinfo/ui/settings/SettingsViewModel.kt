@@ -1,6 +1,7 @@
 package net.imknown.android.forefrontinfo.ui.settings
 
 import android.content.pm.PackageManager
+import androidx.annotation.StringRes
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -29,7 +30,7 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
 
     private var counter = 5
 
-    val version by lazy { MutableLiveData<String>() }
+    val version by lazy { MutableLiveData<Version>() }
     val versionClick by lazy { MutableLiveData<SingleEvent<Int>>() }
 
     val themesPrefChangeEvent by lazy {
@@ -52,7 +53,10 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
         MyApplication.instance.setMyTheme(themesValue.toString())
     }
 
-    fun setBuiltInDataVersion() = viewModelScope.launch(Dispatchers.IO) {
+    fun setBuiltInDataVersion(
+        packageName: String,
+        packageManager: PackageManager
+    ) = viewModelScope.launch(Dispatchers.IO) {
         val assetLldVersion = try {
             JsonIo.getAssetLldVersion(MyApplication.instance.assets)
         } catch (e: Exception) {
@@ -61,15 +65,36 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
             MyApplication.getMyString(android.R.string.unknownName)
         }
 
+        val mySha256 = getMyKeyPublicSha256(packageName, packageManager)
+        val distributor = MyApplication.getMyString(getDistributor(mySha256))
+        val installerPackageName = getInstallerPackageName(packageName, packageManager)
+        val installerLabel = installerPackageName?.let {
+            getApplicationLabel(it, packageManager)
+        }
+        val installer = installerLabel?.let {
+            "$it ($installerPackageName)"
+        } ?: "ADB"
+
         withContext(Dispatchers.Main) {
-            version.value = MyApplication.getMyString(
+            version.value = Version(
                 R.string.about_version_summary,
                 BuildConfig.VERSION_NAME,
                 BuildConfig.VERSION_CODE,
-                assetLldVersion
+                assetLldVersion,
+                distributor,
+                installer
             )
         }
     }
+
+    data class Version(
+        @StringRes val id: Int,
+        val versionName: String,
+        val versionCode: Int,
+        val assetLldVersion: String,
+        val distributor: String,
+        val installer: String
+    )
 
     fun versionClicked() = viewModelScope.launch(Dispatchers.Default) {
         if (counter > 0) {
@@ -90,11 +115,11 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
         )
     }
 
-    private suspend fun getDistributor(
+    private suspend fun getMyKeyPublicSha256(
         packageName: String,
         packageManager: PackageManager
     ) = withContext(Dispatchers.Default) {
-        val mySha256 = if (isAtLeastAndroid9()) {
+        return@withContext if (isAtLeastAndroid9()) {
             packageManager.getPackageInfo(
                 packageName,
                 PackageManager.GET_SIGNING_CERTIFICATES
@@ -110,7 +135,9 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
                 .joinToString(":") { byte -> "%02x".format(byte) }
                 .toUpperCase(Locale.US)
         }
+    }
 
+    private suspend fun getDistributor(mySha256: String?) = withContext(Dispatchers.Default) {
         return@withContext when (mySha256) {
             KEY_SHA_256_GOOGLE -> R.string.about_distributor_google
             KEY_SHA_256_IMKNOWN -> R.string.about_distributor_imknown
@@ -123,4 +150,12 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
         packageName: String,
         packageManager: PackageManager
     ) = packageManager.getInstallerPackageName(packageName)
+
+    private fun getApplicationLabel(
+        packageName: String,
+        packageManager: PackageManager
+    ): CharSequence {
+        val applicationInfo = packageManager.getApplicationInfo(packageName, 0)
+        return packageManager.getApplicationLabel(applicationInfo) // applicationInfo.loadLabel(packageManager)
+    }
 }
