@@ -7,9 +7,9 @@
     <string name="translator_more_info">https://github.com/imknown</string>
 
     <!-- Data -->
-    <string name="lld_json_loading">DATA LOADING 📲</string>
-    <string name="lld_json_offline">OFFLINE DATA 📴 (%s)</string>
-    <string name="lld_json_online">ONLINE DATA 📱 (%s)</string>
+    <string name="lld_json_loading">📲 LOADING…</string>
+    <string name="lld_json_offline">📴 OFFLINE (%s)</string>
+    <string name="lld_json_online">📱 ONLINE (%s)</string>
     <string name="lld_json_download_failed">Online data fetched failed.\nUsing local data instead.\n\n%s</string>
     <string name="lld_json_parse_failed">Data parsed failed.\nPlease try to upgrade this app.\n\n%s</string>
 
