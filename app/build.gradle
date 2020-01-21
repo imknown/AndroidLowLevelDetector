@@ -98,7 +98,7 @@ android {
             flavorInfix = ''
         } else if (flavorName == 'develop') {
             appName = '@string/app_beta_debug_name'
-            flavorInfix = " ${capFirstLetter(flavorName)}"
+            flavorInfix = " ${capFirstLetter('beta')}"
         } else {
             appName = ''
             flavorInfix = ''
