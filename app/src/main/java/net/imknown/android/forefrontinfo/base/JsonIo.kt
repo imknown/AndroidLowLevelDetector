@@ -1,19 +1,26 @@
-package net.imknown.android.forefrontinfo
+package net.imknown.android.forefrontinfo.base
 
 import android.content.res.AssetManager
 import com.google.gson.Gson
+import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import java.io.BufferedReader
 import java.io.File
 
 class JsonIo {
     companion object {
+        const val LLD_JSON_NAME = "lld.json"
+
+        val savedLldJsonFile: File by lazy {
+            File(MyApplication.getDownloadDir(), LLD_JSON_NAME)
+        }
+
         /**
          * https://www.programiz.com/kotlin-programming/examples/string-date
          */
         fun whetherNeedCopyAssets(assets: AssetManager): Boolean {
-            if (GatewayApi.savedLldJsonFile.exists()) {
-                val savedLldVersion = GatewayApi.savedLldJsonFile.fromJson<Lld>().version
+            if (savedLldJsonFile.exists()) {
+                val savedLldVersion = savedLldJsonFile.fromJson<Lld>().version
                 val assetLldVersion = getAssetLldVersion(assets)
 
                 if (savedLldVersion >= assetLldVersion) {
@@ -44,7 +51,7 @@ class JsonIo {
         }
 
         fun getAssetLldVersion(assets: AssetManager) =
-            assets.open(GatewayApi.LLD_JSON_NAME)
+            assets.open(LLD_JSON_NAME)
                 .bufferedReader()
                 .use(BufferedReader::readText)
                 .fromJson<Lld>().version

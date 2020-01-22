@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
-import net.imknown.android.forefrontinfo.base.IFragmentView
+import net.imknown.android.forefrontinfo.ui.base.IFragmentView
 
 class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
 

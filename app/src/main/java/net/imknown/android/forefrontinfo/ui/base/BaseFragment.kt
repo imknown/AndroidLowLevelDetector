@@ -1,4 +1,4 @@
-package net.imknown.android.forefrontinfo.base
+package net.imknown.android.forefrontinfo.ui.base
 
 import androidx.fragment.app.Fragment
 

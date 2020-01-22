@@ -1,23 +1,17 @@
-package net.imknown.android.forefrontinfo
+package net.imknown.android.forefrontinfo.base
 
 import com.github.kittinunf.fuel.core.FuelError
 import com.github.kittinunf.fuel.coroutines.awaitByteArrayResult
 import com.github.kittinunf.fuel.httpDownload
-import java.io.File
+import net.imknown.android.forefrontinfo.BuildConfig
 import java.util.*
 
 class GatewayApi {
     companion object {
-        const val LLD_JSON_NAME = "lld.json"
-
         private const val REPOSITORY_NAME = "imknown/AndroidLowLevelDetector"
 
         private const val URL_PREFIX_LLD_JSON_ZH_CN = "gitee.com/$REPOSITORY_NAME/raw"
         private const val URL_PREFIX_LLD_JSON = "raw.githubusercontent.com/$REPOSITORY_NAME"
-
-        val savedLldJsonFile: File by lazy {
-            File(MyApplication.getDownloadDir(), LLD_JSON_NAME)
-        }
 
         suspend fun downloadLldJsonFile(
             success: (ByteArray) -> Unit,
@@ -30,9 +24,9 @@ class GatewayApi {
             }
 
             val url =
-                "https://$urlPrefixLldJson/${BuildConfig.FLAVOR}/app/src/main/assets/$LLD_JSON_NAME"
+                "https://$urlPrefixLldJson/${BuildConfig.FLAVOR}/app/src/main/assets/${JsonIo.LLD_JSON_NAME}"
 
-            url.httpDownload().fileDestination { _, _ -> savedLldJsonFile }
+            url.httpDownload().fileDestination { _, _ -> JsonIo.savedLldJsonFile }
                 .awaitByteArrayResult().fold(success, failure)
         }
 

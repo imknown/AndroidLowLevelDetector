@@ -1,4 +1,4 @@
-package net.imknown.android.forefrontinfo
+package net.imknown.android.forefrontinfo.ui
 
 import android.os.Bundle
 import androidx.annotation.IdRes
@@ -10,7 +10,8 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import net.imknown.android.forefrontinfo.base.IAndroidVersion
+import net.imknown.android.forefrontinfo.R
+import net.imknown.android.forefrontinfo.ui.base.IAndroidVersion
 import net.imknown.android.forefrontinfo.ui.home.HomeFragment
 import net.imknown.android.forefrontinfo.ui.others.OthersFragment
 import net.imknown.android.forefrontinfo.ui.settings.SettingsFragment

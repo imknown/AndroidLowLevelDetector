@@ -1,4 +1,4 @@
-package net.imknown.android.forefrontinfo
+package net.imknown.android.forefrontinfo.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import kotlinx.android.synthetic.main.main_activity.*
+import net.imknown.android.forefrontinfo.R
 
 class MainActivity : AppCompatActivity() {
 

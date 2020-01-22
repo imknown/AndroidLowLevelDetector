@@ -1,4 +1,4 @@
-package net.imknown.android.forefrontinfo.base
+package net.imknown.android.forefrontinfo.ui.base
 
 import android.os.Bundle
 import androidx.lifecycle.MutableLiveData
@@ -8,7 +8,8 @@ import kotlinx.coroutines.*
 import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
-import net.imknown.android.forefrontinfo.stringEventLiveData
+import net.imknown.android.forefrontinfo.base.SingleEvent
+import net.imknown.android.forefrontinfo.base.stringEventLiveData
 
 abstract class BaseListViewModel : BaseViewModel(), IAndroidVersion {
     val models by lazy { MutableLiveData<ArrayList<MyModel>>() }

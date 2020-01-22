@@ -7,9 +7,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
-import net.imknown.android.forefrontinfo.base.BaseListViewModel
-import net.imknown.android.forefrontinfo.base.MyModel
-import net.imknown.android.forefrontinfo.booleanEventLiveData
+import net.imknown.android.forefrontinfo.base.booleanEventLiveData
+import net.imknown.android.forefrontinfo.ui.base.BaseListViewModel
+import net.imknown.android.forefrontinfo.ui.base.MyModel
 import java.text.SimpleDateFormat
 import java.util.*
 

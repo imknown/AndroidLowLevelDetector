@@ -14,10 +14,14 @@ import com.g00fy2.versioncompare.Version
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import net.imknown.android.forefrontinfo.*
-import net.imknown.android.forefrontinfo.base.BaseListViewModel
-import net.imknown.android.forefrontinfo.base.MyModel
+import net.imknown.android.forefrontinfo.MyApplication
+import net.imknown.android.forefrontinfo.R
+import net.imknown.android.forefrontinfo.base.GatewayApi
+import net.imknown.android.forefrontinfo.base.JsonIo
 import net.imknown.android.forefrontinfo.base.SingleEvent
+import net.imknown.android.forefrontinfo.base.fromJson
+import net.imknown.android.forefrontinfo.ui.base.BaseListViewModel
+import net.imknown.android.forefrontinfo.ui.base.MyModel
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.home.model.Subtitle
 
@@ -90,8 +94,8 @@ class HomeViewModel : BaseListViewModel() {
         if (JsonIo.whetherNeedCopyAssets(MyApplication.instance.assets)) {
             JsonIo.copyJsonFromAssetsToContextFilesDir(
                 MyApplication.instance.assets,
-                GatewayApi.savedLldJsonFile,
-                GatewayApi.LLD_JSON_NAME
+                JsonIo.savedLldJsonFile,
+                JsonIo.LLD_JSON_NAME
             )
         }
     }
@@ -146,7 +150,7 @@ class HomeViewModel : BaseListViewModel() {
         var dataVersion: String
 
         try {
-            val lld = GatewayApi.savedLldJsonFile.fromJson<Lld>()
+            val lld = JsonIo.savedLldJsonFile.fromJson<Lld>()
 
             detect(lld)
 
@@ -729,6 +733,5 @@ class HomeViewModel : BaseListViewModel() {
         title: String,
         detail: String?,
         @ColorRes color: Int
-    ) =
-        tempModels.add(MyModel(title, detail.toString(), color))
+    ) = tempModels.add(MyModel(title, detail.toString(), color))
 }

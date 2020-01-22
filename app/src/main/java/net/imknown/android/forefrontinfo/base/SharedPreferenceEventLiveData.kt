@@ -1,4 +1,4 @@
-package net.imknown.android.forefrontinfo
+package net.imknown.android.forefrontinfo.base
 
 import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
@@ -6,7 +6,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import net.imknown.android.forefrontinfo.base.SingleEvent
 
 /**
  * Copied from:
