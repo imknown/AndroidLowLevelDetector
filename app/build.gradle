@@ -86,11 +86,11 @@ android {
     }
 
     applicationVariants.all { variant ->
-        if (variant.buildType.name != 'debug') {
-            return
+        if (buildType.name == 'release') {
+            renameApk(variant)
+        } else if (buildType.name == 'debug') {
+            setAppName(variant)
         }
-
-        setAppName(variant)
     }
 
     compileOptions {
@@ -104,6 +104,7 @@ android {
     // }
 }
 
+// region [Set AppName]
 private static void setAppName(variant) {
     def appName
     def flavorInfix
@@ -126,5 +127,66 @@ private static void setAppName(variant) {
 private static def capFirstLetter(String flavor) {
     flavor.substring(0, 1).toUpperCase(Locale.US) + flavor.substring(1)
 }
+// endregion [Set AppName]
+
+// region [Rename APK]
+private def renameApk(variant) {
+    def currentTaskNames = gradle.startParameter.taskNames
+
+    def hasTaskName = currentTaskNames.size != 1
+    if (hasTaskName) {
+        return
+    }
+
+    def flavorName = variant.flavorName
+    def buildTypeName = variant.buildType.name
+
+    def currentTaskName = currentTaskNames[0]
+    def isNotAssemble = !currentTaskName.equalsIgnoreCase("assemble$flavorName$buildTypeName")
+    def isNotBundle = !currentTaskName.equalsIgnoreCase("bundle$flavorName$buildTypeName")
+    if (isNotAssemble && isNotBundle) {
+        return
+    }
+
+    def currentGitBranchName = getCurrentGitBranchName()
+    if (!currentTaskName.toLowerCase(Locale.US).contains(currentGitBranchName)) {
+        ant.fail("Task '$currentTaskName' should not use Git branch '$currentGitBranchName'.")
+    }
+
+    variant.outputs.all { output ->
+        outputFileName = getRenamedApkName(variant)
+        println "OutputFileName: $outputFileName"
+    }
+}
+
+private def getRenamedApkName(variant) {
+    def versionCode = variant.versionCode
+    def versionName = variant.versionName
+    def buildTypeName = variant.buildType.name
+    def flavorName = variant.flavorName
+
+    "${archivesBaseName}_${versionName}($versionCode)_${getCurrentDate()}_" +
+            "$buildTypeName".charAt(0).toUpperCase() +
+            "$flavorName".charAt(0).toUpperCase() +
+            "$currentGitBranchName".charAt(0).toUpperCase() +
+            ".apk"
+}
+
+import java.text.SimpleDateFormat
+
+private def static getCurrentDate() {
+    new SimpleDateFormat("yyyy-MM-dd-HH-mm", Locale.US).format(new Date())
+}
+
+private def static getCurrentGitBranchName() {
+    def branch = ""
+    def process = "git rev-parse --abbrev-ref HEAD".execute()
+    process.in.eachLine { line -> branch = line }
+    process.err.eachLine { line -> println line }
+    process.waitFor()
+
+    branch
+}
+// endregion [Rename APK]
 
 apply from: "$rootDir/gradle/dependencies.gradle"
