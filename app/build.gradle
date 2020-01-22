@@ -13,7 +13,7 @@ android {
 
         manifestPlaceholders = [appName: '@string/app_name']
 
-        // setProperty('archivesBaseName', 'lld-$versionName')
+        // setProperty('archivesBaseName', 'lld')
         archivesBaseName = 'lld'
 
         versionCode androidBuild.versionCode
@@ -107,7 +107,7 @@ android {
 private static void setAppName(variant) {
     def appName
     def flavorInfix
-    def flavorName = variant.getFlavorName()
+    def flavorName = variant.flavorName
     if (flavorName == 'master') {
         appName = '@string/app_debug_name'
         flavorInfix = ''
