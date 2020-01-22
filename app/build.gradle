@@ -90,22 +90,7 @@ android {
             return
         }
 
-        def appName
-        def flavorInfix
-        def flavorName = variant.getFlavorName()
-        if (flavorName == 'master') {
-            appName = '@string/app_debug_name'
-            flavorInfix = ''
-        } else if (flavorName == 'develop') {
-            appName = '@string/app_beta_debug_name'
-            flavorInfix = " ${capFirstLetter('beta')}"
-        } else {
-            appName = ''
-            flavorInfix = ''
-        }
-
-        variant.getMergedFlavor().manifestPlaceholders = [appName: appName]
-        resValue 'string', 'leak_canary_display_activity_label', "LLD${flavorInfix} Leaks"
+        setAppName(variant)
     }
 
     compileOptions {
@@ -119,7 +104,26 @@ android {
     // }
 }
 
-static def capFirstLetter(String flavor) {
+private static void setAppName(variant) {
+    def appName
+    def flavorInfix
+    def flavorName = variant.getFlavorName()
+    if (flavorName == 'master') {
+        appName = '@string/app_debug_name'
+        flavorInfix = ''
+    } else if (flavorName == 'develop') {
+        appName = '@string/app_beta_debug_name'
+        flavorInfix = " ${capFirstLetter('beta')}"
+    } else {
+        appName = ''
+        flavorInfix = ''
+    }
+
+    variant.getMergedFlavor().manifestPlaceholders = [appName: appName]
+    variant.resValue 'string', 'leak_canary_display_activity_label', "LLD${flavorInfix} Leaks"
+}
+
+private static def capFirstLetter(String flavor) {
     flavor.substring(0, 1).toUpperCase(Locale.US) + flavor.substring(1)
 }
 
