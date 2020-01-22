@@ -1,0 +1,48 @@
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    // region [Kotlin]
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinSdk.core"
+    // implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinSdk.core"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinSdk.coroutines"
+    // endregion [Kotlin]
+
+    // region [AndroidX]
+    implementation "com.google.android.material:material:$androidX.material"
+
+    implementation "androidx.fragment:fragment-ktx:$androidX.fragment"
+    implementation "androidx.preference:preference:$androidX.preference"
+    implementation "androidx.webkit:webkit:$androidX.webkit"
+
+    implementation "androidx.constraintlayout:constraintlayout:$androidX.constraintLayout"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$androidX.swipeRefreshLayout"
+    implementation "androidx.recyclerview:recyclerview:$androidX.recyclerView"
+    // endregion [AndroidX]
+
+    // region [Test]
+    testImplementation "junit:junit:$androidX.junit"
+    androidTestImplementation "androidx.test.ext:junit:$androidX.extJunit"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$androidX.espressoCore"
+    // endregion [Test]
+
+    // region [3rd Parties]
+    implementation "com.github.topjohnwu.libsu:core:$thirdParties.libsu"
+
+    // debugImplementation "com.squareup.leakcanary:leakcanary-android:$thirdParties.leakCanary"
+    debugImplementation "com.squareup.leakcanary:leakcanary-android-process:$thirdParties.leakCanary"
+
+    implementation "com.google.code.gson:gson:$thirdParties.gson"
+
+    implementation "com.github.kittinunf.fuel:fuel:$thirdParties.fuel"
+    // implementation "com.github.kittinunf.fuel:fuel-gson:$thirdParties.fuel"
+    // implementation "com.github.kittinunf.fuel:fuel-android:$thirdParties.fuel"
+    implementation "com.github.kittinunf.fuel:fuel-coroutines:$thirdParties.fuel"
+    // implementation "com.github.kittinunf.fuel:fuel-livedata:$thirdParties.fuel"
+
+    implementation "com.g00fy2:versioncompare:$thirdParties.versionCompare"
+    // endregion [3rd Parties]
+}
