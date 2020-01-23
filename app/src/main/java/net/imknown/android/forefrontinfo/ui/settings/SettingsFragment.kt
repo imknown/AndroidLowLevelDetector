@@ -4,11 +4,12 @@ import android.os.Bundle
 import android.os.Looper
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.whenCreated
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.MyApplication
@@ -26,12 +27,12 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
     private val settingsViewModel by activityViewModels<SettingsViewModel>()
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        MainScope().launch(Dispatchers.IO) {
+        lifecycleScope.launch(Dispatchers.IO) {
             Looper.myLooper() ?: Looper.prepare()
             setPreferencesFromResource(R.xml.preferences, rootKey)
             Looper.myLooper()?.quit()
 
-            withContext(Dispatchers.Main) {
+            whenCreated {
                 initViews()
             }
         }
@@ -44,7 +45,6 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
             }
         })
 
-        // TODO: MultiWindow/FreeForm raises error 'ViewModel can be accessed only when Fragment is attached'. Maybe a framework bug?
         settingsViewModel.changeScrollBarModeEvent.observe(viewLifecycleOwner, Observer {
             it.getContentIfNotHandled()?.let { isVerticalScrollBarEnabled ->
                 listView.isVerticalScrollBarEnabled = isVerticalScrollBarEnabled
