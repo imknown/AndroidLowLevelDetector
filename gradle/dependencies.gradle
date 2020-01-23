@@ -2,25 +2,78 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 
+//configurations.all {
+//    transitive = false
+//}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-    // region [Kotlin]
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinSdk.core"
-    // implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinSdk.core"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinSdk.coroutines"
-    // endregion [Kotlin]
 
     // region [AndroidX]
     implementation "com.google.android.material:material:$androidX.material"
 
-    implementation "androidx.fragment:fragment-ktx:$androidX.fragment"
-    implementation "androidx.preference:preference:$androidX.preference"
-    implementation "androidx.webkit:webkit:$androidX.webkit"
+    implementation "androidx.activity:activity:$androidX.activity"
+    implementation "androidx.activity:activity-ktx:$androidX.activity"
+
+    implementation "androidx.annotation:annotation:$androidX.annotation"
+    implementation "androidx.annotation:annotation-experimental:$androidX.annotationExperimental"
+
+    implementation "androidx.appcompat:appcompat:$androidX.appcompat"
+    implementation "androidx.appcompat:appcompat-resources:$androidX.appcompat"
+
+    implementation "androidx.arch.core:core-common:$androidX.archCore"
+    implementation "androidx.arch.core:core-runtime:$androidX.archCore"
+
+    implementation "androidx.cardview:cardview:$androidX.cardview"
+
+    implementation "androidx.collection:collection:$androidX.collection"
+    // implementation "androidx.collection:collection-ktx:$androidX.collection"
 
     implementation "androidx.constraintlayout:constraintlayout:$androidX.constraintLayout"
-    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$androidX.swipeRefreshLayout"
+    implementation "androidx.constraintlayout:constraintlayout-solver:$androidX.constraintLayout"
+
+    implementation "androidx.coordinatorlayout:coordinatorlayout:$androidX.coordinatorLayout"
+
+    implementation "androidx.core:core:$androidX.core"
+    implementation "androidx.core:core-ktx:$androidX.core"
+
+    implementation "androidx.cursoradapter:cursoradapter:$androidX.cursorAdapter"
+
+    implementation "androidx.customview:customview:$androidX.customView"
+
+    implementation "androidx.drawerlayout:drawerlayout:$androidX.drawerlayout"
+
+    implementation "androidx.fragment:fragment:$androidX.fragment"
+    implementation "androidx.fragment:fragment-ktx:$androidX.fragment"
+
+    implementation "androidx.interpolator:interpolator:$androidX.interpolator"
+
+    implementation "androidx.lifecycle:lifecycle-common:$androidX.lifecycle"
+    // implementation "androidx.lifecycle:lifecycle-common-java8:$androidX.lifecycle"
+    implementation "androidx.lifecycle:lifecycle-livedata-core:$androidX.lifecycle"
+    implementation "androidx.lifecycle:lifecycle-livedata-core-ktx:$androidX.lifecycle"
+    implementation "androidx.lifecycle:lifecycle-runtime:$androidX.lifecycle"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$androidX.lifecycle"
+    implementation "androidx.lifecycle:lifecycle-viewmodel:$androidX.lifecycle"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$androidX.lifecycle"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$androidX.lifecycleViewmodelSavedstate"
+
+    implementation "androidx.loader:loader:$androidX.loader"
+
+    implementation "androidx.preference:preference:$androidX.preference"
+
     implementation "androidx.recyclerview:recyclerview:$androidX.recyclerView"
+
+    implementation "androidx.savedstate:savedstate:$androidX.savedstate"
+
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$androidX.swipeRefreshLayout"
+
+    implementation "androidx.transition:transition:$androidX.transition"
+
+    implementation "androidx.viewpager:viewpager:$androidX.viewpager"
+    implementation "androidx.viewpager2:viewpager2:$androidX.viewpager2"
+
+    implementation "androidx.webkit:webkit:$androidX.webkit"
     // endregion [AndroidX]
 
     // region [Test]
@@ -28,6 +81,13 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$androidX.extJunit"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidX.espressoCore"
     // endregion [Test]
+
+    // region [Kotlin]
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinSdk.core"
+    // implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinSdk.core"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinSdk.coroutines"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinSdk.coroutines"
+    // endregion [Kotlin]
 
     // region [3rd Parties]
     implementation "com.github.topjohnwu.libsu:core:$thirdParties.libsu"

@@ -98,6 +98,10 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
+
     // https://kotlinlang.org/docs/tutorials/android-plugin.html
     // androidExtensions {
     //     experimental = true
