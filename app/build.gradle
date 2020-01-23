@@ -86,11 +86,11 @@ android {
     }
 
     applicationVariants.all { variant ->
-        if (buildType.name == 'release') {
-            renameApk(variant)
-        } else if (buildType.name == 'debug') {
-            setAppName(variant)
+        if (buildType.name == 'debug') {
+            setAppBetaName(variant)
         }
+
+        renameApk(variant)
     }
 
     compileOptions {
@@ -109,7 +109,7 @@ android {
 }
 
 // region [Set AppName]
-private static void setAppName(variant) {
+private static void setAppBetaName(variant) {
     def appName
     def flavorInfix
     def flavorName = variant.flavorName
@@ -128,13 +128,13 @@ private static void setAppName(variant) {
     variant.resValue 'string', 'leak_canary_display_activity_label', "LLD${flavorInfix} Leaks"
 }
 
-private static def capFirstLetter(String flavor) {
+private static capFirstLetter(String flavor) {
     flavor.substring(0, 1).toUpperCase(Locale.US) + flavor.substring(1)
 }
 // endregion [Set AppName]
 
 // region [Rename APK]
-private def renameApk(variant) {
+private renameApk(variant) {
     def currentTaskNames = gradle.startParameter.taskNames
 
     def hasTaskName = currentTaskNames.size != 1
@@ -146,45 +146,52 @@ private def renameApk(variant) {
     def buildTypeName = variant.buildType.name
 
     def currentTaskName = currentTaskNames[0]
-    def isNotAssemble = !currentTaskName.equalsIgnoreCase("assemble$flavorName$buildTypeName")
-    def isNotBundle = !currentTaskName.equalsIgnoreCase("bundle$flavorName$buildTypeName")
+    def currentTaskNameLower = currentTaskName.toLowerCase(Locale.US)
+    def isNotAssemble = !currentTaskNameLower.contains("assemble$flavorName$buildTypeName")
+    def isNotBundle = !currentTaskNameLower.contains("bundle$flavorName$buildTypeName")
     if (isNotAssemble && isNotBundle) {
-        // TODO: In fact, there are many task should be considered here,
-        // TODO: such as 'build', 'assembleRelease', 'bundleRelease', etc. .
+        // TODO: In fact, there are many tasks should be considered here,
+        // TODO: such as 'build', etc. .
         return
     }
 
     def currentGitBranchName = getCurrentGitBranchName()
-    if (!currentTaskName.toLowerCase(Locale.US).contains(currentGitBranchName)) {
+    if (!currentTaskNameLower.contains(currentGitBranchName)) {
         ant.fail("Task '$currentTaskName' should not use Git branch '$currentGitBranchName'.")
     }
 
+    if (buildTypeName == 'debug') {
+        return
+    }
+
     variant.outputs.all { output ->
+        // TODO: Rename Aab
+
         outputFileName = getRenamedApkName(variant)
         println "OutputFileName: $outputFileName"
     }
 }
 
-private def getRenamedApkName(variant) {
+private getRenamedApkName(variant) {
     def versionCode = variant.versionCode
     def versionName = variant.versionName
-    def buildTypeName = variant.buildType.name
+    def currentDate = getCurrentDate()
+    def currentGitBranchName = getCurrentGitBranchName()
     def flavorName = variant.flavorName
+    def buildTypeName = variant.buildType.name
 
-    "${archivesBaseName}_${versionName}($versionCode)_${getCurrentDate()}_" +
-            "$buildTypeName".charAt(0).toUpperCase() +
-            "$flavorName".charAt(0).toUpperCase() +
-            "$currentGitBranchName".charAt(0).toUpperCase() +
+    "${archivesBaseName}_$versionName($versionCode)_$currentDate" +
+            "_${currentGitBranchName}_${flavorName}_$buildTypeName" +
             ".apk"
 }
 
 import java.text.SimpleDateFormat
 
-private def static getCurrentDate() {
+private static getCurrentDate() {
     new SimpleDateFormat("yyyy-MM-dd-HH-mm", Locale.US).format(new Date())
 }
 
-private def static getCurrentGitBranchName() {
+private static getCurrentGitBranchName() {
     def branch = ""
     def process = "git rev-parse --abbrev-ref HEAD".execute()
     process.in.eachLine { line -> branch = line }
