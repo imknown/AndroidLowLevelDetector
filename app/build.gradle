@@ -149,6 +149,8 @@ private def renameApk(variant) {
     def isNotAssemble = !currentTaskName.equalsIgnoreCase("assemble$flavorName$buildTypeName")
     def isNotBundle = !currentTaskName.equalsIgnoreCase("bundle$flavorName$buildTypeName")
     if (isNotAssemble && isNotBundle) {
+        // TODO: In fact, there are many task should be considered here,
+        // TODO: such as 'build', 'assembleRelease', 'bundleRelease', etc. .
         return
     }
 
