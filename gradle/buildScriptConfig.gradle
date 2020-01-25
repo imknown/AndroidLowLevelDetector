@@ -8,8 +8,8 @@ ext {
             compileSdkVersion        : 29,
             targetSdkVersion         : 29,
 
-            versionCode              : 12,
-            versionName              : '1.5.0'
+            versionCode              : 13,
+            versionName              : '1.5.1'
     ]
 
     // https://maven.google.com
