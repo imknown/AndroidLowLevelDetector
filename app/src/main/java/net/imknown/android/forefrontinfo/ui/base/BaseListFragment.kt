@@ -44,7 +44,7 @@ abstract class BaseListFragment : BaseFragment() {
         })
 
         listViewModel.models.observe(viewLifecycleOwner, Observer {
-            listViewModel.showModels(myAdapter, it)
+            listViewModel.showModels(myAdapter.myModels, it)
         })
 
         listViewModel.showModelsEvent.observe(viewLifecycleOwner, Observer {

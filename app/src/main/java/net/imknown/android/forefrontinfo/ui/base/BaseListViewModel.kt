@@ -46,15 +46,15 @@ abstract class BaseListViewModel : BaseViewModel(), IAndroidVersion {
         savedInstanceState == null || models.value.isNullOrEmpty()
 
     fun showModels(
-        // TODO: Maybe leak, consider moving these logic to the Adapter's ViewModel
-        myAdapter: MyAdapter,
-        myModels: ArrayList<MyModel>
+        myModels: ArrayList<MyModel>,
+        newModels: ArrayList<MyModel>
     ) = viewModelScope.launch(Dispatchers.Default) {
-        if (myModels.isNullOrEmpty()) {
+        if (newModels.isNullOrEmpty()) {
             return@launch
         }
 
-        myAdapter.addAll(myModels)
+        myModels.clear()
+        myModels.addAll(newModels)
 
         withContext(Dispatchers.Main) {
             showModelsEvent.value = SingleEvent(0)
