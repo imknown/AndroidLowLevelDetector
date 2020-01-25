@@ -5,6 +5,7 @@
 
     <application
         android:name=".MyDebugApplication"
+        android:label="@string/app_debug_name"
         tools:ignore="GoogleAppIndexingWarning"
-        tools:replace="android:name" />
+        tools:replace="android:name,android:label" />
 </manifest>

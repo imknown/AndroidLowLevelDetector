@@ -4,14 +4,14 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+def currentGitBranchName = getCurrentGitBranchName()
+
 android {
     compileSdkVersion androidBuild.compileSdkVersion
     buildToolsVersion androidBuild.buildToolsVersion
 
     defaultConfig {
         applicationId 'net.imknown.android.forefrontinfo'
-
-        manifestPlaceholders = [appName: '@string/app_name']
 
         // setProperty('archivesBaseName', 'lld')
         archivesBaseName = 'lld'
@@ -25,6 +25,8 @@ android {
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 
         resConfigs 'zh-rCN', 'fr-rFR'
+
+        buildConfigField 'String', 'GIT_BRANCH', "\"$currentGitBranchName\""
     }
 
     signingConfigs {
@@ -64,32 +66,7 @@ android {
         }
     }
 
-    def version = 'version'
-    flavorDimensions version
-
-    productFlavors {
-        // stable
-        master {
-            dimension version
-        }
-
-        // beta
-        develop {
-            dimension version
-
-            manifestPlaceholders = [appName: '@string/app_beta_name']
-
-            versionCode androidBuild.versionBetaCode
-            versionName androidBuild.versionBetaName
-            versionNameSuffix "-beta$androidBuild.versionBetaIteration"
-        }
-    }
-
     applicationVariants.all { variant ->
-        if (buildType.name == 'debug') {
-            setAppBetaName(variant)
-        }
-
         renameApk(variant)
     }
 
@@ -108,65 +85,14 @@ android {
     // }
 }
 
-// region [Set AppName]
-private static void setAppBetaName(variant) {
-    def appName
-    def flavorInfix
-    def flavorName = variant.flavorName
-    if (flavorName == 'master') {
-        appName = '@string/app_debug_name'
-        flavorInfix = ''
-    } else if (flavorName == 'develop') {
-        appName = '@string/app_beta_debug_name'
-        flavorInfix = " ${capFirstLetter('beta')}"
-    } else {
-        appName = ''
-        flavorInfix = ''
-    }
-
-    variant.getMergedFlavor().manifestPlaceholders = [appName: appName]
-    variant.resValue 'string', 'leak_canary_display_activity_label', "LLD${flavorInfix} Leaks"
-}
-
-private static capFirstLetter(String flavor) {
-    flavor.substring(0, 1).toUpperCase(Locale.US) + flavor.substring(1)
-}
-// endregion [Set AppName]
-
 // region [Rename APK]
 private renameApk(variant) {
-    def currentTaskNames = gradle.startParameter.taskNames
-
-    def hasTaskName = currentTaskNames.size != 1
-    if (hasTaskName) {
-        return
-    }
-
-    def flavorName = variant.flavorName
-    def buildTypeName = variant.buildType.name
-
-    def currentTaskName = currentTaskNames[0]
-    def currentTaskNameLower = currentTaskName.toLowerCase(Locale.US)
-    def isNotAssemble = !currentTaskNameLower.contains("assemble$flavorName$buildTypeName")
-    def isNotBundle = !currentTaskNameLower.contains("bundle$flavorName$buildTypeName")
-    if (isNotAssemble && isNotBundle) {
-        // TODO: In fact, there are many tasks should be considered here,
-        // TODO: such as 'build', etc. .
-        return
-    }
-
-    def currentGitBranchName = getCurrentGitBranchName()
-    if (!currentTaskNameLower.contains(currentGitBranchName)) {
-        ant.fail("Task '$currentTaskName' should not use Git branch '$currentGitBranchName'.")
-    }
-
-    if (buildTypeName == 'debug') {
+    if (variant.buildType.name == 'debug') {
         return
     }
 
     variant.outputs.all { output ->
         // TODO: Rename Aab
-
         outputFileName = getRenamedApkName(variant)
         println "OutputFileName: $outputFileName"
     }
@@ -176,12 +102,10 @@ private getRenamedApkName(variant) {
     def versionCode = variant.versionCode
     def versionName = variant.versionName
     def currentDate = getCurrentDate()
-    def currentGitBranchName = getCurrentGitBranchName()
-    def flavorName = variant.flavorName
     def buildTypeName = variant.buildType.name
 
     "${archivesBaseName}_$versionName($versionCode)_$currentDate" +
-            "_${currentGitBranchName}_${flavorName}_$buildTypeName" +
+            "_${currentGitBranchName}_$buildTypeName" +
             ".apk"
 }
 

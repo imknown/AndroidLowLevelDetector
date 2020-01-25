@@ -24,7 +24,7 @@ class GatewayApi {
             }
 
             val url =
-                "https://$urlPrefixLldJson/${BuildConfig.FLAVOR}/app/src/main/assets/${JsonIo.LLD_JSON_NAME}"
+                "https://$urlPrefixLldJson/${BuildConfig.GIT_BRANCH}/app/src/main/assets/${JsonIo.LLD_JSON_NAME}"
 
             url.httpDownload().fileDestination { _, _ -> JsonIo.savedLldJsonFile }
                 .awaitByteArrayResult().fold(success, failure)

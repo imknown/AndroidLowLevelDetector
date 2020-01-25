@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">LowLevelDetector</string>
-    <string name="app_beta_name">LowLevelDetector Beta</string>
 
     <string name="translation_language_and_translator">Français (FR), traducteur: LiteApplication</string>
     <string name="translator_website">https://litepress.ddns.net</string>
