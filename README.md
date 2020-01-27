@@ -30,5 +30,5 @@ Help you finding out whether your phone provider had implement the latest featur
 - Detect outdatedTargetSdkVersion apk
 - Dark mode supported
 - Online/offline mode (fetching data from remote server or local)
-- MultiWindow/FreeForm/Landscape supported
+- MultiWindow/FreeForm/Foldable/Landscape supported
 - Etc.
