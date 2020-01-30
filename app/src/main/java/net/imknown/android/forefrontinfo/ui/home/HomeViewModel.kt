@@ -7,6 +7,7 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.webkit.WebViewCompat
@@ -86,9 +87,11 @@ class HomeViewModel : BaseListViewModel() {
         private const val PROP_RO_PRODUCT_FIRST_API_LEVEL = "ro.product.first_api_level"
     }
 
-    val subtitle by lazy { MutableLiveData<Subtitle>() }
+    private val _subtitle by lazy { MutableLiveData<Subtitle>() }
+    val subtitle: LiveData<Subtitle> by lazy { _subtitle }
 
-    val error by lazy { MutableLiveData<Event<Exception>>() }
+    private val _error by lazy { MutableLiveData<Event<Exception>>() }
+    val error: LiveData<Event<Exception>> by lazy { _error }
 
     private fun copyJsonIfNeeded() {
         if (JsonIo.whetherNeedCopyAssets(MyApplication.instance.assets)) {
@@ -130,7 +133,7 @@ class HomeViewModel : BaseListViewModel() {
     }
 
     private suspend fun onError(exception: Exception) = withContext(Dispatchers.Main) {
-        error.value = Event(exception)
+        _error.value = Event(exception)
     }
 
     private suspend fun prepareResult(isOnline: Boolean) {
@@ -169,7 +172,7 @@ class HomeViewModel : BaseListViewModel() {
         }
 
         withContext(Dispatchers.Main) {
-            subtitle.value = Subtitle(lldDataModeResId, dataVersion)
+            _subtitle.value = Subtitle(lldDataModeResId, dataVersion)
         }
     }
 
@@ -215,7 +218,7 @@ class HomeViewModel : BaseListViewModel() {
         detectOutdatedTargetSdkVersionApk(tempModels)
 
         withContext(Dispatchers.Main) {
-            models.value = tempModels
+            _models.value = tempModels
         }
     }
 

@@ -1,12 +1,14 @@
 package net.imknown.android.forefrontinfo.ui.others
 
 import android.os.Build
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
+import net.imknown.android.forefrontinfo.base.Event
 import net.imknown.android.forefrontinfo.base.booleanEventLiveData
 import net.imknown.android.forefrontinfo.ui.base.BaseListViewModel
 import net.imknown.android.forefrontinfo.ui.base.MyModel
@@ -19,13 +21,14 @@ class OthersViewModel : BaseListViewModel() {
         private const val CMD_GETPROP = "getprop"
     }
 
-    val rawProp by lazy {
+    private val _rawProp by lazy {
         MyApplication.sharedPreferences.booleanEventLiveData(
             viewModelScope,
             MyApplication.getMyString(R.string.function_raw_build_prop_key),
             false
         )
     }
+    val rawProp: LiveData<Event<Boolean>> by lazy { _rawProp }
 
     override fun collectModels() = viewModelScope.launch(Dispatchers.IO) {
         val tempModels = ArrayList<MyModel>()
@@ -89,7 +92,7 @@ class OthersViewModel : BaseListViewModel() {
         getProp(tempModels)
 
         withContext(Dispatchers.Main) {
-            models.value = tempModels
+            _models.value = tempModels
         }
     }
 

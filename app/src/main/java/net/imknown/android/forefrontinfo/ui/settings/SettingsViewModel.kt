@@ -2,6 +2,7 @@ package net.imknown.android.forefrontinfo.ui.settings
 
 import android.content.pm.PackageManager
 import androidx.annotation.StringRes
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -34,8 +35,11 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
 
     private var counter = 5
 
-    val version by lazy { MutableLiveData<Version>() }
-    val versionClick by lazy { MutableLiveData<Event<Int>>() }
+    private val _version by lazy { MutableLiveData<Version>() }
+    val version: LiveData<Version> by lazy { _version }
+
+    private val _versionClick by lazy { MutableLiveData<Event<Int>>() }
+    val versionClick: LiveData<Event<Int>> by lazy { _versionClick }
 
     val themesPrefChangeEvent by lazy {
         MyApplication.sharedPreferences.stringEventLiveData(
@@ -80,7 +84,7 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
         } ?: "Recovery/Bootloader/ADB"
 
         withContext(Dispatchers.Main) {
-            version.value = Version(
+            _version.value = Version(
                 R.string.about_version_summary,
                 BuildConfig.VERSION_NAME,
                 BuildConfig.VERSION_CODE,
@@ -107,7 +111,7 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
             counter -= 100
 
             withContext(Dispatchers.Main) {
-                versionClick.value = Event(0)
+                _versionClick.value = Event(0)
             }
         }
 

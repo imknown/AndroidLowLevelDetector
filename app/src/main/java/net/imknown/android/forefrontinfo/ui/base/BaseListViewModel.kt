@@ -1,6 +1,7 @@
 package net.imknown.android.forefrontinfo.ui.base
 
 import android.os.Bundle
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.topjohnwu.superuser.Shell
@@ -12,18 +13,23 @@ import net.imknown.android.forefrontinfo.base.Event
 import net.imknown.android.forefrontinfo.base.stringEventLiveData
 
 abstract class BaseListViewModel : BaseViewModel(), IAndroidVersion {
-    val models by lazy { MutableLiveData<ArrayList<MyModel>>() }
+    protected val _models by lazy { MutableLiveData<ArrayList<MyModel>>() }
+    val models: LiveData<ArrayList<MyModel>> by lazy { _models }
 
-    val showModelsEvent by lazy { MutableLiveData<Event<Int>>() }
-    val showErrorEvent by lazy { MutableLiveData<Event<String>>() }
+    private val _showModelsEvent by lazy { MutableLiveData<Event<Int>>() }
+    val showModelsEvent: LiveData<Event<Int>> by lazy { _showModelsEvent }
 
-    val scrollBarMode by lazy {
+    private val _showErrorEvent by lazy { MutableLiveData<Event<String>>() }
+    val showErrorEvent: LiveData<Event<String>> by lazy { _showErrorEvent }
+
+    private val _scrollBarMode by lazy {
         MyApplication.sharedPreferences.stringEventLiveData(
             viewModelScope,
             MyApplication.getMyString(R.string.interface_scroll_bar_key),
             MyApplication.getMyString(R.string.interface_no_scroll_bar_value)
         )
     }
+    val scrollBarMode: LiveData<Event<String?>> by lazy { _scrollBarMode }
 
     abstract fun collectModels(): Job
 
@@ -57,13 +63,13 @@ abstract class BaseListViewModel : BaseViewModel(), IAndroidVersion {
         myModels.addAll(newModels)
 
         withContext(Dispatchers.Main) {
-            showModelsEvent.value = Event(0)
+            _showModelsEvent.value = Event(0)
         }
     }
 
     fun showError(error: Exception) = viewModelScope.launch(Dispatchers.Default) {
         withContext(Dispatchers.Main) {
-            showErrorEvent.value = Event(error.message.toString())
+            _showErrorEvent.value = Event(error.message.toString())
         }
 
         if (BuildConfig.DEBUG) {

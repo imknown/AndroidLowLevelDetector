@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.os.Environment
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.preference.PreferenceManager
 import com.topjohnwu.superuser.Shell
@@ -22,7 +23,7 @@ open class MyApplication : Application() {
     companion object {
         lateinit var instance: MyApplication
 
-        val languageEvent by lazy { MutableLiveData<Event<Int>>() }
+        val languageEvent: LiveData<Event<Int>> by lazy { instance._languageEvent }
 
         val sharedPreferences: SharedPreferences by lazy {
             PreferenceManager.getDefaultSharedPreferences(instance)
@@ -45,6 +46,8 @@ open class MyApplication : Application() {
         fun getMyString(@StringRes resId: Int, vararg formatArgs: Any?) =
             instance.getString(resId, *formatArgs)
     }
+
+    private val _languageEvent by lazy { MutableLiveData<Event<Int>>() }
 
     override fun onCreate() {
         super.onCreate()
@@ -101,7 +104,7 @@ open class MyApplication : Application() {
 
     private suspend fun initLanguage() = withContext(Dispatchers.Main) {
         LanguageBroadcastLiveData().observeForever {
-            languageEvent.value = Event(0)
+            _languageEvent.value = Event(0)
         }
     }
 }
