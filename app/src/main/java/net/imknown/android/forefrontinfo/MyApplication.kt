@@ -72,9 +72,9 @@ open class MyApplication : Application() {
 
     private suspend fun initTheme() {
         val themesValue = sharedPreferences.getString(
-                getMyString(R.string.interface_themes_key),
-                getMyString(R.string.interface_themes_follow_system_value)
-            )!!
+            getMyString(R.string.interface_themes_key),
+            getMyString(R.string.interface_themes_follow_system_value)
+        )!!
         setMyTheme(themesValue)
     }
 
