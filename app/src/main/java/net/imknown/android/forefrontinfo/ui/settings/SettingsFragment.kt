@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
+import net.imknown.android.forefrontinfo.base.EventObserver
 import net.imknown.android.forefrontinfo.ui.base.IFragmentView
 
 class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
@@ -39,16 +40,14 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
     }
 
     private fun initViews() {
-        settingsViewModel.scrollBarModeChangeEvent.observe(viewLifecycleOwner, Observer {
-            it.getContentIfNotHandled()?.let { themesValue ->
+        settingsViewModel.scrollBarModeChangeEvent.observe(viewLifecycleOwner, EventObserver {
+            it?.let { themesValue ->
                 settingsViewModel.setScrollBarMode(themesValue)
             }
         })
 
-        settingsViewModel.changeScrollBarModeEvent.observe(viewLifecycleOwner, Observer {
-            it.getContentIfNotHandled()?.let { isVerticalScrollBarEnabled ->
-                listView.isVerticalScrollBarEnabled = isVerticalScrollBarEnabled
-            }
+        settingsViewModel.changeScrollBarModeEvent.observe(viewLifecycleOwner, EventObserver {
+            listView.isVerticalScrollBarEnabled = it
         })
 
         val versionPref =
@@ -64,14 +63,12 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
             )
         })
 
-        settingsViewModel.versionClick.observe(viewLifecycleOwner, Observer {
-            it.getContentIfNotHandled()?.let {
-                toast(R.string.about_version_click)
-            }
+        settingsViewModel.versionClick.observe(viewLifecycleOwner, EventObserver {
+            toast(R.string.about_version_click)
         })
 
-        settingsViewModel.themesPrefChangeEvent.observe(viewLifecycleOwner, Observer {
-            it.getContentIfNotHandled()?.let { themesValue ->
+        settingsViewModel.themesPrefChangeEvent.observe(viewLifecycleOwner, EventObserver {
+            it?.let { themesValue ->
                 settingsViewModel.setMyTheme(themesValue)
             }
         })

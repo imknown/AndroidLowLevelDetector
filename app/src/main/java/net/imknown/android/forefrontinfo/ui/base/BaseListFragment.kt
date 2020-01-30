@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_list.*
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
+import net.imknown.android.forefrontinfo.base.EventObserver
 
 abstract class BaseListFragment : BaseFragment() {
 
@@ -29,42 +30,34 @@ abstract class BaseListFragment : BaseFragment() {
 
         initViews(savedInstanceState)
 
-        MyApplication.languageEvent.observe(viewLifecycleOwner, Observer {
-            it.getContentIfNotHandled()?.let {
-                swipeRefreshLayout.isRefreshing = true
+        MyApplication.languageEvent.observe(viewLifecycleOwner, EventObserver {
+            swipeRefreshLayout.isRefreshing = true
 
-                listViewModel.collectModels()
-            }
+            listViewModel.collectModels()
         })
 
-        listViewModel.changeScrollBarModeEvent.observe(viewLifecycleOwner, Observer {
-            it.getContentIfNotHandled()?.let { isVerticalScrollBarEnabled ->
-                recyclerView.isVerticalScrollBarEnabled = isVerticalScrollBarEnabled
-            }
+        listViewModel.changeScrollBarModeEvent.observe(viewLifecycleOwner, EventObserver {
+            recyclerView.isVerticalScrollBarEnabled = it
         })
 
         listViewModel.models.observe(viewLifecycleOwner, Observer {
             listViewModel.showModels(myAdapter.myModels, it)
         })
 
-        listViewModel.showModelsEvent.observe(viewLifecycleOwner, Observer {
-            it.getContentIfNotHandled()?.let {
-                myAdapter.notifyDataSetChanged()
+        listViewModel.showModelsEvent.observe(viewLifecycleOwner, EventObserver {
+            myAdapter.notifyDataSetChanged()
 
-                swipeRefreshLayout.isRefreshing = false
-            }
+            swipeRefreshLayout.isRefreshing = false
         })
 
-        listViewModel.showErrorEvent.observe(viewLifecycleOwner, Observer {
-            it.getContentIfNotHandled()?.let { errorMessage ->
-                toast(errorMessage)
+        listViewModel.showErrorEvent.observe(viewLifecycleOwner, EventObserver {
+            toast(it)
 
-                swipeRefreshLayout.isRefreshing = false
-            }
+            swipeRefreshLayout.isRefreshing = false
         })
 
-        listViewModel.scrollBarMode.observe(viewLifecycleOwner, Observer {
-            it.getContentIfNotHandled()?.let { scrollBarMode ->
+        listViewModel.scrollBarMode.observe(viewLifecycleOwner, EventObserver {
+            it?.let { scrollBarMode ->
                 listViewModel.setScrollBarMode(scrollBarMode)
             }
         })
