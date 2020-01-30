@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_list.*
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
+import net.imknown.android.forefrontinfo.base.Event
 import net.imknown.android.forefrontinfo.base.EventObserver
 
 abstract class BaseListFragment : BaseFragment() {
@@ -25,16 +27,18 @@ abstract class BaseListFragment : BaseFragment() {
         return inflater.inflate(R.layout.fragment_list, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        initViews(savedInstanceState)
-
-        MyApplication.languageEvent.observe(viewLifecycleOwner, EventObserver {
+    protected fun observeLanguageEvent(event: LiveData<Event<Int>>) {
+        event.observe(viewLifecycleOwner, EventObserver {
             swipeRefreshLayout.isRefreshing = true
 
             listViewModel.collectModels()
         })
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        initViews(savedInstanceState)
 
         listViewModel.changeScrollBarModeEvent.observe(viewLifecycleOwner, EventObserver {
             recyclerView.isVerticalScrollBarEnabled = it

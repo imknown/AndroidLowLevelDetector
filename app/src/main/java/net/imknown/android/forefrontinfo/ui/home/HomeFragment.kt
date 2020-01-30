@@ -16,6 +16,8 @@ class HomeFragment : BaseListFragment() {
     override val listViewModel by activityViewModels<HomeViewModel>()
 
     override fun init() {
+        observeLanguageEvent(MyApplication.homeLanguageEvent)
+
         listViewModel.subtitle.observe(viewLifecycleOwner, Observer {
             val actionBar = (activity as AppCompatActivity).supportActionBar
             actionBar?.subtitle = MyApplication.getMyString(it.lldDataModeResId, it.dataVersion)

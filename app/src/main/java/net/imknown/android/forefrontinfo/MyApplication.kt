@@ -23,7 +23,8 @@ open class MyApplication : Application() {
     companion object {
         lateinit var instance: MyApplication
 
-        val languageEvent: LiveData<Event<Int>> by lazy { instance._languageEvent }
+        val homeLanguageEvent: LiveData<Event<Int>> by lazy { instance._homeLanguageEvent }
+        val settingsLanguageEvent: LiveData<Event<Int>> by lazy { instance._settingsLanguageEvent }
 
         val sharedPreferences: SharedPreferences by lazy {
             PreferenceManager.getDefaultSharedPreferences(instance)
@@ -47,7 +48,8 @@ open class MyApplication : Application() {
             instance.getString(resId, *formatArgs)
     }
 
-    private val _languageEvent by lazy { MutableLiveData<Event<Int>>() }
+    private val _homeLanguageEvent by lazy { MutableLiveData<Event<Int>>() }
+    private val _settingsLanguageEvent by lazy { MutableLiveData<Event<Int>>() }
 
     override fun onCreate() {
         super.onCreate()
@@ -104,7 +106,8 @@ open class MyApplication : Application() {
 
     private suspend fun initLanguage() = withContext(Dispatchers.Main) {
         LanguageBroadcastLiveData().observeForever {
-            _languageEvent.value = Event(0)
+            _homeLanguageEvent.value = Event(0)
+            _settingsLanguageEvent.value = Event(0)
         }
     }
 }
