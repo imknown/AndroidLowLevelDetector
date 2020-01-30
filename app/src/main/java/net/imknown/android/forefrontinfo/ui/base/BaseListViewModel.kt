@@ -8,14 +8,14 @@ import kotlinx.coroutines.*
 import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
-import net.imknown.android.forefrontinfo.base.SingleEvent
+import net.imknown.android.forefrontinfo.base.Event
 import net.imknown.android.forefrontinfo.base.stringEventLiveData
 
 abstract class BaseListViewModel : BaseViewModel(), IAndroidVersion {
     val models by lazy { MutableLiveData<ArrayList<MyModel>>() }
 
-    val showModelsEvent by lazy { MutableLiveData<SingleEvent<Int>>() }
-    val showErrorEvent by lazy { MutableLiveData<SingleEvent<String>>() }
+    val showModelsEvent by lazy { MutableLiveData<Event<Int>>() }
+    val showErrorEvent by lazy { MutableLiveData<Event<String>>() }
 
     val scrollBarMode by lazy {
         MyApplication.sharedPreferences.stringEventLiveData(
@@ -57,13 +57,13 @@ abstract class BaseListViewModel : BaseViewModel(), IAndroidVersion {
         myModels.addAll(newModels)
 
         withContext(Dispatchers.Main) {
-            showModelsEvent.value = SingleEvent(0)
+            showModelsEvent.value = Event(0)
         }
     }
 
     fun showError(error: Exception) = viewModelScope.launch(Dispatchers.Default) {
         withContext(Dispatchers.Main) {
-            showErrorEvent.value = SingleEvent(error.message.toString())
+            showErrorEvent.value = Event(error.message.toString())
         }
 
         if (BuildConfig.DEBUG) {

@@ -13,7 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import net.imknown.android.forefrontinfo.base.SingleEvent
+import net.imknown.android.forefrontinfo.base.Event
 import java.io.File
 
 @SuppressLint("Registered")
@@ -22,7 +22,7 @@ open class MyApplication : Application() {
     companion object {
         lateinit var instance: MyApplication
 
-        val languageEvent by lazy { MutableLiveData<SingleEvent<Int>>() }
+        val languageEvent by lazy { MutableLiveData<Event<Int>>() }
 
         val sharedPreferences: SharedPreferences by lazy {
             PreferenceManager.getDefaultSharedPreferences(instance)
@@ -101,7 +101,7 @@ open class MyApplication : Application() {
 
     private suspend fun initLanguage() = withContext(Dispatchers.Main) {
         LanguageBroadcastLiveData().observeForever {
-            languageEvent.value = SingleEvent(0)
+            languageEvent.value = Event(0)
         }
     }
 }

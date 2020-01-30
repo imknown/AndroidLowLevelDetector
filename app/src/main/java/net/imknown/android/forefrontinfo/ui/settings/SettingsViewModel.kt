@@ -10,8 +10,8 @@ import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
+import net.imknown.android.forefrontinfo.base.Event
 import net.imknown.android.forefrontinfo.base.JsonIo
-import net.imknown.android.forefrontinfo.base.SingleEvent
 import net.imknown.android.forefrontinfo.base.stringEventLiveData
 import net.imknown.android.forefrontinfo.ui.base.BaseViewModel
 import net.imknown.android.forefrontinfo.ui.base.IAndroidVersion
@@ -35,7 +35,7 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
     private var counter = 5
 
     val version by lazy { MutableLiveData<Version>() }
-    val versionClick by lazy { MutableLiveData<SingleEvent<Int>>() }
+    val versionClick by lazy { MutableLiveData<Event<Int>>() }
 
     val themesPrefChangeEvent by lazy {
         MyApplication.sharedPreferences.stringEventLiveData(
@@ -107,7 +107,7 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
             counter -= 100
 
             withContext(Dispatchers.Main) {
-                versionClick.value = SingleEvent(0)
+                versionClick.value = Event(0)
             }
         }
 

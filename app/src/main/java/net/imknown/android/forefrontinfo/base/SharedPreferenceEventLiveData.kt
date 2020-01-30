@@ -16,7 +16,7 @@ abstract class SharedPreferenceEventLiveData<T>(
     protected val sharedPrefs: SharedPreferences,
     private val key: String,
     private val defValue: T
-) : LiveData<SingleEvent<T>>() {
+) : LiveData<Event<T>>() {
 
     private val preferenceChangeListener =
         SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
@@ -31,7 +31,7 @@ abstract class SharedPreferenceEventLiveData<T>(
             }
         }
 
-    abstract suspend fun getValueFromPreferences(key: String, defValue: T): SingleEvent<T>
+    abstract suspend fun getValueFromPreferences(key: String, defValue: T): Event<T>
 
     override fun onActive() {
         super.onActive()
@@ -48,11 +48,11 @@ abstract class SharedPreferenceEventLiveData<T>(
 fun SharedPreferences.stringEventLiveData(scope: CoroutineScope, key: String, defValue: String) =
     object : SharedPreferenceEventLiveData<String?>(scope, this, key, defValue) {
         override suspend fun getValueFromPreferences(key: String, defValue: String?) =
-            SingleEvent(sharedPrefs.getString(key, defValue))
+            Event(sharedPrefs.getString(key, defValue))
     }
 
 fun SharedPreferences.booleanEventLiveData(scope: CoroutineScope, key: String, defValue: Boolean) =
     object : SharedPreferenceEventLiveData<Boolean>(scope, this, key, defValue) {
         override suspend fun getValueFromPreferences(key: String, defValue: Boolean) =
-            SingleEvent(sharedPrefs.getBoolean(key, defValue))
+            Event(sharedPrefs.getBoolean(key, defValue))
     }

@@ -8,10 +8,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
-import net.imknown.android.forefrontinfo.base.SingleEvent
+import net.imknown.android.forefrontinfo.base.Event
 
 abstract class BaseViewModel : ViewModel() {
-    val changeScrollBarModeEvent by lazy { MutableLiveData<SingleEvent<Boolean>>() }
+    val changeScrollBarModeEvent by lazy { MutableLiveData<Event<Boolean>>() }
 
     fun setScrollBarMode(
         scrollBarMode: String
@@ -19,17 +19,17 @@ abstract class BaseViewModel : ViewModel() {
         when (scrollBarMode) {
             MyApplication.getMyString(R.string.interface_no_scroll_bar_value) -> {
                 withContext(Dispatchers.Main) {
-                    changeScrollBarModeEvent.value = SingleEvent(false)
+                    changeScrollBarModeEvent.value = Event(false)
                 }
             }
             MyApplication.getMyString(R.string.interface_normal_scroll_bar_value) -> {
                 withContext(Dispatchers.Main) {
-                    changeScrollBarModeEvent.value = SingleEvent(true)
+                    changeScrollBarModeEvent.value = Event(true)
                 }
             }
             MyApplication.getMyString(R.string.interface_fast_scroll_bar_value) -> {
                 withContext(Dispatchers.Main) {
-                    changeScrollBarModeEvent.value = SingleEvent(false)
+                    changeScrollBarModeEvent.value = Event(false)
                 }
             }
         }
