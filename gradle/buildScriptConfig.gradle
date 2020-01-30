@@ -3,7 +3,7 @@ ext {
             androidStudioGradlePlugin: '3.5.3',
 
             // https://developer.android.com/studio/releases/build-tools.html#notes
-            buildToolsVersion        : '29.0.2',
+            buildToolsVersion        : '29.0.3',
             minSdkVersion            : 21,
             compileSdkVersion        : 29,
             targetSdkVersion         : 29,
