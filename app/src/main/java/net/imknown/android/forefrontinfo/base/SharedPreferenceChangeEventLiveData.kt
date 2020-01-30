@@ -11,7 +11,7 @@ import kotlinx.coroutines.withContext
  * Copied from:
  * https://gist.github.com/rharter/1df1cd72ce4e9d1801bd2d49f2a96810
  */
-abstract class SharedPreferenceEventLiveData<T>(
+abstract class SharedPreferenceChangeEventLiveData<T>(
     private val scope: CoroutineScope,
     protected val sharedPrefs: SharedPreferences,
     private val key: String,
@@ -21,7 +21,7 @@ abstract class SharedPreferenceEventLiveData<T>(
     private val preferenceChangeListener =
         SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
             scope.launch(Dispatchers.IO) {
-                if (key == this@SharedPreferenceEventLiveData.key) {
+                if (key == this@SharedPreferenceChangeEventLiveData.key) {
                     val event = getValueFromPreferences(key, defValue)
 
                     withContext(Dispatchers.Main) {
@@ -46,13 +46,13 @@ abstract class SharedPreferenceEventLiveData<T>(
 }
 
 fun SharedPreferences.stringEventLiveData(scope: CoroutineScope, key: String, defValue: String) =
-    object : SharedPreferenceEventLiveData<String?>(scope, this, key, defValue) {
+    object : SharedPreferenceChangeEventLiveData<String?>(scope, this, key, defValue) {
         override suspend fun getValueFromPreferences(key: String, defValue: String?) =
             Event(sharedPrefs.getString(key, defValue))
     }
 
 fun SharedPreferences.booleanEventLiveData(scope: CoroutineScope, key: String, defValue: Boolean) =
-    object : SharedPreferenceEventLiveData<Boolean>(scope, this, key, defValue) {
+    object : SharedPreferenceChangeEventLiveData<Boolean>(scope, this, key, defValue) {
         override suspend fun getValueFromPreferences(key: String, defValue: Boolean) =
             Event(sharedPrefs.getBoolean(key, defValue))
     }
