@@ -26,6 +26,7 @@ data class Lld(
     data class Androids(
         // https://source.android.com/security/bulletin/
         // https://source.android.com/setup/start/build-numbers?hl=en#source-code-tags-and-builds
+        // https://android.googlesource.com/platform/build/+/refs/heads/master/core/version_defaults.mk
         val securityPatchLevel: String,
         // https://source.android.com/setup/start/build-numbers?hl=en#source-code-tags-and-builds
         // https://android.googlesource.com/platform/frameworks/base/+refs
