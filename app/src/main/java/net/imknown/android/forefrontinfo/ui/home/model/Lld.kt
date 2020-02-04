@@ -45,11 +45,7 @@ data class Lld(
             val api: String
         ) : BaseInfo()
 
-        // https://android.googlesource.com/platform/build/+/refs/tags/android-10.0.0_r25/core/build_id.mk
-        // https://android.googlesource.com/platform/build/+/refs/tags/android-10.0.0_r24/core/build_id.mk
-        // https://android.googlesource.com/platform/build/+/refs/tags/android-10.0.0_r23/core/build_id.mk
-        // https://android.googlesource.com/platform/build/+/refs/tags/android-10.0.0_r22/core/build_id.mk
-        // https://android.googlesource.com/platform/build/+/refs/tags/android-10.0.0_r21/core/build_id.mk
+        // https://android.googlesource.com/platform/build/+refs
         // https://android.googlesource.com/platform/build/+/refs/heads/master/core/build_id.mk
         //
         // https://developers.google.cn/android/images
