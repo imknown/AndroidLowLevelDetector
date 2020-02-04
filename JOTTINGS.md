@@ -31,8 +31,8 @@ https://android.googlesource.com/platform/external/
 
 ## avb
 
-https://android.googlesource.com/platform/external/avb/+/refs/tags/android-10.0.0_r20/avbtool
-https://android.googlesource.com/platform/external/avb/+/refs/tags/android-10.0.0_r20/libavb/avb_version.h
+https://android.googlesource.com/platform/external/avb/+/refs/heads/master/avbtool
+https://android.googlesource.com/platform/external/avb/+/refs/heads/master/libavb/avb_version.h
 
 ``` sh
 adb shell "grep dm- /proc/mounts"
