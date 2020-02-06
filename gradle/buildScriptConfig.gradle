@@ -36,7 +36,7 @@ ext {
 
             coordinatorLayout           : '1.1.0',
 
-            core                        : '1.1.0',
+            core                        : '1.2.0',
 
             cursorAdapter               : '1.0.0',
 
@@ -44,12 +44,11 @@ ext {
 
             drawerlayout                : '1.0.0',
 
-            fragment                    : '1.2.0',
+            fragment                    : '1.2.1',
 
             interpolator                : '1.0.0',
 
             lifecycle                   : '2.2.0',
-            lifecycleViewmodelSavedstate: '1.0.0',
 
             loader                      : '1.1.0',
 

@@ -52,11 +52,12 @@ dependencies {
     // implementation "androidx.lifecycle:lifecycle-common-java8:$androidX.lifecycle"
     implementation "androidx.lifecycle:lifecycle-livedata-core:$androidX.lifecycle"
     implementation "androidx.lifecycle:lifecycle-livedata-core-ktx:$androidX.lifecycle"
+    // implementation "androidx.lifecycle:lifecycle-livedata-ktx:$androidX.lifecycle"
     implementation "androidx.lifecycle:lifecycle-runtime:$androidX.lifecycle"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$androidX.lifecycle"
     implementation "androidx.lifecycle:lifecycle-viewmodel:$androidX.lifecycle"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$androidX.lifecycle"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$androidX.lifecycleViewmodelSavedstate"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$androidX.lifecycle"
 
     implementation "androidx.loader:loader:$androidX.loader"
 
