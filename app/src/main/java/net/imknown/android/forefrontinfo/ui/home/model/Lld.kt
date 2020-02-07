@@ -49,7 +49,7 @@ data class Lld(
         // https://android.googlesource.com/platform/build/+refs
         // https://android.googlesource.com/platform/build/+/refs/heads/master/core/build_id.mk
         //
-        // https://developers.google.cn/android/images
+        // https://developers.google.com/android/images
         @Keep
         data class Build(
             val details: List<Detail>
