@@ -65,6 +65,7 @@ data class Lld(
     // https://source.android.com/setup/build/building-kernels#downloading
     // https://source.android.com/devices/architecture/kernel/android-common
     // https://www.kernel.org
+    // https://en.wikipedia.org/wiki/Linux_kernel_version_history
     @Keep
     data class Linuxes(
         // https://android.googlesource.com/kernel/common/+/refs/heads/android-5.4/Makefile
@@ -73,7 +74,6 @@ data class Lld(
         // https://android.googlesource.com/kernel/common/+/refs/heads/android-4.9-q/Makefile
         // https://android.googlesource.com/kernel/common/+/refs/heads/android-4.4-p/Makefile
         // https://android.googlesource.com/kernel/common/+/refs/heads/android-3.18/Makefile
-        // https://en.wikipedia.org/wiki/Linux_kernel_version_history
         val google: Versions,
         // https://android.googlesource.com/kernel/common/+/refs/heads/android-mainline/Makefile
         val mainline: BaseInfo
