@@ -100,6 +100,7 @@ data class Lld(
     )
 
     // https://www.chromium.org/developers/calendar
+    // https://chromiumdash.appspot.com/releases?platform=Android
     //
     // https://en.wikipedia.org/wiki/Google_Chrome_version_history
     @Keep
