@@ -98,7 +98,12 @@ abstract class BaseListFragment : BaseFragment() {
 
             layoutManager = LinearLayoutManager(MyApplication.instance)
 
-            addItemDecoration(MyItemDecoration(resources.getDimensionPixelSize(R.dimen.item_divider_space)))
+            addItemDecoration(
+                MyItemDecoration(
+                    resources.getDimensionPixelSize(R.dimen.item_divider_space_horizontal),
+                    resources.getDimensionPixelSize(R.dimen.item_divider_space_vertical)
+                )
+            )
 
             if (adapter == null) {
                 adapter = myAdapter
