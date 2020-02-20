@@ -14,4 +14,6 @@
     <color name="colorNoProblem">#356330</color>
     <color name="colorWaring">#9E5C2E</color>
     <color name="colorCritical">#9E3836</color>
+
+    <color name="colorMainText">#E0FFFFFF</color>
 </resources>

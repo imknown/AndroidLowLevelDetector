@@ -21,12 +21,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical"
+            android:gravity="center_vertical"
             android:paddingStart="@dimen/item_card_title_padding_horizontal"
             android:paddingTop="@dimen/item_card_title_padding_vertical"
             android:paddingEnd="@dimen/item_card_title_padding_horizontal"
             android:paddingBottom="@dimen/item_card_title_padding_vertical"
-            android:textSize="24sp"
+            android:textSize="20sp"
             android:textStyle="bold"
+            android:textColor="@color/colorMainText"
             tools:background="@color/colorNoProblem"
             tools:text="Android version" />
 
@@ -36,11 +38,13 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical"
             android:background="@color/colorDetail"
+            android:gravity="center_vertical"
             android:paddingStart="@dimen/item_card_detail_padding_horizontal"
             android:paddingTop="@dimen/item_card_detail_padding_vertical"
             android:paddingEnd="@dimen/item_card_detail_padding_horizontal"
+            android:textColor="@color/colorMainText"
             android:paddingBottom="@dimen/item_card_detail_padding_vertical"
-            android:textSize="22sp"
+            android:textSize="20sp"
             tools:text="Mine: 10 (Q, API Level 29)\nLatest: 11 (R, API Level 29)" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
