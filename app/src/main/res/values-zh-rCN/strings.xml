@@ -142,6 +142,8 @@
     <string name="about_version_title">版本</string>
     <string name="about_version_summary">版本号: %1$s (迭代次数: %2$d)\n内建数据版本: %3$s\n分发者: %4$s\n安装者: %5$s</string>
 
+    <string name="about_installer_cl">命令行</string>
+
     <string name="about_distributor_google">谷歌</string>
     <string name="about_distributor_imknown">imknown</string>
     <string name="about_distributor_public_debug">公共调试</string>

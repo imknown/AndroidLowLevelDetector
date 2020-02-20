@@ -81,7 +81,7 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
         }
         val installer = installerLabel?.let {
             "$it ($installerPackageName)"
-        } ?: "Recovery/Bootloader/ADB"
+        } ?: MyApplication.getMyString(R.string.about_installer_cl)
 
         withContext(Dispatchers.Main) {
             _version.value = Version(

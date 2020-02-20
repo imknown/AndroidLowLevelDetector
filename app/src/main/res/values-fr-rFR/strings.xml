@@ -142,6 +142,8 @@
     <string name="about_version_title">Version</string>
     <string name="about_version_summary">Version: %1$s (Iteration times: %2$d)\nDonnées intégrées: %3$s\nDistributeur: %4$s\nInstallateur: %5$s</string>
 
+    <string name="about_installer_cl">Ligne de commande</string>
+
     <string name="about_distributor_google">Google</string>
     <string name="about_distributor_imknown">imknown</string>
     <string name="about_distributor_public_debug">Débogage public</string>
