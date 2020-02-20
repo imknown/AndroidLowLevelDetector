@@ -40,6 +40,9 @@
     <string name="ab_seamless_update_enabled_title">Mise à jour A/B seamless</string>
     <string name="current_using_ab_slot_result">\u0020(Slot utilisé: %s)</string>
 
+    <string name="dynamic_partitions_enabled_title">Status du Partitions dynamiques</string>
+    <string name="dynamic_partitions_enabled_retrofitted">\u0020(Rénové)</string>
+
     <string name="treble_enabled_title">Status du Projet Treble</string>
 
     <string name="vndk_built_in_title">Status du NDK Vendor integré</string>

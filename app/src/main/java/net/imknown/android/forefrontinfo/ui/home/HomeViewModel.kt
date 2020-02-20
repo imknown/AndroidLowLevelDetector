@@ -52,6 +52,12 @@ class HomeViewModel : BaseListViewModel() {
         private const val PROP_AB_UPDATE = "ro.build.ab_update"
         private const val PROP_SLOT_SUFFIX = "ro.boot.slot_suffix"
 
+        // https://source.android.com/devices/tech/ota/dynamic_partitions/ab_legacy?hl=en
+        // https://source.android.com/devices/tech/ota/dynamic_partitions/ab_launch?hl=en
+        // https://codelabs.developers.google.com/codelabs/using-Android-GSI?hl=en
+        private const val PROP_DYNAMIC_PARTITIONS = "ro.boot.dynamic_partitions"
+        private const val PROP_DYNAMIC_PARTITIONS_RETROFIT = "ro.boot.dynamic_partitions_retrofit"
+
         // https://source.android.com/devices/architecture?hl=en#hidl
         private const val PROP_TREBLE_ENABLED = "ro.treble.enabled"
 
@@ -202,6 +208,8 @@ class HomeViewModel : BaseListViewModel() {
         detectKernel(tempModels, lld)
 
         detectAb(tempModels)
+
+        detectDynamicPartitions(tempModels)
 
         detectTreble(tempModels)
 
@@ -412,6 +420,27 @@ class HomeViewModel : BaseListViewModel() {
         }
 
         add(tempModels, abFinalResult, abUpdateSupportedArgs, isAbUpdateSupported)
+    }
+
+    private fun detectDynamicPartitions(tempModels: ArrayList<MyModel>) {
+        val isDynamicPartitionsEnabled =
+            getStringProperty(PROP_DYNAMIC_PARTITIONS, isAtLeastAndroid10()).toBoolean()
+        val isDynamicPartitionsRetrofitEnabled =
+            getStringProperty(PROP_DYNAMIC_PARTITIONS_RETROFIT, isAtLeastAndroid10()).toBoolean()
+
+        var detail = translate(isDynamicPartitionsEnabled)
+        if (isDynamicPartitionsRetrofitEnabled) {
+            detail += MyApplication.getMyString(
+                R.string.dynamic_partitions_enabled_retrofitted
+            )
+        }
+
+        add(
+            tempModels,
+            MyApplication.getMyString(R.string.dynamic_partitions_enabled_title),
+            detail,
+            isDynamicPartitionsEnabled
+        )
     }
 
     private fun detectTreble(tempModels: ArrayList<MyModel>) {

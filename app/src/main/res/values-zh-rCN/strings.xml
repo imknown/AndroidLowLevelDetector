@@ -40,6 +40,9 @@
     <string name="ab_seamless_update_enabled_title">A/B 无缝升级 状态</string>
     <string name="current_using_ab_slot_result">\u0020(当前使用的槽位: %s)</string>
 
+    <string name="dynamic_partitions_enabled_title">动态分区 状态</string>
+    <string name="dynamic_partitions_enabled_retrofitted">\u0020(改造的)</string>
+
     <string name="treble_enabled_title">Project Treble 状态</string>
 
     <string name="vndk_built_in_title">内建 供应商 NDK 状态</string>
