@@ -17,6 +17,7 @@ import net.imknown.android.forefrontinfo.base.stringEventLiveData
 import net.imknown.android.forefrontinfo.ui.base.BaseViewModel
 import net.imknown.android.forefrontinfo.ui.base.IAndroidVersion
 import java.security.MessageDigest
+import java.text.SimpleDateFormat
 import java.util.*
 
 class SettingsViewModel : BaseViewModel(), IAndroidVersion {
@@ -65,6 +66,7 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
         packageName: String,
         packageManager: PackageManager
     ) = viewModelScope.launch(Dispatchers.IO) {
+        // region [lld]
         val assetLldVersion = try {
             JsonIo.getAssetLldVersion(MyApplication.instance.assets)
         } catch (e: Exception) {
@@ -72,9 +74,14 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
 
             MyApplication.getMyString(android.R.string.unknownName)
         }
+        // endregion [lld]
 
+        // region [distributor]
         val mySha256 = getMyKeyPublicSha256(packageName, packageManager)
         val distributor = MyApplication.getMyString(getDistributor(mySha256))
+        // endregion [distributor]
+
+        // region [installer]
         val installerPackageName = getInstallerPackageName(packageName, packageManager)
         val installerLabel = installerPackageName?.let {
             getApplicationLabel(it, packageManager)
@@ -82,6 +89,14 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
         val installer = installerLabel?.let {
             "$it ($installerPackageName)"
         } ?: MyApplication.getMyString(R.string.about_installer_cl)
+        // endregion [installer]
+
+        // region [install time]
+        val packageInfo = packageManager.getPackageInfo(packageName, 0)
+        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
+        val firstInstallTime = sdf.format(Date(packageInfo.firstInstallTime))
+        val lastUpdateTime = sdf.format(Date(packageInfo.lastUpdateTime))
+        // endregion [install time]
 
         withContext(Dispatchers.Main) {
             _version.value = Version(
@@ -90,7 +105,9 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
                 BuildConfig.VERSION_CODE,
                 assetLldVersion,
                 distributor,
-                installer
+                installer,
+                firstInstallTime,
+                lastUpdateTime
             )
         }
     }
@@ -101,7 +118,9 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
         val versionCode: Int,
         val assetLldVersion: String,
         val distributor: String,
-        val installer: String
+        val installer: String,
+        val firstInstallTime: String,
+        val lastUpdateTime: String
     )
 
     fun versionClicked() = viewModelScope.launch(Dispatchers.Default) {

@@ -140,7 +140,7 @@
     <string name="about_licenses_summary">引用的开源库</string>
 
     <string name="about_version_title">版本</string>
-    <string name="about_version_summary">版本号: %1$s (迭代次数: %2$d)\n内建数据版本: %3$s\n分发者: %4$s\n安装者: %5$s</string>
+    <string name="about_version_summary">版本号: %1$s (迭代次数: %2$d)\n内建数据版本: %3$s\n分发者: %4$s\n安装者: %5$s\n首次安装: %6$s\n上次更新: %7$s</string>
 
     <string name="about_installer_cl">命令行</string>
 

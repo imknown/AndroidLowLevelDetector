@@ -59,7 +59,9 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
                 it.versionCode,
                 it.assetLldVersion,
                 it.distributor,
-                it.installer
+                it.installer,
+                it.firstInstallTime,
+                it.lastUpdateTime
             )
         })
 

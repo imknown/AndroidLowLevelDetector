@@ -140,7 +140,7 @@
     <string name="about_licenses_summary">Les dépots open-source.</string>
 
     <string name="about_version_title">Version</string>
-    <string name="about_version_summary">Version: %1$s (Iteration times: %2$d)\nDonnées intégrées: %3$s\nDistributeur: %4$s\nInstallateur: %5$s</string>
+    <string name="about_version_summary">Version: %1$s (Iteration times: %2$d)\nDonnées intégrées: %3$s\nDistributeur: %4$s\nInstallateur: %5$s\nPremière installation: %6$s\nDernière mise à jour: %7$s</string>
 
     <string name="about_installer_cl">Ligne de commande</string>
 
