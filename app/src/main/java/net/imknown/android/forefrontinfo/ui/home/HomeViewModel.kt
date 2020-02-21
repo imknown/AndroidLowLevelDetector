@@ -58,6 +58,12 @@ class HomeViewModel : BaseListViewModel() {
         private const val PROP_DYNAMIC_PARTITIONS = "ro.boot.dynamic_partitions"
         private const val PROP_DYNAMIC_PARTITIONS_RETROFIT = "ro.boot.dynamic_partitions_retrofit"
 
+        // https://developer.android.com/topic/dsu?hl=en
+        // private const val PROP_DYNAMIC_SYSTEM_UPDATE = "persist.sys.fflag.override.settings_dynamic_system"
+        private const val FFLAG_PREFIX = "sys.fflag."
+        private const val FFLAG_OVERRIDE_PREFIX = FFLAG_PREFIX + "override."
+        private const val DYNAMIC_SYSTEM = "settings_dynamic_system"
+
         // https://source.android.com/devices/architecture?hl=en#hidl
         private const val PROP_TREBLE_ENABLED = "ro.treble.enabled"
 
@@ -210,6 +216,8 @@ class HomeViewModel : BaseListViewModel() {
         detectAb(tempModels)
 
         detectDynamicPartitions(tempModels)
+
+        detectDsu(tempModels)
 
         detectTreble(tempModels)
 
@@ -440,6 +448,21 @@ class HomeViewModel : BaseListViewModel() {
             MyApplication.getMyString(R.string.dynamic_partitions_enabled_title),
             detail,
             isDynamicPartitionsEnabled
+        )
+    }
+
+    /** {@link android.util.FeatureFlagUtils} */
+    private fun detectDsu(tempModels: ArrayList<MyModel>) {
+        val isDsuEnabled = getStringProperty(
+            FFLAG_OVERRIDE_PREFIX + DYNAMIC_SYSTEM,
+            isAtLeastAndroid10()
+        ).toBoolean()
+
+        add(
+            tempModels,
+            MyApplication.getMyString(R.string.dsu_enabled_title),
+            translate(isDsuEnabled),
+            isDsuEnabled
         )
     }
 
