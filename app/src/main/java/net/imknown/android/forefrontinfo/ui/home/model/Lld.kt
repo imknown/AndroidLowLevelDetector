@@ -89,9 +89,9 @@ data class Lld(
     // https://chromium.googlesource.com/aosp/platform/system/core/+/upstream/shell_and_utilities/
     @Keep
     data class Toyboxes(
-        // https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-10.0.0_r25/www/news.html
+        // https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-10.0.0_r29/www/news.html
         val stable: BaseInfo,
-        // https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-8.0.0_r41/www/news.html
+        // https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-8.0.0_r43/www/news.html
         val support: BaseInfo,
         // https://android.googlesource.com/platform/external/toybox/+/refs/heads/android10-mainline-release/www/news.html
         val mainline: BaseInfo,
