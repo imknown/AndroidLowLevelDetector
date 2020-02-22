@@ -373,6 +373,8 @@ class HomeViewModel : BaseListViewModel() {
             "android"
         )
 
+        @ColorRes var moduleColor = R.color.colorCritical
+
         val moduleVersion = if (idConfigDefaultModuleMetadataProvider != 0) {
             try {
                 // com.android.modulemetadata
@@ -386,6 +388,12 @@ class HomeViewModel : BaseListViewModel() {
                     0
                 ).versionName
 
+                if ((versionName.contains('-') && isLatestPreviewAndroid(lld))
+                    || versionName >= lld.android.stable.version
+                ) {
+                    moduleColor = R.color.colorNoProblem
+                }
+
                 MyApplication.getMyString(R.string.mainline_detail, versionName, moduleProvider)
             } catch (e: Exception) {
                 Log.e(javaClass.simpleName, "Failed to get mainline version.", e)
@@ -393,12 +401,6 @@ class HomeViewModel : BaseListViewModel() {
             }
         } else {
             MyApplication.getMyString(R.string.result_not_supported)
-        }
-
-        @ColorRes val moduleColor = when {
-            moduleVersion == lld.android.stable.version
-                    || isLatestPreviewAndroid(lld) -> R.color.colorNoProblem
-            else -> R.color.colorCritical
         }
 
         add(
