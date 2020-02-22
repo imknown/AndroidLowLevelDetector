@@ -27,7 +27,6 @@
             android:paddingEnd="@dimen/item_card_title_padding_horizontal"
             android:paddingBottom="@dimen/item_card_title_padding_vertical"
             android:textSize="20sp"
-            android:textStyle="bold"
             android:textColor="@color/colorMainText"
             tools:background="@color/colorNoProblem"
             tools:text="Android version" />

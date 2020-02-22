@@ -11,9 +11,9 @@
 
     <color name="colorStateless">#EAEAEA</color>
     <color name="colorDetail">#F0F0F0</color>
-    <color name="colorNoProblem">#71C784</color>
-    <color name="colorWaring">#FFCC80</color>
-    <color name="colorCritical">#FF9999</color>
+    <color name="colorNoProblem">#ACDDB7</color>
+    <color name="colorWaring">#FDD18F</color>
+    <color name="colorCritical">#FFB1AC</color>
 
-    <color name="colorMainText">#E0000000</color>
+    <color name="colorMainText">#000000</color>
 </resources>
