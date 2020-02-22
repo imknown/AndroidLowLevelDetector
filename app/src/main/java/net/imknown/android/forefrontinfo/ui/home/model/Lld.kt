@@ -36,14 +36,14 @@ data class Lld(
         // https://source.android.com/security/bulletin/
         val support: Android,
         // https://ci.android.com
-        val alpha: Android,
         // https://developer.android.com/preview/overview
-        val beta: Android
+        val preview: Android
     ) {
         @Keep
         data class Android(
             val name: String,
-            val api: String
+            val api: String,
+            val phase: String?
         ) : BaseInfo()
 
         // https://android.googlesource.com/platform/build/+refs

@@ -248,18 +248,9 @@ class HomeViewModel : BaseListViewModel() {
             else -> R.color.colorCritical
         }
 
-        val previewVersion: String
-        val previewApi: String
-        val previewType: String
-        if (lld.android.beta.api.isNotEmpty()) {
-            previewVersion = lld.android.beta.version
-            previewApi = lld.android.beta.api
-            previewType = "Beta"
-        } else {
-            previewVersion = lld.android.alpha.version
-            previewApi = lld.android.alpha.api
-            previewType = "Alpha"
-        }
+        val previewVersion = lld.android.preview.version
+        val previewApi = lld.android.preview.api
+        val previewPhase = lld.android.preview.phase
 
         add(
             tempModels,
@@ -286,7 +277,7 @@ class HomeViewModel : BaseListViewModel() {
                 MyApplication.getMyString(R.string.android_info_preview),
                 MyApplication.getMyString(
                     R.string.android_info,
-                    "$previewVersion $previewType",
+                    "$previewVersion $previewPhase",
                     previewApi
                 )
             ),

@@ -16,15 +16,8 @@ interface IAndroidVersion {
         Build.VERSION.SDK_INT >= lld.android.stable.api.toInt()
 
     @SuppressLint("ObsoleteSdkInt")
-    fun isLatestPreviewAndroid(lld: Lld): Boolean {
-        val previewName = if (lld.android.beta.version.isNotEmpty()) {
-            lld.android.beta.name
-        } else {
-            lld.android.alpha.name
-        }
-
-        return Build.VERSION.RELEASE >= previewName
-    }
+    fun isLatestPreviewAndroid(lld: Lld) =
+        Build.VERSION.RELEASE >= lld.android.preview.name
 
     @SuppressLint("ObsoleteSdkInt")
     fun isSupportedByUpstreamAndroid(lld: Lld) =
