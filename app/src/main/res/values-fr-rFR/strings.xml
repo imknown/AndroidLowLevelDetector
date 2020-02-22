@@ -35,7 +35,7 @@
     <string name="security_patch_level_detail">Moi: %1$s\n\nDernier: %2$s</string>
 
     <string name="linux_title">Version de Linux</string>
-    <string name="linux_version_detail">Moi: %1$s\n\nDernière support: %2$s\nLigne principale: %3$s</string>
+    <string name="linux_version_detail">Moi: %1$s\n\nDernière support: %2$s\nMainline: %3$s</string>
 
     <string name="ab_seamless_update_enabled_title">Mise à jour A/B seamless</string>
     <string name="current_using_ab_slot_result">\u0020(Slot utilisé: %s)</string>
@@ -56,7 +56,7 @@
     <string name="apex_legacy_flattened">\u0020(Legacy flattened)</string>
 
     <string name="toybox_built_in_title">Version de Toybox intégrée</string>
-    <string name="toybox_built_in_detail">Moi: %1$s\n\nDernier stable: %2$s\nPlus faible support: %3$s\nLgne principale: %4$s\nMaster: %5$s</string>
+    <string name="toybox_built_in_detail">Moi: %1$s\n\nDernier stable: %2$s\nPlus faible support: %3$s\nMainline: %4$s\nMaster: %5$s</string>
 
     <string name="webview_title">Version WebView</string>
     <string name="webview_detail">Dernier stable: %1$s\nDernier béta: %2$s</string>

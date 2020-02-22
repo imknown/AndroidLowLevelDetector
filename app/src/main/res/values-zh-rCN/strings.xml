@@ -35,7 +35,7 @@
     <string name="security_patch_level_detail">我的: %1$s\n\n最新: %2$s</string>
 
     <string name="linux_title">Linux 版本</string>
-    <string name="linux_version_detail">我的: %1$s\n\n最新支持: %2$s\n主线: %3$s</string>
+    <string name="linux_version_detail">我的: %1$s\n\n最新支持: %2$s\nMainline: %3$s</string>
 
     <string name="ab_seamless_update_enabled_title">A/B 无缝升级 状态</string>
     <string name="current_using_ab_slot_result">\u0020(当前使用的槽位: %s)</string>
@@ -56,7 +56,7 @@
     <string name="apex_legacy_flattened">\u0020(旧式扁平的)</string>
 
     <string name="toybox_built_in_title">内建 Toybox 版本</string>
-    <string name="toybox_built_in_detail">我的: %1$s\n\n最新稳定: %2$s\n最低支持: %3$s\n主线: %4$s\nMaster: %5$s</string>
+    <string name="toybox_built_in_detail">我的: %1$s\n\n最新稳定: %2$s\n最低支持: %3$s\nMainline: %4$s\nMaster: %5$s</string>
 
     <string name="webview_title">WebView 版本</string>
     <string name="webview_detail">最新稳定: %1$s\n最新测试: %2$s</string>
