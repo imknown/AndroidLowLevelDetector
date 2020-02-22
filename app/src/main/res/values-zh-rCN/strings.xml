@@ -34,6 +34,9 @@
     <string name="vendor_security_patch_level_title">供应商 安全补丁等级</string>
     <string name="security_patch_level_detail">我的: %1$s\n\n最新稳定: %2$s</string>
 
+    <string name="mainline_title">Project Mainline 模块版本\n(Google Play 系统更新)</string>
+    <string name="mainline_detail">我的: %1$s (%2$s)</string>
+
     <string name="linux_title">Linux 版本</string>
     <string name="linux_version_detail">我的: %1$s\n\n最新支持: %2$s\nMainline: %3$s</string>
 

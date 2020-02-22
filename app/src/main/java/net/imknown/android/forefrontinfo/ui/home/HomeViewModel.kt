@@ -3,6 +3,7 @@ package net.imknown.android.forefrontinfo.ui.home
 import android.annotation.SuppressLint
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
+import android.content.res.Resources
 import android.os.Build
 import android.util.Log
 import androidx.annotation.ColorRes
@@ -211,6 +212,8 @@ class HomeViewModel : BaseListViewModel() {
             R.string.vendor_security_patch_level_title
         )
 
+        detectMainline(tempModels, lld)
+
         detectKernel(tempModels, lld)
 
         detectAb(tempModels)
@@ -367,6 +370,53 @@ class HomeViewModel : BaseListViewModel() {
 
     private fun getSecurityPatchYearMonth(securityPatch: String) =
         securityPatch.substringBeforeLast('-')
+
+    /**
+     * {@link com.android.settings.deviceinfo.firmwareversion.MainlineModuleVersionPreferenceController}
+     */
+    private fun detectMainline(tempModels: ArrayList<MyModel>, lld: Lld) {
+        // com.android.internal.R.string.config_defaultModuleMetadataProvider
+        val idConfigDefaultModuleMetadataProvider = Resources.getSystem().getIdentifier(
+            "config_defaultModuleMetadataProvider",
+            "string",
+            "android"
+        )
+
+        val moduleVersion = if (idConfigDefaultModuleMetadataProvider != 0) {
+            try {
+                // com.android.modulemetadata
+                // com.google.android.modulemetadata
+                val moduleProvider = MyApplication.getMyString(
+                    idConfigDefaultModuleMetadataProvider
+                )
+
+                val versionName = MyApplication.instance.packageManager.getPackageInfo(
+                    moduleProvider,
+                    0
+                ).versionName
+
+                MyApplication.getMyString(R.string.mainline_detail, versionName, moduleProvider)
+            } catch (e: Exception) {
+                Log.e(javaClass.simpleName, "Failed to get mainline version.", e)
+                MyApplication.getMyString(R.string.result_not_supported)
+            }
+        } else {
+            MyApplication.getMyString(R.string.result_not_supported)
+        }
+
+        @ColorRes val moduleColor = when {
+            moduleVersion == lld.android.stable.version
+                    || isLatestPreviewAndroid(lld) -> R.color.colorNoProblem
+            else -> R.color.colorCritical
+        }
+
+        add(
+            tempModels,
+            MyApplication.getMyString(R.string.mainline_title),
+            moduleVersion,
+            moduleColor
+        )
+    }
 
     private fun detectKernel(tempModels: ArrayList<MyModel>, lld: Lld) {
         val linuxVersionString = SYSTEM_PROPERTY_LINUX_VERSION
@@ -554,7 +604,7 @@ class HomeViewModel : BaseListViewModel() {
             apexEnabledResult += MyApplication.getMyString(R.string.apex_legacy_flattened)
         }
 
-        val apexColor = when {
+        @ColorRes val apexColor = when {
             apexUpdatable -> R.color.colorNoProblem
             isLegacyFlattenedApex -> R.color.colorWaring
             else -> R.color.colorCritical
