@@ -23,7 +23,7 @@
 
     <string name="android_info_title">Version d\'Android</string>
     <string name="android_info">%1$s (API %2$s)</string>
-    <string name="android_info_preview">Aperçu</string>
+    <string name="android_info_preview">Dernière aperçu</string>
     <string name="android_info_detail">Moi: %1$s\n\nDernière stable: %2$s\nPlus faible prise en charge: %3$s\n%4$s: %5$s</string>
 
     <string name="android_build_id_title">Id de build Android</string>
