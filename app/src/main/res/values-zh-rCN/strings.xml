@@ -50,6 +50,10 @@
 
     <string name="treble_enabled_title">Project Treble 状态</string>
 
+    <string name="gsi_status_title">GSI 兼容性</string>
+    <string name="result_compliant">遵从 Treble</string>
+    <string name="result_not_compliant">未遵从 Treble</string>
+
     <string name="vndk_built_in_title">内建 供应商 NDK 状态</string>
     <string name="built_in_vndk_version_result">\u0020(等级: %s)</string>
 

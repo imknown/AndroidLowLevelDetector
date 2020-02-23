@@ -50,6 +50,10 @@
 
     <string name="treble_enabled_title">Status du Projet Treble</string>
 
+    <string name="gsi_status_title">Compatibilité GSI</string>
+    <string name="result_compliant">Conforme à Treble</string>
+    <string name="result_not_compliant">Non conforme à Treble</string>
+
     <string name="vndk_built_in_title">Status du NDK Vendor integré</string>
     <string name="built_in_vndk_version_result">\u0020(Niveau: %s)</string>
 

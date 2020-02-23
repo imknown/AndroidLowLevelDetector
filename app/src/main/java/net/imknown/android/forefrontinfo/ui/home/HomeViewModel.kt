@@ -65,6 +65,12 @@ class HomeViewModel : BaseListViewModel() {
         private const val FFLAG_OVERRIDE_PREFIX = FFLAG_PREFIX + "override."
         private const val DYNAMIC_SYSTEM = "settings_dynamic_system"
 
+        // https://codelabs.developers.google.com/codelabs/using-Android-GSI?hl=en#2
+        // https://developer.android.google.cn/topic/generic-system-image?hl=en
+        // https://source.android.com/setup/build/gsi?hl=en
+        private const val CMD_VENDOR_NAMESPACE_DEFAULT_ISOLATED =
+            "cat /system/etc/ld.config*.txt | grep -A 20 '\\[vendor\\]' | grep namespace.default.isolated"
+
         // https://source.android.com/devices/architecture?hl=en#hidl
         private const val PROP_TREBLE_ENABLED = "ro.treble.enabled"
 
@@ -223,6 +229,8 @@ class HomeViewModel : BaseListViewModel() {
         detectDsu(tempModels)
 
         detectTreble(tempModels)
+
+        detectGsiCompatibility(tempModels)
 
         detectVndk(tempModels, lld)
 
@@ -518,6 +526,30 @@ class HomeViewModel : BaseListViewModel() {
             MyApplication.getMyString(R.string.treble_enabled_title),
             translate(isTrebleEnabled),
             isTrebleEnabled
+        )
+    }
+
+    private suspend fun detectGsiCompatibility(tempModels: ArrayList<MyModel>) {
+        val gsiCompatibilityResult =
+            shAsync(CMD_VENDOR_NAMESPACE_DEFAULT_ISOLATED, isAtLeastAndroid9()).await()
+        var isCompatible = false
+        val result = if (hasResult(gsiCompatibilityResult)) {
+            val lineResult = gsiCompatibilityResult[0].split('=')
+            isCompatible = hasResult(lineResult) && lineResult[1].trim().toBoolean()
+            if (isCompatible) {
+                MyApplication.getMyString(R.string.result_compliant)
+            } else {
+                MyApplication.getMyString(R.string.result_not_compliant)
+            }
+        } else {
+            MyApplication.getMyString(R.string.result_not_supported)
+        }
+
+        add(
+            tempModels,
+            MyApplication.getMyString(R.string.gsi_status_title),
+            result,
+            isCompatible
         )
     }
 
