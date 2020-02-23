@@ -104,7 +104,7 @@ private getRenamedApkName(variant) {
     def currentDate = getCurrentDate()
     def buildTypeName = variant.buildType.name
 
-    "${archivesBaseName}_$versionName($versionCode)_$currentDate" +
+    "${archivesBaseName}_${versionName}_${versionCode}_$currentDate" +
             "_${currentGitBranchName}_$buildTypeName" +
             ".apk"
 }
