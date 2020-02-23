@@ -31,6 +31,9 @@ https://android.googlesource.com/platform/external/
 
 ## avb
 
+https://source.android.com/security/verifiedboot/avb
+https://source.android.com/security/verifiedboot
+https://android.googlesource.com/platform/external/avb/+/master/README.md
 https://android.googlesource.com/platform/external/avb/+/refs/heads/master/avbtool
 https://android.googlesource.com/platform/external/avb/+/refs/heads/master/libavb/avb_version.h
 
@@ -46,6 +49,10 @@ adb shell getprop ro.oem_unlock_supported
 
 adb shell ro.boot.vbmeta.avb_version # required (lib)avb version
 adb shell ro.boot.vbmeta.device_state
+
+adb shell ro.crypto.state
+adb shell ro.build.selinux
+adb shell ro.secure
 ```
 
 ## Settings
