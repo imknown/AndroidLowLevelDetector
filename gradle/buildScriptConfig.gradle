@@ -8,8 +8,8 @@ ext {
             compileSdkVersion        : 'android-R',
             targetSdkVersion         : 29, // 'R'
 
-            versionCode              : 15,
-            versionName              : '1.5.3'
+            versionCode              : 16,
+            versionName              : '1.6.0'
     ]
 
     // https://maven.google.com
