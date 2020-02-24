@@ -12,6 +12,7 @@ Minds
 - Android version market share
 - OpenGL ES/Vulkan/GPU Driver version
 - icu (https://developer.android.com/guide/topics/resources/internationalization)
+- unicode
 - kotlinPoet, googleAutoService, custom commands (V2.0 ?)
 - settings
   - root mode
