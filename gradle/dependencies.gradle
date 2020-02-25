@@ -61,6 +61,15 @@ dependencies {
 
     implementation "androidx.loader:loader:$androidX.loader"
 
+    // implementation "androidx.navigation:navigation-common:$androidX.navigation"
+    // implementation "androidx.navigation:navigation-common-ktx:$androidX.navigation"
+    // implementation "androidx.navigation:navigation-fragment:$androidX.navigation"
+    // implementation "androidx.navigation:navigation-fragment-ktx:$androidX.navigation"
+    // implementation "androidx.navigation:navigation-runtime:$androidX.navigation"
+    // implementation "androidx.navigation:navigation-runtime-ktx:$androidX.navigation"
+    // implementation "androidx.navigation:navigation-ui:$androidX.navigation"
+    // implementation "androidx.navigation:navigation-ui-ktx:$androidX.navigation"
+
     implementation "androidx.preference:preference:$androidX.preference"
 
     implementation "androidx.recyclerview:recyclerview:$androidX.recyclerView"
