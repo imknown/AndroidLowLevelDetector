@@ -13,10 +13,11 @@ Minds
 - OpenGL ES/Vulkan/GPU Driver version
 - icu (https://developer.android.com/guide/topics/resources/internationalization)
 - unicode
-- kotlinPoet, googleAutoService, custom commands (V2.0 ?)
+- custom commands (V2.0 ?)
 - settings
   - root mode
   - show commands
+  - developer mode
   - network cache logic
   - select json server
 - documents
