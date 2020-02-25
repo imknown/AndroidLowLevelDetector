@@ -87,7 +87,21 @@ android {
 
 // region [Rename APK]
 private renameApk(variant) {
-    if (variant.buildType.name == 'debug') {
+    def buildTypeName = variant.buildType.name
+    if (buildTypeName == 'debug') {
+        return
+    }
+
+    def currentTaskNames = gradle.startParameter.taskNames
+    if (currentTaskNames.size != 1) {
+        // Maybe clicking the "Sync Now"?
+        return
+    }
+
+    def currentTaskName = currentTaskNames[0]
+    def isDifferentBuildType = !currentTaskName.toLowerCase(Locale.US).contains(buildTypeName)
+    if (isDifferentBuildType) {
+        println("No need to rename the output of task '$currentTaskName'.")
         return
     }
 
