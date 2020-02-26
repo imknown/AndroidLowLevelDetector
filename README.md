@@ -1,8 +1,7 @@
 # AndroidLowLevelDetector
 An open-source small utility to detect some Android low-level features.
 
-Detect some low-level info like System-as-root, A/B, Treble, APEX, etc..  
-Help you finding out whether your phone provider had implement the latest features of Android conveniently.
+Detect Treble, GSI, Mainline, APEX, system-as-root(SAR), A/B, etc. .
 
 - https://github.com/imknown/AndroidLowLevelDetector
 - https://gitee.com/imknown/AndroidLowLevelDetector (Mirror)
@@ -17,11 +16,16 @@ Help you finding out whether your phone provider had implement the latest featur
 
 ## Features
 - Detect Android version
+- Detect Android Build Id version
 - Detect Android security patch level
 - Detect Vendor security patch level
+- Detect Project Mainline module version (Google Play system update)
 - Detect Linux kernel
 - Detect A/B or A-Only
+- Detect Dynamic Partitions
+- Detect Dynamic System Update(DSU)
 - Detect Project Treble
+- Detect GSI compatibility
 - Detect Vendor NDK
 - Detect System-as-root
 - Detect (flattened) APEX
