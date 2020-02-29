@@ -13,7 +13,7 @@ Minds
 - OpenGL ES/Vulkan/GPU Driver version
 - icu (https://developer.android.com/guide/topics/resources/internationalization)
 - unicode
-- custom commands (V2.0 ?)
+- custom commands, result filters, scroll top, scrollbar (V2.0 ?)
 - settings
   - root mode
   - show commands
