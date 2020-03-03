@@ -47,6 +47,7 @@ data class Lld(
         ) : BaseInfo()
 
         // https://android.googlesource.com/platform/build/+refs
+        // https://android.googlesource.com/platform/build/+/refs/tags/android-10.0.0_r32/core/build_id.mk
         // https://android.googlesource.com/platform/build/+/refs/heads/master/core/build_id.mk
         //
         // https://developers.google.com/android/images
@@ -89,9 +90,9 @@ data class Lld(
     // https://chromium.googlesource.com/aosp/platform/system/core/+/upstream/shell_and_utilities/
     @Keep
     data class Toyboxes(
-        // https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-10.0.0_r29/www/news.html
+        // https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-10.0.0_r32/www/news.html
         val stable: BaseInfo,
-        // https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-8.0.0_r43/www/news.html
+        // https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-8.0.0_r44/www/news.html
         val support: BaseInfo,
         // https://android.googlesource.com/platform/external/toybox/+/refs/heads/android10-mainline-release/www/news.html
         val mainline: BaseInfo,
