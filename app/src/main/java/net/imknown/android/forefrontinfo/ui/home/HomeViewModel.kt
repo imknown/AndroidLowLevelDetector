@@ -79,6 +79,7 @@ class HomeViewModel : BaseListViewModel() {
         private const val PROP_VNDK_VERSION = "ro.vndk.version"
 
         // https://source.android.com/devices/bootloader/system-as-root?hl=en
+        // https://twitter.com/topjohnwu/status/1174392824625676288
         // https://github.com/topjohnwu/Magisk/blob/master/scripts/util_functions.sh#L193
         // https://github.com/opengapps/opengapps/blob/master/scripts/inc.installer.sh#L710
         // https://github.com/penn5/TrebleCheck/blob/master/app/src/main/java/tk/hack5/treblecheck/MountDetector.kt
