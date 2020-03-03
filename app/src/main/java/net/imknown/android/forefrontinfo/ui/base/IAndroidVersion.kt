@@ -15,7 +15,6 @@ interface IAndroidVersion {
     fun isLatestStableAndroid(lld: Lld) =
         Build.VERSION.SDK_INT >= lld.android.stable.api.toInt()
 
-    @SuppressLint("ObsoleteSdkInt")
     fun isLatestPreviewAndroid(lld: Lld) =
         Build.VERSION.RELEASE >= lld.android.preview.name
 
