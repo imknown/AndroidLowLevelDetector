@@ -67,7 +67,7 @@ ext {
             viewpager             : '1.0.0',
             viewpager2            : '1.0.0',
 
-            webkit                : '1.1.0',
+            webkit                : '1.2.0',
 
             // https://developer.android.com/jetpack/androidx/releases/test
             junit                 : '4.13',
