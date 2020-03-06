@@ -77,7 +77,7 @@ abstract class BaseListViewModel : BaseViewModel(), IAndroidVersion {
         }
     }
 
-    protected fun shAsync(cmd: String, condition: Boolean = true): Deferred<MutableList<String>> {
+    protected fun shAsync(cmd: String, condition: Boolean = true): Deferred<List<String>> {
         return viewModelScope.async(Dispatchers.IO) {
             if (condition) {
                 Shell.sh(cmd).exec().out
