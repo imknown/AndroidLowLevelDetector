@@ -32,7 +32,7 @@
 #include "BinderDetector.h"
 
 extern "C" JNIEXPORT jint JNICALL
-Java_net_imknown_android_forefrontinfo_ui_home_HomeViewModel_getBinderVersion(
+Java_net_imknown_android_forefrontinfo_ui_others_OthersViewModel_getBinderVersion(
         JNIEnv *env,
         jobject instance,
         jstring driver

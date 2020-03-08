@@ -88,11 +88,6 @@ class HomeViewModel : BaseListViewModel() {
         private const val CMD_MOUNT_SYSTEM =
             "grep ' /system ' /proc/mounts | grep -v 'tmpfs' | grep -v 'none'"
 
-        private const val ERRNO_PERMISSION_DENIED = -2
-        private const val ERRNO_NO_SUCH_FILE_OR_DIRECTORY = -13
-        private const val BINDER32_PROTOCOL_VERSION = 7
-        private const val BINDER64_PROTOCOL_VERSION = 8
-
         // https://source.android.com/devices/tech/ota/apex?hl=en
         private const val PROP_APEX_UPDATABLE = "ro.apex.updatable"
         private const val CMD_FLATTENED_APEX_MOUNT = "grep 'tmpfs /apex tmpfs' /proc/mounts"
@@ -619,8 +614,6 @@ class HomeViewModel : BaseListViewModel() {
             isSar
         )
     }
-
-    private external fun getBinderVersion(driver: String): Int
 
     private suspend fun detectApex(tempModels: ArrayList<MyModel>) {
         val apexUpdatable = getStringProperty(PROP_APEX_UPDATABLE, isAtLeastAndroid10()).toBoolean()

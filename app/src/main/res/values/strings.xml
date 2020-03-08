@@ -96,6 +96,12 @@
     <string name="build_cpu_abi">CPU current using ABI</string>
     <string name="build_supported_32_bit_abis">Supported 32bit CPU ABIs</string>
     <string name="build_supported_64_bit_abis">Supported 64bit CPU ABIs</string>
+    <string name="binder_status">Binder status</string>
+    <string name="hw_binder_status">HW Binder status</string>
+    <string name="vnd_binder_status">VND Binder status</string>
+    <string name="abi32_binder32" translatable="false">ABI: 32bit\nBinder: 32bit</string>
+    <string name="abi64_binder64" translatable="false">ABI: 64bit\nBinder: 64bit</string>
+    <string name="abi32_binder64" translatable="false">ABI: 32bit\nBinder: 64bit</string>
 
     <string name="build_user">ROM builder</string>
     <string name="build_HOST">ROM build machine name</string>

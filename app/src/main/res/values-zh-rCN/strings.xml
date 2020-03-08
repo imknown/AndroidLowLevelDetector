@@ -96,6 +96,9 @@
     <string name="build_cpu_abi">CPU 正在使用的应用二进制接口</string>
     <string name="build_supported_32_bit_abis">支持的 32位 CPU 应用二进制接口</string>
     <string name="build_supported_64_bit_abis">支持的 64位 CPU 应用二进制接口</string>
+    <string name="binder_status">Binder 状态</string>
+    <string name="hw_binder_status">HW Binder 状态</string>
+    <string name="vnd_binder_status">VND Binder 状态</string>
 
     <string name="build_user">ROM 构建者</string>
     <string name="build_HOST">ROM 构建的主机名</string>

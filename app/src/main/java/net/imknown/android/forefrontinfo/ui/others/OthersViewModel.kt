@@ -1,6 +1,7 @@
 package net.imknown.android.forefrontinfo.ui.others
 
 import android.os.Build
+import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -19,6 +20,11 @@ class OthersViewModel : BaseListViewModel() {
 
     companion object {
         private const val CMD_GETPROP = "getprop"
+
+        private const val ERRNO_PERMISSION_DENIED = -2
+        private const val ERRNO_NO_SUCH_FILE_OR_DIRECTORY = -13
+        private const val BINDER32_PROTOCOL_VERSION = 7
+        private const val BINDER64_PROTOCOL_VERSION = 8
     }
 
     private val _rawProp by lazy {
@@ -60,6 +66,10 @@ class OthersViewModel : BaseListViewModel() {
             Build.SUPPORTED_64_BIT_ABIS.joinToString().takeIf { it.isNotEmpty() }
                 ?: MyApplication.getMyString(R.string.result_not_supported)
         )
+
+        detectBinderStatus(tempModels, "/dev/binder", R.string.binder_status)
+        detectBinderStatus(tempModels, "/dev/hwbinder", R.string.hw_binder_status)
+        detectBinderStatus(tempModels, "/dev/vndbinder", R.string.vnd_binder_status)
         // endregion [Arch & ABI]
 
         // endregion [ROM]
@@ -97,6 +107,45 @@ class OthersViewModel : BaseListViewModel() {
         withContext(Dispatchers.Main) {
             _models.value = tempModels
         }
+    }
+
+    private var libLoaded = false
+
+    private external fun getBinderVersion(driver: String): Int
+
+    private fun detectBinderStatus(
+        tempModels: ArrayList<MyModel>,
+        driver: String,
+        @StringRes titleId: Int
+    ) {
+        if (!libLoaded) {
+            libLoaded = true
+            System.loadLibrary("BinderDetector")
+        }
+
+        val binderVersion = getBinderVersion(driver)
+
+        @StringRes val binderStatusId = if (binderVersion == ERRNO_PERMISSION_DENIED) {
+            android.R.string.unknownName
+        } else if (binderVersion == ERRNO_NO_SUCH_FILE_OR_DIRECTORY) {
+            R.string.result_not_supported
+        } else if (binderVersion == BINDER64_PROTOCOL_VERSION) {
+            if (Build.SUPPORTED_64_BIT_ABIS.isNotEmpty()) {
+                R.string.abi64_binder64
+            } else {
+                R.string.abi32_binder64
+            }
+        } else if (binderVersion == BINDER32_PROTOCOL_VERSION) {
+            R.string.abi32_binder32
+        } else {
+            android.R.string.unknownName
+        }
+
+        add(
+            tempModels,
+            MyApplication.getMyString(titleId),
+            MyApplication.getMyString(binderStatusId)
+        )
     }
 
     private suspend fun getProp(tempModels: ArrayList<MyModel>) {

@@ -96,6 +96,9 @@
     <string name="build_cpu_abi">ABI utisisé par le CPU</string>
     <string name="build_supported_32_bit_abis">32bit CPU ABIs supportés</string>
     <string name="build_supported_64_bit_abis">64bit CPU ABIs supportés</string>
+    <string name="binder_status">Status Binder</string>
+    <string name="hw_binder_status">Status HW Binder</string>
+    <string name="vnd_binder_status">Status VND Binder</string>
 
     <string name="build_user">Constructeur de la ROM</string>
     <string name="build_HOST">Nom de la machine lors du build</string>
