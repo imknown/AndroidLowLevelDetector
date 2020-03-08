@@ -27,6 +27,16 @@ android {
         resConfigs 'zh-rCN', 'fr-rFR'
 
         buildConfigField 'String', 'GIT_BRANCH', "\"$currentGitBranchName\""
+
+        externalNativeBuild {
+            cmake {
+                arguments '-DANDROID_ARM_NEON=TRUE', '-DANDROID_TOOLCHAIN=clang'
+
+                cFlags '-D__STDC_FORMAT_MACROS'
+
+                cppFlags '-fexceptions', '-frtti'
+            }
+        }
     }
 
     signingConfigs {
@@ -83,6 +93,12 @@ android {
     // androidExtensions {
     //     experimental = true
     // }
+
+    externalNativeBuild {
+        cmake {
+            path 'CMakeLists.txt'
+        }
+    }
 
     splits {
         abi {
