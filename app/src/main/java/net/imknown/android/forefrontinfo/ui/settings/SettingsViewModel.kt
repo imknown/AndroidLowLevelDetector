@@ -133,13 +133,6 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
                 _versionClick.value = Event(0)
             }
         }
-
-        println(
-            getInstallerPackageName(
-                MyApplication.instance.packageName,
-                MyApplication.instance.packageManager
-            )
-        )
     }
 
     private suspend fun getMyKeyPublicSha256(
