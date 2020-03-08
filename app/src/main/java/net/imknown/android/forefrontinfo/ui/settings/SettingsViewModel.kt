@@ -34,7 +34,7 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
             "F1:42:FD:28:A5:AD:78:D5:A6:F4:41:3B:00:B5:16:29:74:91:05:8F:B2:3B:2A:37:15:31:E7:75:63:76:6D:18"
     }
 
-    private var counter = 5
+    private var timesLeft = 7
 
     private val _version by lazy { MutableLiveData<Version>() }
     val version: LiveData<Version> by lazy { _version }
@@ -124,11 +124,11 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
     )
 
     fun versionClicked() = viewModelScope.launch(Dispatchers.Default) {
-        if (counter > 0) {
-            counter -= 1
-        } else if (counter == 0) {
-            counter -= 100
+        if (timesLeft < 0) {
+            return@launch
+        }
 
+        if (--timesLeft == 0) {
             withContext(Dispatchers.Main) {
                 _versionClick.value = Event(0)
             }
