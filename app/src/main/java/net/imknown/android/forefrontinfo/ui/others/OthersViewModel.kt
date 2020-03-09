@@ -22,8 +22,8 @@ class OthersViewModel : BaseListViewModel() {
     companion object {
         private const val CMD_GETPROP = "getprop"
 
-        private const val ERRNO_PERMISSION_DENIED = -2
-        private const val ERRNO_NO_SUCH_FILE_OR_DIRECTORY = -13
+        private const val ERRNO_NO_SUCH_FILE_OR_DIRECTORY = 2
+        private const val ERRNO_PERMISSION_DENIED = 13
         private const val BINDER32_PROTOCOL_VERSION = 7
         private const val BINDER64_PROTOCOL_VERSION = 8
     }
@@ -147,10 +147,10 @@ class OthersViewModel : BaseListViewModel() {
 
         val binderVersion = getBinderVersion(driver)
 
-        @StringRes val binderStatusId = if (binderVersion == ERRNO_PERMISSION_DENIED) {
-            android.R.string.unknownName
-        } else if (binderVersion == ERRNO_NO_SUCH_FILE_OR_DIRECTORY) {
+        @StringRes val binderStatusId = if (binderVersion == -ERRNO_NO_SUCH_FILE_OR_DIRECTORY) {
             R.string.result_not_supported
+        } else if (binderVersion == -ERRNO_PERMISSION_DENIED) {
+            android.R.string.unknownName
         } else if (binderVersion == BINDER64_PROTOCOL_VERSION) {
             if (Build.SUPPORTED_64_BIT_ABIS.isNotEmpty()) {
                 R.string.abi64_binder64
