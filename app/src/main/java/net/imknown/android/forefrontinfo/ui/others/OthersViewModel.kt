@@ -1,5 +1,6 @@
 package net.imknown.android.forefrontinfo.ui.others
 
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
@@ -36,6 +37,29 @@ class OthersViewModel : BaseListViewModel() {
     }
     val rawProp: LiveData<Event<Boolean>> by lazy { _rawProp }
 
+    @SuppressLint("DiscouragedPrivateApi")
+    private fun getProcessBit(): String {
+        val isProcess64Bit = if (isAtLeastAndroid6()) {
+            android.os.Process.is64Bit()
+        } else {
+            val vmRuntimeInstance = Class.forName("dalvik.system.VMRuntime")
+                .getDeclaredMethod("getRuntime")
+                .invoke(null)
+
+            Class.forName("dalvik.system.VMRuntime")
+                .getDeclaredMethod("is64Bit")
+                .invoke(vmRuntimeInstance) as Boolean
+        }
+
+        return MyApplication.getMyString(
+            if (isProcess64Bit) {
+                R.string.process_bit_64
+            } else {
+                R.string.process_bit_32
+            }
+        )
+    }
+
     override fun collectModels() = viewModelScope.launch(Dispatchers.IO) {
         val tempModels = ArrayList<MyModel>()
 
@@ -50,6 +74,7 @@ class OthersViewModel : BaseListViewModel() {
         // endregion [Basic]
 
         // region [Arch & ABI]
+        add(tempModels, MyApplication.getMyString(R.string.current_process_bit), getProcessBit())
         add(tempModels, MyApplication.getMyString(R.string.os_arch), System.getProperty("os.arch"))
         @Suppress("DEPRECATION")
         add(tempModels, MyApplication.getMyString(R.string.build_cpu_abi), Build.CPU_ABI)
