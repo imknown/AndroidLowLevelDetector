@@ -51,11 +51,8 @@ class OthersViewModel : BaseListViewModel() {
 
         // region [Arch & ABI]
         add(tempModels, MyApplication.getMyString(R.string.os_arch), System.getProperty("os.arch"))
-        add(
-            tempModels,
-            MyApplication.getMyString(R.string.build_cpu_abi),
-            Build.SUPPORTED_ABIS.joinToString()
-        )
+        @Suppress("DEPRECATION")
+        add(tempModels, MyApplication.getMyString(R.string.build_cpu_abi), Build.CPU_ABI)
         add(
             tempModels,
             MyApplication.getMyString(R.string.build_supported_32_bit_abis),
