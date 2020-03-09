@@ -102,6 +102,9 @@
     <string name="binder_status">Status Binder</string>
     <string name="hw_binder_status">Status HW Binder</string>
     <string name="vnd_binder_status">Status VND Binder</string>
+    <string name="abi32_binder32">ABI: 32bit\nBinder: 32bit</string>
+    <string name="abi64_binder64">ABI: 64bit\nBinder: 64bit</string>
+    <string name="abi32_binder64">ABI: 32bit\nBinder: 64bit</string>
 
     <string name="build_user">Constructeur de la ROM</string>
     <string name="build_HOST">Nom de la machine lors du build</string>
