@@ -110,7 +110,8 @@
     <string name="build_HOST">ROM 构建的主机名</string>
     <string name="build_time">ROM 构建时间</string>
     <string name="build_base_os">基于的系统 (二次开发)</string>
-    <string name="build_fingerprint">原机系统 指纹</string>
+    <string name="build_certain_fingerprint">%s 指纹</string>
+    <string name="build_stock_fingerprint">原机系统 指纹</string>
     <string name="build_display">Android 展示 id</string>
     <string name="build_incremental">Android Git 提交的 Hash</string>
     <string name="build_type">ROM 构建类型</string>

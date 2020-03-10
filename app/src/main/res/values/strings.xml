@@ -110,7 +110,8 @@
     <string name="build_HOST">ROM build machine name</string>
     <string name="build_time">ROM build time</string>
     <string name="build_base_os">ROM based on (Secondary development)</string>
-    <string name="build_fingerprint">Stock ROM fingerprint</string>
+    <string name="build_certain_fingerprint">%s fingerprint</string>
+    <string name="build_stock_fingerprint">Stock ROM fingerprint</string>
     <string name="build_display">Android display id</string>
     <string name="build_incremental">Android Git commit hash</string>
     <string name="build_type">ROM build type</string>

@@ -60,6 +60,7 @@ class OthersViewModel : BaseListViewModel() {
         )
     }
 
+    @ExperimentalStdlibApi
     override fun collectModels() = viewModelScope.launch(Dispatchers.IO) {
         val tempModels = ArrayList<MyModel>()
 
@@ -107,7 +108,7 @@ class OthersViewModel : BaseListViewModel() {
                 Build.VERSION.BASE_OS
             )
         }
-        add(tempModels, MyApplication.getMyString(R.string.build_fingerprint), Build.FINGERPRINT)
+        addFingerprints(tempModels)
         add(tempModels, MyApplication.getMyString(R.string.build_display), Build.DISPLAY)
         add(
             tempModels,
@@ -128,6 +129,28 @@ class OthersViewModel : BaseListViewModel() {
 
         withContext(Dispatchers.Main) {
             _models.value = tempModels
+        }
+    }
+
+    @ExperimentalStdlibApi
+    private fun addFingerprints(tempModels: ArrayList<MyModel>) {
+        if (isAtLeastAndroid10()) {
+            Build.getFingerprintedPartitions().forEach {
+                add(
+                    tempModels,
+                    MyApplication.getMyString(
+                        R.string.build_certain_fingerprint,
+                        it.name.capitalize(Locale.US)
+                    ),
+                    it.fingerprint
+                )
+            }
+        } else {
+            add(
+                tempModels,
+                MyApplication.getMyString(R.string.build_stock_fingerprint),
+                Build.FINGERPRINT
+            )
         }
     }
 
