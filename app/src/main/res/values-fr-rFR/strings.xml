@@ -95,8 +95,8 @@
     <string name="current_process_bit">Bit de processus actuel</string>
     <string name="process_bit_32">32bit</string>
     <string name="process_bit_64">64bit</string>
-    <string name="os_arch">Architecture de l\'OS</string>
-    <string name="build_cpu_abi">ABI utisisé par le CPU</string>
+    <string name="os_arch">Architecture de processus actuel</string>
+    <string name="build_cpu_abi">ABI de processus actuel</string>
     <string name="build_supported_32_bit_abis">32bit CPU ABIs supportés</string>
     <string name="build_supported_64_bit_abis">64bit CPU ABIs supportés</string>
     <string name="binder_status">Status Binder</string>
