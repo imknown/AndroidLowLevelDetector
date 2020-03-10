@@ -8,9 +8,15 @@ buildscript {
         google()
         jcenter()
         // maven { url 'https://maven.aliyun.com/repository/jcenter' }
+
+        maven { url 'https://storage.googleapis.com/r8-releases/raw' }
     }
 
     dependencies {
+        // https://issuetracker.google.com/issues/144514795
+        // https://issuetracker.google.com/issues/147972078
+        classpath "com.android.tools:r8:$androidBuild.r8"
+
         classpath "com.android.tools.build:gradle:$androidBuild.androidStudioGradlePlugin"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinSdk.core"
 
