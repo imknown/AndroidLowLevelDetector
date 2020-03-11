@@ -102,9 +102,9 @@
     <string name="binder_status">Binder 状态</string>
     <string name="hw_binder_status">HW Binder 状态</string>
     <string name="vnd_binder_status">VND Binder 状态</string>
-    <string name="abi32_binder32">ABI: 32位\nBinder: 32位</string>
-    <string name="abi64_binder64">ABI: 64位\nBinder: 64位</string>
-    <string name="abi32_binder64">ABI: 32位\nBinder: 64位</string>
+    <string name="abi32_binder32">ABI: 32位, Binder: 32位</string>
+    <string name="abi64_binder64">ABI: 64位, Binder: 64位</string>
+    <string name="abi32_binder64">ABI: 32位, Binder: 64位</string>
 
     <string name="build_user">ROM 构建者</string>
     <string name="build_HOST">ROM 构建的主机名</string>
