@@ -26,6 +26,8 @@ Detect Treble, GSI, Mainline, APEX, system-as-root(SAR), A/B, etc. .
 - Detect Dynamic System Update(DSU)
 - Detect Project Treble
 - Detect GSI compatibility
+- Detect Binder bitness
+- Detect Process/VM architecture
 - Detect Vendor NDK
 - Detect System-as-root
 - Detect (flattened) APEX
