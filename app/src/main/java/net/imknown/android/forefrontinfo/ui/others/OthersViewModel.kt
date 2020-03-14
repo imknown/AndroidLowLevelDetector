@@ -28,12 +28,6 @@ class OthersViewModel : BaseListViewModel() {
         private const val BINDER64_PROTOCOL_VERSION = 8
     }
 
-    init {
-        viewModelScope.launch(Dispatchers.IO) {
-            System.loadLibrary("BinderDetector")
-        }
-    }
-
     private val _rawProp by lazy {
         MyApplication.sharedPreferences.booleanEventLiveData(
             viewModelScope,
@@ -167,6 +161,8 @@ class OthersViewModel : BaseListViewModel() {
         driver: String,
         @StringRes titleId: Int
     ) {
+        System.loadLibrary("BinderDetector")
+
         val binderVersion = getBinderVersion(driver)
 
         @StringRes val binderStatusId = if (binderVersion == -ERRNO_NO_SUCH_FILE_OR_DIRECTORY) {
