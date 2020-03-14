@@ -1,6 +1,5 @@
 package net.imknown.android.forefrontinfo.ui
 
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.widget.TextView
@@ -12,18 +11,10 @@ import net.imknown.android.forefrontinfo.R
 
 class MainActivity : AppCompatActivity() {
 
-    private val isBroughtToFront
-        get() = intent.flags and Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT != 0
-
     private val mainViewModel by viewModels<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        if (isBroughtToFront) {
-            finish()
-            return
-        }
 
         setContentView(R.layout.main_activity)
 
