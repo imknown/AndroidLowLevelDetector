@@ -1,6 +1,7 @@
 package net.imknown.android.forefrontinfo.ui
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.widget.TextView
 import androidx.activity.viewModels
@@ -62,4 +63,19 @@ class MainActivity : AppCompatActivity() {
 
         mainViewModel.restoreInstanceState(savedInstanceState)
     }
+
+    override fun onBackPressed() {
+        // Finish now, so no need to use async.
+
+        if (is10Leak()) {
+            finishAfterTransition()
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+    // https://github.com/square/leakcanary/issues/1594
+    // https://issuetracker.google.com/issues/139738913
+    private fun is10Leak() = Build.VERSION.SDK_INT == Build.VERSION_CODES.Q
+            && Build.ID.split('.')[1] < "191205"
 }
