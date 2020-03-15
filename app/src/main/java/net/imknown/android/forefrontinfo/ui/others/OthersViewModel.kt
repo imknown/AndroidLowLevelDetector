@@ -46,11 +46,12 @@ class OthersViewModel : BaseListViewModel() {
         val isProcess64Bit = if (isAtLeastAndroid6()) {
             android.os.Process.is64Bit()
         } else {
-            val vmRuntimeInstance = Class.forName("dalvik.system.VMRuntime")
+            val vmRuntimePath = "dalvik.system.VMRuntime"
+            val vmRuntimeInstance = Class.forName(vmRuntimePath)
                 .getDeclaredMethod("getRuntime")
                 .invoke(null)
 
-            Class.forName("dalvik.system.VMRuntime")
+            Class.forName(vmRuntimePath)
                 .getDeclaredMethod("is64Bit")
                 .invoke(vmRuntimeInstance) as Boolean
         }
