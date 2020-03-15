@@ -1,6 +1,5 @@
 package net.imknown.android.forefrontinfo.ui
 
-import android.os.Build
 import android.os.Bundle
 import android.widget.TextView
 import androidx.activity.viewModels
@@ -8,8 +7,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import kotlinx.android.synthetic.main.main_activity.*
 import net.imknown.android.forefrontinfo.R
+import net.imknown.android.forefrontinfo.ui.base.IAndroidVersion
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), IAndroidVersion {
 
     private val mainViewModel by viewModels<MainViewModel>()
 
@@ -64,10 +64,4 @@ class MainActivity : AppCompatActivity() {
             super.onBackPressed()
         }
     }
-
-    // https://github.com/square/leakcanary/issues/1594
-    // https://issuetracker.google.com/issues/139738913
-    private fun is10Leak() = Build.VERSION.SDK_INT == Build.VERSION_CODES.Q
-            && (Build.ID.split('.').size < 2
-            /* */ || Build.ID.split('.')[1] < "191205")
 }
