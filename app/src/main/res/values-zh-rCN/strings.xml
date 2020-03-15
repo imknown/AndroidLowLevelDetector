@@ -95,16 +95,16 @@
     <string name="current_process_bit">当前进程 位数</string>
     <string name="process_bit_32">32位</string>
     <string name="process_bit_64">64位</string>
-    <string name="os_arch">当前进程 架构</string>
-    <string name="build_cpu_abi">当前进程 应用二进制接口</string>
-    <string name="build_supported_32_bit_abis">支持的 32位 CPU 应用二进制接口</string>
-    <string name="build_supported_64_bit_abis">支持的 64位 CPU 应用二进制接口</string>
     <string name="binder_status">Binder 状态</string>
     <string name="hw_binder_status">HW Binder 状态</string>
     <string name="vnd_binder_status">VND Binder 状态</string>
     <string name="abi32_binder32">ABI: 32位, Binder: 32位</string>
     <string name="abi64_binder64">ABI: 64位, Binder: 64位</string>
     <string name="abi32_binder64">ABI: 32位, Binder: 64位</string>
+    <string name="os_arch">当前进程 架构</string>
+    <string name="build_cpu_abi">当前进程 应用二进制接口</string>
+    <string name="build_supported_32_bit_abis">支持的 32位 CPU 应用二进制接口</string>
+    <string name="build_supported_64_bit_abis">支持的 64位 CPU 应用二进制接口</string>
 
     <string name="build_user">ROM 构建者</string>
     <string name="build_HOST">ROM 构建的主机名</string>

@@ -22,6 +22,10 @@ class OthersViewModel : BaseListViewModel() {
     companion object {
         private const val CMD_GETPROP = "getprop"
 
+        private const val DRIVER_BINDER = "/dev/binder"
+        private const val DRIVER_HW_BINDER = "/dev/hwbinder"
+        private const val DRIVER_VND_BINDER = "/dev/vndbinder"
+
         private const val ERRNO_NO_SUCH_FILE_OR_DIRECTORY = 2
         private const val ERRNO_PERMISSION_DENIED = 13
         private const val BINDER32_PROTOCOL_VERSION = 7
@@ -76,6 +80,11 @@ class OthersViewModel : BaseListViewModel() {
 
         // region [Arch & ABI]
         add(tempModels, MyApplication.getMyString(R.string.current_process_bit), getProcessBit())
+        // region [Binder]
+        detectBinderStatus(tempModels, DRIVER_BINDER, R.string.binder_status)
+        detectBinderStatus(tempModels, DRIVER_HW_BINDER, R.string.hw_binder_status)
+        detectBinderStatus(tempModels, DRIVER_VND_BINDER, R.string.vnd_binder_status)
+        // endregion [Binder]
         add(tempModels, MyApplication.getMyString(R.string.os_arch), System.getProperty("os.arch"))
         @Suppress("DEPRECATION")
         add(tempModels, MyApplication.getMyString(R.string.build_cpu_abi), Build.CPU_ABI)
@@ -89,10 +98,6 @@ class OthersViewModel : BaseListViewModel() {
             Build.SUPPORTED_64_BIT_ABIS.joinToString().takeIf { it.isNotEmpty() }
                 ?: MyApplication.getMyString(R.string.result_not_supported)
         )
-
-        detectBinderStatus(tempModels, "/dev/binder", R.string.binder_status)
-        detectBinderStatus(tempModels, "/dev/hwbinder", R.string.hw_binder_status)
-        detectBinderStatus(tempModels, "/dev/vndbinder", R.string.vnd_binder_status)
         // endregion [Arch & ABI]
 
         // region [ROM]
