@@ -24,7 +24,7 @@ dependencies {
     implementation "androidx.arch.core:core-common:$androidX.archCore"
     implementation "androidx.arch.core:core-runtime:$androidX.archCore"
 
-    implementation "androidx.cardview:cardview:$androidX.cardview"
+    // implementation "androidx.cardview:cardview:$androidX.cardview"
 
     implementation "androidx.collection:collection:$androidX.collection"
     // implementation "androidx.collection:collection-ktx:$androidX.collection"

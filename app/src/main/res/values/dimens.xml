@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="item_card_corner_radius">6dp</dimen>
-    <dimen name="item_card_elevation">0dp</dimen>
     <dimen name="item_card_title_padding_horizontal">14dp</dimen>
     <dimen name="item_card_title_padding_vertical">6dp</dimen>
     <dimen name="item_card_detail_padding_horizontal">12dp</dimen>

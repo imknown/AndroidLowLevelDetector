@@ -31,7 +31,7 @@ ext {
 
             archCore              : '2.1.0',
 
-            cardview              : '1.0.0',
+            // cardview              : '1.0.0',
 
             collection            : '1.1.0',
 
