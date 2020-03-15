@@ -92,9 +92,9 @@
     <string name="build_hardware">SoC/内核源码 提供商</string>
     <string name="build_board">SoC 型号</string>
 
+    <string name="bit_32">32位</string>
+    <string name="bit_64">64位</string>
     <string name="current_process_bit">当前进程 位数</string>
-    <string name="process_bit_32">32位</string>
-    <string name="process_bit_64">64位</string>
     <string name="binder_status">Binder 状态</string>
     <string name="hw_binder_status">HW Binder 状态</string>
     <string name="vnd_binder_status">VND Binder 状态</string>

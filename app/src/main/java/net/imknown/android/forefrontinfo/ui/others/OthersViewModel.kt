@@ -60,9 +60,9 @@ class OthersViewModel : BaseListViewModel() {
 
         return MyApplication.getMyString(
             if (isProcess64Bit) {
-                R.string.process_bit_64
+                R.string.bit_64
             } else {
-                R.string.process_bit_32
+                R.string.bit_32
             }
         )
     }

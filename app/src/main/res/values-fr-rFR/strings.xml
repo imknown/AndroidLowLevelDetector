@@ -92,9 +92,9 @@
     <string name="build_hardware">Fournisseur du SoC/Kernel</string>
     <string name="build_board">Modèle SoC</string>
 
+    <string name="bit_32">32bit</string>
+    <string name="bit_64">64bit</string>
     <string name="current_process_bit">Bit de processus actuel</string>
-    <string name="process_bit_32">32bit</string>
-    <string name="process_bit_64">64bit</string>
     <string name="binder_status">Status Binder</string>
     <string name="hw_binder_status">Status HW Binder</string>
     <string name="vnd_binder_status">Status VND Binder</string>
