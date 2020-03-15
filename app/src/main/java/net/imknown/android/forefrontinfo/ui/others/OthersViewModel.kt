@@ -95,7 +95,7 @@ class OthersViewModel : BaseListViewModel() {
         detectBinderStatus(tempModels, "/dev/vndbinder", R.string.vnd_binder_status)
         // endregion [Arch & ABI]
 
-        // endregion [ROM]
+        // region [ROM]
         add(tempModels, MyApplication.getMyString(R.string.build_user), Build.USER)
         add(tempModels, MyApplication.getMyString(R.string.build_HOST), Build.HOST)
         val time =
@@ -120,7 +120,7 @@ class OthersViewModel : BaseListViewModel() {
         add(tempModels, MyApplication.getMyString(R.string.build_codename), Build.VERSION.CODENAME)
         // endregion [ROM]
 
-        // endregion [Others]
+        // region [Others]
         add(tempModels, MyApplication.getMyString(R.string.build_bootloader), Build.BOOTLOADER)
         add(tempModels, MyApplication.getMyString(R.string.build_radio), Build.getRadioVersion())
         // endregion [Others]
