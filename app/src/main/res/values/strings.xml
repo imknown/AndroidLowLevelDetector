@@ -102,6 +102,7 @@
     <string name="abi64_binder64">ABI: 64bit, Binder: 64bit</string>
     <string name="abi32_binder64">ABI: 32bit, Binder: 64bit</string>
     <string name="os_arch">Current process architecture</string>
+    <string name="current_system_abi">Current system ABI</string>
     <string name="build_cpu_abi">Current process ABI</string>
     <string name="build_supported_32_bit_abis">Supported 32bit CPU ABIs</string>
     <string name="build_supported_64_bit_abis">Supported 64bit CPU ABIs</string>

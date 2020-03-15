@@ -1,6 +1,5 @@
 package net.imknown.android.forefrontinfo.ui.home
 
-import android.annotation.SuppressLint
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.res.Resources
@@ -822,28 +821,6 @@ class HomeViewModel : BaseListViewModel() {
             R.string.result_not_supported
         }
     )
-
-    @SuppressLint("PrivateApi")
-    private fun getStringProperty(key: String, condition: Boolean = true): String {
-        return if (condition) {
-            Class.forName("android.os.SystemProperties").getDeclaredMethod(
-                "get",
-                String::class.java,
-                String::class.java
-            ).invoke(null, key, MyApplication.getMyString(R.string.build_not_filled)) as String
-        } else {
-            MyApplication.getMyString(R.string.result_not_supported)
-        }
-    }
-
-//    @SuppressLint("PrivateApi", "DiscouragedPrivateApi")
-//    private fun setStringProperty(key: String, value: String) {
-//        Class.forName("android.os.SystemProperties").getDeclaredMethod(
-//            "set",
-//            String::class.java,
-//            String::class.java
-//        ).invoke(null, key, value)
-//    }
 
     private fun add(
         tempModels: ArrayList<MyModel>,

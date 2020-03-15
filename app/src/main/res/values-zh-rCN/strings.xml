@@ -102,6 +102,7 @@
     <string name="abi64_binder64">ABI: 64位, Binder: 64位</string>
     <string name="abi32_binder64">ABI: 32位, Binder: 64位</string>
     <string name="os_arch">当前进程 架构</string>
+    <string name="current_system_abi">当前系统 ABI</string>
     <string name="build_cpu_abi">当前进程 ABI</string>
     <string name="build_supported_32_bit_abis">支持的 32位 CPU ABI</string>
     <string name="build_supported_64_bit_abis">支持的 64位 CPU ABI</string>

@@ -22,6 +22,8 @@ class OthersViewModel : BaseListViewModel() {
     companion object {
         private const val CMD_GETPROP = "getprop"
 
+        private const val PROP_RO_PRODUCT_CPU_ABI = "ro.product.cpu.abi"
+
         private const val DRIVER_BINDER = "/dev/binder"
         private const val DRIVER_HW_BINDER = "/dev/hwbinder"
         private const val DRIVER_VND_BINDER = "/dev/vndbinder"
@@ -87,6 +89,11 @@ class OthersViewModel : BaseListViewModel() {
         detectBinderStatus(tempModels, DRIVER_VND_BINDER, R.string.vnd_binder_status)
         // endregion [Binder]
         add(tempModels, MyApplication.getMyString(R.string.os_arch), System.getProperty("os.arch"))
+        add(
+            tempModels,
+            MyApplication.getMyString(R.string.current_system_abi),
+            getStringProperty(PROP_RO_PRODUCT_CPU_ABI)
+        )
         @Suppress("DEPRECATION")
         add(tempModels, MyApplication.getMyString(R.string.build_cpu_abi), Build.CPU_ABI)
         add(
