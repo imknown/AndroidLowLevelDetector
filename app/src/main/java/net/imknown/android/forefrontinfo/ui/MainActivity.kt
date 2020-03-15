@@ -68,5 +68,6 @@ class MainActivity : AppCompatActivity() {
     // https://github.com/square/leakcanary/issues/1594
     // https://issuetracker.google.com/issues/139738913
     private fun is10Leak() = Build.VERSION.SDK_INT == Build.VERSION_CODES.Q
-            && Build.ID.split('.')[1] < "191205"
+            && (Build.ID.split('.').size < 2
+            /* */ || Build.ID.split('.')[1] < "191205")
 }
