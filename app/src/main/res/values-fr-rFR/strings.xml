@@ -68,6 +68,11 @@
 
     <string name="adb_status_title">Status ADB</string>
 
+    <string name="encryption_status_title">Statut de chiffrement</string>
+    <string name="result_encrypted">Crypté</string>
+    <string name="result_encrypted_no_key_set">Chiffré mais le mot de passe n\'a pas été défini</string>
+    <string name="result_not_encrypted">Non crypté</string>
+
     <string name="toybox_built_in_title">Version de Toybox intégrée</string>
     <string name="toybox_built_in_detail">Moi: %1$s\n\nDernier stable: %2$s\nPlus faible support: %3$s\nMainline: %4$s\nMaster: %5$s</string>
 

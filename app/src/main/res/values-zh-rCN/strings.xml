@@ -68,6 +68,11 @@
 
     <string name="adb_status_title">ADB 状态</string>
 
+    <string name="encryption_status_title">加密 状态</string>
+    <string name="result_encrypted">已加密</string>
+    <string name="result_encrypted_no_key_set">已加密 但 密码未设置</string>
+    <string name="result_not_encrypted">未加密</string>
+
     <string name="toybox_built_in_title">内建 Toybox 版本</string>
     <string name="toybox_built_in_detail">我的: %1$s\n\n最新稳定: %2$s\n最低支持: %3$s\nMainline: %4$s\nMaster: %5$s</string>
 

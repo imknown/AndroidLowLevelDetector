@@ -1,5 +1,7 @@
 package net.imknown.android.forefrontinfo.ui.home
 
+import android.app.admin.DevicePolicyManager
+import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.res.Resources
@@ -244,6 +246,8 @@ class HomeViewModel : BaseListViewModel() {
         detectDeveloperOptions(tempModels)
 
         detectAdb(tempModels)
+
+        detectEncryption(tempModels)
 
         detectToybox(tempModels, lld)
 
@@ -680,6 +684,44 @@ class HomeViewModel : BaseListViewModel() {
         )
     }
 
+    private fun detectEncryption(tempModels: ArrayList<MyModel>) {
+        val devicePolicyManager =
+            MyApplication.instance.getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
+        val storageEncryptionStatus = devicePolicyManager.storageEncryptionStatus
+        @StringRes val result: Int
+        @ColorRes val color: Int
+        when (storageEncryptionStatus) {
+            DevicePolicyManager.ENCRYPTION_STATUS_ACTIVATING,
+            DevicePolicyManager.ENCRYPTION_STATUS_ACTIVE,
+            DevicePolicyManager.ENCRYPTION_STATUS_ACTIVE_PER_USER -> {
+                result = R.string.result_encrypted
+                color = R.color.colorNoProblem
+            }
+            DevicePolicyManager.ENCRYPTION_STATUS_ACTIVE_DEFAULT_KEY -> {
+                result = R.string.result_encrypted_no_key_set
+                color = R.color.colorWaring
+            }
+            DevicePolicyManager.ENCRYPTION_STATUS_INACTIVE -> {
+                result = R.string.result_not_encrypted
+                color = R.color.colorCritical
+            }
+            DevicePolicyManager.ENCRYPTION_STATUS_UNSUPPORTED -> {
+                result = R.string.result_not_supported
+                color = R.color.colorCritical
+            }
+            else -> {
+                result = R.string.result_not_supported
+                color = R.color.colorCritical
+            }
+        }
+
+        add(
+            tempModels,
+            MyApplication.getMyString(R.string.encryption_status_title),
+            MyApplication.getMyString(result),
+            color
+        )
+    }
     private suspend fun detectToybox(tempModels: ArrayList<MyModel>, lld: Lld) {
         val toyboxVersionResult = shAsync(CMD_TOYBOX_VERSION, isAtLeastAndroid6()).await()
         val hasToyboxVersion = hasResult(toyboxVersionResult)
