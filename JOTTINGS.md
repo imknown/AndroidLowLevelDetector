@@ -46,15 +46,16 @@ adb shell getprop ro.boot.avb_version # avbtool version
 adb shell getprop ro.boot.veritymode
 adb shell getprop ro.boot.verifiedbootstate
 adb shell getprop ro.boot.flash.locked
-adb shell getprop ro.boot.secureboot
+adb shell getprop ro.boot.secureboot # MIUI only?
 adb shell getprop ro.oem_unlock_supported
 
 adb shell getprop ro.boot.vbmeta.avb_version # required (lib)avb version
 adb shell getprop ro.boot.vbmeta.device_state
 
+# (MyApplication.instance.getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager).storageEncryptionStatus
 adb shell getprop ro.crypto.state
 adb shell getprop ro.build.selinux
-adb shell getprop ro.secure
+adb shell getprop ro.secure # Secure boot
 ```
 
 ## Settings
