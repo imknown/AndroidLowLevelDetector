@@ -1,8 +1,10 @@
 apply plugin: 'com.android.application'
 
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
+
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
 
 def currentGitBranchName = getCurrentGitBranchName()
 
@@ -64,6 +66,10 @@ android {
 
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
                     'proguard-rules.pro', 'proguard-gson-rules.pro'
+
+            firebaseCrashlytics {
+                nativeSymbolUploadEnabled true
+            }
         }
 
         debug {

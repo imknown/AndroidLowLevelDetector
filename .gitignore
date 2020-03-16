@@ -8,3 +8,4 @@ build/
 .externalNativeBuild
 .cxx
 /keys/release.jks
+google-services.json
