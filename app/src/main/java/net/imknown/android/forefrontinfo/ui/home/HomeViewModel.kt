@@ -468,7 +468,7 @@ class HomeViewModel : BaseListViewModel() {
 
         val abFinalResult =
             MyApplication.getMyString(
-                R.string.ab_seamless_update_enabled_title
+                R.string.ab_seamless_update_status_title
             )
         if (isAbUpdateSupported) {
             val slotSuffixResult = getStringProperty(PROP_SLOT_SUFFIX)
@@ -503,7 +503,7 @@ class HomeViewModel : BaseListViewModel() {
 
         add(
             tempModels,
-            MyApplication.getMyString(R.string.dynamic_partitions_enabled_title),
+            MyApplication.getMyString(R.string.dynamic_partitions_status_title),
             detail,
             isDynamicPartitionsEnabled
         )
@@ -518,7 +518,7 @@ class HomeViewModel : BaseListViewModel() {
 
         add(
             tempModels,
-            MyApplication.getMyString(R.string.dsu_enabled_title),
+            MyApplication.getMyString(R.string.dsu_status_title),
             translate(isDsuEnabled),
             isDsuEnabled
         )
@@ -530,7 +530,7 @@ class HomeViewModel : BaseListViewModel() {
 
         add(
             tempModels,
-            MyApplication.getMyString(R.string.treble_enabled_title),
+            MyApplication.getMyString(R.string.treble_status_title),
             translate(isTrebleEnabled),
             isTrebleEnabled
         )
@@ -615,7 +615,7 @@ class HomeViewModel : BaseListViewModel() {
             isAtLeastAndroid9() && (hasSystemRootImage || hasMountDevRoot || !hasMountSystem)
         add(
             tempModels,
-            MyApplication.getMyString(R.string.sar_enabled_title),
+            MyApplication.getMyString(R.string.sar_status_title),
             translate(isSar),
             isSar
         )
@@ -644,7 +644,7 @@ class HomeViewModel : BaseListViewModel() {
 
         add(
             tempModels,
-            MyApplication.getMyString(R.string.apex_enabled_title),
+            MyApplication.getMyString(R.string.apex_status_title),
             apexEnabledResult,
             apexColor
         )

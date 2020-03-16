@@ -42,15 +42,15 @@
     <string name="linux_title">Linux version</string>
     <string name="linux_version_detail">Mine: %1$s\n\nLatest support: %2$s\nMainline: %3$s</string>
 
-    <string name="ab_seamless_update_enabled_title">A/B seamless update status</string>
+    <string name="ab_seamless_update_status_title">A/B seamless update status</string>
     <string name="current_using_ab_slot_result">\u0020(Current using slot: %s)</string>
 
-    <string name="dynamic_partitions_enabled_title">Dynamic partitions status</string>
+    <string name="dynamic_partitions_status_title">Dynamic partitions status</string>
     <string name="dynamic_partitions_enabled_retrofitted">\u0020(Retrofitted)</string>
 
-    <string name="dsu_enabled_title">Dynamic System Update(DSU) status</string>
+    <string name="dsu_status_title">Dynamic System Update(DSU) status</string>
 
-    <string name="treble_enabled_title">Project Treble status</string>
+    <string name="treble_status_title">Project Treble status</string>
 
     <string name="gsi_status_title">GSI compatibility</string>
     <string name="result_compliant">Treble compliant</string>
@@ -59,9 +59,9 @@
     <string name="vndk_built_in_title">Built-in Vendor NDK status</string>
     <string name="built_in_vndk_version_result">\u0020(Level: %s)</string>
 
-    <string name="sar_enabled_title">System-as-root status</string>
+    <string name="sar_status_title">System-as-root status</string>
 
-    <string name="apex_enabled_title">APEX status</string>
+    <string name="apex_status_title">APEX status</string>
     <string name="apex_legacy_flattened">\u0020(Legacy flattened)</string>
 
     <string name="developer_options_status_title">Developer options status</string>

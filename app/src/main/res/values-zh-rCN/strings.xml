@@ -42,15 +42,15 @@
     <string name="linux_title">Linux 版本</string>
     <string name="linux_version_detail">我的: %1$s\n\n最新支持: %2$s\nMainline: %3$s</string>
 
-    <string name="ab_seamless_update_enabled_title">A/B 无缝升级 状态</string>
+    <string name="ab_seamless_update_status_title">A/B 无缝升级 状态</string>
     <string name="current_using_ab_slot_result">\u0020(当前使用的槽位: %s)</string>
 
-    <string name="dynamic_partitions_enabled_title">动态分区 状态</string>
+    <string name="dynamic_partitions_status_title">动态分区 状态</string>
     <string name="dynamic_partitions_enabled_retrofitted">\u0020(改造的)</string>
 
-    <string name="dsu_enabled_title">动态系统更新(DSU) 状态</string>
+    <string name="dsu_status_title">动态系统更新(DSU) 状态</string>
 
-    <string name="treble_enabled_title">Project Treble 状态</string>
+    <string name="treble_status_title">Project Treble 状态</string>
 
     <string name="gsi_status_title">GSI 兼容性</string>
     <string name="result_compliant">遵从 Treble</string>
@@ -59,9 +59,9 @@
     <string name="vndk_built_in_title">内建 供应商 NDK 状态</string>
     <string name="built_in_vndk_version_result">\u0020(等级: %s)</string>
 
-    <string name="sar_enabled_title">System-as-root 状态</string>
+    <string name="sar_status_title">System-as-root 状态</string>
 
-    <string name="apex_enabled_title">APEX 状态</string>
+    <string name="apex_status_title">APEX 状态</string>
     <string name="apex_legacy_flattened">\u0020(旧式扁平的)</string>
 
     <string name="developer_options_status_title">开发者选项 状态</string>
