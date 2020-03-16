@@ -20,6 +20,8 @@
     <!-- 首页 -->
     <string name="result_supported">支持</string>
     <string name="result_not_supported">不支持</string>
+    <string name="result_enabled">已启用</string>
+    <string name="result_disabled">已禁用</string>
 
     <string name="android_info_title">Android 版本</string>
     <string name="android_info">%1$s (API %2$s)</string>
@@ -61,6 +63,10 @@
 
     <string name="apex_enabled_title">APEX 状态</string>
     <string name="apex_legacy_flattened">\u0020(旧式扁平的)</string>
+
+    <string name="developer_options_status_title">开发者选项 状态</string>
+
+    <string name="adb_status_title">ADB 状态</string>
 
     <string name="toybox_built_in_title">内建 Toybox 版本</string>
     <string name="toybox_built_in_detail">我的: %1$s\n\n最新稳定: %2$s\n最低支持: %3$s\nMainline: %4$s\nMaster: %5$s</string>

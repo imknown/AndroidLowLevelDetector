@@ -20,6 +20,8 @@
     <!-- Home -->
     <string name="result_supported">Supported</string>
     <string name="result_not_supported">Not supported</string>
+    <string name="result_enabled">Enabled</string>
+    <string name="result_disabled">Disabled</string>
 
     <string name="android_info_title">Android version</string>
     <string name="android_info">%1$s (API %2$s)</string>
@@ -61,6 +63,10 @@
 
     <string name="apex_enabled_title">APEX status</string>
     <string name="apex_legacy_flattened">\u0020(Legacy flattened)</string>
+
+    <string name="developer_options_status_title">Developer options status</string>
+
+    <string name="adb_status_title">ADB status</string>
 
     <string name="toybox_built_in_title">Built-in Toybox version</string>
     <string name="toybox_built_in_detail">Mine: %1$s\n\nLatest stable: %2$s\nLowest support: %3$s\nMainline: %4$s\nMaster: %5$s</string>

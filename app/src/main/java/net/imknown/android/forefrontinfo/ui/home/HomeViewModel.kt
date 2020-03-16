@@ -4,6 +4,7 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.res.Resources
 import android.os.Build
+import android.provider.Settings
 import android.util.Log
 import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
@@ -90,6 +91,8 @@ class HomeViewModel : BaseListViewModel() {
         // https://source.android.com/devices/tech/ota/apex?hl=en
         private const val PROP_APEX_UPDATABLE = "ro.apex.updatable"
         private const val CMD_FLATTENED_APEX_MOUNT = "grep 'tmpfs /apex tmpfs' /proc/mounts"
+
+        private const val SETTINGS_DISABLED = 0
 
         private const val CMD_TOYBOX_VERSION = "toybox --version"
 
@@ -237,6 +240,10 @@ class HomeViewModel : BaseListViewModel() {
         detectSar(tempModels)
 
         detectApex(tempModels)
+
+        detectDeveloperOptions(tempModels)
+
+        detectAdb(tempModels)
 
         detectToybox(tempModels, lld)
 
@@ -643,6 +650,36 @@ class HomeViewModel : BaseListViewModel() {
         )
     }
 
+    private fun detectDeveloperOptions(tempModels: ArrayList<MyModel>) {
+        val developerOptionsDisabled = Settings.Global.getInt(
+            MyApplication.instance.contentResolver,
+            Settings.Global.DEVELOPMENT_SETTINGS_ENABLED,
+            SETTINGS_DISABLED
+        ) == SETTINGS_DISABLED
+
+        add(
+            tempModels,
+            MyApplication.getMyString(R.string.developer_options_status_title),
+            translateDisabled(developerOptionsDisabled),
+            developerOptionsDisabled
+        )
+    }
+
+    private fun detectAdb(tempModels: ArrayList<MyModel>) {
+        val adbDisabled = Settings.Global.getInt(
+            MyApplication.instance.contentResolver,
+            Settings.Global.ADB_ENABLED,
+            SETTINGS_DISABLED
+        ) == SETTINGS_DISABLED
+
+        add(
+            tempModels,
+            MyApplication.getMyString(R.string.adb_status_title),
+            translateDisabled(adbDisabled),
+            adbDisabled
+        )
+    }
+
     private suspend fun detectToybox(tempModels: ArrayList<MyModel>, lld: Lld) {
         val toyboxVersionResult = shAsync(CMD_TOYBOX_VERSION, isAtLeastAndroid6()).await()
         val hasToyboxVersion = hasResult(toyboxVersionResult)
@@ -819,6 +856,14 @@ class HomeViewModel : BaseListViewModel() {
             R.string.result_supported
         } else {
             R.string.result_not_supported
+        }
+    )
+
+    private fun translateDisabled(condition: Boolean) = MyApplication.getMyString(
+        if (condition) {
+            R.string.result_disabled
+        } else {
+            R.string.result_enabled
         }
     )
 
