@@ -52,10 +52,6 @@ adb shell getprop ro.oem_unlock_supported
 adb shell getprop ro.boot.vbmeta.avb_version # required (lib)avb version
 adb shell getprop ro.boot.vbmeta.device_state
 
-# https://source.android.com/security/encryption/full-disk
-# https://source.android.com/security/encryption/file-based
-# (MyApplication.instance.getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager).storageEncryptionStatus
-adb shell getprop ro.crypto.state
 adb shell getprop ro.build.selinux
 adb shell getprop ro.secure # Secure boot
 ```

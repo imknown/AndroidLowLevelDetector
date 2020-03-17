@@ -96,6 +96,10 @@ class HomeViewModel : BaseListViewModel() {
 
         private const val SETTINGS_DISABLED = 0
 
+        // https://source.android.com/security/encryption/full-disk
+        // https://source.android.com/security/encryption/file-based
+        // private const val PROP_CRYPTO_STATE = "ro.crypto.state"
+
         private const val CMD_TOYBOX_VERSION = "toybox --version"
 
         private const val WEB_VIEW_BUILT_IN_PACKAGE_NAME = "com.android.webview"
@@ -682,6 +686,7 @@ class HomeViewModel : BaseListViewModel() {
     }
 
     private fun detectEncryption(tempModels: ArrayList<MyModel>) {
+        // val cryptoState = getStringProperty(PROP_CRYPTO_STATE)
         val devicePolicyManager =
             MyApplication.instance.getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
         val storageEncryptionStatus = devicePolicyManager.storageEncryptionStatus
