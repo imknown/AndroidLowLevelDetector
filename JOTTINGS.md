@@ -46,19 +46,18 @@ adb shell getprop ro.boot.avb_version # avbtool version
 adb shell getprop ro.boot.veritymode
 adb shell getprop ro.boot.verifiedbootstate
 adb shell getprop ro.boot.flash.locked
+
 adb shell getprop ro.boot.secureboot # MIUI only?
-adb shell getprop ro.oem_unlock_supported
-
-adb shell getprop ro.boot.vbmeta.avb_version # required (lib)avb version
-adb shell getprop ro.boot.vbmeta.device_state
-
-adb shell getprop ro.build.selinux
-adb shell getprop ro.boot.selinux
 adb shell getprop ro.secure # Secure boot
 adb shell getprop ro.debuggable
 # * eng builds: ro.secure=0 and ro.debuggable=1
 # * userdebug builds: ro.secure=1 and ro.debuggable=1
 # * user builds: ro.secure=1 and ro.debuggable=0
+
+adb shell getprop ro.oem_unlock_supported
+
+adb shell getprop ro.boot.vbmeta.avb_version # required (lib)avb version
+adb shell getprop ro.boot.vbmeta.device_state
 ```
 
 ## Settings
@@ -89,6 +88,9 @@ busybox (https://busybox.net/downloads/binaries/)
 
 ``` sh
 adb shell getenforce
+
+adb shell getprop ro.build.selinux
+adb shell getprop ro.boot.selinux
 ```
 
 - root: `/sys/fc/selinux/policyvers`
