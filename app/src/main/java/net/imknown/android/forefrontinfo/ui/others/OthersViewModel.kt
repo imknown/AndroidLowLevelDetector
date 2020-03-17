@@ -201,7 +201,7 @@ class OthersViewModel : BaseListViewModel() {
         )
     }
 
-    private suspend fun getProp(tempModels: ArrayList<MyModel>) {
+    private fun getProp(tempModels: ArrayList<MyModel>) {
         val rawBuildProp = MyApplication.sharedPreferences.getBoolean(
             MyApplication.getMyString(R.string.function_raw_build_prop_key), false
         )
@@ -211,7 +211,7 @@ class OthersViewModel : BaseListViewModel() {
         }
 
         var temp = ""
-        shAsync(CMD_GETPROP).await().forEach {
+        sh(CMD_GETPROP).forEach {
             if (it.startsWith("[") && it.endsWith("]")) {
                 addRawProp(tempModels, it)
             } else {

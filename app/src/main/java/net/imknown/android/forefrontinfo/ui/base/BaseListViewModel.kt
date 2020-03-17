@@ -2,6 +2,8 @@ package net.imknown.android.forefrontinfo.ui.base
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import androidx.annotation.MainThread
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -100,13 +102,19 @@ abstract class BaseListViewModel : BaseViewModel(), IAndroidVersion {
 //        ).invoke(null, key, value)
 //    }
 
+    @WorkerThread
+    protected fun sh(cmd: String, condition: Boolean = true): List<String> {
+        return if (condition) {
+            Shell.sh(cmd).exec().out
+        } else {
+            emptyList()
+        }
+    }
+
+    @MainThread
     protected fun shAsync(cmd: String, condition: Boolean = true): Deferred<List<String>> {
         return viewModelScope.async(Dispatchers.IO) {
-            if (condition) {
-                Shell.sh(cmd).exec().out
-            } else {
-                emptyList()
-            }
+            sh(cmd, condition)
         }
     }
 }

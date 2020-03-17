@@ -540,9 +540,8 @@ class HomeViewModel : BaseListViewModel() {
         )
     }
 
-    private suspend fun detectGsiCompatibility(tempModels: ArrayList<MyModel>) {
-        val gsiCompatibilityResult =
-            shAsync(CMD_VENDOR_NAMESPACE_DEFAULT_ISOLATED, isAtLeastAndroid9()).await()
+    private fun detectGsiCompatibility(tempModels: ArrayList<MyModel>) {
+        val gsiCompatibilityResult = sh(CMD_VENDOR_NAMESPACE_DEFAULT_ISOLATED, isAtLeastAndroid9())
         var isCompatible = false
         val result = if (hasResult(gsiCompatibilityResult)) {
             val lineResult = gsiCompatibilityResult[0].split('=')
@@ -604,15 +603,14 @@ class HomeViewModel : BaseListViewModel() {
         )
     }
 
-    private suspend fun detectSar(tempModels: ArrayList<MyModel>) {
+    private fun detectSar(tempModels: ArrayList<MyModel>) {
         val hasSystemRootImage =
             getStringProperty(PROP_SYSTEM_ROOT_IMAGE, isAtLeastAndroid9()).toBoolean()
 
-        val mountDevRootResult = shAsync(CMD_MOUNT_DEV_ROOT, isAtLeastAndroid9()).await()
+        val mountDevRootResult = sh(CMD_MOUNT_DEV_ROOT, isAtLeastAndroid9())
         val hasMountDevRoot = hasResult(mountDevRootResult)
 
-        val mountSystemResult =
-            shAsync(CMD_MOUNT_SYSTEM, isAtLeastAndroid9() && !hasSystemRootImage).await()
+        val mountSystemResult = sh(CMD_MOUNT_SYSTEM, isAtLeastAndroid9() && !hasSystemRootImage)
         val hasMountSystem = hasResult(mountSystemResult)
 
         val isSar =
@@ -625,11 +623,10 @@ class HomeViewModel : BaseListViewModel() {
         )
     }
 
-    private suspend fun detectApex(tempModels: ArrayList<MyModel>) {
+    private fun detectApex(tempModels: ArrayList<MyModel>) {
         val apexUpdatable = getStringProperty(PROP_APEX_UPDATABLE, isAtLeastAndroid10()).toBoolean()
 
-        val flattenedApexMountedResult =
-            shAsync(CMD_FLATTENED_APEX_MOUNT, isAtLeastAndroid10()).await()
+        val flattenedApexMountedResult = sh(CMD_FLATTENED_APEX_MOUNT, isAtLeastAndroid10())
         val isFlattenedApexMounted = hasResult(flattenedApexMountedResult)
 
         val isApex = apexUpdatable || isFlattenedApexMounted
@@ -722,8 +719,9 @@ class HomeViewModel : BaseListViewModel() {
             color
         )
     }
-    private suspend fun detectToybox(tempModels: ArrayList<MyModel>, lld: Lld) {
-        val toyboxVersionResult = shAsync(CMD_TOYBOX_VERSION, isAtLeastAndroid6()).await()
+
+    private fun detectToybox(tempModels: ArrayList<MyModel>, lld: Lld) {
+        val toyboxVersionResult = sh(CMD_TOYBOX_VERSION, isAtLeastAndroid6())
         val hasToyboxVersion = hasResult(toyboxVersionResult)
 
         val toyboxVersion = if (hasToyboxVersion) {
