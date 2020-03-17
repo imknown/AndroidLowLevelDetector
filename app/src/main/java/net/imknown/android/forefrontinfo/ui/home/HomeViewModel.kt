@@ -1,5 +1,6 @@
 package net.imknown.android.forefrontinfo.ui.home
 
+import android.annotation.SuppressLint
 import android.app.admin.DevicePolicyManager
 import android.content.Context
 import android.content.pm.ApplicationInfo
@@ -99,6 +100,10 @@ class HomeViewModel : BaseListViewModel() {
         // https://source.android.com/security/encryption/full-disk
         // https://source.android.com/security/encryption/file-based
         // private const val PROP_CRYPTO_STATE = "ro.crypto.state"
+
+        // https://source.android.com/security/selinux/validate
+        // https://cs.android.com/android/platform/superproject/+/master:external/selinux/libselinux/src/getenforce.c
+        // https://cs.android.com/android/platform/superproject/+/master:external/selinux/libselinux/src/policy.h
 
         private const val CMD_TOYBOX_VERSION = "toybox --version"
 
@@ -252,6 +257,8 @@ class HomeViewModel : BaseListViewModel() {
         detectAdb(tempModels)
 
         detectEncryption(tempModels)
+
+        detectSELinux(tempModels)
 
         detectToybox(tempModels, lld)
 
@@ -722,6 +729,30 @@ class HomeViewModel : BaseListViewModel() {
             MyApplication.getMyString(R.string.encryption_status_title),
             MyApplication.getMyString(result),
             color
+        )
+    }
+
+    @SuppressLint("DiscouragedPrivateApi", "PrivateApi")
+    private fun detectSELinux(tempModels: ArrayList<MyModel>) {
+        val isSELinuxEnabled = Class.forName("android.os.SELinux")
+            .getDeclaredMethod("isSELinuxEnabled")
+            .invoke(null) as Boolean
+
+        // Why always return 'false'?
+//        val isSELinuxEnforced = Class.forName("android.os.SELinux")
+//            .getDeclaredMethod("isSELinuxEnforced")
+//            .invoke(null) as Boolean
+
+        val seLinuxStatus = sh("cat /sys/fs/selinux/enforce")
+        val seLinuxPolicyVersion = sh("cat /sys/fs/selinux/policyvers")
+
+        add(
+            tempModels,
+            MyApplication.getMyString(R.string.encryption_status_title),
+            "isSELinuxEnabled: $isSELinuxEnabled\n" +
+                    "seLinuxStatus: $seLinuxStatus\n" +
+                    "seLinuxPolicyVersion: $seLinuxPolicyVersion",
+            isSELinuxEnabled
         )
     }
 

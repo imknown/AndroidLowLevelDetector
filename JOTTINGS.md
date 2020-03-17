@@ -53,7 +53,12 @@ adb shell getprop ro.boot.vbmeta.avb_version # required (lib)avb version
 adb shell getprop ro.boot.vbmeta.device_state
 
 adb shell getprop ro.build.selinux
+adb shell getprop ro.boot.selinux
 adb shell getprop ro.secure # Secure boot
+adb shell getprop ro.debuggable
+# * eng builds: ro.secure=0 and ro.debuggable=1
+# * userdebug builds: ro.secure=1 and ro.debuggable=1
+# * user builds: ro.secure=1 and ro.debuggable=0
 ```
 
 ## Settings
