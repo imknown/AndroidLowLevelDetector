@@ -41,7 +41,7 @@ class MyDebugApplication : MyApplication(), IAndroidVersion {
                 .penaltyDropBox()
                 .penaltyDialog()
                 .penaltyFlashScreen()
-                .penaltyDeath()
+//                .penaltyDeath()
                 .build()
         )
 
@@ -72,7 +72,7 @@ class MyDebugApplication : MyApplication(), IAndroidVersion {
                     }
                 }
                 .penaltyLog()
-                .penaltyDeath()
+//                .penaltyDeath()
                 .penaltyDropBox()
                 .build()
         )
