@@ -47,7 +47,7 @@ class MyDebugApplication : MyApplication(), IAndroidVersion {
 
         StrictMode.setVmPolicy(
             StrictMode.VmPolicy.Builder()
-//                .detectActivityLeaks()
+                .detectActivityLeaks()
                 .detectFileUriExposure()
                 .detectLeakedClosableObjects()
                 .detectLeakedRegistrationObjects()
@@ -59,12 +59,12 @@ class MyDebugApplication : MyApplication(), IAndroidVersion {
                 }.also {
                     if (isAtLeastAndroid8()) {
                         it.detectContentUriWithoutPermission()
-//                        it.detectUntaggedSockets()
+                        it.detectUntaggedSockets()
                     }
-//                }.also {
-//                    if (isAtLeastAndroid9()) {
-//                        it.detectNonSdkApiUsage()
-//                    }
+                }.also {
+                    if (isAtLeastAndroid9()) {
+                        it.detectNonSdkApiUsage()
+                    }
                 }.also {
                     if (isAtLeastAndroid10()) {
                         it.detectImplicitDirectBoot()
