@@ -42,6 +42,8 @@
     <string name="linux_title">Linux version</string>
     <string name="linux_version_detail">Mine: %1$s\n\nLatest support: %2$s\nMainline: %3$s</string>
 
+    <string name="selinux_status">SELinux status</string>
+
     <string name="ab_seamless_update_status_title">A/B seamless update status</string>
     <string name="current_using_ab_slot_result">\u0020(Current using slot: %s)</string>
 

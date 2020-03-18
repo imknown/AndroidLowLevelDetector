@@ -239,6 +239,8 @@ class HomeViewModel : BaseListViewModel() {
 
         detectKernel(tempModels, lld)
 
+        detectSELinux(tempModels)
+
         detectAb(tempModels)
 
         detectDynamicPartitions(tempModels)
@@ -262,8 +264,6 @@ class HomeViewModel : BaseListViewModel() {
         detectAdbAuthentication(tempModels)
 
         detectEncryption(tempModels)
-
-        detectSELinux(tempModels)
 
         detectToybox(tempModels, lld)
 
@@ -477,6 +477,30 @@ class HomeViewModel : BaseListViewModel() {
                 lld.linux.mainline.version
             ),
             linuxColor
+        )
+    }
+
+    @SuppressLint("DiscouragedPrivateApi", "PrivateApi")
+    private fun detectSELinux(tempModels: ArrayList<MyModel>) {
+        val isSELinuxEnabled = Class.forName("android.os.SELinux")
+            .getDeclaredMethod("isSELinuxEnabled")
+            .invoke(null) as Boolean
+
+        val isSELinuxEnforced = Class.forName("android.os.SELinux")
+            .getDeclaredMethod("isSELinuxEnforced")
+            .invoke(null) as Boolean
+
+        val seLinuxStatus = sh("cat /sys/fs/selinux/enforce")
+        val seLinuxPolicyVersion = sh("cat /sys/fs/selinux/policyvers")
+
+        add(
+            tempModels,
+            MyApplication.getMyString(R.string.selinux_status),
+            "isSELinuxEnabled: $isSELinuxEnabled\n" +
+                    "isSELinuxEnforced: $isSELinuxEnforced\n" +
+                    "seLinuxStatus: $seLinuxStatus\n" +
+                    "seLinuxPolicyVersion: $seLinuxPolicyVersion",
+            isSELinuxEnabled
         )
     }
 
@@ -745,30 +769,6 @@ class HomeViewModel : BaseListViewModel() {
             MyApplication.getMyString(R.string.encryption_status_title),
             MyApplication.getMyString(result),
             color
-        )
-    }
-
-    @SuppressLint("DiscouragedPrivateApi", "PrivateApi")
-    private fun detectSELinux(tempModels: ArrayList<MyModel>) {
-        val isSELinuxEnabled = Class.forName("android.os.SELinux")
-            .getDeclaredMethod("isSELinuxEnabled")
-            .invoke(null) as Boolean
-
-        // Why always return 'false'?
-//        val isSELinuxEnforced = Class.forName("android.os.SELinux")
-//            .getDeclaredMethod("isSELinuxEnforced")
-//            .invoke(null) as Boolean
-
-        val seLinuxStatus = sh("cat /sys/fs/selinux/enforce")
-        val seLinuxPolicyVersion = sh("cat /sys/fs/selinux/policyvers")
-
-        add(
-            tempModels,
-            MyApplication.getMyString(R.string.encryption_status_title),
-            "isSELinuxEnabled: $isSELinuxEnabled\n" +
-                    "seLinuxStatus: $seLinuxStatus\n" +
-                    "seLinuxPolicyVersion: $seLinuxPolicyVersion",
-            isSELinuxEnabled
         )
     }
 

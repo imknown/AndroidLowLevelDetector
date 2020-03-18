@@ -42,6 +42,8 @@
     <string name="linux_title">Linux 版本</string>
     <string name="linux_version_detail">我的: %1$s\n\n最新支持: %2$s\nMainline: %3$s</string>
 
+    <string name="selinux_status">SELinux 状态</string>
+
     <string name="ab_seamless_update_status_title">A/B 无缝升级 状态</string>
     <string name="current_using_ab_slot_result">\u0020(当前使用的槽位: %s)</string>
 
