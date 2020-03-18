@@ -66,7 +66,7 @@
 
     <string name="developer_options_status_title">Statut des options pour de développeurs</string>
 
-    <string name="adb_status_title">Status ADB</string>
+    <string name="adb_debugging_status_title">Statut de débogage ADB</string>
 
     <string name="adb_authentication_status_title">Statut d\'authentification ADB</string>
 

@@ -66,7 +66,7 @@
 
     <string name="developer_options_status_title">开发者选项 状态</string>
 
-    <string name="adb_status_title">ADB 状态</string>
+    <string name="adb_debugging_status_title">ADB 调试 状态</string>
 
     <string name="adb_authentication_status_title">ADB 验证 状态</string>
 

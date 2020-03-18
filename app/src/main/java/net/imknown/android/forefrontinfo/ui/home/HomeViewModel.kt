@@ -668,7 +668,7 @@ class HomeViewModel : BaseListViewModel() {
     }
 
     private fun detectDeveloperOptions(tempModels: ArrayList<MyModel>) {
-        val developerOptionsDisabled = Settings.Global.getInt(
+        val isDeveloperOptionsDisabled = Settings.Global.getInt(
             MyApplication.instance.contentResolver,
             Settings.Global.DEVELOPMENT_SETTINGS_ENABLED,
             SETTINGS_DISABLED
@@ -677,13 +677,13 @@ class HomeViewModel : BaseListViewModel() {
         add(
             tempModels,
             MyApplication.getMyString(R.string.developer_options_status_title),
-            translateDisabled(developerOptionsDisabled),
-            developerOptionsDisabled
+            translateDisabled(isDeveloperOptionsDisabled),
+            isDeveloperOptionsDisabled
         )
     }
 
     private fun detectAdb(tempModels: ArrayList<MyModel>) {
-        val adbDisabled = Settings.Global.getInt(
+        val isAdbDebuggingDisabled = Settings.Global.getInt(
             MyApplication.instance.contentResolver,
             Settings.Global.ADB_ENABLED,
             SETTINGS_DISABLED
@@ -691,9 +691,9 @@ class HomeViewModel : BaseListViewModel() {
 
         add(
             tempModels,
-            MyApplication.getMyString(R.string.adb_status_title),
-            translateDisabled(adbDisabled),
-            adbDisabled
+            MyApplication.getMyString(R.string.adb_debugging_status_title),
+            translateDisabled(isAdbDebuggingDisabled),
+            isAdbDebuggingDisabled
         )
     }
 
