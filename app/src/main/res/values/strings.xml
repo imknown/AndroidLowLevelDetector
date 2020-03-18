@@ -68,6 +68,8 @@
 
     <string name="adb_status_title">ADB status</string>
 
+    <string name="adb_authentication_status_title">ADB authentication status</string>
+
     <string name="encryption_status_title">Encryption status</string>
     <string name="result_encrypted">Encrypted</string>
     <string name="result_encrypted_no_key_set">Encrypted but password not been set</string>

@@ -97,6 +97,9 @@ class HomeViewModel : BaseListViewModel() {
 
         private const val SETTINGS_DISABLED = 0
 
+        // https://cs.android.com/android/platform/superproject/+/master:bootable/recovery/README.md;l=139
+        private const val PROP_ADB_SECURE = "ro.adb.secure"
+
         // https://source.android.com/security/encryption/full-disk
         // https://source.android.com/security/encryption/file-based
         // private const val PROP_CRYPTO_STATE = "ro.crypto.state"
@@ -255,6 +258,8 @@ class HomeViewModel : BaseListViewModel() {
         detectDeveloperOptions(tempModels)
 
         detectAdb(tempModels)
+
+        detectAdbAuthentication(tempModels)
 
         detectEncryption(tempModels)
 
@@ -692,6 +697,17 @@ class HomeViewModel : BaseListViewModel() {
         )
     }
 
+    private fun detectAdbAuthentication(tempModels: ArrayList<MyModel>) {
+        val isAdbAuthenticationEnabled = getStringProperty(PROP_ADB_SECURE).toBoolean()
+
+        add(
+            tempModels,
+            MyApplication.getMyString(R.string.adb_authentication_status_title),
+            translateEnabled(isAdbAuthenticationEnabled),
+            isAdbAuthenticationEnabled
+        )
+    }
+
     private fun detectEncryption(tempModels: ArrayList<MyModel>) {
         // val cryptoState = getStringProperty(PROP_CRYPTO_STATE)
         val devicePolicyManager =
@@ -934,6 +950,8 @@ class HomeViewModel : BaseListViewModel() {
             R.string.result_not_supported
         }
     )
+
+    private fun translateEnabled(condition: Boolean) = translateDisabled(!condition)
 
     private fun translateDisabled(condition: Boolean) = MyApplication.getMyString(
         if (condition) {

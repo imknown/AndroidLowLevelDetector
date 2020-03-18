@@ -68,6 +68,8 @@
 
     <string name="adb_status_title">Status ADB</string>
 
+    <string name="adb_authentication_status_title">Statut d\'authentification ADB</string>
+
     <string name="encryption_status_title">Statut de chiffrement</string>
     <string name="result_encrypted">Crypté</string>
     <string name="result_encrypted_no_key_set">Chiffré mais le mot de passe n\'a pas été défini</string>
