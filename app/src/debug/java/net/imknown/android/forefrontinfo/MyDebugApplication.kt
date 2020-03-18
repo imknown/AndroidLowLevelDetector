@@ -61,10 +61,10 @@ class MyDebugApplication : MyApplication(), IAndroidVersion {
                         it.detectContentUriWithoutPermission()
                         it.detectUntaggedSockets()
                     }
-                }.also {
-                    if (isAtLeastAndroid9()) {
-                        it.detectNonSdkApiUsage()
-                    }
+//                }.also {
+//                    if (isAtLeastAndroid9()) {
+//                        it.detectNonSdkApiUsage()
+//                    }
                 }.also {
                     if (isAtLeastAndroid10()) {
                         it.detectImplicitDirectBoot()
