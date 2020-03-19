@@ -32,6 +32,8 @@ class OthersViewModel : BaseListViewModel() {
         private const val ERRNO_PERMISSION_DENIED = 13
         private const val BINDER32_PROTOCOL_VERSION = 7
         private const val BINDER64_PROTOCOL_VERSION = 8
+
+        private const val PROP_PREVIEW_SDK_FINGERPRINT = "ro.build.version.preview_sdk_fingerprint"
     }
 
     private val _rawProp by lazy {
@@ -163,6 +165,15 @@ class OthersViewModel : BaseListViewModel() {
                 tempModels,
                 MyApplication.getMyString(R.string.build_stock_fingerprint),
                 Build.FINGERPRINT
+            )
+        }
+
+        if (isAtLeastAndroid6()) {
+            add(
+                tempModels,
+                MyApplication.getMyString(R.string.build_stock_preview_fingerprint),
+                // Build.VERSION.PREVIEW_SDK_FINGERPRINT
+                getStringProperty(PROP_PREVIEW_SDK_FINGERPRINT)
             )
         }
     }

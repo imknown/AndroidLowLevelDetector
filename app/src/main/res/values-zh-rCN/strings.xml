@@ -128,6 +128,7 @@
     <string name="build_base_os">基于的系统 (二次开发)</string>
     <string name="build_certain_fingerprint">%s 指纹</string>
     <string name="build_stock_fingerprint">原机系统 指纹</string>
+    <string name="build_stock_preview_fingerprint">原机系统 预览 指纹</string>
     <string name="build_display">Android 展示 id</string>
     <string name="build_incremental">Android Git 提交的 Hash</string>
     <string name="build_type">ROM 构建类型</string>
