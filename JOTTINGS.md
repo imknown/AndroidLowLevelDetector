@@ -96,5 +96,10 @@ adb shell getprop ro.boot.selinux
 - root: `/sys/fc/selinux/policyvers`
 - 8+: `/etc/selinux/plat_sepolicy_vers.txt`
 
+https://source.android.com/security/selinux
+https://github.com/torvalds/linux/blob/master/security/selinux/include/security.h
+https://cs.android.com/search?q=SEPOL_POLICY_KERN
+https://cs.android.com/search?q=POLICYDB_VERSION_MAX
+https://cs.android.com/search?q=VERSION_MAX
 https://android.googlesource.com/platform/system/sepolicy/+/refs/heads/master/Android.bp#15
 https://android.googlesource.com/platform/system/sepolicy/+/refs/heads/master/policy_version.mk#4
