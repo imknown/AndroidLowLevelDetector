@@ -15,19 +15,23 @@ interface IAndroidVersion {
     fun isAtLeastAndroid9() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
     fun isAtLeastAndroid10() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
 
-    fun isStableAndroid10() =
-        Build.VERSION.SDK_INT == Build.VERSION_CODES.Q && Build.VERSION.CODENAME == CODENAME_RELEASE
+    private fun isStableAndroid() = Build.VERSION.CODENAME == CODENAME_RELEASE
+
+    private fun isPreviewAndroid() = !isStableAndroid()
+
+    fun isStableAndroid10() = isStableAndroid()
+            && Build.VERSION.SDK_INT == Build.VERSION_CODES.Q
 
     @SuppressLint("ObsoleteSdkInt")
-    fun isLatestStableAndroid(lld: Lld) =
-        Build.VERSION.SDK_INT >= lld.android.stable.api.toInt()
+    fun isLatestStableAndroid(lld: Lld) = isStableAndroid()
+            && Build.VERSION.SDK_INT >= lld.android.stable.api.toInt()
 
-    fun isLatestPreviewAndroid(lld: Lld) =
-        Build.VERSION.RELEASE >= lld.android.preview.name
+    fun isLatestPreviewAndroid(lld: Lld) = isPreviewAndroid()
+            && Build.VERSION.RELEASE >= lld.android.preview.name
 
     @SuppressLint("ObsoleteSdkInt")
-    fun isSupportedByUpstreamAndroid(lld: Lld) =
-        Build.VERSION.SDK_INT >= lld.android.support.api.toInt()
+    fun isSupportedByUpstreamAndroid(lld: Lld) = isStableAndroid()
+            && Build.VERSION.SDK_INT >= lld.android.support.api.toInt()
 
     // https://github.com/square/leakcanary/issues/1594
     // https://issuetracker.google.com/issues/139738913
