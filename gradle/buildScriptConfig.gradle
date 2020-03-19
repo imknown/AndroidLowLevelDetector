@@ -1,7 +1,7 @@
 ext {
     androidBuild = [
             // https://r8.googlesource.com/r8/+refs
-            r8                       : '2.0.50',
+            r8                       : '2.0.52',
 
             androidStudioGradlePlugin: '3.6.1',
 
