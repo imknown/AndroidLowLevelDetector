@@ -54,14 +54,4 @@ class MainActivity : AppCompatActivity(), IAndroidVersion {
 
         mainViewModel.restoreInstanceState(savedInstanceState)
     }
-
-    override fun onBackPressed() {
-        // Finish now, so no need to use async.
-
-        if (is10Leak()) {
-            finishAfterTransition()
-        } else {
-            super.onBackPressed()
-        }
-    }
 }

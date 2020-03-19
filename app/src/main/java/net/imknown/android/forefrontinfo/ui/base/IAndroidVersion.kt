@@ -32,10 +32,4 @@ interface IAndroidVersion {
     @SuppressLint("ObsoleteSdkInt")
     fun isSupportedByUpstreamAndroid(lld: Lld) = isStableAndroid()
             && Build.VERSION.SDK_INT >= lld.android.support.api.toInt()
-
-    // https://github.com/square/leakcanary/issues/1594
-    // https://issuetracker.google.com/issues/139738913
-    // https://github.com/pytorch/cpuinfo/blob/master/test/build.prop/huawei-p9-lite.log
-    fun is10Leak() = isStableAndroid10()
-            && (Build.ID.split('.').size < 2 || Build.ID.split('.')[1] < "191205")
 }
