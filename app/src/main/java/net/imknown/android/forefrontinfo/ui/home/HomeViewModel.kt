@@ -33,18 +33,10 @@ import net.imknown.android.forefrontinfo.ui.home.model.Subtitle
 class HomeViewModel : BaseListViewModel() {
 
     companion object {
-        private val BUILD_VERSION_RELEASE = Build.VERSION.RELEASE
-        private val BUILD_VERSION_SDK_INT = Build.VERSION.SDK_INT
-
-        private val BUILD_RO_BUILD_ID = Build.ID
         private const val PROP_RO_SYSTEM_BUILD_ID = "ro.system.build.id"
         private const val PROP_RO_VENDOR_BUILD_ID = "ro.vendor.build.id"
         private const val PROP_RO_ODM_BUILD_ID = "ro.odm.build.id"
 
-        private val BUILD_VERSION_SECURITY_PATCH by lazy {
-            // Suppress because of lazy already
-            @Suppress Build.VERSION.SECURITY_PATCH
-        }
         private const val PROP_SECURITY_PATCH = "ro.build.version.security_patch"
 
         private const val PROP_VENDOR_SECURITY_PATCH = "ro.vendor.build.security_patch"
@@ -221,7 +213,7 @@ class HomeViewModel : BaseListViewModel() {
         detectBuildId(tempModels, lld)
 
         var securityPatch = if (isAtLeastAndroid6()) {
-            BUILD_VERSION_SECURITY_PATCH
+            Build.VERSION.SECURITY_PATCH
         } else {
             getStringProperty(PROP_SECURITY_PATCH)
         }
@@ -296,8 +288,8 @@ class HomeViewModel : BaseListViewModel() {
                 R.string.android_info_detail,
                 MyApplication.getMyString(
                     R.string.android_info,
-                    BUILD_VERSION_RELEASE,
-                    BUILD_VERSION_SDK_INT
+                    Build.VERSION.RELEASE,
+                    Build.VERSION.SDK_INT
                 ),
                 MyApplication.getMyString(
                     R.string.android_info,
@@ -321,7 +313,7 @@ class HomeViewModel : BaseListViewModel() {
     }
 
     private fun detectBuildId(tempModels: ArrayList<MyModel>, lld: Lld) {
-        val buildIdResult = BUILD_RO_BUILD_ID
+        val buildIdResult = Build.ID
         val systemBuildIdResult = getStringProperty(PROP_RO_SYSTEM_BUILD_ID, isAtLeastAndroid9())
         val vendorBuildIdResult = getStringProperty(PROP_RO_VENDOR_BUILD_ID, isAtLeastAndroid9())
         val odmBuildIdResult = getStringProperty(PROP_RO_ODM_BUILD_ID, isAtLeastAndroid9())
@@ -893,7 +885,7 @@ class HomeViewModel : BaseListViewModel() {
         var result = firstApiLevelLine
 
         val outdatedSystemApkList = systemApkList.filter {
-            it.targetSdkVersion < BUILD_VERSION_SDK_INT
+            it.targetSdkVersion < Build.VERSION.SDK_INT
         }
 
         outdatedSystemApkList.forEachIndexed { index, applicationInfo ->
