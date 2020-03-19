@@ -3,7 +3,8 @@
 ## Data collections
 
 - No user personal privacy data will be collected on user's phone
-- Google Play will collect some data for statistics if you install this app from Google Play
+- Google Play will collect some data for statistics when your device is running Google Play Service  
+  and Google Firebase will also collect some data for statistics when this app crashes or ANR
   - These data are not requested by me forwardly
   - I can see the backend report on the Google Play Console
   - I will not share these data to any other people
