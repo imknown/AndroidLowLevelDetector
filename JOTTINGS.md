@@ -87,16 +87,14 @@ busybox (https://busybox.net/downloads/binaries/)
 ## selinux
 
 ``` sh
-adb shell getenforce
+# adb shell getenforce # root
 
 adb shell getprop ro.build.selinux
 adb shell getprop ro.boot.selinux
 ```
 
-- root: `/sys/fc/selinux/policyvers`
-- 8+: `/etc/selinux/plat_sepolicy_vers.txt`
-
 /system/etc/selinux/plat_property_contexts
+/vendor/etc/selinux/plat_sepolicy_vers.txt
 /vendor/etc/selinux/plat_property_contexts
 https://cs.android.com/android/platform/superproject/+/master:test/vts-testcase/security/system_property/VtsTrebleSysPropTest.py
 https://cs.android.com/android/platform/superproject/+/master:build/make/core/Makefile;l=1862
