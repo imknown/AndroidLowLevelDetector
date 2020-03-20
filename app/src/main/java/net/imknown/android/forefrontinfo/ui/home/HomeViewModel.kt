@@ -99,6 +99,9 @@ class HomeViewModel : BaseListViewModel() {
         // https://source.android.com/security/selinux/validate
         // https://cs.android.com/android/platform/superproject/+/master:external/selinux/libselinux/src/getenforce.c
         // https://cs.android.com/android/platform/superproject/+/master:external/selinux/libselinux/src/policy.h
+        private const val SELINUX_MOUNT = "/sys/fs/selinux"
+        private const val CMD_SELINUX_STATUS = "cat $SELINUX_MOUNT/enforce"
+        private const val CMD_SELINUX_POLICY_VERSION = "cat $SELINUX_MOUNT/policyvers"
 
         private const val CMD_TOYBOX_VERSION = "toybox --version"
 
@@ -474,16 +477,16 @@ class HomeViewModel : BaseListViewModel() {
 
     @SuppressLint("DiscouragedPrivateApi", "PrivateApi")
     private fun detectSELinux(tempModels: ArrayList<MyModel>) {
-        val isSELinuxEnabled = Class.forName("android.os.SELinux")
+        val seLinuxClassName = "android.os.SELinux"
+        val isSELinuxEnabled = Class.forName(seLinuxClassName)
             .getDeclaredMethod("isSELinuxEnabled")
             .invoke(null) as Boolean
-
-        val isSELinuxEnforced = Class.forName("android.os.SELinux")
+        val isSELinuxEnforced = Class.forName(seLinuxClassName)
             .getDeclaredMethod("isSELinuxEnforced")
             .invoke(null) as Boolean
 
-        val seLinuxStatus = sh("cat /sys/fs/selinux/enforce")
-        val seLinuxPolicyVersion = sh("cat /sys/fs/selinux/policyvers")
+        val seLinuxStatus = sh(CMD_SELINUX_STATUS)
+        val seLinuxPolicyVersion = sh(CMD_SELINUX_POLICY_VERSION)
 
         add(
             tempModels,

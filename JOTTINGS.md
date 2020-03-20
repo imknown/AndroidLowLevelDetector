@@ -96,6 +96,14 @@ adb shell getprop ro.boot.selinux
 - root: `/sys/fc/selinux/policyvers`
 - 8+: `/etc/selinux/plat_sepolicy_vers.txt`
 
+/system/etc/selinux/plat_property_contexts
+/vendor/etc/selinux/plat_property_contexts
+https://cs.android.com/android/platform/superproject/+/master:test/vts-testcase/security/system_property/VtsTrebleSysPropTest.py
+https://cs.android.com/android/platform/superproject/+/master:build/make/core/Makefile;l=1862
+https://cs.android.com/android/platform/superproject/+/master:system/sepolicy/private/property_contexts
+https://cs.android.com/android/platform/superproject/+/master:system/sepolicy/prebuilts/api/29.0/private/file_contexts
+https://cs.android.com/android/platform/superproject/+/master:art/tools/buildbot-setup-device.sh;l=133
+
 https://source.android.com/security/selinux
 https://github.com/torvalds/linux/blob/master/security/selinux/include/security.h
 https://cs.android.com/search?q=SEPOL_POLICY_KERN
