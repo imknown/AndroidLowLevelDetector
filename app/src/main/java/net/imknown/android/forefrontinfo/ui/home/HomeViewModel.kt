@@ -500,7 +500,7 @@ class HomeViewModel : BaseListViewModel() {
     }
 
     private fun detectAb(tempModels: ArrayList<MyModel>) {
-        // val bootPartitions = sh(CMD_BOOT_PARTITION)[0]
+        // val bootPartitions = sh(CMD_BOOT_PARTITION).output[0]
 
         val isAbUpdateSupported = getStringProperty(PROP_AB_UPDATE, isAtLeastAndroid7()).toBoolean()
         var abUpdateSupportedArgs = translate(isAbUpdateSupported)
@@ -579,8 +579,8 @@ class HomeViewModel : BaseListViewModel() {
         val gsiCompatibilityResult = sh(CMD_VENDOR_NAMESPACE_DEFAULT_ISOLATED, isAtLeastAndroid9())
         var isCompatible = false
         val result = if (hasResult(gsiCompatibilityResult)) {
-            val lineResult = gsiCompatibilityResult[0].split('=')
-            isCompatible = hasResult(lineResult) && lineResult[1].trim().toBoolean()
+            val lineResult = gsiCompatibilityResult.output[0].split('=')
+            isCompatible = lineResult.isNotEmpty() && lineResult[1].trim().toBoolean()
             if (isCompatible) {
                 MyApplication.getMyString(R.string.result_compliant)
             } else {
@@ -772,7 +772,7 @@ class HomeViewModel : BaseListViewModel() {
         val hasToyboxVersion = hasResult(toyboxVersionResult)
 
         val toyboxVersion = if (hasToyboxVersion) {
-            toyboxVersionResult[0]
+            toyboxVersionResult.output[0]
         } else {
             translate(false)
         }
@@ -936,7 +936,8 @@ class HomeViewModel : BaseListViewModel() {
                 && result != MyApplication.getMyString(R.string.result_not_supported)
                 && result != MyApplication.getMyString(R.string.build_not_filled)
 
-    private fun hasResult(result: List<String>) = result.isNotEmpty() && result[0].isNotEmpty()
+    private fun hasResult(result: MyShellResult) =
+        result.isSuccess && result.output[0].isNotEmpty()
 
     private fun translate(condition: Boolean) = MyApplication.getMyString(
         if (condition) {

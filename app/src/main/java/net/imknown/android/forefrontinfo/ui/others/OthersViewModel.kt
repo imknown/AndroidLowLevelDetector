@@ -222,7 +222,7 @@ class OthersViewModel : BaseListViewModel() {
         }
 
         var temp = ""
-        sh(CMD_GETPROP).forEach {
+        sh(CMD_GETPROP).output.forEach {
             if (it.startsWith("[") && it.endsWith("]")) {
                 addRawProp(tempModels, it)
             } else {

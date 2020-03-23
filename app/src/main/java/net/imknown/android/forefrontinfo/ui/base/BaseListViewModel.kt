@@ -102,17 +102,23 @@ abstract class BaseListViewModel : BaseViewModel(), IAndroidVersion {
 //        ).invoke(null, key, value)
 //    }
 
+    protected data class MyShellResult(
+        val output: List<String>,
+        val isSuccess: Boolean
+    )
+
     @WorkerThread
-    protected fun sh(cmd: String, condition: Boolean = true): List<String> {
+    protected fun sh(cmd: String, condition: Boolean = true): MyShellResult {
         return if (condition) {
-            Shell.sh(cmd).exec().out
+            val result = Shell.sh(cmd).exec()
+            MyShellResult(result.out, result.isSuccess)
         } else {
-            emptyList()
+            MyShellResult(emptyList(), false)
         }
     }
 
     @MainThread
-    protected fun shAsync(cmd: String, condition: Boolean = true): Deferred<List<String>> {
+    protected fun shAsync(cmd: String, condition: Boolean = true): Deferred<MyShellResult> {
         return viewModelScope.async(Dispatchers.IO) {
             sh(cmd, condition)
         }
