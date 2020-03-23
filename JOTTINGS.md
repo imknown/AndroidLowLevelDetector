@@ -83,29 +83,3 @@ adb shell settings list secure
 ## busybox
 
 busybox (https://busybox.net/downloads/binaries/)
-
-## selinux
-
-``` sh
-# adb shell getenforce # root
-
-adb shell getprop ro.build.selinux
-adb shell getprop ro.boot.selinux
-```
-
-/system/etc/selinux/plat_property_contexts
-/vendor/etc/selinux/plat_sepolicy_vers.txt
-/vendor/etc/selinux/plat_property_contexts
-https://cs.android.com/android/platform/superproject/+/master:test/vts-testcase/security/system_property/VtsTrebleSysPropTest.py
-https://cs.android.com/android/platform/superproject/+/master:build/make/core/Makefile;l=1862
-https://cs.android.com/android/platform/superproject/+/master:system/sepolicy/private/property_contexts
-https://cs.android.com/android/platform/superproject/+/master:system/sepolicy/prebuilts/api/29.0/private/file_contexts
-https://cs.android.com/android/platform/superproject/+/master:art/tools/buildbot-setup-device.sh;l=133
-
-https://source.android.com/security/selinux
-https://github.com/torvalds/linux/blob/master/security/selinux/include/security.h
-https://cs.android.com/search?q=SEPOL_POLICY_KERN
-https://cs.android.com/search?q=POLICYDB_VERSION_MAX
-https://cs.android.com/search?q=VERSION_MAX
-https://android.googlesource.com/platform/system/sepolicy/+/refs/heads/master/Android.bp#15
-https://android.googlesource.com/platform/system/sepolicy/+/refs/heads/master/policy_version.mk#4

@@ -96,12 +96,20 @@ class HomeViewModel : BaseListViewModel() {
         // https://source.android.com/security/encryption/file-based
         // private const val PROP_CRYPTO_STATE = "ro.crypto.state"
 
-        // https://source.android.com/security/selinux/validate
-        // https://cs.android.com/android/platform/superproject/+/master:external/selinux/libselinux/src/getenforce.c
-        // https://cs.android.com/android/platform/superproject/+/master:external/selinux/libselinux/src/policy.h
+        // https://source.android.com/security/selinux
+        // https://cs.android.com/android/platform/superproject/+/master:external/selinux/libsepol/include/sepol/policydb/policydb.h;l=745
+        // https://github.com/torvalds/linux/blob/master/security/selinux/include/security.h#L43
+        // /* root needed */ private const val CMD_GETENFORCE = "getenforce"
         private const val SELINUX_MOUNT = "/sys/fs/selinux"
         private const val CMD_SELINUX_STATUS = "cat $SELINUX_MOUNT/enforce"
         private const val CMD_SELINUX_POLICY_VERSION = "cat $SELINUX_MOUNT/policyvers"
+        private const val CMD_ERROR_PERMISSION_DENIED = "Permission denied"
+        private const val CMD_ERROR_NO_SUCH_FILE_OR_DIRECTORY = "No such file or directory"
+        private const val PROP_BUILD_SELINUX = "ro.build.selinux"
+        private const val PROP_BOOT_SELINUX = "ro.boot.selinux"
+        private const val SELINUX_STATUS_DISABLE = "disable"
+        private const val SELINUX_STATUS_PERMISSIVE = "permissive"
+        private const val SELINUX_STATUS_ENFORCING = "enforcing"
 
         private const val CMD_TOYBOX_VERSION = "toybox --version"
 
@@ -485,8 +493,21 @@ class HomeViewModel : BaseListViewModel() {
             .getDeclaredMethod("isSELinuxEnforced")
             .invoke(null) as Boolean
 
-        val seLinuxStatus = sh(CMD_SELINUX_STATUS)
-        val seLinuxPolicyVersion = sh(CMD_SELINUX_POLICY_VERSION)
+        val seLinuxStatus = sh(CMD_SELINUX_STATUS, isAtLeastAndroid8())
+        val seLinuxPolicyVersion = sh(CMD_SELINUX_POLICY_VERSION, isAtLeastAndroid8())
+
+//        if (hasResult(seLinuxStatus)) {
+//            // "permissive"
+//        } else {
+//            if (seLinuxStatus.output[0].endsWith(CMD_ERROR_PERMISSION_DENIED)) {
+//                // enforcing
+//            } else {
+//                // permissive
+//            }
+//        }
+
+        val buildSELinuxProp = getStringProperty(PROP_BUILD_SELINUX)
+        val bootSELinuxProp = getStringProperty(PROP_BOOT_SELINUX)
 
         add(
             tempModels,
@@ -494,7 +515,9 @@ class HomeViewModel : BaseListViewModel() {
             "isSELinuxEnabled: $isSELinuxEnabled\n" +
                     "isSELinuxEnforced: $isSELinuxEnforced\n" +
                     "seLinuxStatus: $seLinuxStatus\n" +
-                    "seLinuxPolicyVersion: $seLinuxPolicyVersion",
+                    "seLinuxPolicyVersion: $seLinuxPolicyVersion\n" +
+                    "buildSELinuxProp: $buildSELinuxProp\n" +
+                    "bootSELinuxProp: $bootSELinuxProp",
             isSELinuxEnabled
         )
     }
