@@ -1,6 +1,5 @@
 package net.imknown.android.forefrontinfo.ui.home
 
-import android.annotation.SuppressLint
 import android.app.admin.DevicePolicyManager
 import android.content.Context
 import android.content.pm.ApplicationInfo
@@ -379,7 +378,7 @@ class HomeViewModel : BaseListViewModel() {
     ) {
         val lldSecurityPatch = lld.android.securityPatchLevel
         @ColorRes val securityPatchColor = when {
-            !hasResult(securityPatch) -> R.color.colorCritical
+            !isPropertyValueNotEmpty(securityPatch) -> R.color.colorCritical
             securityPatch >= lldSecurityPatch -> R.color.colorNoProblem
             getSecurityPatchYearMonth(securityPatch) >= getSecurityPatchYearMonth(lldSecurityPatch) -> R.color.colorWaring
             else -> R.color.colorCritical
@@ -601,7 +600,7 @@ class HomeViewModel : BaseListViewModel() {
     private fun detectGsiCompatibility(tempModels: ArrayList<MyModel>) {
         val gsiCompatibilityResult = sh(CMD_VENDOR_NAMESPACE_DEFAULT_ISOLATED, isAtLeastAndroid9())
         var isCompatible = false
-        val result = if (hasResult(gsiCompatibilityResult)) {
+        val result = if (isShellResultSuccessful(gsiCompatibilityResult)) {
             val lineResult = gsiCompatibilityResult.output[0].split('=')
             isCompatible = lineResult.isNotEmpty() && lineResult[1].trim().toBoolean()
             if (isCompatible) {
@@ -623,7 +622,7 @@ class HomeViewModel : BaseListViewModel() {
 
     private fun detectVndk(tempModels: ArrayList<MyModel>, lld: Lld) {
         val vndkVersionResult = getStringProperty(PROP_VNDK_VERSION, isAtLeastAndroid8())
-        val hasVndkVersion = hasResult(vndkVersionResult)
+        val hasVndkVersion = isPropertyValueNotEmpty(vndkVersionResult)
 
         @ColorRes val vndkColor: Int
 
@@ -666,10 +665,10 @@ class HomeViewModel : BaseListViewModel() {
             getStringProperty(PROP_SYSTEM_ROOT_IMAGE, isAtLeastAndroid9()).toBoolean()
 
         val mountDevRootResult = sh(CMD_MOUNT_DEV_ROOT, isAtLeastAndroid9())
-        val hasMountDevRoot = hasResult(mountDevRootResult)
+        val hasMountDevRoot = isShellResultSuccessful(mountDevRootResult)
 
         val mountSystemResult = sh(CMD_MOUNT_SYSTEM, isAtLeastAndroid9() && !hasSystemRootImage)
-        val hasMountSystem = hasResult(mountSystemResult)
+        val hasMountSystem = isShellResultSuccessful(mountSystemResult)
 
         val isSar =
             isAtLeastAndroid9() && (hasSystemRootImage || hasMountDevRoot || !hasMountSystem)
@@ -685,7 +684,7 @@ class HomeViewModel : BaseListViewModel() {
         val apexUpdatable = getStringProperty(PROP_APEX_UPDATABLE, isAtLeastAndroid10()).toBoolean()
 
         val flattenedApexMountedResult = sh(CMD_FLATTENED_APEX_MOUNT, isAtLeastAndroid10())
-        val isFlattenedApexMounted = hasResult(flattenedApexMountedResult)
+        val isFlattenedApexMounted = isShellResultSuccessful(flattenedApexMountedResult)
 
         val isApex = apexUpdatable || isFlattenedApexMounted
         val isLegacyFlattenedApex = !apexUpdatable && isFlattenedApexMounted
@@ -792,7 +791,7 @@ class HomeViewModel : BaseListViewModel() {
 
     private fun detectToybox(tempModels: ArrayList<MyModel>, lld: Lld) {
         val toyboxVersionResult = sh(CMD_TOYBOX_VERSION, isAtLeastAndroid6())
-        val hasToyboxVersion = hasResult(toyboxVersionResult)
+        val hasToyboxVersion = isShellResultSuccessful(toyboxVersionResult)
 
         val toyboxVersion = if (hasToyboxVersion) {
             toyboxVersionResult.output[0]
@@ -930,7 +929,7 @@ class HomeViewModel : BaseListViewModel() {
             R.color.colorNoProblem
         } else {
             val outdatedFirstApiLevelSystemApkList =
-                if (hasResult(firstApiLevelProp) && firstApiLevelProp != "0") {
+                if (isPropertyValueNotEmpty(firstApiLevelProp) && firstApiLevelProp != "0") {
                     systemApkList.filter {
                         it.targetSdkVersion < firstApiLevelProp.toInt()
                     }
@@ -954,12 +953,12 @@ class HomeViewModel : BaseListViewModel() {
     }
     // endregion [detect]
 
-    private fun hasResult(result: String) =
+    private fun isPropertyValueNotEmpty(result: String) =
         result.isNotEmpty()
                 && result != MyApplication.getMyString(R.string.result_not_supported)
                 && result != MyApplication.getMyString(R.string.build_not_filled)
 
-    private fun hasResult(result: MyShellResult) =
+    private fun isShellResultSuccessful(result: MyShellResult) =
         result.isSuccess && result.output[0].isNotEmpty()
 
     private fun translate(condition: Boolean) = MyApplication.getMyString(
