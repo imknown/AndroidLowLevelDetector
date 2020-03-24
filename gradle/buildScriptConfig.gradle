@@ -125,9 +125,9 @@ ext {
             firebaseAnalytics              : '17.2.3',
 
             // https://firebase.google.com/docs/crashlytics/get-started-new-sdk?platform=android#add-crashlytics
-            firebaseCrashlyticsGradlePlugin: '2.0.0-beta02',
+            firebaseCrashlyticsGradlePlugin: '2.0.0-beta03',
             // https://firebase.google.com/docs/crashlytics/get-started-new-sdk?platform=android#add-dependencies
-            firebaseCrashlytics            : '17.0.0-beta01',
+            firebaseCrashlytics            : '17.0.0-beta02',
             // https://firebase.google.com/docs/crashlytics/ndk-reports-new-sdk#update-gradle-config
             firebaseCrashlyticsNdk         : '17.0.0-beta01'
     ]
