@@ -99,6 +99,8 @@
     <string name="outdated_target_version_sdk_version_apk_my_first_api_level">My factory Android API: %s\n\n</string>
     <string name="outdated_target_version_sdk_version_apk_title">Outdated targetSdkVersion system apps</string>
     <string name="outdated_target_version_sdk_version_apk_result_none">No outdated system apps</string>
+    <string name="outdated_target_version_sdk_version_apk_result_format_package_first" translatable="false">%1$s (%2$s)</string>
+    <string name="outdated_target_version_sdk_version_apk_result_format_target_sdk_version_first" translatable="false">(%2$s) %1$s</string>
 
     <!-- Others -->
     <string name="build_brand">Brand</string>
@@ -170,6 +172,10 @@
     <string name="function_allow_network_data_key" translatable="false">about_allow_network_data_key</string>
     <string name="function_allow_network_data_title">Allow network data</string>
     <string name="function_allow_network_data_summary">When enabled, data will be prior fetched from remote network server, then be cached on the local storage.</string>
+
+    <string name="function_outdated_target_order_by_package_name_first_key" translatable="false">function_outdated_target_order_by_package_name_key</string>
+    <string name="function_outdated_target_order_by_package_name_first_title">Order by package name first</string>
+    <string name="function_outdated_target_order_by_package_name_first_summary">Order the outdated apps by package name first, otherwise by the targetSdkVersion first.</string>
 
     <string name="function_raw_build_prop_key" translatable="false">interface_verbose_prop_key</string>
     <string name="function_raw_build_prop_title">Show raw build.prop</string>

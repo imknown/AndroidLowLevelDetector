@@ -936,12 +936,27 @@ class HomeViewModel : BaseListViewModel() {
                 R.color.colorWaring
             }
         } else {
-            systemApkList = systemApkList.sortedWith(
-                compareBy(ApplicationInfo::targetSdkVersion, ApplicationInfo::packageName)
+            val shouldOrderByPackageNameFirst = MyApplication.sharedPreferences.getBoolean(
+                MyApplication.getMyString(R.string.function_outdated_target_order_by_package_name_first_key),
+                false
             )
 
+            @StringRes val format = if (shouldOrderByPackageNameFirst) {
+                systemApkList = systemApkList.sortedBy(ApplicationInfo::packageName)
+
+                R.string.outdated_target_version_sdk_version_apk_result_format_package_first
+            } else {
+                systemApkList = systemApkList.sortedWith(
+                    compareBy(ApplicationInfo::targetSdkVersion, ApplicationInfo::packageName)
+                )
+
+                R.string.outdated_target_version_sdk_version_apk_result_format_target_sdk_version_first
+            }
+
             systemApkList.forEachIndexed { index, applicationInfo ->
-                result += "(${applicationInfo.packageName}) ${applicationInfo.targetSdkVersion}"
+                result += MyApplication.getMyString(
+                    format, applicationInfo.packageName, applicationInfo.targetSdkVersion
+                )
 
                 if (index != systemApkList.size - 1) {
                     result += "\n"

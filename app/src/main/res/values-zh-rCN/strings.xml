@@ -161,6 +161,9 @@
     <string name="function_allow_network_data_title">允许网络数据</string>
     <string name="function_allow_network_data_summary">若启用, 数据将优先从远端网络服务器获取, 并被缓存在本地存储.</string>
 
+    <string name="function_outdated_target_order_by_package_name_first_title">优先按包名排序</string>
+    <string name="function_outdated_target_order_by_package_name_first_summary">优先按包名排序过时程序, 否则按 targetSdkVersion 优先.</string>
+
     <string name="function_raw_build_prop_title">显示原始 build.prop</string>
     <string name="function_raw_build_prop_summary">在 \"其他\" 中显示 build.prop 文件的原始数据</string>
 

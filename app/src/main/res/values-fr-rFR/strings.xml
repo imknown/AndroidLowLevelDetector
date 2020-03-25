@@ -161,6 +161,9 @@
     <string name="function_allow_network_data_title">Activer les données en ligne</string>
     <string name="function_allow_network_data_summary">Lorsque cette option est activée, les données seront préalablement extraites du serveur réseau distant, puis mises en cache sur le stockage local.</string>
 
+    <string name="function_outdated_target_order_by_package_name_first_title">Commandez d\'abord par nom de colis</string>
+    <string name="function_outdated_target_order_by_package_name_first_summary">Commandez d\'abord les applications obsolètes par nom de package, sinon par targetSdkVersion d\'abord.</string>
+
     <string name="function_raw_build_prop_title">Voir build.prop directement</string>
     <string name="function_raw_build_prop_summary">Voir directement les valeurs de build.prop dans \"Autres\"</string>
 

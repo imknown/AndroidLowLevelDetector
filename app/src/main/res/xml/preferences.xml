@@ -6,19 +6,19 @@
         android:title="@string/interface_title"
         app:iconSpaceReserved="false">
         <ListPreference
-            app:iconSpaceReserved="false"
             app:defaultValue="@string/interface_themes_follow_system_value"
             app:entries="@array/themeKeys"
             app:entryValues="@array/themeValues"
+            app:iconSpaceReserved="false"
             app:key="@string/interface_themes_key"
             app:summary="@string/interface_themes_summary"
             app:title="@string/interface_themes_title" />
 
         <ListPreference
-            app:iconSpaceReserved="false"
             app:defaultValue="@string/interface_no_scroll_bar_value"
             app:entries="@array/scrollBarKeys"
             app:entryValues="@array/scrollBarValues"
+            app:iconSpaceReserved="false"
             app:key="@string/interface_scroll_bar_key"
             app:summary="@string/interface_scroll_bar_summary"
             app:title="@string/interface_scroll_bar_title" />
@@ -33,6 +33,12 @@
             app:key="@string/function_allow_network_data_key"
             app:summary="@string/function_allow_network_data_summary"
             app:title="@string/function_allow_network_data_title" />
+
+        <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
+            app:key="@string/function_outdated_target_order_by_package_name_first_key"
+            app:summary="@string/function_outdated_target_order_by_package_name_first_summary"
+            app:title="@string/function_outdated_target_order_by_package_name_first_title" />
 
         <SwitchPreferenceCompat
             app:iconSpaceReserved="false"
