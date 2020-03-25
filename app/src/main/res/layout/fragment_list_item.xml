@@ -4,7 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:context=".ui.base.MyAdapter">
+    tools:context=".ui.base.MyAdapter"
+    tools:layout_marginEnd="@dimen/item_divider_space_horizontal"
+    tools:layout_marginStart="@dimen/item_divider_space_horizontal"
+    tools:layout_marginTop="@dimen/item_divider_space_vertical">
 
     <TextView
         android:id="@+id/tvTitle"
