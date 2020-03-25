@@ -270,7 +270,7 @@ class HomeViewModel : BaseListViewModel() {
 
         detectWebView(tempModels, lld)
 
-        detectOutdatedTargetSdkVersionApk(tempModels)
+        detectOutdatedTargetSdkVersionApk(tempModels, lld)
 
         withContext(Dispatchers.Main) {
             _models.value = tempModels
@@ -913,56 +913,42 @@ class HomeViewModel : BaseListViewModel() {
         return "$desc\n$appName\n$versionName"
     }
 
-    private fun detectOutdatedTargetSdkVersionApk(tempModels: ArrayList<MyModel>) {
-        val systemApkList =
-            MyApplication.instance.packageManager.getInstalledApplications(0).filter {
-                it.flags and (ApplicationInfo.FLAG_UPDATED_SYSTEM_APP or ApplicationInfo.FLAG_SYSTEM) > 0
+    private fun detectOutdatedTargetSdkVersionApk(tempModels: ArrayList<MyModel>, lld: Lld) {
+        var systemApkList = MyApplication.instance.packageManager.getInstalledApplications(0)
+            .filter {
+                (it.flags and (ApplicationInfo.FLAG_UPDATED_SYSTEM_APP or ApplicationInfo.FLAG_SYSTEM) > 0)
+                        && (it.targetSdkVersion < Build.VERSION.SDK_INT
+                        /* */ || (isPreviewAndroid() && it.targetSdkVersion == Build.VERSION.SDK_INT)
+                        )
             }
-//                .sortedWith(compareBy(ApplicationInfo::targetSdkVersion, ApplicationInfo::packageName))
-                .sortedBy(ApplicationInfo::packageName)
 
-        val firstApiLevelProp = getStringProperty(PROP_RO_PRODUCT_FIRST_API_LEVEL)
-
-        val firstApiLevelLine = MyApplication.getMyString(
+        var result = MyApplication.getMyString(
             R.string.outdated_target_version_sdk_version_apk_my_first_api_level,
-            firstApiLevelProp
+            getStringProperty(PROP_RO_PRODUCT_FIRST_API_LEVEL)
         )
-        var result = firstApiLevelLine
 
-        val outdatedSystemApkList = systemApkList.filter {
-            it.targetSdkVersion < Build.VERSION.SDK_INT
-            // firstApiLevelProp.toInt()
-        }
-
-        outdatedSystemApkList.forEachIndexed { index, applicationInfo ->
-            result += "(${applicationInfo.targetSdkVersion}) ${applicationInfo.packageName}"
-
-            if (index != outdatedSystemApkList.size - 1) {
-                result += "\n"
-            }
-        }
-
-        val noOutdatedTotally = (result == firstApiLevelLine)
-
-        @ColorRes val targetSdkVersionColor = if (noOutdatedTotally) {
+        @ColorRes val targetSdkVersionColor = if (systemApkList.isEmpty()) {
             result += MyApplication.getMyString(R.string.outdated_target_version_sdk_version_apk_result_none)
 
-            R.color.colorNoProblem
-        } else {
-            val outdatedFirstApiLevelSystemApkList =
-                if (isPropertyValueNotEmpty(firstApiLevelProp) && firstApiLevelProp != "0") {
-                    systemApkList.filter {
-                        it.targetSdkVersion < firstApiLevelProp.toInt()
-                    }
-                } else {
-                    outdatedSystemApkList
-                }
-
-            if (outdatedFirstApiLevelSystemApkList.isNotEmpty()) {
-                R.color.colorCritical
+            if (isLatestStableAndroid(lld) || isLatestPreviewAndroid(lld)) {
+                R.color.colorNoProblem
             } else {
                 R.color.colorWaring
             }
+        } else {
+            systemApkList = systemApkList.sortedWith(
+                compareBy(ApplicationInfo::targetSdkVersion, ApplicationInfo::packageName)
+            )
+
+            systemApkList.forEachIndexed { index, applicationInfo ->
+                result += "(${applicationInfo.packageName}) ${applicationInfo.targetSdkVersion}"
+
+                if (index != systemApkList.size - 1) {
+                    result += "\n"
+                }
+            }
+
+            R.color.colorCritical
         }
 
         add(
