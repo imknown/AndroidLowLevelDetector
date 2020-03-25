@@ -20,7 +20,7 @@
         android:paddingEnd="@dimen/item_card_title_padding_horizontal"
         android:paddingBottom="@dimen/item_card_title_padding_vertical"
         android:textColor="@color/colorMainText"
-        android:textSize="20sp"
+        android:textSize="18sp"
         tools:background="@color/colorNoProblem"
         tools:text="Android version" />
 
@@ -36,6 +36,6 @@
         android:paddingEnd="@dimen/item_card_detail_padding_horizontal"
         android:paddingBottom="@dimen/item_card_detail_padding_vertical"
         android:textColor="@color/colorMainText"
-        android:textSize="20sp"
+        android:textSize="18sp"
         tools:text="Mine: 10 (Q, API Level 29)\nLatest: 11 (R, API Level 29)" />
 </LinearLayout>

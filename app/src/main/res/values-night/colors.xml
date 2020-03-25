@@ -9,11 +9,11 @@
     <color name="colorStatusBar">@android:color/black</color>
     <color name="colorNavigationBar">@android:color/black</color>
 
-    <color name="colorStateless">#282828</color>
-    <color name="colorDetail">#303030</color>
-    <color name="colorNoProblem">#356330</color>
-    <color name="colorWaring">#9E5C2E</color>
-    <color name="colorCritical">#9E3836</color>
+    <color name="colorStateless">#181818</color>
+    <color name="colorDetail">#202020</color>
+    <color name="colorNoProblem">#2A4028</color>
+    <color name="colorWaring">#5E3920</color>
+    <color name="colorCritical">#652D2D</color>
 
     <color name="colorMainText">#E0FFFFFF</color>
 </resources>
