@@ -42,21 +42,23 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
     private val _versionClick by lazy { MutableLiveData<Event<Int>>() }
     val versionClick: LiveData<Event<Int>> by lazy { _versionClick }
 
-    val themesPrefChangeEvent by lazy {
+    private val _themesPrefChangeEvent by lazy {
         MyApplication.sharedPreferences.stringEventLiveData(
             viewModelScope,
             MyApplication.getMyString(R.string.interface_themes_key),
             MyApplication.getMyString(R.string.interface_themes_follow_system_value)
         )
     }
+    val themesPrefChangeEvent: LiveData<Event<String?>> by lazy { _themesPrefChangeEvent }
 
-    val scrollBarModeChangeEvent by lazy {
+    private val _scrollBarModeChangeEvent by lazy {
         MyApplication.sharedPreferences.stringEventLiveData(
             viewModelScope,
             MyApplication.getMyString(R.string.interface_scroll_bar_key),
             MyApplication.getMyString(R.string.interface_no_scroll_bar_value)
         )
     }
+    val scrollBarModeChangeEvent: LiveData<Event<String?>> by lazy { _scrollBarModeChangeEvent }
 
     fun setMyTheme(themesValue: Any) = viewModelScope.launch(Dispatchers.IO) {
         MyApplication.instance.setMyTheme(themesValue.toString())
