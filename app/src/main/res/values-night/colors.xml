@@ -11,9 +11,9 @@
 
     <color name="colorStateless">#181818</color>
     <color name="colorDetail">#202020</color>
-    <color name="colorNoProblem">#2A4028</color>
-    <color name="colorWaring">#5E3920</color>
-    <color name="colorCritical">#652D2D</color>
+    <color name="colorNoProblem">#2B5128</color>
+    <color name="colorWaring">#703E1E</color>
+    <color name="colorCritical">#772727</color>
 
     <color name="colorMainText">#E0FFFFFF</color>
 </resources>
