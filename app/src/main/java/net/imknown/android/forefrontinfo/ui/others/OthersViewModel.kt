@@ -212,6 +212,7 @@ class OthersViewModel : BaseListViewModel() {
         )
     }
 
+    // TODO Use payload
     private fun getProp(tempModels: ArrayList<MyModel>) {
         val rawBuildProp = MyApplication.sharedPreferences.getBoolean(
             MyApplication.getMyString(R.string.function_raw_build_prop_key), false
