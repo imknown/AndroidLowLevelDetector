@@ -43,8 +43,8 @@
     <string name="linux_version_detail">Moi: %1$s\n\nDernière support: %2$s\nMainline: %3$s</string>
 
     <string name="selinux_status">Status SELinux</string>
-    <string name="selinux_status_enforcing_mode">Enforcing</string>
-    <string name="selinux_status_permissive_mode">Permissive</string>
+    <string name="selinux_status_enforcing_mode">Mode forcé</string>
+    <string name="selinux_status_permissive_mode">Mode permissif</string>
 
     <string name="ab_seamless_update_status_title">Mise à jour A/B seamless</string>
     <string name="current_using_ab_slot_result">\u0020(Slot utilisé: %s)</string>
