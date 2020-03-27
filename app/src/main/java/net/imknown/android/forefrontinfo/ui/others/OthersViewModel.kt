@@ -47,7 +47,7 @@ class OthersViewModel : BaseListViewModel() {
 
     @SuppressLint("DiscouragedPrivateApi")
     private fun getProcessBit(): String {
-        val isProcess64Bit = if (isAtLeastAndroid6()) {
+        val isProcess64Bit = if (isAtLeastStableAndroid6()) {
             android.os.Process.is64Bit()
         } else {
             val vmRuntimePath = "dalvik.system.VMRuntime"
@@ -116,7 +116,7 @@ class OthersViewModel : BaseListViewModel() {
         val time =
             SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US).format(Date(Build.TIME))
         add(tempModels, MyApplication.getMyString(R.string.build_time), time)
-        if (isAtLeastAndroid6()) {
+        if (isAtLeastStableAndroid6()) {
             add(
                 tempModels,
                 MyApplication.getMyString(R.string.build_base_os),
@@ -149,7 +149,7 @@ class OthersViewModel : BaseListViewModel() {
 
     @ExperimentalStdlibApi
     private fun addFingerprints(tempModels: ArrayList<MyModel>) {
-        if (isAtLeastAndroid10()) {
+        if (isAtLeastStableAndroid10()) {
             Build.getFingerprintedPartitions().forEach {
                 add(
                     tempModels,
@@ -168,7 +168,7 @@ class OthersViewModel : BaseListViewModel() {
             )
         }
 
-        if (isAtLeastAndroid10()) {
+        if (isAtLeastStableAndroid10()) {
             add(
                 tempModels,
                 MyApplication.getMyString(R.string.build_stock_preview_fingerprint),

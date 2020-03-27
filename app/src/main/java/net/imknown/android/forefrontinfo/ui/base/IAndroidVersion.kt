@@ -9,18 +9,14 @@ interface IAndroidVersion {
         private const val CODENAME_RELEASE = "REL"
     }
 
-    fun isAtLeastAndroid6() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-    fun isAtLeastAndroid7() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-    fun isAtLeastAndroid8() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
-    fun isAtLeastAndroid9() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
-    fun isAtLeastAndroid10() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+    fun isAtLeastStableAndroid6() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+    fun isAtLeastStableAndroid7() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+    fun isAtLeastStableAndroid8() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
+    fun isAtLeastStableAndroid9() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
+    fun isAtLeastStableAndroid10() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
 
     fun isStableAndroid() = Build.VERSION.CODENAME == CODENAME_RELEASE
-
     fun isPreviewAndroid() = !isStableAndroid()
-
-    fun isStableAndroid10() = isStableAndroid()
-            && Build.VERSION.SDK_INT == Build.VERSION_CODES.Q
 
     @SuppressLint("ObsoleteSdkInt")
     fun isLatestStableAndroid(lld: Lld) = isStableAndroid()

@@ -231,14 +231,14 @@ class HomeViewModel : BaseListViewModel() {
 
         detectBuildId(tempModels, lld)
 
-        var securityPatch = if (isAtLeastAndroid6()) {
+        var securityPatch = if (isAtLeastStableAndroid6()) {
             Build.VERSION.SECURITY_PATCH
         } else {
             getStringProperty(PROP_SECURITY_PATCH)
         }
         detectSecurityPatch(tempModels, lld, securityPatch, R.string.security_patch_level_title)
 
-        securityPatch = getStringProperty(PROP_VENDOR_SECURITY_PATCH, isAtLeastAndroid9())
+        securityPatch = getStringProperty(PROP_VENDOR_SECURITY_PATCH, isAtLeastStableAndroid9())
         detectSecurityPatch(
             tempModels,
             lld,
@@ -333,9 +333,11 @@ class HomeViewModel : BaseListViewModel() {
 
     private fun detectBuildId(tempModels: ArrayList<MyModel>, lld: Lld) {
         val buildIdResult = Build.ID
-        val systemBuildIdResult = getStringProperty(PROP_RO_SYSTEM_BUILD_ID, isAtLeastAndroid9())
-        val vendorBuildIdResult = getStringProperty(PROP_RO_VENDOR_BUILD_ID, isAtLeastAndroid9())
-        val odmBuildIdResult = getStringProperty(PROP_RO_ODM_BUILD_ID, isAtLeastAndroid9())
+        val systemBuildIdResult =
+            getStringProperty(PROP_RO_SYSTEM_BUILD_ID, isAtLeastStableAndroid9())
+        val vendorBuildIdResult =
+            getStringProperty(PROP_RO_VENDOR_BUILD_ID, isAtLeastStableAndroid9())
+        val odmBuildIdResult = getStringProperty(PROP_RO_ODM_BUILD_ID, isAtLeastStableAndroid9())
 
         var builds = ""
         val details = lld.android.build.details
@@ -549,7 +551,8 @@ class HomeViewModel : BaseListViewModel() {
     private fun detectAb(tempModels: ArrayList<MyModel>) {
         // val bootPartitions = sh(CMD_BOOT_PARTITION).output[0]
 
-        val isAbUpdateSupported = getStringProperty(PROP_AB_UPDATE, isAtLeastAndroid7()).toBoolean()
+        val isAbUpdateSupported =
+            getStringProperty(PROP_AB_UPDATE, isAtLeastStableAndroid7()).toBoolean()
         var abUpdateSupportedArgs = translate(isAbUpdateSupported)
 
         val abFinalResult =
@@ -576,9 +579,11 @@ class HomeViewModel : BaseListViewModel() {
 
     private fun detectDynamicPartitions(tempModels: ArrayList<MyModel>) {
         val isDynamicPartitionsEnabled =
-            getStringProperty(PROP_DYNAMIC_PARTITIONS, isAtLeastAndroid10()).toBoolean()
+            getStringProperty(PROP_DYNAMIC_PARTITIONS, isAtLeastStableAndroid10()).toBoolean()
         val isDynamicPartitionsRetrofitEnabled =
-            getStringProperty(PROP_DYNAMIC_PARTITIONS_RETROFIT, isAtLeastAndroid10()).toBoolean()
+            getStringProperty(
+                PROP_DYNAMIC_PARTITIONS_RETROFIT, isAtLeastStableAndroid10()
+            ).toBoolean()
 
         var detail = translate(isDynamicPartitionsEnabled)
         if (isDynamicPartitionsRetrofitEnabled) {
@@ -599,7 +604,7 @@ class HomeViewModel : BaseListViewModel() {
     private fun detectDsu(tempModels: ArrayList<MyModel>) {
         val isDsuEnabled = getStringProperty(
             FFLAG_OVERRIDE_PREFIX + DYNAMIC_SYSTEM,
-            isAtLeastAndroid10()
+            isAtLeastStableAndroid10()
         ).toBoolean()
 
         add(
@@ -612,7 +617,7 @@ class HomeViewModel : BaseListViewModel() {
 
     private fun detectTreble(tempModels: ArrayList<MyModel>) {
         val isTrebleEnabled =
-            getStringProperty(PROP_TREBLE_ENABLED, isAtLeastAndroid8()).toBoolean()
+            getStringProperty(PROP_TREBLE_ENABLED, isAtLeastStableAndroid8()).toBoolean()
 
         add(
             tempModels,
@@ -623,7 +628,8 @@ class HomeViewModel : BaseListViewModel() {
     }
 
     private fun detectGsiCompatibility(tempModels: ArrayList<MyModel>) {
-        val gsiCompatibilityResult = sh(CMD_VENDOR_NAMESPACE_DEFAULT_ISOLATED, isAtLeastAndroid9())
+        val gsiCompatibilityResult =
+            sh(CMD_VENDOR_NAMESPACE_DEFAULT_ISOLATED, isAtLeastStableAndroid9())
         var isCompatible = false
         val result = if (isShellResultSuccessful(gsiCompatibilityResult)) {
             val lineResult = gsiCompatibilityResult.output[0].split('=')
@@ -646,7 +652,7 @@ class HomeViewModel : BaseListViewModel() {
     }
 
     private fun detectVndk(tempModels: ArrayList<MyModel>, lld: Lld) {
-        val vndkVersionResult = getStringProperty(PROP_VNDK_VERSION, isAtLeastAndroid8())
+        val vndkVersionResult = getStringProperty(PROP_VNDK_VERSION, isAtLeastStableAndroid8())
         val hasVndkVersion = isPropertyValueNotEmpty(vndkVersionResult)
 
         @ColorRes val vndkColor: Int
@@ -687,16 +693,17 @@ class HomeViewModel : BaseListViewModel() {
 
     private fun detectSar(tempModels: ArrayList<MyModel>) {
         val hasSystemRootImage =
-            getStringProperty(PROP_SYSTEM_ROOT_IMAGE, isAtLeastAndroid9()).toBoolean()
+            getStringProperty(PROP_SYSTEM_ROOT_IMAGE, isAtLeastStableAndroid9()).toBoolean()
 
-        val mountDevRootResult = sh(CMD_MOUNT_DEV_ROOT, isAtLeastAndroid9())
+        val mountDevRootResult = sh(CMD_MOUNT_DEV_ROOT, isAtLeastStableAndroid9())
         val hasMountDevRoot = isShellResultSuccessful(mountDevRootResult)
 
-        val mountSystemResult = sh(CMD_MOUNT_SYSTEM, isAtLeastAndroid9() && !hasSystemRootImage)
+        val mountSystemResult =
+            sh(CMD_MOUNT_SYSTEM, isAtLeastStableAndroid9() && !hasSystemRootImage)
         val hasMountSystem = isShellResultSuccessful(mountSystemResult)
 
         val isSar =
-            isAtLeastAndroid9() && (hasSystemRootImage || hasMountDevRoot || !hasMountSystem)
+            isAtLeastStableAndroid9() && (hasSystemRootImage || hasMountDevRoot || !hasMountSystem)
         add(
             tempModels,
             MyApplication.getMyString(R.string.sar_status_title),
@@ -706,9 +713,10 @@ class HomeViewModel : BaseListViewModel() {
     }
 
     private fun detectApex(tempModels: ArrayList<MyModel>) {
-        val apexUpdatable = getStringProperty(PROP_APEX_UPDATABLE, isAtLeastAndroid10()).toBoolean()
+        val apexUpdatable =
+            getStringProperty(PROP_APEX_UPDATABLE, isAtLeastStableAndroid10()).toBoolean()
 
-        val flattenedApexMountedResult = sh(CMD_FLATTENED_APEX_MOUNT, isAtLeastAndroid10())
+        val flattenedApexMountedResult = sh(CMD_FLATTENED_APEX_MOUNT, isAtLeastStableAndroid10())
         val isFlattenedApexMounted = isShellResultSuccessful(flattenedApexMountedResult)
 
         val isApex = apexUpdatable || isFlattenedApexMounted
@@ -815,7 +823,7 @@ class HomeViewModel : BaseListViewModel() {
     }
 
     private fun detectToybox(tempModels: ArrayList<MyModel>, lld: Lld) {
-        val toyboxVersionResult = sh(CMD_TOYBOX_VERSION, isAtLeastAndroid6())
+        val toyboxVersionResult = sh(CMD_TOYBOX_VERSION, isAtLeastStableAndroid6())
         val hasToyboxVersion = isShellResultSuccessful(toyboxVersionResult)
 
         val toyboxVersion = if (hasToyboxVersion) {

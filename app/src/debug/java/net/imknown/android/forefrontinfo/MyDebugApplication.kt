@@ -29,11 +29,11 @@ class MyDebugApplication : MyApplication(), IAndroidVersion {
                 .detectDiskWrites()
                 .detectNetwork()
                 .also {
-                    if (isAtLeastAndroid6()) {
+                    if (isAtLeastStableAndroid6()) {
                         it.detectResourceMismatches()
                     }
                 }.also {
-                    if (isAtLeastAndroid8()) {
+                    if (isAtLeastStableAndroid8()) {
                         it.detectUnbufferedIo()
                     }
                 }
@@ -53,11 +53,11 @@ class MyDebugApplication : MyApplication(), IAndroidVersion {
                 .detectLeakedRegistrationObjects()
                 .detectLeakedSqlLiteObjects()
                 .also {
-                    if (isAtLeastAndroid6()) {
+                    if (isAtLeastStableAndroid6()) {
                         it.detectCleartextNetwork()
                     }
                 }.also {
-                    if (isAtLeastAndroid8()) {
+                    if (isAtLeastStableAndroid8()) {
                         it.detectContentUriWithoutPermission()
                         it.detectUntaggedSockets()
                     }
@@ -66,7 +66,7 @@ class MyDebugApplication : MyApplication(), IAndroidVersion {
 //                        it.detectNonSdkApiUsage()
 //                    }
                 }.also {
-                    if (isAtLeastAndroid10()) {
+                    if (isAtLeastStableAndroid10()) {
                         it.detectImplicitDirectBoot()
                         it.detectCredentialProtectedWhileLocked()
                     }

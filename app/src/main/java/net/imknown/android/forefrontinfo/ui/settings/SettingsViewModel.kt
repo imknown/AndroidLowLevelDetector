@@ -141,7 +141,7 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
         packageName: String,
         packageManager: PackageManager
     ) = withContext(Dispatchers.Default) {
-        return@withContext if (isAtLeastAndroid9()) {
+        return@withContext if (isAtLeastStableAndroid9()) {
             packageManager.getPackageInfo(
                 packageName,
                 PackageManager.GET_SIGNING_CERTIFICATES
