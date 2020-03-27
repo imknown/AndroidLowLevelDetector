@@ -12,8 +12,8 @@ ext {
             compileSdkVersion        : 29,
             targetSdkVersion         : 29,
 
-            versionCode              : 19,
-            versionName              : '1.7.2'
+            versionCode              : 20,
+            versionName              : '1.8.0'
     ]
     // endregion [AndroidBuild]
 
