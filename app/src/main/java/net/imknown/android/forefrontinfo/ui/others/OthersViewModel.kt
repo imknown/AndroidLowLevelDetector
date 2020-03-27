@@ -168,7 +168,7 @@ class OthersViewModel : BaseListViewModel() {
             )
         }
 
-        if (isAtLeastAndroid6()) {
+        if (isAtLeastAndroid10()) {
             add(
                 tempModels,
                 MyApplication.getMyString(R.string.build_stock_preview_fingerprint),
