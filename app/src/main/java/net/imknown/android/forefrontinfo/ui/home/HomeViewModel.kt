@@ -23,7 +23,7 @@ import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.Event
 import net.imknown.android.forefrontinfo.base.GatewayApi
 import net.imknown.android.forefrontinfo.base.JsonIo
-import net.imknown.android.forefrontinfo.base.fromJson
+import net.imknown.android.forefrontinfo.base.booleanEventLiveData
 import net.imknown.android.forefrontinfo.ui.base.BaseListViewModel
 import net.imknown.android.forefrontinfo.ui.base.MyModel
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
@@ -130,6 +130,18 @@ class HomeViewModel : BaseListViewModel() {
     private val _error by lazy { MutableLiveData<Event<Exception>>() }
     val error: LiveData<Event<Exception>> by lazy { _error }
 
+    private val _outdatedOrderProp by lazy {
+        MyApplication.sharedPreferences.booleanEventLiveData(
+            viewModelScope,
+            MyApplication.getMyString(R.string.function_outdated_target_order_by_package_name_first_key),
+            false
+        )
+    }
+    val outdatedOrderProp: LiveData<Event<Boolean>> by lazy { _outdatedOrderProp }
+
+    private val _showOutdatedOrderEvent by lazy { MutableLiveData<Event<Int>>() }
+    val showOutdatedOrderEvent: LiveData<Event<Int>> by lazy { _showOutdatedOrderEvent }
+
     private fun copyJsonIfNeeded() {
         if (JsonIo.whetherNeedCopyAssets(MyApplication.instance.assets)) {
             JsonIo.copyJsonFromAssetsToContextFilesDir(
@@ -190,7 +202,7 @@ class HomeViewModel : BaseListViewModel() {
         var dataVersion: String
 
         try {
-            val lld = JsonIo.savedLldJsonFile.fromJson<Lld>()
+            val lld = JsonIo.lld
 
             detect(lld)
 
@@ -913,7 +925,7 @@ class HomeViewModel : BaseListViewModel() {
         return "$desc\n$appName\n$versionName"
     }
 
-    private fun detectOutdatedTargetSdkVersionApk(tempModels: ArrayList<MyModel>, lld: Lld) {
+    private fun getOutdatedTargetSdkVersionApkModel(lld: Lld): MyModel {
         var systemApkList = MyApplication.instance.packageManager.getInstalledApplications(0)
             .filter {
                 (it.flags and (ApplicationInfo.FLAG_UPDATED_SYSTEM_APP or ApplicationInfo.FLAG_SYSTEM) > 0)
@@ -966,13 +978,27 @@ class HomeViewModel : BaseListViewModel() {
             R.color.colorCritical
         }
 
-        add(
-            tempModels,
+        return MyModel(
             MyApplication.getMyString(R.string.outdated_target_version_sdk_version_apk_title),
             result,
             targetSdkVersionColor
         )
     }
+
+    private fun detectOutdatedTargetSdkVersionApk(tempModels: ArrayList<MyModel>, lld: Lld) {
+        val myModel = getOutdatedTargetSdkVersionApkModel(lld)
+
+        add(tempModels, myModel.title, myModel.detail, myModel.color)
+    }
+
+    fun payloadOutdatedTargetSdkVersionApk(myModel: MyModel, lld: Lld) =
+        viewModelScope.launch(Dispatchers.IO) {
+            myModel.detail = getOutdatedTargetSdkVersionApkModel(lld).detail
+
+            withContext(Dispatchers.Main) {
+                _showOutdatedOrderEvent.value = Event(0)
+            }
+        }
     // endregion [detect]
 
     private fun isPropertyValueNotEmpty(result: String) =

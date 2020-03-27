@@ -11,8 +11,12 @@ class JsonIo {
     companion object {
         const val LLD_JSON_NAME = "lld.json"
 
-        val savedLldJsonFile: File by lazy {
+        val savedLldJsonFile by lazy {
             File(MyApplication.getDownloadDir(), LLD_JSON_NAME)
+        }
+
+        val lld by lazy {
+            savedLldJsonFile.fromJson<Lld>()
         }
 
         /**
@@ -20,7 +24,7 @@ class JsonIo {
          */
         fun whetherNeedCopyAssets(assets: AssetManager): Boolean {
             if (savedLldJsonFile.exists()) {
-                val savedLldVersion = savedLldJsonFile.fromJson<Lld>().version
+                val savedLldVersion = lld.version
                 val assetLldVersion = getAssetLldVersion(assets)
 
                 if (savedLldVersion >= assetLldVersion) {

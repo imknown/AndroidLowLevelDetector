@@ -8,9 +8,11 @@ import kotlinx.android.synthetic.main.fragment_list_item.view.*
 import net.imknown.android.forefrontinfo.R
 
 class MyAdapter : RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
-    private val _myModels by lazy { ArrayList<MyModel>() }
-    var myModels = _myModels
-        private set
+    companion object {
+        const val PAYLOAD_DETAILS = 1
+    }
+
+    val myModels by lazy { ArrayList<MyModel>() }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(
@@ -19,6 +21,18 @@ class MyAdapter : RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
             false
         )
         return MyViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int, payloads: MutableList<Any>) {
+        if (payloads.isNullOrEmpty()) {
+            super.onBindViewHolder(holder, position, payloads)
+        } else {
+            payloads.forEach {
+                if (it == PAYLOAD_DETAILS) {
+                    holder.itemView.tvDetail.text = myModels[position].detail
+                }
+            }
+        }
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {

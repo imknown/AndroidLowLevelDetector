@@ -15,7 +15,7 @@ import net.imknown.android.forefrontinfo.base.EventObserver
 
 abstract class BaseListFragment : BaseFragment() {
 
-    private val myAdapter by lazy { MyAdapter() }
+    protected val myAdapter by lazy { MyAdapter() }
 
     protected abstract val listViewModel: BaseListViewModel
 
