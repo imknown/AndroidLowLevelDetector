@@ -65,7 +65,9 @@ android {
             signingConfig signingConfigs.release
 
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
-                    'proguard-rules.pro', 'proguard-gson-rules.pro'
+                    'proguard-rules.pro',
+                    'proguard-firebase-rules.pro',
+                    'proguard-gson-rules.pro'
 
             firebaseCrashlytics {
                 nativeSymbolUploadEnabled true
