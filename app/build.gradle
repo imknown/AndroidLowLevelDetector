@@ -6,8 +6,6 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 
-def currentGitBranchName = getCurrentGitBranchName()
-
 android {
     compileSdkVersion androidBuild.compileSdkVersion
     buildToolsVersion androidBuild.buildToolsVersion
@@ -15,11 +13,11 @@ android {
     defaultConfig {
         applicationId 'net.imknown.android.forefrontinfo'
 
-        // setProperty('archivesBaseName', 'lld')
-        archivesBaseName = 'lld'
-
         versionCode androidBuild.versionCode
         versionName androidBuild.versionName
+
+        // setProperty('archivesBaseName', 'lld')
+        archivesBaseName = "lld-$versionName-$versionCode-${getCurrentDate()}-${getCurrentGitBranchName()}"
 
         minSdkVersion androidBuild.minSdkVersion
         targetSdkVersion androidBuild.targetSdkVersion
@@ -84,10 +82,6 @@ android {
         }
     }
 
-    applicationVariants.all { variant ->
-        renameApk(variant)
-    }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -109,48 +103,10 @@ android {
     }
 }
 
-// region [Rename APK]
-private renameApk(variant) {
-    def buildTypeName = variant.buildType.name
-    if (buildTypeName == 'debug') {
-        return
-    }
-
-    def currentTaskNames = gradle.startParameter.taskNames
-    if (currentTaskNames.size != 1) {
-        // Maybe clicking the "Sync Now"?
-        return
-    }
-
-    def currentTaskName = currentTaskNames[0]
-    def isDifferentBuildType = !currentTaskName.toLowerCase(Locale.US).contains(buildTypeName)
-    if (isDifferentBuildType) {
-        println("No need to rename the output of task '$currentTaskName'.")
-        return
-    }
-
-    variant.outputs.all { output ->
-        // TODO: Rename Aab
-        outputFileName = getRenamedApkName(variant)
-        println "OutputFileName: $outputFileName"
-    }
-}
-
-private getRenamedApkName(variant) {
-    def versionCode = variant.versionCode
-    def versionName = variant.versionName
-    def currentDate = getCurrentDate()
-    def buildTypeName = variant.buildType.name
-
-    "${archivesBaseName}_${versionName}_${versionCode}_$currentDate" +
-            "_${currentGitBranchName}_$buildTypeName" +
-            ".apk"
-}
-
 import java.text.SimpleDateFormat
 
 private static getCurrentDate() {
-    new SimpleDateFormat("yyyy-MM-dd-HH-mm", Locale.US).format(new Date())
+    new SimpleDateFormat("yyyyMMdd-HHmm", Locale.US).format(new Date())
 }
 
 private static getCurrentGitBranchName() {
@@ -162,6 +118,5 @@ private static getCurrentGitBranchName() {
 
     branch
 }
-// endregion [Rename APK]
 
 apply from: "$rootDir/gradle/dependencies.gradle"
