@@ -16,65 +16,6 @@ class MyDebugApplication : MyApplication(), IAndroidVersion {
             return
         }
 
-        initStrictMode()
-    }
-
-    private fun initStrictMode() {
-        // StrictMode.enableDefaults()
-
-        StrictMode.setThreadPolicy(
-            StrictMode.ThreadPolicy.Builder()
-                .detectCustomSlowCalls()
-                .detectDiskReads()
-                .detectDiskWrites()
-                .detectNetwork()
-                .also {
-                    if (isAtLeastStableAndroid6()) {
-                        it.detectResourceMismatches()
-                    }
-                }.also {
-                    if (isAtLeastStableAndroid8()) {
-                        it.detectUnbufferedIo()
-                    }
-                }
-//                .penaltyDeath()
-                .penaltyDialog()
-//                .penaltyDropBox()
-                .penaltyFlashScreen()
-                .penaltyLog()
-                .build()
-        )
-
-        StrictMode.setVmPolicy(
-            StrictMode.VmPolicy.Builder()
-                .detectActivityLeaks()
-                .detectFileUriExposure()
-                .detectLeakedClosableObjects()
-                .detectLeakedRegistrationObjects()
-                .detectLeakedSqlLiteObjects()
-                .also {
-                    if (isAtLeastStableAndroid6()) {
-                        it.detectCleartextNetwork()
-                    }
-                }.also {
-                    if (isAtLeastStableAndroid8()) {
-                        it.detectContentUriWithoutPermission()
-                        it.detectUntaggedSockets()
-                    }
-//                }.also {
-//                    if (isAtLeastAndroid9()) {
-//                        it.detectNonSdkApiUsage()
-//                    }
-                }.also {
-                    if (isAtLeastStableAndroid10()) {
-                        it.detectImplicitDirectBoot()
-                        it.detectCredentialProtectedWhileLocked()
-                    }
-                }
-//                .penaltyDeath()
-//                .penaltyDropBox()
-                .penaltyLog()
-                .build()
-        )
+        StrictMode.enableDefaults()
     }
 }
