@@ -37,11 +37,11 @@ class MyDebugApplication : MyApplication(), IAndroidVersion {
                         it.detectUnbufferedIo()
                     }
                 }
-                .penaltyLog()
-                .penaltyDropBox()
-                .penaltyDialog()
-                .penaltyFlashScreen()
 //                .penaltyDeath()
+                .penaltyDialog()
+//                .penaltyDropBox()
+                .penaltyFlashScreen()
+                .penaltyLog()
                 .build()
         )
 
@@ -71,9 +71,9 @@ class MyDebugApplication : MyApplication(), IAndroidVersion {
                         it.detectCredentialProtectedWhileLocked()
                     }
                 }
-                .penaltyLog()
 //                .penaltyDeath()
-                .penaltyDropBox()
+//                .penaltyDropBox()
+                .penaltyLog()
                 .build()
         )
     }
