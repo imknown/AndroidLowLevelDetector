@@ -87,6 +87,7 @@ class HomeViewModel : BaseListViewModel() {
         private const val CMD_FLATTENED_APEX_MOUNT = "grep 'tmpfs /apex tmpfs' /proc/mounts"
 
         private const val SETTINGS_DISABLED = 0
+        private const val SETTINGS_ENABLED = 1
 
         // https://cs.android.com/android/platform/superproject/+/master:bootable/recovery/README.md;l=139
         private const val PROP_ADB_SECURE = "ro.adb.secure"
@@ -772,7 +773,8 @@ class HomeViewModel : BaseListViewModel() {
     }
 
     private fun detectAdbAuthentication(tempModels: ArrayList<MyModel>) {
-        val isAdbAuthenticationEnabled = getStringProperty(PROP_ADB_SECURE).toBoolean()
+        val isAdbAuthenticationEnabled =
+            getStringProperty(PROP_ADB_SECURE) == SETTINGS_ENABLED.toString()
 
         add(
             tempModels,
