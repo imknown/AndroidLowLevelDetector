@@ -16,7 +16,7 @@ import net.imknown.android.forefrontinfo.base.Event
 import net.imknown.android.forefrontinfo.base.stringEventLiveData
 
 abstract class BaseListViewModel : BaseViewModel(), IAndroidVersion {
-    protected val _models by lazy { MutableLiveData<ArrayList<MyModel>>() }
+    private val _models by lazy { MutableLiveData<ArrayList<MyModel>>() }
     val models: LiveData<ArrayList<MyModel>> by lazy { _models }
 
     private val _showModelsEvent by lazy { MutableLiveData<Event<Int>>() }
@@ -53,6 +53,11 @@ abstract class BaseListViewModel : BaseViewModel(), IAndroidVersion {
 
     fun hasNoData(savedInstanceState: Bundle?) =
         savedInstanceState == null || models.value.isNullOrEmpty()
+
+    protected suspend fun setModels(tempModels: ArrayList<MyModel>) =
+        withContext(Dispatchers.Main) {
+            _models.value = tempModels
+        }
 
     fun showModels(
         myModels: ArrayList<MyModel>,

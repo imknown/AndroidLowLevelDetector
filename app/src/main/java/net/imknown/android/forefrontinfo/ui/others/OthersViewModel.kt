@@ -7,7 +7,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.Event
@@ -142,9 +141,7 @@ class OthersViewModel : BaseListViewModel() {
 
         getProp(tempModels)
 
-        withContext(Dispatchers.Main) {
-            _models.value = tempModels
-        }
+        setModels(tempModels)
     }
 
     @ExperimentalStdlibApi

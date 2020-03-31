@@ -283,9 +283,7 @@ class HomeViewModel : BaseListViewModel() {
 
         detectOutdatedTargetSdkVersionApk(tempModels, lld)
 
-        withContext(Dispatchers.Main) {
-            _models.value = tempModels
-        }
+        setModels(tempModels)
     }
 
     private fun detectAndroid(tempModels: ArrayList<MyModel>, lld: Lld) {
