@@ -15,8 +15,11 @@ class JsonIo {
             File(MyApplication.getDownloadDir(), LLD_JSON_NAME)
         }
 
-        val lld by lazy {
-            savedLldJsonFile.fromJson<Lld>()
+        lateinit var lld: Lld
+            private set
+
+        fun prepareLld() {
+            lld = savedLldJsonFile.fromJson()
         }
 
         /**
@@ -24,6 +27,8 @@ class JsonIo {
          */
         fun whetherNeedCopyAssets(assets: AssetManager): Boolean {
             if (savedLldJsonFile.exists()) {
+                prepareLld()
+
                 val savedLldVersion = lld.version
                 val assetLldVersion = getAssetLldVersion(assets)
 
@@ -49,6 +54,8 @@ class JsonIo {
                 savedFile.outputStream().use { outStream ->
                     outStream.let {
                         inStream.copyTo(it)
+
+                        prepareLld()
                     }
                 }
             }

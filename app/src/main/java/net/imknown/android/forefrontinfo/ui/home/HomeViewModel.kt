@@ -156,47 +156,42 @@ class HomeViewModel : BaseListViewModel() {
             MyApplication.getMyString(R.string.function_allow_network_data_key), false
         )
 
+        var isOnline = false
+
         if (allowNetwork) {
             GatewayApi.downloadLldJsonFile({
-                launch(Dispatchers.IO) {
-                    prepareResult(true)
-                }
+                isOnline = true
             }, {
-                launch(Dispatchers.IO) {
-                    onError(
-                        Exception(
-                            MyApplication.getMyString(
-                                R.string.lld_json_download_failed,
-                                it.message
-                            )
-                        )
-                    )
-
-                    prepareResult(false)
-                }
+                showError(it.message)
             })
-        } else {
-            prepareResult(false)
         }
+
+        prepareResult(isOnline)
+    }
+
+    private fun showError(message: String?) = viewModelScope.launch(Dispatchers.IO) {
+        onError(Exception(MyApplication.getMyString(R.string.lld_json_download_failed, message)))
     }
 
     private suspend fun onError(exception: Exception) = withContext(Dispatchers.Main) {
         _error.value = Event(exception)
     }
 
-    private suspend fun prepareResult(isOnline: Boolean) {
-        if (!isOnline) {
+    private suspend fun prepareLld(isOnline: Boolean) {
+        if (isOnline) {
+            JsonIo.prepareLld()
+        } else {
             try {
                 copyJsonIfNeeded()
             } catch (e: Exception) {
                 onError(e)
             }
         }
-
-        prepareResultWhenOk(isOnline)
     }
 
-    private suspend fun prepareResultWhenOk(isOnline: Boolean) {
+    private suspend fun prepareResult(isOnline: Boolean) {
+        prepareLld(isOnline)
+
         @StringRes var lldDataModeResId: Int
         var dataVersion: String
 
