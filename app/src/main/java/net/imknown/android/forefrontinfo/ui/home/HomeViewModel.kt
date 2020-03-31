@@ -887,9 +887,7 @@ class HomeViewModel : BaseListViewModel() {
             |${collectWebViewInfo(implementWebViewPackageInfo, R.string.webview_implement_version)}
             |
             |${MyApplication.getMyString(
-                R.string.webview_detail,
-                lld.webView.stable.version,
-                lld.webView.beta.version
+                R.string.webview_detail, lld.webView.stable.version, lld.webView.beta.version
             )}
             """.trimMargin(),
             webViewColor
@@ -920,7 +918,7 @@ class HomeViewModel : BaseListViewModel() {
         val versionName =
             packageInfo?.versionName ?: MyApplication.getMyString(android.R.string.unknownName)
 
-        return "$desc\n$appName\n$versionName"
+        return "$desc:\n$appName ($versionName)"
     }
 
     private fun getOutdatedTargetSdkVersionApkModel(lld: Lld): MyModel {
