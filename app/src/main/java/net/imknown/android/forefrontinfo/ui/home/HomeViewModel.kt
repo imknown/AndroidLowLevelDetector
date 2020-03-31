@@ -994,9 +994,13 @@ class HomeViewModel : BaseListViewModel() {
         add(tempModels, myModel.title, myModel.detail, myModel.color)
     }
 
-    fun payloadOutdatedTargetSdkVersionApk(myModel: MyModel, lld: Lld) =
+    fun payloadOutdatedTargetSdkVersionApk(myModels: ArrayList<MyModel>) =
         viewModelScope.launch(Dispatchers.IO) {
-            myModel.detail = getOutdatedTargetSdkVersionApkModel(lld).detail
+            if (myModels.isEmpty()) {
+                return@launch
+            }
+
+            myModels.last().detail = getOutdatedTargetSdkVersionApkModel(JsonIo.lld).detail
 
             withContext(Dispatchers.Main) {
                 _showOutdatedOrderEvent.value = Event(0)

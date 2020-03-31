@@ -5,7 +5,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.base.EventObserver
-import net.imknown.android.forefrontinfo.base.JsonIo
 import net.imknown.android.forefrontinfo.ui.base.BaseListFragment
 import net.imknown.android.forefrontinfo.ui.base.MyAdapter
 
@@ -30,10 +29,7 @@ class HomeFragment : BaseListFragment() {
         })
 
         listViewModel.outdatedOrderProp.observe(viewLifecycleOwner, EventObserver {
-            listViewModel.payloadOutdatedTargetSdkVersionApk(
-                myAdapter.myModels.last(),
-                JsonIo.lld
-            )
+            listViewModel.payloadOutdatedTargetSdkVersionApk(myAdapter.myModels)
         })
 
         listViewModel.showOutdatedOrderEvent.observe(viewLifecycleOwner, EventObserver {
