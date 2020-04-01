@@ -4,9 +4,11 @@ import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.Event
@@ -44,6 +46,9 @@ class OthersViewModel : BaseListViewModel() {
     }
     val rawProp: LiveData<Event<Boolean>> by lazy { _rawProp }
 
+    private val _toggleRawPropEvent by lazy { MutableLiveData<Event<ToggleRawPropResult>>() }
+    val toggleRawPropEvent: LiveData<Event<ToggleRawPropResult>> by lazy { _toggleRawPropEvent }
+
     @SuppressLint("DiscouragedPrivateApi")
     private fun getProcessBit(): String {
         val isProcess64Bit = if (isAtLeastStableAndroid6()) {
@@ -67,6 +72,9 @@ class OthersViewModel : BaseListViewModel() {
             }
         )
     }
+
+    var rawPropStartIndex = 0
+        private set
 
     @ExperimentalStdlibApi
     override fun collectModels() = viewModelScope.launch(Dispatchers.IO) {
@@ -139,6 +147,8 @@ class OthersViewModel : BaseListViewModel() {
         add(tempModels, MyApplication.getMyString(R.string.build_radio), Build.getRadioVersion())
         // endregion [Others]
 
+        rawPropStartIndex = tempModels.size
+
         getProp(tempModels)
 
         setModels(tempModels)
@@ -209,7 +219,33 @@ class OthersViewModel : BaseListViewModel() {
         )
     }
 
-    // TODO Use payload
+    data class ToggleRawPropResult(
+        val isOn: Boolean,
+        val positionStart: Int,
+        val itemCount: Int
+    )
+
+    fun payloadRawProp(myModels: ArrayList<MyModel>, isOn: Boolean) =
+        viewModelScope.launch(Dispatchers.IO) {
+            val itemCountChanged: Int
+
+            if (isOn) {
+                getProp(myModels)
+
+                itemCountChanged = myModels.size - rawPropStartIndex
+            } else {
+                itemCountChanged = myModels.size - rawPropStartIndex
+
+                myModels.subList(rawPropStartIndex, myModels.size).clear()
+            }
+
+            val result = ToggleRawPropResult(isOn, rawPropStartIndex, itemCountChanged)
+
+            withContext(Dispatchers.Main) {
+                _toggleRawPropEvent.value = Event(result)
+            }
+        }
+
     private fun getProp(tempModels: ArrayList<MyModel>) {
         val rawBuildProp = MyApplication.sharedPreferences.getBoolean(
             MyApplication.getMyString(R.string.function_raw_build_prop_key), false

@@ -18,7 +18,15 @@ class OthersFragment : BaseListFragment() {
         observeLanguageEvent(MyApplication.settingsLanguageEvent)
 
         listViewModel.rawProp.observe(viewLifecycleOwner, EventObserver {
-            listViewModel.collectModels()
+            listViewModel.payloadRawProp(myAdapter.myModels, it)
+        })
+
+        listViewModel.toggleRawPropEvent.observe(viewLifecycleOwner, EventObserver {
+            if (it.isOn) {
+                myAdapter.notifyItemRangeInserted(it.positionStart, it.itemCount)
+            } else {
+                myAdapter.notifyItemRangeRemoved(it.positionStart, it.itemCount)
+            }
         })
     }
 }
