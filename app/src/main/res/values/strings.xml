@@ -113,16 +113,16 @@
 
     <string name="bit_32">32bit</string>
     <string name="bit_64">64bit</string>
-    <string name="current_process_bit">Current process bit</string>
     <string name="binder_status">Binder status</string>
     <string name="hw_binder_status">HW Binder status</string>
     <string name="vnd_binder_status">VND Binder status</string>
     <string name="abi32_binder32">ABI: 32bit, Binder: 32bit</string>
     <string name="abi64_binder64">ABI: 64bit, Binder: 64bit</string>
     <string name="abi32_binder64">ABI: 32bit, Binder: 64bit</string>
+    <string name="current_process_bit">Current process bit</string>
     <string name="os_arch">Current process architecture</string>
-    <string name="current_system_abi">Current system ABI</string>
     <string name="build_cpu_abi">Current process ABI</string>
+    <string name="current_system_abi">Current system ABI</string>
     <string name="build_supported_32_bit_abis">Supported 32bit CPU ABIs</string>
     <string name="build_supported_64_bit_abis">Supported 64bit CPU ABIs</string>
 

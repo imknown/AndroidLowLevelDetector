@@ -91,20 +91,24 @@ class OthersViewModel : BaseListViewModel() {
         // endregion [Basic]
 
         // region [Arch & ABI]
-        add(tempModels, MyApplication.getMyString(R.string.current_process_bit), getProcessBit())
         // region [Binder]
         detectBinderStatus(tempModels, DRIVER_BINDER, R.string.binder_status)
         detectBinderStatus(tempModels, DRIVER_HW_BINDER, R.string.hw_binder_status)
         detectBinderStatus(tempModels, DRIVER_VND_BINDER, R.string.vnd_binder_status)
         // endregion [Binder]
+
+        // region [Process]
+        add(tempModels, MyApplication.getMyString(R.string.current_process_bit), getProcessBit())
         add(tempModels, MyApplication.getMyString(R.string.os_arch), System.getProperty("os.arch"))
+        @Suppress("DEPRECATION")
+        add(tempModels, MyApplication.getMyString(R.string.build_cpu_abi), Build.CPU_ABI)
+        // endregion [Process]
+
         add(
             tempModels,
             MyApplication.getMyString(R.string.current_system_abi),
             getStringProperty(PROP_RO_PRODUCT_CPU_ABI)
         )
-        @Suppress("DEPRECATION")
-        add(tempModels, MyApplication.getMyString(R.string.build_cpu_abi), Build.CPU_ABI)
         add(
             tempModels,
             MyApplication.getMyString(R.string.build_supported_32_bit_abis),
