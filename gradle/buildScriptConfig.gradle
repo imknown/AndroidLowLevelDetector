@@ -122,14 +122,14 @@ ext {
     firebase = [
             googleServices                 : '4.3.3',
 
-            firebaseAnalytics              : '17.2.3',
+            firebaseAnalytics              : '17.3.0',
 
             // https://firebase.google.com/docs/crashlytics/get-started-new-sdk?platform=android#add-crashlytics
             firebaseCrashlyticsGradlePlugin: '2.0.0-beta03',
             // https://firebase.google.com/docs/crashlytics/get-started-new-sdk?platform=android#add-dependencies
-            firebaseCrashlytics            : '17.0.0-beta02',
+            firebaseCrashlytics            : '17.0.0-beta03',
             // https://firebase.google.com/docs/crashlytics/ndk-reports-new-sdk#update-gradle-config
-            firebaseCrashlyticsNdk         : '17.0.0-beta01'
+            firebaseCrashlyticsNdk         : '17.0.0-beta03'
     ]
     // endregion [Firebase]
 }
