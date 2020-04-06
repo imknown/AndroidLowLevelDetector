@@ -205,13 +205,9 @@ class OthersViewModel : BaseListViewModel() {
         } else if (binderVersion == -ERRNO_PERMISSION_DENIED) {
             android.R.string.unknownName
         } else if (binderVersion == BINDER64_PROTOCOL_VERSION) {
-            if (Build.SUPPORTED_64_BIT_ABIS.isNotEmpty()) {
-                R.string.abi64_binder64
-            } else {
-                R.string.abi32_binder64
-            }
+            R.string.bit_64
         } else if (binderVersion == BINDER32_PROTOCOL_VERSION) {
-            R.string.abi32_binder32
+            R.string.bit_32
         } else {
             android.R.string.unknownName
         }
