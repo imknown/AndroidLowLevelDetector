@@ -12,8 +12,8 @@ ext {
             compileSdkVersion        : 29,
             targetSdkVersion         : 29,
 
-            versionCode              : 22,
-            versionName              : '1.8.2'
+            versionCode              : 23,
+            versionName              : '1.8.3-debug'
     ]
     // endregion [AndroidBuild]
 
