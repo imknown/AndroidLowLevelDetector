@@ -73,8 +73,7 @@ class OthersViewModel : BaseListViewModel() {
         )
     }
 
-    var rawPropStartIndex = 0
-        private set
+    private var rawPropStartIndex = 0
 
     @ExperimentalStdlibApi
     override fun collectModels() = viewModelScope.launch(Dispatchers.IO) {
@@ -198,18 +197,22 @@ class OthersViewModel : BaseListViewModel() {
     ) {
         System.loadLibrary("BinderDetector")
 
-        val binderVersion = getBinderVersion(driver)
-
-        @StringRes val binderStatusId = if (binderVersion == -ERRNO_NO_SUCH_FILE_OR_DIRECTORY) {
-            R.string.result_not_supported
-        } else if (binderVersion == -ERRNO_PERMISSION_DENIED) {
-            android.R.string.unknownName
-        } else if (binderVersion == BINDER64_PROTOCOL_VERSION) {
-            R.string.bit_64
-        } else if (binderVersion == BINDER32_PROTOCOL_VERSION) {
-            R.string.bit_32
-        } else {
-            android.R.string.unknownName
+        @StringRes val binderStatusId = when (getBinderVersion(driver)) {
+            -ERRNO_NO_SUCH_FILE_OR_DIRECTORY -> {
+                R.string.result_not_supported
+            }
+            -ERRNO_PERMISSION_DENIED -> {
+                android.R.string.unknownName
+            }
+            BINDER64_PROTOCOL_VERSION -> {
+                R.string.bit_64
+            }
+            BINDER32_PROTOCOL_VERSION -> {
+                R.string.bit_32
+            }
+            else -> {
+                android.R.string.unknownName
+            }
         }
 
         add(
