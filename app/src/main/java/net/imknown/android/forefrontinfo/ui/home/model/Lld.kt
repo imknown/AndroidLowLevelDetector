@@ -92,7 +92,7 @@ data class Lld(
     data class Toyboxes(
         // https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-10.0.0_r33/main.c
         val stable: BaseInfo,
-        // https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-8.0.0_r44/main.c
+        // https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-8.0.0_r45/main.c
         val support: BaseInfo,
         // https://android.googlesource.com/platform/external/toybox/+/refs/heads/android10-mainline-resolv-release/main.c
         val mainline: BaseInfo,
