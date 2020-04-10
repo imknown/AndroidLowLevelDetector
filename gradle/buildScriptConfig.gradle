@@ -106,7 +106,7 @@ ext {
             leakCanary    : '2.2',
 
             // https://github.com/kittinunf/fuel
-            fuel          : '2.2.1',
+            fuel          : '2.2.2',
 
             // https://github.com/google/gson
             gson          : '2.8.6',
