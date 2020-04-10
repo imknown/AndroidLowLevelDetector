@@ -52,7 +52,7 @@ abstract class BaseListViewModel : BaseViewModel(), IAndroidVersion {
     }
 
     fun hasNoData(savedInstanceState: Bundle?) =
-        savedInstanceState == null || models.value.isNullOrEmpty()
+        (savedInstanceState == null || _showModelsEvent.value == null) && _showErrorEvent.value == null
 
     protected suspend fun setModels(tempModels: ArrayList<MyModel>) =
         withContext(Dispatchers.Main) {
