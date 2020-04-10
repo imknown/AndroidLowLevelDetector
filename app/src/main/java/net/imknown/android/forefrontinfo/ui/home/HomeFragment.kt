@@ -24,10 +24,6 @@ class HomeFragment : BaseListFragment() {
             actionBar?.subtitle = MyApplication.getMyString(it.lldDataModeResId, it.dataVersion)
         })
 
-        listViewModel.error.observe(viewLifecycleOwner, EventObserver {
-            listViewModel.showError(it)
-        })
-
         listViewModel.outdatedOrderProp.observe(viewLifecycleOwner, EventObserver {
             listViewModel.payloadOutdatedTargetSdkVersionApk(myAdapter.myModels)
         })

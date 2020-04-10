@@ -75,7 +75,11 @@ abstract class BaseListViewModel : BaseViewModel(), IAndroidVersion {
         }
     }
 
-    fun showError(error: Exception) = viewModelScope.launch(Dispatchers.Default) {
+    protected fun showError(message: String) = viewModelScope.launch(Dispatchers.Default) {
+        showError(Exception(message))
+    }
+
+    protected fun showError(error: Exception) = viewModelScope.launch(Dispatchers.Default) {
         withContext(Dispatchers.Main) {
             _showErrorEvent.value = Event(error.message.toString())
         }

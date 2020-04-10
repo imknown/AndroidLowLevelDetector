@@ -126,9 +126,6 @@ class HomeViewModel : BaseListViewModel() {
     private val _subtitle by lazy { MutableLiveData<Subtitle>() }
     val subtitle: LiveData<Subtitle> by lazy { _subtitle }
 
-    private val _error by lazy { MutableLiveData<Event<Exception>>() }
-    val error: LiveData<Event<Exception>> by lazy { _error }
-
     private val _outdatedOrderProp by lazy {
         MyApplication.sharedPreferences.booleanEventLiveData(
             viewModelScope,
@@ -162,29 +159,21 @@ class HomeViewModel : BaseListViewModel() {
             GatewayApi.downloadLldJsonFile({
                 isOnline = true
             }, {
-                showError(it.message)
+                showError(MyApplication.getMyString(R.string.lld_json_download_failed, it.message))
             })
         }
 
         prepareResult(isOnline)
     }
 
-    private fun showError(message: String?) = viewModelScope.launch(Dispatchers.IO) {
-        onError(Exception(MyApplication.getMyString(R.string.lld_json_download_failed, message)))
-    }
-
-    private suspend fun onError(exception: Exception) = withContext(Dispatchers.Main) {
-        _error.value = Event(exception)
-    }
-
-    private suspend fun prepareLld(isOnline: Boolean) {
+    private fun prepareLld(isOnline: Boolean) {
         if (isOnline) {
             JsonIo.prepareLld()
         } else {
             try {
                 copyJsonIfNeeded()
             } catch (e: Exception) {
-                onError(e)
+                showError(e)
             }
         }
     }
@@ -207,7 +196,7 @@ class HomeViewModel : BaseListViewModel() {
             }
             dataVersion = lld.version
         } catch (e: Exception) {
-            onError(Exception(MyApplication.getMyString(R.string.lld_json_parse_failed, e.message)))
+            showError(MyApplication.getMyString(R.string.lld_json_parse_failed, e.message))
 
             lldDataModeResId = R.string.lld_json_offline
 
