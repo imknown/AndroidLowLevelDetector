@@ -15,6 +15,12 @@
   - User uses this permission to fetch data from remote server
   - This permission is only used when user turns on the switch in settings manually
 
+- Used by Firebase:
+  - android.permission.ACCESS_NETWORK_STATE
+  - android.permission.WAKE_LOCK
+  - com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE
+  - com.google.android.c2dm.permission.RECEIVE
+
 ## Security
 
 - You can review all the code here, so I promise there are no things below inside:
