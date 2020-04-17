@@ -60,7 +60,7 @@ ext {
 
             navigation            : '2.2.0',
 
-            preference            : '1.1.0',
+            preference            : '1.1.1',
 
             recyclerView          : '1.1.0',
 
