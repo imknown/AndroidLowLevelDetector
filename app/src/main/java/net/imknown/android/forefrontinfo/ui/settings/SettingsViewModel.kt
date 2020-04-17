@@ -176,8 +176,11 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
     private fun getApplicationLabel(
         packageName: String,
         packageManager: PackageManager
-    ): CharSequence {
+    ) = try {
         val applicationInfo = packageManager.getApplicationInfo(packageName, 0)
-        return packageManager.getApplicationLabel(applicationInfo) // applicationInfo.loadLabel(packageManager)
+        packageManager.getApplicationLabel(applicationInfo) // applicationInfo.loadLabel(packageManager)
+    } catch (e: PackageManager.NameNotFoundException) {
+        e.printStackTrace()
+        MyApplication.instance.getString(android.R.string.unknownName)
     }
 }
