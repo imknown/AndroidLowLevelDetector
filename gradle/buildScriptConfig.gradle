@@ -4,7 +4,7 @@ ext {
             // https://r8.googlesource.com/r8/+refs
             r8                       : '2.0.67',
 
-            androidStudioGradlePlugin: '3.6.2',
+            androidStudioGradlePlugin: '3.6.3',
 
             // https://developer.android.com/studio/releases/build-tools.html#notes
             buildToolsVersion        : '29.0.3',
