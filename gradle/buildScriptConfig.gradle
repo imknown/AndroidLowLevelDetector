@@ -2,7 +2,7 @@ ext {
     // region [AndroidBuild]
     androidBuild = [
             // https://r8.googlesource.com/r8/+refs
-            r8                       : '2.0.67',
+            r8                       : '2.0.70',
 
             androidStudioGradlePlugin: '3.6.3',
 
