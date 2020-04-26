@@ -4,13 +4,14 @@ ext {
             // https://r8.googlesource.com/r8/+refs
             r8                       : '2.0.70',
 
-            androidStudioGradlePlugin: '3.6.3',
+            androidStudioGradlePlugin: '4.0.0-beta05',
 
             // https://developer.android.com/studio/releases/build-tools.html#notes
-            buildToolsVersion        : '29.0.3',
+            buildToolsVersion        : '30.0.0-rc2',
+
             minSdkVersion            : 21,
-            compileSdkVersion        : 29,
-            targetSdkVersion         : 29,
+            compileSdkVersion        : 'android-R',
+            targetSdkVersion         : 'R',
 
             versionCode              : 24,
             versionName              : '1.8.4_unpublished'
