@@ -86,7 +86,6 @@ class HomeViewModel : BaseListViewModel() {
 
         // https://source.android.com/devices/tech/ota/apex?hl=en
         private const val PROP_APEX_UPDATABLE = "ro.apex.updatable"
-        private const val CMD_FLATTENED_APEX_MOUNT = "grep 'tmpfs /apex tmpfs' /proc/mounts"
 
         private const val SETTINGS_DISABLED = 0
         private const val SETTINGS_ENABLED = 1
@@ -287,7 +286,7 @@ class HomeViewModel : BaseListViewModel() {
 
         detectSar(tempModels)
 
-        detectApex(tempModels)
+        detectApex(tempModels, mounts)
 
         detectDeveloperOptions(tempModels)
 
@@ -731,12 +730,13 @@ class HomeViewModel : BaseListViewModel() {
         )
     }
 
-    private fun detectApex(tempModels: ArrayList<MyModel>) {
+    private fun detectApex(tempModels: ArrayList<MyModel>, mounts: List<Mount>) {
         val apexUpdatable =
             getStringProperty(PROP_APEX_UPDATABLE, isAtLeastStableAndroid10()).toBoolean()
 
-        val flattenedApexMountedResult = sh(CMD_FLATTENED_APEX_MOUNT, isAtLeastStableAndroid10())
-        val isFlattenedApexMounted = isShellResultSuccessful(flattenedApexMountedResult)
+        val isFlattenedApexMounted = isAtLeastStableAndroid10() && mounts.any {
+            it.mountPoint.startsWith("/apex/") && it.mountPoint.contains("@")
+        }
 
         val isApex = apexUpdatable || isFlattenedApexMounted
         val isLegacyFlattenedApex = !apexUpdatable && isFlattenedApexMounted
