@@ -82,6 +82,8 @@ class HomeViewModel : BaseListViewModel() {
         private const val CMD_MOUNT_SYSTEM =
             "grep ' /system ' /proc/mounts | grep -v 'tmpfs' | grep -v 'none'"
 
+        private const val CMD_MOUNT = "cat /proc/mounts"
+
         // https://source.android.com/devices/tech/ota/apex?hl=en
         private const val PROP_APEX_UPDATABLE = "ro.apex.updatable"
         private const val CMD_FLATTENED_APEX_MOUNT = "grep 'tmpfs /apex tmpfs' /proc/mounts"
@@ -208,6 +210,38 @@ class HomeViewModel : BaseListViewModel() {
         }
     }
 
+    // https://unix.stackexchange.com/questions/91960/can-anyone-explain-the-output-of-mount
+    private data class Mount(
+        val blockDevice: String,
+        val mountPoint: String,
+        val type: String,
+        val mountOptions: String,
+        val dummy0: Int,
+        val dummy1: Int
+    )
+
+    private fun getMounts(): List<Mount> {
+        val mounts = ArrayList<Mount>()
+
+        sh(CMD_MOUNT).output.forEach {
+            val columns = it.split(" ")
+            if (columns.size == 6) {
+                mounts.add(
+                    Mount(
+                        columns[0],
+                        columns[1],
+                        columns[2],
+                        columns[3],
+                        columns[4].toInt(),
+                        columns[5].toInt()
+                    )
+                )
+            }
+        }
+
+        return mounts
+    }
+
     // region [detect]
     private suspend fun detect(lld: Lld) {
         val tempModels = ArrayList<MyModel>()
@@ -248,6 +282,8 @@ class HomeViewModel : BaseListViewModel() {
         detectGsiCompatibility(tempModels)
 
         detectVndk(tempModels, lld)
+
+        val mounts = getMounts()
 
         detectSar(tempModels)
 
