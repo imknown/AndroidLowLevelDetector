@@ -64,6 +64,7 @@
     <string name="built_in_vndk_version_result">\u0020(Niveau: %s)</string>
 
     <string name="sar_status_title">Status System-as-root</string>
+    <string name="sar_type_legacy">Héritage</string>
 
     <string name="apex_status_title">Status APEX</string>
     <string name="apex_legacy_flattened">\u0020(Héritage aplati)</string>
