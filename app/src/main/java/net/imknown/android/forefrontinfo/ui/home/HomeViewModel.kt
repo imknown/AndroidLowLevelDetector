@@ -73,18 +73,20 @@ class HomeViewModel : BaseListViewModel() {
         private const val PROP_VNDK_VERSION = "ro.vndk.version"
 
         // https://source.android.com/devices/bootloader/system-as-root?hl=en
+        //
         // https://twitter.com/topjohnwu/status/1174392824625676288
-        // https://github.com/topjohnwu/Magisk/blob/master/scripts/util_functions.sh#L193
-        // https://github.com/opengapps/opengapps/blob/master/scripts/inc.installer.sh#L710
+        // https://github.com/topjohnwu/Magisk/blob/master/docs/boot.md
+        // https://github.com/topjohnwu/Magisk/blob/master/scripts/util_functions.sh#L239
+        // https://github.com/opengapps/opengapps/blob/master/scripts/inc.installer.sh#L1120
+        //
         // https://github.com/penn5/TrebleCheck/blob/master/app/src/main/java/tk/hack5/treblecheck/MountDetector.kt
+        // https://github.com/kevintresuelo/treble/blob/master/app/src/main/java/com/kevintresuelo/treble/checker/SystemAsRoot.kt
         private const val PROP_SYSTEM_ROOT_IMAGE = "ro.build.system_root_image"
-        private const val CMD_MOUNT_DEV_ROOT = "grep '/dev/root / ' /proc/mounts"
-        private const val CMD_MOUNT_SYSTEM =
-            "grep ' /system ' /proc/mounts | grep -v 'tmpfs' | grep -v 'none'"
+
+        private const val CMD_MOUNT = "cat /proc/mounts"
 
         // https://source.android.com/devices/tech/ota/apex?hl=en
         private const val PROP_APEX_UPDATABLE = "ro.apex.updatable"
-        private const val CMD_FLATTENED_APEX_MOUNT = "grep 'tmpfs /apex tmpfs' /proc/mounts"
 
         private const val SETTINGS_DISABLED = 0
         private const val SETTINGS_ENABLED = 1
@@ -208,6 +210,38 @@ class HomeViewModel : BaseListViewModel() {
         }
     }
 
+    // https://unix.stackexchange.com/questions/91960/can-anyone-explain-the-output-of-mount
+    private data class Mount(
+        val blockDevice: String,
+        val mountPoint: String,
+        val type: String,
+        val mountOptions: String,
+        val dummy0: Int,
+        val dummy1: Int
+    )
+
+    private fun getMounts(): List<Mount> {
+        val mounts = ArrayList<Mount>()
+
+        sh(CMD_MOUNT).output.forEach {
+            val columns = it.split(" ")
+            if (columns.size == 6) {
+                mounts.add(
+                    Mount(
+                        columns[0],
+                        columns[1],
+                        columns[2],
+                        columns[3],
+                        columns[4].toInt(),
+                        columns[5].toInt()
+                    )
+                )
+            }
+        }
+
+        return mounts
+    }
+
     // region [detect]
     private suspend fun detect(lld: Lld) {
         val tempModels = ArrayList<MyModel>()
@@ -249,9 +283,11 @@ class HomeViewModel : BaseListViewModel() {
 
         detectVndk(tempModels, lld)
 
-        detectSar(tempModels)
+        val mounts = getMounts()
 
-        detectApex(tempModels)
+        detectSar(tempModels, mounts)
+
+        detectApex(tempModels, mounts)
 
         detectDeveloperOptions(tempModels)
 
@@ -674,33 +710,59 @@ class HomeViewModel : BaseListViewModel() {
         )
     }
 
-    private fun detectSar(tempModels: ArrayList<MyModel>) {
-        val hasSystemRootImage =
+    private fun detectSar(tempModels: ArrayList<MyModel>, mounts: List<Mount>) {
+        val isLAndroid9TheLegacySar =
             getStringProperty(PROP_SYSTEM_ROOT_IMAGE, isAtLeastStableAndroid9()).toBoolean()
 
-        val mountDevRootResult = sh(CMD_MOUNT_DEV_ROOT, isAtLeastStableAndroid9())
-        val hasMountDevRoot = isShellResultSuccessful(mountDevRootResult)
+        val isTheLegacySarMount = isAtLeastStableAndroid9()
+                && mounts.any { it.blockDevice == "/dev/root" && it.mountPoint == "/" }
 
-        val mountSystemResult =
-            sh(CMD_MOUNT_SYSTEM, isAtLeastStableAndroid9() && !hasSystemRootImage)
-        val hasMountSystem = isShellResultSuccessful(mountSystemResult)
+        val isTheLegacySar = isLAndroid9TheLegacySar && isTheLegacySarMount
 
-        val isSar =
-            isAtLeastStableAndroid9() && (hasSystemRootImage || hasMountDevRoot || !hasMountSystem)
+        val isThe2siSar = isAtLeastStableAndroid10()
+                && mounts.none { it.blockDevice != "none" && it.mountPoint == "/system" && it.type != "tmpfs" }
+
+        val isSar = isTheLegacySar || isThe2siSar || isAtLeastStableAndroid10()
+        var result = translate(isSar)
+
+        @ColorRes var color = R.color.colorCritical
+        @StringRes val sarTypeRes: Int
+
+        if (isSar) {
+            when {
+                isTheLegacySar -> {
+                    color = R.color.colorWaring
+                    sarTypeRes = R.string.sar_type_legacy
+                }
+                isThe2siSar -> {
+                    color = R.color.colorNoProblem
+                    sarTypeRes = R.string.sar_type_2si
+                }
+                else -> {
+                    color = R.color.colorCritical
+                    sarTypeRes = android.R.string.unknownName
+                }
+            }
+
+            val sarType = MyApplication.getMyString(sarTypeRes)
+            result += " ($sarType)"
+        }
+
         add(
             tempModels,
             MyApplication.getMyString(R.string.sar_status_title),
-            translate(isSar),
-            isSar
+            result,
+            color
         )
     }
 
-    private fun detectApex(tempModels: ArrayList<MyModel>) {
+    private fun detectApex(tempModels: ArrayList<MyModel>, mounts: List<Mount>) {
         val apexUpdatable =
             getStringProperty(PROP_APEX_UPDATABLE, isAtLeastStableAndroid10()).toBoolean()
 
-        val flattenedApexMountedResult = sh(CMD_FLATTENED_APEX_MOUNT, isAtLeastStableAndroid10())
-        val isFlattenedApexMounted = isShellResultSuccessful(flattenedApexMountedResult)
+        val isFlattenedApexMounted = isAtLeastStableAndroid10() && mounts.any {
+            it.mountPoint.startsWith("/apex/") && it.mountPoint.contains("@")
+        }
 
         val isApex = apexUpdatable || isFlattenedApexMounted
         val isLegacyFlattenedApex = !apexUpdatable && isFlattenedApexMounted

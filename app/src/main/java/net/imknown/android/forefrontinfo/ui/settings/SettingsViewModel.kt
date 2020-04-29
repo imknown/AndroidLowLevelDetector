@@ -186,6 +186,6 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
         packageManager.getApplicationLabel(applicationInfo) // applicationInfo.loadLabel(packageManager)
     } catch (e: PackageManager.NameNotFoundException) {
         e.printStackTrace()
-        MyApplication.instance.getString(android.R.string.unknownName)
+        MyApplication.getMyString(android.R.string.unknownName)
     }
 }

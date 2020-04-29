@@ -64,9 +64,10 @@
     <string name="built_in_vndk_version_result">\u0020(等级: %s)</string>
 
     <string name="sar_status_title">System-as-root 状态</string>
+    <string name="sar_type_legacy">旧版</string>
 
     <string name="apex_status_title">APEX 状态</string>
-    <string name="apex_legacy_flattened">\u0020(旧式扁平的)</string>
+    <string name="apex_legacy_flattened">\u0020(旧版扁平的)</string>
 
     <string name="developer_options_status_title">开发者选项 状态</string>
 
