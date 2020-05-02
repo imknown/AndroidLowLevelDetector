@@ -137,8 +137,8 @@ class HomeViewModel : BaseListViewModel() {
     }
     val outdatedOrderProp: LiveData<Event<Boolean>> by lazy { _outdatedOrderProp }
 
-    private val _showOutdatedOrderEvent by lazy { MutableLiveData<Event<Int>>() }
-    val showOutdatedOrderEvent: LiveData<Event<Int>> by lazy { _showOutdatedOrderEvent }
+    private val _showOutdatedOrderEvent by lazy { MutableLiveData<Event<Unit>>() }
+    val showOutdatedOrderEvent: LiveData<Event<Unit>> by lazy { _showOutdatedOrderEvent }
 
     private fun copyJsonIfNeeded() {
         if (JsonIo.whetherNeedCopyAssets(MyApplication.instance.assets)) {
@@ -1047,7 +1047,7 @@ class HomeViewModel : BaseListViewModel() {
             myModels.last().detail = getOutdatedTargetSdkVersionApkModel(JsonIo.lld).detail
 
             withContext(Dispatchers.Main) {
-                _showOutdatedOrderEvent.value = Event(0)
+                _showOutdatedOrderEvent.value = Event(Unit)
             }
         }
     // endregion [detect]
