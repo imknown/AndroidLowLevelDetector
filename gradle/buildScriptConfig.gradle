@@ -124,11 +124,11 @@ ext {
 
             firebaseAnalytics              : '17.4.0',
 
-            // https://firebase.google.com/docs/crashlytics/get-started-new-sdk?platform=android#add-crashlytics
+            // https://firebase.google.com/docs/crashlytics/get-started?platform=android#add-crashlytics
             firebaseCrashlyticsGradlePlugin: '2.0.0',
-            // https://firebase.google.com/docs/crashlytics/get-started-new-sdk?platform=android#add-dependencies
+            // https://firebase.google.com/docs/crashlytics/get-started?platform=android#add-dependencies
             firebaseCrashlytics            : '17.0.0',
-            // https://firebase.google.com/docs/crashlytics/ndk-reports-new-sdk#update-gradle-config
+            // https://firebase.google.com/docs/crashlytics/ndk-reports
             firebaseCrashlyticsNdk         : '17.0.0'
     ]
     // endregion [Firebase]
