@@ -7,7 +7,7 @@ import android.content.IntentFilter
 import androidx.lifecycle.LiveData
 import net.imknown.android.forefrontinfo.base.Event
 
-class LanguageBroadcastLiveData : LiveData<Event<Int>>() {
+class LanguageBroadcastLiveData : LiveData<Event<Unit>>() {
     override fun onActive() {
         super.onActive()
 
@@ -23,7 +23,7 @@ class LanguageBroadcastLiveData : LiveData<Event<Int>>() {
 
     private val receiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            value = Event(0)
+            value = Event(Unit)
         }
     }
 }

@@ -2,7 +2,7 @@ ext {
     // region [AndroidBuild]
     androidBuild = [
             // https://r8.googlesource.com/r8/+refs
-            r8                       : '2.0.71',
+            r8                       : '2.0.73',
 
             androidStudioGradlePlugin: '4.0.0-beta05',
 
@@ -13,8 +13,8 @@ ext {
             compileSdkVersion        : 'android-R',
             targetSdkVersion         : 'R',
 
-            versionCode              : 24,
-            versionName              : '1.8.4'//_unpublished'
+            versionCode              : 25,
+            versionName              : '1.8.5_unpublished'
     ]
     // endregion [AndroidBuild]
 

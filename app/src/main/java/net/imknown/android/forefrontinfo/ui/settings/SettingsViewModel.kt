@@ -39,8 +39,8 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
     private val _version by lazy { MutableLiveData<Version>() }
     val version: LiveData<Version> by lazy { _version }
 
-    private val _versionClick by lazy { MutableLiveData<Event<Int>>() }
-    val versionClick: LiveData<Event<Int>> by lazy { _versionClick }
+    private val _versionClick by lazy { MutableLiveData<Event<Unit>>() }
+    val versionClick: LiveData<Event<Unit>> by lazy { _versionClick }
 
     private val _themesPrefChangeEvent by lazy {
         MyApplication.sharedPreferences.stringEventLiveData(
@@ -132,7 +132,7 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
 
         if (--timesLeft == 0) {
             withContext(Dispatchers.Main) {
-                _versionClick.value = Event(0)
+                _versionClick.value = Event(Unit)
             }
         }
     }
