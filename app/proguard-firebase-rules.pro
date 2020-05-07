@@ -5,5 +5,5 @@
 -keep public class * extends java.lang.Exception  # Optional: Keep custom exceptions.
 
 # If you want a faster, obfuscated build with ProGuard, exclude Crashlytics by adding the following lines to your ProGuard config file:
-# -keep com.google.firebase.crashlytics。** {*; }
-# -dontwarn com.google.firebase.crashlytics。**
+# -keep class com.google.firebase.crashlytics.** { *; }
+# -dontwarn com.google.firebase.crashlytics.**
