@@ -1,9 +1,6 @@
 ext {
     // region [AndroidBuild]
     androidBuild = [
-            // https://r8.googlesource.com/r8/+refs
-            r8                       : '2.0.73',
-
             androidStudioGradlePlugin: '3.6.3',
 
             // https://developer.android.com/studio/releases/build-tools.html#notes
