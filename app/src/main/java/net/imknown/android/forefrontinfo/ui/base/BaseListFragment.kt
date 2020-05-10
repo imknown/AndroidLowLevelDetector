@@ -27,7 +27,7 @@ abstract class BaseListFragment : BaseFragment() {
         return inflater.inflate(R.layout.fragment_list, container, false)
     }
 
-    protected fun observeLanguageEvent(event: LiveData<Event<Int>>) {
+    protected fun observeLanguageEvent(event: LiveData<Event<Unit>>) {
         event.observe(viewLifecycleOwner, EventObserver {
             swipeRefreshLayout.isRefreshing = true
 

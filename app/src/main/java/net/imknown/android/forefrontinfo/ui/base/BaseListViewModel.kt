@@ -19,8 +19,8 @@ abstract class BaseListViewModel : BaseViewModel(), IAndroidVersion {
     private val _models by lazy { MutableLiveData<ArrayList<MyModel>>() }
     val models: LiveData<ArrayList<MyModel>> by lazy { _models }
 
-    private val _showModelsEvent by lazy { MutableLiveData<Event<Int>>() }
-    val showModelsEvent: LiveData<Event<Int>> by lazy { _showModelsEvent }
+    private val _showModelsEvent by lazy { MutableLiveData<Event<Unit>>() }
+    val showModelsEvent: LiveData<Event<Unit>> by lazy { _showModelsEvent }
 
     private val _showErrorEvent by lazy { MutableLiveData<Event<String>>() }
     val showErrorEvent: LiveData<Event<String>> by lazy { _showErrorEvent }
@@ -71,7 +71,7 @@ abstract class BaseListViewModel : BaseViewModel(), IAndroidVersion {
         myModels.addAll(newModels)
 
         withContext(Dispatchers.Main) {
-            _showModelsEvent.value = Event(0)
+            _showModelsEvent.value = Event(Unit)
         }
     }
 

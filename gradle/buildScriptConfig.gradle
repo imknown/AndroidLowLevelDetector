@@ -1,9 +1,6 @@
 ext {
     // region [AndroidBuild]
     androidBuild = [
-            // https://r8.googlesource.com/r8/+refs
-            r8                       : '2.0.71',
-
             androidStudioGradlePlugin: '3.6.3',
 
             // https://developer.android.com/studio/releases/build-tools.html#notes
@@ -12,8 +9,8 @@ ext {
             compileSdkVersion        : 29,
             targetSdkVersion         : 29,
 
-            versionCode              : 24,
-            versionName              : '1.8.4'//_unpublished'
+            versionCode              : 25,
+            versionName              : '1.8.5'//_unpublished'
     ]
     // endregion [AndroidBuild]
 
@@ -122,13 +119,13 @@ ext {
     firebase = [
             googleServices                 : '4.3.3',
 
-            firebaseAnalytics              : '17.4.0',
+            firebaseAnalytics              : '17.4.1',
 
-            // https://firebase.google.com/docs/crashlytics/get-started-new-sdk?platform=android#add-crashlytics
-            firebaseCrashlyticsGradlePlugin: '2.0.0',
-            // https://firebase.google.com/docs/crashlytics/get-started-new-sdk?platform=android#add-dependencies
+            // https://firebase.google.com/docs/crashlytics/get-started?platform=android#add-crashlytics
+            firebaseCrashlyticsGradlePlugin: '2.1.0',
+            // https://firebase.google.com/docs/crashlytics/get-started?platform=android#add-dependencies
             firebaseCrashlytics            : '17.0.0',
-            // https://firebase.google.com/docs/crashlytics/ndk-reports-new-sdk#update-gradle-config
+            // https://firebase.google.com/docs/crashlytics/ndk-reports
             firebaseCrashlyticsNdk         : '17.0.0'
     ]
     // endregion [Firebase]
