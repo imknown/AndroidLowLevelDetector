@@ -1,11 +1,25 @@
+ # IntelliJ Idea project files
 *.iml
-.gradle
-/local.properties
 /.idea
-.DS_Store
-build/
+
+# Gradle files
+/.gradle
+/local.properties
+
+# Generated files
+build
+
+# Android Studio
 /captures
-.externalNativeBuild
+
+# C/C++
 .cxx
+
+# Release keystore
 /keys/release.jks
+
+# Firebase
 google-services.json
+
+# macOS
+.DS_Store
