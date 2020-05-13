@@ -117,6 +117,6 @@ dependencies {
     // endregion [3rd Parties]
 
     implementation "com.google.firebase:firebase-analytics:$firebase.firebaseAnalytics"
-    implementation "com.google.firebase:firebase-crashlytics:$firebase.firebaseCrashlytics"
+    // implementation "com.google.firebase:firebase-crashlytics:$firebase.firebaseCrashlytics"
     implementation "com.google.firebase:firebase-crashlytics-ndk:$firebase.firebaseCrashlyticsNdk"
 }
