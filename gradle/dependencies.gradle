@@ -116,7 +116,7 @@ dependencies {
     implementation "com.g00fy2:versioncompare:$thirdParties.versionCompare"
     // endregion [3rd Parties]
 
-    implementation "com.google.firebase:firebase-analytics:$firebase.firebaseAnalytics"
+    implementation "com.google.firebase:firebase-analytics-ktx:$firebase.firebaseAnalytics"
     // implementation "com.google.firebase:firebase-crashlytics:$firebase.firebaseCrashlytics"
     implementation "com.google.firebase:firebase-crashlytics-ndk:$firebase.firebaseCrashlyticsNdk"
 }
