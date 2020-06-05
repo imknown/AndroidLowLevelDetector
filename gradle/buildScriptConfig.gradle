@@ -119,14 +119,14 @@ ext {
     firebase = [
             googleServices                 : '4.3.3',
 
-            firebaseAnalytics              : '17.4.2',
+            firebaseAnalytics              : '17.4.3',
 
             // https://firebase.google.com/docs/crashlytics/get-started?platform=android#add-crashlytics
             firebaseCrashlyticsGradlePlugin: '2.1.1',
             // https://firebase.google.com/docs/crashlytics/get-started?platform=android#add-dependencies
-            firebaseCrashlytics            : '17.0.0',
+            firebaseCrashlytics            : '17.0.1',
             // https://firebase.google.com/docs/crashlytics/ndk-reports
-            firebaseCrashlyticsNdk         : '17.0.0'
+            firebaseCrashlyticsNdk         : '17.0.1'
     ]
     // endregion [Firebase]
 }
