@@ -327,7 +327,7 @@ class HomeViewModel : BaseListViewModel() {
                 MyApplication.getMyString(
                     R.string.android_info,
                     getAndroidVersionName(),
-                    Build.VERSION.SDK_INT
+                    getAndroidApiLevel()
                 ),
                 MyApplication.getMyString(
                     R.string.android_info,

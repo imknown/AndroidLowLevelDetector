@@ -2,11 +2,15 @@ package net.imknown.android.forefrontinfo.ui.base
 
 import android.annotation.SuppressLint
 import android.os.Build
+import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 
 interface IAndroidVersion {
     companion object {
         private const val CODENAME_RELEASE = "REL"
+
+        // https://cs.android.com/android/platform/superproject/+/master:libcore/libart/src/main/java/dalvik/system/VMRuntime.java?q=SDK_VERSION_CUR_DEVELOPMENT
+        private const val SDK_VERSION_CUR_DEVELOPMENT = 10000
     }
 
     fun isAtLeastStableAndroid6() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
@@ -38,4 +42,14 @@ interface IAndroidVersion {
     } else {
         Build.VERSION.CODENAME
     }
+
+    fun getAndroidApiLevel() = if (isStableAndroid()) {
+        Build.VERSION.SDK_INT
+    } else {
+        SDK_VERSION_CUR_DEVELOPMENT
+    }
+
+    fun getAndroidApiLevelDynamic() = MyApplication.instance.packageManager.getApplicationInfo(
+        "android", 0
+    ).targetSdkVersion
 }

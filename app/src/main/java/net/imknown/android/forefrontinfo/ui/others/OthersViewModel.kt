@@ -230,17 +230,26 @@ class OthersViewModel : BaseListViewModel() {
 
     fun payloadRawProp(myModels: ArrayList<MyModel>, isOn: Boolean) =
         viewModelScope.launch(Dispatchers.IO) {
+            if (models.value.isNullOrEmpty()) {
+                return@launch
+            }
+
+            val modelsNotNull = models.value!!
+
             val itemCountChanged: Int
 
             if (isOn) {
-                getProp(myModels)
+                getProp(modelsNotNull)
 
-                itemCountChanged = myModels.size - rawPropStartIndex
+                itemCountChanged = modelsNotNull.size - rawPropStartIndex
             } else {
-                itemCountChanged = myModels.size - rawPropStartIndex
+                itemCountChanged = modelsNotNull.size - rawPropStartIndex
 
-                myModels.subList(rawPropStartIndex, myModels.size).clear()
+                modelsNotNull.subList(rawPropStartIndex, modelsNotNull.size).clear()
             }
+
+            myModels.clear()
+            myModels.addAll(modelsNotNull)
 
             val result = ToggleRawPropResult(isOn, rawPropStartIndex, itemCountChanged)
 
