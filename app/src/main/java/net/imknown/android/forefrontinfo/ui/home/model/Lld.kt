@@ -87,7 +87,7 @@ data class Lld(
 
     // https://github.com/landley/toybox
     // https://android.googlesource.com/platform/external/toybox/+refs
-    // https://chromium.googlesource.com/aosp/platform/system/core/+/upstream/shell_and_utilities/
+    // https://android.googlesource.com/platform/system/core/+/refs/heads/master/shell_and_utilities/
     @Keep
     data class Toyboxes(
         // https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-10.0.0_r39/main.c
