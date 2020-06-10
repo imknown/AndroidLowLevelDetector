@@ -4,6 +4,11 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <queries>
+        <package android:name="com.android.modulemetadata" />
+        <package android:name="com.google.android.modulemetadata" />
+    </queries>
+
     <application
         android:name=".MyApplication"
         android:allowBackup="false"

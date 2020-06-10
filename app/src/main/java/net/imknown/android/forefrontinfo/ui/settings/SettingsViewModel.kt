@@ -171,7 +171,12 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
     private fun getInstallerPackageName(
         packageName: String,
         packageManager: PackageManager
-    ) = packageManager.getInstallerPackageName(packageName)
+    ) = if (isAtLeastStableAndroid11()) {
+        packageManager.getInstallSourceInfo(packageName).installingPackageName
+    } else {
+        @Suppress("DEPRECATION")
+        packageManager.getInstallerPackageName(packageName)
+    }
 
     private fun getApplicationLabel(
         packageName: String,
