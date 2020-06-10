@@ -48,7 +48,7 @@ ext {
 
             drawerlayout          : '1.0.0',
 
-            fragment              : '1.2.4',
+            fragment              : '1.2.5',
 
             interpolator          : '1.0.0',
 
