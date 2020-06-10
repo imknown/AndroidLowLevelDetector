@@ -1,10 +1,8 @@
 package net.imknown.android.forefrontinfo
 
-import android.annotation.SuppressLint
 import android.os.StrictMode
 import leakcanary.LeakCanaryProcess
 
-@SuppressLint("Registered")
 class MyDebugApplication : MyApplication() {
     override fun onCreate() {
         super.onCreate()
