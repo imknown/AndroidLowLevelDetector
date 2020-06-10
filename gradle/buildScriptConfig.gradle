@@ -4,11 +4,11 @@ ext {
             androidStudioGradlePlugin: '4.0.0',
 
             // https://developer.android.com/studio/releases/build-tools.html#notes
-            buildToolsVersion        : '30.0.0-rc4',
+            buildToolsVersion        : '30.0.0',
 
             minSdkVersion            : 21,
-            compileSdkVersion        : 'android-R',
-            targetSdkVersion         : 'R',
+            compileSdkVersion        : 30,
+            targetSdkVersion         : 30,
 
             versionCode              : 27,
             versionName              : '1.8.7'//_unpublished'
