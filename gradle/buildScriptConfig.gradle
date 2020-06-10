@@ -11,7 +11,7 @@ ext {
             targetSdkVersion         : 30,
 
             versionCode              : 28,
-            versionName              : '1.9.0_unpublished'
+            versionName              : '1.9.0'
     ]
     // endregion [AndroidBuild]
 
