@@ -30,6 +30,8 @@ android {
 
         buildConfigField 'String', 'GIT_BRANCH', "\"$currentGitBranchName\""
 
+        ndkVersion androidBuild.ndkVersion
+
         externalNativeBuild {
             cmake {
                 arguments '-DANDROID_ARM_NEON=TRUE', '-DANDROID_TOOLCHAIN=clang'
