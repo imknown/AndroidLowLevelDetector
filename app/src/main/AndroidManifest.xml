@@ -7,6 +7,9 @@
     <queries>
         <package android:name="com.android.modulemetadata" />
         <package android:name="com.google.android.modulemetadata" />
+
+        <package android:name="com.android.webview" />
+        <package android:name="com.google.android.webview" />
     </queries>
 
     <application
