@@ -104,6 +104,7 @@ dependencies {
 
     // debugImplementation "com.squareup.leakcanary:leakcanary-android:$thirdParties.leakCanary"
     debugImplementation "com.squareup.leakcanary:leakcanary-android-process:$thirdParties.leakCanary"
+    // implementation "com.squareup.leakcanary:plumber-android:$thirdParties.leakCanary"
 
     implementation "com.google.code.gson:gson:$thirdParties.gson"
 
