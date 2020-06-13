@@ -1,8 +1,15 @@
 # AndroidLowLevelDetector
 An open-source small utility to detect some Android low-level features.
 
-Detect Treble, GSI, Mainline, APEX, system-as-root(SAR), A/B, etc. .
+Detect Treble, GSI, Mainline, APEX, system-as-root(SAR), A/B, etc. .  
+Some source codes refer to [Magisk][Magisk], [OpenGApps][OpenGApps], [TrebleInfo][TrebleInfo], [TrebleCheck][TrebleCheck], etc. .
 
+[Magisk]:https://github.com/topjohnwu/Magisk
+[OpenGApps]:https://github.com/opengapps/opengapps
+[TrebleInfo]:https://github.com/penn5/TrebleCheck
+[TrebleCheck]:https://github.com/kevintresuelo/treble
+
+## Source
 - https://github.com/imknown/AndroidLowLevelDetector
 - https://gitee.com/imknown/AndroidLowLevelDetector (Mirror)
 
