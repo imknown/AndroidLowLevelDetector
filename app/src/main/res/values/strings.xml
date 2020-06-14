@@ -66,6 +66,7 @@
     <string name="sar_status_title">System-as-root status</string>
     <string name="sar_type_legacy">Legacy</string>
     <string name="sar_type_2si" translatable="false">2-Stage-Init</string>
+    <string name="sar_type_twrp" translatable="false">TWRP</string>
 
     <string name="apex_status_title">APEX status</string>
     <string name="apex_legacy_flattened">\u0020(Legacy flattened)</string>

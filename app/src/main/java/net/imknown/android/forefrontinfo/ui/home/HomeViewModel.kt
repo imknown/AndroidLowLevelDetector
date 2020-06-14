@@ -732,7 +732,9 @@ class HomeViewModel : BaseListViewModel() {
         val isThe2siSar = isAtLeastStableAndroid10()
                 && mounts.none { it.blockDevice != "none" && it.mountPoint == "/system" && it.type != "tmpfs" }
 
-        val isSar = isTheLegacySar || isThe2siSar || isAtLeastStableAndroid10()
+        val isTrwpSar = mounts.any { it.mountPoint == "/system_root" && it.type != "tmpfs" }
+
+        val isSar = isTheLegacySar || isThe2siSar || isTrwpSar || isAtLeastStableAndroid10()
         var result = translate(isSar)
 
         @ColorRes var color = R.color.colorCritical
@@ -747,6 +749,10 @@ class HomeViewModel : BaseListViewModel() {
                 isThe2siSar -> {
                     color = R.color.colorNoProblem
                     sarTypeRes = R.string.sar_type_2si
+                }
+                isTrwpSar -> {
+                    color = R.color.colorWaring
+                    sarTypeRes = R.string.sar_type_twrp
                 }
                 else -> {
                     color = R.color.colorCritical
