@@ -93,7 +93,7 @@ class HomeViewModel : BaseListViewModel() {
         private const val SETTINGS_DISABLED = 0
         private const val SETTINGS_ENABLED = 1
 
-        // https://cs.android.com/android/platform/superproject/+/master:bootable/recovery/README.md;l=139
+        // https://android.googlesource.com/platform/bootable/recovery/+/master/README.md#shows-the-device_but-in-state
         private const val PROP_ADB_SECURE = "ro.adb.secure"
 
         // https://source.android.com/security/encryption/full-disk
@@ -101,7 +101,7 @@ class HomeViewModel : BaseListViewModel() {
         // private const val PROP_CRYPTO_STATE = "ro.crypto.state"
 
         // https://source.android.com/security/selinux
-        // https://cs.android.com/android/platform/superproject/+/master:external/selinux/libsepol/include/sepol/policydb/policydb.h;l=745
+        // https://android.googlesource.com/platform/external/selinux/+/master/libsepol/include/sepol/policydb/policydb.h#745
         // https://github.com/torvalds/linux/blob/master/security/selinux/include/security.h#L43
         // private const val SELINUX_MOUNT = "/sys/fs/selinux"
         // private const val CMD_SELINUX_POLICY_VERSION = "cat $SELINUX_MOUNT/policyvers"

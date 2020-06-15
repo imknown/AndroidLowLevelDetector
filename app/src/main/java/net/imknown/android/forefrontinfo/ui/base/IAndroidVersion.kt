@@ -9,7 +9,7 @@ interface IAndroidVersion {
     companion object {
         private const val CODENAME_RELEASE = "REL"
 
-        // https://cs.android.com/android/platform/superproject/+/master:libcore/libart/src/main/java/dalvik/system/VMRuntime.java?q=SDK_VERSION_CUR_DEVELOPMENT
+        // https://android.googlesource.com/platform/libcore/+/master/libart/src/main/java/dalvik/system/VMRuntime.java#163
         private const val SDK_VERSION_CUR_DEVELOPMENT = 10000
     }
 
