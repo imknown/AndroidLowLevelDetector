@@ -15,7 +15,7 @@
 // https://android.googlesource.com/platform/frameworks/native/+/master/libs/binder/ProcessState.cpp#349
 // https://android.googlesource.com/platform/system/libhwbinder/+/master/ProcessState.cpp#406
 // https://android.googlesource.com/platform/frameworks/native/+/master/libs/binder/tests/binderDriverInterfaceTest.cpp
-// https://android.googlesource.com/platform/external/linux-kselftest/+/refs/heads/master/tools/testing/selftests/filesystems/binderfs/binderfs_test.c#135
+// https://android.googlesource.com/platform/external/linux-kselftest/+/master/tools/testing/selftests/filesystems/binderfs/binderfs_test.c#135
 //
 // https://android.googlesource.com/platform/external/kernel-headers/+/master/original/uapi/linux/android/binder.h#102
 // https://android.googlesource.com/platform/bionic/+/master/libc/kernel/uapi/linux/android/binder.h#98

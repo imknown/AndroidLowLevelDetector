@@ -26,7 +26,7 @@ data class Lld(
     data class Androids(
         // https://source.android.com/security/bulletin/
         // https://source.android.com/setup/start/build-numbers?hl=en#source-code-tags-and-builds
-        // https://android.googlesource.com/platform/build/+/refs/heads/master/core/version_defaults.mk
+        // https://android.googlesource.com/platform/build/+/master/core/version_defaults.mk
         val securityPatchLevel: String,
         // https://source.android.com/setup/start/build-numbers?hl=en#source-code-tags-and-builds
         // https://android.googlesource.com/platform/frameworks/base/+refs
@@ -48,7 +48,7 @@ data class Lld(
 
         // https://android.googlesource.com/platform/build/+refs
         // https://android.googlesource.com/platform/build/+/refs/tags/android-10.0.0_r39/core/build_id.mk
-        // https://android.googlesource.com/platform/build/+/refs/heads/master/core/build_id.mk
+        // https://android.googlesource.com/platform/build/+/master/core/build_id.mk
         //
         // https://developers.google.com/android/images
         @Keep
@@ -69,14 +69,14 @@ data class Lld(
     // https://en.wikipedia.org/wiki/Linux_kernel_version_history
     @Keep
     data class Linuxes(
-        // https://android.googlesource.com/kernel/common/+/refs/heads/android-5.4/Makefile
-        // https://android.googlesource.com/kernel/common/+/refs/heads/android-4.19/Makefile
-        // https://android.googlesource.com/kernel/common/+/refs/heads/android-4.14/Makefile
-        // https://android.googlesource.com/kernel/common/+/refs/heads/android-4.9-q/Makefile
-        // https://android.googlesource.com/kernel/common/+/refs/heads/android-4.4-p/Makefile
-        // https://android.googlesource.com/kernel/common/+/refs/heads/android-3.18/Makefile
+        // https://android.googlesource.com/kernel/common/+/android-5.4/Makefile
+        // https://android.googlesource.com/kernel/common/+/android-4.19/Makefile
+        // https://android.googlesource.com/kernel/common/+/android-4.14/Makefile
+        // https://android.googlesource.com/kernel/common/+/android-4.9-q/Makefile
+        // https://android.googlesource.com/kernel/common/+/android-4.4-p/Makefile
+        // https://android.googlesource.com/kernel/common/+/android-3.18/Makefile
         val google: Versions,
-        // https://android.googlesource.com/kernel/common/+/refs/heads/android-mainline/Makefile
+        // https://android.googlesource.com/kernel/common/+/android-mainline/Makefile
         val mainline: BaseInfo
     ) {
         @Keep
@@ -87,17 +87,17 @@ data class Lld(
 
     // https://github.com/landley/toybox
     // https://android.googlesource.com/platform/external/toybox/+refs
-    // https://android.googlesource.com/platform/system/core/+/refs/heads/master/shell_and_utilities/
+    // https://android.googlesource.com/platform/system/core/+/master/shell_and_utilities/
     @Keep
     data class Toyboxes(
         // https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-10.0.0_r39/main.c
         val stable: BaseInfo,
         // https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-8.0.0_r47/main.c
         val support: BaseInfo,
-        // https://android.googlesource.com/platform/external/toybox/+/refs/heads/android10-mainline-resolv-release/main.c
+        // https://android.googlesource.com/platform/external/toybox/+/android10-mainline-resolv-release/main.c
         val mainline: BaseInfo,
-        // https://android.googlesource.com/platform/external/toybox/+/refs/heads/master/toys.h#135
-        // https://android.googlesource.com/platform/external/toybox/+/refs/heads/upstream-master/toys.h#135
+        // https://android.googlesource.com/platform/external/toybox/+/master/toys.h#135
+        // https://android.googlesource.com/platform/external/toybox/+/upstream-master/toys.h#135
         val master: BaseInfo
     )
 
