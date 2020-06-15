@@ -48,7 +48,9 @@
     <string name="selinux_status_permissive_mode">Mode permissif</string>
 
     <string name="ab_seamless_update_status_title">Mise à jour A/B seamless</string>
-    <string name="current_using_ab_slot_result">\u0020(Slot utilisé: %s)</string>
+    <string name="virtual_ab">\u0020(Virtuel)</string>
+    <string name="virtual_ab_retrofit">\u0020(Virtuel, rénové)</string>
+    <string name="current_using_ab_slot_result">\u0020(Courant: %s)</string>
 
     <string name="dynamic_partitions_status_title">Status du Partitions dynamiques</string>
     <string name="dynamic_partitions_enabled_retrofitted">\u0020(Rénové)</string>

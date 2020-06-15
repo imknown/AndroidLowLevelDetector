@@ -47,7 +47,10 @@ class HomeViewModel : BaseListViewModel() {
 
         // https://source.android.com/devices/tech/ota/ab?hl=en
         // /* root needed */ private const val CMD_BOOT_PARTITION = "ls /dev/block/bootdevice/by-name | grep boot_"
+        // private const val PROP_VIRTUAL_AB_ALLOW_NON_AB = "ro.virtual_ab.allow_non_ab"
         private const val PROP_AB_UPDATE = "ro.build.ab_update"
+        private const val PROP_VIRTUAL_AB_ENABLED = "ro.virtual_ab.enabled"
+        private const val PROP_VIRTUAL_AB_RETROFIT = "ro.virtual_ab.retrofit"
         private const val PROP_SLOT_SUFFIX = "ro.boot.slot_suffix"
 
         // https://source.android.com/devices/tech/ota/dynamic_partitions/ab_legacy?hl=en
@@ -585,32 +588,45 @@ class HomeViewModel : BaseListViewModel() {
     }
 
     private fun detectAb(tempModels: ArrayList<MyModel>) {
-        // val bootPartitions = sh(CMD_BOOT_PARTITION).output[0]
-
         val isAbUpdateSupported =
             getStringProperty(PROP_AB_UPDATE, isAtLeastStableAndroid7()).toBoolean()
-        var abUpdateSupportedArgs = translate(isAbUpdateSupported)
 
-        val abFinalResult =
-            MyApplication.getMyString(
-                R.string.ab_seamless_update_status_title
-            )
-        if (isAbUpdateSupported) {
-            val slotSuffixResult = getStringProperty(PROP_SLOT_SUFFIX)
-            val hasVndkVersion = slotSuffixResult.isNotEmpty()
-            val slotSuffixUsing = if (hasVndkVersion) {
-                slotSuffixResult
-            } else {
-                MyApplication.getMyString(android.R.string.unknownName)
+        val isVirtualAb =
+            getStringProperty(PROP_VIRTUAL_AB_ENABLED, isAtLeastStableAndroid11()).toBoolean()
+
+        val isAbEnable = isAbUpdateSupported || isVirtualAb
+
+        var abResult = translate(isAbEnable)
+
+        if (isAbEnable) {
+            if (isVirtualAb) {
+                val isVirtualAbRetrofit = getStringProperty(
+                    PROP_VIRTUAL_AB_RETROFIT, isAtLeastStableAndroid11()
+                ).toBoolean()
+
+                abResult += MyApplication.getMyString(
+                    if (isVirtualAbRetrofit) {
+                        R.string.virtual_ab_retrofit
+                    } else {
+                        R.string.virtual_ab
+                    }
+                )
             }
 
-            abUpdateSupportedArgs += MyApplication.getMyString(
+            val slotSuffixResult = getStringProperty(PROP_SLOT_SUFFIX)
+
+            abResult += MyApplication.getMyString(
                 R.string.current_using_ab_slot_result,
-                slotSuffixUsing
+                slotSuffixResult
             )
         }
 
-        add(tempModels, abFinalResult, abUpdateSupportedArgs, isAbUpdateSupported)
+        add(
+            tempModels,
+            MyApplication.getMyString(R.string.ab_seamless_update_status_title),
+            abResult,
+            isAbEnable
+        )
     }
 
     private fun detectDynamicPartitions(tempModels: ArrayList<MyModel>) {
