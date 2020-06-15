@@ -56,6 +56,7 @@
     <string name="dsu_status_title">Status du Mise à jour du système dynamique(DSU)</string>
 
     <string name="treble_status_title">Status du Projet Treble</string>
+    <string name="treble_legacy_no_fragments">\u0020(Héritage, pas de fragments)</string>
 
     <string name="gsi_status_title">Compatibilité GSI</string>
     <string name="result_compliant">Conforme à Treble</string>

@@ -28,6 +28,7 @@ import net.imknown.android.forefrontinfo.ui.base.BaseListViewModel
 import net.imknown.android.forefrontinfo.ui.base.MyModel
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.home.model.Subtitle
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -68,7 +69,13 @@ class HomeViewModel : BaseListViewModel() {
             "cat /system/etc/ld.config*.txt | grep -A 20 '\\[vendor\\]' | grep namespace.default.isolated"
 
         // https://source.android.com/devices/architecture?hl=en#hidl
+        // https://source.android.com/devices/architecture/vintf/objects#device-manifest-file
+        // https://source.android.com/compatibility/vts/hal-testability
+        // https://android.googlesource.com/platform/cts/+/master/hostsidetests/security/src/android/security/cts/SELinuxHostTest.java#268
+        // https://android.googlesource.com/platform/system/libvintf/+/master/VintfObject.cpp#238
+        // https://android.googlesource.com/platform/system/libvintf/+/master/VintfObject.cpp#289
         private const val PROP_TREBLE_ENABLED = "ro.treble.enabled"
+        private const val PATH_LEGACY_NO_FRAGMENTS_TREBLE = "/vendor/manifest.xml"
 
         // https://source.android.com/devices/architecture/vndk?hl=en
         private const val PROP_VNDK_LITE = "ro.vndk.lite"
@@ -648,11 +655,25 @@ class HomeViewModel : BaseListViewModel() {
         val isTrebleEnabled =
             getStringProperty(PROP_TREBLE_ENABLED, isAtLeastStableAndroid8()).toBoolean()
 
+        var trebleResult = translate(isTrebleEnabled)
+
+        @ColorRes val trebleColor = if (isTrebleEnabled) {
+            if (File(PATH_LEGACY_NO_FRAGMENTS_TREBLE).exists()) {
+                trebleResult += MyApplication.getMyString(R.string.treble_legacy_no_fragments)
+
+                R.color.colorWaring
+            } else {
+                R.color.colorNoProblem
+            }
+        } else {
+            R.color.colorCritical
+        }
+
         add(
             tempModels,
             MyApplication.getMyString(R.string.treble_status_title),
-            translate(isTrebleEnabled),
-            isTrebleEnabled
+            trebleResult,
+            trebleColor
         )
     }
 
