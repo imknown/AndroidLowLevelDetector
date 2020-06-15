@@ -3,26 +3,19 @@ package net.imknown.android.forefrontinfo.ui.others
 import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.StringRes
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
-import net.imknown.android.forefrontinfo.base.Event
-import net.imknown.android.forefrontinfo.base.booleanEventLiveData
-import net.imknown.android.forefrontinfo.ui.base.BaseListViewModel
+import net.imknown.android.forefrontinfo.ui.base.BasePureListViewModel
 import net.imknown.android.forefrontinfo.ui.base.MyModel
 import java.text.SimpleDateFormat
 import java.util.*
 
-class OthersViewModel : BaseListViewModel() {
+class OthersViewModel : BasePureListViewModel() {
 
     companion object {
-        private const val CMD_GETPROP = "getprop"
-
         private const val PROP_RO_PRODUCT_CPU_ABI = "ro.product.cpu.abi"
 
         // private const val CPU_ARCHITECTURE = "grep 'CPU architecture' /proc/cpuinfo"
@@ -37,18 +30,6 @@ class OthersViewModel : BaseListViewModel() {
 
         private const val PROP_PREVIEW_SDK_FINGERPRINT = "ro.build.version.preview_sdk_fingerprint"
     }
-
-    private val _rawProp by lazy {
-        MyApplication.sharedPreferences.booleanEventLiveData(
-            viewModelScope,
-            MyApplication.getMyString(R.string.function_raw_build_prop_key),
-            false
-        )
-    }
-    val rawProp: LiveData<Event<Boolean>> by lazy { _rawProp }
-
-    private val _toggleRawPropEvent by lazy { MutableLiveData<Event<ToggleRawPropResult>>() }
-    val toggleRawPropEvent: LiveData<Event<ToggleRawPropResult>> by lazy { _toggleRawPropEvent }
 
     @SuppressLint("DiscouragedPrivateApi")
     private fun getProcessBit(): String {
@@ -73,8 +54,6 @@ class OthersViewModel : BaseListViewModel() {
             }
         )
     }
-
-    private var rawPropStartIndex = 0
 
     @ExperimentalStdlibApi
     override fun collectModels() = viewModelScope.launch(Dispatchers.IO) {
@@ -151,10 +130,6 @@ class OthersViewModel : BaseListViewModel() {
         add(tempModels, MyApplication.getMyString(R.string.build_radio), Build.getRadioVersion())
         // endregion [Others]
 
-        rawPropStartIndex = tempModels.size
-
-        getProp(tempModels)
-
         setModels(tempModels)
     }
 
@@ -221,84 +196,5 @@ class OthersViewModel : BaseListViewModel() {
             MyApplication.getMyString(titleId),
             MyApplication.getMyString(binderStatusId)
         )
-    }
-
-    data class ToggleRawPropResult(
-        val isOn: Boolean,
-        val positionStart: Int,
-        val itemCount: Int
-    )
-
-    fun payloadRawProp(myModels: ArrayList<MyModel>, isOn: Boolean) =
-        viewModelScope.launch(Dispatchers.IO) {
-            if (models.value.isNullOrEmpty()) {
-                return@launch
-            }
-
-            val modelsNotNull = models.value!!
-
-            val itemCountChanged: Int
-
-            if (isOn) {
-                getProp(modelsNotNull)
-
-                itemCountChanged = modelsNotNull.size - rawPropStartIndex
-            } else {
-                itemCountChanged = modelsNotNull.size - rawPropStartIndex
-
-                modelsNotNull.subList(rawPropStartIndex, modelsNotNull.size).clear()
-            }
-
-            myModels.clear()
-            myModels.addAll(modelsNotNull)
-
-            val result = ToggleRawPropResult(isOn, rawPropStartIndex, itemCountChanged)
-
-            withContext(Dispatchers.Main) {
-                _toggleRawPropEvent.value = Event(result)
-            }
-        }
-
-    private fun getProp(tempModels: ArrayList<MyModel>) {
-        val rawBuildProp = MyApplication.sharedPreferences.getBoolean(
-            MyApplication.getMyString(R.string.function_raw_build_prop_key), false
-        )
-
-        if (!rawBuildProp) {
-            return
-        }
-
-        var temp = ""
-        sh(CMD_GETPROP).output.forEach {
-            if (it.startsWith("[") && it.endsWith("]")) {
-                addRawProp(tempModels, it)
-            } else {
-                temp += "$it\n"
-
-                if (it.endsWith("]")) {
-                    addRawProp(tempModels, temp)
-
-                    temp = ""
-                }
-            }
-        }
-    }
-
-    private fun addRawProp(tempModels: ArrayList<MyModel>, text: String) {
-        val result = text.split(": ")
-        add(tempModels, removeSquareBrackets(result[0]), removeSquareBrackets(result[1]))
-    }
-
-    private fun removeSquareBrackets(text: String) =
-        text.substringAfter("[").substringBefore(']').trimIndent()
-
-    private fun add(tempModels: ArrayList<MyModel>, title: String, detail: String?) {
-        val translatedDetail = if (detail.isNullOrEmpty()) {
-            MyApplication.getMyString(R.string.build_not_filled)
-        } else {
-            detail.toString()
-        }
-
-        tempModels.add(MyModel(title, translatedDetail))
     }
 }

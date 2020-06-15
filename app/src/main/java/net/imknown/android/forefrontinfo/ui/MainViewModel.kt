@@ -14,6 +14,7 @@ import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.ui.base.IAndroidVersion
 import net.imknown.android.forefrontinfo.ui.home.HomeFragment
 import net.imknown.android.forefrontinfo.ui.others.OthersFragment
+import net.imknown.android.forefrontinfo.ui.prop.PropFragment
 import net.imknown.android.forefrontinfo.ui.settings.SettingsFragment
 
 class MainViewModel : ViewModel(), IAndroidVersion {
@@ -88,7 +89,10 @@ class MainViewModel : ViewModel(), IAndroidVersion {
         }
     }
 
-    private suspend fun createFragment(fragmentTransaction: FragmentTransaction, @IdRes id: Int): Fragment {
+    private suspend fun createFragment(
+        fragmentTransaction: FragmentTransaction,
+        @IdRes id: Int
+    ): Fragment {
         val fragment: Fragment = when (id) {
             R.id.navigation_home -> {
                 HomeFragment.newInstance()
@@ -96,6 +100,10 @@ class MainViewModel : ViewModel(), IAndroidVersion {
 
             R.id.navigation_others -> {
                 OthersFragment.newInstance()
+            }
+
+            R.id.navigation_prop -> {
+                PropFragment.newInstance()
             }
 
             R.id.navigation_settings -> {

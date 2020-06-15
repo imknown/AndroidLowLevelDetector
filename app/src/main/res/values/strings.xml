@@ -15,6 +15,7 @@
     <!-- Tab -->
     <string name="title_home">Home</string>
     <string name="title_others">Others</string>
+    <string name="title_prop">Properties</string>
     <string name="title_settings">Settings</string>
 
     <!-- Home -->
@@ -176,10 +177,6 @@
     <string name="function_outdated_target_order_by_package_name_first_key" translatable="false">function_outdated_target_order_by_package_name_key</string>
     <string name="function_outdated_target_order_by_package_name_first_title">Order by package name first</string>
     <string name="function_outdated_target_order_by_package_name_first_summary">Order the outdated apps by package name first, otherwise by the targetSdkVersion first.</string>
-
-    <string name="function_raw_build_prop_key" translatable="false">interface_verbose_prop_key</string>
-    <string name="function_raw_build_prop_title">Show raw build.prop</string>
-    <string name="function_raw_build_prop_summary">Show the raw data of file build.prop in \"Others\"</string>
 
     <string name="about_title">About</string>
 

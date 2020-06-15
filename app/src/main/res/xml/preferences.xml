@@ -39,12 +39,6 @@
             app:key="@string/function_outdated_target_order_by_package_name_first_key"
             app:summary="@string/function_outdated_target_order_by_package_name_first_summary"
             app:title="@string/function_outdated_target_order_by_package_name_first_title" />
-
-        <SwitchPreferenceCompat
-            app:iconSpaceReserved="false"
-            app:key="@string/function_raw_build_prop_key"
-            app:summary="@string/function_raw_build_prop_summary"
-            app:title="@string/function_raw_build_prop_title" />
     </PreferenceCategory>
 
     <PreferenceCategory

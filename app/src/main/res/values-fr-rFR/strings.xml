@@ -15,6 +15,7 @@
     <!-- Tab -->
     <string name="title_home">Menu</string>
     <string name="title_others">Autres</string>
+    <string name="title_prop">Propriétés</string>
     <string name="title_settings">Paramètres</string>
 
     <!-- Home -->
@@ -161,9 +162,6 @@
 
     <string name="function_outdated_target_order_by_package_name_first_title">Commandez d\'abord par nom de colis</string>
     <string name="function_outdated_target_order_by_package_name_first_summary">Commandez d\'abord les applications obsolètes par nom de package, sinon par targetSdkVersion d\'abord.</string>
-
-    <string name="function_raw_build_prop_title">Voir build.prop directement</string>
-    <string name="function_raw_build_prop_summary">Voir directement les valeurs de build.prop dans \"Autres\"</string>
 
     <string name="about_title">À propos</string>
 

@@ -1,16 +1,16 @@
-package net.imknown.android.forefrontinfo.ui.others
+package net.imknown.android.forefrontinfo.ui.prop
 
 import androidx.fragment.app.activityViewModels
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.ui.base.BaseListFragment
 
-class OthersFragment : BaseListFragment() {
+class PropFragment : BaseListFragment() {
 
     companion object {
-        fun newInstance() = OthersFragment()
+        fun newInstance() = PropFragment()
     }
 
-    override val listViewModel by activityViewModels<OthersViewModel>()
+    override val listViewModel by activityViewModels<PropViewModel>()
 
     override fun init() {
         observeLanguageEvent(MyApplication.settingsLanguageEvent)

@@ -15,6 +15,7 @@
     <!-- 选项卡 -->
     <string name="title_home">首页</string>
     <string name="title_others">其他</string>
+    <string name="title_prop">属性</string>
     <string name="title_settings">设置</string>
 
     <!-- 首页 -->
@@ -161,9 +162,6 @@
 
     <string name="function_outdated_target_order_by_package_name_first_title">优先按包名排序</string>
     <string name="function_outdated_target_order_by_package_name_first_summary">优先按包名排序过时程序, 否则按 targetSdkVersion 优先.</string>
-
-    <string name="function_raw_build_prop_title">显示原始 build.prop</string>
-    <string name="function_raw_build_prop_summary">在 \"其他\" 中显示 build.prop 文件的原始数据</string>
 
     <string name="about_title">关于</string>
 
