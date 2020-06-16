@@ -16,9 +16,6 @@ Some source codes refer to [Magisk][Magisk], [OpenGApps][OpenGApps], [TrebleInfo
 2. https://github.com/imknown/AndroidLowLevelDetector/releases
 3. https://coolapk.com/apk/net.imknown.android.forefrontinfo
 
-## Screenshots
-![Home](art/home.png "Home") ![Others](art/others.png "Others") ![Settings](art/settings.png "Settings")
-
 ## Features
 - Detect Android version
 - Detect Android Build Id version
