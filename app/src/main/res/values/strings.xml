@@ -153,7 +153,7 @@
     <string name="interface_scroll_bar_key" translatable="false">interface_scroll_bar_key</string>
     <string name="interface_scroll_bar_title">Scroll bar mode</string>
     <string name="interface_scroll_bar_summary">Click to show the scroll bar mode</string>
-    <string name="interface_no_scroll_bar_key">None (High performance)</string>
+    <string name="interface_no_scroll_bar_key">None</string>
     <string name="interface_normal_scroll_bar_key">Normal</string>
     <!--<string name="interface_fast_scroll_bar_key">Draggable</string>-->
     <string name="interface_no_scroll_bar_value" translatable="false">0</string>

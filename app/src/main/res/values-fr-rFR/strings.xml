@@ -148,7 +148,7 @@
     <string name="interface_title">Interface</string>
     <string name="interface_scroll_bar_title">Mode de défilement</string>
     <string name="interface_scroll_bar_summary">Cliquez ici pour voir le mode de défilement</string>
-    <string name="interface_no_scroll_bar_key">Aucun (Boones performances)</string>
+    <string name="interface_no_scroll_bar_key">Aucun</string>
     <string name="interface_normal_scroll_bar_key">Normale</string>
     <!--<string name="interface_fast_scroll_bar_key">Tirrable</string>-->
 
