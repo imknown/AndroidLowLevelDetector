@@ -125,11 +125,11 @@ ext {
             firebaseAnalytics              : '17.4.3',
 
             // https://firebase.google.com/docs/crashlytics/get-started?platform=android#add-crashlytics
-            firebaseCrashlyticsGradlePlugin: '2.1.1',
+            firebaseCrashlyticsGradlePlugin: '2.2.0',
             // https://firebase.google.com/docs/crashlytics/get-started?platform=android#add-dependencies
-            firebaseCrashlytics            : '17.0.1',
+            firebaseCrashlytics            : '17.1.0',
             // https://firebase.google.com/docs/crashlytics/ndk-reports
-            firebaseCrashlyticsNdk         : '17.0.1'
+            firebaseCrashlyticsNdk         : '17.1.0'
     ]
     // endregion [Firebase]
 }
