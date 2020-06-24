@@ -8,6 +8,8 @@
         <item name="android:navigationBarColor">@color/colorNavigationBar</item>
         <!--<item name="android:navigationBarDividerColor">@android:color/darker_gray</item>-->
 
+        <item name="colorBackgroundFloating">@color/colorPrimary</item>
+
         <item name="android:windowEnableSplitTouch">false</item>
         <item name="android:splitMotionEvents">false</item>
     </style>
