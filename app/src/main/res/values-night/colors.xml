@@ -2,12 +2,29 @@
 <resources>
     <color name="ic_launcher_background">#069868</color>
 
-    <color name="colorPrimary">@android:color/black</color>
-    <color name="colorPrimaryDark">@android:color/black</color>
-    <color name="colorAccent">#6DB67D</color>
+    <color name="colorPrimary">@android:color/white</color>
+    <color name="colorPrimaryVariant">@android:color/white</color>
+    <color name="colorOnPrimary">@android:color/black</color>
+
+    <color name="colorSecondary">#4AA85E</color>
+    <color name="colorSecondaryVariant">#4AA85E</color>
+    <color name="colorOnSecondary">@android:color/white</color>
+
+    <color name="colorError">#F00</color>
+    <color name="colorOnError">@android:color/white</color>
+
+    <color name="colorSurface">@android:color/black</color>
+    <color name="colorOnSurface">@android:color/white</color>
+
+    <color name="colorBackground">@android:color/black</color>
+    <color name="colorOnBackground">@android:color/white</color>
 
     <color name="colorStatusBar">@android:color/black</color>
     <color name="colorNavigationBar">@android:color/black</color>
+
+    <color name="colorBackgroundFloating">@android:color/black</color>
+
+    <color name="colorBottomNavigationViewBackground">@android:color/black</color>
 
     <color name="colorStateless">#181818</color>
     <color name="colorDetail">#202020</color>

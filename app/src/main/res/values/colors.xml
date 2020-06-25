@@ -2,12 +2,29 @@
 <resources>
     <color name="ic_launcher_background">#069868</color>
 
-    <color name="colorPrimary">@android:color/white</color>
-    <color name="colorPrimaryDark">@android:color/secondary_text_dark</color>
-    <color name="colorAccent">#4AA85E</color>
+    <color name="colorPrimary">@android:color/black</color>
+    <color name="colorPrimaryVariant">@android:color/black</color>
+    <color name="colorOnPrimary">@android:color/white</color>
+
+    <color name="colorSecondary">#6DB67D</color>
+    <color name="colorSecondaryVariant">#6DB67D</color>
+    <color name="colorOnSecondary">@android:color/black</color>
+
+    <color name="colorError">#F00</color>
+    <color name="colorOnError">@android:color/white</color>
+
+    <color name="colorSurface">@android:color/white</color>
+    <color name="colorOnSurface">@android:color/black</color>
+
+    <color name="colorBackground">@android:color/white</color>
+    <color name="colorOnBackground">@android:color/black</color>
 
     <color name="colorStatusBar">@android:color/secondary_text_dark</color>
     <color name="colorNavigationBar">@android:color/secondary_text_dark</color>
+
+    <color name="colorBackgroundFloating">@android:color/white</color>
+
+    <color name="colorBottomNavigationViewBackground">@android:color/white</color>
 
     <color name="colorStateless">#EAEAEA</color>
     <color name="colorDetail">#F0F0F0</color>
@@ -15,5 +32,5 @@
     <color name="colorWaring">#FDD18F</color>
     <color name="colorCritical">#FFB1AC</color>
 
-    <color name="colorMainText">#000000</color>
+    <color name="colorMainText">@android:color/black</color>
 </resources>

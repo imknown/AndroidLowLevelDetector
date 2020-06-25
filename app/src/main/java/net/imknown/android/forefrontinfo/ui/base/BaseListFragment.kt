@@ -80,7 +80,7 @@ abstract class BaseListFragment : BaseFragment() {
     }
 
     private fun initViews(savedInstanceState: Bundle?) {
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent)
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorSecondary)
         swipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.colorStateless)
 
         if (listViewModel.hasNoData(savedInstanceState)) {

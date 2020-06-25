@@ -7,9 +7,11 @@
     tools:context=".ui.MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
+        style="@style/Widget.MaterialComponents.AppBarLayout.Surface"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:attr/windowBackground">
+        android:backgroundTint="@color/colorBottomNavigationViewBackground"
+        android:backgroundTintMode="multiply">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
@@ -31,7 +33,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="?android:attr/windowBackground"
+        android:backgroundTintMode="multiply"
+        app:backgroundTint="@color/colorBottomNavigationViewBackground"
         app:itemIconTint="@drawable/selector_bottom_navigation_view"
         app:itemTextColor="@drawable/selector_bottom_navigation_view"
         app:labelVisibilityMode="labeled"
