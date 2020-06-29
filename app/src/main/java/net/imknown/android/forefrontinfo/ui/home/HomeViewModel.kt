@@ -43,7 +43,7 @@ class HomeViewModel : BaseListViewModel() {
 
         private const val PROP_VENDOR_SECURITY_PATCH = "ro.vendor.build.security_patch"
 
-        private val SYSTEM_PROPERTY_LINUX_VERSION = System.getProperty("os.version")
+        private const val SYSTEM_PROPERTY_LINUX_VERSION = "os.version"
 
         // https://source.android.com/devices/tech/ota/ab?hl=en
         // /* root needed */ private const val CMD_BOOT_PARTITION = "ls /dev/block/bootdevice/by-name | grep boot_"
@@ -500,7 +500,7 @@ class HomeViewModel : BaseListViewModel() {
     }
 
     private fun detectKernel(tempModels: ArrayList<MyModel>, lld: Lld) {
-        val linuxVersionString = SYSTEM_PROPERTY_LINUX_VERSION
+        val linuxVersionString = System.getProperty(SYSTEM_PROPERTY_LINUX_VERSION)
         val linuxVersion = Version(linuxVersionString)
 
         @ColorRes var linuxColor = R.color.colorCritical
