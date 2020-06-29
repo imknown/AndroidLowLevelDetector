@@ -78,8 +78,8 @@ class HomeViewModel : BaseListViewModel() {
         // https://android.googlesource.com/platform/system/libvintf/+/master/VintfObject.cpp#238
         // https://android.googlesource.com/platform/system/libvintf/+/master/VintfObject.cpp#289
         private const val PROP_TREBLE_ENABLED = "ro.treble.enabled"
-        private const val PATH_VENDOR_TREBLE = "/vendor/etc/vintf/manifest.xml2"
-        private const val PATH_VENDOR_LEGACY_NO_FRAGMENTS_TREBLE = "/vendor/manifest.xml2"
+        private const val PATH_VENDOR_TREBLE = "/vendor/etc/vintf/manifest.xml"
+        private const val PATH_VENDOR_LEGACY_NO_FRAGMENTS_TREBLE = "/vendor/manifest.xml"
 
         // https://source.android.com/devices/architecture/vndk?hl=en
         private const val PROP_VNDK_LITE = "ro.vndk.lite"
