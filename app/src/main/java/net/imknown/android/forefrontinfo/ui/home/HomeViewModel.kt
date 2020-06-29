@@ -78,7 +78,8 @@ class HomeViewModel : BaseListViewModel() {
         // https://android.googlesource.com/platform/system/libvintf/+/master/VintfObject.cpp#238
         // https://android.googlesource.com/platform/system/libvintf/+/master/VintfObject.cpp#289
         private const val PROP_TREBLE_ENABLED = "ro.treble.enabled"
-        private const val PATH_LEGACY_NO_FRAGMENTS_TREBLE = "/vendor/manifest.xml"
+        private const val PATH_VENDOR_TREBLE = "/vendor/etc/vintf/manifest.xml2"
+        private const val PATH_VENDOR_LEGACY_NO_FRAGMENTS_TREBLE = "/vendor/manifest.xml2"
 
         // https://source.android.com/devices/architecture/vndk?hl=en
         private const val PROP_VNDK_LITE = "ro.vndk.lite"
@@ -674,12 +675,20 @@ class HomeViewModel : BaseListViewModel() {
         var trebleResult = translate(isTrebleEnabled)
 
         @ColorRes val trebleColor = if (isTrebleEnabled) {
-            if (File(PATH_LEGACY_NO_FRAGMENTS_TREBLE).exists()) {
-                trebleResult += MyApplication.getMyString(R.string.treble_legacy_no_fragments)
+            when {
+                File(PATH_VENDOR_TREBLE).exists() -> {
+                    R.color.colorNoProblem
+                }
+                File(PATH_VENDOR_LEGACY_NO_FRAGMENTS_TREBLE).exists() -> {
+                    trebleResult += MyApplication.getMyString(R.string.treble_legacy_no_fragments)
 
-                R.color.colorWaring
-            } else {
-                R.color.colorNoProblem
+                    R.color.colorWaring
+                }
+                else -> {
+                    trebleResult += MyApplication.getMyString(R.string.treble_other)
+
+                    R.color.colorWaring
+                }
             }
         } else {
             R.color.colorCritical

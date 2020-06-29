@@ -59,6 +59,7 @@
 
     <string name="treble_status_title">Project Treble 状态</string>
     <string name="treble_legacy_no_fragments">\u0020(旧版，无片段)</string>
+    <string name="treble_other">\u0020(其他)</string>
 
     <string name="gsi_status_title">GSI 兼容性</string>
     <string name="result_compliant">遵从 Treble</string>
