@@ -8,9 +8,6 @@ import net.imknown.android.forefrontinfo.ui.home.model.Lld
 interface IAndroidVersion {
     companion object {
         private const val CODENAME_RELEASE = "REL"
-
-        // https://android.googlesource.com/platform/libcore/+/master/libart/src/main/java/dalvik/system/VMRuntime.java#163
-        private const val SDK_VERSION_CUR_DEVELOPMENT = 10000
     }
 
     fun isAtLeastStableAndroid6() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
@@ -35,7 +32,7 @@ interface IAndroidVersion {
             && Build.VERSION.SDK_INT >= lld.android.support.api.toInt()
 
     /**
-     * TODO: For Android 11+, Use "Build.VERSION.RELEASE_OR_CODENAME" (ro.build.version.release_or_codename)
+     * For Android 11+, Use "Build.VERSION.RELEASE_OR_CODENAME" (ro.build.version.release_or_codename)
      */
     fun getAndroidVersionName(): String = if (isStableAndroid()) {
         Build.VERSION.RELEASE
@@ -46,7 +43,7 @@ interface IAndroidVersion {
     fun getAndroidApiLevel() = if (isStableAndroid()) {
         Build.VERSION.SDK_INT
     } else {
-        SDK_VERSION_CUR_DEVELOPMENT
+        Build.VERSION_CODES.CUR_DEVELOPMENT
     }
 
     fun getAndroidApiLevelDynamic() = MyApplication.instance.packageManager.getApplicationInfo(
