@@ -31,52 +31,51 @@
 
 #include "BinderDetector.h"
 
+void release(JNIEnv *env, jstring driver,
+             const char *driverChars, int fd) {
+    env->ReleaseStringUTFChars(driver, driverChars);
+    close(fd);
+}
+
+int getErrorNo(JNIEnv *env, jstring driver,
+               int ret, const char *function,
+               const char *driverChars, int fd) {
+    char buf[256];
+    snprintf(buf, sizeof buf, "%s%s%s%s%s%d%s%d%s%s",
+             function, ": ",
+             "Driver: ", driverChars,
+             ", ret: ", ret,
+             ", errorNo: ", errno,
+             ", error: ", strerror(errno));
+    __android_log_print(ANDROID_LOG_WARN, "BinderDetector", buf, nullptr);
+
+    int errorNo = -abs(errno);
+
+    release(env, driver, driverChars, fd);
+
+    return errorNo;
+}
+
 extern "C" JNIEXPORT jint JNICALL
 Java_net_imknown_android_forefrontinfo_ui_others_OthersViewModel_getBinderVersion(
         JNIEnv *env,
         jobject instance,
         jstring driver
 ) {
-    int binderVersion = -1;
-
     const char *driverChars = env->GetStringUTFChars(driver, nullptr);
     int fd = open(driverChars, O_RDONLY | O_CLOEXEC);
     if (fd < 0) {
-        int errorNo = errno;
-
-        char buf[256];
-        snprintf(buf, sizeof buf, "%s%s%s%d%s%d%s%s",
-                 "Driver: ", driverChars,
-                 ", fd: ", fd,
-                 ", errorNo: ", errorNo,
-                 ", error: ", strerror(errorNo));
-        __android_log_print(ANDROID_LOG_WARN, "BinderDetector open", buf, nullptr);
-
-        env->ReleaseStringUTFChars(driver, driverChars);
-        close(fd);
-
-        return -abs(errorNo);
+        return getErrorNo(env, driver, fd, "open", driverChars, fd);
     }
 
     int version = _IOWR('b', 9, struct binder_version);
-    int ret = ioctl(fd, version, &binderVersion);
-
-    if (ret < 0) {
-        int errorNo = errno;
-
-        char buf[256];
-        snprintf(buf, sizeof buf, "%s%s%s%d%s%d%s%s",
-                 "Driver: ", driverChars,
-                 ", ret: ", ret,
-                 ", errorNo: ", errorNo,
-                 ", error: ", strerror(errorNo));
-        __android_log_print(ANDROID_LOG_WARN, "BinderDetector ioctl", buf, nullptr);
-
-        binderVersion = -abs(errorNo);
+    int binderVersion = -1;
+    int ioctlRet = ioctl(fd, version, &binderVersion);
+    if (ioctlRet < 0) {
+        return getErrorNo(env, driver, ioctlRet, "ioctl", driverChars, fd);
     }
 
-    env->ReleaseStringUTFChars(driver, driverChars);
-    close(fd);
+    release(env, driver, driverChars, fd);
 
     return binderVersion;
 }
