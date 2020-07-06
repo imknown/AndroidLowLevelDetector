@@ -40,14 +40,12 @@ void release(JNIEnv *env, jstring driver,
 int getErrorNo(JNIEnv *env, jstring driver,
                int ret, const char *function,
                const char *driverChars, int fd) {
-    char buf[256];
-    snprintf(buf, sizeof buf, "%s%s%s%s%s%d%s%d%s%s",
-             function, ": ",
-             "Driver: ", driverChars,
-             ", ret: ", ret,
-             ", errorNo: ", errno,
-             ", error: ", strerror(errno));
-    __android_log_print(ANDROID_LOG_WARN, "BinderDetector", buf, nullptr);
+    __android_log_print(
+            ANDROID_LOG_WARN,
+            "BinderDetector",
+            "%s: Driver: %s, ret: %d, errorNo: %d, error: %s",
+            function, driverChars, ret, errno, strerror(errno)
+    );
 
     int errorNo = -abs(errno);
 
