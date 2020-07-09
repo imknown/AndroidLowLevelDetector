@@ -23,6 +23,11 @@ For 3rd-parties:
   - This permission is used to fetch data from remote server
   - This permission is only used when user turns on the switch in settings manually
 
+- android.permission.QUERY_ALL_PACKAGES
+  - This permission is used to fetch target api, package name, etc. of apps 
+  - This permission is only used to retrieve prebuilt ROM system apps,
+    and no user installed apps will be retrieved
+
 - Used by Firebase:
   - android.permission.ACCESS_NETWORK_STATE
   - android.permission.WAKE_LOCK
