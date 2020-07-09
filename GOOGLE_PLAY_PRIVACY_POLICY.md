@@ -20,7 +20,7 @@ For 3rd-parties:
 ## Permissions
 
 - android.permission.INTERNET
-  - User uses this permission to fetch data from remote server
+  - This permission is used to fetch data from remote server
   - This permission is only used when user turns on the switch in settings manually
 
 - Used by Firebase:
