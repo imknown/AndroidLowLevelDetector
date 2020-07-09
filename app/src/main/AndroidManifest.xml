@@ -3,14 +3,7 @@
     package="net.imknown.android.forefrontinfo">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
-    <queries>
-        <package android:name="com.android.modulemetadata" />
-        <package android:name="com.google.android.modulemetadata" />
-
-        <package android:name="com.android.webview" />
-        <package android:name="com.google.android.webview" />
-    </queries>
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
 
     <application
         android:name=".MyApplication"
