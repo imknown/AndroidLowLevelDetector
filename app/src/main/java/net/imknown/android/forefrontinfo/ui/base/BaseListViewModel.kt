@@ -15,7 +15,7 @@ import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.Event
 import net.imknown.android.forefrontinfo.base.stringEventLiveData
 
-abstract class BaseListViewModel : BaseViewModel(), IAndroidVersion {
+abstract class BaseListViewModel : BaseViewModel() {
     private val _models by lazy { MutableLiveData<ArrayList<MyModel>>() }
     val models: LiveData<ArrayList<MyModel>> by lazy { _models }
 

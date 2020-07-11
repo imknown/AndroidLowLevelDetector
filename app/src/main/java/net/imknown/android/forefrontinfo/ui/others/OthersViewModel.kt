@@ -9,11 +9,12 @@ import kotlinx.coroutines.launch
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.ui.base.BasePureListViewModel
+import net.imknown.android.forefrontinfo.ui.base.IAndroidVersion
 import net.imknown.android.forefrontinfo.ui.base.MyModel
 import java.text.SimpleDateFormat
 import java.util.*
 
-class OthersViewModel : BasePureListViewModel() {
+class OthersViewModel : BasePureListViewModel(), IAndroidVersion {
 
     companion object {
         private const val PROP_RO_PRODUCT_CPU_ABI = "ro.product.cpu.abi"

@@ -25,6 +25,7 @@ import net.imknown.android.forefrontinfo.base.GatewayApi
 import net.imknown.android.forefrontinfo.base.JsonIo
 import net.imknown.android.forefrontinfo.base.booleanEventLiveData
 import net.imknown.android.forefrontinfo.ui.base.BaseListViewModel
+import net.imknown.android.forefrontinfo.ui.base.IAndroidVersion
 import net.imknown.android.forefrontinfo.ui.base.MyModel
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.home.model.Subtitle
@@ -32,7 +33,7 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
-class HomeViewModel : BaseListViewModel() {
+class HomeViewModel : BaseListViewModel(), IAndroidVersion {
 
     companion object {
         private const val PROP_RO_SYSTEM_BUILD_ID = "ro.system.build.id"

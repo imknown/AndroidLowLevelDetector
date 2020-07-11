@@ -11,13 +11,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.R
-import net.imknown.android.forefrontinfo.ui.base.IAndroidVersion
 import net.imknown.android.forefrontinfo.ui.home.HomeFragment
 import net.imknown.android.forefrontinfo.ui.others.OthersFragment
 import net.imknown.android.forefrontinfo.ui.prop.PropFragment
 import net.imknown.android.forefrontinfo.ui.settings.SettingsFragment
 
-class MainViewModel : ViewModel(), IAndroidVersion {
+class MainViewModel : ViewModel() {
 
     companion object {
         private const val BUNDLE_ID_LAST_ID = "BUNDLE_ID_LAST_ID"

@@ -7,9 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import kotlinx.android.synthetic.main.main_activity.*
 import net.imknown.android.forefrontinfo.R
-import net.imknown.android.forefrontinfo.ui.base.IAndroidVersion
 
-class MainActivity : AppCompatActivity(), IAndroidVersion {
+class MainActivity : AppCompatActivity() {
 
     private val mainViewModel by viewModels<MainViewModel>()
 
