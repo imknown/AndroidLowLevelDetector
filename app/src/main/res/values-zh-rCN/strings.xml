@@ -37,25 +37,19 @@
     <string name="vendor_security_patch_level_title">供应商 安全补丁等级</string>
     <string name="security_patch_level_detail">我的: %1$s\n\n最新稳定: %2$s</string>
 
-    <string name="mainline_title">Project Mainline 模块版本\n(Google Play 系统更新)</string>
-    <string name="mainline_detail">我的: %1$s (%2$s)</string>
-
     <string name="linux_title">Linux 版本</string>
     <string name="linux_version_detail">我的: %1$s\n\n最新支持: %2$s\nMainline: %3$s</string>
-
-    <string name="selinux_status">SELinux 状态</string>
-    <string name="selinux_status_enforcing_mode">强制模式</string>
-    <string name="selinux_status_permissive_mode">宽容模式</string>
 
     <string name="ab_seamless_update_status_title">A/B 无缝升级 状态</string>
     <string name="virtual_ab">\u0020(虚拟的)</string>
     <string name="virtual_ab_retrofit">\u0020(虚拟的, 改造的)</string>
     <string name="current_using_ab_slot_result">\u0020(当前: %s)</string>
 
+    <string name="sar_status_title">System-as-root 状态</string>
+    <string name="sar_type_legacy">旧版</string>
+
     <string name="dynamic_partitions_status_title">动态分区 状态</string>
     <string name="dynamic_partitions_enabled_retrofitted">\u0020(改造的)</string>
-
-    <string name="dsu_status_title">动态系统更新(DSU) 状态</string>
 
     <string name="treble_status_title">Project Treble 状态</string>
     <string name="treble_legacy_no_fragments">\u0020(旧版，无片段)</string>
@@ -65,11 +59,13 @@
     <string name="result_compliant">遵从 Treble</string>
     <string name="result_not_compliant">未遵从 Treble</string>
 
+    <string name="dsu_status_title">动态系统更新(DSU) 状态</string>
+
+    <string name="mainline_title">Project Mainline 模块版本\n(Google Play 系统更新)</string>
+    <string name="mainline_detail">我的: %1$s (%2$s)</string>
+
     <string name="vndk_built_in_title">内建 供应商 NDK 状态</string>
     <string name="built_in_vndk_version_result">\u0020(等级: %s)</string>
-
-    <string name="sar_status_title">System-as-root 状态</string>
-    <string name="sar_type_legacy">旧版</string>
 
     <string name="apex_status_title">APEX 状态</string>
     <string name="apex_legacy_flattened">\u0020(旧版扁平的)</string>
@@ -84,6 +80,10 @@
     <string name="result_encrypted">已加密</string>
     <string name="result_encrypted_no_key_set">已加密 但 密码未设置</string>
     <string name="result_not_encrypted">未加密</string>
+
+    <string name="selinux_status">SELinux 状态</string>
+    <string name="selinux_status_enforcing_mode">强制模式</string>
+    <string name="selinux_status_permissive_mode">宽容模式</string>
 
     <string name="toybox_built_in_title">内建 Toybox 版本</string>
     <string name="toybox_built_in_detail">我的: %1$s\n\n最新稳定: %2$s\n最低支持: %3$s\nMainline: %4$s\nMaster: %5$s</string>

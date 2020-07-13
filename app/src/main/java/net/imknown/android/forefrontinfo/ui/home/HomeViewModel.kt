@@ -287,27 +287,25 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
             R.string.vendor_security_patch_level_title
         )
 
-        detectMainline(tempModels, lld)
-
         detectKernel(tempModels, lld)
-
-        detectSELinux(tempModels)
 
         detectAb(tempModels)
 
-        detectDynamicPartitions(tempModels)
+        val mounts = getMounts()
 
-        detectDsu(tempModels)
+        detectSar(tempModels, mounts)
+
+        detectDynamicPartitions(tempModels)
 
         detectTreble(tempModels)
 
         detectGsiCompatibility(tempModels)
 
+        detectDsu(tempModels)
+
+        detectMainline(tempModels, lld)
+
         detectVndk(tempModels, lld)
-
-        val mounts = getMounts()
-
-        detectSar(tempModels, mounts)
 
         detectApex(tempModels, mounts)
 
@@ -318,6 +316,8 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         detectAdbAuthentication(tempModels)
 
         detectEncryption(tempModels)
+
+        detectSELinux(tempModels)
 
         detectToybox(tempModels, lld)
 
@@ -451,55 +451,6 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
     private fun getSecurityPatchYearMonth(securityPatch: String) =
         securityPatch.substringBeforeLast('-')
 
-    /**
-     * {@link com.android.settings.deviceinfo.firmwareversion.MainlineModuleVersionPreferenceController}
-     */
-    private fun detectMainline(tempModels: ArrayList<MyModel>, lld: Lld) {
-        // com.android.internal.R.string.config_defaultModuleMetadataProvider
-        val idConfigDefaultModuleMetadataProvider = Resources.getSystem().getIdentifier(
-            "config_defaultModuleMetadataProvider",
-            "string",
-            "android"
-        )
-
-        @ColorRes var moduleColor = R.color.colorCritical
-
-        val moduleVersion = if (idConfigDefaultModuleMetadataProvider != 0) {
-            try {
-                // com.android.modulemetadata
-                // com.google.android.modulemetadata
-                val moduleProvider = MyApplication.getMyString(
-                    idConfigDefaultModuleMetadataProvider
-                )
-
-                val versionName = MyApplication.instance.packageManager.getPackageInfo(
-                    moduleProvider,
-                    0
-                ).versionName
-
-                if ((versionName.contains('-') && isLatestPreviewAndroid(lld))
-                    || versionName >= lld.android.stable.version
-                ) {
-                    moduleColor = R.color.colorNoProblem
-                }
-
-                MyApplication.getMyString(R.string.mainline_detail, versionName, moduleProvider)
-            } catch (e: Exception) {
-                Log.e(javaClass.simpleName, "Failed to get mainline version.", e)
-                MyApplication.getMyString(R.string.result_not_supported)
-            }
-        } else {
-            MyApplication.getMyString(R.string.result_not_supported)
-        }
-
-        add(
-            tempModels,
-            MyApplication.getMyString(R.string.mainline_title),
-            moduleVersion,
-            moduleColor
-        )
-    }
-
     private fun detectKernel(tempModels: ArrayList<MyModel>, lld: Lld) {
         val linuxVersionString = System.getProperty(SYSTEM_PROPERTY_LINUX_VERSION)
         val linuxVersion = Version(linuxVersionString)
@@ -531,61 +482,6 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
                 lld.linux.mainline.version
             ),
             linuxColor
-        )
-    }
-
-    private fun detectSELinux(tempModels: ArrayList<MyModel>) {
-//        val seLinuxClass = Class.forName("android.os.SELinux")
-//        val isSELinuxBooted = seLinuxClass
-//            .getDeclaredMethod("isSELinuxEnabled")
-//            .invoke(null) as Boolean
-//        val isSELinuxEnforceBooted = seLinuxClass
-//            .getDeclaredMethod("isSELinuxEnforced")
-//            .invoke(null) as Boolean
-//
-//        val bootSELinuxProp = getStringProperty(PROP_BOOT_SELINUX)
-
-        @StringRes val result: Int
-        @ColorRes val color: Int
-
-        val seLinuxStatus = sh(CMD_GETENFORCE)
-        val seLinuxStatusResult = seLinuxStatus.output[0]
-
-        if (isShellResultSuccessful(seLinuxStatus)) {
-            when (seLinuxStatusResult) {
-                SELINUX_STATUS_ENFORCING -> {
-                    result = R.string.selinux_status_enforcing_mode
-                    color = R.color.colorNoProblem
-                }
-                SELINUX_STATUS_PERMISSIVE -> {
-                    // val seLinuxPolicyVersion = sh(CMD_SELINUX_POLICY_VERSION, isAtLeastAndroid8())
-                    result = R.string.selinux_status_permissive_mode
-                    color = R.color.colorWaring
-                }
-                SELINUX_STATUS_DISABLED -> {
-                    result = R.string.result_disabled
-                    color = R.color.colorCritical
-                }
-                else -> {
-                    result = android.R.string.unknownName
-                    color = R.color.colorCritical
-                }
-            }
-        } else {
-            if (seLinuxStatusResult.endsWith(CMD_ERROR_PERMISSION_DENIED)) {
-                result = R.string.selinux_status_enforcing_mode
-                color = R.color.colorNoProblem
-            } else {
-                result = android.R.string.unknownName
-                color = R.color.colorCritical
-            }
-        }
-
-        add(
-            tempModels,
-            MyApplication.getMyString(R.string.selinux_status),
-            MyApplication.getMyString(result),
-            color
         )
     }
 
@@ -631,6 +527,58 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         )
     }
 
+    private fun detectSar(tempModels: ArrayList<MyModel>, mounts: List<Mount>) {
+        val isLAndroid9TheLegacySar =
+            getStringProperty(PROP_SYSTEM_ROOT_IMAGE, isAtLeastStableAndroid9()).toBoolean()
+
+        val isTheLegacySarMount = isAtLeastStableAndroid9()
+                && mounts.any { it.blockDevice == "/dev/root" && it.mountPoint == "/" }
+
+        val isTheLegacySar = isLAndroid9TheLegacySar && isTheLegacySarMount
+
+        val isThe2siSar = isAtLeastStableAndroid10()
+                && mounts.none { it.blockDevice != "none" && it.mountPoint == "/system" && it.type != "tmpfs" }
+
+        val isTrwpSar = mounts.any { it.mountPoint == "/system_root" && it.type != "tmpfs" }
+
+        val isSar = isTheLegacySar || isThe2siSar || isTrwpSar || isAtLeastStableAndroid10()
+        var result = translate(isSar)
+
+        @ColorRes var color = R.color.colorCritical
+        @StringRes val sarTypeRes: Int
+
+        if (isSar) {
+            when {
+                isTheLegacySar -> {
+                    color = R.color.colorWaring
+                    sarTypeRes = R.string.sar_type_legacy
+                }
+                isThe2siSar -> {
+                    color = R.color.colorNoProblem
+                    sarTypeRes = R.string.sar_type_2si
+                }
+                isTrwpSar -> {
+                    color = R.color.colorWaring
+                    sarTypeRes = R.string.sar_type_twrp
+                }
+                else -> {
+                    color = R.color.colorCritical
+                    sarTypeRes = android.R.string.unknownName
+                }
+            }
+
+            val sarType = MyApplication.getMyString(sarTypeRes)
+            result += " ($sarType)"
+        }
+
+        add(
+            tempModels,
+            MyApplication.getMyString(R.string.sar_status_title),
+            result,
+            color
+        )
+    }
+
     private fun detectDynamicPartitions(tempModels: ArrayList<MyModel>) {
         val isDynamicPartitionsEnabled =
             getStringProperty(PROP_DYNAMIC_PARTITIONS, isAtLeastStableAndroid10()).toBoolean()
@@ -651,21 +599,6 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
             MyApplication.getMyString(R.string.dynamic_partitions_status_title),
             detail,
             isDynamicPartitionsEnabled
-        )
-    }
-
-    /** {@link android.util.FeatureFlagUtils} */
-    private fun detectDsu(tempModels: ArrayList<MyModel>) {
-        val isDsuEnabled = getStringProperty(
-            FFLAG_OVERRIDE_PREFIX + DYNAMIC_SYSTEM,
-            isAtLeastStableAndroid10()
-        ).toBoolean()
-
-        add(
-            tempModels,
-            MyApplication.getMyString(R.string.dsu_status_title),
-            translate(isDsuEnabled),
-            isDsuEnabled
         )
     }
 
@@ -727,6 +660,70 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         )
     }
 
+    /** {@link android.util.FeatureFlagUtils} */
+    private fun detectDsu(tempModels: ArrayList<MyModel>) {
+        val isDsuEnabled = getStringProperty(
+            FFLAG_OVERRIDE_PREFIX + DYNAMIC_SYSTEM,
+            isAtLeastStableAndroid10()
+        ).toBoolean()
+
+        add(
+            tempModels,
+            MyApplication.getMyString(R.string.dsu_status_title),
+            translate(isDsuEnabled),
+            isDsuEnabled
+        )
+    }
+
+    /**
+     * {@link com.android.settings.deviceinfo.firmwareversion.MainlineModuleVersionPreferenceController}
+     */
+    private fun detectMainline(tempModels: ArrayList<MyModel>, lld: Lld) {
+        // com.android.internal.R.string.config_defaultModuleMetadataProvider
+        val idConfigDefaultModuleMetadataProvider = Resources.getSystem().getIdentifier(
+            "config_defaultModuleMetadataProvider",
+            "string",
+            "android"
+        )
+
+        @ColorRes var moduleColor = R.color.colorCritical
+
+        val moduleVersion = if (idConfigDefaultModuleMetadataProvider != 0) {
+            try {
+                // com.android.modulemetadata
+                // com.google.android.modulemetadata
+                val moduleProvider = MyApplication.getMyString(
+                    idConfigDefaultModuleMetadataProvider
+                )
+
+                val versionName = MyApplication.instance.packageManager.getPackageInfo(
+                    moduleProvider,
+                    0
+                ).versionName
+
+                if ((versionName.contains('-') && isLatestPreviewAndroid(lld))
+                    || versionName >= lld.android.stable.version
+                ) {
+                    moduleColor = R.color.colorNoProblem
+                }
+
+                MyApplication.getMyString(R.string.mainline_detail, versionName, moduleProvider)
+            } catch (e: Exception) {
+                Log.e(javaClass.simpleName, "Failed to get mainline version.", e)
+                MyApplication.getMyString(R.string.result_not_supported)
+            }
+        } else {
+            MyApplication.getMyString(R.string.result_not_supported)
+        }
+
+        add(
+            tempModels,
+            MyApplication.getMyString(R.string.mainline_title),
+            moduleVersion,
+            moduleColor
+        )
+    }
+
     private fun detectVndk(tempModels: ArrayList<MyModel>, lld: Lld) {
         val vndkVersionResult = getStringProperty(PROP_VNDK_VERSION, isAtLeastStableAndroid8())
         val hasVndkVersion = isPropertyValueNotEmpty(vndkVersionResult)
@@ -764,58 +761,6 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
             MyApplication.getMyString(R.string.vndk_built_in_title),
             isVndkBuiltInResult,
             vndkColor
-        )
-    }
-
-    private fun detectSar(tempModels: ArrayList<MyModel>, mounts: List<Mount>) {
-        val isLAndroid9TheLegacySar =
-            getStringProperty(PROP_SYSTEM_ROOT_IMAGE, isAtLeastStableAndroid9()).toBoolean()
-
-        val isTheLegacySarMount = isAtLeastStableAndroid9()
-                && mounts.any { it.blockDevice == "/dev/root" && it.mountPoint == "/" }
-
-        val isTheLegacySar = isLAndroid9TheLegacySar && isTheLegacySarMount
-
-        val isThe2siSar = isAtLeastStableAndroid10()
-                && mounts.none { it.blockDevice != "none" && it.mountPoint == "/system" && it.type != "tmpfs" }
-
-        val isTrwpSar = mounts.any { it.mountPoint == "/system_root" && it.type != "tmpfs" }
-
-        val isSar = isTheLegacySar || isThe2siSar || isTrwpSar || isAtLeastStableAndroid10()
-        var result = translate(isSar)
-
-        @ColorRes var color = R.color.colorCritical
-        @StringRes val sarTypeRes: Int
-
-        if (isSar) {
-            when {
-                isTheLegacySar -> {
-                    color = R.color.colorWaring
-                    sarTypeRes = R.string.sar_type_legacy
-                }
-                isThe2siSar -> {
-                    color = R.color.colorNoProblem
-                    sarTypeRes = R.string.sar_type_2si
-                }
-                isTrwpSar -> {
-                    color = R.color.colorWaring
-                    sarTypeRes = R.string.sar_type_twrp
-                }
-                else -> {
-                    color = R.color.colorCritical
-                    sarTypeRes = android.R.string.unknownName
-                }
-            }
-
-            val sarType = MyApplication.getMyString(sarTypeRes)
-            result += " ($sarType)"
-        }
-
-        add(
-            tempModels,
-            MyApplication.getMyString(R.string.sar_status_title),
-            result,
-            color
         )
     }
 
@@ -926,6 +871,61 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         add(
             tempModels,
             MyApplication.getMyString(R.string.encryption_status_title),
+            MyApplication.getMyString(result),
+            color
+        )
+    }
+
+    private fun detectSELinux(tempModels: ArrayList<MyModel>) {
+//        val seLinuxClass = Class.forName("android.os.SELinux")
+//        val isSELinuxBooted = seLinuxClass
+//            .getDeclaredMethod("isSELinuxEnabled")
+//            .invoke(null) as Boolean
+//        val isSELinuxEnforceBooted = seLinuxClass
+//            .getDeclaredMethod("isSELinuxEnforced")
+//            .invoke(null) as Boolean
+//
+//        val bootSELinuxProp = getStringProperty(PROP_BOOT_SELINUX)
+
+        @StringRes val result: Int
+        @ColorRes val color: Int
+
+        val seLinuxStatus = sh(CMD_GETENFORCE)
+        val seLinuxStatusResult = seLinuxStatus.output[0]
+
+        if (isShellResultSuccessful(seLinuxStatus)) {
+            when (seLinuxStatusResult) {
+                SELINUX_STATUS_ENFORCING -> {
+                    result = R.string.selinux_status_enforcing_mode
+                    color = R.color.colorNoProblem
+                }
+                SELINUX_STATUS_PERMISSIVE -> {
+                    // val seLinuxPolicyVersion = sh(CMD_SELINUX_POLICY_VERSION, isAtLeastAndroid8())
+                    result = R.string.selinux_status_permissive_mode
+                    color = R.color.colorWaring
+                }
+                SELINUX_STATUS_DISABLED -> {
+                    result = R.string.result_disabled
+                    color = R.color.colorCritical
+                }
+                else -> {
+                    result = android.R.string.unknownName
+                    color = R.color.colorCritical
+                }
+            }
+        } else {
+            if (seLinuxStatusResult.endsWith(CMD_ERROR_PERMISSION_DENIED)) {
+                result = R.string.selinux_status_enforcing_mode
+                color = R.color.colorNoProblem
+            } else {
+                result = android.R.string.unknownName
+                color = R.color.colorCritical
+            }
+        }
+
+        add(
+            tempModels,
+            MyApplication.getMyString(R.string.selinux_status),
             MyApplication.getMyString(result),
             color
         )

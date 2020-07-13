@@ -37,25 +37,21 @@
     <string name="vendor_security_patch_level_title">Vendor security patch level</string>
     <string name="security_patch_level_detail">Mine: %1$s\n\nLatest stable: %2$s</string>
 
-    <string name="mainline_title">Project Mainline module version\n(Google Play system update)</string>
-    <string name="mainline_detail">Mine: %1$s (%2$s)</string>
-
     <string name="linux_title">Linux version</string>
     <string name="linux_version_detail">Mine: %1$s\n\nLatest support: %2$s\nMainline: %3$s</string>
-
-    <string name="selinux_status">SELinux status</string>
-    <string name="selinux_status_enforcing_mode">Enforcing mode</string>
-    <string name="selinux_status_permissive_mode">Permissive mode</string>
 
     <string name="ab_seamless_update_status_title">A/B seamless update status</string>
     <string name="virtual_ab">\u0020(Virtual)</string>
     <string name="virtual_ab_retrofit">\u0020(Virtual, retrofitted)</string>
     <string name="current_using_ab_slot_result">\u0020(Current: %s)</string>
 
+    <string name="sar_status_title">System-as-root status</string>
+    <string name="sar_type_legacy">Legacy</string>
+    <string name="sar_type_2si" translatable="false">2-Stage-Init</string>
+    <string name="sar_type_twrp" translatable="false">TWRP</string>
+
     <string name="dynamic_partitions_status_title">Dynamic partitions status</string>
     <string name="dynamic_partitions_enabled_retrofitted">\u0020(Retrofitted)</string>
-
-    <string name="dsu_status_title">Dynamic System Update(DSU) status</string>
 
     <string name="treble_status_title">Project Treble status</string>
     <string name="treble_legacy_no_fragments">\u0020(Legacy, no fragments)</string>
@@ -65,13 +61,13 @@
     <string name="result_compliant">Treble compliant</string>
     <string name="result_not_compliant">Not Treble compliant</string>
 
+    <string name="dsu_status_title">Dynamic System Update(DSU) status</string>
+
+    <string name="mainline_title">Project Mainline module version\n(Google Play system update)</string>
+    <string name="mainline_detail">Mine: %1$s (%2$s)</string>
+
     <string name="vndk_built_in_title">Built-in Vendor NDK status</string>
     <string name="built_in_vndk_version_result">\u0020(Level: %s)</string>
-
-    <string name="sar_status_title">System-as-root status</string>
-    <string name="sar_type_legacy">Legacy</string>
-    <string name="sar_type_2si" translatable="false">2-Stage-Init</string>
-    <string name="sar_type_twrp" translatable="false">TWRP</string>
 
     <string name="apex_status_title">APEX status</string>
     <string name="apex_legacy_flattened">\u0020(Legacy flattened)</string>
@@ -86,6 +82,10 @@
     <string name="result_encrypted">Encrypted</string>
     <string name="result_encrypted_no_key_set">Encrypted but password not been set</string>
     <string name="result_not_encrypted">Not encrypted</string>
+
+    <string name="selinux_status">SELinux status</string>
+    <string name="selinux_status_enforcing_mode">Enforcing mode</string>
+    <string name="selinux_status_permissive_mode">Permissive mode</string>
 
     <string name="toybox_built_in_title">Built-in Toybox version</string>
     <string name="toybox_built_in_detail">Mine: %1$s\n\nLatest stable: %2$s\nLowest support: %3$s\nMainline: %4$s\nMaster: %5$s</string>

@@ -37,25 +37,19 @@
     <string name="vendor_security_patch_level_title">Niveau du patch de sécurité Vendor</string>
     <string name="security_patch_level_detail">Moi: %1$s\n\nDernière stable: %2$s</string>
 
-    <string name="mainline_title">Project Mainline module version\n(Mise à jour du système Google Play)</string>
-    <string name="mainline_detail">Moi: %1$s (%2$s)</string>
-
     <string name="linux_title">Version de Linux</string>
     <string name="linux_version_detail">Moi: %1$s\n\nDernière support: %2$s\nMainline: %3$s</string>
-
-    <string name="selinux_status">Status SELinux</string>
-    <string name="selinux_status_enforcing_mode">Mode forcé</string>
-    <string name="selinux_status_permissive_mode">Mode permissif</string>
 
     <string name="ab_seamless_update_status_title">Mise à jour A/B seamless</string>
     <string name="virtual_ab">\u0020(Virtuel)</string>
     <string name="virtual_ab_retrofit">\u0020(Virtuel, rénové)</string>
     <string name="current_using_ab_slot_result">\u0020(Courant: %s)</string>
 
+    <string name="sar_status_title">Status System-as-root</string>
+    <string name="sar_type_legacy">Héritage</string>
+
     <string name="dynamic_partitions_status_title">Status du Partitions dynamiques</string>
     <string name="dynamic_partitions_enabled_retrofitted">\u0020(Rénové)</string>
-
-    <string name="dsu_status_title">Status du Mise à jour du système dynamique(DSU)</string>
 
     <string name="treble_status_title">Status du Projet Treble</string>
     <string name="treble_legacy_no_fragments">\u0020(Héritage, pas de fragments)</string>
@@ -65,11 +59,13 @@
     <string name="result_compliant">Conforme à Treble</string>
     <string name="result_not_compliant">Non conforme à Treble</string>
 
+    <string name="dsu_status_title">Status du Mise à jour du système dynamique(DSU)</string>
+
+    <string name="mainline_title">Project Mainline module version\n(Mise à jour du système Google Play)</string>
+    <string name="mainline_detail">Moi: %1$s (%2$s)</string>
+
     <string name="vndk_built_in_title">Status du NDK Vendor integré</string>
     <string name="built_in_vndk_version_result">\u0020(Niveau: %s)</string>
-
-    <string name="sar_status_title">Status System-as-root</string>
-    <string name="sar_type_legacy">Héritage</string>
 
     <string name="apex_status_title">Status APEX</string>
     <string name="apex_legacy_flattened">\u0020(Héritage aplati)</string>
@@ -84,6 +80,10 @@
     <string name="result_encrypted">Crypté</string>
     <string name="result_encrypted_no_key_set">Chiffré mais le mot de passe n\'a pas été défini</string>
     <string name="result_not_encrypted">Non crypté</string>
+
+    <string name="selinux_status">Status SELinux</string>
+    <string name="selinux_status_enforcing_mode">Mode forcé</string>
+    <string name="selinux_status_permissive_mode">Mode permissif</string>
 
     <string name="toybox_built_in_title">Version de Toybox intégrée</string>
     <string name="toybox_built_in_detail">Moi: %1$s\n\nDernier stable: %2$s\nPlus faible support: %3$s\nMainline: %4$s\nMaster: %5$s</string>
