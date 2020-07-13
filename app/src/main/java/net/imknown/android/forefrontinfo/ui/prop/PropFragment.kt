@@ -13,6 +13,6 @@ class PropFragment : BaseListFragment() {
     override val listViewModel by activityViewModels<PropViewModel>()
 
     override fun init() {
-        observeLanguageEvent(MyApplication.settingsLanguageEvent)
+        observeLanguageEvent(MyApplication.propLanguageEvent)
     }
 }

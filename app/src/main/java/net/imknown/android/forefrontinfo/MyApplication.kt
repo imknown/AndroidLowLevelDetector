@@ -2,7 +2,7 @@ package net.imknown.android.forefrontinfo
 
 import android.annotation.SuppressLint
 import android.app.Application
-import android.content.SharedPreferences
+import android.content.*
 import android.os.Environment
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
@@ -24,7 +24,8 @@ open class MyApplication : Application() {
         lateinit var instance: MyApplication
 
         val homeLanguageEvent: LiveData<Event<Unit>> by lazy { instance._homeLanguageEvent }
-        val settingsLanguageEvent: LiveData<Event<Unit>> by lazy { instance._settingsLanguageEvent }
+        val othersLanguageEvent: LiveData<Event<Unit>> by lazy { instance._othersLanguageEvent }
+        val propLanguageEvent: LiveData<Event<Unit>> by lazy { instance._propLanguageEvent }
 
         val sharedPreferences: SharedPreferences by lazy {
             PreferenceManager.getDefaultSharedPreferences(instance)
@@ -49,7 +50,8 @@ open class MyApplication : Application() {
     }
 
     private val _homeLanguageEvent by lazy { MutableLiveData<Event<Unit>>() }
-    private val _settingsLanguageEvent by lazy { MutableLiveData<Event<Unit>>() }
+    private val _othersLanguageEvent by lazy { MutableLiveData<Event<Unit>>() }
+    private val _propLanguageEvent by lazy { MutableLiveData<Event<Unit>>() }
 
     override fun onCreate() {
         super.onCreate()
@@ -103,10 +105,15 @@ open class MyApplication : Application() {
         }
     }
 
-    private suspend fun initLanguage() = withContext(Dispatchers.Main) {
-        LanguageBroadcastLiveData().observeForever {
-            _homeLanguageEvent.value = Event(Unit)
-            _settingsLanguageEvent.value = Event(Unit)
+    private fun initLanguage() {
+        val receiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                _homeLanguageEvent.value = Event(Unit)
+                _othersLanguageEvent.value = Event(Unit)
+                _propLanguageEvent.value = Event(Unit)
+            }
         }
+
+        registerReceiver(receiver, IntentFilter(Intent.ACTION_LOCALE_CHANGED))
     }
 }

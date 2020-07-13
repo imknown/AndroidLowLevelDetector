@@ -13,6 +13,6 @@ class OthersFragment : BaseListFragment() {
     override val listViewModel by activityViewModels<OthersViewModel>()
 
     override fun init() {
-        observeLanguageEvent(MyApplication.settingsLanguageEvent)
+        observeLanguageEvent(MyApplication.othersLanguageEvent)
     }
 }
