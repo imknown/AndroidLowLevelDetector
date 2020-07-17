@@ -24,7 +24,7 @@ ext {
     // https://mvnrepository.com/
     androidX = [
             // https://github.com/material-components/material-components-android/releases
-            material              : '1.2.0-beta01',
+            material              : '1.2.0-rc01',
 
             activity              : '1.1.0',
             annotation            : '1.1.0',
