@@ -30,6 +30,7 @@
             android:textColor="@color/colorMainText"
             android:textDirection="locale"
             android:textSize="18sp"
+            android:textStyle="bold"
             tools:background="@color/colorNoProblem"
             tools:text="@string/android_info_title" />
 
