@@ -32,7 +32,7 @@
             android:textColor="@color/colorMainText"
             android:textSize="18sp"
             tools:background="@color/colorNoProblem"
-            tools:text="Android version" />
+            tools:text="@string/android_info_title" />
 
         <TextView
             android:id="@+id/tvDetail"
@@ -47,6 +47,6 @@
             android:paddingBottom="@dimen/item_card_detail_padding_vertical"
             android:textColor="@color/colorMainText"
             android:textSize="18sp"
-            tools:text="Mine: 10 (Q, API Level 29)\nLatest: 11 (R, API Level 29)" />
+            tools:text="@string/android_info_detail" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
