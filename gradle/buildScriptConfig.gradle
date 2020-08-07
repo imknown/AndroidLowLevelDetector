@@ -30,7 +30,7 @@ ext {
             annotation            : '1.1.0',
             annotationExperimental: '1.0.0',
 
-            appcompat             : '1.1.0',
+            appcompat             : '1.2.0',
 
             archCore              : '2.1.0',
 
