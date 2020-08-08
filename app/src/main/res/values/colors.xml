@@ -32,5 +32,5 @@
     <color name="colorWaring">#FDD18F</color>
     <color name="colorCritical">#FFB1AC</color>
 
-    <color name="colorMainText">@android:color/black</color>
+    <color name="colorMainText">#222</color>
 </resources>
