@@ -17,6 +17,10 @@ import java.util.*
 class OthersViewModel : BasePureListViewModel(), IAndroidVersion {
 
     companion object {
+        init {
+            System.loadLibrary("BinderDetector")
+        }
+
         private const val PROP_RO_PRODUCT_CPU_ABI = "ro.product.cpu.abi"
 
         // private const val CPU_ARCHITECTURE = "grep 'CPU architecture' /proc/cpuinfo"
@@ -172,8 +176,6 @@ class OthersViewModel : BasePureListViewModel(), IAndroidVersion {
         driver: String,
         @StringRes titleId: Int
     ) {
-        System.loadLibrary("BinderDetector")
-
         @StringRes val binderStatusId = when (getBinderVersion(driver)) {
             -ERRNO_NO_SUCH_FILE_OR_DIRECTORY -> {
                 R.string.result_not_supported
