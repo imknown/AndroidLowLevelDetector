@@ -38,7 +38,7 @@ android {
 
                 cFlags '-D__STDC_FORMAT_MACROS'
 
-                cppFlags '-fexceptions', '-frtti'
+                cppFlags '-fexceptions', '-frtti', "-std=c++17"
             }
         }
     }
@@ -103,6 +103,7 @@ android {
     externalNativeBuild {
         cmake {
             path 'CMakeLists.txt'
+            version "3.10.2"
         }
     }
 }
