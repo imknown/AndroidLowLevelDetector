@@ -100,7 +100,7 @@ ext {
     // https://firebase.google.com/docs/android/setup#available-libraries
     thirdParties = [
             // https://github.com/topjohnwu/libsu
-            libsu         : '3.0.1',
+            libsu         : '3.0.2',
 
             // https://github.com/square/leakcanary
             leakCanary    : '2.4',
