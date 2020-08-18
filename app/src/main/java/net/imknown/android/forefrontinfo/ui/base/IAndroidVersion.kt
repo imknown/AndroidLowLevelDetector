@@ -2,7 +2,6 @@ package net.imknown.android.forefrontinfo.ui.base
 
 import android.annotation.SuppressLint
 import android.os.Build
-import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 
 interface IAndroidVersion {
@@ -46,7 +45,7 @@ interface IAndroidVersion {
         Build.VERSION_CODES.CUR_DEVELOPMENT
     }
 
-    fun getAndroidApiLevelDynamic() = MyApplication.instance.packageManager.getApplicationInfo(
-        "android", 0
-    ).targetSdkVersion
+//    fun getAndroidApiLevelDynamic() = MyApplication.instance.packageManager.getApplicationInfo(
+//        "android", 0
+//    ).targetSdkVersion
 }
