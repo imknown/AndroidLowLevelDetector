@@ -3,7 +3,6 @@ package net.imknown.android.forefrontinfo.ui.settings
 import android.os.Bundle
 import android.os.Looper
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.whenCreated
 import androidx.preference.ListPreference
@@ -52,7 +51,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
 
         val versionPref =
             findPreference<Preference>(MyApplication.getMyString(R.string.about_version_key))!!
-        settingsViewModel.version.observe(viewLifecycleOwner, Observer {
+        settingsViewModel.version.observe(viewLifecycleOwner) {
             versionPref.summary = MyApplication.getMyString(
                 it.id,
                 it.versionName,
@@ -63,7 +62,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
                 it.firstInstallTime,
                 it.lastUpdateTime
             )
-        })
+        }
 
         settingsViewModel.versionClick.observe(viewLifecycleOwner, EventObserver {
             toast(R.string.about_version_click)

@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_list.*
 import net.imknown.android.forefrontinfo.MyApplication
@@ -44,9 +43,9 @@ abstract class BaseListFragment : BaseFragment() {
             recyclerView.isVerticalScrollBarEnabled = it
         })
 
-        listViewModel.models.observe(viewLifecycleOwner, Observer {
+        listViewModel.models.observe(viewLifecycleOwner) {
             listViewModel.showModels(myAdapter.myModels, it)
-        })
+        }
 
         listViewModel.showModelsEvent.observe(viewLifecycleOwner, EventObserver {
             myAdapter.notifyDataSetChanged()
