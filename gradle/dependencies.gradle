@@ -30,7 +30,7 @@ dependencies {
     // implementation "androidx.collection:collection-ktx:$androidX.collection"
 
     implementation "androidx.constraintlayout:constraintlayout:$androidX.constraintLayout"
-    implementation "androidx.constraintlayout:constraintlayout-solver:$androidX.constraintLayout"
+    // implementation "androidx.constraintlayout:constraintlayout-solver:$androidX.constraintLayout"
 
     implementation "androidx.coordinatorlayout:coordinatorlayout:$androidX.coordinatorLayout"
 
