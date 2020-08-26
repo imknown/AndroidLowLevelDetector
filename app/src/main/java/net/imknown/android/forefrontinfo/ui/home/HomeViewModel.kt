@@ -741,7 +741,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
             val hasVndkLite = getStringProperty(PROP_VNDK_LITE).toBoolean()
 
             vndkColor = if (
-                (vndkVersion == lld.android.stable.api || isLatestPreviewAndroid(lld)) && !hasVndkLite
+                (isLatestPreviewAndroid(lld) || vndkVersion >= lld.android.stable.api) && !hasVndkLite
             ) {
                 R.color.colorNoProblem
             } else {
