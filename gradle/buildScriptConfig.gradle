@@ -77,8 +77,8 @@ ext {
 
             // https://developer.android.com/jetpack/androidx/releases/test
             junit                 : '4.13',
-            extJunit              : '1.1.1',
-            espressoCore          : '3.2.0'
+            extJunit              : '1.1.2',
+            espressoCore          : '3.3.0'
     ]
     // endregion [AndroidX]
 
