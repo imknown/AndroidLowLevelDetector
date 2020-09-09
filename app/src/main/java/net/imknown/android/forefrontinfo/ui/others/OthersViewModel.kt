@@ -17,10 +17,6 @@ import java.util.*
 class OthersViewModel : BasePureListViewModel(), IAndroidVersion {
 
     companion object {
-        init {
-            System.loadLibrary("BinderDetector")
-        }
-
         private const val PROP_RO_PRODUCT_CPU_ABI = "ro.product.cpu.abi"
 
         // private const val CPU_ARCHITECTURE = "grep 'CPU architecture' /proc/cpuinfo"
