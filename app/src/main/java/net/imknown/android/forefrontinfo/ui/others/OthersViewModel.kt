@@ -25,8 +25,6 @@ class OthersViewModel : BasePureListViewModel(), IAndroidVersion {
 
         // private const val CPU_ARCHITECTURE = "grep 'CPU architecture' /proc/cpuinfo"
         private const val DRIVER_BINDER = "/dev/binder"
-        private const val DRIVER_HW_BINDER = "/dev/hwbinder"
-        private const val DRIVER_VND_BINDER = "/dev/vndbinder"
 
         private const val ERRNO_NO_SUCH_FILE_OR_DIRECTORY = 2
         private const val ERRNO_PERMISSION_DENIED = 13
@@ -77,8 +75,6 @@ class OthersViewModel : BasePureListViewModel(), IAndroidVersion {
         // region [Arch & ABI]
         // region [Binder]
         detectBinderStatus(tempModels, DRIVER_BINDER, R.string.binder_status)
-        detectBinderStatus(tempModels, DRIVER_HW_BINDER, R.string.hw_binder_status)
-        detectBinderStatus(tempModels, DRIVER_VND_BINDER, R.string.vnd_binder_status)
         // endregion [Binder]
 
         // region [Process]
