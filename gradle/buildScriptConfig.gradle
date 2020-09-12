@@ -125,7 +125,7 @@ ext {
             firebaseAnalytics              : '17.5.0',
 
             // https://firebase.google.com/docs/crashlytics/get-started?platform=android#add-crashlytics
-            firebaseCrashlyticsGradlePlugin: '2.2.1',
+            firebaseCrashlyticsGradlePlugin: '2.3.0',
             // https://firebase.google.com/docs/crashlytics/get-started?platform=android#add-dependencies
             firebaseCrashlytics            : '17.2.1',
             // https://firebase.google.com/docs/crashlytics/ndk-reports
