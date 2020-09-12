@@ -1,6 +1,5 @@
 package net.imknown.android.forefrontinfo.ui.base
 
-import android.annotation.SuppressLint
 import android.os.Build
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 
@@ -19,14 +18,12 @@ interface IAndroidVersion {
     fun isStableAndroid() = Build.VERSION.CODENAME == CODENAME_RELEASE
     fun isPreviewAndroid() = !isStableAndroid()
 
-    @SuppressLint("ObsoleteSdkInt")
     fun isLatestStableAndroid(lld: Lld) = isStableAndroid()
             && Build.VERSION.SDK_INT >= lld.android.stable.api.toInt()
 
     fun isLatestPreviewAndroid(lld: Lld) = isPreviewAndroid()
             && getAndroidVersionName() >= lld.android.preview.name
 
-    @SuppressLint("ObsoleteSdkInt")
     fun isSupportedByUpstreamAndroid(lld: Lld) = isStableAndroid()
             && Build.VERSION.SDK_INT >= lld.android.support.api.toInt()
 
