@@ -396,9 +396,12 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
 
         val separator = '.'
         fun getDate(buildId: String) = buildId.substringAfter(separator)
-        fun isDateHigherThanConfig() =
-            (buildIdResult.split(separator).size > 2 && getDate(buildIdResult) >= getDate(details[details.size - 1].id))
-                    || isLatestPreviewAndroid(lld)
+        fun isDateHigherThanConfig() = (
+                isLatestStableAndroid(lld)
+                        && buildIdResult.split(separator).size > 2
+                        && getDate(buildIdResult) >= getDate(details[details.size - 1].id)
+                )
+                || isLatestPreviewAndroid(lld)
 
         @ColorRes val buildIdColor = when {
             isDateHigherThanConfig() -> R.color.colorNoProblem
