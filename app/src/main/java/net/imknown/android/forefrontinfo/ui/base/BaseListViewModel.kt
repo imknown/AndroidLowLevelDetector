@@ -79,7 +79,7 @@ abstract class BaseListViewModel : BaseViewModel() {
         showError(Exception(message))
     }
 
-    protected fun showError(error: Exception) = viewModelScope.launch(Dispatchers.Default) {
+    private fun showError(error: Exception) = viewModelScope.launch(Dispatchers.Default) {
         withContext(Dispatchers.Main) {
             _showErrorEvent.value = Event(error.message.toString())
         }

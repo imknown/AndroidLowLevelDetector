@@ -26,7 +26,7 @@
     <string name="result_enabled">Activée</string>
     <string name="result_disabled">Désactivé</string>
 
-    <string name="android_info_title">Version d\'Android</string>
+    <string name="android_info_title">"Version d'Android"</string>
     <string name="android_info">%1$s (API %2$s)</string>
     <string name="android_info_preview">Dernière aperçu</string>
     <string name="android_info_detail">Moi: %1$s\n\nDernière stable: %2$s\nPlus faible prise en charge: %3$s\n%4$s: %5$s</string>
@@ -76,11 +76,11 @@
 
     <string name="adb_debugging_status_title">Statut de débogage ADB</string>
 
-    <string name="adb_authentication_status_title">Statut d\'authentification ADB</string>
+    <string name="adb_authentication_status_title">"Statut d'authentification ADB"</string>
 
     <string name="encryption_status_title">Statut de chiffrement</string>
     <string name="result_encrypted">Crypté</string>
-    <string name="result_encrypted_no_key_set">Chiffré mais le mot de passe n\'a pas été défini</string>
+    <string name="result_encrypted_no_key_set">"Chiffré mais le mot de passe n'a pas été défini"</string>
     <string name="result_not_encrypted">Non crypté</string>
 
     <string name="selinux_status">Status SELinux</string>
@@ -104,9 +104,9 @@
     <string name="chrome_developer">Chrome Developer</string>
     <string name="chrome_canary">Chrome Canary</string>
 
-    <string name="outdated_target_version_sdk_version_apk_my_first_api_level">API Android à la sortie d\'usine: %s\n\n</string>
+    <string name="outdated_target_version_sdk_version_apk_my_first_api_level">"API Android à la sortie d'usine: %s\n\n"</string>
     <string name="outdated_target_version_sdk_version_apk_title">Les application system avec targetVersionSdk dépassé</string>
-    <string name="outdated_target_version_sdk_version_apk_result_none">Pas d\'application dépassé</string>
+    <string name="outdated_target_version_sdk_version_apk_result_none">"Pas d'application dépassé"</string>
 
     <!-- Others -->
     <string name="build_brand">Marque</string>
@@ -135,12 +135,12 @@
     <string name="build_base_os">ROM basé sur (Développement secondaire)</string>
     <string name="build_certain_fingerprint">%s empreinte</string>
     <string name="build_stock_fingerprint">Empreinte de la ROM originale</string>
-    <string name="build_stock_preview_fingerprint">Empreinte digitale d\'aperçu de la ROM stock</string>
-    <string name="build_display">ID d\'Android</string>
+    <string name="build_stock_preview_fingerprint">"Empreinte digitale d'aperçu de la ROM stock"</string>
+    <string name="build_display">"ID d'Android"</string>
     <string name="build_incremental">Android Git commit hash</string>
     <string name="build_type">Type de build </string>
     <string name="build_tags">Tags de build</string>
-    <string name="build_codename">Nom de code de la branche Git d\'Android  (REL: Version stable de production)</string>
+    <string name="build_codename">"Nom de code de la branche Git d'Android  (REL: Version stable de production)"</string>
 
     <string name="build_bootloader">Version du Bootloader</string>
     <string name="build_radio">Version de la bande de base</string>
@@ -166,20 +166,20 @@
     <string name="function_allow_network_data_title">Activer les données en ligne</string>
     <string name="function_allow_network_data_summary">Lorsque cette option est activée, les données seront préalablement extraites du serveur réseau distant, puis mises en cache sur le stockage local.</string>
 
-    <string name="function_outdated_target_order_by_package_name_first_title">Commandez d\'abord par nom de colis</string>
-    <string name="function_outdated_target_order_by_package_name_first_summary">Commandez d\'abord les applications obsolètes par nom de package, sinon par targetSdkVersion d\'abord.</string>
+    <string name="function_outdated_target_order_by_package_name_first_title">"Commandez d'abord par nom de colis"</string>
+    <string name="function_outdated_target_order_by_package_name_first_summary">"Commandez d'abord les applications obsolètes par nom de package, sinon par targetSdkVersion d'abord."</string>
 
     <string name="about_title">À propos</string>
 
     <string name="about_shop_title">Play Store</string>
-    <string name="about_shop_summary">Ouvre la page de l\'application dans Play Store</string>
+    <string name="about_shop_summary">"Ouvre la page de l'application dans Play Store"</string>
     <string name="about_shop">https://play.google.com/store/apps/details?id=net.imknown.android.forefrontinfo</string>
 
     <string name="about_source_title">Code source</string>
-    <string name="about_source_summary">L\'adresse GitHub du code sourcce de l\'application</string>
+    <string name="about_source_summary">"L'adresse GitHub du code sourcce de l'application"</string>
 
     <string name="about_privacy_policy_title">Politique de confidentialité</string>
-    <string name="about_privacy_policy_summary">Voyez ce qui se passe quand vous utilisez l\'application</string>
+    <string name="about_privacy_policy_summary">"Voyez ce qui se passe quand vous utilisez l'application"</string>
     <string name="about_privacy_policy">https://github.com/imknown/AndroidLowLevelDetector/blob/master/GOOGLE_PLAY_PRIVACY_POLICY.md</string>
 
     <string name="about_licenses_title">Licences</string>
