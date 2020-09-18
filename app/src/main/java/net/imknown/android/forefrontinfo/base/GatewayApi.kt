@@ -1,8 +1,8 @@
 package net.imknown.android.forefrontinfo.base
 
 import com.github.kittinunf.fuel.core.FuelError
-import com.github.kittinunf.fuel.coroutines.awaitByteArrayResult
-import com.github.kittinunf.fuel.httpDownload
+import com.github.kittinunf.fuel.coroutines.awaitStringResult
+import com.github.kittinunf.fuel.httpGet
 import net.imknown.android.forefrontinfo.BuildConfig
 import java.util.*
 
@@ -12,8 +12,8 @@ object GatewayApi {
     private const val URL_PREFIX_LLD_JSON_ZH_CN = "gitee.com/$REPOSITORY_NAME/raw"
     private const val URL_PREFIX_LLD_JSON = "raw.githubusercontent.com/$REPOSITORY_NAME"
 
-    suspend fun downloadLldJsonFile(
-        success: (ByteArray) -> Unit,
+    suspend fun fetchLldJson(
+        success: (String) -> Unit,
         failure: (FuelError) -> Unit
     ) {
         val urlPrefixLldJson = if (isChinaMainlandTimezone()) {
@@ -24,9 +24,7 @@ object GatewayApi {
 
         val url =
             "https://$urlPrefixLldJson/${BuildConfig.GIT_BRANCH}/app/src/main/assets/${JsonIo.LLD_JSON_NAME}"
-
-        url.httpDownload().fileDestination { _, _ -> JsonIo.savedLldJsonFile }
-            .awaitByteArrayResult().fold(success, failure)
+        url.httpGet().awaitStringResult().fold(success, failure)
     }
 
     private fun isChinaMainlandTimezone() =

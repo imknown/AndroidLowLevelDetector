@@ -9,8 +9,10 @@
     <string name="lld_json_loading">📲 CHARGEMENT DES…</string>
     <string name="lld_json_offline">📴 HORS-LIGNE (%s)</string>
     <string name="lld_json_online">📱 ENLIGNE (%s)</string>
-    <string name="lld_json_download_failed">Impossible d\'atteindre les données en ligne.\nUtilisation des données locales.\n\n%s</string>
-    <string name="lld_json_parse_failed">Impossible de parser les données.\nEssayez de mettre à jour l\'application.\n\n%s</string>
+    <string name="lld_json_fetch_failed">"Impossible d'atteindre les données en ligne.\nUtilisation des données locales.\n\n%s"</string>
+    <string name="lld_json_save_failed">"L'enregistrement des données a échoué.\nVeuillez vérifier votre stockage.\n\n%s"</string>
+    <string name="lld_json_parse_failed">"Impossible de parser les données.\nEssayez de mettre à jour l'application.\n\n%s"</string>
+    <string name="lld_json_detect_failed">"La détection a échoué.\nEssayez de mettre à jour l'application.\n\n%s"</string>
 
     <!-- Tab -->
     <string name="title_home">Menu</string>

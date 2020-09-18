@@ -17,13 +17,11 @@ import androidx.webkit.WebViewCompat
 import com.g00fy2.versioncompare.Version
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
-import net.imknown.android.forefrontinfo.base.Event
-import net.imknown.android.forefrontinfo.base.GatewayApi
-import net.imknown.android.forefrontinfo.base.JsonIo
-import net.imknown.android.forefrontinfo.base.booleanEventLiveData
+import net.imknown.android.forefrontinfo.base.*
 import net.imknown.android.forefrontinfo.ui.base.BaseListViewModel
 import net.imknown.android.forefrontinfo.ui.base.IAndroidVersion
 import net.imknown.android.forefrontinfo.ui.base.MyModel
@@ -154,55 +152,71 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
     private val _showOutdatedOrderEvent by lazy { MutableLiveData<Event<Unit>>() }
     val showOutdatedOrderEvent: LiveData<Event<Unit>> by lazy { _showOutdatedOrderEvent }
 
-    private fun copyJsonIfNeeded() {
-        if (JsonIo.whetherNeedCopyAssets(MyApplication.instance.assets)) {
-            JsonIo.copyJsonFromAssetsToContextFilesDir(
-                MyApplication.instance.assets,
-                JsonIo.savedLldJsonFile,
-                JsonIo.LLD_JSON_NAME
-            )
-        }
-    }
-
     override fun collectModels() = viewModelScope.launch(Dispatchers.IO) {
         val allowNetwork = MyApplication.sharedPreferences.getBoolean(
             MyApplication.getMyString(R.string.function_allow_network_data_key), false
         )
 
-        var isOnline = false
-
         if (allowNetwork) {
-            GatewayApi.downloadLldJsonFile({
-                isOnline = true
+            GatewayApi.fetchLldJson({ lldString ->
+                try {
+                    val lld = lldString.fromJson<Lld>()
+
+                    runBlocking {
+                        prepareResult(true, lld)
+
+                        try {
+                            JsonIo.saveLldJsonFile(lldString)
+                        } catch (e: Exception) {
+                            showError(
+                                MyApplication.getMyString(
+                                    R.string.lld_json_save_failed,
+                                    e.message
+                                )
+                            )
+                        }
+                    }
+                } catch (e: Exception) {
+                    showError(MyApplication.getMyString(R.string.lld_json_parse_failed, e.message))
+
+                    runBlocking {
+                        prepareOfflineLld()
+                    }
+                }
             }, {
-                showError(MyApplication.getMyString(R.string.lld_json_download_failed, it.message))
+                showError(MyApplication.getMyString(R.string.lld_json_fetch_failed, it.message))
+
+                runBlocking {
+                    prepareOfflineLld()
+                }
             })
-        }
-
-        prepareResult(isOnline)
-    }
-
-    private fun prepareLld(isOnline: Boolean) {
-        if (isOnline) {
-            JsonIo.prepareLld()
         } else {
-            try {
-                copyJsonIfNeeded()
-            } catch (e: Exception) {
-                showError(e)
-            }
+            prepareOfflineLld()
         }
     }
 
-    private suspend fun prepareResult(isOnline: Boolean) {
-        prepareLld(isOnline)
+    private suspend fun prepareOfflineLld() {
+        val lld = fetchOfflineLld()
 
+        prepareResult(false, lld)
+    }
+
+    private fun fetchOfflineLld() =
+        try {
+            JsonIo.copyJsonIfNeeded()
+
+            JsonIo.savedLldJsonFile.fromJson()
+        } catch (e: Exception) {
+            showError(MyApplication.getMyString(R.string.lld_json_save_failed, e.message))
+
+            JsonIo.getAssetLld(MyApplication.instance.assets)
+        }
+
+    private suspend fun prepareResult(isOnline: Boolean, lld: Lld) {
         @StringRes var lldDataModeResId: Int
         var dataVersion: String
 
         try {
-            val lld = JsonIo.lld
-
             detect(lld)
 
             lldDataModeResId = if (isOnline) {
@@ -212,7 +226,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
             }
             dataVersion = getLocalTimeZoneDatetime(lld.version)
         } catch (e: Exception) {
-            showError(MyApplication.getMyString(R.string.lld_json_parse_failed, e.message))
+            showError(MyApplication.getMyString(R.string.lld_json_detect_failed, e.message))
 
             lldDataModeResId = R.string.lld_json_offline
 
@@ -1111,7 +1125,8 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
                 return@launch
             }
 
-            myModels.last().detail = getOutdatedTargetSdkVersionApkModel(JsonIo.lld).detail
+            val lld = fetchOfflineLld()
+            myModels.last().detail = getOutdatedTargetSdkVersionApkModel(lld).detail
 
             withContext(Dispatchers.Main) {
                 _showOutdatedOrderEvent.value = Event(Unit)
