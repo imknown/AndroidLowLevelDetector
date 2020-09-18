@@ -1,14 +1,17 @@
 package net.imknown.android.forefrontinfo.ui.base
 
+import android.content.Context
 import android.widget.Toast
 import androidx.annotation.StringRes
-import net.imknown.android.forefrontinfo.MyApplication
 
 interface IFragmentView {
+    val visualContext: Context?
 
-    fun toast(@StringRes resId: Int) =
-        Toast.makeText(MyApplication.instance, resId, Toast.LENGTH_LONG).show()
+    fun toast(@StringRes resId: Int) = visualContext?.let {
+        Toast.makeText(it, resId, Toast.LENGTH_LONG).show()
+    }
 
-    fun toast(text: String) =
-        Toast.makeText(MyApplication.instance, text, Toast.LENGTH_LONG).show()
+    fun toast(text: String) = visualContext?.let {
+        Toast.makeText(it, text, Toast.LENGTH_LONG).show()
+    }
 }

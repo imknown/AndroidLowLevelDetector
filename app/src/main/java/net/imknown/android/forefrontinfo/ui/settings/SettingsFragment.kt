@@ -24,6 +24,8 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
         }
     }
 
+    override val visualContext by lazy { context }
+
     private val settingsViewModel by activityViewModels<SettingsViewModel>()
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
