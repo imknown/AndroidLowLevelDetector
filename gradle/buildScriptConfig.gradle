@@ -46,9 +46,9 @@ ext {
 
             cursorAdapter         : '1.0.0',
 
-            customView            : '1.0.0',
+            customView            : '1.1.0',
 
-            drawerlayout          : '1.0.0',
+            drawerlayout          : '1.1.1',
 
             fragment              : '1.2.5',
 
@@ -66,7 +66,7 @@ ext {
 
             savedstate            : '1.0.0',
 
-            swipeRefreshLayout    : '1.0.0',
+            swipeRefreshLayout    : '1.1.0',
 
             transition            : '1.3.1',
 
