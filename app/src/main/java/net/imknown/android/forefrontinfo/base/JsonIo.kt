@@ -51,17 +51,23 @@ object JsonIo {
     }
 
     fun getAssetLld(assets: AssetManager) =
-        assets.open(LLD_JSON_NAME)
-            .bufferedReader()
-            .use(BufferedReader::readText)
-            .fromJson<Lld>()
+        try {
+            assets.open(LLD_JSON_NAME)
+                .bufferedReader()
+                .use(BufferedReader::readText)
+                .fromJson<Lld>()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
 
     fun getAssetLldVersion(assets: AssetManager) =
-        getAssetLld(assets).version
+        getAssetLld(assets)?.version
+            ?: MyApplication.getMyString(android.R.string.unknownName)
 }
 
-inline fun <reified T : Any> File.fromJson(): T =
+inline fun <reified T : Any> File.fromJson(): T? =
     Gson().fromJson(readText(), T::class.java)
 
-inline fun <reified T : Any> String.fromJson(): T =
+inline fun <reified T : Any> String.fromJson(): T? =
     Gson().fromJson(this, T::class.java)

@@ -158,83 +158,92 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         )
 
         if (allowNetwork) {
-            GatewayApi.fetchLldJson({ lldString ->
-                try {
-                    val lld = lldString.fromJson<Lld>()
-
-                    runBlocking {
-                        prepareResult(true, lld)
-
-                        try {
-                            JsonIo.saveLldJsonFile(lldString)
-                        } catch (e: Exception) {
-                            showError(
-                                MyApplication.getMyString(
-                                    R.string.lld_json_save_failed,
-                                    e.message
-                                )
-                            )
-                        }
-                    }
-                } catch (e: Exception) {
-                    showError(MyApplication.getMyString(R.string.lld_json_parse_failed, e.message))
-
-                    runBlocking {
-                        prepareOfflineLld()
-                    }
-                }
+            GatewayApi.fetchLldJson({
+                runBlocking { prepareOnlineLld(it) }
             }, {
                 showError(MyApplication.getMyString(R.string.lld_json_fetch_failed, it.message))
 
-                runBlocking {
-                    prepareOfflineLld()
-                }
+                runBlocking { prepareOfflineLld() }
             })
         } else {
             prepareOfflineLld()
         }
     }
 
-    private suspend fun prepareOfflineLld() {
-        val lld = fetchOfflineLld()
+    private suspend fun prepareOnlineLld(lldString: String) {
+        try {
+            val lld = lldString.fromJson<Lld>()
+            val isSuccess = prepareDetect(lld)
 
-        prepareResult(false, lld)
+            setSubtitle(isSuccess, lld, R.string.lld_json_online)
+
+            try {
+                JsonIo.saveLldJsonFile(lldString)
+            } catch (e: Exception) {
+                showError(MyApplication.getMyString(R.string.lld_json_save_failed, e.message))
+            }
+        } catch (e: Exception) {
+            showError(MyApplication.getMyString(R.string.lld_json_parse_failed, e.message))
+
+            prepareOfflineLld()
+        }
     }
 
-    private fun fetchOfflineLld() =
+    private suspend fun prepareOfflineLld() {
+        val lld = fetchOfflineLld()
+        val isSuccess = prepareDetect(lld)
+
+        setSubtitle(isSuccess, lld, R.string.lld_json_offline)
+    }
+
+    private fun fetchOfflineLld(): Lld? {
+        val lld: Lld?
+
         try {
             JsonIo.copyJsonIfNeeded()
-
-            JsonIo.savedLldJsonFile.fromJson()
         } catch (e: Exception) {
             showError(MyApplication.getMyString(R.string.lld_json_save_failed, e.message))
+
+            lld = JsonIo.getAssetLld(MyApplication.instance.assets)
+            return lld
+        }
+
+        lld = try {
+            JsonIo.savedLldJsonFile.fromJson()
+        } catch (e: Exception) {
+            showError(MyApplication.getMyString(R.string.lld_json_parse_failed, e.message))
 
             JsonIo.getAssetLld(MyApplication.instance.assets)
         }
 
-    private suspend fun prepareResult(isOnline: Boolean, lld: Lld) {
-        @StringRes var lldDataModeResId: Int
-        var dataVersion: String
+        return lld
+    }
 
-        try {
+    private suspend fun prepareDetect(lld: Lld?): Boolean {
+        if (lld == null) {
+            return false
+        }
+
+        return try {
             detect(lld)
 
-            lldDataModeResId = if (isOnline) {
-                R.string.lld_json_online
-            } else {
-                R.string.lld_json_offline
-            }
-            dataVersion = getLocalTimeZoneDatetime(lld.version)
+            true
         } catch (e: Exception) {
             showError(MyApplication.getMyString(R.string.lld_json_detect_failed, e.message))
 
-            lldDataModeResId = R.string.lld_json_offline
+            false
+        }
+    }
 
-            dataVersion = MyApplication.getMyString(android.R.string.unknownName)
+    private suspend fun setSubtitle(isSuccess: Boolean, lld: Lld?, @StringRes subtitleResId: Int) {
+        val dataVersion = if (isSuccess) {
+            getLocalTimeZoneDatetime(lld!!.version)
+        } else {
+            MyApplication.getMyString(android.R.string.unknownName)
         }
 
         withContext(Dispatchers.Main) {
-            _subtitle.value = Subtitle(lldDataModeResId, dataVersion)
+            _subtitle.value = Subtitle(subtitleResId, dataVersion)
         }
     }
 
@@ -1126,6 +1135,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
             }
 
             val lld = fetchOfflineLld()
+                ?: return@launch
             myModels.last().detail = getOutdatedTargetSdkVersionApkModel(lld).detail
 
             withContext(Dispatchers.Main) {
