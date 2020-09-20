@@ -141,7 +141,7 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
                 PackageManager.GET_SIGNING_CERTIFICATES
             )?.signingInfo?.apkContentsSigners
         } else {
-            @Suppress("DEPRECATION")
+            @Suppress("DEPRECATION", "PackageManagerGetSignatures")
             packageManager.getPackageInfo(
                 packageName,
                 PackageManager.GET_SIGNATURES
