@@ -4,7 +4,6 @@ import com.github.kittinunf.fuel.core.FuelError
 import com.github.kittinunf.fuel.coroutines.awaitStringResult
 import com.github.kittinunf.fuel.httpGet
 import net.imknown.android.forefrontinfo.BuildConfig
-import java.util.*
 
 object GatewayApi {
     private const val REPOSITORY_NAME = "imknown/AndroidLowLevelDetector"
@@ -26,7 +25,4 @@ object GatewayApi {
             "https://$urlPrefixLldJson/${BuildConfig.GIT_BRANCH}/app/src/main/assets/${JsonIo.LLD_JSON_NAME}"
         url.httpGet().awaitStringResult().fold(success, failure)
     }
-
-    private fun isChinaMainlandTimezone() =
-        TimeZone.getDefault().id == "Asia/Shanghai" || TimeZone.getDefault().id == "Asia/Urumqi"
 }

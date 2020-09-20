@@ -17,6 +17,8 @@ ext {
     ]
     // endregion [AndroidBuild]
 
+    desugarJdkLibs = '1.0.10'
+
     // region [AndroidX]
     // https://maven.google.com
     // https://androidstudio.googleblog.com/

@@ -87,6 +87,8 @@ android {
     }
 
     compileOptions {
+        coreLibraryDesugaringEnabled true
+
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -108,10 +110,12 @@ android {
     }
 }
 
-import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 private static getCurrentDate() {
-    new SimpleDateFormat("yyyyMMdd-HHmm", Locale.US).format(new Date())
+    DateTimeFormatter.ofPattern("yyyyMMdd-HHmm").format(Instant.now().atZone(ZoneId.systemDefault()))
 }
 
 private static getCurrentGitBranchName() {

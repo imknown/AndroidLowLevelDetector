@@ -28,7 +28,6 @@ import net.imknown.android.forefrontinfo.ui.base.MyModel
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.home.model.Subtitle
 import java.io.File
-import java.text.SimpleDateFormat
 import java.util.*
 
 class HomeViewModel : BaseListViewModel(), IAndroidVersion {
@@ -237,7 +236,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
 
     private suspend fun setSubtitle(isSuccess: Boolean, lld: Lld?, @StringRes subtitleResId: Int) {
         val dataVersion = if (isSuccess) {
-            getLocalTimeZoneDatetime(lld!!.version)
+            lld!!.version.formatToLocalZonedDatetimeString()
         } else {
             MyApplication.getMyString(android.R.string.unknownName)
         }
@@ -245,14 +244,6 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         withContext(Dispatchers.Main) {
             _subtitle.value = Subtitle(subtitleResId, dataVersion)
         }
-    }
-
-    private fun getLocalTimeZoneDatetime(source: String): String {
-        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm Z", Locale.US).apply {
-            timeZone = TimeZone.getDefault()
-        }
-        val localDate = formatter.parse(source)!!
-        return formatter.format(localDate)
     }
 
     // https://unix.stackexchange.com/questions/91960/can-anyone-explain-the-output-of-mount

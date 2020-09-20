@@ -11,13 +11,10 @@ import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
-import net.imknown.android.forefrontinfo.base.Event
-import net.imknown.android.forefrontinfo.base.JsonIo
-import net.imknown.android.forefrontinfo.base.stringEventLiveData
+import net.imknown.android.forefrontinfo.base.*
 import net.imknown.android.forefrontinfo.ui.base.BaseViewModel
 import net.imknown.android.forefrontinfo.ui.base.IAndroidVersion
 import java.security.MessageDigest
-import java.text.SimpleDateFormat
 import java.util.*
 
 class SettingsViewModel : BaseViewModel(), IAndroidVersion {
@@ -70,6 +67,7 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
     ) = viewModelScope.launch(Dispatchers.IO) {
         // region [lld]
         val assetLldVersion = JsonIo.getAssetLldVersion(MyApplication.instance.assets)
+            .formatToLocalZonedDatetimeString()
         // endregion [lld]
 
         // region [distributor]
@@ -89,9 +87,8 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
 
         // region [install time]
         val packageInfo = packageManager.getPackageInfo(packageName, 0)
-        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
-        val firstInstallTime = sdf.format(Date(packageInfo.firstInstallTime))
-        val lastUpdateTime = sdf.format(Date(packageInfo.lastUpdateTime))
+        val firstInstallTime = packageInfo.firstInstallTime.formatToDatetimeString()
+        val lastUpdateTime = packageInfo.lastUpdateTime.formatToDatetimeString()
         // endregion [install time]
 
         withContext(Dispatchers.Main) {
