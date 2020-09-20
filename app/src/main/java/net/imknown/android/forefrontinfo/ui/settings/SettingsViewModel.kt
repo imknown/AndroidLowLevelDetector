@@ -69,13 +69,7 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
         packageManager: PackageManager
     ) = viewModelScope.launch(Dispatchers.IO) {
         // region [lld]
-        val assetLldVersion = try {
-            JsonIo.getAssetLldVersion(MyApplication.instance.assets)
-        } catch (e: Exception) {
-            e.printStackTrace()
-
-            MyApplication.getMyString(android.R.string.unknownName)
-        }
+        val assetLldVersion = JsonIo.getAssetLldVersion(MyApplication.instance.assets)
         // endregion [lld]
 
         // region [distributor]
