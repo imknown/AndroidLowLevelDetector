@@ -167,7 +167,14 @@ class OthersViewModel : BasePureListViewModel(), IAndroidVersion {
         driver: String,
         @StringRes titleId: Int
     ) {
-        @StringRes val binderStatusId = when (getBinderVersion(driver)) {
+        val binderVersion = try {
+            System.loadLibrary("BinderDetector")
+            getBinderVersion(driver)
+        } catch (e: UnsatisfiedLinkError) {
+            e.printStackTrace()
+        }
+
+        @StringRes val binderStatusId = when (binderVersion) {
             -ERRNO_NO_SUCH_FILE_OR_DIRECTORY -> {
                 R.string.result_not_supported
             }

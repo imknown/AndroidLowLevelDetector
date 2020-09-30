@@ -7,10 +7,6 @@ import net.imknown.android.forefrontinfo.ui.base.BaseListFragment
 class OthersFragment : BaseListFragment() {
 
     companion object {
-        init {
-            System.loadLibrary("BinderDetector")
-        }
-
         fun newInstance() = OthersFragment()
     }
 
