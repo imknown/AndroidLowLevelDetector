@@ -44,7 +44,7 @@ ext {
 
             coordinatorLayout     : '1.1.0',
 
-            core                  : '1.3.1',
+            core                  : '1.3.2',
 
             cursorAdapter         : '1.0.0',
 
