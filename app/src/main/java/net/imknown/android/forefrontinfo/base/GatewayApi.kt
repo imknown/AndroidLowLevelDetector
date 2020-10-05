@@ -8,17 +8,17 @@ import net.imknown.android.forefrontinfo.BuildConfig
 object GatewayApi {
     private const val REPOSITORY_NAME = "imknown/AndroidLowLevelDetector"
 
-    private const val URL_PREFIX_LLD_JSON_ZH_CN = "gitee.com/$REPOSITORY_NAME/raw"
-    private const val URL_PREFIX_LLD_JSON = "raw.githubusercontent.com/$REPOSITORY_NAME"
+    private const val URL_PREFIX_LLD_JSON_GITEE = "gitee.com/$REPOSITORY_NAME/raw"
+    private const val URL_PREFIX_LLD_JSON_GITHUB = "raw.githubusercontent.com/$REPOSITORY_NAME"
 
     suspend fun fetchLldJson(
         success: (String) -> Unit,
         failure: (FuelError) -> Unit
     ) {
         val urlPrefixLldJson = if (isChinaMainlandTimezone()) {
-            URL_PREFIX_LLD_JSON_ZH_CN
+            URL_PREFIX_LLD_JSON_GITEE
         } else {
-            URL_PREFIX_LLD_JSON
+            URL_PREFIX_LLD_JSON_GITHUB
         }
 
         val url =
