@@ -5,7 +5,6 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
-import java.util.*
 
 fun String.formatToLocalZonedDatetimeString(): String {
     val patternZonedDatetime = "yyyy-MM-dd HH:mm Z"
@@ -27,4 +26,4 @@ fun Long.formatToDatetimeString(): String {
 }
 
 fun isChinaMainlandTimezone() =
-    TimeZone.getDefault().id == "Asia/Shanghai" || TimeZone.getDefault().id == "Asia/Urumqi"
+    ZoneId.systemDefault().id == "Asia/Shanghai" || ZoneId.systemDefault().id == "Asia/Urumqi"
