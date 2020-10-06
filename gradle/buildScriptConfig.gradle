@@ -19,7 +19,7 @@ ext {
 
     // https://developer.android.com/studio/write/java8-support#library-desugaring
     // https://github.com/google/desugar_jdk_libs/blob/master/CHANGELOG.md
-    desugarJdkLibs = '1.0.10'
+    desugarJdkLibs = '1.0.11'
 
     // region [AndroidX]
     // https://maven.google.com
