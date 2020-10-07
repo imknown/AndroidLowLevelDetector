@@ -1,7 +1,8 @@
 {
-  "version": "2020-10-07 06:25 +0800",
+  "version": "2020-10-07 19:55 +0800",
   "android": {
-    "securityPatchLevel": "2020-10-05",
+    "securityPatchLevel": "2020-10-06",
+    "googlePlaySystemUpdates": "2020-10-01",
     "build": {
       "version": "2020-10-06",
       "details": [
