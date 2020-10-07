@@ -63,7 +63,7 @@
     <string name="dsu_status_title">动态系统更新(DSU) 状态</string>
 
     <string name="mainline_title">Project Mainline 模块版本\n(Google Play 系统更新)</string>
-    <string name="mainline_detail">我的: %1$s (%2$s)</string>
+    <string name="mainline_detail">我的: %1$s (%2$s)\n\n最新: %3$s</string>
 
     <string name="vndk_built_in_title">内建 供应商 NDK 状态</string>
     <string name="built_in_vndk_version_result">\u0020(等级: %s)</string>

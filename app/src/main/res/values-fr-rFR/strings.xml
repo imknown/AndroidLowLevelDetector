@@ -64,7 +64,7 @@
     <string name="dsu_status_title">Status du Mise à jour du système dynamique(DSU)</string>
 
     <string name="mainline_title">Project Mainline module version\n(Mise à jour du système Google Play)</string>
-    <string name="mainline_detail">Moi: %1$s (%2$s)</string>
+    <string name="mainline_detail">Moi: %1$s (%2$s)\n\nDernière: %3$s</string>
 
     <string name="vndk_built_in_title">Status du NDK Vendor integré</string>
     <string name="built_in_vndk_version_result">\u0020(Niveau: %s)</string>

@@ -719,13 +719,15 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
                     0
                 ).versionName
 
-                if ((versionName.contains('-') && isLatestPreviewAndroid(lld))
-                    || versionName >= lld.android.stable.version
-                ) {
+                val latestGooglePlaySystemUpdates = lld.android.googlePlaySystemUpdates
+                if (versionName >= latestGooglePlaySystemUpdates) {
                     moduleColor = R.color.colorNoProblem
                 }
 
-                MyApplication.getMyString(R.string.mainline_detail, versionName, moduleProvider)
+                MyApplication.getMyString(
+                    R.string.mainline_detail,
+                    versionName, moduleProvider, latestGooglePlaySystemUpdates
+                )
             } catch (e: Exception) {
                 Log.e(javaClass.simpleName, "Failed to get mainline version.", e)
                 MyApplication.getMyString(R.string.result_not_supported)
