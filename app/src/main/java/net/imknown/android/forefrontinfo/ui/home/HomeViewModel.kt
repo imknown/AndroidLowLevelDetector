@@ -697,6 +697,15 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
      * {@link com.android.settings.deviceinfo.firmwareversion.MainlineModuleVersionPreferenceController}
      */
     private fun detectMainline(tempModels: ArrayList<MyModel>, lld: Lld) {
+        var versionName = MyApplication.getMyString(R.string.result_not_supported)
+        var moduleProvider = MyApplication.getMyString(android.R.string.unknownName)
+        val latestGooglePlaySystemUpdates = lld.android.googlePlaySystemUpdates
+
+        fun getResult() = MyApplication.getMyString(
+            R.string.mainline_detail,
+            versionName, moduleProvider, latestGooglePlaySystemUpdates
+        )
+
         // com.android.internal.R.string.config_defaultModuleMetadataProvider
         val idConfigDefaultModuleMetadataProvider = Resources.getSystem().getIdentifier(
             "config_defaultModuleMetadataProvider",
@@ -706,40 +715,36 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
 
         @ColorRes var moduleColor = R.color.colorCritical
 
-        val moduleVersion = if (idConfigDefaultModuleMetadataProvider != 0) {
+        val result = if (idConfigDefaultModuleMetadataProvider != 0) {
             try {
                 // com.android.modulemetadata
                 // com.google.android.modulemetadata
-                val moduleProvider = MyApplication.getMyString(
+                moduleProvider = MyApplication.getMyString(
                     idConfigDefaultModuleMetadataProvider
                 )
 
-                val versionName = MyApplication.instance.packageManager.getPackageInfo(
+                versionName = MyApplication.instance.packageManager.getPackageInfo(
                     moduleProvider,
                     0
                 ).versionName
 
-                val latestGooglePlaySystemUpdates = lld.android.googlePlaySystemUpdates
                 if (versionName >= latestGooglePlaySystemUpdates) {
                     moduleColor = R.color.colorNoProblem
                 }
 
-                MyApplication.getMyString(
-                    R.string.mainline_detail,
-                    versionName, moduleProvider, latestGooglePlaySystemUpdates
-                )
+                getResult()
             } catch (e: Exception) {
                 Log.e(javaClass.simpleName, "Failed to get mainline version.", e)
-                MyApplication.getMyString(R.string.result_not_supported)
+                getResult()
             }
         } else {
-            MyApplication.getMyString(R.string.result_not_supported)
+            getResult()
         }
 
         add(
             tempModels,
             MyApplication.getMyString(R.string.mainline_title),
-            moduleVersion,
+            result,
             moduleColor
         )
     }
