@@ -42,7 +42,7 @@ ext {
 
             collection            : '1.1.0',
 
-            constraintLayout      : '2.0.1',
+            constraintLayout      : '2.0.2',
 
             coordinatorLayout     : '1.1.0',
 
