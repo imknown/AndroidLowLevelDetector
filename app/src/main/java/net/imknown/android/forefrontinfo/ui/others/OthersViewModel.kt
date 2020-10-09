@@ -8,7 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
-import net.imknown.android.forefrontinfo.base.formatToDatetimeString
+import net.imknown.android.forefrontinfo.base.formatToLocalZonedDatetimeString
 import net.imknown.android.forefrontinfo.ui.base.BasePureListViewModel
 import net.imknown.android.forefrontinfo.ui.base.IAndroidVersion
 import net.imknown.android.forefrontinfo.ui.base.MyModel
@@ -100,7 +100,7 @@ class OthersViewModel : BasePureListViewModel(), IAndroidVersion {
         // region [ROM]
         add(tempModels, MyApplication.getMyString(R.string.build_user), Build.USER)
         add(tempModels, MyApplication.getMyString(R.string.build_HOST), Build.HOST)
-        val time = Build.TIME.formatToDatetimeString()
+        val time = Build.TIME.formatToLocalZonedDatetimeString()
         add(tempModels, MyApplication.getMyString(R.string.build_time), time)
         if (isAtLeastStableAndroid6()) {
             add(

@@ -1,6 +1,7 @@
 package net.imknown.android.forefrontinfo.base
 
 import android.content.res.AssetManager
+import android.util.Log
 import com.google.gson.Gson
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
@@ -62,8 +63,7 @@ object JsonIo {
         }
 
     fun getAssetLldVersion(assets: AssetManager) =
-        getAssetLld(assets)?.version
-            ?: MyApplication.getMyString(android.R.string.unknownName)
+        getAssetLld(assets)?.version ?: 0L.formatToLocalZonedDatetimeString()
 }
 
 inline fun <reified T : Any> File.fromJson(): T? =

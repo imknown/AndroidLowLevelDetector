@@ -11,7 +11,10 @@ import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
-import net.imknown.android.forefrontinfo.base.*
+import net.imknown.android.forefrontinfo.base.Event
+import net.imknown.android.forefrontinfo.base.JsonIo
+import net.imknown.android.forefrontinfo.base.formatToLocalZonedDatetimeString
+import net.imknown.android.forefrontinfo.base.stringEventLiveData
 import net.imknown.android.forefrontinfo.ui.base.BaseViewModel
 import net.imknown.android.forefrontinfo.ui.base.IAndroidVersion
 import java.security.MessageDigest
@@ -87,8 +90,8 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
 
         // region [install time]
         val packageInfo = packageManager.getPackageInfo(packageName, 0)
-        val firstInstallTime = packageInfo.firstInstallTime.formatToDatetimeString()
-        val lastUpdateTime = packageInfo.lastUpdateTime.formatToDatetimeString()
+        val firstInstallTime = packageInfo.firstInstallTime.formatToLocalZonedDatetimeString()
+        val lastUpdateTime = packageInfo.lastUpdateTime.formatToLocalZonedDatetimeString()
         // endregion [install time]
 
         withContext(Dispatchers.Main) {

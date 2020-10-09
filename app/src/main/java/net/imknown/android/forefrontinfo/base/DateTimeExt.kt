@@ -1,7 +1,6 @@
 package net.imknown.android.forefrontinfo.base
 
 import java.time.Instant
-import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -15,12 +14,12 @@ fun String.formatToLocalZonedDatetimeString(): String {
     return formatter.format(zonedDateTime)
 }
 
-fun Long.formatToDatetimeString(): String {
-    val patternDatetime = "yyyy-MM-dd HH:mm:ss"
+fun Long.formatToLocalZonedDatetimeString(): String {
+    val patternDatetime = "yyyy-MM-dd HH:mm:ss Z"
     val formatter = DateTimeFormatter.ofPattern(patternDatetime)
     val localDateTime =
         // Instant.ofEpochMilli(this).atZone(ZoneId.systemDefault()).toLocalDateTime()
-        LocalDateTime.ofInstant(Instant.ofEpochMilli(this), ZoneId.systemDefault())
+        ZonedDateTime.ofInstant(Instant.ofEpochMilli(this), ZoneId.systemDefault())
 
     return formatter.format(localDateTime)
 }
