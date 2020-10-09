@@ -353,6 +353,11 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         val previewApi = lld.android.preview.api
         val previewPhase = lld.android.preview.phase
 
+        var myAndroidVersionName = getAndroidVersionName()
+        if (isGoEdition()) {
+            myAndroidVersionName += " (Go)"
+        }
+
         add(
             tempModels,
             MyApplication.getMyString(
@@ -362,7 +367,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
                 R.string.android_info_detail,
                 MyApplication.getMyString(
                     R.string.android_info,
-                    getAndroidVersionName(),
+                    myAndroidVersionName,
                     getAndroidApiLevel()
                 ),
                 MyApplication.getMyString(
