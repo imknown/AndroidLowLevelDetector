@@ -739,7 +739,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
 
                 getResult()
             } catch (e: Exception) {
-                Log.e(javaClass.simpleName, "Failed to get mainline version.", e)
+                Log.d(javaClass.simpleName, "Failed to get mainline version.", e)
                 getResult()
             }
         } else {
@@ -1001,7 +1001,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         try {
             MyApplication.instance.packageManager.getPackageInfo(packageName, 0)
         } catch (e: Exception) {
-            Log.d(javaClass.simpleName, "$packageName not found.")
+            Log.d(javaClass.simpleName, "$packageName not found.", e)
             null
         }
 
