@@ -27,9 +27,7 @@ open class MyApplication : Application() {
         val othersLanguageEvent: LiveData<Event<Unit>> by lazy { instance._othersLanguageEvent }
         val propLanguageEvent: LiveData<Event<Unit>> by lazy { instance._propLanguageEvent }
 
-        val sharedPreferences: SharedPreferences by lazy {
-            PreferenceManager.getDefaultSharedPreferences(instance)
-        }
+        lateinit var sharedPreferences: SharedPreferences
 
         fun getDownloadDir() = getFileDir(Environment.DIRECTORY_DOWNLOADS)
 
@@ -58,6 +56,8 @@ open class MyApplication : Application() {
 
         GlobalScope.launch(Dispatchers.IO) {
             instance = this@MyApplication
+
+            sharedPreferences = PreferenceManager.getDefaultSharedPreferences(instance)
 
             initShell()
 
