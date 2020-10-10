@@ -66,9 +66,9 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
             )
         }
 
-        settingsViewModel.versionClick.observe(viewLifecycleOwner, EventObserver {
+        settingsViewModel.versionClick.observe(viewLifecycleOwner) {
             toast(R.string.about_version_click)
-        })
+        }
 
         settingsViewModel.themesPrefChangeEvent.observe(viewLifecycleOwner, EventObserver {
             it?.let { themesValue ->

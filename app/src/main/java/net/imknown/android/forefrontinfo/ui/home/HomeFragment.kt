@@ -3,7 +3,6 @@ package net.imknown.android.forefrontinfo.ui.home
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
 import net.imknown.android.forefrontinfo.MyApplication
-import net.imknown.android.forefrontinfo.base.EventObserver
 import net.imknown.android.forefrontinfo.ui.base.BaseListFragment
 import net.imknown.android.forefrontinfo.ui.base.MyAdapter
 
@@ -23,12 +22,12 @@ class HomeFragment : BaseListFragment() {
             actionBar?.subtitle = MyApplication.getMyString(it.lldDataModeResId, it.dataVersion)
         }
 
-        listViewModel.outdatedOrderProp.observe(viewLifecycleOwner, EventObserver {
+        listViewModel.outdatedOrderProp.observe(viewLifecycleOwner) {
             listViewModel.payloadOutdatedTargetSdkVersionApk(myAdapter.myModels)
-        })
+        }
 
-        listViewModel.showOutdatedOrderEvent.observe(viewLifecycleOwner, EventObserver {
+        listViewModel.showOutdatedOrderEvent.observe(viewLifecycleOwner) {
             myAdapter.notifyItemChanged(myAdapter.myModels.lastIndex, MyAdapter.PAYLOAD_DETAILS)
-        })
+        }
     }
 }
