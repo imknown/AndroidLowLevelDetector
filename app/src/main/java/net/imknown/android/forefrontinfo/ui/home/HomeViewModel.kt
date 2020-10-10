@@ -160,7 +160,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
             GatewayApi.fetchLldJson({
                 runBlocking { prepareOnlineLld(it) }
             }, {
-                showError(MyApplication.getMyString(R.string.lld_json_fetch_failed, it.message))
+                showError(R.string.lld_json_fetch_failed, it)
 
                 runBlocking { prepareOfflineLld() }
             })
@@ -179,10 +179,10 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
             try {
                 JsonIo.saveLldJsonFile(lldString)
             } catch (e: Exception) {
-                showError(MyApplication.getMyString(R.string.lld_json_save_failed, e.message))
+                showError(R.string.lld_json_save_failed, e)
             }
         } catch (e: Exception) {
-            showError(MyApplication.getMyString(R.string.lld_json_parse_failed, e.message))
+            showError(R.string.lld_json_parse_failed, e)
 
             prepareOfflineLld()
         }
@@ -201,7 +201,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         try {
             JsonIo.copyJsonIfNeeded()
         } catch (e: Exception) {
-            showError(MyApplication.getMyString(R.string.lld_json_save_failed, e.message))
+            showError(R.string.lld_json_save_failed, e)
 
             lld = JsonIo.getAssetLld(MyApplication.instance.assets)
             return lld
@@ -210,7 +210,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         lld = try {
             JsonIo.savedLldJsonFile.fromJson()
         } catch (e: Exception) {
-            showError(MyApplication.getMyString(R.string.lld_json_parse_failed, e.message))
+            showError(R.string.lld_json_parse_failed, e)
 
             JsonIo.getAssetLld(MyApplication.instance.assets)
         }
@@ -228,7 +228,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
 
             true
         } catch (e: Exception) {
-            showError(MyApplication.getMyString(R.string.lld_json_detect_failed, e.message))
+            showError(R.string.lld_json_detect_failed, e)
 
             false
         }

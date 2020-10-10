@@ -3,6 +3,7 @@ package net.imknown.android.forefrontinfo.ui.base
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.annotation.MainThread
+import androidx.annotation.StringRes
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -75,19 +76,16 @@ abstract class BaseListViewModel : BaseViewModel() {
         }
     }
 
-    protected fun showError(message: String) = viewModelScope.launch(Dispatchers.Default) {
-        showError(Exception(message))
-    }
+    protected fun showError(@StringRes messageId: Int, cause: Throwable) =
+        viewModelScope.launch(Dispatchers.Default) {
+            withContext(Dispatchers.Main) {
+                _showErrorEvent.value = Event(MyApplication.getMyString(messageId, cause.message))
+            }
 
-    private fun showError(error: Exception) = viewModelScope.launch(Dispatchers.Default) {
-        withContext(Dispatchers.Main) {
-            _showErrorEvent.value = Event(error.message.toString())
+            if (BuildConfig.DEBUG) {
+                cause.printStackTrace()
+            }
         }
-
-        if (BuildConfig.DEBUG) {
-            error.printStackTrace()
-        }
-    }
 
     @SuppressLint("PrivateApi")
     protected fun getStringProperty(key: String, condition: Boolean = true): String {
