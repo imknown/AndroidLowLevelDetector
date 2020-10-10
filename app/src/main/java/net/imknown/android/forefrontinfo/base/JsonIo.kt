@@ -67,7 +67,7 @@ object JsonIo {
 }
 
 inline fun <reified T : Any> File.fromJson(): T? =
-    Gson().fromJson(readText(), T::class.java)
+    readText().fromJson()
 
 inline fun <reified T : Any> String.fromJson(): T? =
     Gson().fromJson(this, T::class.java)
