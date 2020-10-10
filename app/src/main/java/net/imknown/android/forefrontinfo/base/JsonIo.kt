@@ -4,6 +4,7 @@ import android.content.res.AssetManager
 import android.util.Log
 import com.google.gson.Gson
 import net.imknown.android.forefrontinfo.MyApplication
+import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import java.io.BufferedReader
 import java.io.File
@@ -16,14 +17,53 @@ object JsonIo {
         File(MyApplication.getDownloadDir(), LLD_JSON_NAME)
     }
 
-    fun copyJsonIfNeeded() {
-        if (!savedLldJsonFile.exists()) {
-            copyAssetsFileToContextFilesDir(
-                MyApplication.instance.assets,
-                savedLldJsonFile,
-                LLD_JSON_NAME
-            )
+    private fun deleteDirtyDirectory() {
+        if (!savedLldJsonFile.deleteRecursively()) {
+            Log.e(javaClass.simpleName, "Delete dirty directory failed.")
+        } else {
+            Log.i(javaClass.simpleName, "Dirty directory deleted.")
         }
+    }
+
+    fun copyJsonIfNeeded() {
+        var shouldCopy = false
+
+        if (savedLldJsonFile.exists()) {
+            if (savedLldJsonFile.isDirectory) {
+                deleteDirtyDirectory()
+                shouldCopy = true
+            } else {
+                val savedLldVersion = try {
+                    savedLldJsonFile.fromJson<Lld>()?.version
+                } catch (e: Exception) {
+                    val message =
+                        MyApplication.getMyString(R.string.lld_json_parse_failed, e.message)
+                    Log.e(javaClass.simpleName, message, e)
+                    null
+                }
+
+                if (savedLldVersion == null) {
+                    shouldCopy = true
+                } else {
+                    val assetLldVersion = getAssetLldVersion(MyApplication.instance.assets)
+                    if (savedLldVersion <= assetLldVersion) {
+                        shouldCopy = true
+                    }
+                }
+            }
+        } else {
+            shouldCopy = true
+        }
+
+        if (!shouldCopy) {
+            return
+        }
+
+        copyAssetsFileToContextFilesDir(
+            MyApplication.instance.assets,
+            savedLldJsonFile,
+            LLD_JSON_NAME
+        )
     }
 
     /**
@@ -46,6 +86,10 @@ object JsonIo {
     }
 
     fun saveLldJsonFile(lldString: String) {
+        if (savedLldJsonFile.exists() && savedLldJsonFile.isDirectory) {
+            deleteDirtyDirectory()
+        }
+
         FileWriter(savedLldJsonFile).use {
             it.write(lldString)
         }
