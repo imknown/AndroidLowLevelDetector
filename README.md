@@ -45,3 +45,7 @@ Some source codes refer to [Magisk][Magisk], [OpenGApps][OpenGApps], [TrebleInfo
 - Etc.
 
 </details>
+
+## Contribute
+Just use `Pull Request`.  
+Translations are also welcome.
