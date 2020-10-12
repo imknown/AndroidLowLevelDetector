@@ -17,6 +17,9 @@ Some source codes refer to [Magisk][Magisk], [OpenGApps][OpenGApps], [TrebleInfo
 3. https://coolapk.com/apk/net.imknown.android.forefrontinfo
 
 ## Features
+<details>
+<summary>Click me</summary>
+
 - Detect Android version
 - Detect Android Build Id version
 - Detect Android security patch level
@@ -40,3 +43,5 @@ Some source codes refer to [Magisk][Magisk], [OpenGApps][OpenGApps], [TrebleInfo
 - Online/offline mode (fetching data from remote server or local)
 - MultiWindow/FreeForm/Foldable/Landscape supported
 - Etc.
+
+</details>
