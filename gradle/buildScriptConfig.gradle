@@ -116,7 +116,7 @@ ext {
             gson          : '2.8.6',
 
             // https://github.com/G00fY2/version-compare
-            versionCompare: '1.3.5'
+            versionCompare: '1.3.6'
     ]
     // endregion [ThirdParties]
 
