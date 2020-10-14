@@ -88,7 +88,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         // https://twitter.com/topjohnwu/status/1174392824625676288
         // https://github.com/topjohnwu/Magisk/blob/master/docs/boot.md
         // https://github.com/topjohnwu/Magisk/blob/master/scripts/util_functions.sh#L239
-        // https://github.com/opengapps/opengapps/blob/master/scripts/inc.installer.sh#L1120
+        // https://github.com/opengapps/opengapps/blob/master/scripts/templates/installer.sh#L1032
         //
         // https://github.com/penn5/TrebleCheck/blob/master/app/src/main/java/tk/hack5/treblecheck/MountDetector.kt
         // https://github.com/kevintresuelo/treble/blob/master/app/src/main/java/com/kevintresuelo/treble/checker/SystemAsRoot.kt
