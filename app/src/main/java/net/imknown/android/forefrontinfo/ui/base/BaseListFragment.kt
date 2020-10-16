@@ -27,11 +27,11 @@ abstract class BaseListFragment : BaseFragment() {
     }
 
     protected fun observeLanguageEvent(event: LiveData<Event<Unit>>) {
-        event.observe(viewLifecycleOwner) {
+        event.observe(viewLifecycleOwner, EventObserver {
             swipeRefreshLayout.isRefreshing = true
 
             listViewModel.collectModels()
-        }
+        })
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -47,11 +47,11 @@ abstract class BaseListFragment : BaseFragment() {
             listViewModel.showModels(myAdapter.myModels, it)
         }
 
-        listViewModel.showModelsEvent.observe(viewLifecycleOwner) {
+        listViewModel.showModelsEvent.observe(viewLifecycleOwner, EventObserver {
             myAdapter.notifyDataSetChanged()
 
             swipeRefreshLayout.isRefreshing = false
-        }
+        })
 
         listViewModel.showErrorEvent.observe(viewLifecycleOwner, EventObserver {
             toast(it)
