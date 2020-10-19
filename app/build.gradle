@@ -19,7 +19,7 @@ android {
         versionName androidBuild.versionName
 
         // setProperty('archivesBaseName', 'lld')
-        archivesBaseName = "lld-$versionName-$versionCode-${getCurrentDate()}-${getCurrentGitBranchName()}"
+        archivesBaseName = "lld-$versionName-$versionCode-$currentDate-$currentGitBranchName"
 
         minSdkVersion androidBuild.minSdkVersion
         targetSdkVersion androidBuild.targetSdkVersion
