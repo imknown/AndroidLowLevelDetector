@@ -1,11 +1,19 @@
 {
-  "version": "2020-10-23 19:50 +0800",
+  "version": "2020-10-26 21:45 +0800",
   "android": {
     "securityPatchLevel": "2020-10-05",
     "googlePlaySystemUpdates": "2020-10-01",
     "build": {
-      "version": "2020-10-06",
+      "version": "2020-10-15",
       "details": [
+        {
+          "id": "RD1A.200810.021.A1",
+          "revision": "r8"
+        },
+        {
+          "id": "RD1A.200810.020",
+          "revision": "r7"
+        },
         {
           "id": "RP1A.201005.006",
           "revision": "r5"
@@ -45,7 +53,7 @@
       ]
     },
     "mainline": {
-      "version": "5.9"
+      "version": "5.10-rc1"
     }
   },
   "toybox": {
@@ -59,7 +67,7 @@
       "version": "0.8.3"
     },
     "master": {
-      "version": "0.8.3"
+      "version": "0.8.4"
     }
   },
   "webView": {
