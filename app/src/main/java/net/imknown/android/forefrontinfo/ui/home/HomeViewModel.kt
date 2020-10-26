@@ -990,7 +990,6 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
                 toyboxVersion,
                 lld.toybox.stable.version,
                 lld.toybox.support.version,
-                lld.toybox.mainline.version,
                 lld.toybox.master.version
             ),
             toyboxColor

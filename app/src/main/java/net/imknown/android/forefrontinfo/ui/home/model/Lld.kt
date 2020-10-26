@@ -96,8 +96,6 @@ data class Lld(
         val stable: BaseInfo,
         // https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-8.0.0_r51/main.c
         val support: BaseInfo,
-        // https://android.googlesource.com/platform/external/toybox/+/android10-mainline-resolv-release/main.c
-        val mainline: BaseInfo,
         // https://android.googlesource.com/platform/external/toybox/+/master/toys.h#135
         // https://android.googlesource.com/platform/external/toybox/+/upstream-master/toys.h#135
         val master: BaseInfo

@@ -87,7 +87,7 @@
     <string name="selinux_status_permissive_mode">宽容模式</string>
 
     <string name="toybox_built_in_title">内建 Toybox 版本</string>
-    <string name="toybox_built_in_detail">我的: %1$s\n\n最新稳定: %2$s\n最低支持: %3$s\nMainline: %4$s\nMaster: %5$s</string>
+    <string name="toybox_built_in_detail">我的: %1$s\n\n最新稳定: %2$s\n最低支持: %3$s\nMaster: %4$s</string>
 
     <string name="webview_title">WebView 版本</string>
     <string name="webview_detail">最新稳定: %1$s\n最新测试: %2$s</string>

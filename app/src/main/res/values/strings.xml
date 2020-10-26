@@ -90,7 +90,7 @@
     <string name="selinux_status_permissive_mode">Permissive mode</string>
 
     <string name="toybox_built_in_title">Built-in Toybox version</string>
-    <string name="toybox_built_in_detail">Mine: %1$s\n\nLatest stable: %2$s\nLowest support: %3$s\nMainline: %4$s\nMaster: %5$s</string>
+    <string name="toybox_built_in_detail">Mine: %1$s\n\nLatest stable: %2$s\nLowest support: %3$s\nMaster: %4$s</string>
 
     <string name="webview_title">WebView version</string>
     <string name="webview_detail">Latest stable: %1$s\nLatest beta: %2$s</string>

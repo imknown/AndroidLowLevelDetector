@@ -88,7 +88,7 @@
     <string name="selinux_status_permissive_mode">Mode permissif</string>
 
     <string name="toybox_built_in_title">Version de Toybox intégrée</string>
-    <string name="toybox_built_in_detail">Moi: %1$s\n\nDernier stable: %2$s\nPlus faible support: %3$s\nMainline: %4$s\nMaster: %5$s</string>
+    <string name="toybox_built_in_detail">Moi: %1$s\n\nDernier stable: %2$s\nPlus faible support: %3$s\nMaster: %4$s</string>
 
     <string name="webview_title">Version WebView</string>
     <string name="webview_detail">Dernier stable: %1$s\nDernier béta: %2$s</string>
