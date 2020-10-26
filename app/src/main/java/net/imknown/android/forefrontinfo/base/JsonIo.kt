@@ -46,7 +46,7 @@ object JsonIo {
                     shouldCopy = true
                 } else {
                     val assetLldVersion = getAssetLldVersion(MyApplication.instance.assets)
-                    if (savedLldVersion <= assetLldVersion) {
+                    if (savedLldVersion < assetLldVersion) {
                         shouldCopy = true
                     }
                 }
