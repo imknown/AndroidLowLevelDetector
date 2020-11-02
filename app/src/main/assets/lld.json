@@ -1,5 +1,5 @@
 {
-  "version": "2020-10-31 06:00 +0800",
+  "version": "2020-11-02 20:25 +0800",
   "android": {
     "securityPatchLevel": "2020-10-05",
     "googlePlaySystemUpdates": "2020-10-01",
@@ -44,7 +44,7 @@
   "linux": {
     "google": {
       "versions": [
-        "5.4.73",
+        "5.4.74",
         "4.19.154",
         "4.14.203",
         "4.9.241",
@@ -53,7 +53,7 @@
       ]
     },
     "mainline": {
-      "version": "5.10-rc1"
+      "version": "5.10-rc2"
     }
   },
   "toybox": {
