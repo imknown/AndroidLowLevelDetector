@@ -1,26 +1,30 @@
 {
-  "version": "2020-11-02 20:25 +0800",
+  "version": "2020-11-03 20:05 +0800",
   "android": {
-    "securityPatchLevel": "2020-10-05",
-    "googlePlaySystemUpdates": "2020-10-01",
+    "securityPatchLevel": "2020-11-05",
+    "googlePlaySystemUpdates": "2020-11-01",
     "build": {
-      "version": "2020-10-15",
+      "version": "2020-11-02",
       "details": [
         {
-          "id": "RD1A.200810.021.A1",
-          "revision": "r8"
+          "id": "RP1A.201105.002",
+          "revision": "r17"
         },
         {
-          "id": "RD1A.200810.020",
-          "revision": "r7"
+          "id": "RD1A.201105.003.C1",
+          "revision": "r15"
         },
         {
-          "id": "RP1A.201005.006",
-          "revision": "r5"
+          "id": "RD1A.201105.003.B1",
+          "revision": "r14"
         },
         {
-          "id": "RP1A.201005.004",
-          "revision": "r4"
+          "id": "RD1A.201105.003.A1",
+          "revision": "r13"
+        },
+        {
+          "id": "RD1A.201105.003",
+          "revision": "r12"
         }
       ]
     },
@@ -72,7 +76,7 @@
   },
   "webView": {
     "stable": {
-      "version": "86.0.4240.114"
+      "version": "86.0.4240.185"
     },
     "beta": {
       "version": "87.0.4280.38"
