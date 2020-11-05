@@ -95,7 +95,7 @@ ext {
 
             // https://github.com/Kotlin/kotlinx.coroutines/releases
             // https://bintray.com/kotlin/kotlinx/kotlinx.coroutines
-            coroutines: '1.4.0'
+            coroutines: '1.4.1'
     ]
     // endregion [Kotlin]
 
