@@ -414,11 +414,11 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         }
 
         val separator = '.'
-        fun getDate(buildId: String) = buildId.substringAfter(separator)
+        fun getDate(buildId: String) = buildId.split(separator)[1]
         fun isDateHigherThanConfig() = (
                 isLatestStableAndroid(lld)
                         && buildIdResult.split(separator).size > 2
-                        && getDate(buildIdResult) >= getDate(details[details.size - 1].id)
+                        && getDate(buildIdResult) >= getDate(details[0].id)
                 )
                 || isLatestPreviewAndroid(lld)
 
