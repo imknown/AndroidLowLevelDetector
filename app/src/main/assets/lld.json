@@ -1,5 +1,5 @@
 {
-  "version": "2020-11-10 20:30 +0800",
+  "version": "2020-11-11 22:20 +0800",
   "android": {
     "securityPatchLevel": "2020-11-05",
     "googlePlaySystemUpdates": "2020-11-01",
@@ -48,7 +48,7 @@
   "linux": {
     "google": {
       "versions": [
-        "5.4.75",
+        "5.4.76",
         "4.19.156",
         "4.14.205",
         "4.9.242",
