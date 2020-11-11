@@ -14,7 +14,6 @@ dependencies {
     // region [AndroidX]
     implementation "com.google.android.material:material:$androidX.material"
 
-    implementation "androidx.activity:activity:$androidX.activity"
     implementation "androidx.activity:activity-ktx:$androidX.activity"
 
     implementation "androidx.annotation:annotation:$androidX.annotation"
@@ -28,49 +27,15 @@ dependencies {
 
     implementation "androidx.cardview:cardview:$androidX.cardview"
 
-    implementation "androidx.collection:collection:$androidX.collection"
-    // implementation "androidx.collection:collection-ktx:$androidX.collection"
-
     implementation "androidx.constraintlayout:constraintlayout:$androidX.constraintLayout"
-    // implementation "androidx.constraintlayout:constraintlayout-solver:$androidX.constraintLayout"
 
-    implementation "androidx.coordinatorlayout:coordinatorlayout:$androidX.coordinatorLayout"
-
-    implementation "androidx.core:core:$androidX.core"
     implementation "androidx.core:core-ktx:$androidX.core"
 
-    implementation "androidx.cursoradapter:cursoradapter:$androidX.cursorAdapter"
-
-    implementation "androidx.customview:customview:$androidX.customView"
-
-    implementation "androidx.drawerlayout:drawerlayout:$androidX.drawerlayout"
-
-    implementation "androidx.fragment:fragment:$androidX.fragment"
     implementation "androidx.fragment:fragment-ktx:$androidX.fragment"
 
-    implementation "androidx.interpolator:interpolator:$androidX.interpolator"
-
-    implementation "androidx.lifecycle:lifecycle-common:$androidX.lifecycle"
-    // implementation "androidx.lifecycle:lifecycle-common-java8:$androidX.lifecycle"
-    implementation "androidx.lifecycle:lifecycle-livedata-core:$androidX.lifecycle"
-    implementation "androidx.lifecycle:lifecycle-livedata-core-ktx:$androidX.lifecycle"
-    // implementation "androidx.lifecycle:lifecycle-livedata-ktx:$androidX.lifecycle"
-    implementation "androidx.lifecycle:lifecycle-runtime:$androidX.lifecycle"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$androidX.lifecycle"
-    implementation "androidx.lifecycle:lifecycle-viewmodel:$androidX.lifecycle"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$androidX.lifecycle"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$androidX.lifecycle"
     implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$androidX.lifecycle"
-
-    implementation "androidx.loader:loader:$androidX.loader"
-
-    // implementation "androidx.navigation:navigation-common:$androidX.navigation"
-    // implementation "androidx.navigation:navigation-common-ktx:$androidX.navigation"
-    // implementation "androidx.navigation:navigation-fragment:$androidX.navigation"
-    // implementation "androidx.navigation:navigation-fragment-ktx:$androidX.navigation"
-    // implementation "androidx.navigation:navigation-runtime:$androidX.navigation"
-    // implementation "androidx.navigation:navigation-runtime-ktx:$androidX.navigation"
-    // implementation "androidx.navigation:navigation-ui:$androidX.navigation"
-    // implementation "androidx.navigation:navigation-ui-ktx:$androidX.navigation"
 
     implementation "androidx.preference:preference:$androidX.preference"
 
@@ -79,11 +44,6 @@ dependencies {
     implementation "androidx.savedstate:savedstate:$androidX.savedstate"
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:$androidX.swipeRefreshLayout"
-
-    implementation "androidx.transition:transition:$androidX.transition"
-
-    implementation "androidx.viewpager:viewpager:$androidX.viewpager"
-    implementation "androidx.viewpager2:viewpager2:$androidX.viewpager2"
 
     implementation "androidx.webkit:webkit:$androidX.webkit"
     // endregion [AndroidX]
@@ -97,30 +57,24 @@ dependencies {
     // region [Kotlin]
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinSdk.core"
     // implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinSdk.core"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinSdk.coroutines"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinSdk.coroutines"
     // endregion [Kotlin]
 
     // region [3rd Parties]
     implementation "com.github.topjohnwu.libsu:core:$thirdParties.libsu"
 
-    // debugImplementation "com.squareup.leakcanary:leakcanary-android:$thirdParties.leakCanary"
     debugImplementation "com.squareup.leakcanary:leakcanary-android-process:$thirdParties.leakCanary"
     // implementation "com.squareup.leakcanary:plumber-android:$thirdParties.leakCanary"
 
     implementation "com.google.code.gson:gson:$thirdParties.gson"
 
     implementation "com.github.kittinunf.fuel:fuel:$thirdParties.fuel"
-    // implementation "com.github.kittinunf.fuel:fuel-gson:$thirdParties.fuel"
-    // implementation "com.github.kittinunf.fuel:fuel-android:$thirdParties.fuel"
     implementation "com.github.kittinunf.fuel:fuel-coroutines:$thirdParties.fuel"
-    // implementation "com.github.kittinunf.fuel:fuel-livedata:$thirdParties.fuel"
 
     implementation "com.g00fy2:versioncompare:$thirdParties.versionCompare"
     // endregion [3rd Parties]
 
     implementation platform("com.google.firebase:firebase-bom:$firebase.billOfMaterials")
     implementation 'com.google.firebase:firebase-analytics-ktx'
-    // implementation 'com.google.firebase:firebase-crashlytics-ktx'
     implementation 'com.google.firebase:firebase-crashlytics-ndk'
 }
