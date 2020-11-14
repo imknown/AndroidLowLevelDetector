@@ -33,6 +33,8 @@ import java.util.*
 class HomeViewModel : BaseListViewModel(), IAndroidVersion {
 
     companion object {
+        private const val BUILD_ID_SEPARATOR = '.'
+
         private const val PROP_RO_SYSTEM_BUILD_ID = "ro.system.build.id"
         private const val PROP_RO_VENDOR_BUILD_ID = "ro.vendor.build.id"
         private const val PROP_RO_ODM_BUILD_ID = "ro.odm.build.id"
@@ -413,13 +415,15 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
             }
         }
 
-        val separator = '.'
-        fun getDate(buildId: String) = buildId.split(separator)[1]
+        val firstDetailId = details[0].id
+        fun getDate(buildId: String) = buildId.split(BUILD_ID_SEPARATOR)[1]
+        fun isUpdateToLatestStable() = buildIdResult.first() > firstDetailId.first()
         fun isDateHigherThanConfig() = (
                 isLatestStableAndroid(lld)
-                        && buildIdResult.split(separator).size > 2
-                        && getDate(buildIdResult) >= getDate(details[0].id)
+                        && buildIdResult.split(BUILD_ID_SEPARATOR).size > 2
+                        && getDate(buildIdResult) >= getDate(firstDetailId)
                 )
+                || isUpdateToLatestStable()
                 || isLatestPreviewAndroid(lld)
 
         @ColorRes val buildIdColor = when {
