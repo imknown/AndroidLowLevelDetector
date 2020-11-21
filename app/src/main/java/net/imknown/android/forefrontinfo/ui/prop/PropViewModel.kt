@@ -11,17 +11,43 @@ class PropViewModel : BasePureListViewModel() {
 
     companion object {
         private const val CMD_GETPROP = "getprop"
+
+        private const val UNIX_LIKE_NEWLINE_ORIGIN = "\\n"
     }
 
     override fun collectModels() = viewModelScope.launch(Dispatchers.IO) {
         val tempModels = ArrayList<MyModel>()
 
-        getProp(tempModels)
+        getSystemProp(tempModels)
+        getBuildProp(tempModels)
 
         setModels(tempModels)
     }
 
-    private fun getProp(tempModels: ArrayList<MyModel>) {
+    private fun getSystemProp(tempModels: ArrayList<MyModel>) {
+        val systemProperties = System.getProperties()
+        val defaultsProperties = Properties::class.java
+            .getDeclaredField("defaults")
+            .also { it.isAccessible = true }
+            .get(systemProperties) as Properties
+
+        (defaultsProperties + systemProperties)
+            .toList()
+            .sortedBy { it.first.toString() }
+            .forEach {
+                add(
+                    tempModels,
+                    it.first.toString(),
+                    if (it.second == System.lineSeparator()) {
+                        UNIX_LIKE_NEWLINE_ORIGIN
+                    } else {
+                        it.second.toString()
+                    }
+                )
+            }
+    }
+
+    private fun getBuildProp(tempModels: ArrayList<MyModel>) {
         var temp = ""
         sh(CMD_GETPROP).output.forEach {
             if (it.startsWith("[") && it.endsWith("]")) {
