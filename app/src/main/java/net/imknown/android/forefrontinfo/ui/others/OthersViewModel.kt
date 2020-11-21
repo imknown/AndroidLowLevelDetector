@@ -18,6 +18,7 @@ class OthersViewModel : BasePureListViewModel(), IAndroidVersion {
 
     companion object {
         private const val PROP_RO_PRODUCT_CPU_ABI = "ro.product.cpu.abi"
+        private const val SYSTEM_PROPERTY_ARCHITECTURE = "os.arch"
 
         // private const val CPU_ARCHITECTURE = "grep 'CPU architecture' /proc/cpuinfo"
         private const val DRIVER_BINDER = "/dev/binder"
@@ -75,7 +76,11 @@ class OthersViewModel : BasePureListViewModel(), IAndroidVersion {
 
         // region [Process]
         add(tempModels, MyApplication.getMyString(R.string.current_process_bit), getProcessBit())
-        add(tempModels, MyApplication.getMyString(R.string.os_arch), System.getProperty("os.arch"))
+        add(
+            tempModels,
+            MyApplication.getMyString(R.string.os_arch),
+            System.getProperty(SYSTEM_PROPERTY_ARCHITECTURE)
+        )
         @Suppress("DEPRECATION")
         add(tempModels, MyApplication.getMyString(R.string.build_cpu_abi), Build.CPU_ABI)
         // endregion [Process]
