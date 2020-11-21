@@ -137,6 +137,7 @@
     <string name="build_stock_fingerprint">Empreinte de la ROM originale</string>
     <string name="build_stock_preview_fingerprint">"Empreinte digitale d'aperçu de la ROM stock"</string>
     <string name="build_display">"ID d'Android"</string>
+    <string name="webview_user_agent">User-Agent</string>
     <string name="build_incremental">Android Git commit hash</string>
     <string name="build_type">Type de build </string>
     <string name="build_tags">Tags de build</string>

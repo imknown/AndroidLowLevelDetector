@@ -141,6 +141,7 @@
     <string name="build_stock_fingerprint">Stock ROM fingerprint</string>
     <string name="build_stock_preview_fingerprint">Stock ROM preview fingerprint</string>
     <string name="build_display">Android display id</string>
+    <string name="webview_user_agent">User-Agent</string>
     <string name="build_incremental">Android Git commit hash</string>
     <string name="build_type">ROM build type</string>
     <string name="build_tags">ROM build tags</string>

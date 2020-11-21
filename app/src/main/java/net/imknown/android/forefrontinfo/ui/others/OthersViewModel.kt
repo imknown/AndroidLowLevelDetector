@@ -2,6 +2,7 @@ package net.imknown.android.forefrontinfo.ui.others
 
 import android.annotation.SuppressLint
 import android.os.Build
+import android.webkit.WebSettings
 import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -116,6 +117,11 @@ class OthersViewModel : BasePureListViewModel(), IAndroidVersion {
         }
         addFingerprints(tempModels)
         add(tempModels, MyApplication.getMyString(R.string.build_display), Build.DISPLAY)
+        add(
+            tempModels,
+            MyApplication.getMyString(R.string.webview_user_agent),
+            WebSettings.getDefaultUserAgent(MyApplication.instance)
+        )
         add(
             tempModels,
             MyApplication.getMyString(R.string.build_incremental),
