@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
 
         val subtitleTextView = Toolbar::class.java
             .getDeclaredField("mSubtitleTextView")
-            .also { it.isAccessible = true }
+            .apply { isAccessible = true }
             .get(toolbar) as TextView
         subtitleTextView.isVerticalScrollBarEnabled = false
     }
