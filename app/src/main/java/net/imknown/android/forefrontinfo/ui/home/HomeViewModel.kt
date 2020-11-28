@@ -1155,9 +1155,6 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
                 && result != MyApplication.getMyString(R.string.result_not_supported)
                 && result != MyApplication.getMyString(R.string.build_not_filled)
 
-    private fun isShellResultSuccessful(result: MyShellResult) =
-        result.isSuccess && result.output[0].isNotEmpty()
-
     private fun translate(condition: Boolean) = MyApplication.getMyString(
         if (condition) {
             R.string.result_supported

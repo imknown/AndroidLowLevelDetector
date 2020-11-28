@@ -30,6 +30,9 @@ class OthersViewModel : BasePureListViewModel(), IAndroidVersion {
         private const val BINDER64_PROTOCOL_VERSION = 8
 
         private const val PROP_PREVIEW_SDK_FINGERPRINT = "ro.build.version.preview_sdk_fingerprint"
+
+        private const val CMD_KERNEL_VERBOSE = "cat /proc/version"
+        private const val CMD_KERNEL_ALL = "uname -a"
     }
 
     @SuppressLint("DiscouragedPrivateApi")
@@ -122,6 +125,26 @@ class OthersViewModel : BasePureListViewModel(), IAndroidVersion {
             MyApplication.getMyString(R.string.webview_user_agent),
             WebSettings.getDefaultUserAgent(MyApplication.instance)
         )
+        // region [Kernel]
+        var kernelFinal: String? = null
+        val kernelVerbose = sh(CMD_KERNEL_VERBOSE)
+        if (isShellResultSuccessful(kernelVerbose)) {
+            kernelFinal = kernelVerbose.output[0]
+        } else {
+            val kernelAll = sh(CMD_KERNEL_ALL)
+            if (isShellResultSuccessful(kernelAll)) {
+                kernelFinal = kernelAll.output[0]
+            }
+        }
+
+        kernelFinal?.let {
+            add(
+                tempModels,
+                MyApplication.getMyString(R.string.linux),
+                it
+            )
+        }
+        // endregion [Kernel]
         add(
             tempModels,
             MyApplication.getMyString(R.string.build_incremental),

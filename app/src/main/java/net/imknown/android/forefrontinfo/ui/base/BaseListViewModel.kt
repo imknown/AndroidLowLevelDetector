@@ -130,4 +130,7 @@ abstract class BaseListViewModel : BaseViewModel() {
             sh(cmd, condition)
         }
     }
+
+    protected fun isShellResultSuccessful(result: MyShellResult) =
+        result.isSuccess && result.output[0].isNotEmpty()
 }

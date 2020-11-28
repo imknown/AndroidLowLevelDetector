@@ -137,6 +137,7 @@
     <string name="build_stock_preview_fingerprint">原机系统 预览 指纹</string>
     <string name="build_display">Android 展示 id</string>
     <string name="webview_user_agent">User-Agent</string>
+    <string name="linux">Linux</string>
     <string name="build_incremental">Android Git 提交的 Hash</string>
     <string name="build_type">ROM 构建类型</string>
     <string name="build_tags">ROM 构建描述标签</string>
