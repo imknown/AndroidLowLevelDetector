@@ -60,7 +60,7 @@ ext {
             webkit                : '1.3.0',
 
             // https://developer.android.com/jetpack/androidx/releases/test
-            junit                 : '4.13',
+            junit                 : '4.13.1',
             extJunit              : '1.1.2',
             espressoCore          : '3.3.0'
     ]
