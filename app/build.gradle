@@ -82,7 +82,7 @@ android {
 
             signingConfig signingConfigs.debug
 
-            applicationIdSuffix '.debug'
+            applicationIdSuffix ".$name"
         }
     }
 
