@@ -71,7 +71,7 @@ ext {
             // https://github.com/JetBrains/kotlin/releases
             // https://bintray.com/kotlin/kotlin-dev/kotlin
             // http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.jetbrains.kotlin%22
-            core      : '1.4.20',
+            core      : '1.4.21',
 
             // https://github.com/Kotlin/kotlinx.coroutines/releases
             // https://bintray.com/kotlin/kotlinx/kotlinx.coroutines
