@@ -38,7 +38,7 @@
     <string name="vendor_security_patch_level_title">供应商 安全补丁等级</string>
     <string name="security_patch_level_detail">我的: %1$s\n\n最新稳定: %2$s</string>
 
-    <string name="linux_title">Linux 版本</string>
+    <string name="linux_title">Linux 内核版本</string>
     <string name="linux_version_detail">我的: %1$s\n\n最新支持: %2$s\nMainline: %3$s</string>
 
     <string name="ab_seamless_update_status_title">A/B 无缝升级 状态</string>
@@ -137,7 +137,7 @@
     <string name="build_stock_preview_fingerprint">原机系统 预览 指纹</string>
     <string name="build_display">Android 展示 id</string>
     <string name="webview_user_agent">User-Agent</string>
-    <string name="linux">Linux</string>
+    <string name="linux">Linux 内核</string>
     <string name="build_incremental">Android Git 提交的 Hash</string>
     <string name="build_type">ROM 构建类型</string>
     <string name="build_tags">ROM 构建描述标签</string>

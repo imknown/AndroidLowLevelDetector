@@ -39,7 +39,7 @@
     <string name="vendor_security_patch_level_title">Niveau du patch de sécurité Vendor</string>
     <string name="security_patch_level_detail">Moi: %1$s\n\nDernière stable: %2$s</string>
 
-    <string name="linux_title">Version de Linux</string>
+    <string name="linux_title">Version du noyau Linux</string>
     <string name="linux_version_detail">Moi: %1$s\n\nDernière support: %2$s\nMainline: %3$s</string>
 
     <string name="ab_seamless_update_status_title">Mise à jour A/B seamless</string>
@@ -138,7 +138,7 @@
     <string name="build_stock_preview_fingerprint">"Empreinte digitale d'aperçu de la ROM stock"</string>
     <string name="build_display">"ID d'Android"</string>
     <string name="webview_user_agent">User-Agent</string>
-    <string name="linux">Linux</string>
+    <string name="linux">Noyau Linux</string>
     <string name="build_incremental">Android Git commit hash</string>
     <string name="build_type">Type de build </string>
     <string name="build_tags">Tags de build</string>
