@@ -1,11 +1,23 @@
 {
-  "version": "2020-12-14 21:50 +0800",
+  "version": "2020-12-15 22:00 +0800",
   "android": {
     "securityPatchLevel": "2020-12-05",
     "googlePlaySystemUpdates": "2020-11-01",
     "build": {
-      "version": "2020-12-07",
+      "version": "2020-12-14",
       "details": [
+        {
+          "id": "RQ1D.201205.012.A1",
+          "revision": "r24"
+        },
+        {
+          "id": "RQ1A.201205.003.A1",
+          "revision": "r23"
+        },
+        {
+          "id": "RQ1A.201205.011",
+          "revision": "r22"
+        },
         {
           "id": "RQ1A.201205.008.A1",
           "revision": "r21"
@@ -44,6 +56,7 @@
   "linux": {
     "google": {
       "versions": [
+        "5.10.1",
         "5.4.83",
         "4.19.163",
         "4.14.212",
@@ -53,7 +66,7 @@
       ]
     },
     "mainline": {
-      "version": "5.10-rc7"
+      "version": "5.10"
     }
   },
   "toybox": {
