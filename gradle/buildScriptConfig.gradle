@@ -88,7 +88,7 @@ ext {
             leakCanary    : '2.5',
 
             // https://github.com/kittinunf/fuel
-            fuel          : '2.3.0',
+            fuel          : '2.3.1',
 
             // https://github.com/google/gson
             gson          : '2.8.6',
