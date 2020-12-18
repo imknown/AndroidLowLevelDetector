@@ -1,5 +1,5 @@
 {
-  "version": "2020-12-16 21:05 +0800",
+  "version": "2020-12-18 22:00 +0800",
   "android": {
     "securityPatchLevel": "2020-12-05",
     "googlePlaySystemUpdates": "2020-11-01",
@@ -88,7 +88,7 @@
       "version": "87.0.4280.101"
     },
     "beta": {
-      "version": "88.0.4324.39"
+      "version": "88.0.4324.51"
     }
   }
 }
