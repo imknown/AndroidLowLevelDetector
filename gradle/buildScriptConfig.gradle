@@ -57,7 +57,7 @@ ext {
 
             swipeRefreshLayout    : '1.1.0',
 
-            webkit                : '1.3.0',
+            webkit                : '1.4.0',
 
             // https://developer.android.com/jetpack/androidx/releases/test
             junit                 : '4.13.1',
