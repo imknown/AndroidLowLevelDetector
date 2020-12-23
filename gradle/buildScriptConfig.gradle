@@ -105,7 +105,7 @@ ext {
             googleServices                 : '4.3.4',
 
             // https://firebase.google.com/docs/android/learn-more#bom
-            billOfMaterials                : '26.1.1',
+            billOfMaterials                : '26.2.0',
 
             // https://firebase.google.com/docs/crashlytics/start-using-analytics?platform=android
             // firebaseAnalytics              : '18.0.0',
