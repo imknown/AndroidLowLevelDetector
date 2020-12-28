@@ -2,7 +2,6 @@ plugins {
     id 'com.android.application'
 
     id 'kotlin-android'
-    id 'kotlin-android-extensions'
 
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
@@ -97,16 +96,15 @@ android {
         jvmTarget = JavaVersion.VERSION_1_8
     }
 
-    // https://kotlinlang.org/docs/tutorials/android-plugin.html
-    // androidExtensions {
-    //     experimental = true
-    // }
-
     externalNativeBuild {
         cmake {
             path 'CMakeLists.txt'
             version "3.10.2"
         }
+    }
+
+    buildFeatures {
+        viewBinding true
     }
 }
 

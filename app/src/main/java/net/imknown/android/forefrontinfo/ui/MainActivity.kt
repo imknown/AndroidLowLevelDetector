@@ -5,17 +5,19 @@ import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import kotlinx.android.synthetic.main.main_activity.*
-import net.imknown.android.forefrontinfo.R
+import net.imknown.android.forefrontinfo.databinding.MainActivityBinding
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var binding: MainActivityBinding
 
     private val mainViewModel by viewModels<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.main_activity)
+        binding = MainActivityBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         initViews()
 
@@ -31,7 +33,7 @@ class MainActivity : AppCompatActivity() {
     private fun initViews() {
         initSubtitle()
 
-        bottomNavigationView.setOnNavigationItemSelectedListener {
+        binding.bottomNavigationView.setOnNavigationItemSelectedListener {
             mainViewModel.switchFragment(supportFragmentManager, it.itemId)
 
             true
@@ -39,12 +41,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initSubtitle() {
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
 
         val subtitleTextView = Toolbar::class.java
             .getDeclaredField("mSubtitleTextView")
             .apply { isAccessible = true }
-            .get(toolbar) as TextView
+            .get(binding.toolbar) as TextView
         subtitleTextView.isVerticalScrollBarEnabled = false
     }
 

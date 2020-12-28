@@ -6,13 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.fragment_list.*
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.Event
 import net.imknown.android.forefrontinfo.base.EventObserver
+import net.imknown.android.forefrontinfo.databinding.FragmentListBinding
 
 abstract class BaseListFragment : BaseFragment() {
+
+    private lateinit var binding: FragmentListBinding
 
     protected val myAdapter by lazy { MyAdapter() }
 
@@ -23,12 +25,13 @@ abstract class BaseListFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_list, container, false)
+        binding = FragmentListBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     protected fun observeLanguageEvent(event: LiveData<Event<Unit>>) {
         event.observe(viewLifecycleOwner, EventObserver {
-            swipeRefreshLayout.isRefreshing = true
+            binding.swipeRefreshLayout.isRefreshing = true
 
             listViewModel.collectModels()
         })
@@ -40,7 +43,7 @@ abstract class BaseListFragment : BaseFragment() {
         initViews(savedInstanceState)
 
         listViewModel.changeScrollBarModeEvent.observe(viewLifecycleOwner, EventObserver {
-            recyclerView.isVerticalScrollBarEnabled = it
+            binding.recyclerView.isVerticalScrollBarEnabled = it
         })
 
         listViewModel.models.observe(viewLifecycleOwner) {
@@ -50,13 +53,13 @@ abstract class BaseListFragment : BaseFragment() {
         listViewModel.showModelsEvent.observe(viewLifecycleOwner, EventObserver {
             myAdapter.notifyDataSetChanged()
 
-            swipeRefreshLayout.isRefreshing = false
+            binding.swipeRefreshLayout.isRefreshing = false
         })
 
         listViewModel.showErrorEvent.observe(viewLifecycleOwner, EventObserver {
             toast(it)
 
-            swipeRefreshLayout.isRefreshing = false
+            binding.swipeRefreshLayout.isRefreshing = false
         })
 
         listViewModel.scrollBarMode.observe(viewLifecycleOwner, EventObserver {
@@ -73,26 +76,26 @@ abstract class BaseListFragment : BaseFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
 
-        if (recyclerView.adapter != null) {
-            recyclerView.adapter = null
+        if (binding.recyclerView.adapter != null) {
+            binding.recyclerView.adapter = null
         }
     }
 
     private fun initViews(savedInstanceState: Bundle?) {
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorSecondary)
-        swipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.colorStateless)
+        binding.swipeRefreshLayout.setColorSchemeResources(R.color.colorSecondary)
+        binding.swipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.colorStateless)
 
         if (listViewModel.hasNoData(savedInstanceState)) {
             // When activity is recreated, data is filled by memory.
             // It is fast. No progress indicator needed indeed.
-            swipeRefreshLayout.isRefreshing = true
+            binding.swipeRefreshLayout.isRefreshing = true
         }
 
-        swipeRefreshLayout.setOnRefreshListener {
+        binding.swipeRefreshLayout.setOnRefreshListener {
             listViewModel.collectModels()
         }
 
-        recyclerView.apply {
+        binding.recyclerView.apply {
             setHasFixedSize(true)
 
             layoutManager = LinearLayoutManager(MyApplication.instance)
