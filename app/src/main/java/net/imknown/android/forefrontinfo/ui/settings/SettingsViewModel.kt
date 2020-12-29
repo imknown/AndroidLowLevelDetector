@@ -70,7 +70,8 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
     ) = viewModelScope.launch(Dispatchers.IO) {
         // region [lld]
         val assetLldVersion = JsonIo.getAssetLldVersion(MyApplication.instance.assets)
-            .formatToLocalZonedDatetimeString()
+            ?.formatToLocalZonedDatetimeString()
+            ?: MyApplication.getMyString(android.R.string.unknownName)
         // endregion [lld]
 
         // region [distributor]

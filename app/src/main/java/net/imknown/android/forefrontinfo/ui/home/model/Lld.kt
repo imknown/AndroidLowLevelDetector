@@ -1,8 +1,10 @@
 package net.imknown.android.forefrontinfo.ui.home.model
 
 import androidx.annotation.Keep
+import kotlinx.serialization.Serializable
 
 @Keep
+@Serializable
 data class Lld(
     val android: Androids,
     val linux: Linuxes,
@@ -23,6 +25,7 @@ data class Lld(
     // https://www.appbrain.com/stats/top-android-sdk-versions
     // https://gs.statcounter.com/android-version-market-share/
     @Keep
+    @Serializable
     data class Androids(
         // https://source.android.com/security/bulletin#bulletins
         // https://source.android.com/setup/start/build-numbers?hl=en#source-code-tags-and-builds
@@ -42,10 +45,11 @@ data class Lld(
         val preview: Android
     ) {
         @Keep
+        @Serializable
         data class Android(
             val name: String,
             val api: String,
-            val phase: String?
+            val phase: String? = null
         ) : BaseInfo()
 
         // https://android.googlesource.com/platform/build/+refs
@@ -54,10 +58,12 @@ data class Lld(
         //
         // https://developers.google.com/android/images
         @Keep
+        @Serializable
         data class Build(
             val details: List<Detail>
         ) : BaseInfo() {
             @Keep
+            @Serializable
             data class Detail(
                 val id: String,
                 val revision: String
@@ -70,6 +76,7 @@ data class Lld(
     // https://www.kernel.org
     // https://en.wikipedia.org/wiki/Linux_kernel_version_history
     @Keep
+    @Serializable
     data class Linuxes(
         // https://android.googlesource.com/kernel/common/+/android-5.4/Makefile
         // https://android.googlesource.com/kernel/common/+/android-4.19/Makefile
@@ -82,6 +89,7 @@ data class Lld(
         val mainline: BaseInfo
     ) {
         @Keep
+        @Serializable
         data class Versions(
             val versions: List<String>
         )
@@ -91,6 +99,7 @@ data class Lld(
     // https://android.googlesource.com/platform/external/toybox/+refs
     // https://android.googlesource.com/platform/system/core/+/master/shell_and_utilities/
     @Keep
+    @Serializable
     data class Toyboxes(
         // https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-11.0.0_r24/main.c
         val stable: BaseInfo,
@@ -106,6 +115,7 @@ data class Lld(
     //
     // https://en.wikipedia.org/wiki/Google_Chrome_version_history
     @Keep
+    @Serializable
     data class WebViews(
         val stable: BaseInfo,
         val beta: BaseInfo

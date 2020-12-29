@@ -58,6 +58,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinSdk.core"
     // implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinSdk.core"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinSdk.coroutines"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSdk.serialization"
     // endregion [Kotlin]
 
     // region [3rd Parties]
@@ -65,8 +66,6 @@ dependencies {
 
     debugImplementation "com.squareup.leakcanary:leakcanary-android-process:$thirdParties.leakCanary"
     // implementation "com.squareup.leakcanary:plumber-android:$thirdParties.leakCanary"
-
-    implementation "com.google.code.gson:gson:$thirdParties.gson"
 
     implementation "com.github.kittinunf.fuel:fuel:$thirdParties.fuel"
     implementation "com.github.kittinunf.fuel:fuel-coroutines:$thirdParties.fuel"

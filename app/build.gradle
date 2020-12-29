@@ -3,6 +3,8 @@ plugins {
 
     id 'kotlin-android'
 
+    id 'kotlinx-serialization'
+
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
 }
@@ -68,7 +70,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
                     'proguard-rules.pro',
                     'proguard-firebase-rules.pro',
-                    'proguard-gson-rules.pro'
+                    'proguard-rules-kotlinx-serialization-json.pro'
 
             firebaseCrashlytics {
                 nativeSymbolUploadEnabled true
