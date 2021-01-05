@@ -1,43 +1,27 @@
 {
-  "version": "2020-12-30 20:45 +0800",
+  "version": "2021-01-05 21:25 +0800",
   "android": {
-    "securityPatchLevel": "2020-12-05",
-    "googlePlaySystemUpdates": "2020-11-01",
+    "securityPatchLevel": "2021-01-05",
+    "googlePlaySystemUpdates": "2021-01-01",
     "build": {
-      "version": "2020-12-14",
+      "version": "2021-01-05",
       "details": [
         {
-          "id": "RQ1D.201205.012.A1",
-          "revision": "r24"
+          "id": "RQ1D.210105.003",
+          "revision": "r28"
         },
         {
-          "id": "RQ1A.201205.003.A1",
-          "revision": "r23"
+          "id": "RQ1A.210105.003",
+          "revision": "r27"
         },
         {
-          "id": "RQ1A.201205.011",
-          "revision": "r22"
-        },
-        {
-          "id": "RQ1A.201205.008.A1",
-          "revision": "r21"
-        },
-        {
-          "id": "RQ1A.201205.010",
-          "revision": "r20"
-        },
-        {
-          "id": "RQ1A.201205.008",
-          "revision": "r19"
-        },
-        {
-          "id": "RQ1A.201205.003",
-          "revision": "r18"
+          "id": "RQ1A.210105.002",
+          "revision": "r26"
         }
       ]
     },
     "stable": {
-      "name": "R",
+      "name": "Red Velvet Cake",
       "api": "30",
       "version": "11"
     },
@@ -66,7 +50,7 @@
       ]
     },
     "mainline": {
-      "version": "5.11-rc1"
+      "version": "5.11-rc2"
     }
   },
   "toybox": {
