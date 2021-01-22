@@ -60,9 +60,7 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
     }
     val scrollBarModeChangeEvent: LiveData<Event<String?>> by lazy { _scrollBarModeChangeEvent }
 
-    fun setMyTheme(themesValue: Any) = viewModelScope.launch(Dispatchers.IO) {
-        MyApplication.instance.setMyTheme(themesValue.toString())
-    }
+    fun setMyTheme(themesValue: Any) = MyApplication.instance.setMyTheme(themesValue.toString())
 
     fun setBuiltInDataVersion(
         packageName: String,

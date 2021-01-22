@@ -13,7 +13,6 @@ import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.base.Event
 import java.io.File
 
@@ -61,8 +60,6 @@ open class MyApplication : Application() {
 
             initShell()
 
-            initTheme()
-
             initLanguage()
         }
     }
@@ -74,7 +71,7 @@ open class MyApplication : Application() {
         )
     }
 
-    private suspend fun initTheme() {
+    fun initTheme() {
         val themesValue = sharedPreferences.getString(
             getMyString(R.string.interface_themes_key),
             getMyString(R.string.interface_themes_follow_system_value)
@@ -82,7 +79,7 @@ open class MyApplication : Application() {
         setMyTheme(themesValue)
     }
 
-    suspend fun setMyTheme(themesValue: String) = withContext(Dispatchers.Default) {
+    fun setMyTheme(themesValue: String) {
         @AppCompatDelegate.NightMode val mode = when (themesValue) {
             getMyString(R.string.interface_themes_follow_system_value) -> {
                 AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
@@ -101,9 +98,7 @@ open class MyApplication : Application() {
             }
         }
 
-        withContext(Dispatchers.Main) {
-            AppCompatDelegate.setDefaultNightMode(mode)
-        }
+        AppCompatDelegate.setDefaultNightMode(mode)
     }
 
     private fun initLanguage() {
