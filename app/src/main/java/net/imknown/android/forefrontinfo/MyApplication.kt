@@ -1,6 +1,5 @@
 package net.imknown.android.forefrontinfo
 
-import android.annotation.SuppressLint
 import android.app.Application
 import android.content.*
 import android.os.Environment
@@ -16,7 +15,6 @@ import kotlinx.coroutines.launch
 import net.imknown.android.forefrontinfo.base.Event
 import java.io.File
 
-@SuppressLint("Registered")
 open class MyApplication : Application() {
 
     companion object {
