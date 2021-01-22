@@ -5,6 +5,7 @@ import com.github.kittinunf.fuel.core.FuelManager
 import com.github.kittinunf.fuel.core.interceptors.LogRequestAsCurlInterceptor
 import com.github.kittinunf.fuel.core.interceptors.LogRequestInterceptor
 import com.github.kittinunf.fuel.core.interceptors.LogResponseInterceptor
+import com.topjohnwu.superuser.Shell
 import leakcanary.LeakCanaryProcess
 
 class MyDebugApplication : MyApplication() {
@@ -18,6 +19,8 @@ class MyDebugApplication : MyApplication() {
         }
 
         StrictMode.enableDefaults()
+
+        Shell.enableVerboseLogging = true
 
         FuelManager.instance.addRequestInterceptor(LogRequestAsCurlInterceptor)
         FuelManager.instance.addRequestInterceptor(LogRequestInterceptor)
