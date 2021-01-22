@@ -5,6 +5,9 @@ import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import net.imknown.android.forefrontinfo.databinding.MainActivityBinding
 
 class MainActivity : AppCompatActivity() {
@@ -43,11 +46,13 @@ class MainActivity : AppCompatActivity() {
     private fun initSubtitle() {
         setSupportActionBar(binding.toolbar)
 
-        val subtitleTextView = Toolbar::class.java
-            .getDeclaredField("mSubtitleTextView")
-            .apply { isAccessible = true }
-            .get(binding.toolbar) as TextView
-        subtitleTextView.isVerticalScrollBarEnabled = false
+        lifecycleScope.launch(Dispatchers.IO) {
+            val subtitleTextView = Toolbar::class.java
+                .getDeclaredField("mSubtitleTextView")
+                .apply { isAccessible = true }
+                .get(binding.toolbar) as TextView
+            subtitleTextView.isVerticalScrollBarEnabled = false
+        }
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
