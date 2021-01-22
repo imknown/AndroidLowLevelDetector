@@ -1,6 +1,10 @@
 package net.imknown.android.forefrontinfo
 
 import android.os.StrictMode
+import com.github.kittinunf.fuel.core.FuelManager
+import com.github.kittinunf.fuel.core.interceptors.LogRequestAsCurlInterceptor
+import com.github.kittinunf.fuel.core.interceptors.LogRequestInterceptor
+import com.github.kittinunf.fuel.core.interceptors.LogResponseInterceptor
 import leakcanary.LeakCanaryProcess
 
 class MyDebugApplication : MyApplication() {
@@ -14,5 +18,9 @@ class MyDebugApplication : MyApplication() {
         }
 
         StrictMode.enableDefaults()
+
+        FuelManager.instance.addRequestInterceptor(LogRequestAsCurlInterceptor)
+        FuelManager.instance.addRequestInterceptor(LogRequestInterceptor)
+        FuelManager.instance.addResponseInterceptor(LogResponseInterceptor)
     }
 }
