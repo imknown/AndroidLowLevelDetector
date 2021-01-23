@@ -72,7 +72,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
 
         settingsViewModel.themesPrefChangeEvent.observe(viewLifecycleOwner, EventObserver {
             it?.let { themesValue ->
-                settingsViewModel.setMyTheme(themesValue)
+                MyApplication.setMyTheme(themesValue)
             }
         })
 

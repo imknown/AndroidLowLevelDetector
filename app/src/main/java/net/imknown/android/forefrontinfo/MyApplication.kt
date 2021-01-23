@@ -9,9 +9,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.preference.PreferenceManager
 import com.topjohnwu.superuser.Shell
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import net.imknown.android.forefrontinfo.base.Event
 import java.io.File
 
@@ -24,7 +21,9 @@ open class MyApplication : Application() {
         val othersLanguageEvent: LiveData<Event<Unit>> by lazy { instance._othersLanguageEvent }
         val propLanguageEvent: LiveData<Event<Unit>> by lazy { instance._propLanguageEvent }
 
-        lateinit var sharedPreferences: SharedPreferences
+        val sharedPreferences: SharedPreferences by lazy {
+            PreferenceManager.getDefaultSharedPreferences(instance)
+        }
 
         fun getDownloadDir() = getFileDir(Environment.DIRECTORY_DOWNLOADS)
 
@@ -42,6 +41,36 @@ open class MyApplication : Application() {
 
         fun getMyString(@StringRes resId: Int, vararg formatArgs: Any?) =
             instance.getString(resId, *formatArgs)
+
+        fun initTheme() {
+            val themesValue = sharedPreferences.getString(
+                getMyString(R.string.interface_themes_key),
+                getMyString(R.string.interface_themes_follow_system_value)
+            )!!
+            setMyTheme(themesValue)
+        }
+
+        fun setMyTheme(themesValue: String) {
+            @AppCompatDelegate.NightMode val mode = when (themesValue) {
+                getMyString(R.string.interface_themes_follow_system_value) -> {
+                    AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+                }
+                getMyString(R.string.interface_themes_power_saver_value) -> {
+                    AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY
+                }
+                getMyString(R.string.interface_themes_always_light_value) -> {
+                    AppCompatDelegate.MODE_NIGHT_NO
+                }
+                getMyString(R.string.interface_themes_always_dark_value) -> {
+                    AppCompatDelegate.MODE_NIGHT_YES
+                }
+                else -> {
+                    AppCompatDelegate.MODE_NIGHT_YES
+                }
+            }
+
+            AppCompatDelegate.setDefaultNightMode(mode)
+        }
     }
 
     private val _homeLanguageEvent by lazy { MutableLiveData<Event<Unit>>() }
@@ -51,15 +80,11 @@ open class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        GlobalScope.launch(Dispatchers.IO) {
-            instance = this@MyApplication
+        instance = this@MyApplication
 
-            sharedPreferences = PreferenceManager.getDefaultSharedPreferences(instance)
+        initShell()
 
-            initShell()
-
-            initLanguage()
-        }
+        initLanguage()
     }
 
     private fun initShell() {
@@ -67,36 +92,6 @@ open class MyApplication : Application() {
             Shell.Builder.create()
                 .setFlags(Shell.FLAG_REDIRECT_STDERR or Shell.FLAG_NON_ROOT_SHELL)
         )
-    }
-
-    fun initTheme() {
-        val themesValue = sharedPreferences.getString(
-            getMyString(R.string.interface_themes_key),
-            getMyString(R.string.interface_themes_follow_system_value)
-        )!!
-        setMyTheme(themesValue)
-    }
-
-    fun setMyTheme(themesValue: String) {
-        @AppCompatDelegate.NightMode val mode = when (themesValue) {
-            getMyString(R.string.interface_themes_follow_system_value) -> {
-                AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-            }
-            getMyString(R.string.interface_themes_power_saver_value) -> {
-                AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY
-            }
-            getMyString(R.string.interface_themes_always_light_value) -> {
-                AppCompatDelegate.MODE_NIGHT_NO
-            }
-            getMyString(R.string.interface_themes_always_dark_value) -> {
-                AppCompatDelegate.MODE_NIGHT_YES
-            }
-            else -> {
-                AppCompatDelegate.MODE_NIGHT_YES
-            }
-        }
-
-        AppCompatDelegate.setDefaultNightMode(mode)
     }
 
     private fun initLanguage() {

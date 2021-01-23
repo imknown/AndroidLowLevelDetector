@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
     private val mainViewModel by viewModels<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        MyApplication.instance.initTheme()
+        MyApplication.initTheme()
 
         super.onCreate(savedInstanceState)
 
