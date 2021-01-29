@@ -102,20 +102,20 @@ ext {
     // https://firebase.google.com/support/release-notes/android
     // https://firebase.google.com/docs/android/setup#available-libraries
     firebase = [
-            googleServices                 : '4.3.4',
+            googleServices                 : '4.3.5',
 
             // https://firebase.google.com/docs/android/learn-more#bom
-            billOfMaterials                : '26.3.0',
+            billOfMaterials                : '26.4.0',
 
             // https://firebase.google.com/docs/crashlytics/start-using-analytics?platform=android
-            // firebaseAnalytics              : '18.0.0',
+            // firebaseAnalytics              : '18.0.2',
 
             // https://firebase.google.com/docs/crashlytics/get-started?platform=android#add-crashlytics
             firebaseCrashlyticsGradlePlugin: '2.4.1',
             // https://firebase.google.com/docs/crashlytics/get-started?platform=android#add-dependencies
-            // firebaseCrashlytics            : '17.3.0',
+            // firebaseCrashlytics            : '17.3.1',
             // https://firebase.google.com/docs/crashlytics/ndk-reports
-            // firebaseCrashlyticsNdk         : '17.3.0'
+            // firebaseCrashlyticsNdk         : '17.3.1'
     ]
     // endregion [Firebase]
 }
