@@ -1,22 +1,22 @@
 {
-  "version": "2021-02-01 21:25 +0800",
+  "version": "2021-02-02 20:20 +0800",
   "android": {
-    "securityPatchLevel": "2021-01-05",
-    "googlePlaySystemUpdates": "2021-01-01",
+    "securityPatchLevel": "2021-02-05",
+    "googlePlaySystemUpdates": "2021-02-01",
     "build": {
-      "version": "2021-01-05",
+      "version": "2021-02-02",
       "details": [
         {
-          "id": "RQ1D.210105.003",
-          "revision": "r28"
+          "id": "RQ1D.210205.004",
+          "revision": "r31"
         },
         {
-          "id": "RQ1A.210105.003",
-          "revision": "r27"
+          "id": "RQ1C.210205.006",
+          "revision": "r30"
         },
         {
-          "id": "RQ1A.210105.002",
-          "revision": "r26"
+          "id": "RQ1A.210205.004",
+          "revision": "r29"
         }
       ]
     },
@@ -27,8 +27,8 @@
     },
     "support": {
       "name": "Oreo",
-      "api": "26",
-      "version": "8.0.0"
+      "api": "27",
+      "version": "8.1.0"
     },
     "preview": {
       "name": "S",
@@ -58,7 +58,7 @@
       "version": "0.8.3"
     },
     "support": {
-      "version": "0.7.3"
+      "version": "0.7.4"
     },
     "mainline": {
       "version": "0.8.4"
@@ -69,7 +69,7 @@
   },
   "webView": {
     "stable": {
-      "version": "88.0.4324.93"
+      "version": "88.0.4324.141"
     },
     "beta": {
       "version": "89.0.4389.23"
