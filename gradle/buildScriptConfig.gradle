@@ -85,7 +85,7 @@ ext {
     // region [ThirdParties]
     thirdParties = [
             // https://github.com/topjohnwu/libsu
-            libsu         : '3.0.2',
+            libsu         : '3.1.0',
 
             // https://github.com/square/leakcanary
             leakCanary    : '2.6',
