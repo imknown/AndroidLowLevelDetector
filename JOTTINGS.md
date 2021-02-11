@@ -60,26 +60,6 @@ adb shell getprop ro.boot.vbmeta.avb_version # required (lib)avb version
 adb shell getprop ro.boot.vbmeta.device_state
 ```
 
-## Settings
-
-- https://developer.android.com/studio/command-line/adb#shellcommands
-- https://stackoverflow.com/questions/40624222/how-does-adb-shell-getprop-and-setprop-work
-
-- https://developer.android.com/reference/android/provider/Settings.System
-- https://developer.android.com/reference/android/provider/Settings.Global
-- https://developer.android.com/reference/android/provider/Settings.Secure
-
-``` sh
-adb shell settings list system
-adb shell settings list global
-adb shell settings list secure
-```
-
-``` sh
-# adb root
-# adb shell cat /data/property/persistent_properties
-```
-
 ## busybox
 
 busybox (https://busybox.net/downloads/binaries/)
