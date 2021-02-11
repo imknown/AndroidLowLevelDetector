@@ -1,11 +1,15 @@
 package net.imknown.android.forefrontinfo.ui.prop
 
+import android.provider.Settings
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import net.imknown.android.forefrontinfo.MyApplication
+import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.ui.base.BasePureListViewModel
 import net.imknown.android.forefrontinfo.ui.base.MyModel
 import java.util.*
+import kotlin.reflect.KClass
 
 class PropViewModel : BasePureListViewModel() {
 
@@ -19,6 +23,9 @@ class PropViewModel : BasePureListViewModel() {
         val tempModels = ArrayList<MyModel>()
 
         getSystemProp(tempModels)
+        getSettings(tempModels, Settings.System::class)
+        getSettings(tempModels, Settings.Secure::class)
+        getSettings(tempModels, Settings.Global::class)
         getBuildProp(tempModels)
 
         setModels(tempModels)
@@ -44,6 +51,22 @@ class PropViewModel : BasePureListViewModel() {
                         it.second.toString()
                     }
                 )
+            }
+    }
+
+    private fun <T> getSettings(tempModels: ArrayList<MyModel>, subSettingsKClass: KClass<T>)
+            where T : Settings.NameValueTable {
+        subSettingsKClass.java.declaredFields
+            .filter { it.type == String::class.java }
+            .map { it.get(null) as String }
+            .sortedBy { it.toUpperCase(Locale.US) }
+            .forEach {
+                var key = it
+                val value = Settings.Global.getString(
+                    MyApplication.instance.contentResolver, key
+                ) ?: MyApplication.getMyString(R.string.build_not_filled)
+                key = "${subSettingsKClass.qualifiedName}.$key"
+                tempModels.add(MyModel(key, value))
             }
     }
 
