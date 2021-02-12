@@ -1,6 +1,8 @@
 package net.imknown.android.forefrontinfo.ui.settings
 
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -34,14 +36,6 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
             "F1:42:FD:28:A5:AD:78:D5:A6:F4:41:3B:00:B5:16:29:74:91:05:8F:B2:3B:2A:37:15:31:E7:75:63:76:6D:18"
     }
 
-    private var timesLeft = 7
-
-    private val _version by lazy { MutableLiveData<Version>() }
-    val version: LiveData<Version> by lazy { _version }
-
-    private val _versionClick by lazy { MutableLiveData<Event<Unit>>() }
-    val versionClick: LiveData<Event<Unit>> by lazy { _versionClick }
-
     private val _themesPrefChangeEvent by lazy {
         MyApplication.sharedPreferences.stringEventLiveData(
             viewModelScope,
@@ -51,14 +45,35 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
     }
     val themesPrefChangeEvent: LiveData<Event<String?>> by lazy { _themesPrefChangeEvent }
 
-    private val _scrollBarModeChangeEvent by lazy {
+    private val _scrollBarModeChangedEvent by lazy {
         MyApplication.sharedPreferences.stringEventLiveData(
             viewModelScope,
             MyApplication.getMyString(R.string.interface_scroll_bar_key),
             MyApplication.getMyString(R.string.interface_no_scroll_bar_value)
         )
     }
-    val scrollBarModeChangeEvent: LiveData<Event<String?>> by lazy { _scrollBarModeChangeEvent }
+    val scrollBarModeChangedEvent: LiveData<Event<String?>> by lazy { _scrollBarModeChangedEvent }
+
+    private val _showMessageEvent by lazy { MutableLiveData<Event<Int>>() }
+    val showMessageEvent: LiveData<Event<Int>> by lazy { _showMessageEvent }
+
+    fun openInExternal(@StringRes uriResId: Int) = viewModelScope.launch(Dispatchers.Default) {
+        val uri = Uri.parse(MyApplication.getMyString(uriResId))
+        val intent = Intent(Intent.ACTION_VIEW, uri).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        if (intent.resolveActivity(MyApplication.instance.packageManager) != null) {
+            MyApplication.instance.startActivity(intent)
+        } else {
+            withContext(Dispatchers.Main) {
+                _showMessageEvent.value = Event(R.string.no_browser_found)
+            }
+        }
+    }
+
+    // region [Version Info]
+    private val _version by lazy { MutableLiveData<Version>() }
+    val version: LiveData<Version> by lazy { _version }
 
     fun setBuiltInDataVersion(
         packageName: String,
@@ -116,18 +131,6 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
         val lastUpdateTime: String
     )
 
-    fun versionClicked() = viewModelScope.launch(Dispatchers.Default) {
-        if (timesLeft < 0) {
-            return@launch
-        }
-
-        if (--timesLeft == 0) {
-            withContext(Dispatchers.Main) {
-                _versionClick.value = Event(Unit)
-            }
-        }
-    }
-
     private suspend fun getMyKeyPublicSha256(
         packageName: String,
         packageManager: PackageManager
@@ -179,4 +182,21 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
         e.printStackTrace()
         MyApplication.getMyString(android.R.string.unknownName)
     }
+    // endregion [Version Info]
+
+    // region [Version Click]
+    private var timesLeft = 7
+
+    fun versionClicked() = viewModelScope.launch(Dispatchers.Default) {
+        if (timesLeft < 0) {
+            return@launch
+        }
+
+        if (--timesLeft == 0) {
+            withContext(Dispatchers.Main) {
+                _showMessageEvent.value = Event(R.string.about_version_click)
+            }
+        }
+    }
+    // endregion [Version Click]
 }

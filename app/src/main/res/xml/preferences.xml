@@ -46,53 +46,33 @@
         app:iconSpaceReserved="false">
         <Preference
             app:iconSpaceReserved="false"
+            app:key="@string/about_shop_key"
             app:summary="@string/about_shop_summary"
-            app:title="@string/about_shop_title">
-
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:data="@string/about_shop" />
-        </Preference>
+            app:title="@string/about_shop_title" />
 
         <Preference
             app:iconSpaceReserved="false"
+            app:key="@string/about_source_key"
             app:summary="@string/about_source_summary"
-            app:title="@string/about_source_title">
-
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:data="https://github.com/imknown/AndroidLowLevelDetector" />
-        </Preference>
+            app:title="@string/about_source_title" />
 
         <Preference
             app:iconSpaceReserved="false"
+            app:key="@string/about_privacy_policy_key"
             app:summary="@string/about_privacy_policy_summary"
-            app:title="@string/about_privacy_policy_title">
-
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:data="@string/about_privacy_policy" />
-        </Preference>
+            app:title="@string/about_privacy_policy_title" />
 
         <Preference
             app:iconSpaceReserved="false"
+            app:key="@string/about_licenses_key"
             app:summary="@string/about_licenses_summary"
-            app:title="@string/about_licenses_title">
-
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:data="https://github.com/imknown/AndroidLowLevelDetector/blob/master/gradle/buildScriptConfig.gradle" />
-        </Preference>
+            app:title="@string/about_licenses_title" />
 
         <Preference
             app:iconSpaceReserved="false"
+            app:key="@string/about_translator_more_info_key"
             app:summary="@string/translator_more_info"
-            app:title="@string/translation_language_and_translator">
-
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:data="@string/translator_website" />
-        </Preference>
+            app:title="@string/translation_language_and_translator" />
 
         <Preference
             app:iconSpaceReserved="false"

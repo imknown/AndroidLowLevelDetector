@@ -1,10 +1,6 @@
 <resources>
     <string name="app_name">底层探测器</string>
 
-    <string name="translation_language_and_translator">简体中文 (中国), 翻译: imknown</string>
-    <string name="translator_website">https://imknown.net</string>
-    <string name="translator_more_info">https://github.com/imknown</string>
-
     <!-- 数据 -->
     <string name="lld_json_loading">📲 加载中…</string>
     <string name="lld_json_offline">📴 离线 (%s)</string>
@@ -172,19 +168,23 @@
 
     <string name="about_title">关于</string>
 
+    <string name="no_browser_found">无可用浏览器</string>
+
     <string name="about_shop_title">应用商店页</string>
     <string name="about_shop_summary">打开本程序商店所在的页面</string>
-    <string name="about_shop">https://coolapk.com/apk/net.imknown.android.forefrontinfo</string>
 
     <string name="about_source_title">源码</string>
     <string name="about_source_summary">本程序源码的 Github 地址</string>
 
     <string name="about_privacy_policy_title">隐私政策</string>
     <string name="about_privacy_policy_summary">看看使用本程序时会发生什么</string>
-    <string name="about_privacy_policy">https://github.com/imknown/AndroidLowLevelDetector/blob/master/GOOGLE_PLAY_PRIVACY_POLICY.md</string>
 
     <string name="about_licenses_title">协议</string>
     <string name="about_licenses_summary">引用的开源库</string>
+
+    <string name="translation_language_and_translator">简体中文 (中国), 翻译: imknown</string>
+    <string name="translator_website">https://imknown.net</string>
+    <string name="translator_more_info">https://github.com/imknown</string>
 
     <string name="about_version_title">版本</string>
     <string name="about_version_summary">版本号: %1$s (迭代次数: %2$d)\n内建数据版本: %3$s\n分发者: %4$s\n安装者: %5$s\n首次安装: %6$s\n上次更新: %7$s</string>

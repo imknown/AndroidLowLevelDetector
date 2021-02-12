@@ -1,10 +1,6 @@
 <resources>
     <string name="app_name">LowLevelDetector</string>
 
-    <string name="translation_language_and_translator">English (US), translator: imknown</string>
-    <string name="translator_website">https://imknown.net</string>
-    <string name="translator_more_info">https://github.com/imknown</string>
-
     <!-- Data -->
     <string name="lld_json_loading">📲 LOADING…</string>
     <string name="lld_json_offline">📴 OFFLINE (%s)</string>
@@ -188,19 +184,33 @@
 
     <string name="about_title">About</string>
 
+    <string name="no_browser_found">No available browser</string>
+
+    <string name="about_shop_key" translatable="false">about_shop_key</string>
     <string name="about_shop_title">Store page</string>
     <string name="about_shop_summary">Open the page of current app in the store</string>
-    <string name="about_shop">https://play.google.com/store/apps/details?id=net.imknown.android.forefrontinfo</string>
+    <string name="about_shop_uri" translatable="false">https://play.google.com/store/apps/details?id=net.imknown.android.forefrontinfo</string>
+    <string name="about_shop_china_mainland_uri" translatable="false">https://coolapk.com/apk/net.imknown.android.forefrontinfo</string>
 
+    <string name="about_source_key" translatable="false">about_source_key</string>
     <string name="about_source_title">Source code</string>
     <string name="about_source_summary">Github address of the app source code</string>
+    <string name="about_source_uri" translatable="false">https://github.com/imknown/AndroidLowLevelDetector</string>
 
+    <string name="about_privacy_policy_key" translatable="false">about_privacy_policy_key</string>
     <string name="about_privacy_policy_title">Privacy policy</string>
     <string name="about_privacy_policy_summary">See what will happen when using this app</string>
-    <string name="about_privacy_policy">https://github.com/imknown/AndroidLowLevelDetector/blob/master/GOOGLE_PLAY_PRIVACY_POLICY.md</string>
+    <string name="about_privacy_policy_uri" translatable="false">https://github.com/imknown/AndroidLowLevelDetector/blob/master/GOOGLE_PLAY_PRIVACY_POLICY.md</string>
 
+    <string name="about_licenses_key" translatable="false">about_licenses_key</string>
     <string name="about_licenses_title">License</string>
     <string name="about_licenses_summary">Referenced open-source repositories</string>
+    <string name="about_licenses_uri" translatable="false">https://github.com/imknown/AndroidLowLevelDetector/blob/master/gradle/buildScriptConfig.gradle</string>
+
+    <string name="about_translator_more_info_key" translatable="false">about_translator_more_info_key</string>
+    <string name="translation_language_and_translator">English (US), translator: imknown</string>
+    <string name="translator_website">https://imknown.net</string>
+    <string name="translator_more_info">https://github.com/imknown</string>
 
     <string name="about_version_key" translatable="false">about_version_key</string>
     <string name="about_version_title">Version</string>

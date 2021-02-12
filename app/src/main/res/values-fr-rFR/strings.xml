@@ -1,10 +1,6 @@
 <resources>
     <string name="app_name">LowLevelDetector</string>
 
-    <string name="translation_language_and_translator">Français (FR), traducteur: LiteApplication</string>
-    <string name="translator_website">https://litepress.ddns.net</string>
-    <string name="translator_more_info">https://github.com/LiteApplication</string>
-
     <!-- Data -->
     <string name="lld_json_loading">📲 CHARGEMENT DES…</string>
     <string name="lld_json_offline">📴 HORS-LIGNE (%s)</string>
@@ -173,19 +169,23 @@
 
     <string name="about_title">À propos</string>
 
+    <string name="no_browser_found">Aucun navigateur disponible</string>
+
     <string name="about_shop_title">Play Store</string>
     <string name="about_shop_summary">"Ouvre la page de l'application dans Play Store"</string>
-    <string name="about_shop">https://play.google.com/store/apps/details?id=net.imknown.android.forefrontinfo</string>
 
     <string name="about_source_title">Code source</string>
     <string name="about_source_summary">"L'adresse GitHub du code sourcce de l'application"</string>
 
     <string name="about_privacy_policy_title">Politique de confidentialité</string>
     <string name="about_privacy_policy_summary">"Voyez ce qui se passe quand vous utilisez l'application"</string>
-    <string name="about_privacy_policy">https://github.com/imknown/AndroidLowLevelDetector/blob/master/GOOGLE_PLAY_PRIVACY_POLICY.md</string>
 
     <string name="about_licenses_title">Licences</string>
     <string name="about_licenses_summary">Les dépots open-source.</string>
+
+    <string name="translation_language_and_translator">Français (FR), traducteur: LiteApplication</string>
+    <string name="translator_website">https://litepress.ddns.net</string>
+    <string name="translator_more_info">https://github.com/LiteApplication</string>
 
     <string name="about_version_title">Version</string>
     <string name="about_version_summary">Version: %1$s (Iteration times: %2$d)\nDonnées intégrées: %3$s\nDistributeur: %4$s\nInstallateur: %5$s\nPremière installation: %6$s\nDernière mise à jour: %7$s</string>
