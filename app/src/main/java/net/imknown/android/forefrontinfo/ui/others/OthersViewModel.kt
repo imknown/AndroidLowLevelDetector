@@ -2,7 +2,6 @@ package net.imknown.android.forefrontinfo.ui.others
 
 import android.annotation.SuppressLint
 import android.os.Build
-import android.util.AndroidRuntimeException
 import android.webkit.WebSettings
 import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
@@ -126,7 +125,7 @@ class OthersViewModel : BasePureListViewModel(), IAndroidVersion {
             MyApplication.getMyString(R.string.webview_user_agent),
             try {
                 WebSettings.getDefaultUserAgent(MyApplication.instance)
-            } catch (e: AndroidRuntimeException) {
+            } catch (e: Exception) {
                 e.printStackTrace()
                 MyApplication.getMyString(android.R.string.unknownName)
             }
