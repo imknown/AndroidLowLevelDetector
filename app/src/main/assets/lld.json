@@ -1,5 +1,5 @@
 {
-  "version": "2021-02-15 20:00 +0800",
+  "version": "2021-02-17 19:25 +0800",
   "android": {
     "securityPatchLevel": "2021-02-05",
     "googlePlaySystemUpdates": "2021-02-01",
@@ -31,7 +31,7 @@
       "version": "8.1.0"
     },
     "preview": {
-      "name": "S",
+      "name": "Snow Cone",
       "api": "30",
       "version": "12",
       "phase": "Internal"
@@ -40,8 +40,8 @@
   "linux": {
     "google": {
       "versions": [
-        "5.10.16",
-        "5.4.98",
+        "5.10.17",
+        "5.4.99",
         "4.19.176",
         "4.14.221",
         "4.9.257",
@@ -69,7 +69,7 @@
   },
   "webView": {
     "stable": {
-      "version": "88.0.4324.152"
+      "version": "88.0.4324.181"
     },
     "beta": {
       "version": "89.0.4389.48"
