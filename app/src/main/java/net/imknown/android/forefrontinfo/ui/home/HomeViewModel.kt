@@ -401,6 +401,13 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
             getStringProperty(PROP_RO_VENDOR_BUILD_ID, isAtLeastStableAndroid9())
         val odmBuildIdResult = getStringProperty(PROP_RO_ODM_BUILD_ID, isAtLeastStableAndroid9())
 
+        fun isBuildIdCtsFormat(buildId: String) = buildId.split(BUILD_ID_SEPARATOR).size > 2
+        val buildIdForCompare = if (isBuildIdCtsFormat(buildIdResult)) {
+            buildIdResult
+        } else {
+            systemBuildIdResult
+        }
+
         var builds = ""
         val details = lld.android.build.details
         details.forEachIndexed { index, detail ->
@@ -417,11 +424,11 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
 
         val firstDetailId = details[0].id
         fun getDate(buildId: String) = buildId.split(BUILD_ID_SEPARATOR)[1]
-        fun isUpdateToLatestStable() = buildIdResult.first() > firstDetailId.first()
+        fun isUpdateToLatestStable() = buildIdForCompare.first() > firstDetailId.first()
         fun isDateHigherThanConfig() = (
                 isLatestStableAndroid(lld)
-                        && buildIdResult.split(BUILD_ID_SEPARATOR).size > 2
-                        && getDate(buildIdResult) >= getDate(firstDetailId)
+                        && isBuildIdCtsFormat(buildIdForCompare)
+                        && getDate(buildIdForCompare) >= getDate(firstDetailId)
                 )
                 || isUpdateToLatestStable()
                 || isLatestPreviewAndroid(lld)
