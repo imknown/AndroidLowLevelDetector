@@ -26,7 +26,7 @@ interface IAndroidVersion {
             && Build.VERSION.SDK_INT >= lld.android.stable.api.toInt()
 
     fun isLatestPreviewAndroid(lld: Lld) = isPreviewAndroid()
-            && getAndroidVersionName() >= lld.android.preview.name
+            && getAndroidVersionName() >= lld.android.preview.name[0].toString()
 
     fun isSupportedByUpstreamAndroid(lld: Lld) = isStableAndroid()
             && Build.VERSION.SDK_INT >= lld.android.support.api.toInt()
