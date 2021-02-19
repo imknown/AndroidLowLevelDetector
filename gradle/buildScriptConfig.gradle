@@ -12,8 +12,8 @@ ext {
 
             ndkVersion               : '22.0.7026061',
 
-            versionCode              : 48,
-            versionName              : '1.13.1'//_unpublished'
+            versionCode              : 49,
+            versionName              : '1.13.2_unpublished'
     ]
     // endregion [AndroidBuild]
 
