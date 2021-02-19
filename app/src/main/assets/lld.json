@@ -1,5 +1,5 @@
 {
-  "version": "2021-02-18 20:30 +0800",
+  "version": "2021-02-19 08:05 +0800",
   "android": {
     "securityPatchLevel": "2021-02-05",
     "googlePlaySystemUpdates": "2021-02-01",
@@ -34,7 +34,7 @@
       "name": "Snow Cone",
       "api": "30",
       "version": "12",
-      "phase": "Internal"
+      "phase": "DP1"
     }
   },
   "linux": {
