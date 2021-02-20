@@ -78,7 +78,7 @@ ext {
             coroutines   : '1.4.2',
 
             // https://github.com/Kotlin/kotlinx.serialization/releases
-            serialization: '1.0.1'
+            serialization: '1.1.0'
     ]
     // endregion [Kotlin]
 
