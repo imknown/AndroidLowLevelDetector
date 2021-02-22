@@ -523,10 +523,13 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         val isAbUpdateSupported =
             getStringProperty(PROP_AB_UPDATE, isAtLeastStableAndroid7()).toBoolean()
 
+        val slotSuffixResult = getStringProperty(PROP_SLOT_SUFFIX, isAtLeastStableAndroid7())
+
         val isVirtualAb =
             getStringProperty(PROP_VIRTUAL_AB_ENABLED, isAtLeastStableAndroid11()).toBoolean()
 
-        val isAbEnable = isAbUpdateSupported || isVirtualAb
+        val isAbEnable =
+            isAbUpdateSupported || isPropertyValueNotEmpty(slotSuffixResult) || isVirtualAb
 
         var abResult = translate(isAbEnable)
 
@@ -544,8 +547,6 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
                     }
                 )
             }
-
-            val slotSuffixResult = getStringProperty(PROP_SLOT_SUFFIX)
 
             abResult += MyApplication.getMyString(
                 R.string.current_using_ab_slot_result,
