@@ -58,6 +58,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         // https://codelabs.developers.google.com/codelabs/using-Android-GSI?hl=en
         private const val PROP_DYNAMIC_PARTITIONS = "ro.boot.dynamic_partitions"
         private const val PROP_DYNAMIC_PARTITIONS_RETROFIT = "ro.boot.dynamic_partitions_retrofit"
+        // /* root needed */ private const val CMD_LL_DEV_BLOCK_SUPER = "ls -l /dev/block/by-name/super"
 
         // https://developer.android.com/topic/dsu?hl=en
         // private const val PROP_DYNAMIC_SYSTEM_UPDATE = "persist.sys.fflag.override.settings_dynamic_system"
@@ -615,15 +616,21 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
     }
 
     private fun detectDynamicPartitions(tempModels: ArrayList<MyModel>) {
-        val isDynamicPartitionsEnabled =
+        val isDynamicPartitions =
             getStringProperty(PROP_DYNAMIC_PARTITIONS, isAtLeastStableAndroid10()).toBoolean()
-        val isDynamicPartitionsRetrofitEnabled =
+        val isDynamicPartitionsRetrofit =
             getStringProperty(
                 PROP_DYNAMIC_PARTITIONS_RETROFIT, isAtLeastStableAndroid10()
             ).toBoolean()
 
+//        val superPartitionResult = sh(CMD_LL_DEV_BLOCK_SUPER, isAtLeastStableAndroid10())
+//        val hasSuperPartition = isShellResultSuccessful(superPartitionResult)
+
+        val isDynamicPartitionsEnabled =
+            isDynamicPartitions || isDynamicPartitionsRetrofit // || hasSuperPartition
+
         var detail = translate(isDynamicPartitionsEnabled)
-        if (isDynamicPartitionsRetrofitEnabled) {
+        if (isDynamicPartitionsRetrofit) {
             detail += MyApplication.getMyString(
                 R.string.dynamic_partitions_enabled_retrofitted
             )
