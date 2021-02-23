@@ -57,8 +57,10 @@ class PropViewModel : BasePureListViewModel() {
     private fun <T> getSettings(tempModels: ArrayList<MyModel>, subSettingsKClass: KClass<T>)
             where T : Settings.NameValueTable {
         subSettingsKClass.java.declaredFields
-            .filter { it.type == String::class.java }
-            .map { it.get(null) as String }
+            .filter {
+                it.isAccessible = true
+                it.type == String::class.java
+            }.map { it.get(null) as String }
             .sortedBy { it.toUpperCase(Locale.US) }
             .forEach {
                 var key = it
