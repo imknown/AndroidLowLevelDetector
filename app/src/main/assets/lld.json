@@ -1,5 +1,5 @@
 {
-  "version": "2021-02-26 20:05 +0800",
+  "version": "2021-03-01 22:50 +0800",
   "android": {
     "securityPatchLevel": "2021-02-05",
     "googlePlaySystemUpdates": "2021-02-01",
@@ -50,7 +50,7 @@
       ]
     },
     "mainline": {
-      "version": "5.11"
+      "version": "5.12-rc1"
     }
   },
   "toybox": {
