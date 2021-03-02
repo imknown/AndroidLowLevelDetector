@@ -1,22 +1,18 @@
 {
-  "version": "2021-03-01 22:50 +0800",
+  "version": "2021-03-02 21:50 +0800",
   "android": {
-    "securityPatchLevel": "2021-02-05",
-    "googlePlaySystemUpdates": "2021-02-01",
+    "securityPatchLevel": "2021-03-05",
+    "googlePlaySystemUpdates": "2021-03-01",
     "build": {
-      "version": "2021-02-02",
+      "version": "2021-03-01",
       "details": [
         {
-          "id": "RQ1D.210205.004",
-          "revision": "r31"
+          "id": "RQ2A.210305.007",
+          "revision": "r33"
         },
         {
-          "id": "RQ1C.210205.006",
-          "revision": "r30"
-        },
-        {
-          "id": "RQ1A.210205.004",
-          "revision": "r29"
+          "id": "RQ2A.210305.006",
+          "revision": "r32"
         }
       ]
     },
@@ -72,7 +68,7 @@
       "version": "88.0.4324.181"
     },
     "beta": {
-      "version": "89.0.4389.69"
+      "version": "89.0.4389.72"
     }
   }
 }
