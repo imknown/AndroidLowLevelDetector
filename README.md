@@ -72,6 +72,6 @@ Translations are also welcome.
   keyPassword=<Yours>
   ```
 
-  The location of `storeFile` can be `$rootDir/keys/release.jks`.  
+  The location of `storeFile` can be `../keys/release.jks`.  
   It has been already ignored in file `$rootDir/.gitingore` by default.  
   So you can put your own private certificate or signing key there safely.

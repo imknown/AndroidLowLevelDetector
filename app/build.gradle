@@ -45,6 +45,8 @@ android {
     }
 
     signingConfigs {
+        apply from: 'keysConfig.gradle'
+
         release {
             storeFile file(keysConfig.release.storeFile)
             storePassword keysConfig.release.storePassword

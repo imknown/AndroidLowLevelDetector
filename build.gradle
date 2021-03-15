@@ -1,8 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    apply from: 'gradle/buildScriptConfig.gradle'
-    apply from: 'gradle/keysConfig.gradle'
+    apply from: 'buildScriptConfig.gradle'
 
     repositories {
         google()
