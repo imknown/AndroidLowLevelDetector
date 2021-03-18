@@ -12,7 +12,6 @@
         android:name=".MyApplication"
         android:allowBackup="false"
         android:allowNativeHeapPointerTagging="false"
-        android:fullBackupContent="@null"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
