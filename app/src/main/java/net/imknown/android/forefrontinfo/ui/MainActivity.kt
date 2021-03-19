@@ -13,7 +13,7 @@ import net.imknown.android.forefrontinfo.databinding.MainActivityBinding
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: MainActivityBinding
+    private val binding by lazy { MainActivityBinding.inflate(layoutInflater) }
 
     private val mainViewModel by viewModels<MainViewModel>()
 
@@ -22,7 +22,6 @@ class MainActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
 
-        binding = MainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         initViews()

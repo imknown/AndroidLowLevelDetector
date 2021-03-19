@@ -14,7 +14,9 @@ import net.imknown.android.forefrontinfo.databinding.FragmentListBinding
 
 abstract class BaseListFragment : BaseFragment() {
 
-    private lateinit var binding: FragmentListBinding
+    private val binding by lazy {
+        FragmentListBinding.inflate(layoutInflater, null, false)
+    }
 
     protected val myAdapter by lazy { MyAdapter() }
 
@@ -24,10 +26,7 @@ abstract class BaseListFragment : BaseFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentListBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    ) = binding.root
 
     protected fun observeLanguageEvent(event: LiveData<Event<Unit>>) {
         event.observe(viewLifecycleOwner, EventObserver {
