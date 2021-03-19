@@ -4,8 +4,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.base.EventObserver
-import net.imknown.android.forefrontinfo.ui.base.BaseListFragment
-import net.imknown.android.forefrontinfo.ui.base.MyAdapter
+import net.imknown.android.forefrontinfo.ui.base.list.BaseListFragment
+import net.imknown.android.forefrontinfo.ui.base.list.MyAdapter
 
 class HomeFragment : BaseListFragment() {
 

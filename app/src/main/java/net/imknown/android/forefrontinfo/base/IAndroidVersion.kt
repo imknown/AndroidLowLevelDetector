@@ -1,4 +1,4 @@
-package net.imknown.android.forefrontinfo.ui.base
+package net.imknown.android.forefrontinfo.base
 
 import android.app.ActivityManager
 import android.content.Context

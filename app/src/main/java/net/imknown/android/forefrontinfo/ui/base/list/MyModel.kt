@@ -1,4 +1,4 @@
-package net.imknown.android.forefrontinfo.ui.base
+package net.imknown.android.forefrontinfo.ui.base.list
 
 import androidx.annotation.ColorRes
 import net.imknown.android.forefrontinfo.R

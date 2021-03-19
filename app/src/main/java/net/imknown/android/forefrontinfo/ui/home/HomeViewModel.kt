@@ -22,9 +22,8 @@ import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.*
-import net.imknown.android.forefrontinfo.ui.base.BaseListViewModel
-import net.imknown.android.forefrontinfo.ui.base.IAndroidVersion
-import net.imknown.android.forefrontinfo.ui.base.MyModel
+import net.imknown.android.forefrontinfo.ui.base.list.BaseListViewModel
+import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.home.model.Subtitle
 import java.io.File

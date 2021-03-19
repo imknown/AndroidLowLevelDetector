@@ -1,4 +1,4 @@
-package net.imknown.android.forefrontinfo.ui.base
+package net.imknown.android.forefrontinfo.ui.base.list
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,6 +11,7 @@ import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.Event
 import net.imknown.android.forefrontinfo.base.EventObserver
 import net.imknown.android.forefrontinfo.databinding.FragmentListBinding
+import net.imknown.android.forefrontinfo.ui.base.BaseFragment
 
 abstract class BaseListFragment : BaseFragment() {
 

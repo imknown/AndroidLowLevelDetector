@@ -1,4 +1,4 @@
-package net.imknown.android.forefrontinfo.ui.base
+package net.imknown.android.forefrontinfo.ui.base.list
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

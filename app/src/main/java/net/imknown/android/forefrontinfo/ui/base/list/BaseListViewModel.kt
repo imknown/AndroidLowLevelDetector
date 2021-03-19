@@ -1,4 +1,4 @@
-package net.imknown.android.forefrontinfo.ui.base
+package net.imknown.android.forefrontinfo.ui.base.list
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -15,6 +15,7 @@ import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.Event
 import net.imknown.android.forefrontinfo.base.stringEventLiveData
+import net.imknown.android.forefrontinfo.ui.base.BaseViewModel
 
 abstract class BaseListViewModel : BaseViewModel() {
     private val _models by lazy { MutableLiveData<ArrayList<MyModel>>() }

@@ -9,7 +9,7 @@
     app:cardBackgroundColor="@android:color/transparent"
     app:cardCornerRadius="@dimen/item_card_corner_radius"
     app:cardElevation="@dimen/item_card_elevation"
-    tools:context=".ui.base.MyAdapter"
+    tools:context=".ui.base.list.MyAdapter"
     tools:layout_marginEnd="@dimen/item_divider_space_horizontal"
     tools:layout_marginStart="@dimen/item_divider_space_horizontal"
     tools:layout_marginTop="@dimen/item_divider_space_vertical">
