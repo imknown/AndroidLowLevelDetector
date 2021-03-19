@@ -29,12 +29,6 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.showTheTopFragmentOfTheStack(savedInstanceState, supportFragmentManager)
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-
-        mainViewModel.saveInstanceState(outState)
-    }
-
     private fun initViews() {
         initSubtitle()
 
@@ -55,11 +49,5 @@ class MainActivity : AppCompatActivity() {
                 .get(binding.toolbar) as TextView
             subtitleTextView.isVerticalScrollBarEnabled = false
         }
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-
-        mainViewModel.restoreInstanceState(savedInstanceState)
     }
 }

@@ -5,6 +5,7 @@ import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -16,14 +17,14 @@ import net.imknown.android.forefrontinfo.ui.others.OthersFragment
 import net.imknown.android.forefrontinfo.ui.prop.PropFragment
 import net.imknown.android.forefrontinfo.ui.settings.SettingsFragment
 
-class MainViewModel : ViewModel() {
+class MainViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
 
     companion object {
-        private const val BUNDLE_ID_LAST_ID = "BUNDLE_ID_LAST_ID"
+        private const val SAVED_STATE_HANDLE_KEY_LAST_ID = "SAVED_STATE_HANDLE_KEY_LAST_ID"
     }
 
     @IdRes
-    private var lastId = R.id.navigation_home
+    private var lastId = getSavedStateLastId()
 
     fun switchFragment(
         supportFragmentManager: FragmentManager,
@@ -51,6 +52,8 @@ class MainViewModel : ViewModel() {
         }
 
         lastId = selectedId
+
+        setSavedStateLastId()
     }
 
     private fun findFragmentByTag(supportFragmentManager: FragmentManager, @IdRes id: Int) =
@@ -119,11 +122,10 @@ class MainViewModel : ViewModel() {
         return fragment
     }
 
-    fun saveInstanceState(outState: Bundle) {
-        outState.putInt(BUNDLE_ID_LAST_ID, lastId)
+    private fun setSavedStateLastId() {
+        savedStateHandle[SAVED_STATE_HANDLE_KEY_LAST_ID] = lastId
     }
 
-    fun restoreInstanceState(savedInstanceState: Bundle) {
-        lastId = savedInstanceState.getInt(BUNDLE_ID_LAST_ID)
-    }
+    private fun getSavedStateLastId() = savedStateHandle[SAVED_STATE_HANDLE_KEY_LAST_ID]
+        ?: R.id.navigation_home
 }
