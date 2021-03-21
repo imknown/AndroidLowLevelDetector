@@ -16,11 +16,11 @@ import com.google.android.material.color.DynamicColors
 import com.topjohnwu.superuser.Shell
 import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.R
-import net.imknown.android.forefrontinfo.base.mvvm.Event
 import net.imknown.android.forefrontinfo.base.property.PropertyManager
 import net.imknown.android.forefrontinfo.base.property.impl.DefaultProperty
 import net.imknown.android.forefrontinfo.base.shell.ShellManager
 import net.imknown.android.forefrontinfo.base.shell.impl.LibSuShell
+import net.imknown.android.forefrontinfo.ui.base.Event
 import java.io.File
 
 open class MyApplication : Application() {
@@ -98,9 +98,8 @@ open class MyApplication : Application() {
         DynamicColors.applyToActivitiesIfAvailable(this)
 
         val themesValue = sharedPreferences.getString(
-            getMyString(R.string.interface_themes_key),
-            getMyString(R.string.interface_themes_follow_system_value)
-        )!!
+            getMyString(R.string.interface_themes_key), null
+        ) ?: getMyString(R.string.interface_themes_follow_system_value)
         setMyTheme(themesValue)
     }
 

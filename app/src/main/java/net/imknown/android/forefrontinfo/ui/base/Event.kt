@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.imknown.android.forefrontinfo.base.mvvm
+package net.imknown.android.forefrontinfo.ui.base
 
 import androidx.lifecycle.Observer
 

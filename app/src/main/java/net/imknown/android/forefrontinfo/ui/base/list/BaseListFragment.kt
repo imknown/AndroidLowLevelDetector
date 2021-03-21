@@ -10,13 +10,13 @@ import androidx.core.view.updatePadding
 import androidx.lifecycle.LiveData
 import com.google.android.material.color.MaterialColors
 import net.imknown.android.forefrontinfo.R
-import net.imknown.android.forefrontinfo.base.mvvm.BaseFragment
-import net.imknown.android.forefrontinfo.base.mvvm.Event
-import net.imknown.android.forefrontinfo.base.mvvm.EventObserver
-import net.imknown.android.forefrontinfo.base.mvvm.toast
-import net.imknown.android.forefrontinfo.base.mvvm.windowInsetsCompatTypes
 import net.imknown.android.forefrontinfo.databinding.BaseListFragmentBinding
 import net.imknown.android.forefrontinfo.ui.MainActivity
+import net.imknown.android.forefrontinfo.ui.base.BaseFragment
+import net.imknown.android.forefrontinfo.ui.base.Event
+import net.imknown.android.forefrontinfo.ui.base.EventObserver
+import net.imknown.android.forefrontinfo.ui.base.ext.toast
+import net.imknown.android.forefrontinfo.ui.base.ext.windowInsetsCompatTypes
 import com.google.android.material.R as materialR
 
 abstract class BaseListFragment : BaseFragment<BaseListFragmentBinding>() {
@@ -37,7 +37,7 @@ abstract class BaseListFragment : BaseFragment<BaseListFragmentBinding>() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        // super.onViewCreated(view, savedInstanceState)
+        super.onViewCreated(view, savedInstanceState)
 
         initWindowInsets()
 

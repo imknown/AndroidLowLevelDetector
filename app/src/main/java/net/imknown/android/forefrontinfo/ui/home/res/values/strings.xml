@@ -8,6 +8,14 @@
     <string name="result_enabled">Enabled</string>
     <string name="result_disabled">Disabled</string>
 
+    <string name="lld_json_mode_title">Detect mode</string>
+    <string name="lld_json_offline">Offline (%s)</string>
+    <string name="lld_json_online">Online (%s)</string>
+    <string name="lld_json_fetch_failed">Online data fetching failed.\nUse local data instead.\n\n%s</string>
+    <string name="lld_json_save_failed">Data saving failed.\nPlease check your storage.\n\n%s</string>
+    <string name="lld_json_parse_failed">Data parsing failed.\nPlease try to upgrade this app.\n\n%s</string>
+    <string name="lld_json_detect_failed">Detecting failed.\nPlease try to upgrade this app.\n\n%s</string>
+
     <string name="android_info_title">Android version</string>
     <string name="android_info">%1$s (API %2$s)</string>
     <string name="android_info_detail">Mine: %1$s\n\nLatest stable: %2$s\nLowest support: %3$s\nLatest preview: %4$s\nLatest internal: %5$s</string>

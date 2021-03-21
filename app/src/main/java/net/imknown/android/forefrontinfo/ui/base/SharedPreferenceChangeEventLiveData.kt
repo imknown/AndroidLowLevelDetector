@@ -1,4 +1,4 @@
-package net.imknown.android.forefrontinfo.base.mvvm
+package net.imknown.android.forefrontinfo.ui.base
 
 import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
@@ -20,18 +20,19 @@ abstract class SharedPreferenceChangeEventLiveData<T>(
 
     private val preferenceChangeListener =
         SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-            scope.launch(Dispatchers.IO) {
-                if (key == this@SharedPreferenceChangeEventLiveData.key) {
-                    val event = getValueFromPreferences(key, defValue)
-
-                    withContext(Dispatchers.Main) {
-                        value = event
-                    }
+            scope.launch {
+                if (key != this@SharedPreferenceChangeEventLiveData.key) {
+                    return@launch
                 }
+
+                val event = withContext(Dispatchers.Default) {
+                    getValueFromPreferences(key, defValue)
+                }
+                value = Event(event)
             }
         }
 
-    abstract suspend fun getValueFromPreferences(key: String, defValue: T): Event<T>
+    abstract suspend fun getValueFromPreferences(key: String, defValue: T): T
 
     override fun onActive() {
         super.onActive()
@@ -48,11 +49,11 @@ abstract class SharedPreferenceChangeEventLiveData<T>(
 fun SharedPreferences.stringEventLiveData(scope: CoroutineScope, key: String, defValue: String) =
     object : SharedPreferenceChangeEventLiveData<String?>(scope, this, key, defValue) {
         override suspend fun getValueFromPreferences(key: String, defValue: String?) =
-            Event(sharedPrefs.getString(key, defValue))
+            sharedPrefs.getString(key, defValue)
     }
 
 fun SharedPreferences.booleanEventLiveData(scope: CoroutineScope, key: String, defValue: Boolean) =
     object : SharedPreferenceChangeEventLiveData<Boolean>(scope, this, key, defValue) {
         override suspend fun getValueFromPreferences(key: String, defValue: Boolean) =
-            Event(sharedPrefs.getBoolean(key, defValue))
+            sharedPrefs.getBoolean(key, defValue)
     }

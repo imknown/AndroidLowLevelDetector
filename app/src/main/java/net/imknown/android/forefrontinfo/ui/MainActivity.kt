@@ -1,11 +1,9 @@
 package net.imknown.android.forefrontinfo.ui
 
 import android.os.Bundle
-import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.updatePadding
@@ -13,13 +11,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.commitNow
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import net.imknown.android.forefrontinfo.R
-import net.imknown.android.forefrontinfo.base.mvvm.viewBinding
-import net.imknown.android.forefrontinfo.base.mvvm.windowInsetsCompatTypes
 import net.imknown.android.forefrontinfo.databinding.MainActivityBinding
+import net.imknown.android.forefrontinfo.ui.base.ext.viewBinding
+import net.imknown.android.forefrontinfo.ui.base.ext.windowInsetsCompatTypes
 import net.imknown.android.forefrontinfo.ui.home.HomeFragment
 import net.imknown.android.forefrontinfo.ui.others.OthersFragment
 import net.imknown.android.forefrontinfo.ui.prop.PropFragment
@@ -89,24 +84,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        initSubtitle()
+        setSupportActionBar(binding.toolbar)
 
         binding.bottomNavigationView.setOnItemSelectedListener {
             supportFragmentManager.switch(it.itemId)
 
             true
-        }
-    }
-
-    private fun initSubtitle() {
-        setSupportActionBar(binding.toolbar)
-
-        lifecycleScope.launch(Dispatchers.IO) {
-            val subtitleTextView = Toolbar::class.java
-                .getDeclaredField("mSubtitleTextView")
-                .apply { isAccessible = true }
-                .get(binding.toolbar) as TextView
-            subtitleTextView.isVerticalScrollBarEnabled = false
         }
     }
 

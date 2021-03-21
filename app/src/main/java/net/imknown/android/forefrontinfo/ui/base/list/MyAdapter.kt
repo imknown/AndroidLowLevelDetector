@@ -11,7 +11,7 @@ class MyAdapter : RecyclerView.Adapter<MyViewHolder>() {
         const val PAYLOAD_DETAILS = 1
     }
 
-    val myModels by lazy { ArrayList<MyModel>() }
+    val myModels by lazy { mutableListOf<MyModel>() }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = MyViewHolder(parent)
 

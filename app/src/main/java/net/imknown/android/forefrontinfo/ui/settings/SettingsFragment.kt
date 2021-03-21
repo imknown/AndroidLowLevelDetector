@@ -7,16 +7,20 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.doOnLayout
 import androidx.core.view.updatePadding
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.extension.isChinaMainlandTimezone
-import net.imknown.android.forefrontinfo.base.mvvm.EventObserver
-import net.imknown.android.forefrontinfo.base.mvvm.toast
-import net.imknown.android.forefrontinfo.base.mvvm.windowInsetsCompatTypes
 import net.imknown.android.forefrontinfo.ui.MainActivity
+import net.imknown.android.forefrontinfo.ui.base.EventObserver
+import net.imknown.android.forefrontinfo.ui.base.ext.toast
+import net.imknown.android.forefrontinfo.ui.base.ext.windowInsetsCompatTypes
+import net.imknown.android.forefrontinfo.ui.settings.datasource.AppInfoDataSource
+import net.imknown.android.forefrontinfo.ui.settings.datasource.FingerprintDataSource
+import net.imknown.android.forefrontinfo.ui.settings.repository.SettingsRepository
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
@@ -24,7 +28,17 @@ class SettingsFragment : PreferenceFragmentCompat() {
         fun newInstance() = SettingsFragment()
     }
 
-    private val settingsViewModel by viewModels<SettingsViewModel>()
+    private val settingsViewModel by viewModels<SettingsViewModel>(
+        extrasProducer = {
+            MutableCreationExtras(defaultViewModelCreationExtras).apply {
+                val repository = SettingsRepository(AppInfoDataSource(), FingerprintDataSource())
+                this[SettingsViewModel.MY_REPOSITORY_KEY] = repository
+            }
+        },
+        factoryProducer = {
+            SettingsViewModel.Factory
+        }
+    )
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)
@@ -75,16 +89,17 @@ class SettingsFragment : PreferenceFragmentCompat() {
             listView.isVerticalScrollBarEnabled = it
         })
 
-        val scrollBarModePref =
-            findPreference<ListPreference>(MyApplication.getMyString(R.string.interface_scroll_bar_key))!!
-        settingsViewModel.setScrollBarMode(scrollBarModePref.value)
+        val scrollBarModePref = findPreference<ListPreference>(MyApplication.getMyString(R.string.interface_scroll_bar_key))
+        scrollBarModePref?.let {
+            settingsViewModel.setScrollBarMode(it.value)
+        }
         // endregion [Scroll Bar Mode]
 
         settingsViewModel.showMessageEvent.observe(viewLifecycleOwner, EventObserver {
             context?.toast(it)
         })
 
-        val aboutShopPref = findPreference(R.string.about_shop_key)
+        val aboutShopPref = findPreferenceOrNull(R.string.about_shop_key)
         setOnOpenInExternalListener(
             aboutShopPref, if (isChinaMainlandTimezone()) {
                 R.string.about_shop_china_mainland_uri
@@ -93,25 +108,22 @@ class SettingsFragment : PreferenceFragmentCompat() {
             }
         )
 
-        val aboutSourcePref = findPreference(R.string.about_source_key)
+        val aboutSourcePref = findPreferenceOrNull(R.string.about_source_key)
         setOnOpenInExternalListener(aboutSourcePref, R.string.about_source_uri)
 
-        val aboutPrivacyPolicyPref = findPreference(R.string.about_privacy_policy_key)
+        val aboutPrivacyPolicyPref = findPreferenceOrNull(R.string.about_privacy_policy_key)
         setOnOpenInExternalListener(aboutPrivacyPolicyPref, R.string.about_privacy_policy_uri)
 
-        val aboutLicensesPref = findPreference(R.string.about_licenses_key)
+        val aboutLicensesPref = findPreferenceOrNull(R.string.about_licenses_key)
         setOnOpenInExternalListener(aboutLicensesPref, R.string.about_licenses_uri)
 
-        val aboutTranslatorMoreInfoPref = findPreference(R.string.about_translator_more_info_key)
-        setOnOpenInExternalListener(
-            aboutTranslatorMoreInfoPref,
-            R.string.translator_website
-        )
+        val aboutTranslatorMoreInfoPref = findPreferenceOrNull(R.string.about_translator_more_info_key)
+        setOnOpenInExternalListener(aboutTranslatorMoreInfoPref, R.string.translator_website)
 
         // region [Version Info]
-        val versionPref = findPreference(R.string.about_version_key)
+        val versionPref = findPreferenceOrNull(R.string.about_version_key)
         settingsViewModel.version.observe(viewLifecycleOwner) {
-            versionPref.summary = MyApplication.getMyString(
+            versionPref?.summary = MyApplication.getMyString(
                 it.id,
                 it.versionName,
                 it.versionCode,
@@ -123,14 +135,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
             )
         }
 
-        settingsViewModel.setBuiltInDataVersion(
-            MyApplication.instance.packageName,
-            MyApplication.instance.packageManager
-        )
+        val context = MyApplication.instance
+        settingsViewModel.setBuiltInDataVersion(context.packageManager, context.packageName)
         // endregion [Version Info]
 
         // region [Version Click]
-        versionPref.setOnPreferenceClickListener {
+        versionPref?.setOnPreferenceClickListener {
             settingsViewModel.versionClicked()
 
             true
@@ -138,11 +148,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
         // endregion [Version Click]
     }
 
-    private fun findPreference(@StringRes resId: Int) =
-        findPreference<Preference>(MyApplication.getMyString(resId))!!
+    private fun findPreferenceOrNull(@StringRes resId: Int) =
+        findPreference<Preference>(MyApplication.getMyString(resId))
 
-    private fun setOnOpenInExternalListener(pref: Preference, @StringRes uriResId: Int) {
-        pref.setOnPreferenceClickListener {
+    private fun setOnOpenInExternalListener(pref: Preference?, @StringRes uriResId: Int) {
+        pref?.setOnPreferenceClickListener {
             settingsViewModel.openInExternal(uriResId)
 
             true

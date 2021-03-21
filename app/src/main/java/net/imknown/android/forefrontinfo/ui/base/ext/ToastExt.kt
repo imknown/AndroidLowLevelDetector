@@ -1,4 +1,4 @@
-package net.imknown.android.forefrontinfo.base.mvvm
+package net.imknown.android.forefrontinfo.ui.base.ext
 
 import android.content.Context
 import android.widget.Toast

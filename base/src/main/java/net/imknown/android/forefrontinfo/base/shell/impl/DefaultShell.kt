@@ -1,5 +1,6 @@
 package net.imknown.android.forefrontinfo.base.shell.impl
 
+import net.imknown.android.forefrontinfo.base.extension.fullMessage
 import net.imknown.android.forefrontinfo.base.shell.IShell
 import net.imknown.android.forefrontinfo.base.shell.ShellResult
 
@@ -19,7 +20,7 @@ object DefaultShell : IShell {
             val stream = with(process) { if (isSuccess) inputStream else errorStream }
             output += stream.bufferedReader().readLines()
         } catch (e: Exception) {
-            output += (e.message ?: "")
+            output += e.fullMessage
         }
 
         return ShellResult(output, isSuccess, exitCode)

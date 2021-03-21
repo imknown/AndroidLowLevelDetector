@@ -1,20 +1,19 @@
-package net.imknown.android.forefrontinfo.ui.base
+package net.imknown.android.forefrontinfo.ui.common
 
 import android.content.res.AssetManager
 import android.util.Log
-import kotlinx.serialization.json.Json
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
+import net.imknown.android.forefrontinfo.base.extension.fullMessage
+import net.imknown.android.forefrontinfo.ui.home.datasource.LldDataSource
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileWriter
 
-object JsonIo {
-    const val LLD_JSON_NAME = "lld.json"
-
+object LldManager {
     val savedLldJsonFile by lazy {
-        File(MyApplication.getDownloadDir(), LLD_JSON_NAME)
+        File(MyApplication.getDownloadDir(), LldDataSource.LLD_JSON_NAME)
     }
 
     private fun deleteDirtyDirectory() {
@@ -34,11 +33,10 @@ object JsonIo {
                 shouldCopy = true
             } else {
                 val savedLldVersion = try {
-                    savedLldJsonFile.fromJson<Lld>().version
+                    savedLldJsonFile.toObjectOrThrow<Lld>().version
                 } catch (e: Exception) {
-                    val message =
-                        MyApplication.getMyString(R.string.lld_json_parse_failed, e.message)
-                    Log.e(javaClass.simpleName, message, e)
+                    val message = MyApplication.getMyString(R.string.lld_json_parse_failed, e.fullMessage)
+                    Log.e(javaClass.simpleName, message)
                     null
                 }
 
@@ -62,7 +60,7 @@ object JsonIo {
         copyAssetsFileToContextFilesDir(
             MyApplication.instance.assets,
             savedLldJsonFile,
-            LLD_JSON_NAME
+            LldDataSource.LLD_JSON_NAME
         )
     }
 
@@ -97,10 +95,10 @@ object JsonIo {
 
     fun getAssetLld(assets: AssetManager): Lld? =
         try {
-            assets.open(LLD_JSON_NAME)
+            assets.open(LldDataSource.LLD_JSON_NAME)
                 .bufferedReader()
                 .use(BufferedReader::readText)
-                .fromJson()
+                .toObjectOrThrow()
         } catch (e: Exception) {
             e.printStackTrace()
             null
@@ -108,13 +106,3 @@ object JsonIo {
 
     fun getAssetLldVersion(assets: AssetManager): String? = getAssetLld(assets)?.version
 }
-
-val json by lazy { Json { ignoreUnknownKeys = true } }
-
-@Throws
-inline fun <reified T : Any> File.fromJson(): T =
-    readText().fromJson()
-
-@Throws
-inline fun <reified T : Any> String.fromJson(): T =
-    json.decodeFromString(this)
