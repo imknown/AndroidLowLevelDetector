@@ -20,7 +20,7 @@ abstract class SharedPreferenceChangeEventLiveData<T>(
 
     private val preferenceChangeListener =
         SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-            scope.launch(Dispatchers.IO) {
+            scope.launch(Dispatchers.Default) {
                 if (key == this@SharedPreferenceChangeEventLiveData.key) {
                     val event = getValueFromPreferences(key, defValue)
 

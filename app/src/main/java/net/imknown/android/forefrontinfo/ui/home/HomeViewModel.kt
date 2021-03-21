@@ -9,11 +9,18 @@ import android.os.Build
 import android.provider.Settings
 import android.util.Log
 import androidx.annotation.AttrRes
+import androidx.annotation.MainThread
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.CreationExtras
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.webkit.WebViewCompat
 import io.github.g00fy2.versioncompare.Version
 import kotlinx.coroutines.Dispatchers
@@ -24,39 +31,48 @@ import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.extension.formatToLocalZonedDatetimeString
 import net.imknown.android.forefrontinfo.base.mvvm.Event
 import net.imknown.android.forefrontinfo.base.mvvm.booleanEventLiveData
-import net.imknown.android.forefrontinfo.ui.base.JsonIo
-import net.imknown.android.forefrontinfo.ui.base.fromJson
-import net.imknown.android.forefrontinfo.ui.base.getAndroidApiLevel
-import net.imknown.android.forefrontinfo.ui.base.getAndroidVersionName
-import net.imknown.android.forefrontinfo.ui.base.isAtLeastStableAndroid10
-import net.imknown.android.forefrontinfo.ui.base.isAtLeastStableAndroid11
-import net.imknown.android.forefrontinfo.ui.base.isAtLeastStableAndroid12
-import net.imknown.android.forefrontinfo.ui.base.isAtLeastStableAndroid13
-import net.imknown.android.forefrontinfo.ui.base.isAtLeastStableAndroid6
-import net.imknown.android.forefrontinfo.ui.base.isAtLeastStableAndroid7
-import net.imknown.android.forefrontinfo.ui.base.isAtLeastStableAndroid8
-import net.imknown.android.forefrontinfo.ui.base.isAtLeastStableAndroid9
-import net.imknown.android.forefrontinfo.ui.base.isGoEdition
-import net.imknown.android.forefrontinfo.ui.base.isLatestPreviewAndroid
-import net.imknown.android.forefrontinfo.ui.base.isLatestStableAndroid
-import net.imknown.android.forefrontinfo.ui.base.isPreviewAndroid
-import net.imknown.android.forefrontinfo.ui.base.isSupportedByUpstreamAndroid
 import net.imknown.android.forefrontinfo.ui.base.list.BaseListViewModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
+import net.imknown.android.forefrontinfo.ui.common.LldManager
+import net.imknown.android.forefrontinfo.ui.common.toObjectOrThrow
+import net.imknown.android.forefrontinfo.ui.common.getAndroidApiLevel
+import net.imknown.android.forefrontinfo.ui.common.getAndroidVersionName
+import net.imknown.android.forefrontinfo.ui.common.getBooleanProperty
+import net.imknown.android.forefrontinfo.ui.common.getStringProperty
+import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid10
+import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid11
+import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid12
+import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid13
+import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid6
+import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid7
+import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid8
+import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid9
+import net.imknown.android.forefrontinfo.ui.common.isGoEdition
+import net.imknown.android.forefrontinfo.ui.common.isLatestPreviewAndroid
+import net.imknown.android.forefrontinfo.ui.common.isLatestStableAndroid
+import net.imknown.android.forefrontinfo.ui.common.isPreviewAndroid
+import net.imknown.android.forefrontinfo.ui.common.isSupportedByUpstreamAndroid
+import net.imknown.android.forefrontinfo.ui.common.sh
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.home.model.Subtitle
+import net.imknown.android.forefrontinfo.ui.home.repository.HomeRepository
 import java.io.File
 
-class HomeViewModel : BaseListViewModel() {
+class HomeViewModel(
+    private val homeRepository: HomeRepository,
+    private val savedStateHandle: SavedStateHandle
+) : BaseListViewModel() {
 
     companion object {
-        // region [Build ID]
-        private const val BUILD_ID_SEPARATOR = '.'
+        val MY_REPOSITORY_KEY = object : CreationExtras.Key<HomeRepository> {}
 
-        private const val PROP_RO_SYSTEM_BUILD_ID = "ro.system.build.id"
-        private const val PROP_RO_VENDOR_BUILD_ID = "ro.vendor.build.id"
-        private const val PROP_RO_ODM_BUILD_ID = "ro.odm.build.id"
-        // endregion [Build ID]
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val repository = this[MY_REPOSITORY_KEY] as HomeRepository
+                val savedStateHandle = createSavedStateHandle()
+                HomeViewModel(repository, savedStateHandle)
+            }
+        }
 
         // region [Security Patch]
         private const val PROP_SECURITY_PATCH = "ro.build.version.security_patch"
@@ -197,16 +213,14 @@ class HomeViewModel : BaseListViewModel() {
     private val _showOutdatedOrderEvent by lazy { MutableLiveData<Event<Unit>>() }
     val showOutdatedOrderEvent: LiveData<Event<Unit>> by lazy { _showOutdatedOrderEvent }
 
-    override fun collectModels() = viewModelScope.launch(Dispatchers.IO) {
+    override fun collectModels()  {
         val allowNetwork = MyApplication.sharedPreferences.getBoolean(
             MyApplication.getMyString(R.string.function_allow_network_data_key), false
         )
 
         if (allowNetwork) {
             try {
-                val lldString = GatewayApi.fetchLldJson()
-
-                prepareOnlineLld(lldString)
+                prepareOnlineLld()
             } catch (e: Exception) {
                 showError(R.string.lld_json_fetch_failed, e)
 
@@ -217,15 +231,19 @@ class HomeViewModel : BaseListViewModel() {
         }
     }
 
-    private suspend fun prepareOnlineLld(lldString: String) {
+    // region [Lld]
+    private fun prepareOnlineLld() {
+        viewModelScope.launch(Dispatchers.IO) {
+        }
+
         try {
-            val lld = lldString.fromJson<Lld>()
+            val lld = homeRepository.fetchOnlineLldOrThrow()
             val isSuccess = prepareDetect(lld)
 
             setSubtitle(isSuccess, lld, R.string.lld_json_online)
 
             try {
-                JsonIo.saveLldJsonFile(lldString)
+                LldManager.saveLldJsonFile(lldString)
             } catch (e: Exception) {
                 showError(R.string.lld_json_save_failed, e)
             }
@@ -236,35 +254,37 @@ class HomeViewModel : BaseListViewModel() {
         }
     }
 
-    private suspend fun prepareOfflineLld() {
-        val lld = fetchOfflineLld()
+    private fun prepareOfflineLld() {
+        viewModelScope.launch(Dispatchers.IO) {
+        }
+
+        val lld = fetchOfflineLldOrNull()
         val isSuccess = prepareDetect(lld)
 
         setSubtitle(isSuccess, lld, R.string.lld_json_offline)
     }
 
-    private fun fetchOfflineLld(): Lld? {
-        val lld: Lld?
-
+    private fun fetchOfflineLldOrNull(): Lld? {
         try {
-            JsonIo.copyJsonIfNeeded()
+            LldManager.copyJsonIfNeeded()
         } catch (e: Exception) {
             showError(R.string.lld_json_save_failed, e)
 
-            lld = JsonIo.getAssetLld(MyApplication.instance.assets)
+            val lld = LldManager.getAssetLld(MyApplication.instance.assets)
             return lld
         }
 
-        lld = try {
-            JsonIo.savedLldJsonFile.fromJson()
+        val lld = try {
+            homeRepository.fetchOfflineLldOrThrow()
         } catch (e: Exception) {
             showError(R.string.lld_json_parse_failed, e)
 
-            JsonIo.getAssetLld(MyApplication.instance.assets)
+            LldManager.getAssetLld(MyApplication.instance.assets)
         }
 
         return lld
     }
+    // endregion [Lld]
 
     private suspend fun prepareDetect(lld: Lld?): Boolean {
         if (lld == null) {
@@ -282,16 +302,15 @@ class HomeViewModel : BaseListViewModel() {
         }
     }
 
-    private suspend fun setSubtitle(isSuccess: Boolean, lld: Lld?, @StringRes subtitleResId: Int) {
+    @MainThread
+    private fun setSubtitle(isSuccess: Boolean, lld: Lld?, @StringRes subtitleResId: Int) {
         val dataVersion = if (isSuccess) {
-            lld!!.version.formatToLocalZonedDatetimeString()
+            lld.version.formatToLocalZonedDatetimeString()
         } else {
             MyApplication.getMyString(android.R.string.unknownName)
         }
 
-        withContext(Dispatchers.Main) {
-            _subtitle.value = Subtitle(subtitleResId, dataVersion)
-        }
+        _subtitle.value = Subtitle(subtitleResId, dataVersion)
     }
 
     // https://unix.stackexchange.com/questions/91960/can-anyone-explain-the-output-of-mount
@@ -393,26 +412,20 @@ class HomeViewModel : BaseListViewModel() {
     }
 
     private fun detectAndroid(tempModels: ArrayList<MyModel>, lld: Lld) {
-        @AttrRes val androidColor = when {
-            isLatestStableAndroid(lld) || isLatestPreviewAndroid(lld) -> R.attr.colorNoProblem
-            isSupportedByUpstreamAndroid(lld) -> R.attr.colorWaring
-            else -> R.attr.colorCritical
-        }
-
-        val previewVersion = lld.android.preview.version
-        val previewApi = lld.android.preview.api
-        val previewPhase = lld.android.preview.phase
-
         var myAndroidVersionName = getAndroidVersionName()
-        if (MyApplication.instance.isGoEdition()) {
+        if (homeRepository.isGoEdition(MyApplication.instance)) {
             myAndroidVersionName += " (Go)"
         }
 
+        val previewVersion = lld.android.preview.version
+        val previewPhase = lld.android.preview.phase
+        val previewApi = lld.android.preview.api
+
+        val androidColor = homeRepository.getAndroidColor(lld)
+
         add(
             tempModels,
-            MyApplication.getMyString(
-                R.string.android_info_title
-            ),
+            MyApplication.getMyString(R.string.android_info_title),
             MyApplication.getMyString(
                 R.string.android_info_detail,
                 MyApplication.getMyString(
@@ -1373,20 +1386,19 @@ class HomeViewModel : BaseListViewModel() {
         add(tempModels, myModel.title, myModel.detail, myModel.color)
     }
 
-    fun payloadOutdatedTargetSdkVersionApk(myModels: ArrayList<MyModel>) =
-        viewModelScope.launch(Dispatchers.IO) {
-            if (myModels.isEmpty()) {
-                return@launch
-            }
-
-            val lld = fetchOfflineLld()
-                ?: return@launch
-            myModels.last().detail = getOutdatedTargetSdkVersionApkModel(lld).detail
-
-            withContext(Dispatchers.Main) {
-                _showOutdatedOrderEvent.value = Event(Unit)
-            }
+    fun payloadOutdatedTargetSdkVersionApk(myModels: ArrayList<MyModel>) {
+        if (myModels.isEmpty()) {
+            return
         }
+
+        val lld = fetchOfflineLldOrNull()
+            ?: return
+        myModels.last().detail = getOutdatedTargetSdkVersionApkModel(lld).detail
+
+        withContext(Dispatchers.Main) {
+            _showOutdatedOrderEvent.value = Event(Unit)
+        }
+    }
     // endregion [detect]
 
     private fun isPropertyValueNotEmpty(result: String) =
@@ -1413,10 +1425,7 @@ class HomeViewModel : BaseListViewModel() {
     )
 
     private fun add(
-        tempModels: ArrayList<MyModel>,
-        title: String,
-        detail: String?,
-        condition: Boolean
+        tempModels: ArrayList<MyModel>, title: String, detail: String?, condition: Boolean
     ) = tempModels.add(
         MyModel(
             title,
@@ -1430,9 +1439,6 @@ class HomeViewModel : BaseListViewModel() {
     )
 
     private fun add(
-        tempModels: ArrayList<MyModel>,
-        title: String,
-        detail: String?,
-        @AttrRes color: Int
+        tempModels: ArrayList<MyModel>, title: String, detail: String?, @AttrRes color: Int
     ) = tempModels.add(MyModel(title, detail.toString(), color))
 }

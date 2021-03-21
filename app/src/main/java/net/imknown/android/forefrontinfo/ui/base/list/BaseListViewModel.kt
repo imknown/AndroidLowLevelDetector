@@ -1,12 +1,12 @@
 package net.imknown.android.forefrontinfo.ui.base.list
 
 import android.os.Bundle
+import androidx.annotation.MainThread
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.BuildConfig
@@ -15,9 +15,6 @@ import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.mvvm.BaseViewModel
 import net.imknown.android.forefrontinfo.base.mvvm.Event
 import net.imknown.android.forefrontinfo.base.mvvm.stringEventLiveData
-import net.imknown.android.forefrontinfo.base.property.PropertyManager
-import net.imknown.android.forefrontinfo.base.shell.ShellManager
-import net.imknown.android.forefrontinfo.base.shell.ShellResult
 
 abstract class BaseListViewModel : BaseViewModel() {
     private val _models by lazy { MutableLiveData<ArrayList<MyModel>>() }
@@ -38,14 +35,13 @@ abstract class BaseListViewModel : BaseViewModel() {
     }
     val scrollBarMode: LiveData<Event<String?>> by lazy { _scrollBarMode }
 
-    abstract fun collectModels(): Job
+    abstract fun collectModels()
 
     fun init(savedInstanceState: Bundle?) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Default) {
             val scrollBarMode = MyApplication.sharedPreferences.getString(
-                MyApplication.getMyString(R.string.interface_scroll_bar_key),
-                MyApplication.getMyString(R.string.interface_no_scroll_bar_value)
-            )!!
+                MyApplication.getMyString(R.string.interface_scroll_bar_key), null
+            ) ?: MyApplication.getMyString(R.string.interface_no_scroll_bar_value)
             setScrollBarMode(scrollBarMode)
 
             // When activity is recreated, use LiveData to restore the data
@@ -58,10 +54,10 @@ abstract class BaseListViewModel : BaseViewModel() {
     fun hasNoData(savedInstanceState: Bundle?) =
         (savedInstanceState == null || _showModelsEvent.value == null) && _showErrorEvent.value == null
 
-    protected suspend fun setModels(tempModels: ArrayList<MyModel>) =
-        withContext(Dispatchers.Main) {
-            _models.value = tempModels
-        }
+    @MainThread
+    protected fun setModels(tempModels: ArrayList<MyModel>) {
+        _models.value = tempModels
+    }
 
     fun showModels(
         myModels: ArrayList<MyModel>,
@@ -89,28 +85,4 @@ abstract class BaseListViewModel : BaseViewModel() {
                 cause.printStackTrace()
             }
         }
-
-    protected fun getStringProperty(key: String, condition: Boolean = true): String =
-        if (condition) {
-            PropertyManager.instance.getString(
-                key, MyApplication.getMyString(R.string.build_not_filled)
-            )
-        } else {
-            MyApplication.getMyString(R.string.result_not_supported)
-        }
-
-    protected fun getBooleanProperty(key: String, condition: Boolean = true) =
-        if (condition) {
-            PropertyManager.instance.getBoolean(key, false)
-        } else {
-            false
-        }
-
-    protected fun sh(cmd: String, condition: Boolean = true): ShellResult {
-        return if (condition) {
-            ShellManager.instance.execute(cmd)
-        } else {
-            ShellResult()
-        }
-    }
 }
