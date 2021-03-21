@@ -4,10 +4,13 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.viewmodel.MutableCreationExtras
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.mvvm.EventObserver
 import net.imknown.android.forefrontinfo.ui.base.list.BaseListFragment
 import net.imknown.android.forefrontinfo.ui.base.list.MyAdapter
+import net.imknown.android.forefrontinfo.ui.home.datasource.LldDataSource
+import net.imknown.android.forefrontinfo.ui.home.repository.HomeRepository
 
 class HomeFragment : BaseListFragment() {
 
@@ -15,7 +18,17 @@ class HomeFragment : BaseListFragment() {
         fun newInstance() = HomeFragment()
     }
 
-    override val listViewModel by viewModels<HomeViewModel>()
+    override val listViewModel by viewModels<HomeViewModel>(
+        extrasProducer = {
+            MutableCreationExtras(defaultViewModelCreationExtras).apply {
+                val repository = HomeRepository(LldDataSource())
+                this[HomeViewModel.MY_REPOSITORY_KEY] = repository
+            }
+        },
+        factoryProducer = {
+            HomeViewModel.Factory
+        }
+    )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
