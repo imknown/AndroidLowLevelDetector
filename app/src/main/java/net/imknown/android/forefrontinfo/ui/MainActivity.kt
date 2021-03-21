@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity() {
     private fun initSubtitle() {
         setSupportActionBar(binding.toolbar)
 
-        lifecycleScope.launch(Dispatchers.IO) {
+        lifecycleScope.launch(Dispatchers.Default) {
             val subtitleTextView = Toolbar::class.java
                 .getDeclaredField("mSubtitleTextView")
                 .apply { isAccessible = true }
