@@ -1,9 +1,10 @@
 package net.imknown.android.forefrontinfo.base
 
-import com.github.kittinunf.fuel.core.FuelError
-import com.github.kittinunf.fuel.coroutines.awaitStringResult
 import com.github.kittinunf.fuel.httpGet
+import kotlinx.coroutines.suspendCancellableCoroutine
 import net.imknown.android.forefrontinfo.BuildConfig
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 object GatewayApi {
     private const val REPOSITORY_NAME = "imknown/AndroidLowLevelDetector"
@@ -11,18 +12,20 @@ object GatewayApi {
     private const val URL_PREFIX_LLD_JSON_GITEE = "gitee.com/$REPOSITORY_NAME/raw"
     private const val URL_PREFIX_LLD_JSON_GITHUB = "raw.githubusercontent.com/$REPOSITORY_NAME"
 
-    suspend fun fetchLldJson(
-        success: (String) -> Unit,
-        failure: (FuelError) -> Unit
-    ) {
+    suspend fun fetchLldJson() = suspendCancellableCoroutine<String> { cont ->
         val urlPrefixLldJson = if (isChinaMainlandTimezone()) {
             URL_PREFIX_LLD_JSON_GITEE
         } else {
             URL_PREFIX_LLD_JSON_GITHUB
         }
 
-        val url =
-            "https://$urlPrefixLldJson/${BuildConfig.GIT_BRANCH}/app/src/main/assets/${JsonIo.LLD_JSON_NAME}"
-        url.httpGet().awaitStringResult().fold(success, failure)
+        "https://$urlPrefixLldJson/${BuildConfig.GIT_BRANCH}/app/src/main/assets/${JsonIo.LLD_JSON_NAME}"
+            .httpGet()
+            .responseString()
+            .third
+            .fold(
+                { cont.resume(it) },
+                { cont.resumeWithException(it) }
+            )
     }
 }

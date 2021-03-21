@@ -17,7 +17,6 @@ import androidx.webkit.WebViewCompat
 import com.g00fy2.versioncompare.Version
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
@@ -159,13 +158,15 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         )
 
         if (allowNetwork) {
-            GatewayApi.fetchLldJson({
-                runBlocking { prepareOnlineLld(it) }
-            }, {
-                showError(R.string.lld_json_fetch_failed, it)
+            try {
+                val lldString = GatewayApi.fetchLldJson()
 
-                runBlocking { prepareOfflineLld() }
-            })
+                prepareOnlineLld(lldString)
+            } catch (e: Exception) {
+                showError(R.string.lld_json_fetch_failed, e)
+
+                prepareOfflineLld()
+            }
         } else {
             prepareOfflineLld()
         }
