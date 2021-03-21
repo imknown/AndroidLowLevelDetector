@@ -1,4 +1,4 @@
-package net.imknown.android.forefrontinfo.ui.home
+package net.imknown.android.forefrontinfo.ui.home.datasource
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -12,23 +12,29 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.http.headers
 import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.base.extension.isChinaMainlandTimezone
-import net.imknown.android.forefrontinfo.ui.base.JsonIo
+import net.imknown.android.forefrontinfo.ui.common.LldManager
 import java.io.IOException
 import java.net.Proxy
 import java.net.ProxySelector
 import java.net.SocketAddress
 import java.net.URI
 
-object GatewayApi {
-    private const val HEADER_REFERER_KEY = "Referer"
-    private const val HEADER_REFERER_VALUE = BuildConfig.APPLICATION_ID
+class LldDataSource {
+    companion object {
+        const val LLD_JSON_NAME = "lld.json"
 
-    private const val REPOSITORY_NAME = "imknown/AndroidLowLevelDetector"
+        // region [Online]
+        private const val HEADER_REFERER_KEY = "Referer"
+        private const val HEADER_REFERER_VALUE = BuildConfig.APPLICATION_ID
 
-    private const val URL_PREFIX_LLD_JSON_GITEE = "gitee.com/$REPOSITORY_NAME/raw"
-    private const val URL_PREFIX_LLD_JSON_GITHUB = "raw.githubusercontent.com/$REPOSITORY_NAME"
+        private const val REPOSITORY_NAME = "imknown/AndroidLowLevelDetector"
 
-    suspend fun fetchLldJson(): String {
+        private const val URL_PREFIX_LLD_JSON_GITEE = "gitee.com/$REPOSITORY_NAME/raw"
+        private const val URL_PREFIX_LLD_JSON_GITHUB = "raw.githubusercontent.com/$REPOSITORY_NAME"
+        // endregion [Online]
+    }
+
+    suspend fun fetchOnlineLldJsonStringOrThrow(): String {
         val urlPrefixLldJson = if (isChinaMainlandTimezone()) {
             URL_PREFIX_LLD_JSON_GITEE
         } else {
@@ -51,6 +57,7 @@ object GatewayApi {
                         }
 
                         override fun connectFailed(uri: URI?, sa: SocketAddress?, ioe: IOException?) {
+                            ioe?.printStackTrace()
                             getDefault().connectFailed(uri, sa, ioe)
                         }
                     }
@@ -67,7 +74,7 @@ object GatewayApi {
             }
         }
 
-        val url = "https://$urlPrefixLldJson/${BuildConfig.GIT_BRANCH}/app/src/main/assets/${JsonIo.LLD_JSON_NAME}"
+        val url = "https://$urlPrefixLldJson/${BuildConfig.GIT_BRANCH}/app/src/main/assets/$LLD_JSON_NAME"
         val response: HttpResponse = client.get(url) {
             headers {
                 append(HEADER_REFERER_KEY, HEADER_REFERER_VALUE)
@@ -77,4 +84,6 @@ object GatewayApi {
             response.body()
         }
     }
+
+    fun fetchOfflineLldFileOrThrow() = LldManager.savedLldJsonFile
 }

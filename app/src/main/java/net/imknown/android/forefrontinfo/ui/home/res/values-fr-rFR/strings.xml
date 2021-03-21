@@ -8,6 +8,14 @@
     <string name="result_enabled">Activée</string>
     <string name="result_disabled">Désactivé</string>
 
+    <string name="lld_json_mode_title">Mode de détection</string>
+    <string name="lld_json_offline">Hors-ligne (%s)</string>
+    <string name="lld_json_online">Enligne (%s)</string>
+    <string name="lld_json_fetch_failed">"Impossible d'atteindre les données en ligne.\nUtilisation des données locales.\n\n%s"</string>
+    <string name="lld_json_save_failed">"L'enregistrement des données a échoué.\nVeuillez vérifier votre stockage.\n\n%s"</string>
+    <string name="lld_json_parse_failed">"Impossible de parser les données.\nEssayez de mettre à jour l'application.\n\n%s"</string>
+    <string name="lld_json_detect_failed">"La détection a échoué.\nEssayez de mettre à jour l'application.\n\n%s"</string>
+
     <string name="android_info_title">"Version d'Android"</string>
     <string name="android_info">%1$s (API %2$s)</string>
     <string name="android_info_detail">Moi: %1$s\n\nDernière stable: %2$s\nPlus faible prise en charge: %3$s\nDernière aperçu: %4$s\nDernière interne: %5$s</string>
