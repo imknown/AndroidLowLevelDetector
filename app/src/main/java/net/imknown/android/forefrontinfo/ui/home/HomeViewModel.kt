@@ -13,6 +13,7 @@ import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.webkit.WebViewCompat
 import io.github.g00fy2.versioncompare.Version
@@ -33,7 +34,10 @@ import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.home.model.Subtitle
 import java.io.File
 
-class HomeViewModel : BaseListViewModel(), IAndroidVersion {
+class HomeViewModel(
+    private val homeRepository: IHomeRepository,
+    private val savedStateHandle: SavedStateHandle
+) : BaseListViewModel(), IAndroidVersion {
 
     companion object : IAndroidVersion {
         // region [Build ID]
@@ -190,7 +194,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
 
         if (allowNetwork) {
             try {
-                val lldString = GatewayApi.fetchLldJson()
+                val lldString = homeRepository.fetchLldJson()
 
                 prepareOnlineLld(lldString)
             } catch (e: Exception) {
