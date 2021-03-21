@@ -8,6 +8,14 @@
     <string name="result_enabled">已啟用</string>
     <string name="result_disabled">已停用</string>
 
+    <string name="lld_json_mode_title">檢測模式</string>
+    <string name="lld_json_offline">離線（%s）</string>
+    <string name="lld_json_online">在線上（%s）</string>
+    <string name="lld_json_fetch_failed">線上數據獲取失敗。\n使用離線數據代替。\n\n%s</string>
+    <string name="lld_json_save_failed">數據儲存失敗。\n請檢查你的儲存。\n\n%s</string>
+    <string name="lld_json_parse_failed">數據分析失敗。\n請嘗試升級本程式。\n\n%s</string>
+    <string name="lld_json_detect_failed">檢查失敗。\n請嘗試升級本程式。\n\n%s</string>
+
     <string name="android_info_title">Android 版本</string>
     <string name="android_info">%1$s（API %2$s）</string>
     <string name="android_info_detail">我的：%1$s\n\n最新穩定：%2$s\n最低支援：%3$s\n最新預覽：%4$s\n最新內部：%5$s</string>

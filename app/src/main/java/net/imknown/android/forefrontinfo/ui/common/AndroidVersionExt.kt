@@ -1,4 +1,4 @@
-package net.imknown.android.forefrontinfo.ui.base
+package net.imknown.android.forefrontinfo.ui.common
 
 import android.app.ActivityManager
 import android.content.Context
@@ -19,6 +19,7 @@ fun isAtLeastStableAndroid12() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 fun isAtLeastStableAndroid13() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
 // fun isAtLeastStableAndroid14() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE
 // fun isAtLeastStableAndroid15() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM
+// fun isAtLeastStableAndroid16() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA
 
 fun isStableAndroid() = Build.VERSION.CODENAME == CODENAME_RELEASE
 fun isPreviewAndroid() = !isStableAndroid()
