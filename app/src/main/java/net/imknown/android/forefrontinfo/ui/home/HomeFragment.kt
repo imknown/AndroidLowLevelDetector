@@ -4,8 +4,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.mvvm.EventObserver
+import net.imknown.android.forefrontinfo.ui.base.GeneralSavedStateViewModelFactory
 import net.imknown.android.forefrontinfo.ui.base.list.BaseListFragment
 import net.imknown.android.forefrontinfo.ui.base.list.MyAdapter
+import net.imknown.android.forefrontinfo.ui.home.datasource.HomeGatewayDataSource
+import net.imknown.android.forefrontinfo.ui.home.datasource.HomeLocalDataSource
 
 class HomeFragment : BaseListFragment() {
 
@@ -13,7 +16,12 @@ class HomeFragment : BaseListFragment() {
         fun newInstance() = HomeFragment()
     }
 
-    override val listViewModel by activityViewModels<HomeViewModel>()
+    override val listViewModel by activityViewModels<HomeViewModel> {
+        GeneralSavedStateViewModelFactory(
+            HomeRepository(HomeLocalDataSource(), HomeGatewayDataSource()),
+            this
+        )
+    }
 
     override fun init() {
         observeLanguageEvent(MyApplication.homeLanguageEvent)
