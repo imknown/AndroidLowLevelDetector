@@ -13,21 +13,15 @@ import net.imknown.android.forefrontinfo.base.EventObserver
 import net.imknown.android.forefrontinfo.databinding.FragmentListBinding
 import net.imknown.android.forefrontinfo.ui.base.BaseFragment
 
-abstract class BaseListFragment : BaseFragment() {
+abstract class BaseListFragment : BaseFragment<FragmentListBinding>() {
 
-    private val binding by lazy {
-        FragmentListBinding.inflate(layoutInflater, null, false)
-    }
+    override fun initBinding(
+        inflater: LayoutInflater, container: ViewGroup?, attachToParent: Boolean
+    ) = FragmentListBinding.inflate(inflater, container, attachToParent)
 
     protected val myAdapter by lazy { MyAdapter() }
 
     protected abstract val listViewModel: BaseListViewModel
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ) = binding.root
 
     protected fun observeLanguageEvent(event: LiveData<Event<Unit>>) {
         event.observe(viewLifecycleOwner, EventObserver {
@@ -71,14 +65,6 @@ abstract class BaseListFragment : BaseFragment() {
         listViewModel.init(savedInstanceState)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-
-        if (binding.recyclerView.adapter != null) {
-            binding.recyclerView.adapter = null
-        }
-    }
-
     private fun initViews(savedInstanceState: Bundle?) {
         binding.swipeRefreshLayout.setColorSchemeResources(R.color.colorSecondary)
         binding.swipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.colorStateless)
@@ -105,9 +91,7 @@ abstract class BaseListFragment : BaseFragment() {
                 )
             )
 
-            if (adapter == null) {
-                adapter = myAdapter
-            }
+            adapter = myAdapter
         }
     }
 

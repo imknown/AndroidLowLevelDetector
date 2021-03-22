@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import net.imknown.android.forefrontinfo.databinding.FragmentListItemBinding
 
-class MyAdapter : RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
+class MyAdapter : RecyclerView.Adapter<MyViewHolder>() {
     companion object {
         const val PAYLOAD_DETAILS = 1
     }
@@ -40,6 +40,4 @@ class MyAdapter : RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
     }
 
     override fun getItemCount() = myModels.size
-
-    class MyViewHolder(val binding: FragmentListItemBinding) : RecyclerView.ViewHolder(binding.root)
 }
