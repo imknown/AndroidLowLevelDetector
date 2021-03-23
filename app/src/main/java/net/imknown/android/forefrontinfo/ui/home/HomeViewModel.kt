@@ -1027,11 +1027,13 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         val builtInWebViewPackageInfo =
             getPackageInfo(WEB_VIEW_BUILT_IN_PACKAGE_NAME)
                 ?: getPackageInfo(WEB_VIEW_STABLE_PACKAGE_NAME)
-        val builtInWebViewVersion = builtInWebViewPackageInfo?.versionName ?: ""
+        val builtInWebViewVersion = builtInWebViewPackageInfo?.versionName
+            ?: MyApplication.getMyString(android.R.string.unknownName)
 
         val implementWebViewPackageInfo =
             WebViewCompat.getCurrentWebViewPackage(MyApplication.instance)
-        val implementWebViewVersion = implementWebViewPackageInfo?.versionName ?: ""
+        val implementWebViewVersion = implementWebViewPackageInfo?.versionName
+            ?: MyApplication.getMyString(android.R.string.unknownName)
 
         val lldWebViewStable = lld.webView.stable.version
         @ColorRes val webViewColor = when {
@@ -1048,9 +1050,11 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
             |
             |${collectWebViewInfo(implementWebViewPackageInfo, R.string.webview_implement_version)}
             |
-            |${MyApplication.getMyString(
-                R.string.webview_detail, lld.webView.stable.version, lld.webView.beta.version
-            )}
+            |${
+                MyApplication.getMyString(
+                    R.string.webview_detail, lld.webView.stable.version, lld.webView.beta.version
+                )
+            }
             """.trimMargin(),
             webViewColor
         )
