@@ -13,7 +13,7 @@ abstract class BaseFragment<T : ViewBinding> : Fragment(), IFragmentView {
     private var _binding: T? = null
     protected val binding get() = _binding!!
 
-    abstract fun initBinding(
+    protected abstract fun initBinding(
         inflater: LayoutInflater, container: ViewGroup?, attachToParent: Boolean = false
     ): T
 
