@@ -94,7 +94,7 @@ ext {
             fuel          : '2.3.1',
 
             // https://github.com/G00fY2/version-compare
-            versionCompare: '1.4.0'
+            versionCompare: '1.4.1'
     ]
     // endregion [ThirdParties]
 
