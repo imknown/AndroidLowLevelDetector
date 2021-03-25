@@ -10,10 +10,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.databinding.MainActivityBinding
+import net.imknown.android.forefrontinfo.ui.base.IView
+import net.imknown.android.forefrontinfo.ui.base.viewBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), IView {
 
-    private val binding by lazy { MainActivityBinding.inflate(layoutInflater) }
+    private val binding by viewBinding(MainActivityBinding::inflate)
 
     private val mainViewModel by viewModels<MainViewModel>()
 

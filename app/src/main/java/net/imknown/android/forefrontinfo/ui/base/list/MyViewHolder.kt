@@ -1,6 +1,11 @@
 package net.imknown.android.forefrontinfo.ui.base.list
 
+import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import net.imknown.android.forefrontinfo.databinding.FragmentListItemBinding
+import net.imknown.android.forefrontinfo.ui.base.viewBinding
 
-class MyViewHolder(val binding: FragmentListItemBinding) : RecyclerView.ViewHolder(binding.root)
+class MyViewHolder(
+    parent: ViewGroup,
+    val binding: FragmentListItemBinding = parent.viewBinding(FragmentListItemBinding::inflate)
+) : RecyclerView.ViewHolder(binding.root)

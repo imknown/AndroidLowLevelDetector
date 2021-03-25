@@ -15,9 +15,8 @@ import net.imknown.android.forefrontinfo.ui.base.BaseFragment
 
 abstract class BaseListFragment : BaseFragment<FragmentListBinding>() {
 
-    override fun initBinding(
-        inflater: LayoutInflater, container: ViewGroup?, attachToParent: Boolean
-    ) = FragmentListBinding.inflate(inflater, container, attachToParent)
+    override val inflate: (LayoutInflater, ViewGroup?, Boolean) -> FragmentListBinding =
+        FragmentListBinding::inflate
 
     protected val myAdapter by lazy { MyAdapter() }
 

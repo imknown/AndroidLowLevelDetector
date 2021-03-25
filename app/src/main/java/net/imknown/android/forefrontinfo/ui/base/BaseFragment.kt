@@ -11,17 +11,15 @@ abstract class BaseFragment<T : ViewBinding> : Fragment(), IFragmentView {
     override val visualContext by lazy { context }
 
     private var _binding: T? = null
-    protected val binding get() = _binding!!
+    protected val binding by lazy { _binding!! }
 
-    protected abstract fun initBinding(
-        inflater: LayoutInflater, container: ViewGroup?, attachToParent: Boolean = false
-    ): T
+    protected abstract val inflate: (LayoutInflater, ViewGroup?, Boolean) -> T
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        _binding = initBinding(inflater, container)
-        return binding.root
+        _binding = viewBinding(inflate, container)
+        return _binding?.root
     }
 
     override fun onDestroyView() {

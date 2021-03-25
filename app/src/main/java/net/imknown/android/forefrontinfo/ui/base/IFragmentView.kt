@@ -4,7 +4,7 @@ import android.content.Context
 import android.widget.Toast
 import androidx.annotation.StringRes
 
-interface IFragmentView {
+interface IFragmentView : IView {
     val visualContext: Context?
 
     fun toast(@StringRes resId: Int) = visualContext?.let {
