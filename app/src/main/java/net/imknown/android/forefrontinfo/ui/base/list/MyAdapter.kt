@@ -14,20 +14,27 @@ class MyAdapter : RecyclerView.Adapter<MyViewHolder>() {
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int, payloads: MutableList<Any>) {
         if (payloads.isNullOrEmpty()) {
-            super.onBindViewHolder(holder, position, payloads)
+            onBindFullViewHolder(holder, position)
         } else {
-            payloads.forEach {
-                if (it == PAYLOAD_DETAILS) {
-                    holder.binding.tvDetail.text = myModels[position].detail
-                }
-            }
+            onBindPayloadViewHolder(holder, position, payloads)
         }
     }
 
-    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+    /** Do **NOT** use this function. Use [onBindViewHolder] above instead */
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {}
+
+    private fun onBindFullViewHolder(holder: MyViewHolder, position: Int) {
         holder.binding.tvTitle.setBackgroundResource(myModels[position].color)
         holder.binding.tvTitle.text = myModels[position].title
         holder.binding.tvDetail.text = myModels[position].detail
+    }
+
+    private fun onBindPayloadViewHolder(
+        holder: MyViewHolder, position: Int, payloads: MutableList<Any>
+    ) = payloads.forEach {
+        if (it == PAYLOAD_DETAILS) {
+            holder.binding.tvDetail.text = myModels[position].detail
+        }
     }
 
     override fun getItemCount() = myModels.size
