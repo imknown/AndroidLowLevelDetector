@@ -105,11 +105,11 @@ ext {
             googleServices                 : '4.3.5',
 
             // https://firebase.google.com/docs/android/learn-more#bom
-            billOfMaterials                : '26.7.0',
+            billOfMaterials                : '26.8.0',
 
             // https://firebase.google.com/docs/crashlytics/get-started?platform=android
             // https://firebase.google.com/docs/crashlytics/ndk-reports
-            firebaseCrashlyticsGradlePlugin: '2.5.1',
+            firebaseCrashlyticsGradlePlugin: '2.5.2',
     ]
     // endregion [Firebase]
 }
