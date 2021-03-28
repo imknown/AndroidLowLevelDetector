@@ -88,7 +88,7 @@ ext {
             libsu         : '3.1.1',
 
             // https://github.com/square/leakcanary
-            leakCanary    : '2.6',
+            leakCanary    : '2.7',
 
             // https://github.com/kittinunf/fuel
             fuel          : '2.3.1',
