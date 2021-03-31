@@ -1,11 +1,3 @@
-repositories {
-    maven { url 'https://jitpack.io' }
-}
-
-//configurations.all {
-//    transitive = false
-//}
-
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
