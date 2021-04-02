@@ -1,7 +1,7 @@
 package net.imknown.android.forefrontinfo.ui.base.list
 
-import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
+import net.imknown.android.forefrontinfo.base.MyApplication
 import java.util.*
 
 abstract class BasePureListViewModel : BaseListViewModel() {

@@ -11,11 +11,11 @@ import androidx.lifecycle.viewModelScope
 import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.*
 import net.imknown.android.forefrontinfo.BuildConfig
-import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
-import net.imknown.android.forefrontinfo.base.Event
-import net.imknown.android.forefrontinfo.base.stringEventLiveData
-import net.imknown.android.forefrontinfo.ui.base.BaseViewModel
+import net.imknown.android.forefrontinfo.base.MyApplication
+import net.imknown.android.forefrontinfo.base.mvvm.BaseViewModel
+import net.imknown.android.forefrontinfo.base.mvvm.Event
+import net.imknown.android.forefrontinfo.base.mvvm.stringEventLiveData
 
 abstract class BaseListViewModel : BaseViewModel() {
     private val _models by lazy { MutableLiveData<ArrayList<MyModel>>() }

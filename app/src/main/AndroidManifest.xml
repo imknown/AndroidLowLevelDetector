@@ -9,7 +9,7 @@
         tools:ignore="QueryAllPackagesPermission" />
 
     <application
-        android:name=".MyApplication"
+        android:name=".base.MyApplication"
         android:allowBackup="false"
         android:allowNativeHeapPointerTagging="false"
         android:icon="@mipmap/ic_launcher"
@@ -17,6 +17,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        tools:replace="android:label, android:name"
         tools:targetApi="30">
 
         <activity

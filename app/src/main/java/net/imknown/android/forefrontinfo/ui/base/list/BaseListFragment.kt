@@ -6,12 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.LinearLayoutManager
-import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
-import net.imknown.android.forefrontinfo.base.Event
-import net.imknown.android.forefrontinfo.base.EventObserver
+import net.imknown.android.forefrontinfo.base.MyApplication
+import net.imknown.android.forefrontinfo.base.MyItemDecoration
+import net.imknown.android.forefrontinfo.base.mvvm.BaseFragment
+import net.imknown.android.forefrontinfo.base.mvvm.Event
+import net.imknown.android.forefrontinfo.base.mvvm.EventObserver
 import net.imknown.android.forefrontinfo.databinding.FragmentListBinding
-import net.imknown.android.forefrontinfo.ui.base.BaseFragment
 
 abstract class BaseListFragment : BaseFragment<FragmentListBinding>() {
 

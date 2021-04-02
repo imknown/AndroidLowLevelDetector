@@ -12,11 +12,11 @@ import androidx.preference.PreferenceFragmentCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
-import net.imknown.android.forefrontinfo.base.EventObserver
-import net.imknown.android.forefrontinfo.base.isChinaMainlandTimezone
-import net.imknown.android.forefrontinfo.ui.base.IFragmentView
+import net.imknown.android.forefrontinfo.base.MyApplication
+import net.imknown.android.forefrontinfo.base.extension.isChinaMainlandTimezone
+import net.imknown.android.forefrontinfo.base.mvvm.EventObserver
+import net.imknown.android.forefrontinfo.base.mvvm.IFragmentView
 
 class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
 

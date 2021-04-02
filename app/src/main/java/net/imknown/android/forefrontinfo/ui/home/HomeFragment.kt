@@ -2,8 +2,8 @@ package net.imknown.android.forefrontinfo.ui.home
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
-import net.imknown.android.forefrontinfo.MyApplication
-import net.imknown.android.forefrontinfo.base.EventObserver
+import net.imknown.android.forefrontinfo.base.MyApplication
+import net.imknown.android.forefrontinfo.base.mvvm.EventObserver
 import net.imknown.android.forefrontinfo.ui.base.list.BaseListFragment
 import net.imknown.android.forefrontinfo.ui.base.list.MyAdapter
 

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="net.imknown.android.forefrontinfo.base">
+
+    <application
+        android:name=".MyDebugApplication"
+        android:label="@string/app_debug_name" />
+</manifest>

@@ -8,10 +8,10 @@ import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import net.imknown.android.forefrontinfo.MyApplication
+import net.imknown.android.forefrontinfo.base.MyApplication
+import net.imknown.android.forefrontinfo.base.mvvm.IView
+import net.imknown.android.forefrontinfo.base.mvvm.viewBinding
 import net.imknown.android.forefrontinfo.databinding.MainActivityBinding
-import net.imknown.android.forefrontinfo.ui.base.IView
-import net.imknown.android.forefrontinfo.ui.base.viewBinding
 
 class MainActivity : AppCompatActivity(), IView {
 
