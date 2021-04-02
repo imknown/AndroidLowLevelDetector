@@ -33,6 +33,8 @@ open class MyApplication : Application() {
                 externalFilesDir
             } else {
                 instance.filesDir.resolve(type)
+            }.apply {
+                mkdirs()
             }
         }
 
