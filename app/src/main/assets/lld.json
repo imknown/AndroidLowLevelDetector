@@ -1,18 +1,18 @@
 {
-  "version": "2021-03-30 23:00 +0800",
+  "version": "2021-04-06 20:35 +0800",
   "android": {
-    "securityPatchLevel": "2021-03-05",
-    "googlePlaySystemUpdates": "2021-03-01",
+    "securityPatchLevel": "2021-04-05",
+    "googlePlaySystemUpdates": "2021-04-01",
     "build": {
-      "version": "2021-03-01",
+      "version": "2021-04-01",
       "details": [
         {
-          "id": "RQ2A.210305.007",
-          "revision": "r33"
+          "id": "RQ2A.210405.006",
+          "revision": "r35"
         },
         {
-          "id": "RQ2A.210305.006",
-          "revision": "r32"
+          "id": "RQ2A.210405.005",
+          "revision": "r34"
         }
       ]
     },
@@ -46,7 +46,7 @@
       ]
     },
     "mainline": {
-      "version": "5.12-rc5"
+      "version": "5.12-rc6"
     }
   },
   "toybox": {
@@ -68,7 +68,7 @@
       "version": "89.0.4389.105"
     },
     "beta": {
-      "version": "90.0.4430.40"
+      "version": "90.0.4430.51"
     }
   }
 }
