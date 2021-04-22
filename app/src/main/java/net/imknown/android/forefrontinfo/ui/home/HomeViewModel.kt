@@ -756,7 +756,9 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
                     0
                 ).versionName
 
-                if (versionName >= latestGooglePlaySystemUpdates) {
+                if (versionName >= latestGooglePlaySystemUpdates
+                    || "$versionName-01" >= latestGooglePlaySystemUpdates
+                ) {
                     moduleColor = R.color.colorNoProblem
                 }
 
