@@ -88,9 +88,9 @@
 
     <string name="webview_title">Version WebView</string>
     <string name="webview_detail">Dernier stable: %1$s\nDernier béta: %2$s</string>
-    <string name="webview_built_in_version">Mon system WebView integré à AOSP</string>
+    <string name="webview_built_in_version">Mon system WebView integré</string>
     <string name="webview_implement_version">Mon implémentation de WebView</string>
-    <string name="webview_built_in">WebView intégré</string>
+    <string name="webview_aosp">AOSP WebView</string>
     <string name="webview_stable">WebView Stable</string>
     <string name="webview_beta">WebView Beta</string>
     <string name="webview_developer">WebView Developer</string>

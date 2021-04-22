@@ -88,9 +88,9 @@
 
     <string name="webview_title">WebView 版本</string>
     <string name="webview_detail">最新稳定: %1$s\n最新测试: %2$s</string>
-    <string name="webview_built_in_version">我的 AOSP 内建 WebView</string>
+    <string name="webview_built_in_version">我的内建 WebView</string>
     <string name="webview_implement_version">我的 WebView 实现</string>
-    <string name="webview_built_in">内建 WebView</string>
+    <string name="webview_aosp">AOSP WebView</string>
     <string name="webview_stable">WebView 稳定版</string>
     <string name="webview_beta">WebView 测试版</string>
     <string name="webview_developer">WebView 开发者版</string>

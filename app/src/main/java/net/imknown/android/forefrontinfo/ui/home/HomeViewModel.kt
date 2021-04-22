@@ -128,7 +128,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
 
         private const val CMD_TOYBOX_VERSION = "toybox --version"
 
-        private const val WEB_VIEW_BUILT_IN_PACKAGE_NAME = "com.android.webview"
+        private const val WEB_VIEW_AOSP_PACKAGE_NAME = "com.android.webview"
         private const val WEB_VIEW_STABLE_PACKAGE_NAME = "com.google.android.webview"
         private const val WEB_VIEW_BETA_PACKAGE_NAME = "com.google.android.webview.beta"
         private const val WEB_VIEW_DEV_IN_PACKAGE_NAME = "com.google.android.webview.dev"
@@ -1029,7 +1029,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
 
     private fun detectWebView(tempModels: ArrayList<MyModel>, lld: Lld) {
         val builtInWebViewPackageInfo =
-            getPackageInfo(WEB_VIEW_BUILT_IN_PACKAGE_NAME)
+            getPackageInfo(WEB_VIEW_AOSP_PACKAGE_NAME)
                 ?: getPackageInfo(WEB_VIEW_STABLE_PACKAGE_NAME)
         val builtInWebViewVersion = builtInWebViewPackageInfo?.versionName
             ?: MyApplication.getMyString(android.R.string.unknownName)
@@ -1066,7 +1066,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
 
     private fun getWebViewAppName(packageName: String?) = MyApplication.getMyString(
         when (packageName) {
-            WEB_VIEW_BUILT_IN_PACKAGE_NAME -> R.string.webview_built_in
+            WEB_VIEW_AOSP_PACKAGE_NAME -> R.string.webview_aosp
 
             WEB_VIEW_STABLE_PACKAGE_NAME -> R.string.webview_stable
             WEB_VIEW_BETA_PACKAGE_NAME -> R.string.webview_beta
