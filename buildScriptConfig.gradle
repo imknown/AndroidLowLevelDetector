@@ -11,6 +11,7 @@ ext {
             targetSdkVersion         : 30,
 
             ndkVersion               : '22.1.7171670',
+            cmake                    : '3.10.2',
 
             versionCode              : 51,
             versionName              : '1.14.0_unpublished'

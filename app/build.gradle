@@ -39,7 +39,7 @@ android {
 
                 cFlags '-D__STDC_FORMAT_MACROS'
 
-                cppFlags '-fexceptions', '-frtti', "-std=c++17"
+                cppFlags '-fexceptions', '-frtti', '-std=c++17'
             }
         }
     }
@@ -103,7 +103,7 @@ android {
     externalNativeBuild {
         cmake {
             path 'CMakeLists.txt'
-            version "3.10.2"
+            version androidBuild.cmake
         }
     }
 
@@ -117,12 +117,12 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 private static getCurrentDate() {
-    DateTimeFormatter.ofPattern("yyyyMMdd-HHmm").format(Instant.now().atZone(ZoneId.systemDefault()))
+    DateTimeFormatter.ofPattern('yyyyMMdd-HHmm').format(Instant.now().atZone(ZoneId.systemDefault()))
 }
 
 private static getCurrentGitBranchName() {
-    def branch = ""
-    def process = "git rev-parse --abbrev-ref HEAD".execute()
+    def branch = ''
+    def process = 'git rev-parse --abbrev-ref HEAD'.execute()
     process.in.eachLine { line -> branch = line }
     process.err.eachLine { line -> println line }
     process.waitFor()
