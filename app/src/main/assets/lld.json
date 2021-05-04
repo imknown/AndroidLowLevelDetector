@@ -1,18 +1,18 @@
 {
-  "version": "2021-05-03 11:15 +0800",
+  "version": "2021-05-04 20:25 +0800",
   "android": {
-    "securityPatchLevel": "2021-04-05",
+    "securityPatchLevel": "2021-05-05",
     "googlePlaySystemUpdates": "2021-04-01",
     "build": {
-      "version": "2021-04-05",
+      "version": "2021-05-03",
       "details": [
         {
-          "id": "RQ2A.210405.006",
-          "revision": "r35"
+          "id": "RQ2A.210505.003",
+          "revision": "r37"
         },
         {
-          "id": "RQ2A.210405.005",
-          "revision": "r34"
+          "id": "RQ2A.210505.002",
+          "revision": "r36"
         }
       ]
     },
