@@ -47,6 +47,13 @@ android {
     signingConfigs {
         apply from: 'keysConfig.gradle'
 
+        config {
+            enableV1Signing true
+            enableV2Signing true
+            enableV3Signing true
+            enableV4Signing true
+        }
+
         release {
             storeFile file(keysConfig.release.storeFile)
             storePassword keysConfig.release.storePassword
