@@ -61,7 +61,7 @@ class PropViewModel : BasePureListViewModel() {
                 it.isAccessible = true
                 it.type == String::class.java
             }.map { it.get(null) as String }
-            .sortedBy { it.toUpperCase(Locale.US) }
+            .sortedBy { it.uppercase(Locale.US) }
             .forEach {
                 var key = it
                 val value = Settings.Global.getString(

@@ -149,7 +149,7 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
         }?.get(0)?.let {
             MessageDigest.getInstance(ALGORITHM_SHA256).digest(it.toByteArray())
                 .joinToString(":") { byte -> "%02x".format(byte) }
-                .toUpperCase(Locale.US)
+                .uppercase(Locale.US)
         }
     }
 

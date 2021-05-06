@@ -171,14 +171,14 @@ class OthersViewModel : BasePureListViewModel(), IAndroidVersion {
     @ExperimentalStdlibApi
     private fun addFingerprints(tempModels: ArrayList<MyModel>) {
         if (isAtLeastStableAndroid10()) {
-            Build.getFingerprintedPartitions().forEach {
+            Build.getFingerprintedPartitions().forEach { partition ->
                 add(
                     tempModels,
                     MyApplication.getMyString(
                         R.string.build_certain_fingerprint,
-                        it.name.capitalize(Locale.US)
+                        partition.name.replaceFirstChar { it.uppercase(Locale.US) }
                     ),
-                    it.fingerprint
+                    partition.fingerprint
                 )
             }
         } else {
