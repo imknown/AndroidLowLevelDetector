@@ -31,7 +31,7 @@ ext {
             // https://github.com/material-components/material-components-android/releases
             material              : '1.3.0',
 
-            activity              : '1.2.2',
+            activity              : '1.2.3',
 
             annotation            : '1.2.0',
             annotationExperimental: '1.1.0',
@@ -44,7 +44,7 @@ ext {
 
             constraintLayout      : '2.0.4',
 
-            core                  : '1.5.0-rc01',
+            core                  : '1.5.0-rc02',
 
             fragment              : '1.3.3',
 
