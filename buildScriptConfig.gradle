@@ -101,14 +101,14 @@ ext {
     // https://firebase.google.com/support/release-notes/android
     // https://firebase.google.com/docs/android/setup#available-libraries
     firebase = [
-            googleServices                 : '4.3.5',
+            googleServices                 : '4.3.8',
 
             // https://firebase.google.com/docs/android/learn-more#bom
-            billOfMaterials                : '28.0.0',
+            billOfMaterials                : '28.0.1',
 
             // https://firebase.google.com/docs/crashlytics/get-started?platform=android
             // https://firebase.google.com/docs/crashlytics/ndk-reports
-            firebaseCrashlyticsGradlePlugin: '2.5.2',
+            firebaseCrashlyticsGradlePlugin: '2.6.1',
     ]
     // endregion [Firebase]
 }
