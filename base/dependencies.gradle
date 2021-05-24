@@ -35,7 +35,7 @@ dependencies {
     // endregion [Test]
 
     // region [Kotlin]
-    api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinSdk.core"
+    api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinSdk.core"
     // api "org.jetbrains.kotlin:kotlin-reflect:$kotlinSdk.core"
     api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinSdk.coroutines"
     api "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSdk.serialization"

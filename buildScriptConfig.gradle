@@ -71,7 +71,7 @@ ext {
     kotlinSdk = [
             // https://github.com/JetBrains/kotlin/releases
             // https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.jetbrains.kotlin%22
-            core         : '1.5.0',
+            core         : '1.5.10',
 
             // https://github.com/Kotlin/kotlinx.coroutines/releases
             coroutines   : '1.5.0',
@@ -81,7 +81,7 @@ ext {
     ]
     // endregion [Kotlin]
 
-    // region [ThirdParties]
+    // region [3rd Parties]
     thirdParties = [
             // https://github.com/topjohnwu/libsu/releases
             libsu         : '3.1.2',
@@ -95,7 +95,7 @@ ext {
             // https://github.com/G00fY2/version-compare/releases
             versionCompare: '1.4.1'
     ]
-    // endregion [ThirdParties]
+    // endregion [3rd Parties]
 
     // region [Firebase]
     // https://firebase.google.com/support/release-notes/android
