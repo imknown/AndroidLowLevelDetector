@@ -52,7 +52,7 @@ ext {
 
             preference            : '1.1.1',
 
-            recyclerView          : '1.2.0',
+            recyclerView          : '1.2.1',
 
             savedstate            : '1.1.0',
 
