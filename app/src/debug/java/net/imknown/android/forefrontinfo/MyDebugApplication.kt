@@ -8,18 +8,11 @@ import com.github.kittinunf.fuel.core.interceptors.LogResponseInterceptor
 import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.DEBUG_PROPERTY_NAME
 import kotlinx.coroutines.DEBUG_PROPERTY_VALUE_ON
-import leakcanary.LeakCanaryProcess
 import net.imknown.android.forefrontinfo.base.MyApplication
 
 class MyDebugApplication : MyApplication() {
     override fun onCreate() {
         super.onCreate()
-
-        if (LeakCanaryProcess.isInAnalyzerProcess(this)) {
-            // This process is dedicated to LeakCanary for heap analysis.
-            // You should not init your app in this process.
-            return
-        }
 
         StrictMode.enableDefaults()
 

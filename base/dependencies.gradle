@@ -44,9 +44,6 @@ dependencies {
     // region [3rd Parties]
     api "com.github.topjohnwu.libsu:core:$thirdParties.libsu"
 
-    debugApi "com.squareup.leakcanary:leakcanary-android-process:$thirdParties.leakCanary"
-    // api "com.squareup.leakcanary:plumber-android:$thirdParties.leakCanary"
-
     api "com.github.kittinunf.fuel:fuel:$thirdParties.fuel"
     // api "com.github.kittinunf.fuel:fuel-coroutines:$thirdParties.fuel"
 

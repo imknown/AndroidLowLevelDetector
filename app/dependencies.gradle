@@ -24,4 +24,9 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$androidX.extJunit"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidX.espressoCore"
     // endregion [Test]
+
+    // region [3rd Parties]
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:$thirdParties.leakCanary"
+    // implementation "com.squareup.leakcanary:plumber-android:$thirdParties.leakCanary"
+    // endregion [3rd Parties]
 }
