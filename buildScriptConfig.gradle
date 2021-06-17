@@ -11,7 +11,7 @@ ext {
             targetSdkVersion         : 30,
 
             ndkVersion               : '23.0.7421159 rc5',
-            cmake                    : '3.20.3',
+            cmake                    : '3.20.4',
 
             versionCode              : 52,
             versionName              : '1.14.1_unpublished'
@@ -108,7 +108,7 @@ ext {
 
             // https://firebase.google.com/docs/crashlytics/get-started?platform=android
             // https://firebase.google.com/docs/crashlytics/ndk-reports
-            firebaseCrashlyticsGradlePlugin: '2.6.1',
+            firebaseCrashlyticsGradlePlugin: '2.6.1'
     ]
     // endregion [Firebase]
 }
