@@ -1,5 +1,5 @@
 {
-  "version": "2021-06-21 19:50 +0800",
+  "version": "2021-06-23 20:45 +0800",
   "android": {
     "securityPatchLevel": "2021-06-05",
     "googlePlaySystemUpdates": "2021-04-01",
@@ -61,7 +61,7 @@
   },
   "webView": {
     "stable": {
-      "version": "91.0.4472.114"
+      "version": "91.0.4472.120"
     },
     "beta": {
       "version": "92.0.4515.59"
