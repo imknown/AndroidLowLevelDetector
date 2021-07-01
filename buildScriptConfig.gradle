@@ -44,7 +44,7 @@ ext {
 
             constraintLayout      : '2.0.4',
 
-            core                  : '1.5.0',
+            core                  : '1.6.0',
 
             fragment              : '1.3.5',
 
