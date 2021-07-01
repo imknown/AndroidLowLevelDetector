@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity(), IView {
     private fun initViews() {
         initSubtitle()
 
-        binding.bottomNavigationView.setOnNavigationItemSelectedListener {
+        binding.bottomNavigationView.setOnItemSelectedListener {
             mainViewModel.switchFragment(supportFragmentManager, it.itemId)
 
             true
