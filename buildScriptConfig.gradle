@@ -1,7 +1,7 @@
 ext {
     // region [AndroidBuild]
     androidBuild = [
-            androidStudioGradlePlugin: '7.0.0-beta04',
+            androidStudioGradlePlugin: '7.0.0-beta05',
 
             // https://developer.android.com/studio/releases/build-tools.html#notes
             buildToolsVersion        : '30.0.3',
@@ -29,7 +29,7 @@ ext {
     // https://developer.android.com/jetpack/androidx/versions
     androidX = [
             // https://github.com/material-components/material-components-android/releases
-            material              : '1.4.0-rc01',
+            material              : '1.4.0',
 
             activity              : '1.2.3',
 
