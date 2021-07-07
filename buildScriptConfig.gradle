@@ -108,7 +108,7 @@ ext {
 
             // https://firebase.google.com/docs/crashlytics/get-started?platform=android
             // https://firebase.google.com/docs/crashlytics/ndk-reports
-            firebaseCrashlyticsGradlePlugin: '2.7.0'
+            firebaseCrashlyticsGradlePlugin: '2.7.1'
     ]
     // endregion [Firebase]
 }
