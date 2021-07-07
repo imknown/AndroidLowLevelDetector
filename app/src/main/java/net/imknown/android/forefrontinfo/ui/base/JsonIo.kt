@@ -110,10 +110,12 @@ object JsonIo {
     fun getAssetLldVersion(assets: AssetManager): String? = getAssetLld(assets)?.version
 }
 
+val json by lazy { Json { ignoreUnknownKeys = true } }
+
 @Throws
 inline fun <reified T : Any> File.fromJson(): T =
     readText().fromJson()
 
 @Throws
 inline fun <reified T : Any> String.fromJson(): T =
-    Json { ignoreUnknownKeys = true }.decodeFromString(this)
+    json.decodeFromString(this)
