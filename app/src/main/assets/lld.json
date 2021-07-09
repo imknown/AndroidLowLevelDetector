@@ -1,14 +1,14 @@
 {
-  "version": "2021-07-07 21:15 +0800",
+  "version": "2021-07-09 22:30 +0800",
   "android": {
-    "securityPatchLevel": "2021-06-05",
-    "googlePlaySystemUpdates": "2021-04-01",
+    "securityPatchLevel": "2021-07-05",
+    "googlePlaySystemUpdates": "2021-07-01",
     "build": {
-      "version": "2021-06-07",
+      "version": "2021-07-07",
       "details": [
         {
-          "id": "RQ3A.210605.005",
-          "revision": "r38"
+          "id": "RQ3A.210705.001",
+          "revision": "r39"
         }
       ]
     },
@@ -64,7 +64,7 @@
       "version": "91.0.4472.134"
     },
     "beta": {
-      "version": "92.0.4515.80"
+      "version": "92.0.4515.92"
     }
   }
 }
