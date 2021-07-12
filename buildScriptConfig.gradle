@@ -74,7 +74,7 @@ ext {
             core         : '1.5.20',
 
             // https://github.com/Kotlin/kotlinx.coroutines/releases
-            coroutines   : '1.5.0',
+            coroutines   : '1.5.1',
 
             // https://github.com/Kotlin/kotlinx.serialization/releases
             serialization: '1.2.2'
