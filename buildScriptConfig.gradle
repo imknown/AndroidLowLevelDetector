@@ -4,11 +4,11 @@ ext {
             androidStudioGradlePlugin: '4.2.2',
 
             // https://developer.android.com/studio/releases/build-tools.html#notes
-            buildToolsVersion        : '30.0.3',
+            buildToolsVersion        : '31.0.0',
 
             minSdkVersion            : 21,
-            compileSdkVersion        : 30,
-            targetSdkVersion         : 30,
+            compileSdkVersion        : 31,
+            targetSdkVersion         : 31,
 
             ndkVersion               : '22.1.7171670',
             cmake                    : '3.20.5',
