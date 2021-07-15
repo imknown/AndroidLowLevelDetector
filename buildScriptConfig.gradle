@@ -1,7 +1,7 @@
 ext {
     // region [AndroidBuild]
     androidBuild = [
-            androidStudioGradlePlugin: '7.0.0-beta05',
+            androidStudioGradlePlugin: '4.2.2',
 
             // https://developer.android.com/studio/releases/build-tools.html#notes
             buildToolsVersion        : '30.0.3',
