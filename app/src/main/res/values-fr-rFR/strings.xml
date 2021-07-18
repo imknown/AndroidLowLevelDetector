@@ -19,6 +19,7 @@
     <!-- Home -->
     <string name="result_supported">Supporté</string>
     <string name="result_not_supported">Non supporté</string>
+    <string name="result_unidentified">Non identifié</string>
     <string name="result_enabled">Activée</string>
     <string name="result_disabled">Désactivé</string>
 

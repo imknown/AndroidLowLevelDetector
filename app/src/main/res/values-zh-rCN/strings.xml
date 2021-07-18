@@ -19,6 +19,7 @@
     <!-- 首页 -->
     <string name="result_supported">支持</string>
     <string name="result_not_supported">不支持</string>
+    <string name="result_unidentified">无法辨别</string>
     <string name="result_enabled">已启用</string>
     <string name="result_disabled">已禁用</string>
 

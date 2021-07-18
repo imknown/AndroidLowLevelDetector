@@ -318,9 +318,9 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
 
         detectDynamicPartitions(tempModels)
 
-        detectTreble(tempModels)
+        val isTrebleEnabled = detectTreble(tempModels)
 
-        detectGsiCompatibility(tempModels)
+        detectGsiCompatibility(tempModels, isTrebleEnabled)
 
         detectDsu(tempModels)
 
@@ -652,7 +652,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         )
     }
 
-    private fun detectTreble(tempModels: ArrayList<MyModel>) {
+    private fun detectTreble(tempModels: ArrayList<MyModel>): Boolean {
         val isTrebleEnabled =
             getStringProperty(PROP_TREBLE_ENABLED, isAtLeastStableAndroid8()).toBoolean()
 
@@ -684,9 +684,13 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
             trebleResult,
             trebleColor
         )
+
+        return isTrebleEnabled
     }
 
-    private fun detectGsiCompatibility(tempModels: ArrayList<MyModel>) {
+    private fun detectGsiCompatibility(
+        tempModels: ArrayList<MyModel>, isTrebleEnabled: Boolean
+    ) {
         val gsiCompatibilityResult =
             sh(CMD_VENDOR_NAMESPACE_DEFAULT_ISOLATED, isAtLeastStableAndroid9())
         var isCompatible = false
@@ -699,7 +703,11 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
                 MyApplication.getMyString(R.string.result_not_compliant)
             }
         } else {
-            MyApplication.getMyString(R.string.result_not_supported)
+            if (isTrebleEnabled && isAtLeastStableAndroid9()) {
+                MyApplication.getMyString(R.string.result_unidentified)
+            } else {
+                MyApplication.getMyString(R.string.result_not_supported)
+            }
         }
 
         add(

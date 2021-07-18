@@ -20,6 +20,7 @@
     <!-- Home -->
     <string name="result_supported">Supported</string>
     <string name="result_not_supported">Not supported</string>
+    <string name="result_unidentified">Unidentified</string>
     <string name="result_enabled">Enabled</string>
     <string name="result_disabled">Disabled</string>
 
