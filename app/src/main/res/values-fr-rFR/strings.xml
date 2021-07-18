@@ -107,12 +107,16 @@
 
     <!-- Others -->
     <string name="build_brand">Marque</string>
-    <string name="build_manufacturer">Constructeur/OEM</string>
+    <string name="build_manufacturer">Constructeur</string>
     <string name="build_model">Nom du model</string>
     <string name="build_device">Nom de code</string>
     <string name="build_product">Nom global du produit</string>
-    <string name="build_hardware">Fournisseur du SoC/Kernel</string>
-    <string name="build_board">Modèle SoC</string>
+    <string name="build_hardware">Nom du matériel</string>
+    <string name="build_board">Modèle de carte mère</string>
+    <string name="build_soc_model">Modèle SoC</string>
+    <string name="build_soc_manufacturer">Fabricant de SoC</string>
+    <string name="build_hardware_sku">SKU ou matériel</string>
+    <string name="build_odm_hardware_sku">SKU ou matériel ODM</string>
 
     <string name="bit_32">32bit</string>
     <string name="bit_64">64bit</string>
@@ -140,6 +144,7 @@
     <string name="build_type">Type de build </string>
     <string name="build_tags">Tags de build</string>
     <string name="build_codename">"Nom de code de la branche Git d'Android  (REL: Version stable de production)"</string>
+    <string name="build_preview_sdk_int">"Révision de l'aperçu du développeur de la pré-version du SDK"</string>
 
     <string name="build_bootloader">Version du Bootloader</string>
     <string name="build_radio">Version de la bande de base</string>

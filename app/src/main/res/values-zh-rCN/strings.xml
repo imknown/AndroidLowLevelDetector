@@ -107,12 +107,16 @@
 
     <!-- 其他 -->
     <string name="build_brand">品牌</string>
-    <string name="build_manufacturer">代工/OEM</string>
+    <string name="build_manufacturer">制造商</string>
     <string name="build_model">销售型号</string>
     <string name="build_device">开发代号</string>
     <string name="build_product">总产品名称</string>
-    <string name="build_hardware">SoC/内核源码 提供商</string>
-    <string name="build_board">SoC 型号</string>
+    <string name="build_hardware">硬件名称</string>
+    <string name="build_board">主板型号</string>
+    <string name="build_soc_model">SoC 型号</string>
+    <string name="build_soc_manufacturer">SoC 制造商</string>
+    <string name="build_hardware_sku">硬件 SKU</string>
+    <string name="build_odm_hardware_sku">ODM 硬件 SKU</string>
 
     <string name="bit_32">32位</string>
     <string name="bit_64">64位</string>
@@ -140,6 +144,7 @@
     <string name="build_type">ROM 构建类型</string>
     <string name="build_tags">ROM 构建描述标签</string>
     <string name="build_codename">系统 构建分支名 (REL: 正式)</string>
+    <string name="build_preview_sdk_int">预发行 SDK 开发者预览修订号</string>
 
     <string name="build_bootloader">Bootloader 版本</string>
     <string name="build_radio">基带版本</string>

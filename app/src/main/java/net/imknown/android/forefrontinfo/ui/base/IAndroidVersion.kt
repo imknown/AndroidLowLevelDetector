@@ -14,10 +14,11 @@ interface IAndroidVersion {
     fun isAtLeastStableAndroid6() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
     fun isAtLeastStableAndroid7() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
     fun isAtLeastStableAndroid8() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
-    fun isAtLeastStableAndroid8P1() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1
+    fun isAtLeastStableAndroid8Mr1() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1
     fun isAtLeastStableAndroid9() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
     fun isAtLeastStableAndroid10() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
     fun isAtLeastStableAndroid11() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
+    fun isAtLeastStableAndroid12() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 
     fun isStableAndroid() = Build.VERSION.CODENAME == CODENAME_RELEASE
     fun isPreviewAndroid() = !isStableAndroid()
@@ -40,7 +41,7 @@ interface IAndroidVersion {
         Build.VERSION.CODENAME
     }
 
-    fun isGoEdition() = isAtLeastStableAndroid8P1()
+    fun isGoEdition() = isAtLeastStableAndroid8Mr1()
             && (MyApplication.instance.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager).isLowRamDevice
 
     fun getAndroidApiLevel() = if (isStableAndroid()) {

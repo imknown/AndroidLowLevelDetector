@@ -71,6 +71,22 @@ class OthersViewModel : BasePureListViewModel(), IAndroidVersion {
         add(tempModels, MyApplication.getMyString(R.string.build_product), Build.PRODUCT)
         add(tempModels, MyApplication.getMyString(R.string.build_hardware), Build.HARDWARE)
         add(tempModels, MyApplication.getMyString(R.string.build_board), Build.BOARD)
+
+        if (isAtLeastStableAndroid12()) {
+            add(tempModels, MyApplication.getMyString(R.string.build_soc_model), Build.SOC_MODEL)
+            add(
+                tempModels,
+                MyApplication.getMyString(R.string.build_soc_manufacturer),
+                Build.SOC_MANUFACTURER
+            )
+
+            add(tempModels, MyApplication.getMyString(R.string.build_hardware_sku), Build.SKU)
+            add(
+                tempModels,
+                MyApplication.getMyString(R.string.build_odm_hardware_sku),
+                Build.ODM_SKU
+            )
+        }
         // endregion [Basic]
 
         // region [Arch & ABI]
@@ -158,6 +174,14 @@ class OthersViewModel : BasePureListViewModel(), IAndroidVersion {
         add(tempModels, MyApplication.getMyString(R.string.build_type), Build.TYPE)
         add(tempModels, MyApplication.getMyString(R.string.build_tags), Build.TAGS)
         add(tempModels, MyApplication.getMyString(R.string.build_codename), Build.VERSION.CODENAME)
+
+        if (isAtLeastStableAndroid6()) {
+            add(
+                tempModels,
+                MyApplication.getMyString(R.string.build_preview_sdk_int),
+                Build.VERSION.PREVIEW_SDK_INT.toString()
+            )
+        }
         // endregion [ROM]
 
         // region [Others]
