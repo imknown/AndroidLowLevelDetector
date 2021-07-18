@@ -36,6 +36,8 @@
     <string name="vendor_security_patch_level_title">供应商 安全补丁等级</string>
     <string name="security_patch_level_detail">我的: %1$s\n\n最新稳定: %2$s</string>
 
+    <string name="performance_class_title">性能等级</string>
+
     <string name="linux_title">Linux 内核版本</string>
     <string name="linux_version_detail">我的: %1$s\n\n最新支持: %2$s\nMainline: %3$s</string>
 

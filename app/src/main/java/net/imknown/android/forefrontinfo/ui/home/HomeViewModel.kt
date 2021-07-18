@@ -308,6 +308,8 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
             R.string.vendor_security_patch_level_title
         )
 
+        detectPerformanceClass(tempModels)
+
         detectKernel(tempModels, lld)
 
         detectAb(tempModels)
@@ -493,6 +495,36 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
 
     private fun getSecurityPatchYearMonth(securityPatch: String) =
         securityPatch.substringBeforeLast('-')
+
+    private fun detectPerformanceClass(tempModels: ArrayList<MyModel>) {
+        @ColorRes var performanceColorRes = R.color.colorCritical
+
+        val result = if (isAtLeastStableAndroid12()) {
+            val performanceClass = Build.VERSION.MEDIA_PERFORMANCE_CLASS
+            if (performanceClass == Build.VERSION.SDK_INT) {
+                performanceColorRes = R.color.colorNoProblem
+            } else if (performanceClass == Build.VERSION.SDK_INT - 1) {
+                performanceColorRes = R.color.colorWaring
+            }
+
+            if (performanceClass != 0) {
+                MyApplication.getMyString(
+                    R.string.performance_class_detail_api, performanceClass
+                )
+            } else {
+                MyApplication.getMyString(R.string.result_not_supported)
+            }
+        } else {
+            MyApplication.getMyString(R.string.result_not_supported)
+        }
+
+        add(
+            tempModels,
+            MyApplication.getMyString(R.string.performance_class_title),
+            result,
+            performanceColorRes
+        )
+    }
 
     private fun detectKernel(tempModels: ArrayList<MyModel>, lld: Lld) {
         val linuxVersionString = System.getProperty(SYSTEM_PROPERTY_LINUX_VERSION)

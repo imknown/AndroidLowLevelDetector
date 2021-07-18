@@ -37,6 +37,9 @@
     <string name="vendor_security_patch_level_title">Vendor security patch level</string>
     <string name="security_patch_level_detail">Mine: %1$s\n\nLatest stable: %2$s</string>
 
+    <string name="performance_class_title">Performance class</string>
+    <string name="performance_class_detail_api" translatable="false">API %s</string>
+
     <string name="linux_title">Linux kernel version</string>
     <string name="linux_version_detail">Mine: %1$s\n\nLatest support: %2$s\nMainline: %3$s</string>
 

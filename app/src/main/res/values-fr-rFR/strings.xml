@@ -36,6 +36,8 @@
     <string name="vendor_security_patch_level_title">Niveau du patch de sécurité Vendor</string>
     <string name="security_patch_level_detail">Moi: %1$s\n\nDernière stable: %2$s</string>
 
+    <string name="performance_class_title">Niveau de performance</string>
+
     <string name="linux_title">Version du noyau Linux</string>
     <string name="linux_version_detail">Moi: %1$s\n\nDernière support: %2$s\nMainline: %3$s</string>
 
