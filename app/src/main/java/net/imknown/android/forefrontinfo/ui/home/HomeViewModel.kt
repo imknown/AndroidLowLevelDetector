@@ -86,7 +86,8 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
 
         // https://source.android.com/devices/architecture/vndk?hl=en
         private const val PROP_VNDK_LITE = "ro.vndk.lite"
-        private const val PROP_VNDK_VERSION = "ro.vndk.version"
+        private const val PROP_VNDK_VENDOR_VERSION = "ro.vndk.version"
+        private const val PROP_VNDK_PRODUCT_VERSION = "ro.product.vndk.version"
 
         // https://source.android.com/devices/bootloader/system-as-root?hl=en
         //
@@ -824,7 +825,10 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
     }
 
     private fun detectVndk(tempModels: ArrayList<MyModel>, lld: Lld) {
-        val vndkVersionResult = getStringProperty(PROP_VNDK_VERSION, isAtLeastStableAndroid8())
+        val vndkVersionResult =
+            getStringProperty(PROP_VNDK_VENDOR_VERSION, isAtLeastStableAndroid8())
+//        val vndkProductVersionResult =
+//            getStringProperty(PROP_VNDK_PRODUCT_VERSION, isAtLeastStableAndroid8())
         val hasVndkVersion = isPropertyValueNotEmpty(vndkVersionResult)
 
         @ColorRes val vndkColor: Int
