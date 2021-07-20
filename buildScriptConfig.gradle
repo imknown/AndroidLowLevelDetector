@@ -14,7 +14,7 @@ ext {
             cmake                    : '3.20.5',
 
             versionCode              : 52,
-            versionName              : '1.15.0_unpublished'
+            versionName              : '1.15.0'
     ]
     // endregion [AndroidBuild]
 
