@@ -89,8 +89,8 @@ abstract class BaseListViewModel : BaseViewModel() {
         }
 
     @SuppressLint("PrivateApi")
-    protected fun getStringProperty(key: String, condition: Boolean = true): String {
-        return if (condition) {
+    protected fun getStringProperty(key: String, condition: Boolean = true) =
+        if (condition) {
             Class.forName("android.os.SystemProperties").getDeclaredMethod(
                 "get",
                 String::class.java,
@@ -99,7 +99,6 @@ abstract class BaseListViewModel : BaseViewModel() {
         } else {
             MyApplication.getMyString(R.string.result_not_supported)
         }
-    }
 
 //    @SuppressLint("PrivateApi", "DiscouragedPrivateApi")
 //    protected fun setStringProperty(key: String, value: String) {
@@ -109,6 +108,18 @@ abstract class BaseListViewModel : BaseViewModel() {
 //            String::class.java
 //        ).invoke(null, key, value)
 //    }
+
+    @SuppressLint("PrivateApi")
+    protected fun getBooleanProperty(key: String, condition: Boolean = true) =
+        if (condition) {
+            Class.forName("android.os.SystemProperties").getDeclaredMethod(
+                "getBoolean",
+                String::class.java,
+                Boolean::class.java
+            ).invoke(null, key, false) as Boolean
+        } else {
+            false
+        }
 
     protected data class MyShellResult(
         val output: List<String>,

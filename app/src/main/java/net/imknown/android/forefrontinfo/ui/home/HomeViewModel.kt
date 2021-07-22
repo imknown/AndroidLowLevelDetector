@@ -562,13 +562,11 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
     }
 
     private fun detectAb(tempModels: ArrayList<MyModel>) {
-        val isAbUpdateSupported =
-            getStringProperty(PROP_AB_UPDATE, isAtLeastStableAndroid7()).toBoolean()
+        val isAbUpdateSupported = getBooleanProperty(PROP_AB_UPDATE, isAtLeastStableAndroid7())
 
         val slotSuffixResult = getStringProperty(PROP_SLOT_SUFFIX, isAtLeastStableAndroid7())
 
-        val isVirtualAb =
-            getStringProperty(PROP_VIRTUAL_AB_ENABLED, isAtLeastStableAndroid11()).toBoolean()
+        val isVirtualAb = getBooleanProperty(PROP_VIRTUAL_AB_ENABLED, isAtLeastStableAndroid11())
 
         val isAbEnable =
             isAbUpdateSupported || isPropertyValueNotEmpty(slotSuffixResult) || isVirtualAb
@@ -577,9 +575,8 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
 
         if (isAbEnable) {
             if (isVirtualAb) {
-                val isVirtualAbRetrofit = getStringProperty(
-                    PROP_VIRTUAL_AB_RETROFIT, isAtLeastStableAndroid11()
-                ).toBoolean()
+                val isVirtualAbRetrofit =
+                    getBooleanProperty(PROP_VIRTUAL_AB_RETROFIT, isAtLeastStableAndroid11())
 
                 abResult += MyApplication.getMyString(
                     if (isVirtualAbRetrofit) {
@@ -606,7 +603,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
 
     private fun detectSar(tempModels: ArrayList<MyModel>, mounts: List<Mount>) {
         val isLAndroid9TheLegacySar =
-            getStringProperty(PROP_SYSTEM_ROOT_IMAGE, isAtLeastStableAndroid9()).toBoolean()
+            getBooleanProperty(PROP_SYSTEM_ROOT_IMAGE, isAtLeastStableAndroid9())
 
         val isTheLegacySarMount = isAtLeastStableAndroid9()
                 && mounts.any { it.blockDevice == "/dev/root" && it.mountPoint == "/" }
@@ -658,11 +655,9 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
 
     private fun detectDynamicPartitions(tempModels: ArrayList<MyModel>) {
         val isDynamicPartitions =
-            getStringProperty(PROP_DYNAMIC_PARTITIONS, isAtLeastStableAndroid10()).toBoolean()
+            getBooleanProperty(PROP_DYNAMIC_PARTITIONS, isAtLeastStableAndroid10())
         val isDynamicPartitionsRetrofit =
-            getStringProperty(
-                PROP_DYNAMIC_PARTITIONS_RETROFIT, isAtLeastStableAndroid10()
-            ).toBoolean()
+            getBooleanProperty(PROP_DYNAMIC_PARTITIONS_RETROFIT, isAtLeastStableAndroid10())
 
 //        val superPartitionResult = sh(CMD_LL_DEV_BLOCK_SUPER, isAtLeastStableAndroid10())
 //        val hasSuperPartition = isShellResultSuccessful(superPartitionResult)
@@ -686,8 +681,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
     }
 
     private fun detectTreble(tempModels: ArrayList<MyModel>): Boolean {
-        val isTrebleEnabled =
-            getStringProperty(PROP_TREBLE_ENABLED, isAtLeastStableAndroid8()).toBoolean()
+        val isTrebleEnabled = getBooleanProperty(PROP_TREBLE_ENABLED, isAtLeastStableAndroid8())
 
         var trebleResult = translate(isTrebleEnabled)
 
@@ -841,7 +835,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
                 MyApplication.getMyString(android.R.string.unknownName)
             }
 
-            val hasVndkLite = getStringProperty(PROP_VNDK_LITE).toBoolean()
+            val hasVndkLite = getBooleanProperty(PROP_VNDK_LITE)
 
             vndkColor = if (
                 (isLatestPreviewAndroid(lld) || vndkVersion >= lld.android.stable.api) && !hasVndkLite
@@ -868,8 +862,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
     }
 
     private fun detectApex(tempModels: ArrayList<MyModel>, mounts: List<Mount>) {
-        val apexUpdatable =
-            getStringProperty(PROP_APEX_UPDATABLE, isAtLeastStableAndroid10()).toBoolean()
+        val apexUpdatable = getBooleanProperty(PROP_APEX_UPDATABLE, isAtLeastStableAndroid10())
 
         val isFlattenedApexMounted = isAtLeastStableAndroid10() && mounts.any {
             it.mountPoint.startsWith("/apex/") && it.mountPoint.contains("@")
