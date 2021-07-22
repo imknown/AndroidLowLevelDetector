@@ -63,10 +63,10 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         // /* root needed */ private const val CMD_LL_DEV_BLOCK_SUPER = "ls -l /dev/block/by-name/super"
 
         // https://developer.android.com/topic/dsu?hl=en
-        // private const val PROP_DYNAMIC_SYSTEM_UPDATE = "persist.sys.fflag.override.settings_dynamic_system"
-        private const val FFLAG_PREFIX = "sys.fflag."
-        private const val FFLAG_OVERRIDE_PREFIX = FFLAG_PREFIX + "override."
-        private const val DYNAMIC_SYSTEM = "settings_dynamic_system"
+        private const val PROP_PERSIST_DYNAMIC_SYSTEM_UPDATE =
+            "persist.sys.fflag.override.settings_dynamic_system"
+        private const val PROP_DYNAMIC_SYSTEM_UPDATE = "sys.fflag.override.settings_dynamic_system"
+        private const val DSU_LOADER_PACKAGE_NAME = "com.android.dynsystem"
 
         // https://codelabs.developers.google.com/codelabs/using-Android-GSI?hl=en#2
         // https://developer.android.google.cn/topic/generic-system-image?hl=en
@@ -747,11 +747,10 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
 
     /** {@link android.util.FeatureFlagUtils} */
     private fun detectDsu(tempModels: ArrayList<MyModel>) {
-        val isDsuEnabled = getStringProperty(
-            FFLAG_OVERRIDE_PREFIX + DYNAMIC_SYSTEM,
-            isAtLeastStableAndroid10()
-        ).toBoolean()
-
+        val isDsuEnabled =
+            getBooleanProperty(PROP_PERSIST_DYNAMIC_SYSTEM_UPDATE, isAtLeastStableAndroid10())
+                    || getBooleanProperty(PROP_DYNAMIC_SYSTEM_UPDATE, isAtLeastStableAndroid10())
+                    || getPackageInfo(DSU_LOADER_PACKAGE_NAME) != null
         add(
             tempModels,
             MyApplication.getMyString(R.string.dsu_status_title),
