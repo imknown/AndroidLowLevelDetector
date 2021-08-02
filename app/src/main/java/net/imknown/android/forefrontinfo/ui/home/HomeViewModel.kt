@@ -1,7 +1,6 @@
 package net.imknown.android.forefrontinfo.ui.home
 
 import android.app.admin.DevicePolicyManager
-import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.res.Resources
@@ -10,6 +9,7 @@ import android.provider.Settings
 import android.util.Log
 import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -933,9 +933,10 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
 
     private fun detectEncryption(tempModels: ArrayList<MyModel>) {
         // val cryptoState = getStringProperty(PROP_CRYPTO_STATE)
-        val devicePolicyManager =
-            MyApplication.instance.getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
-        val storageEncryptionStatus = devicePolicyManager.storageEncryptionStatus
+        val devicePolicyManager = ContextCompat.getSystemService(
+            MyApplication.instance, DevicePolicyManager::class.java
+        )
+        val storageEncryptionStatus = devicePolicyManager?.storageEncryptionStatus
         @StringRes val result: Int
         @ColorRes val color: Int
         when (storageEncryptionStatus) {
