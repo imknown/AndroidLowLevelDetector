@@ -133,20 +133,22 @@
     <string name="build_supported_64_bit_abis">64bit CPU ABIs supportés</string>
 
     <string name="build_user">Constructeur de la ROM</string>
-    <string name="build_HOST">Nom de la machine lors du build</string>
+    <string name="build_host">Nom de la machine lors du build</string>
     <string name="build_time">Date du build</string>
     <string name="build_base_os">ROM basé sur (Développement secondaire)</string>
     <string name="build_certain_fingerprint">%s empreinte</string>
     <string name="build_stock_fingerprint">Empreinte de la ROM originale</string>
     <string name="build_stock_preview_fingerprint">"Empreinte digitale d'aperçu de la ROM stock"</string>
-    <string name="build_display">"ID d'Android"</string>
-    <string name="webview_user_agent">WebView User-Agent</string>
-    <string name="linux">Noyau Linux</string>
-    <string name="build_incremental">Android Git commit hash</string>
+    <string name="build_id">ID de build ROM</string>
+    <string name="build_display">"ID de build ROM pour l'utilisateur"</string>
     <string name="build_type">Type de build </string>
     <string name="build_tags">Tags de build</string>
-    <string name="build_codename">"Nom de code de la branche Git d'Android  (REL: Version stable de production)"</string>
+    <string name="build_incremental">Git commit hash</string>
+    <string name="build_codename">"Nom de code de la branche Git (REL: Version stable de production)"</string>
     <string name="build_preview_sdk_int">"Révision de l'aperçu du développeur de la pré-version du SDK"</string>
+
+    <string name="webview_user_agent">WebView User-Agent</string>
+    <string name="linux">Noyau Linux</string>
 
     <string name="build_bootloader">Version du Bootloader</string>
     <string name="build_radio">Version de la bande de base</string>

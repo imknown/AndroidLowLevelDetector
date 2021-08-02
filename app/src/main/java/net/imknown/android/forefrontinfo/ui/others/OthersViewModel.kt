@@ -124,7 +124,7 @@ class OthersViewModel : BasePureListViewModel(), IAndroidVersion {
 
         // region [ROM]
         add(tempModels, MyApplication.getMyString(R.string.build_user), Build.USER)
-        add(tempModels, MyApplication.getMyString(R.string.build_HOST), Build.HOST)
+        add(tempModels, MyApplication.getMyString(R.string.build_host), Build.HOST)
         val time = Build.TIME.formatToLocalZonedDatetimeString()
         add(tempModels, MyApplication.getMyString(R.string.build_time), time)
         if (isAtLeastStableAndroid6()) {
@@ -135,7 +135,24 @@ class OthersViewModel : BasePureListViewModel(), IAndroidVersion {
             )
         }
         addFingerprints(tempModels)
+        add(tempModels, MyApplication.getMyString(R.string.build_id), Build.ID)
         add(tempModels, MyApplication.getMyString(R.string.build_display), Build.DISPLAY)
+        add(tempModels, MyApplication.getMyString(R.string.build_type), Build.TYPE)
+        add(tempModels, MyApplication.getMyString(R.string.build_tags), Build.TAGS)
+        add(
+            tempModels,
+            MyApplication.getMyString(R.string.build_incremental),
+            Build.VERSION.INCREMENTAL
+        )
+        add(tempModels, MyApplication.getMyString(R.string.build_codename), Build.VERSION.CODENAME)
+        if (isAtLeastStableAndroid6()) {
+            add(
+                tempModels,
+                MyApplication.getMyString(R.string.build_preview_sdk_int),
+                Build.VERSION.PREVIEW_SDK_INT.toString()
+            )
+        }
+
         add(
             tempModels,
             MyApplication.getMyString(R.string.webview_user_agent),
@@ -166,22 +183,6 @@ class OthersViewModel : BasePureListViewModel(), IAndroidVersion {
             )
         }
         // endregion [Kernel]
-        add(
-            tempModels,
-            MyApplication.getMyString(R.string.build_incremental),
-            Build.VERSION.INCREMENTAL
-        )
-        add(tempModels, MyApplication.getMyString(R.string.build_type), Build.TYPE)
-        add(tempModels, MyApplication.getMyString(R.string.build_tags), Build.TAGS)
-        add(tempModels, MyApplication.getMyString(R.string.build_codename), Build.VERSION.CODENAME)
-
-        if (isAtLeastStableAndroid6()) {
-            add(
-                tempModels,
-                MyApplication.getMyString(R.string.build_preview_sdk_int),
-                Build.VERSION.PREVIEW_SDK_INT.toString()
-            )
-        }
         // endregion [ROM]
 
         // region [Others]

@@ -133,20 +133,22 @@
     <string name="build_supported_64_bit_abis">支持的 64位 CPU ABI</string>
 
     <string name="build_user">ROM 构建者</string>
-    <string name="build_HOST">ROM 构建的主机名</string>
+    <string name="build_host">ROM 构建的主机名</string>
     <string name="build_time">ROM 构建时间</string>
     <string name="build_base_os">基于的系统 (二次开发)</string>
     <string name="build_certain_fingerprint">%s 指纹</string>
     <string name="build_stock_fingerprint">原机系统 指纹</string>
     <string name="build_stock_preview_fingerprint">原机系统 预览 指纹</string>
-    <string name="build_display">Android 展示 id</string>
-    <string name="webview_user_agent">WebView User-Agent</string>
-    <string name="linux">Linux 内核</string>
-    <string name="build_incremental">Android Git 提交的 Hash</string>
+    <string name="build_id">ROM 构建 ID</string>
+    <string name="build_display">给用户看的 ROM 构建 ID</string>
     <string name="build_type">ROM 构建类型</string>
     <string name="build_tags">ROM 构建描述标签</string>
-    <string name="build_codename">系统 构建分支名 (REL: 正式)</string>
+    <string name="build_incremental">Git 提交的 Hash</string>
+    <string name="build_codename">Git 分支代号 (REL: 正式)</string>
     <string name="build_preview_sdk_int">预发行 SDK 开发者预览修订号</string>
+
+    <string name="webview_user_agent">WebView User-Agent</string>
+    <string name="linux">Linux 内核</string>
 
     <string name="build_bootloader">Bootloader 版本</string>
     <string name="build_radio">基带版本</string>

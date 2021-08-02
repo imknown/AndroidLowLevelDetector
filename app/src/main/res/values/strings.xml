@@ -139,20 +139,22 @@
     <string name="build_supported_64_bit_abis">Supported 64bit CPU ABIs</string>
 
     <string name="build_user">ROM builder</string>
-    <string name="build_HOST">ROM build machine name</string>
+    <string name="build_host">ROM build machine name</string>
     <string name="build_time">ROM build time</string>
     <string name="build_base_os">ROM based on (Secondary development)</string>
     <string name="build_certain_fingerprint">%s fingerprint</string>
     <string name="build_stock_fingerprint">Stock ROM fingerprint</string>
     <string name="build_stock_preview_fingerprint">Stock ROM preview fingerprint</string>
-    <string name="build_display">Android display id</string>
-    <string name="webview_user_agent">WebView User-Agent</string>
-    <string name="linux">Linux kernel</string>
-    <string name="build_incremental">Android Git commit hash</string>
+    <string name="build_id">ROM build ID</string>
+    <string name="build_display">ROM build ID for user</string>
     <string name="build_type">ROM build type</string>
     <string name="build_tags">ROM build tags</string>
-    <string name="build_codename">Android Git branch codename (REL: stable release version)</string>
+    <string name="build_incremental">Git commit hash</string>
+    <string name="build_codename">Git branch codename (REL: stable release version)</string>
     <string name="build_preview_sdk_int">Developer preview revision of pre-release SDK</string>
+
+    <string name="webview_user_agent">WebView User-Agent</string>
+    <string name="linux">Linux kernel</string>
 
     <string name="build_bootloader">Bootloader version</string>
     <string name="build_radio">Baseband version</string>
