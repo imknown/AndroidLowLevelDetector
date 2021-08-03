@@ -1,6 +1,8 @@
 package net.imknown.android.forefrontinfo.ui.prop
 
+import android.content.ContentResolver
 import android.provider.Settings
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -64,11 +66,18 @@ class PropViewModel : BasePureListViewModel() {
             .sortedBy { it.uppercase(Locale.US) }
             .forEach {
                 var key = it
-                val value = Settings.Global.getString(
-                    MyApplication.instance.contentResolver, key
-                ) ?: MyApplication.getMyString(R.string.build_not_filled)
-                key = "${subSettingsKClass.qualifiedName}.$key"
-                tempModels.add(MyModel(key, value))
+                try {
+                    val value = subSettingsKClass.java.getDeclaredMethod(
+                        "getString",
+                        ContentResolver::class.java,
+                        String::class.java
+                    ).invoke(null, MyApplication.instance.contentResolver, key) as? String
+                        ?: MyApplication.getMyString(R.string.build_not_filled)
+                    key = "${subSettingsKClass.qualifiedName}.$key"
+                    tempModels.add(MyModel(key, value))
+                } catch (e: Exception) {
+                    Log.e(javaClass.simpleName, e.cause?.message.toString())
+                }
             }
     }
 
