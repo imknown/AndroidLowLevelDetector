@@ -9,13 +9,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
-
-#ifdef __BIONIC_FORTIFY
-#undef __BIONIC_FORTIFY
-
 #include <fcntl.h>
-
-#endif
 
 struct binder_version {
     __s32 protocol_version;
