@@ -9,7 +9,7 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.android.tools.build:gradle:$androidBuild.androidStudioGradlePlugin"
+        classpath "com.android.tools.build:gradle:$androidBuild.androidGradlePlugin"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinSdk.core"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlinSdk.core"
 
