@@ -10,7 +10,7 @@ plugins {
 }
 
 android {
-    compileSdkVersion androidBuild.compileSdkVersion
+    compileSdk androidBuild.compileSdkVersion
     buildToolsVersion androidBuild.buildToolsVersion
 
     defaultConfig {
@@ -22,8 +22,8 @@ android {
         // setProperty('archivesBaseName', 'lld')
         archivesBaseName = "lld-$versionName-$versionCode-$currentDate-$currentGitBranchName"
 
-        minSdkVersion androidBuild.minSdkVersion
-        targetSdkVersion androidBuild.targetSdkVersion
+        minSdk androidBuild.minSdkVersion
+        targetSdk androidBuild.targetSdkVersion
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 
