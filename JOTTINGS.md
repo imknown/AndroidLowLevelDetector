@@ -4,8 +4,16 @@ Minds
 ## Features todo
 
 - JetPack
-  - Architecture (MVVM, Lifecycle, ViewModel, LiveData, Navigation, etc.)
-  - Animation & transitions
+  - MVVM/MVI (UseCase)
+  - Lifecycle
+  - ViewModel
+  - LiveData/KotlinFlow
+  - Navigation
+  - Hilt
+  - FragmentFactory
+  - Startup
+  - Compose
+  - Transitions
 - detect dm-verity (version)
 - detect FBE/FDE
 - detect HAL
