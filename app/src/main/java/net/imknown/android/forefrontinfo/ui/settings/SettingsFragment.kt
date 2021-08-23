@@ -11,7 +11,6 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.extension.isChinaMainlandTimezone
@@ -21,9 +20,7 @@ import net.imknown.android.forefrontinfo.base.mvvm.IFragmentView
 class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
 
     companion object {
-        suspend fun newInstance() = withContext(Dispatchers.Main) {
-            SettingsFragment()
-        }
+        fun newInstance() = SettingsFragment()
     }
 
     override val visualContext by lazy { context }

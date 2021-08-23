@@ -7,10 +7,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.ui.home.HomeFragment
 import net.imknown.android.forefrontinfo.ui.others.OthersFragment
@@ -29,9 +25,9 @@ class MainViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
     fun switchFragment(
         supportFragmentManager: FragmentManager,
         @IdRes selectedId: Int
-    ) = viewModelScope.launch(Dispatchers.Default) {
+    ) {
         if (selectedId == lastId) {
-            return@launch
+            return
         }
 
         val fragmentTransaction = supportFragmentManager.beginTransaction()
@@ -47,9 +43,9 @@ class MainViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
         val lastFragment = getFragment(supportFragmentManager, fragmentTransaction, lastId)
         fragmentTransaction.hide(lastFragment)
 
-        withContext(Dispatchers.Main) {
-            fragmentTransaction.commitNowAllowingStateLoss()
-        }
+        fragmentTransaction.setReorderingAllowed(true)
+
+        fragmentTransaction.commitNowAllowingStateLoss()
 
         lastId = selectedId
 
@@ -62,7 +58,7 @@ class MainViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
     private fun isFragmentCreated(supportFragmentManager: FragmentManager, @IdRes id: Int) =
         findFragmentByTag(supportFragmentManager, id) != null
 
-    private suspend fun getFragment(
+    private fun getFragment(
         supportFragmentManager: FragmentManager,
         fragmentTransaction: FragmentTransaction, @IdRes id: Int
     ) = findFragmentByTag(supportFragmentManager, id)
@@ -75,10 +71,10 @@ class MainViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
     fun showTheTopFragmentOfTheStack(
         savedInstanceState: Bundle?,
         supportFragmentManager: FragmentManager
-    ) = viewModelScope.launch(Dispatchers.Default) {
+    ) {
         if (savedInstanceState != null) {
             // This is the activity which is recreated
-            return@launch
+            return
         }
 
         val fragmentTransaction = supportFragmentManager.beginTransaction()
@@ -86,12 +82,12 @@ class MainViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
 
         createFragment(fragmentTransaction, lastId)
 
-        withContext(Dispatchers.Main) {
-            fragmentTransaction.commitNowAllowingStateLoss()
-        }
+        fragmentTransaction.setReorderingAllowed(true)
+
+        fragmentTransaction.commitNowAllowingStateLoss()
     }
 
-    private suspend fun createFragment(
+    private fun createFragment(
         fragmentTransaction: FragmentTransaction,
         @IdRes id: Int
     ): Fragment {
