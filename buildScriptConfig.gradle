@@ -101,10 +101,10 @@ ext {
     // https://firebase.google.com/support/release-notes/android
     // https://firebase.google.com/docs/android/setup#available-libraries
     firebase = [
-            googleServices                 : '4.3.8',
+            googleServices                 : '4.3.10',
 
             // https://firebase.google.com/docs/android/learn-more#bom
-            billOfMaterials                : '28.3.1',
+            billOfMaterials                : '28.4.0',
 
             // https://firebase.google.com/docs/crashlytics/get-started?platform=android
             // https://firebase.google.com/docs/crashlytics/ndk-reports
