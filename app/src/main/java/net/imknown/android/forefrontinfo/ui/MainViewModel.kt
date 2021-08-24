@@ -60,7 +60,8 @@ class MainViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
 
     private fun getFragment(
         supportFragmentManager: FragmentManager,
-        fragmentTransaction: FragmentTransaction, @IdRes id: Int
+        fragmentTransaction: FragmentTransaction,
+        @IdRes id: Int
     ) = findFragmentByTag(supportFragmentManager, id)
         ?: createFragment(fragmentTransaction, id)
 
