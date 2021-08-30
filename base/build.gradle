@@ -5,12 +5,12 @@ plugins {
 }
 
 android {
-    compileSdkVersion androidBuild.compileSdkVersion
+    compileSdk androidBuild.compileSdkVersion
     buildToolsVersion androidBuild.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion androidBuild.minSdkVersion
-        targetSdkVersion androidBuild.targetSdkVersion
+        minSdk androidBuild.minSdkVersion
+        targetSdk androidBuild.targetSdkVersion
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 
