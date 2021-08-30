@@ -59,7 +59,6 @@ class OthersViewModel : BasePureListViewModel(), IAndroidVersion {
         )
     }
 
-    @ExperimentalStdlibApi
     override fun collectModels() = viewModelScope.launch(Dispatchers.IO) {
         val tempModels = ArrayList<MyModel>()
 
@@ -193,7 +192,6 @@ class OthersViewModel : BasePureListViewModel(), IAndroidVersion {
         setModels(tempModels)
     }
 
-    @ExperimentalStdlibApi
     private fun addFingerprints(tempModels: ArrayList<MyModel>) {
         if (isAtLeastStableAndroid10()) {
             Build.getFingerprintedPartitions().forEach { partition ->
