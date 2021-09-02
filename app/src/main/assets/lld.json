@@ -1,5 +1,5 @@
 {
-  "version": "2021-09-01 19:30 +0800",
+  "version": "2021-09-02 19:25 +0800",
   "android": {
     "securityPatchLevel": "2021-08-05",
     "googlePlaySystemUpdates": "2021-08-01",
@@ -64,7 +64,7 @@
       "version": "93.0.4577.62"
     },
     "beta": {
-      "version": "94.0.4606.19"
+      "version": "94.0.4606.31"
     }
   }
 }
