@@ -1,14 +1,22 @@
 {
-  "version": "2021-09-03 19:25 +0800",
+  "version": "2021-09-08 20:00 +0800",
   "android": {
-    "securityPatchLevel": "2021-08-05",
-    "googlePlaySystemUpdates": "2021-08-01",
+    "securityPatchLevel": "2021-09-05",
+    "googlePlaySystemUpdates": "2021-09-01",
     "build": {
-      "version": "2021-08-02",
+      "version": "2021-09-07",
       "details": [
         {
-          "id": "RQ3A.210805.001.A1",
-          "revision": "r40"
+          "id": "RQ3A.210905.001",
+          "revision": "r43"
+        },
+        {
+          "id": "RD2A.210905.002",
+          "revision": "r44"
+        },
+        {
+          "id": "RD2A.210905.003",
+          "revision": "r45"
         }
       ]
     },
@@ -32,7 +40,7 @@
   "linux": {
     "google": {
       "versions": [
-        "5.10.62",
+        "5.10.63",
         "5.4.144",
         "4.19.206",
         "4.14.246",
