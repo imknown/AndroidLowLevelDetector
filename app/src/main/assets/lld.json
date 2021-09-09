@@ -1,14 +1,22 @@
 {
-  "version": "2021-09-02 19:25 +0800",
+  "version": "2021-09-09 19:55 +0800",
   "android": {
-    "securityPatchLevel": "2021-08-05",
-    "googlePlaySystemUpdates": "2021-08-01",
+    "securityPatchLevel": "2021-09-05",
+    "googlePlaySystemUpdates": "2021-09-01",
     "build": {
-      "version": "2021-08-02",
+      "version": "2021-09-07",
       "details": [
         {
-          "id": "RQ3A.210805.001.A1",
-          "revision": "r40"
+          "id": "RQ3A.210905.001",
+          "revision": "r43"
+        },
+        {
+          "id": "RD2A.210905.002",
+          "revision": "r44"
+        },
+        {
+          "id": "RD2A.210905.003",
+          "revision": "r45"
         }
       ]
     },
@@ -26,18 +34,18 @@
       "name": "Snow Cone",
       "api": "31",
       "version": "12",
-      "phase": "Beta 4.1"
+      "phase": "Beta 5"
     }
   },
   "linux": {
     "google": {
       "versions": [
-        "5.10.61",
-        "5.4.143",
-        "4.19.205",
-        "4.14.245",
-        "4.9.281",
-        "4.4.282",
+        "5.10.63",
+        "5.4.144",
+        "4.19.206",
+        "4.14.246",
+        "4.9.282",
+        "4.4.283",
         "3.18.140"
       ]
     },
@@ -64,7 +72,7 @@
       "version": "93.0.4577.62"
     },
     "beta": {
-      "version": "94.0.4606.31"
+      "version": "94.0.4606.40"
     }
   }
 }
