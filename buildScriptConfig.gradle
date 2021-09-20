@@ -13,8 +13,8 @@ ext {
             ndkVersion               : '23.0.7599858',
             cmake                    : '3.20.5',
 
-            versionCode              : 54,
-            versionName              : '1.15.2'//_unpublished'
+            versionCode              : 55,
+            versionName              : '1.15.3_unpublished'
     ]
     // endregion [AndroidBuild]
 
