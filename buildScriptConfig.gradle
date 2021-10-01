@@ -42,7 +42,7 @@ ext {
 
             cardview              : '1.0.0',
 
-            constraintLayout      : '2.1.0',
+            constraintLayout      : '2.1.1',
 
             core                  : '1.6.0',
 
