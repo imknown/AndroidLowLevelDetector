@@ -104,7 +104,7 @@ ext {
             googleServices                 : '4.3.10',
 
             // https://firebase.google.com/docs/android/learn-more#bom
-            billOfMaterials                : '28.4.1',
+            billOfMaterials                : '28.4.2',
 
             // https://firebase.google.com/docs/crashlytics/get-started?platform=android
             // https://firebase.google.com/docs/crashlytics/ndk-reports
