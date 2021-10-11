@@ -1,29 +1,25 @@
 {
-  "version": "2021-09-30 19:55 +0800",
+  "version": "2021-10-11 19:35 +0800",
   "android": {
-    "securityPatchLevel": "2021-09-05",
+    "securityPatchLevel": "2021-10-05",
     "googlePlaySystemUpdates": "2021-09-01",
     "build": {
-      "version": "2021-09-07",
+      "version": "2021-10-04",
       "details": [
         {
-          "id": "RQ3A.210905.001",
-          "revision": "r43"
+          "id": "SP1A.210812.015",
+          "revision": "r1"
         },
         {
-          "id": "RD2A.210905.002",
-          "revision": "r44"
-        },
-        {
-          "id": "RD2A.210905.003",
-          "revision": "r45"
+          "id": "SP1A.210812.016",
+          "revision": "r2"
         }
       ]
     },
     "stable": {
-      "name": "Red Velvet Cake",
-      "api": "30",
-      "version": "11"
+      "name": "Snow Cone",
+      "api": "31",
+      "version": "12"
     },
     "support": {
       "name": "Oreo",
@@ -31,26 +27,26 @@
       "version": "8.1.0"
     },
     "preview": {
-      "name": "Snow Cone",
-      "api": "31",
-      "version": "12",
-      "phase": "Beta 5"
+      "name": "Snow Cone v2",
+      "api": "32",
+      "version": "12.1",
+      "phase": "Internal"
     }
   },
   "linux": {
     "google": {
       "versions": [
-        "5.10.70",
-        "5.4.150",
-        "4.19.208",
-        "4.14.248",
-        "4.9.284",
-        "4.4.285",
+        "5.10.72",
+        "5.4.152",
+        "4.19.210",
+        "4.14.250",
+        "4.9.286",
+        "4.4.287",
         "3.18.140"
       ]
     },
     "mainline": {
-      "version": "5.15-rc3"
+      "version": "5.15-rc5"
     }
   },
   "toybox": {
@@ -69,10 +65,10 @@
   },
   "webView": {
     "stable": {
-      "version": "94.0.4606.61"
+      "version": "94.0.4606.80"
     },
     "beta": {
-      "version": "95.0.4638.32"
+      "version": "95.0.4638.40"
     }
   }
 }
