@@ -1,7 +1,7 @@
 ext {
     // region [AndroidBuild]
     androidBuild = [
-            androidGradlePlugin: '7.0.2',
+            androidGradlePlugin      : '7.0.3',
 
             // https://developer.android.com/studio/releases/build-tools.html#notes
             buildToolsVersion        : '31.0.0',
