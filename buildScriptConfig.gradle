@@ -10,7 +10,7 @@ ext {
             compileSdkVersion        : 31,
             targetSdkVersion         : 31,
 
-            ndkVersion               : '23.0.7599858',
+            ndkVersion               : '23.1.7779620',
             cmake                    : '3.20.5',
 
             versionCode              : 55,
