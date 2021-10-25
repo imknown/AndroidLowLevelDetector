@@ -1,5 +1,5 @@
 {
-  "version": "2021-10-20 19:40 +0800",
+  "version": "2021-10-25 20:00 +0800",
   "android": {
     "securityPatchLevel": "2021-10-05",
     "googlePlaySystemUpdates": "2021-09-01",
@@ -72,7 +72,7 @@
       "version": "95.0.4638.50"
     },
     "beta": {
-      "version": "95.0.4638.50"
+      "version": "96.0.4664.17"
     }
   }
 }
