@@ -1,7 +1,7 @@
 package net.imknown.android.forefrontinfo.ui.home
 
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.mvvm.EventObserver
 import net.imknown.android.forefrontinfo.ui.base.list.BaseListFragment
@@ -13,7 +13,7 @@ class HomeFragment : BaseListFragment() {
         fun newInstance() = HomeFragment()
     }
 
-    override val listViewModel by activityViewModels<HomeViewModel>()
+    override val listViewModel by viewModels<HomeViewModel>()
 
     override fun init() {
         observeLanguageEvent(MyApplication.homeLanguageEvent)

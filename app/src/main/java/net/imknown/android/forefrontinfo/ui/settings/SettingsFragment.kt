@@ -3,7 +3,7 @@ package net.imknown.android.forefrontinfo.ui.settings
 import android.os.Bundle
 import android.os.Looper
 import androidx.annotation.StringRes
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.whenCreated
 import androidx.preference.ListPreference
@@ -25,7 +25,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
 
     override val visualContext by lazy { context }
 
-    private val settingsViewModel by activityViewModels<SettingsViewModel>()
+    private val settingsViewModel by viewModels<SettingsViewModel>()
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         lifecycleScope.launch(Dispatchers.IO) {
