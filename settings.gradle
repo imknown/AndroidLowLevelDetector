@@ -1,2 +1,4 @@
+rootProject.name = "AndroidLowLevelDetector"
+
 include ':base'
 include ':app'
