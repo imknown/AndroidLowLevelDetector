@@ -1,10 +1,10 @@
 {
-  "version": "2021-10-28 22:35 +0800",
+  "version": "2021-10-29 19:40 +0800",
   "android": {
     "securityPatchLevel": "2021-10-05",
     "googlePlaySystemUpdates": "2021-09-01",
     "build": {
-      "version": "2021-10-19",
+      "version": "2021-10-28",
       "details": [
         {
           "id": "SP1A.210812.015",
@@ -17,6 +17,22 @@
         {
           "id": "SP1A.210812.016.A1",
           "revision": "r3"
+        },
+        {
+          "id": "SD1A.210817.015.A41",
+          "revision": "r4"
+        },
+        {
+          "id": "SD1A.210817.019.B1",
+          "revision": "r5"
+        },
+        {
+          "id": "SD1A.210817.019.C2",
+          "revision": "r6"
+        },
+        {
+          "id": "SD1A.210817.019.C4",
+          "revision": "r7"
         }
       ]
     },
