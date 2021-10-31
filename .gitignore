@@ -3,7 +3,7 @@
 /.idea
 
 # Gradle files
-/.gradle
+.gradle
 /local.properties
 
 # Generated files
