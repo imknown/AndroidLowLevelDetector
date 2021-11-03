@@ -1,38 +1,34 @@
 {
-  "version": "2021-11-01 20:55 +0800",
+  "version": "2021-11-03 20:25 +0800",
   "android": {
-    "securityPatchLevel": "2021-10-05",
-    "googlePlaySystemUpdates": "2021-09-01",
+    "securityPatchLevel": "2021-11-05",
+    "googlePlaySystemUpdates": "2021-11-01",
     "build": {
-      "version": "2021-10-28",
+      "version": "2021-11-02",
       "details": [
         {
-          "id": "SP1A.210812.015",
-          "revision": "r1"
+          "id": "SP1A.211105.002",
+          "revision": "r8"
         },
         {
-          "id": "SP1A.210812.016",
-          "revision": "r2"
+          "id": "SP1A.211105.002.A1",
+          "revision": "r9"
         },
         {
-          "id": "SP1A.210812.016.A1",
-          "revision": "r3"
+          "id": "SP1A.211105.003",
+          "revision": "r10"
         },
         {
-          "id": "SD1A.210817.015.A4",
-          "revision": "r4"
+          "id": "SP1A.211105.004",
+          "revision": "r11"
         },
         {
-          "id": "SD1A.210817.019.B1",
-          "revision": "r5"
+          "id": "SD1A.210817.036",
+          "revision": "r12"
         },
         {
-          "id": "SD1A.210817.019.C2",
-          "revision": "r6"
-        },
-        {
-          "id": "SD1A.210817.019.C4",
-          "revision": "r7"
+          "id": "SD1A.210817.036.A8",
+          "revision": "r13"
         }
       ]
     },
@@ -42,9 +38,9 @@
       "version": "12"
     },
     "support": {
-      "name": "Oreo",
-      "api": "27",
-      "version": "8.1.0"
+      "name": "Pie",
+      "api": "28",
+      "version": "9"
     },
     "preview": {
       "name": "Snow Cone v2",
@@ -56,13 +52,12 @@
   "linux": {
     "google": {
       "versions": [
-        "5.10.76",
-        "5.4.156",
-        "4.19.214",
-        "4.14.253",
-        "4.9.288",
-        "4.4.290",
-        "3.18.140"
+        "5.10.77",
+        "5.4.157",
+        "4.19.215",
+        "4.14.254",
+        "4.9.289",
+        "4.4.291"
       ]
     },
     "mainline": {
@@ -71,10 +66,10 @@
   },
   "toybox": {
     "stable": {
-      "version": "0.8.3"
+      "version": "0.8.4"
     },
     "support": {
-      "version": "0.7.4"
+      "version": "0.7.6"
     },
     "mainline": {
       "version": "0.8.5"
@@ -85,7 +80,7 @@
   },
   "webView": {
     "stable": {
-      "version": "95.0.4638.50"
+      "version": "95.0.4638.74"
     },
     "beta": {
       "version": "96.0.4664.17"

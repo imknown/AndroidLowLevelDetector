@@ -53,7 +53,7 @@ data class Lld(
         ) : BaseInfo()
 
         // https://android.googlesource.com/platform/build/+refs
-        // https://android.googlesource.com/platform/build/+/refs/tags/android-11.0.0_r45/core/build_id.mk
+        // https://android.googlesource.com/platform/build/+/refs/tags/android-12.0.0_r13/core/build_id.mk
         // https://android.googlesource.com/platform/build/+/master/core/build_id.mk
         //
         // https://developers.google.com/android/images
@@ -78,12 +78,7 @@ data class Lld(
     @Keep
     @Serializable
     data class Linuxes(
-        // https://android.googlesource.com/kernel/common/+/android-5.4/Makefile
-        // https://android.googlesource.com/kernel/common/+/android-4.19/Makefile
-        // https://android.googlesource.com/kernel/common/+/android-4.14/Makefile
-        // https://android.googlesource.com/kernel/common/+/android-4.9-q/Makefile
-        // https://android.googlesource.com/kernel/common/+/android-4.4-p/Makefile
-        // https://android.googlesource.com/kernel/common/+/android-3.18/Makefile
+        // https://android.googlesource.com/kernel/common
         val google: Versions,
         // https://android.googlesource.com/kernel/common/+/android-mainline/Makefile
         val mainline: BaseInfo
@@ -101,9 +96,9 @@ data class Lld(
     @Keep
     @Serializable
     data class Toyboxes(
-        // https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-11.0.0_r45/main.c
+        // https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-12.0.0_r13/toys.h
         val stable: BaseInfo,
-        // https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-security-8.1.0_r92/main.c
+        // https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-security-9.0.0_r74/main.c
         val support: BaseInfo,
         // https://android.googlesource.com/platform/external/toybox/+/master/toys.h#135
         // https://android.googlesource.com/platform/external/toybox/+/upstream-master/toys.h#135
