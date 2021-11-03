@@ -69,7 +69,7 @@ object Versions {
     object Kotlin {
         // https://github.com/JetBrains/kotlin/releases
         // https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.jetbrains.kotlin%22
-        const val kotlin = "1.6.0-RC"
+        const val kotlin = "1.6.0-RC2"
 
         // https://github.com/Kotlin/kotlinx.coroutines/releases
         const val coroutines = "1.5.2"
