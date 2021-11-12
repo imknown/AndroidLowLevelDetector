@@ -27,7 +27,7 @@ object Versions {
     // https://developer.android.com/jetpack/androidx/versions
     object AndroidX {
         // https://github.com/material-components/material-components-android/releases
-        const val material = "1.4.0"
+        const val material = "1.5.0-beta01"
 
         const val activity = "1.4.0"
 
@@ -75,7 +75,7 @@ object Versions {
         const val coroutines = "1.5.2"
 
         // https://github.com/Kotlin/kotlinx.serialization/releases
-        const val serialization = "1.3.0"
+        const val serialization = "1.3.1"
     }
 
     // https://firebase.google.com/support/release-notes/android
