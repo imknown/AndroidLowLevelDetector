@@ -4,13 +4,9 @@ Minds
 ## Features todo
 
 - JetPack
-  - MVVM/MVI (UseCase)
-  - Lifecycle
-  - ViewModel
-  - LiveData/KotlinFlow
+  - UseCase
   - Navigation
   - Hilt
-  - FragmentFactory
   - Startup
   - Compose
   - Transitions

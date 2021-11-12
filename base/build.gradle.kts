@@ -65,7 +65,7 @@ dependencies {
     api("androidx.fragment:fragment-ktx:${Versions.AndroidX.fragment}")
 
     api("androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.AndroidX.lifecycle}")
-    api("androidx.lifecycle:lifecycle-livedata-ktx:${Versions.AndroidX.lifecycle}")
+    api("androidx.lifecycle:lifecycle-runtime-ktx:${Versions.AndroidX.lifecycle}")
     api("androidx.lifecycle:lifecycle-viewmodel-savedstate:${Versions.AndroidX.lifecycle}")
 
     api("androidx.preference:preference:${Versions.AndroidX.preference}")
