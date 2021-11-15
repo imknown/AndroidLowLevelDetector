@@ -1,5 +1,5 @@
 {
-  "version": "2021-11-14 12:00 +0800",
+  "version": "2021-11-15 20:35 +0800",
   "android": {
     "securityPatchLevel": "2021-11-05",
     "googlePlaySystemUpdates": "2021-11-01",
@@ -61,7 +61,7 @@
       ]
     },
     "mainline": {
-      "version": "5.15"
+      "version": "5.16-rc1"
     }
   },
   "toybox": {
@@ -80,7 +80,7 @@
   },
   "webView": {
     "stable": {
-      "version": "95.0.4638.74"
+      "version": "96.0.4664.45"
     },
     "beta": {
       "version": "96.0.4664.45"
