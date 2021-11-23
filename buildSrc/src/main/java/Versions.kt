@@ -72,7 +72,7 @@ object Versions {
         const val kotlin = "1.6.0"
 
         // https://github.com/Kotlin/kotlinx.coroutines/releases
-        const val coroutines = "1.5.2"
+        const val coroutines = "1.6.0-RC"
 
         // https://github.com/Kotlin/kotlinx.serialization/releases
         const val serialization = "1.3.1"
