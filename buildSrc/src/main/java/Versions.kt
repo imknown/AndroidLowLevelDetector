@@ -10,7 +10,7 @@ object Versions {
         const val targetSdkVersion = 31
 
         const val ndkVersion = "24.0.7856742 rc1"
-        const val cmake = "3.22.0-rc2"
+        const val cmake = "3.22.0"
 
         const val versionCode = 55
         const val versionName = "1.15.3_unpublished"
