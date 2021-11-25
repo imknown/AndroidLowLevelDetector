@@ -40,11 +40,11 @@ android {
 
         externalNativeBuild {
             cmake {
-                arguments.addAll(listOf("-DANDROID_ARM_NEON=TRUE", "-DANDROID_TOOLCHAIN=clang"))
+                arguments += listOf("-DANDROID_ARM_NEON=TRUE", "-DANDROID_TOOLCHAIN=clang")
 
-                cFlags.addAll(listOf("-D__STDC_FORMAT_MACROS"))
+                cFlags += listOf("-D__STDC_FORMAT_MACROS")
 
-                cppFlags.addAll(listOf("-fexceptions", "-frtti", "-std=c++17"))
+                cppFlags += listOf("-fexceptions", "-frtti", "-std=c++17")
             }
         }
     }
