@@ -13,7 +13,7 @@ object Versions {
         const val cmake = "3.22.0"
 
         const val versionCode = 55
-        const val versionName = "1.15.3_unpublished"
+        const val versionName = "1.15.3"//_unpublished"
     }
 
     // https://developer.android.com/studio/write/java8-support#library-desugaring
