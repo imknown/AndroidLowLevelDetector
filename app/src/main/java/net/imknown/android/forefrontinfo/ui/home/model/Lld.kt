@@ -53,7 +53,7 @@ data class Lld(
         ) : BaseInfo()
 
         // https://android.googlesource.com/platform/build/+refs
-        // https://android.googlesource.com/platform/build/+/refs/tags/android-12.0.0_r15/core/build_id.mk
+        // https://android.googlesource.com/platform/build/+/refs/tags/android-12.0.0_r16/core/build_id.mk
         // https://android.googlesource.com/platform/build/+/master/core/build_id.mk
         //
         // https://developers.google.com/android/images
@@ -96,9 +96,9 @@ data class Lld(
     @Keep
     @Serializable
     data class Toyboxes(
-        // https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-12.0.0_r15/toys.h
+        // https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-12.0.0_r16/toys.h
         val stable: BaseInfo,
-        // https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-security-9.0.0_r74/main.c
+        // https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-security-9.0.0_r75/main.c
         val support: BaseInfo,
         // https://android.googlesource.com/platform/external/toybox/+/master/toys.h#135
         // https://android.googlesource.com/platform/external/toybox/+/upstream-master/toys.h#135

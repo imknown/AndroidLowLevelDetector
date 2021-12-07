@@ -1,42 +1,14 @@
 {
-  "version": "2021-12-06 20:00 +0800",
+  "version": "2021-12-07 20:45 +0800",
   "android": {
-    "securityPatchLevel": "2021-11-05",
-    "googlePlaySystemUpdates": "2021-11-01",
+    "securityPatchLevel": "2021-12-05",
+    "googlePlaySystemUpdates": "2021-12-05",
     "build": {
-      "version": "2021-11-16",
+      "version": "2021-12-06",
       "details": [
         {
-          "id": "SP1A.211105.002",
-          "revision": "r8"
-        },
-        {
-          "id": "SP1A.211105.002.A1",
-          "revision": "r9"
-        },
-        {
-          "id": "SP1A.211105.003",
-          "revision": "r10"
-        },
-        {
-          "id": "SP1A.211105.004",
-          "revision": "r11"
-        },
-        {
-          "id": "SD1A.210817.036",
-          "revision": "r12"
-        },
-        {
-          "id": "SD1A.210817.036.A8",
-          "revision": "r13"
-        },
-        {
-          "id": "SD1A.210817.037",
-          "revision": "r14"
-        },
-        {
-          "id": "SD1A.210817.037.A1",
-          "revision": "r15"
+          "id": "SQ1A.211205.008",
+          "revision": "r16"
         }
       ]
     },
@@ -60,6 +32,7 @@
   "linux": {
     "google": {
       "versions": [
+        "5.15.6",
         "5.10.83",
         "5.4.163",
         "4.19.219",
@@ -88,7 +61,7 @@
   },
   "webView": {
     "stable": {
-      "version": "96.0.4664.45"
+      "version": "96.0.4664.92"
     },
     "beta": {
       "version": "97.0.4692.36"
