@@ -1,42 +1,14 @@
 {
-  "version": "2021-12-02 19:45 +0800",
+  "version": "2021-12-08 19:50 +0800",
   "android": {
-    "securityPatchLevel": "2021-11-05",
-    "googlePlaySystemUpdates": "2021-11-01",
+    "securityPatchLevel": "2021-12-05",
+    "googlePlaySystemUpdates": "2021-12-05",
     "build": {
-      "version": "2021-11-16",
+      "version": "2021-12-06",
       "details": [
         {
-          "id": "SP1A.211105.002",
-          "revision": "r8"
-        },
-        {
-          "id": "SP1A.211105.002.A1",
-          "revision": "r9"
-        },
-        {
-          "id": "SP1A.211105.003",
-          "revision": "r10"
-        },
-        {
-          "id": "SP1A.211105.004",
-          "revision": "r11"
-        },
-        {
-          "id": "SD1A.210817.036",
-          "revision": "r12"
-        },
-        {
-          "id": "SD1A.210817.036.A8",
-          "revision": "r13"
-        },
-        {
-          "id": "SD1A.210817.037",
-          "revision": "r14"
-        },
-        {
-          "id": "SD1A.210817.037.A1",
-          "revision": "r15"
+          "id": "SQ1A.211205.008",
+          "revision": "r16"
         }
       ]
     },
@@ -60,16 +32,17 @@
   "linux": {
     "google": {
       "versions": [
-        "5.10.83",
-        "5.4.163",
-        "4.19.219",
-        "4.14.256",
-        "4.9.291",
-        "4.4.293"
+        "5.15.7",
+        "5.10.84",
+        "5.4.164",
+        "4.19.220",
+        "4.14.257",
+        "4.9.292",
+        "4.4.294"
       ]
     },
     "mainline": {
-      "version": "5.16-rc3"
+      "version": "5.16-rc4"
     }
   },
   "toybox": {
@@ -88,7 +61,7 @@
   },
   "webView": {
     "stable": {
-      "version": "96.0.4664.45"
+      "version": "96.0.4664.92"
     },
     "beta": {
       "version": "97.0.4692.36"
