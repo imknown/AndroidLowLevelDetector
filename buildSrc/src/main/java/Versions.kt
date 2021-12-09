@@ -3,14 +3,14 @@ object Versions {
         const val androidGradlePlugin = "7.0.3"
 
         // https://developer.android.com/studio/releases/build-tools.html#notes
-        const val buildToolsVersion = "32.0.0-rc1"
+        const val buildToolsVersion = "32.0.0"
 
         const val minSdkVersion = 21
         const val compileSdkVersion = 31
         const val targetSdkVersion = 31
 
-        const val ndkVersion = "24.0.7856742 rc1"
-        const val cmake = "3.22.0"
+        const val ndkVersion = "24.0.7956693 rc2"
+        const val cmake = "3.22.1"
 
         const val versionCode = 56
         const val versionName = "1.15.4_unpublished"
@@ -34,7 +34,7 @@ object Versions {
         const val annotation = "1.3.0"
         const val annotationExperimental = "1.2.0-rc01"
 
-        const val appcompat = "1.4.0-beta01"
+        const val appcompat = "1.4.0"
 
         const val archCore = "2.1.0"
 
