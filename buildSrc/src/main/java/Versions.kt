@@ -6,8 +6,8 @@ object Versions {
         const val buildToolsVersion = "32.0.0"
 
         const val minSdkVersion = 21
-        const val compileSdkVersion = 31
-        const val targetSdkVersion = 31
+        const val compileSdkVersion = 32
+        const val targetSdkVersion = 32
 
         const val ndkVersion = "24.0.7956693 rc2"
         const val cmake = "3.22.1"
