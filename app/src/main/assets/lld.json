@@ -1,5 +1,5 @@
 {
-  "version": "2021-12-08 19:50 +0800",
+  "version": "2021-12-09 20:45 +0800",
   "android": {
     "securityPatchLevel": "2021-12-05",
     "googlePlaySystemUpdates": "2021-12-05",
@@ -26,7 +26,7 @@
       "name": "Snow Cone v2",
       "api": "32",
       "version": "12L",
-      "phase": "DP1"
+      "phase": "Beta 1"
     }
   },
   "linux": {
@@ -64,7 +64,7 @@
       "version": "96.0.4664.92"
     },
     "beta": {
-      "version": "97.0.4692.36"
+      "version": "97.0.4692.45"
     }
   }
 }
