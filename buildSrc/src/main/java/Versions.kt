@@ -72,7 +72,7 @@ object Versions {
         const val kotlin = "1.6.10-RC"
 
         // https://github.com/Kotlin/kotlinx.coroutines/releases
-        const val coroutines = "1.6.0-RC"
+        const val coroutines = "1.6.0-RC2"
 
         // https://github.com/Kotlin/kotlinx.serialization/releases
         const val serialization = "1.3.1"
@@ -84,7 +84,7 @@ object Versions {
         const val googleServices = "4.3.10"
 
         // https://firebase.google.com/docs/android/learn-more#bom
-        const val billOfMaterials = "29.0.1"
+        const val billOfMaterials = "29.0.2"
 
         // https://firebase.google.com/docs/crashlytics/get-started?platform=android
         // https://firebase.google.com/docs/crashlytics/ndk-reports
