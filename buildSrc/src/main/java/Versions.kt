@@ -27,7 +27,7 @@ object Versions {
     // https://developer.android.com/jetpack/androidx/versions
     object AndroidX {
         // https://github.com/material-components/material-components-android/releases
-        const val material = "1.5.0-beta01"
+        const val material = "1.5.0-rc01"
 
         const val activity = "1.4.0"
 
@@ -69,7 +69,7 @@ object Versions {
     object Kotlin {
         // https://github.com/JetBrains/kotlin/releases
         // https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.jetbrains.kotlin%22
-        const val kotlin = "1.6.10-RC"
+        const val kotlin = "1.6.10"
 
         // https://github.com/Kotlin/kotlinx.coroutines/releases
         const val coroutines = "1.6.0-RC2"
