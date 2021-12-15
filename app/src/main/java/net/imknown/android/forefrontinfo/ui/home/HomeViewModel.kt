@@ -19,22 +19,22 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.R
-import net.imknown.android.forefrontinfo.base.*
+import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.extension.formatToLocalZonedDatetimeString
 import net.imknown.android.forefrontinfo.base.mvvm.Event
 import net.imknown.android.forefrontinfo.base.mvvm.booleanEventLiveData
 import net.imknown.android.forefrontinfo.ui.base.IAndroidVersion
 import net.imknown.android.forefrontinfo.ui.base.JsonIo
 import net.imknown.android.forefrontinfo.ui.base.fromJson
-import net.imknown.android.forefrontinfo.ui.base.list.*
+import net.imknown.android.forefrontinfo.ui.base.list.BaseListViewModel
+import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.home.model.Subtitle
 import java.io.File
-import java.util.*
 
 class HomeViewModel : BaseListViewModel(), IAndroidVersion {
 
-    companion object {
+    companion object : IAndroidVersion {
         private const val BUILD_ID_SEPARATOR = '.'
 
         private const val PROP_RO_SYSTEM_BUILD_ID = "ro.system.build.id"
@@ -71,8 +71,14 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         // https://codelabs.developers.google.com/codelabs/using-Android-GSI?hl=en#2
         // https://developer.android.google.cn/topic/generic-system-image?hl=en
         // https://source.android.com/setup/build/gsi?hl=en
-        private const val CMD_VENDOR_NAMESPACE_DEFAULT_ISOLATED =
-            "cat /system/etc/ld.config*.txt | grep -A 20 '\\[vendor\\]' | grep namespace.default.isolated"
+        // https://source.android.com/devices/architecture/vndk/linker-namespace?hl=en
+        private val fileLdConfig = when {
+            isAtLeastStableAndroid11() -> "/linkerconfig/ld.config.txt"
+            isAtLeastStableAndroid9() -> "/system/etc/ld.config*.txt"
+            else -> ""
+        }
+        private val CMD_VENDOR_NAMESPACE_DEFAULT_ISOLATED =
+            "cat $fileLdConfig | grep -A 20 '\\[vendor\\]' | grep namespace.default.isolated"
 
         // https://source.android.com/devices/architecture?hl=en#hidl
         // https://source.android.com/devices/architecture/vintf/objects#device-manifest-file
