@@ -141,6 +141,8 @@ dependencies {
 
     implementation("androidx.cardview:cardview:${Versions.AndroidX.cardview}")
 
+    implementation("androidx.coordinatorlayout:coordinatorlayout:${Versions.AndroidX.coordinatorLayout}")
+
     implementation("androidx.constraintlayout:constraintlayout:${Versions.AndroidX.constraintLayout}")
 
     implementation("androidx.recyclerview:recyclerview:${Versions.AndroidX.recyclerView}")
