@@ -1,10 +1,10 @@
 {
-  "version": "2021-12-15 20:25 +0800",
+  "version": "2021-12-16 20:25 +0800",
   "android": {
     "securityPatchLevel": "2021-12-05",
     "googlePlaySystemUpdates": "2021-12-05",
     "build": {
-      "version": "2021-12-13",
+      "version": "2021-12-15",
       "details": [
         {
           "id": "SQ1A.211205.008",
@@ -21,6 +21,10 @@
         {
           "id": "SQ1D.211205.016.A4",
           "revision": "r20"
+        },
+        {
+          "id": "SQ1D.211205.016.A5",
+          "revision": "r21"
         }
       ]
     },
@@ -76,7 +80,7 @@
       "version": "96.0.4664.104"
     },
     "beta": {
-      "version": "97.0.4692.45"
+      "version": "97.0.4692.56"
     }
   }
 }
