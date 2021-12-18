@@ -745,28 +745,29 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         }
         val cmd = String.format(CMD_VENDOR_NAMESPACE_DEFAULT_ISOLATED, fileLdConfig)
         val gsiCompatibilityResult = sh(cmd, isAtLeastStableAndroid9())
-        var isCompatible = false
-        val result = if (isShellResultSuccessful(gsiCompatibilityResult)) {
+        val (@StringRes result, @ColorRes color) = if (
+            isShellResultSuccessful(gsiCompatibilityResult)
+        ) {
             val lineResult = gsiCompatibilityResult.output[0].split('=')
-            isCompatible = lineResult.isNotEmpty() && lineResult[1].trim().toBoolean()
+            val isCompatible = lineResult.isNotEmpty() && lineResult[1].trim().toBoolean()
             if (isCompatible) {
-                MyApplication.getMyString(R.string.result_compliant)
+                Pair(R.string.result_compliant, R.color.colorNoProblem)
             } else {
-                MyApplication.getMyString(R.string.result_not_compliant)
+                Pair(R.string.result_not_compliant, R.color.colorWaring)
             }
         } else {
             if (isTrebleEnabled && isAtLeastStableAndroid9()) {
-                MyApplication.getMyString(R.string.result_unidentified)
+                Pair(R.string.result_unidentified, R.color.colorWaring)
             } else {
-                MyApplication.getMyString(R.string.result_not_supported)
+                Pair(R.string.result_not_supported, R.color.colorCritical)
             }
         }
 
         add(
             tempModels,
             MyApplication.getMyString(R.string.gsi_status_title),
-            result,
-            isCompatible
+            MyApplication.getMyString(result),
+            color
         )
     }
 
