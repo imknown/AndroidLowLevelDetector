@@ -118,6 +118,7 @@
     <string name="build_soc_model">Modèle SoC</string>
     <string name="build_soc_manufacturer">Fabricant de SoC</string>
     <string name="build_hardware_sku">SKU ou matériel</string>
+    <string name="build_vendor_sku">Vendor SKU</string>
     <string name="build_odm_hardware_sku">SKU ou matériel ODM</string>
 
     <string name="bit_32">32bit</string>

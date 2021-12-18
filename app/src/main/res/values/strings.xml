@@ -125,6 +125,7 @@
     <string name="build_soc_model">SoC model</string>
     <string name="build_soc_manufacturer">SoC manufacturer</string>
     <string name="build_hardware_sku">SKU of hardware</string>
+    <string name="build_vendor_sku">Vendor SKU</string>
     <string name="build_odm_hardware_sku">SKU of ODM hardware</string>
 
     <string name="bit_32">32bit</string>
