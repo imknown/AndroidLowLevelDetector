@@ -703,25 +703,26 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
             getStringProperty(PROP_VENDOR_SKU, isAtLeastStableAndroid12())
         )
 
-        @ColorRes val trebleColor = when {
-            File(pathVendorSku).exists()
-                    || File(PATH_VENDOR_VINTF).exists()
-                    || File(PATH_VENDOR_VINTF_FRAGMENTS).exists() -> {
-                R.color.colorNoProblem
-            }
-            File(PATH_VENDOR_LEGACY_NO_FRAGMENTS).exists() -> {
-                trebleResult += MyApplication.getMyString(R.string.treble_legacy_no_fragments)
+        @ColorRes val trebleColor = if (isTrebleEnabled) {
+            when {
+                File(pathVendorSku).exists()
+                        || File(PATH_VENDOR_VINTF).exists()
+                        || File(PATH_VENDOR_VINTF_FRAGMENTS).exists() -> {
+                    R.color.colorNoProblem
+                }
+                File(PATH_VENDOR_LEGACY_NO_FRAGMENTS).exists() -> {
+                    trebleResult += MyApplication.getMyString(R.string.treble_legacy_no_fragments)
 
-                R.color.colorWaring
-            }
-            isTrebleEnabled -> {
-                trebleResult += MyApplication.getMyString(R.string.treble_other)
+                    R.color.colorWaring
+                }
+                else -> {
+                    trebleResult += MyApplication.getMyString(R.string.treble_other)
 
-                R.color.colorWaring
+                    R.color.colorWaring
+                }
             }
-            else -> {
-                R.color.colorCritical
-            }
+        } else {
+            R.color.colorCritical
         }
 
         add(
