@@ -72,13 +72,10 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         // https://developer.android.google.cn/topic/generic-system-image?hl=en
         // https://source.android.com/setup/build/gsi?hl=en
         // https://source.android.com/devices/architecture/vndk/linker-namespace?hl=en
-        private val fileLdConfig = when {
-            isAtLeastStableAndroid11() -> "/linkerconfig/ld.config.txt"
-            isAtLeastStableAndroid9() -> "/system/etc/ld.config*.txt"
-            else -> ""
-        }
-        private val CMD_VENDOR_NAMESPACE_DEFAULT_ISOLATED =
-            "cat $fileLdConfig | grep -A 20 '\\[vendor\\]' | grep namespace.default.isolated"
+        private const val LD_CONFIG_FILE_ANDROID_11 = "/linkerconfig/ld.config.txt"
+        private const val LD_CONFIG_FILE_ANDROID_9 = "/system/etc/ld.config*.txt"
+        private const val CMD_VENDOR_NAMESPACE_DEFAULT_ISOLATED =
+            "cat %s | grep -A 20 '\\[vendor\\]' | grep namespace.default.isolated"
 
         // https://source.android.com/devices/architecture?hl=en#hidl
         // https://source.android.com/devices/architecture/vintf/objects#device-manifest-file
@@ -731,8 +728,13 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
     private fun detectGsiCompatibility(
         tempModels: ArrayList<MyModel>, isTrebleEnabled: Boolean
     ) {
-        val gsiCompatibilityResult =
-            sh(CMD_VENDOR_NAMESPACE_DEFAULT_ISOLATED, isAtLeastStableAndroid9())
+        val fileLdConfig = when {
+            isAtLeastStableAndroid11() -> LD_CONFIG_FILE_ANDROID_11
+            isAtLeastStableAndroid9() -> LD_CONFIG_FILE_ANDROID_9
+            else -> "NOT_EXIST"
+        }
+        val cmd = String.format(CMD_VENDOR_NAMESPACE_DEFAULT_ISOLATED, fileLdConfig)
+        val gsiCompatibilityResult = sh(cmd, isAtLeastStableAndroid9())
         var isCompatible = false
         val result = if (isShellResultSuccessful(gsiCompatibilityResult)) {
             val lineResult = gsiCompatibilityResult.output[0].split('=')
