@@ -47,7 +47,7 @@
     <string name="current_using_ab_slot_result">\u0020(当前: %s)</string>
 
     <string name="sar_status_title">System-as-root 状态</string>
-    <string name="sar_type_legacy">旧版</string>
+    <string name="sar_type_legacy">旧版, Android 9</string>
 
     <string name="dynamic_partitions_status_title">动态分区 状态</string>
     <string name="dynamic_partitions_enabled_retrofitted">\u0020(改造的)</string>

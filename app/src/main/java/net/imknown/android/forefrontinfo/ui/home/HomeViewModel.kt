@@ -621,7 +621,10 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
 
         val isTwrpSar = mounts.any { it.mountPoint == "/system_root" && it.type != "tmpfs" }
 
-        val isSar = isTheLegacySar || isThe2siSar || isTwrpSar || isAtLeastStableAndroid10()
+        val isSlashSar = mounts.any { it.mountPoint == "/" && it.type != "rootfs" }
+
+        val isSar =
+            isTheLegacySar || isThe2siSar || isTwrpSar || isSlashSar || isAtLeastStableAndroid10()
         var result = translate(isSar)
 
         @ColorRes var color = R.color.colorCritical
@@ -640,6 +643,10 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
                 isTwrpSar -> {
                     color = R.color.colorWaring
                     sarTypeRes = R.string.sar_type_twrp
+                }
+                isSlashSar -> {
+                    color = R.color.colorNoProblem
+                    sarTypeRes = R.string.sar_type_slash
                 }
                 else -> {
                     color = R.color.colorCritical

@@ -47,7 +47,7 @@
     <string name="current_using_ab_slot_result">\u0020(Courant: %s)</string>
 
     <string name="sar_status_title">Status System-as-root</string>
-    <string name="sar_type_legacy">Héritage</string>
+    <string name="sar_type_legacy">Héritage, Android 9</string>
 
     <string name="dynamic_partitions_status_title">Status du Partitions dynamiques</string>
     <string name="dynamic_partitions_enabled_retrofitted">\u0020(Rénové)</string>

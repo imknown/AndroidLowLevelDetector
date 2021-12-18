@@ -49,9 +49,10 @@
     <string name="current_using_ab_slot_result">\u0020(Current: %s)</string>
 
     <string name="sar_status_title">System-as-root status</string>
-    <string name="sar_type_legacy">Legacy</string>
+    <string name="sar_type_legacy">Legacy, Android 9</string>
     <string name="sar_type_2si" translatable="false">2-Stage-Init</string>
     <string name="sar_type_twrp" translatable="false">TWRP</string>
+    <string name="sar_type_slash" translatable="false">/</string>
 
     <string name="dynamic_partitions_status_title">Dynamic partitions status</string>
     <string name="dynamic_partitions_enabled_retrofitted">\u0020(Retrofitted)</string>
