@@ -81,11 +81,14 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         // https://source.android.com/devices/architecture/vintf/objects#device-manifest-file
         // https://source.android.com/compatibility/vts/hal-testability
         // https://android.googlesource.com/platform/cts/+/master/hostsidetests/security/src/android/security/cts/SELinuxHostTest.java#268
-        // https://android.googlesource.com/platform/system/libvintf/+/master/VintfObject.cpp#238
-        // https://android.googlesource.com/platform/system/libvintf/+/master/VintfObject.cpp#289
+        // https://android.googlesource.com/platform/system/libvintf/+/master/VintfObject.cpp#286
+        // https://android.googlesource.com/platform/system/libvintf/+/master/VintfObject.cpp#313
         private const val PROP_TREBLE_ENABLED = "ro.treble.enabled"
-        private const val PATH_VENDOR_TREBLE = "/vendor/etc/vintf/manifest.xml"
-        private const val PATH_VENDOR_LEGACY_NO_FRAGMENTS_TREBLE = "/vendor/manifest.xml"
+        const val PROP_VENDOR_SKU = "ro.boot.product.vendor.sku"
+        private const val PATH_VENDOR_VINTF_SKU = "/vendor/etc/vintf/manifest_%s.xml"
+        private const val PATH_VENDOR_VINTF = "/vendor/etc/vintf/manifest.xml"
+        private const val PATH_VENDOR_VINTF_FRAGMENTS = "/vendor/etc/vintf/manifest/"
+        private const val PATH_VENDOR_LEGACY_NO_FRAGMENTS = "/vendor/manifest.xml"
 
         // https://source.android.com/devices/architecture/vndk?hl=en
         private const val PROP_VNDK_LITE = "ro.vndk.lite"
@@ -695,24 +698,30 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
 
         var trebleResult = translate(isTrebleEnabled)
 
-        @ColorRes val trebleColor = if (isTrebleEnabled) {
-            when {
-                File(PATH_VENDOR_TREBLE).exists() -> {
-                    R.color.colorNoProblem
-                }
-                File(PATH_VENDOR_LEGACY_NO_FRAGMENTS_TREBLE).exists() -> {
-                    trebleResult += MyApplication.getMyString(R.string.treble_legacy_no_fragments)
+        val pathVendorSku = String.format(
+            PATH_VENDOR_VINTF_SKU,
+            getStringProperty(PROP_VENDOR_SKU, isAtLeastStableAndroid12())
+        )
 
-                    R.color.colorWaring
-                }
-                else -> {
-                    trebleResult += MyApplication.getMyString(R.string.treble_other)
-
-                    R.color.colorWaring
-                }
+        @ColorRes val trebleColor = when {
+            File(pathVendorSku).exists()
+                    || File(PATH_VENDOR_VINTF).exists()
+                    || File(PATH_VENDOR_VINTF_FRAGMENTS).exists() -> {
+                R.color.colorNoProblem
             }
-        } else {
-            R.color.colorCritical
+            File(PATH_VENDOR_LEGACY_NO_FRAGMENTS).exists() -> {
+                trebleResult += MyApplication.getMyString(R.string.treble_legacy_no_fragments)
+
+                R.color.colorWaring
+            }
+            isTrebleEnabled -> {
+                trebleResult += MyApplication.getMyString(R.string.treble_other)
+
+                R.color.colorWaring
+            }
+            else -> {
+                R.color.colorCritical
+            }
         }
 
         add(
@@ -722,7 +731,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
             trebleColor
         )
 
-        return isTrebleEnabled
+        return trebleColor != R.color.colorCritical
     }
 
     private fun detectGsiCompatibility(

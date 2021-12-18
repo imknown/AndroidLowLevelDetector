@@ -13,13 +13,12 @@ import net.imknown.android.forefrontinfo.base.extension.formatToLocalZonedDateti
 import net.imknown.android.forefrontinfo.ui.base.IAndroidVersion
 import net.imknown.android.forefrontinfo.ui.base.list.BasePureListViewModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
+import net.imknown.android.forefrontinfo.ui.home.HomeViewModel
 import java.util.*
 
 class OthersViewModel : BasePureListViewModel(), IAndroidVersion {
 
     companion object {
-        private const val PROP_VENDOR_SKU = "ro.boot.product.vendor.sku"
-
         private const val PROP_RO_PRODUCT_CPU_ABI = "ro.product.cpu.abi"
         private const val SYSTEM_PROPERTY_ARCHITECTURE = "os.arch"
 
@@ -85,7 +84,7 @@ class OthersViewModel : BasePureListViewModel(), IAndroidVersion {
             add(
                 tempModels,
                 MyApplication.getMyString(R.string.build_vendor_sku),
-                getStringProperty(PROP_VENDOR_SKU)
+                getStringProperty(HomeViewModel.PROP_VENDOR_SKU)
             )
             add(
                 tempModels,
