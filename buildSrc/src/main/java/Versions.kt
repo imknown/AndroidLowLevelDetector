@@ -77,7 +77,7 @@ object Versions {
         const val coroutines = "1.6.0"
 
         // https://github.com/Kotlin/kotlinx.serialization/releases
-        const val serialization = "1.3.1"
+        const val serialization = "1.3.2"
     }
 
     // https://firebase.google.com/support/release-notes/android
