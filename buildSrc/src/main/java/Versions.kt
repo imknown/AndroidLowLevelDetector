@@ -104,6 +104,6 @@ object Versions {
         const val fuel = "2.3.1"
 
         // https://github.com/G00fY2/version-compare/releases
-        const val versionCompare = "1.4.1"
+        const val versionCompare = "1.5.0"
     }
 }
