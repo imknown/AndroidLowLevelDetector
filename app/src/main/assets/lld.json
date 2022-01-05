@@ -1,30 +1,18 @@
 {
-  "version": "2022-01-03 10:25 +0800",
+  "version": "2022-01-05 19:35 +0800",
   "android": {
-    "securityPatchLevel": "2021-12-05",
-    "googlePlaySystemUpdates": "2021-12-05",
+    "securityPatchLevel": "2022-01-05",
+    "googlePlaySystemUpdates": "2022-01-05",
     "build": {
-      "version": "2021-12-15",
+      "version": "2022-01-04",
       "details": [
         {
-          "id": "SQ1A.211205.008",
-          "revision": "r16"
+          "id": "SP1A.210812.016.A2",
+          "revision": "r25"
         },
         {
-          "id": "SQ1D.211205.016.A1",
-          "revision": "r18"
-        },
-        {
-          "id": "SQ1D.211205.017",
-          "revision": "r19"
-        },
-        {
-          "id": "SQ1D.211205.016.A4",
-          "revision": "r20"
-        },
-        {
-          "id": "SQ1D.211205.016.A5",
-          "revision": "r21"
+          "id": "SQ1A.220105.002",
+          "revision": "r26"
         }
       ]
     },
@@ -77,7 +65,7 @@
   },
   "webView": {
     "stable": {
-      "version": "96.0.4664.104"
+      "version": "97.0.4692.70"
     },
     "beta": {
       "version": "97.0.4692.70"
