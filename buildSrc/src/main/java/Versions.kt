@@ -98,7 +98,7 @@ object Versions {
         const val libsu = "3.2.1"
 
         // https://github.com/square/leakcanary/releases
-        const val leakCanary = "2.8"
+        const val leakCanary = "2.8.1"
 
         // https://github.com/kittinunf/fuel/releases
         const val fuel = "2.3.1"
