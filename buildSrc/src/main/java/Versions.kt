@@ -34,13 +34,13 @@ object Versions {
         const val annotation = "1.3.0"
         const val annotationExperimental = "1.2.0"
 
-        const val appcompat = "1.4.0"
+        const val appcompat = "1.4.1"
 
         const val archCore = "2.1.0"
 
         const val cardview = "1.0.0"
 
-        const val coordinatorLayout = "1.2.0-rc01"
+        const val coordinatorLayout = "1.2.0"
 
         const val constraintLayout = "2.1.2"
 
