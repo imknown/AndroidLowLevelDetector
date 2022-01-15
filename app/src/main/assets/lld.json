@@ -1,14 +1,18 @@
 {
-  "version": "2022-01-13 20:50 +0800",
+  "version": "2022-01-15 11:05 +0800",
   "android": {
     "securityPatchLevel": "2022-01-05",
     "googlePlaySystemUpdates": "2022-01-05",
     "build": {
-      "version": "2022-01-04",
+      "version": "2022-01-14",
       "details": [
         {
           "id": "SQ1A.220105.002",
           "revision": "r26"
+        },
+        {
+          "id": "SQ1D.220105.007",
+          "revision": "r27"
         }
       ]
     },
