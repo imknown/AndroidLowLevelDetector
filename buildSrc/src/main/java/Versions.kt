@@ -27,7 +27,7 @@ object Versions {
     // https://developer.android.com/jetpack/androidx/versions
     object AndroidX {
         // https://github.com/material-components/material-components-android/releases
-        const val material = "1.5.0-rc01"
+        const val material = "1.5.0"
 
         const val activity = "1.4.0"
 
