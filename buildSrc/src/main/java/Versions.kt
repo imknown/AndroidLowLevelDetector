@@ -42,7 +42,7 @@ object Versions {
 
         const val coordinatorLayout = "1.2.0"
 
-        const val constraintLayout = "2.1.2"
+        const val constraintLayout = "2.1.3"
 
         const val core = "1.7.0"
 
