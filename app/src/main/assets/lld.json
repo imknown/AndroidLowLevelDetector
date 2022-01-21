@@ -1,5 +1,5 @@
 {
-  "version": "2022-01-20 19:30 +0800",
+  "version": "2022-01-21 19:10 +0800",
   "android": {
     "securityPatchLevel": "2022-01-05",
     "googlePlaySystemUpdates": "2022-01-05",
@@ -36,7 +36,7 @@
   "linux": {
     "google": {
       "versions": [
-        "5.15.15",
+        "5.15.16",
         "5.10.93",
         "5.4.173",
         "4.19.225",
