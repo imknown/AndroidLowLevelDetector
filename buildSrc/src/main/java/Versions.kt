@@ -86,7 +86,7 @@ object Versions {
         const val googleServices = "4.3.10"
 
         // https://firebase.google.com/docs/android/learn-more#bom
-        const val billOfMaterials = "29.0.3"
+        const val billOfMaterials = "29.0.4"
 
         // https://firebase.google.com/docs/crashlytics/get-started?platform=android
         // https://firebase.google.com/docs/crashlytics/ndk-reports
