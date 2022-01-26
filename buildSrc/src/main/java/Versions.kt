@@ -1,6 +1,6 @@
 object Versions {
     object AndroidBuild {
-        const val androidGradlePlugin = "7.1.0-rc01"
+        const val androidGradlePlugin = "7.1.0"
 
         // https://developer.android.com/studio/releases/build-tools.html#notes
         const val buildToolsVersion = "32.0.0"
