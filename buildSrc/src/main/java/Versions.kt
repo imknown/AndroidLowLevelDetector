@@ -46,11 +46,11 @@ object Versions {
 
         const val core = "1.7.0"
 
-        const val fragment = "1.4.0"
+        const val fragment = "1.4.1"
 
         const val lifecycle = "2.4.0"
 
-        const val preference = "1.2.0-rc01"
+        const val preference = "1.2.0"
 
         const val recyclerView = "1.2.1"
 
