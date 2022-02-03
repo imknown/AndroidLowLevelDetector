@@ -21,14 +21,14 @@ object Versions {
     // https://github.com/google/desugar_jdk_libs/blob/master/CHANGELOG.md
     const val desugarJdkLibs = "1.1.5"
 
+    // https://github.com/material-components/material-components-android/releases
+    const val material = "1.5.0"
+
     // region [AndroidX]
     // https://maven.google.com
     // https://androidstudio.googleblog.com/
     // https://developer.android.com/jetpack/androidx/versions
     object AndroidX {
-        // https://github.com/material-components/material-components-android/releases
-        const val material = "1.5.0"
-
         const val activity = "1.4.0"
 
         const val annotation = "1.3.0"
@@ -38,7 +38,7 @@ object Versions {
 
         const val archCore = "2.1.0"
 
-        const val cardview = "1.0.0"
+        const val cardView = "1.0.0"
 
         const val coordinatorLayout = "1.2.0"
 
@@ -54,7 +54,7 @@ object Versions {
 
         const val recyclerView = "1.2.1"
 
-        const val savedstate = "1.1.0"
+        const val savedState = "1.1.0"
 
         const val swipeRefreshLayout = "1.1.0"
 

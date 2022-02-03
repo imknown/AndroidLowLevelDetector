@@ -70,7 +70,7 @@ dependencies {
 
     api("androidx.preference:preference:${Versions.AndroidX.preference}")
 
-    api("androidx.savedstate:savedstate:${Versions.AndroidX.savedstate}")
+    api("androidx.savedstate:savedstate:${Versions.AndroidX.savedState}")
     // endregion [AndroidX]
 
     // region [Test]
