@@ -1,16 +1,16 @@
 object Versions {
     object AndroidBuild {
-        const val androidGradlePlugin = "7.2.0-beta01"
+        const val androidGradlePlugin = "7.2.0-beta02"
 
         // https://developer.android.com/studio/releases/build-tools.html#notes
-        const val buildToolsVersion = "32.1.0-rc1"
+        const val buildToolsVersion = "33.0.0-rc1"
 
         const val minSdkVersion = 21
         const val compileSdkVersion = 32
         const val targetSdkVersion = 32
 
-        const val ndkVersion = "24.0.7956693 rc2"
-        const val cmake = "3.22.1"
+        const val ndkVersion = "25.0.8141415 rc1"
+        const val cmake = "3.23.0-rc1"
 
         const val versionCode = 59
         const val versionName = "1.15.7_unpublished"
@@ -48,7 +48,7 @@ object Versions {
 
         const val fragment = "1.4.1"
 
-        const val lifecycle = "2.4.0"
+        const val lifecycle = "2.4.1"
 
         const val preference = "1.2.0"
 
