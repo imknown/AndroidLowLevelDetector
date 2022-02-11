@@ -13,7 +13,7 @@
 
     <item
         android:id="@+id/navigation_prop"
-        android:icon="@drawable/ic_baseline_prop_24"
+        android:icon="@drawable/ic_prop_24dp"
         android:title="@string/title_prop" />
 
     <item

@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.preference.PreferenceManager
+import com.google.android.material.color.DynamicColors
 import com.topjohnwu.superuser.Shell
 import net.imknown.android.forefrontinfo.base.mvvm.Event
 import java.io.File
@@ -44,14 +45,6 @@ open class MyApplication : Application() {
         fun getMyString(@StringRes resId: Int, vararg formatArgs: Any?) =
             instance.getString(resId, *formatArgs)
 
-        fun initTheme() {
-            val themesValue = sharedPreferences.getString(
-                getMyString(R.string.interface_themes_key),
-                getMyString(R.string.interface_themes_follow_system_value)
-            )!!
-            setMyTheme(themesValue)
-        }
-
         fun setMyTheme(themesValue: String) {
             @AppCompatDelegate.NightMode val mode = when (themesValue) {
                 getMyString(R.string.interface_themes_follow_system_value) -> {
@@ -84,9 +77,21 @@ open class MyApplication : Application() {
 
         instance = this@MyApplication
 
+        initTheme()
+
         initShell()
 
         initLanguage()
+    }
+
+    private fun initTheme() {
+        DynamicColors.applyToActivitiesIfAvailable(this)
+
+        val themesValue = sharedPreferences.getString(
+            getMyString(R.string.interface_themes_key),
+            getMyString(R.string.interface_themes_follow_system_value)
+        )!!
+        setMyTheme(themesValue)
     }
 
     private fun initShell() {

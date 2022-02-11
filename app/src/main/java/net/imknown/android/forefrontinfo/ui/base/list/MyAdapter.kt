@@ -2,6 +2,7 @@ package net.imknown.android.forefrontinfo.ui.base.list
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.color.MaterialColors
 
 class MyAdapter : RecyclerView.Adapter<MyViewHolder>() {
     companion object {
@@ -24,9 +25,12 @@ class MyAdapter : RecyclerView.Adapter<MyViewHolder>() {
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {}
 
     private fun onBindFullViewHolder(holder: MyViewHolder, position: Int) {
-        holder.binding.tvTitle.setBackgroundResource(myModels[position].color)
-        holder.binding.tvTitle.text = myModels[position].title
-        holder.binding.tvDetail.text = myModels[position].detail
+        with(holder.binding) {
+            val backgroundColor = MaterialColors.getColor(root, myModels[position].color)
+            tvTitle.setBackgroundColor(backgroundColor)
+            tvTitle.text = myModels[position].title
+            tvDetail.text = myModels[position].detail
+        }
     }
 
     private fun onBindPayloadViewHolder(

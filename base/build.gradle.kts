@@ -56,6 +56,8 @@ dependencies {
 
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:${Versions.desugarJdkLibs}")
 
+    api("com.google.android.material:material:${Versions.material}")
+
     // region [AndroidX]
     api("androidx.activity:activity-ktx:${Versions.AndroidX.activity}")
 

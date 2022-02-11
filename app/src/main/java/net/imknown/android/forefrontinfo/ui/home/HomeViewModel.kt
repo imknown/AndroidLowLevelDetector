@@ -8,6 +8,7 @@ import android.content.res.Resources
 import android.os.Build
 import android.provider.Settings
 import android.util.Log
+import androidx.annotation.AttrRes
 import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
@@ -379,9 +380,9 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
 
     private fun detectAndroid(tempModels: ArrayList<MyModel>, lld: Lld) {
         @ColorRes val androidColor = when {
-            isLatestStableAndroid(lld) || isLatestPreviewAndroid(lld) -> R.color.colorNoProblem
-            isSupportedByUpstreamAndroid(lld) -> R.color.colorWaring
-            else -> R.color.colorCritical
+            isLatestStableAndroid(lld) || isLatestPreviewAndroid(lld) -> R.attr.colorNoProblem
+            isSupportedByUpstreamAndroid(lld) -> R.attr.colorWaring
+            else -> R.attr.colorCritical
         }
 
         val previewVersion = lld.android.preview.version
@@ -475,9 +476,9 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
                 || isLatestPreviewAndroid(lld)
 
         @ColorRes val buildIdColor = when {
-            isDateHigherThanConfig() -> R.color.colorNoProblem
-            isLatestStableAndroid(lld) -> R.color.colorWaring
-            else -> R.color.colorCritical
+            isDateHigherThanConfig() -> R.attr.colorNoProblem
+            isLatestStableAndroid(lld) -> R.attr.colorWaring
+            else -> R.attr.colorCritical
         }
 
         add(
@@ -505,10 +506,10 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
     ) {
         val lldSecurityPatch = lld.android.securityPatchLevel
         @ColorRes val securityPatchColor = when {
-            !isPropertyValueNotEmpty(securityPatch) -> R.color.colorCritical
-            securityPatch >= lldSecurityPatch -> R.color.colorNoProblem
-            getSecurityPatchYearMonth(securityPatch) >= getSecurityPatchYearMonth(lldSecurityPatch) -> R.color.colorWaring
-            else -> R.color.colorCritical
+            !isPropertyValueNotEmpty(securityPatch) -> R.attr.colorCritical
+            securityPatch >= lldSecurityPatch -> R.attr.colorNoProblem
+            getSecurityPatchYearMonth(securityPatch) >= getSecurityPatchYearMonth(lldSecurityPatch) -> R.attr.colorWaring
+            else -> R.attr.colorCritical
         }
 
         add(
@@ -527,14 +528,14 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         securityPatch.substringBeforeLast('-')
 
     private fun detectPerformanceClass(tempModels: ArrayList<MyModel>) {
-        @ColorRes var performanceColorRes = R.color.colorCritical
+        @ColorRes var performanceColorRes = R.attr.colorCritical
 
         val result = if (isAtLeastStableAndroid12()) {
             val performanceClass = Build.VERSION.MEDIA_PERFORMANCE_CLASS
             if (performanceClass == Build.VERSION.SDK_INT) {
-                performanceColorRes = R.color.colorNoProblem
+                performanceColorRes = R.attr.colorNoProblem
             } else if (performanceClass == Build.VERSION.SDK_INT - 1) {
-                performanceColorRes = R.color.colorWaring
+                performanceColorRes = R.attr.colorWaring
             }
 
             if (performanceClass != 0) {
@@ -560,7 +561,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         val linuxVersionString = System.getProperty(SYSTEM_PROPERTY_LINUX_VERSION)
         val linuxVersion = Version(linuxVersionString)
 
-        @ColorRes var linuxColor = R.color.colorCritical
+        @ColorRes var linuxColor = R.attr.colorCritical
 
         val versionsSupported = lld.linux.google.versions
         versionsSupported.forEach {
@@ -568,9 +569,9 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
                 && linuxVersion.minor == Version(it).minor
             ) {
                 linuxColor = if (linuxVersion.isAtLeast(it)) {
-                    R.color.colorNoProblem
+                    R.attr.colorNoProblem
                 } else {
-                    R.color.colorWaring
+                    R.attr.colorWaring
                 }
 
                 return@forEach
@@ -650,29 +651,29 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
             isTheLegacySar || isThe2siSar || isTwrpSar || isSlashSar || isAtLeastStableAndroid10()
         var result = translate(isSar)
 
-        @ColorRes var color = R.color.colorCritical
+        @ColorRes var color = R.attr.colorCritical
         @StringRes val sarTypeRes: Int
 
         if (isSar) {
             when {
                 isTheLegacySar -> {
-                    color = R.color.colorWaring
+                    color = R.attr.colorWaring
                     sarTypeRes = R.string.sar_type_legacy
                 }
                 isThe2siSar -> {
-                    color = R.color.colorNoProblem
+                    color = R.attr.colorNoProblem
                     sarTypeRes = R.string.sar_type_2si
                 }
                 isTwrpSar -> {
-                    color = R.color.colorWaring
+                    color = R.attr.colorWaring
                     sarTypeRes = R.string.sar_type_twrp
                 }
                 isSlashSar -> {
-                    color = R.color.colorNoProblem
+                    color = R.attr.colorNoProblem
                     sarTypeRes = R.string.sar_type_slash
                 }
                 else -> {
-                    color = R.color.colorCritical
+                    color = R.attr.colorCritical
                     sarTypeRes = android.R.string.unknownName
                 }
             }
@@ -731,21 +732,21 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
                 File(pathVendorSku).exists()
                         || File(PATH_VENDOR_VINTF).exists()
                         || File(PATH_VENDOR_VINTF_FRAGMENTS).exists() -> {
-                    R.color.colorNoProblem
+                    R.attr.colorNoProblem
                 }
                 File(PATH_VENDOR_LEGACY_NO_FRAGMENTS).exists() -> {
                     trebleResult += MyApplication.getMyString(R.string.treble_legacy_no_fragments)
 
-                    R.color.colorWaring
+                    R.attr.colorWaring
                 }
                 else -> {
                     trebleResult += MyApplication.getMyString(R.string.treble_other)
 
-                    R.color.colorWaring
+                    R.attr.colorWaring
                 }
             }
         } else {
-            R.color.colorCritical
+            R.attr.colorCritical
         }
 
         add(
@@ -755,7 +756,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
             trebleColor
         )
 
-        return trebleColor != R.color.colorCritical
+        return trebleColor != R.attr.colorCritical
     }
 
     private fun detectGsiCompatibility(
@@ -774,15 +775,15 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
             val lineResult = gsiCompatibilityResult.output[0].split('=')
             val isCompatible = lineResult.isNotEmpty() && lineResult[1].trim().toBoolean()
             if (isCompatible) {
-                Pair(R.string.result_compliant, R.color.colorNoProblem)
+                Pair(R.string.result_compliant, R.attr.colorNoProblem)
             } else {
-                Pair(R.string.result_not_compliant, R.color.colorWaring)
+                Pair(R.string.result_not_compliant, R.attr.colorWaring)
             }
         } else {
             if (isTrebleEnabled && isAtLeastStableAndroid9()) {
-                Pair(R.string.result_unidentified, R.color.colorWaring)
+                Pair(R.string.result_unidentified, R.attr.colorWaring)
             } else {
-                Pair(R.string.result_not_supported, R.color.colorCritical)
+                Pair(R.string.result_not_supported, R.attr.colorCritical)
             }
         }
 
@@ -827,7 +828,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
             "config_defaultModuleMetadataProvider", "string", "android"
         )
 
-        @ColorRes var moduleColor = R.color.colorCritical
+        @ColorRes var moduleColor = R.attr.colorCritical
 
         val result = if (idConfigDefaultModuleMetadataProvider != 0) {
             try {
@@ -850,7 +851,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
                 if (versionName >= latestGooglePlaySystemUpdates
                     || "$versionName-01" >= latestGooglePlaySystemUpdates
                 ) {
-                    moduleColor = R.color.colorNoProblem
+                    moduleColor = R.attr.colorNoProblem
                 }
 
                 getResult()
@@ -886,9 +887,9 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
             vndkColor = if (
                 (isLatestPreviewAndroid(lld) || vndkVersionResult >= lld.android.stable.api) && !hasVndkLite
             ) {
-                R.color.colorNoProblem
+                R.attr.colorNoProblem
             } else {
-                R.color.colorWaring
+                R.attr.colorWaring
             }
 
             isVndkBuiltInResult += MyApplication.getMyString(
@@ -896,7 +897,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
                 if (hasVndkLite) "$vndkVersionResult, Lite" else vndkVersionResult
             )
         } else {
-            vndkColor = R.color.colorCritical
+            vndkColor = R.attr.colorCritical
         }
 
         add(
@@ -923,9 +924,9 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         }
 
         @ColorRes val apexColor = when {
-            apexUpdatable -> R.color.colorNoProblem
-            isLegacyFlattenedApex -> R.color.colorWaring
-            else -> R.color.colorCritical
+            apexUpdatable -> R.attr.colorNoProblem
+            isLegacyFlattenedApex -> R.attr.colorWaring
+            else -> R.attr.colorCritical
         }
 
         add(
@@ -991,23 +992,23 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
             DevicePolicyManager.ENCRYPTION_STATUS_ACTIVE,
             DevicePolicyManager.ENCRYPTION_STATUS_ACTIVE_PER_USER -> {
                 result = R.string.result_encrypted
-                color = R.color.colorNoProblem
+                color = R.attr.colorNoProblem
             }
             DevicePolicyManager.ENCRYPTION_STATUS_ACTIVE_DEFAULT_KEY -> {
                 result = R.string.result_encrypted_no_key_set
-                color = R.color.colorWaring
+                color = R.attr.colorWaring
             }
             DevicePolicyManager.ENCRYPTION_STATUS_INACTIVE -> {
                 result = R.string.result_not_encrypted
-                color = R.color.colorCritical
+                color = R.attr.colorCritical
             }
             DevicePolicyManager.ENCRYPTION_STATUS_UNSUPPORTED -> {
                 result = R.string.result_not_supported
-                color = R.color.colorCritical
+                color = R.attr.colorCritical
             }
             else -> {
                 result = R.string.result_not_supported
-                color = R.color.colorCritical
+                color = R.attr.colorCritical
             }
         }
 
@@ -1040,29 +1041,29 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
             when (seLinuxStatusResult) {
                 SELINUX_STATUS_ENFORCING -> {
                     result = R.string.selinux_status_enforcing_mode
-                    color = R.color.colorNoProblem
+                    color = R.attr.colorNoProblem
                 }
                 SELINUX_STATUS_PERMISSIVE -> {
                     // val seLinuxPolicyVersion = sh(CMD_SELINUX_POLICY_VERSION, isAtLeastAndroid8())
                     result = R.string.selinux_status_permissive_mode
-                    color = R.color.colorWaring
+                    color = R.attr.colorWaring
                 }
                 SELINUX_STATUS_DISABLED -> {
                     result = R.string.result_disabled
-                    color = R.color.colorCritical
+                    color = R.attr.colorCritical
                 }
                 else -> {
                     result = android.R.string.unknownName
-                    color = R.color.colorCritical
+                    color = R.attr.colorCritical
                 }
             }
         } else {
             if (seLinuxStatusResult.endsWith(CMD_ERROR_PERMISSION_DENIED)) {
                 result = R.string.selinux_status_enforcing_mode
-                color = R.color.colorNoProblem
+                color = R.attr.colorNoProblem
             } else {
                 result = android.R.string.unknownName
-                color = R.color.colorCritical
+                color = R.attr.colorCritical
             }
         }
 
@@ -1088,12 +1089,12 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
             val toyboxRealVersionString = toyboxVersion.replace("toybox ", "")
             val toyboxRealVersion = Version(toyboxRealVersionString)
             when {
-                toyboxRealVersion.isAtLeast(lld.toybox.stable.version) -> R.color.colorNoProblem
-                toyboxRealVersion.isAtLeast(lld.toybox.support.version) -> R.color.colorWaring
-                else -> R.color.colorCritical
+                toyboxRealVersion.isAtLeast(lld.toybox.stable.version) -> R.attr.colorNoProblem
+                toyboxRealVersion.isAtLeast(lld.toybox.support.version) -> R.attr.colorWaring
+                else -> R.attr.colorCritical
             }
         } else {
-            R.color.colorCritical
+            R.attr.colorCritical
         }
         add(
             tempModels,
@@ -1207,9 +1208,9 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
 
         val lldWebViewStable = lld.webView.stable.version
         @ColorRes val webViewColor = when {
-            Version(builtInVersionName).isAtLeast(lldWebViewStable) -> R.color.colorNoProblem
-            Version(implementVersionName).isAtLeast(lldWebViewStable) -> R.color.colorWaring
-            else -> R.color.colorCritical
+            Version(builtInVersionName).isAtLeast(lldWebViewStable) -> R.attr.colorNoProblem
+            Version(implementVersionName).isAtLeast(lldWebViewStable) -> R.attr.colorWaring
+            else -> R.attr.colorCritical
         }
 
         add(
@@ -1299,9 +1300,9 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
             result += MyApplication.getMyString(R.string.outdated_target_version_sdk_version_apk_result_none)
 
             if (isLatestStableAndroid(lld) || isLatestPreviewAndroid(lld)) {
-                R.color.colorNoProblem
+                R.attr.colorNoProblem
             } else {
-                R.color.colorWaring
+                R.attr.colorWaring
             }
         } else {
             val shouldOrderByPackageNameFirst = MyApplication.sharedPreferences.getBoolean(
@@ -1331,7 +1332,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
                 }
             }
 
-            R.color.colorCritical
+            R.attr.colorCritical
         }
 
         return MyModel(
@@ -1396,9 +1397,9 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
             title,
             detail.toString(),
             if (condition) {
-                R.color.colorNoProblem
+                R.attr.colorNoProblem
             } else {
-                R.color.colorCritical
+                R.attr.colorCritical
             }
         )
     )
@@ -1407,6 +1408,6 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         tempModels: ArrayList<MyModel>,
         title: String,
         detail: String?,
-        @ColorRes color: Int
+        @AttrRes color: Int
     ) = tempModels.add(MyModel(title, detail.toString(), color))
 }

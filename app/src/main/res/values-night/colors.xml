@@ -2,35 +2,52 @@
 <resources>
     <color name="ic_launcher_background">#069868</color>
 
-    <color name="colorPrimary">@android:color/white</color>
-    <color name="colorPrimaryVariant">@android:color/white</color>
-    <color name="colorOnPrimary">@android:color/black</color>
+    <!-- region [M3] -->
+    <color name="md_theme_primary">#86D992</color>
+    <color name="md_theme_onPrimary">#003915</color>
+    <color name="md_theme_primaryContainer">#005321</color>
+    <color name="md_theme_onPrimaryContainer">#A1F6AC</color>
 
-    <color name="colorSecondary">#4AA85E</color>
-    <color name="colorSecondaryVariant">#4AA85E</color>
-    <color name="colorOnSecondary">@android:color/white</color>
+    <color name="md_theme_secondary">#B8CCB6</color>
+    <color name="md_theme_onSecondary">#233425</color>
+    <color name="md_theme_secondaryContainer">#394B3A</color>
+    <color name="md_theme_onSecondaryContainer">#D4E8D1</color>
 
-    <color name="colorError">#F00</color>
-    <color name="colorOnError">@android:color/white</color>
+    <color name="md_theme_tertiary">#A1CED7</color>
+    <color name="md_theme_onTertiary">#00363D</color>
+    <color name="md_theme_tertiaryContainer">#1F4D55</color>
+    <color name="md_theme_onTertiaryContainer">#BDEAF3</color>
 
-    <color name="colorSurface">@android:color/black</color>
-    <color name="colorOnSurface">@android:color/white</color>
+    <color name="md_theme_error">#FFB4AB</color>
+    <color name="md_theme_errorContainer">#93000A</color>
+    <color name="md_theme_onError">#690005</color>
+    <color name="md_theme_onErrorContainer">#FFDAD6</color>
 
-    <color name="colorBackground">@android:color/black</color>
-    <color name="colorOnBackground">@android:color/white</color>
+    <color name="md_theme_background">#1A1C19</color>
+    <color name="md_theme_onBackground">#E2E3DD</color>
 
-    <color name="colorStatusBar">@android:color/black</color>
-    <color name="colorNavigationBar">@android:color/black</color>
+    <color name="md_theme_surface">#1A1C19</color>
+    <color name="md_theme_onSurface">#E2E3DD</color>
+    <color name="md_theme_surfaceVariant">#414941</color>
+    <color name="md_theme_onSurfaceVariant">#C1C9BE</color>
 
-    <color name="colorBackgroundFloating">@android:color/black</color>
+    <color name="md_theme_outline">#8B9389</color>
 
-    <color name="colorBottomNavigationViewBackground">@android:color/black</color>
+    <color name="md_theme_inverseOnSurface">#1A1C19</color>
+    <color name="md_theme_inverseSurface">#E2E3DD</color>
+    <color name="md_theme_inversePrimary">#166D33</color>
+
+    <color name="md_theme_shadow">#000000</color>
+
+    <color name="md_theme_surfaceTint">#86D992</color>
+    <color name="md_theme_surfaceTintColor">#86D992</color>
+    <!-- endregion [M3] -->
+
+    <color name="colorStatusBar">@android:color/transparent</color>
+    <color name="colorNavigationBar">@android:color/transparent</color>
 
     <color name="colorStateless">#181818</color>
-    <color name="colorDetail">#202020</color>
     <color name="colorNoProblem">#2B5128</color>
-    <color name="colorWaring">#7E451F</color>
-    <color name="colorCritical">#802929</color>
-
-    <color name="colorMainText">@android:color/white</color>
+    <color name="colorWaring">#7E581F</color>
+    <color name="colorCritical">#812F2F</color>
 </resources>

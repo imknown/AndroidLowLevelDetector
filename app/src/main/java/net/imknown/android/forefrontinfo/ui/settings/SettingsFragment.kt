@@ -1,16 +1,15 @@
 package net.imknown.android.forefrontinfo.ui.settings
 
 import android.os.Bundle
-import android.os.Looper
+import android.view.View
 import androidx.annotation.StringRes
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.whenCreated
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.extension.isChinaMainlandTimezone
@@ -28,15 +27,24 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
     private val settingsViewModel by viewModels<SettingsViewModel>()
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        lifecycleScope.launch(Dispatchers.IO) {
-            Looper.myLooper() ?: Looper.prepare()
-            setPreferencesFromResource(R.xml.preferences, rootKey)
-            Looper.myLooper()?.quit()
+        setPreferencesFromResource(R.xml.preferences, rootKey)
+    }
 
-            whenCreated {
-                initViews()
-            }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        ViewCompat.setOnApplyWindowInsetsListener(listView) { insetView, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            insetView.updatePadding(
+                left = insets.left,
+                right = insets.right,
+                bottom = insets.bottom
+            )
+
+            windowInsets
         }
+
+        initViews()
     }
 
     private fun initViews() {

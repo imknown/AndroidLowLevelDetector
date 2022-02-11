@@ -143,8 +143,6 @@ dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:${Versions.desugarJdkLibs}")
 
     // region [AndroidX]
-    implementation("com.google.android.material:material:${Versions.material}")
-
     implementation("androidx.cardview:cardview:${Versions.AndroidX.cardView}")
 
     implementation("androidx.coordinatorlayout:coordinatorlayout:${Versions.AndroidX.coordinatorLayout}")
