@@ -14,8 +14,9 @@ plugins {
 }
 
 android {
-    compileSdk = Versions.AndroidBuild.compileSdkVersion
-    buildToolsVersion = Versions.AndroidBuild.buildToolsVersion
+    compileSdk = Versions.AndroidBuild.compileSdk
+    compileSdkPreview = Versions.AndroidBuild.compileSdkPreview
+    buildToolsVersion = Versions.AndroidBuild.buildTools
 
     defaultConfig {
         applicationId = "net.imknown.android.forefrontinfo"
@@ -27,8 +28,9 @@ android {
         val currentGitBranchName = "git rev-parse --abbrev-ref HEAD".execute()
         base.archivesName.set("lld-$versionName-$versionCode-$currentDatetime-$currentGitBranchName")
 
-        minSdk = Versions.AndroidBuild.minSdkVersion
-        targetSdk = Versions.AndroidBuild.targetSdkVersion
+        minSdk = Versions.AndroidBuild.minSdk
+        targetSdk = Versions.AndroidBuild.targetSdk
+        targetSdkPreview = Versions.AndroidBuild.targetSdkPreview
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -36,7 +38,7 @@ android {
 
         buildConfigField("String", "GIT_BRANCH", "\"$currentGitBranchName\"")
 
-        ndkVersion = Versions.AndroidBuild.ndkVersion
+        ndkVersion = Versions.AndroidBuild.ndk
 
         externalNativeBuild {
             cmake {

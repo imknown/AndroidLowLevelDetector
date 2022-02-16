@@ -3,13 +3,15 @@ object Versions {
         const val androidGradlePlugin = "7.2.0-beta02"
 
         // https://developer.android.com/studio/releases/build-tools.html#notes
-        const val buildToolsVersion = "33.0.0-rc1"
+        const val buildTools = "33.0.0-rc1"
 
-        const val minSdkVersion = 21
-        const val compileSdkVersion = 32
-        const val targetSdkVersion = 32
+        const val minSdk = 21
+        const val compileSdk = 32
+        const val compileSdkPreview = "Tiramisu"
+        const val targetSdk = 32
+        const val targetSdkPreview = "Tiramisu"
 
-        const val ndkVersion = "25.0.8141415 rc1"
+        const val ndk = "25.0.8141415 rc1"
         const val cmake = "3.23.0-rc1"
 
         const val versionCode = 59
