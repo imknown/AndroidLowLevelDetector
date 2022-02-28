@@ -13,7 +13,7 @@ class MyAdapter : RecyclerView.Adapter<MyViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = MyViewHolder(parent)
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int, payloads: MutableList<Any>) {
-        if (payloads.isNullOrEmpty()) {
+        if (payloads.isEmpty()) {
             onBindFullViewHolder(holder, position)
         } else {
             onBindPayloadViewHolder(holder, position, payloads)

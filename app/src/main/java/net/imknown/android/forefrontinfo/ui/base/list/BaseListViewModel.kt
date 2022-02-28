@@ -66,7 +66,7 @@ abstract class BaseListViewModel : BaseViewModel() {
         myModels: ArrayList<MyModel>,
         newModels: ArrayList<MyModel>
     ) = viewModelScope.launch(Dispatchers.Default) {
-        if (newModels.isNullOrEmpty()) {
+        if (newModels.isEmpty()) {
             return@launch
         }
 
@@ -130,7 +130,7 @@ abstract class BaseListViewModel : BaseViewModel() {
     @WorkerThread
     protected fun sh(cmd: String, condition: Boolean = true): MyShellResult {
         return if (condition) {
-            val result = Shell.sh(cmd).exec()
+            val result = Shell.cmd(cmd).exec()
             MyShellResult(result.out, result.isSuccess)
         } else {
             MyShellResult(emptyList(), false)
