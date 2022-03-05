@@ -6,13 +6,13 @@ plugins {
 
 android {
     compileSdk = Versions.AndroidBuild.compileSdk
-    compileSdkPreview = Versions.AndroidBuild.compileSdkPreview
+    // compileSdkPreview = Versions.AndroidBuild.compileSdkPreview
     buildToolsVersion = Versions.AndroidBuild.buildTools
 
     defaultConfig {
         minSdk = Versions.AndroidBuild.minSdk
         targetSdk = Versions.AndroidBuild.targetSdk
-        targetSdkPreview = Versions.AndroidBuild.targetSdkPreview
+        // targetSdkPreview = Versions.AndroidBuild.targetSdkPreview
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
