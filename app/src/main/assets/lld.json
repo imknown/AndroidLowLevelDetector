@@ -1,39 +1,31 @@
 {
-  "version": "2022-03-07 19:15 +0800",
+  "version": "2022-03-08 19:35 +0800",
   "android": {
-    "securityPatchLevel": "2022-02-05",
-    "googlePlaySystemUpdates": "2022-02-01",
+    "securityPatchLevel": "2022-03-05",
+    "googlePlaySystemUpdates": "2022-03-05",
     "build": {
-      "version": "2022-02-17",
+      "version": "2022-03-07",
       "details": [
         {
-          "id": "SQ1A.220205.002",
-          "revision": "r28"
-        },
-        {
-          "id": "SQ1D.220205.003",
-          "revision": "r29"
-        },
-        {
-          "id": "SQ1D.220205.004",
-          "revision": "r32"
+          "id": "SP2A.220305.012",
+          "revision": "r1"
         }
       ]
     },
     "stable": {
-      "name": "Snow Cone",
-      "api": "31",
-      "version": "12"
+      "name": "Snow Cone v2",
+      "api": "32",
+      "version": "12L, Snow Cone v2"
     },
     "support": {
       "name": "Quince Tart",
       "api": "29",
-      "version": "10"
+      "version": "10, Quince Tart"
     },
     "preview": {
       "name": "Tiramisu",
       "api": "33",
-      "version": "13",
+      "version": "13, Tiramisu",
       "phase": "DP1"
     }
   },
