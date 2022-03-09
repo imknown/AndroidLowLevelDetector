@@ -1,55 +1,47 @@
 {
-  "version": "2022-03-04 23:20 +0800",
+  "version": "2022-03-09 19:25 +0800",
   "android": {
-    "securityPatchLevel": "2022-02-05",
-    "googlePlaySystemUpdates": "2022-02-01",
+    "securityPatchLevel": "2022-03-05",
+    "googlePlaySystemUpdates": "2022-03-05",
     "build": {
-      "version": "2022-02-17",
+      "version": "2022-03-07",
       "details": [
         {
-          "id": "SQ1A.220205.002",
-          "revision": "r28"
-        },
-        {
-          "id": "SQ1D.220205.003",
-          "revision": "r29"
-        },
-        {
-          "id": "SQ1D.220205.004",
-          "revision": "r32"
+          "id": "SP2A.220305.012",
+          "revision": "r1"
         }
       ]
     },
     "stable": {
-      "name": "Snow Cone",
-      "api": "31",
-      "version": "12"
+      "name": "Snow Cone v2",
+      "api": "32",
+      "version": "12L, Snow Cone v2"
     },
     "support": {
       "name": "Quince Tart",
       "api": "29",
-      "version": "10"
+      "version": "10, Quince Tart"
     },
     "preview": {
       "name": "Tiramisu",
       "api": "33",
-      "version": "13",
+      "version": "13, Tiramisu",
       "phase": "DP1"
     }
   },
   "linux": {
     "google": {
       "versions": [
-        "5.15.26",
-        "5.10.103",
-        "5.4.182",
-        "4.19.232",
-        "4.14.269",
-        "4.9.304"
+        "5.15.27",
+        "5.10.104",
+        "5.4.183",
+        "4.19.233",
+        "4.14.270",
+        "4.9.305"
       ]
     },
     "mainline": {
-      "version": "5.17-rc6"
+      "version": "5.17-rc7"
     }
   },
   "toybox": {
