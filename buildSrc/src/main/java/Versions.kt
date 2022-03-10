@@ -1,6 +1,6 @@
 object Versions {
     object AndroidBuild {
-        const val androidGradlePlugin = "7.2.0-beta03"
+        const val androidGradlePlugin = "7.2.0-beta04"
 
         // https://developer.android.com/studio/releases/build-tools.html#notes
         const val buildTools = "33.0.0-rc1"
@@ -97,7 +97,7 @@ object Versions {
 
     object ThirdParties {
         // https://github.com/topjohnwu/libsu/releases
-        const val libsu = "4.0.0"
+        const val libsu = "4.0.2"
 
         // https://github.com/square/leakcanary/releases
         const val leakCanary = "2.8.1"
