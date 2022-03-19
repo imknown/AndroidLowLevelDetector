@@ -1,8 +1,10 @@
 package net.imknown.android.forefrontinfo.ui.home
 
+import android.annotation.SuppressLint
 import android.app.admin.DevicePolicyManager
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.os.Build
 import android.provider.Settings
@@ -798,6 +800,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
             versionName, moduleProvider, latestGooglePlaySystemUpdates
         )
 
+        @SuppressLint("DiscouragedApi")
         // com.android.internal.R.string.config_defaultModuleMetadataProvider
         val idConfigDefaultModuleMetadataProvider = Resources.getSystem().getIdentifier(
             "config_defaultModuleMetadataProvider",
@@ -815,10 +818,15 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
                     idConfigDefaultModuleMetadataProvider
                 )
 
-                versionName = MyApplication.instance.packageManager.getPackageInfo(
-                    moduleProvider,
-                    0
-                ).versionName
+                val packageManager = MyApplication.instance.packageManager
+                val packageInfo = if (isAtLeastStableAndroid13()) {
+                    val flags = PackageManager.PackageInfoFlags.of(0)
+                    packageManager.getPackageInfo(moduleProvider, flags)
+                } else {
+                    @Suppress("Deprecation")
+                    packageManager.getPackageInfo(moduleProvider, 0)
+                }
+                versionName = packageInfo.versionName
 
                 if (versionName >= latestGooglePlaySystemUpdates
                     || "$versionName-01" >= latestGooglePlaySystemUpdates
@@ -1090,7 +1098,14 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
 
     private fun getPackageInfo(packageName: String) =
         try {
-            MyApplication.instance.packageManager.getPackageInfo(packageName, 0)
+            val packageManager = MyApplication.instance.packageManager
+            if (isAtLeastStableAndroid13()) {
+                val flags = PackageManager.PackageInfoFlags.of(0)
+                packageManager.getPackageInfo(packageName, flags)
+            } else {
+                @Suppress("Deprecation")
+                packageManager.getPackageInfo(packageName, 0)
+            }
         } catch (e: Exception) {
             Log.d(javaClass.simpleName, "$packageName not found.", e)
             null
@@ -1161,13 +1176,20 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
     }
 
     private fun getOutdatedTargetSdkVersionApkModel(lld: Lld): MyModel {
-        var systemApkList = MyApplication.instance.packageManager.getInstalledApplications(0)
-            .filter {
-                (it.flags and (ApplicationInfo.FLAG_UPDATED_SYSTEM_APP or ApplicationInfo.FLAG_SYSTEM) > 0)
-                        && (it.targetSdkVersion < Build.VERSION.SDK_INT
-                        /* */ || (isPreviewAndroid() && it.targetSdkVersion == Build.VERSION.SDK_INT)
-                        )
-            }
+        val packageManager = MyApplication.instance.packageManager
+        val installedApplications = if (isAtLeastStableAndroid13()) {
+            val flags = PackageManager.ApplicationInfoFlags.of(0)
+            packageManager.getInstalledApplications(flags)
+        } else {
+            @Suppress("Deprecation")
+            packageManager.getInstalledApplications(0)
+        }
+        var systemApkList = installedApplications.filter {
+            (it.flags and (ApplicationInfo.FLAG_UPDATED_SYSTEM_APP or ApplicationInfo.FLAG_SYSTEM) > 0)
+                    && (it.targetSdkVersion < Build.VERSION.SDK_INT
+                    /* */ || (isPreviewAndroid() && it.targetSdkVersion == Build.VERSION.SDK_INT)
+                    )
+        }
 
         var result = MyApplication.getMyString(
             R.string.outdated_target_version_sdk_version_apk_my_first_api_level,
