@@ -15,7 +15,7 @@ plugins {
 
 android {
     compileSdk = Versions.AndroidBuild.compileSdk
-    compileSdkPreview = Versions.AndroidBuild.compileSdkPreview
+    // compileSdkPreview = Versions.AndroidBuild.compileSdkPreview
     buildToolsVersion = Versions.AndroidBuild.buildTools
 
     defaultConfig {

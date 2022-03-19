@@ -106,7 +106,7 @@ class OthersViewModel : BasePureListViewModel(), IAndroidVersion {
             MyApplication.getMyString(R.string.os_arch),
             System.getProperty(SYSTEM_PROPERTY_ARCHITECTURE)
         )
-        @Suppress("Deprecation")
+        @Suppress("DEPRECATION")
         add(tempModels, MyApplication.getMyString(R.string.build_cpu_abi), Build.CPU_ABI)
         // endregion [Process]
 

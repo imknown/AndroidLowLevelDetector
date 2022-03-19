@@ -102,13 +102,7 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
         // endregion [installer]
 
         // region [install time]
-        val packageInfo = if (isAtLeastStableAndroid13()) {
-            val flags = PackageManager.PackageInfoFlags.of(0)
-            packageManager.getPackageInfo(packageName, flags)
-        } else {
-            @Suppress("Deprecation")
-            packageManager.getPackageInfo(packageName, 0)
-        }
+        val packageInfo = packageManager.getPackageInfo(packageName, 0)
         val firstInstallTime = packageInfo.firstInstallTime.formatToLocalZonedDatetimeString()
         val lastUpdateTime = packageInfo.lastUpdateTime.formatToLocalZonedDatetimeString()
         // endregion [install time]
@@ -143,22 +137,16 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
         packageManager: PackageManager
     ) = withContext(Dispatchers.Default) {
         return@withContext if (isAtLeastStableAndroid9()) {
-            val packageInfo = if (isAtLeastStableAndroid13()) {
-                val flags = PackageManager.PackageInfoFlags.of(
-                    PackageManager.GET_SIGNING_CERTIFICATES.toLong()
-                )
-                packageManager.getPackageInfo(packageName, flags)
-            } else {
-                @Suppress("Deprecation")
-                packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNING_CERTIFICATES)
-            }
-            packageInfo?.signingInfo?.apkContentsSigners
+            packageManager.getPackageInfo(
+                packageName,
+                PackageManager.GET_SIGNING_CERTIFICATES
+            )?.signingInfo?.apkContentsSigners
         } else {
-            @Suppress("Deprecation", "PackageManagerGetSignatures")
-            val packageInfo =
-                packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNATURES)
-            @Suppress("Deprecation")
-            packageInfo?.signatures
+            @Suppress("DEPRECATION", "PackageManagerGetSignatures")
+            packageManager.getPackageInfo(
+                packageName,
+                PackageManager.GET_SIGNATURES
+            )?.signatures
         }?.get(0)?.let {
             MessageDigest.getInstance(ALGORITHM_SHA256).digest(it.toByteArray())
                 .joinToString(":") { byte -> "%02x".format(byte) }
@@ -181,7 +169,7 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
     ) = if (isAtLeastStableAndroid11()) {
         packageManager.getInstallSourceInfo(packageName).installingPackageName
     } else {
-        @Suppress("Deprecation")
+        @Suppress("DEPRECATION")
         packageManager.getInstallerPackageName(packageName)
     }
 
@@ -189,13 +177,7 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
         packageName: String,
         packageManager: PackageManager
     ) = try {
-        val applicationInfo = if (isAtLeastStableAndroid13()) {
-            val flags = PackageManager.ApplicationInfoFlags.of(0)
-            packageManager.getApplicationInfo(packageName, flags)
-        } else {
-            @Suppress("Deprecation")
-            packageManager.getApplicationInfo(packageName, 0)
-        }
+        val applicationInfo = packageManager.getApplicationInfo(packageName, 0)
         packageManager.getApplicationLabel(applicationInfo) // applicationInfo.loadLabel(packageManager)
     } catch (e: PackageManager.NameNotFoundException) {
         e.printStackTrace()

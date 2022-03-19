@@ -3,7 +3,6 @@ package net.imknown.android.forefrontinfo.ui.base
 import android.app.ActivityManager
 import android.os.Build
 import androidx.core.content.ContextCompat
-import androidx.core.os.BuildCompat
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 
@@ -20,7 +19,6 @@ interface IAndroidVersion {
     fun isAtLeastStableAndroid10() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
     fun isAtLeastStableAndroid11() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
     fun isAtLeastStableAndroid12() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-    fun isAtLeastStableAndroid13() = BuildCompat.isAtLeastT()
 
     fun isStableAndroid() = Build.VERSION.CODENAME == CODENAME_RELEASE
     fun isPreviewAndroid() = !isStableAndroid()
