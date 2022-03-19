@@ -14,6 +14,11 @@ buildscript {
     }
 }
 
+extensions.findByName("buildScan")?.withGroovyBuilder {
+    setProperty("termsOfServiceUrl", "https://gradle.com/terms-of-service")
+    setProperty("termsOfServiceAgree", "yes")
+}
+
 tasks.register<Delete>("clean") {
     delete(rootProject.buildDir)
 }
