@@ -38,7 +38,11 @@ interface IAndroidVersion {
     fun getAndroidVersionName(): String = if (isStableAndroid()) {
         Build.VERSION.RELEASE
     } else {
-        Build.VERSION.CODENAME
+        if (isAtLeastStableAndroid13()) {
+            "${Build.VERSION.RELEASE_OR_PREVIEW_DISPLAY}, "
+        } else {
+            ""
+        } + Build.VERSION.CODENAME
     }
 
     fun isGoEdition() = isAtLeastStableAndroid8P1() && isLowRamDevice()
