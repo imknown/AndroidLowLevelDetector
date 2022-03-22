@@ -1,5 +1,5 @@
 {
-  "version": "2022-03-21 19:00 +0800",
+  "version": "2022-03-22 19:40 +0800",
   "android": {
     "securityPatchLevel": "2022-03-05",
     "googlePlaySystemUpdates": "2022-03-05",
@@ -9,6 +9,10 @@
         {
           "id": "SP2A.220305.012",
           "revision": "r1"
+        },
+        {
+          "id": "SP2A.220305.013.A3",
+          "revision": "r2"
         }
       ]
     },
