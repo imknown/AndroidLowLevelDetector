@@ -24,7 +24,7 @@ object Versions {
     const val desugarJdkLibs = "1.1.5"
 
     // https://github.com/material-components/material-components-android/releases
-    const val material = "1.5.0"
+    const val material = "1.6.0-beta01"
 
     // region [AndroidX]
     // https://maven.google.com
@@ -73,7 +73,7 @@ object Versions {
     object Kotlin {
         // https://github.com/JetBrains/kotlin/releases
         // https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.jetbrains.kotlin%22
-        const val kotlin = "1.6.20-RC"
+        const val kotlin = "1.6.20-RC2"
 
         // https://github.com/Kotlin/kotlinx.coroutines/releases
         const val coroutines = "1.6.0"
@@ -97,7 +97,7 @@ object Versions {
 
     object ThirdParties {
         // https://github.com/topjohnwu/libsu/releases
-        const val libsu = "4.0.2"
+        const val libsu = "4.0.3"
 
         // https://github.com/square/leakcanary/releases
         const val leakCanary = "2.8.1"
