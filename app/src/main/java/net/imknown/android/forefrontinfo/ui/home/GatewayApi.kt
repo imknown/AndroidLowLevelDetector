@@ -9,6 +9,9 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 object GatewayApi {
+    private const val HEADER_REFERER_KEY = "Referer"
+    private const val HEADER_REFERER_VALUE = BuildConfig.APPLICATION_ID
+
     private const val REPOSITORY_NAME = "imknown/AndroidLowLevelDetector"
 
     private const val URL_PREFIX_LLD_JSON_GITEE = "gitee.com/$REPOSITORY_NAME/raw"
@@ -23,6 +26,7 @@ object GatewayApi {
 
         "https://$urlPrefixLldJson/${BuildConfig.GIT_BRANCH}/app/src/main/assets/${JsonIo.LLD_JSON_NAME}"
             .httpGet()
+            .header(HEADER_REFERER_KEY, HEADER_REFERER_VALUE)
             .responseString()
             .third
             .fold(
