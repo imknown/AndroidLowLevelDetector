@@ -1,5 +1,5 @@
 {
-  "version": "2022-03-26 10:15 +0800",
+  "version": "2022-03-27 17:30 +0800",
   "android": {
     "securityPatchLevel": "2022-03-05",
     "googlePlaySystemUpdates": "2022-03-05",
@@ -19,7 +19,7 @@
     "stable": {
       "name": "Snow Cone v2",
       "api": "32",
-      "version": "12L, Snow Cone v2"
+      "version": "12.1, Snow Cone v2"
     },
     "support": {
       "name": "Quince Tart",
