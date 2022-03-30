@@ -1,5 +1,5 @@
 {
-  "version": "2022-03-29 18:55 +0800",
+  "version": "2022-03-30 19:15 +0800",
   "android": {
     "securityPatchLevel": "2022-03-05",
     "googlePlaySystemUpdates": "2022-03-05",
@@ -64,7 +64,7 @@
   },
   "webView": {
     "stable": {
-      "version": "99.0.4844.88"
+      "version": "100.0.4896.58"
     },
     "beta": {
       "version": "100.0.4896.58"
