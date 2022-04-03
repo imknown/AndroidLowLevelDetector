@@ -12,7 +12,7 @@ object Versions {
         const val targetSdkPreview = "Tiramisu"
 
         const val ndk = "25.0.8221429 rc2"
-        const val cmake = "3.23.0-rc3"
+        const val cmake = "3.23.0"
 
         const val versionCode = 61
         const val versionName = "1.15.9_unpublished"
@@ -73,7 +73,7 @@ object Versions {
     object Kotlin {
         // https://github.com/JetBrains/kotlin/releases
         // https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.jetbrains.kotlin%22
-        const val kotlin = "1.6.20-RC2"
+        const val kotlin = "1.6.20"
 
         // https://github.com/Kotlin/kotlinx.coroutines/releases
         const val coroutines = "1.6.0"
