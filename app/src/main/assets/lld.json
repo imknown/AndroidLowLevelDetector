@@ -1,18 +1,18 @@
 {
-  "version": "2022-04-04 11:00 +0800",
+  "version": "2022-04-05 11:35 +0800",
   "android": {
-    "securityPatchLevel": "2022-03-05",
-    "googlePlaySystemUpdates": "2022-03-05",
+    "securityPatchLevel": "2022-04-05",
+    "googlePlaySystemUpdates": "2022-04-01",
     "build": {
-      "version": "2022-03-07",
+      "version": "2022-04-04",
       "details": [
         {
-          "id": "SP2A.220305.012",
-          "revision": "r1"
+          "id": "SP2A.220405.003",
+          "revision": "r3"
         },
         {
-          "id": "SP2A.220305.013.A3",
-          "revision": "r2"
+          "id": "SP2A.220405.004",
+          "revision": "r4"
         }
       ]
     },
@@ -64,7 +64,7 @@
   },
   "webView": {
     "stable": {
-      "version": "100.0.4896.58"
+      "version": "100.0.4896.79"
     },
     "beta": {
       "version": "101.0.4951.15"
