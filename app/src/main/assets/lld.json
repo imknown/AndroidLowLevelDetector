@@ -1,25 +1,25 @@
 {
-  "version": "2022-03-26 10:15 +0800",
+  "version": "2022-04-05 11:35 +0800",
   "android": {
-    "securityPatchLevel": "2022-03-05",
-    "googlePlaySystemUpdates": "2022-03-05",
+    "securityPatchLevel": "2022-04-05",
+    "googlePlaySystemUpdates": "2022-04-01",
     "build": {
-      "version": "2022-03-07",
+      "version": "2022-04-04",
       "details": [
         {
-          "id": "SP2A.220305.012",
-          "revision": "r1"
+          "id": "SP2A.220405.003",
+          "revision": "r3"
         },
         {
-          "id": "SP2A.220305.013.A3",
-          "revision": "r2"
+          "id": "SP2A.220405.004",
+          "revision": "r4"
         }
       ]
     },
     "stable": {
       "name": "Snow Cone v2",
       "api": "32",
-      "version": "12L, Snow Cone v2"
+      "version": "12.1, Snow Cone v2"
     },
     "support": {
       "name": "Quince Tart",
@@ -36,16 +36,16 @@
   "linux": {
     "google": {
       "versions": [
-        "5.15.31",
-        "5.10.108",
-        "5.4.187",
-        "4.19.236",
-        "4.14.273",
-        "4.9.308"
+        "5.15.32",
+        "5.10.109",
+        "5.4.188",
+        "4.19.237",
+        "4.14.275",
+        "4.9.309"
       ]
     },
     "mainline": {
-      "version": "5.17"
+      "version": "5.18-rc1"
     }
   },
   "toybox": {
@@ -64,10 +64,10 @@
   },
   "webView": {
     "stable": {
-      "version": "99.0.4844.88"
+      "version": "100.0.4896.79"
     },
     "beta": {
-      "version": "100.0.4896.56"
+      "version": "101.0.4951.15"
     }
   }
 }
