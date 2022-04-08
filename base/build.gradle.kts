@@ -10,6 +10,8 @@ android {
     buildToolsVersion = Versions.AndroidBuild.buildTools
 
     defaultConfig {
+        namespace = "net.imknown.android.forefrontinfo.base"
+
         minSdk = Versions.AndroidBuild.minSdk
         targetSdk = Versions.AndroidBuild.targetSdk
         // targetSdkPreview = Versions.AndroidBuild.targetSdkPreview

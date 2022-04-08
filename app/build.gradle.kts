@@ -19,7 +19,7 @@ android {
     buildToolsVersion = Versions.AndroidBuild.buildTools
 
     defaultConfig {
-        applicationId = "net.imknown.android.forefrontinfo"
+        namespace = "net.imknown.android.forefrontinfo"
 
         versionCode = Versions.AndroidBuild.versionCode
         versionName = Versions.AndroidBuild.versionName
