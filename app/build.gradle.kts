@@ -129,6 +129,10 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
+    lint {
+        checkDependencies = true
+    }
 }
 
 dependencies {
