@@ -3,7 +3,7 @@ object Versions {
         const val androidGradlePlugin = "7.2.0-rc01"
 
         // https://developer.android.com/studio/releases/build-tools.html#notes
-        const val buildTools = "33.0.0-rc2"
+        const val buildTools = "33.0.0-rc3"
 
         const val minSdk = 21
         const val compileSdk = 32
