@@ -12,7 +12,7 @@ object Versions {
         const val targetSdkPreview = "Tiramisu"
 
         const val ndk = "25.0.8221429 rc2"
-        const val cmake = "3.23.0"
+        const val cmake = "3.23.1"
 
         const val versionCode = 61
         const val versionName = "1.15.9_unpublished"
