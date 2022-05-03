@@ -1,18 +1,14 @@
 {
-  "version": "2022-04-27 20:00 +0800",
+  "version": "2022-05-03 12:10 +0800",
   "android": {
-    "securityPatchLevel": "2022-04-05",
-    "googlePlaySystemUpdates": "2022-04-01",
+    "securityPatchLevel": "2022-05-05",
+    "googlePlaySystemUpdates": "2022-05-01",
     "build": {
-      "version": "2022-04-04",
+      "version": "2022-05-02",
       "details": [
         {
-          "id": "SP2A.220405.003",
+          "id": "SP2A.220505.002",
           "revision": "r3"
-        },
-        {
-          "id": "SP2A.220405.004",
-          "revision": "r4"
         }
       ]
     },
@@ -36,16 +32,16 @@
   "linux": {
     "google": {
       "versions": [
-        "5.15.35",
-        "5.10.112",
-        "5.4.190",
-        "4.19.239",
+        "5.15.37",
+        "5.10.113",
+        "5.4.191",
+        "4.19.241",
         "4.14.277",
         "4.9.312"
       ]
     },
     "mainline": {
-      "version": "5.18-rc4"
+      "version": "5.18-rc5"
     }
   },
   "toybox": {
@@ -67,7 +63,7 @@
       "version": "101.0.4951.41"
     },
     "beta": {
-      "version": "101.0.4951.41"
+      "version": "102.0.5005.26"
     }
   }
 }
