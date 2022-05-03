@@ -1,18 +1,14 @@
 {
-  "version": "2022-05-02 12:10 +0800",
+  "version": "2022-05-03 12:10 +0800",
   "android": {
-    "securityPatchLevel": "2022-04-05",
-    "googlePlaySystemUpdates": "2022-04-01",
+    "securityPatchLevel": "2022-05-05",
+    "googlePlaySystemUpdates": "2022-05-01",
     "build": {
-      "version": "2022-04-04",
+      "version": "2022-05-02",
       "details": [
         {
-          "id": "SP2A.220405.003",
+          "id": "SP2A.220505.002",
           "revision": "r3"
-        },
-        {
-          "id": "SP2A.220405.004",
-          "revision": "r4"
         }
       ]
     },
