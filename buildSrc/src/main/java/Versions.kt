@@ -1,6 +1,6 @@
 object Versions {
     object AndroidBuild {
-        const val androidGradlePlugin = "7.2.0-rc01"
+        const val androidGradlePlugin = "7.2.0-rc02"
 
         // https://developer.android.com/studio/releases/build-tools.html#notes
         const val buildTools = "33.0.0-rc3"
@@ -24,7 +24,7 @@ object Versions {
     const val desugarJdkLibs = "1.1.5"
 
     // https://github.com/material-components/material-components-android/releases
-    const val material = "1.6.0-rc01"
+    const val material = "1.6.0"
 
     // region [AndroidX]
     // https://maven.google.com
@@ -97,7 +97,7 @@ object Versions {
 
     object ThirdParties {
         // https://github.com/topjohnwu/libsu/releases
-        const val libsu = "4.0.3"
+        const val libsu = "5.0.1"
 
         // https://github.com/square/leakcanary/releases
         const val leakCanary = "2.9.1"
