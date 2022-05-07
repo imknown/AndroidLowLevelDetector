@@ -73,7 +73,7 @@ object Versions {
     object Kotlin {
         // https://github.com/JetBrains/kotlin/releases
         // https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.jetbrains.kotlin%22
-        const val kotlin = "1.6.21"
+        const val kotlin = "1.7.0-Beta"
 
         // https://github.com/Kotlin/kotlinx.coroutines/releases
         const val coroutines = "1.6.1"
@@ -88,7 +88,7 @@ object Versions {
         const val googleServices = "4.3.10"
 
         // https://firebase.google.com/docs/android/learn-more#bom
-        const val billOfMaterials = "29.3.1"
+        const val billOfMaterials = "30.0.0"
 
         // https://firebase.google.com/docs/crashlytics/get-started?platform=android
         // https://firebase.google.com/docs/crashlytics/ndk-reports
