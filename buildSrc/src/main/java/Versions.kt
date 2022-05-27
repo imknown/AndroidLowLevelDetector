@@ -1,6 +1,6 @@
 object Versions {
     object AndroidBuild {
-        const val androidGradlePlugin = "7.2.0"
+        const val androidGradlePlugin = "7.2.1"
 
         // https://developer.android.com/studio/releases/build-tools.html#notes
         const val buildTools = "33.0.0-rc4"
@@ -24,7 +24,7 @@ object Versions {
     const val desugarJdkLibs = "1.1.5"
 
     // https://github.com/material-components/material-components-android/releases
-    const val material = "1.6.0"
+    const val material = "1.7.0-alpha02"
 
     // region [AndroidX]
     // https://maven.google.com
@@ -44,7 +44,7 @@ object Versions {
 
         const val coordinatorLayout = "1.2.0"
 
-        const val constraintLayout = "2.1.3"
+        const val constraintLayout = "2.1.4"
 
         const val core = "1.8.0-rc01"
 
@@ -88,11 +88,11 @@ object Versions {
         const val googleServices = "4.3.10"
 
         // https://firebase.google.com/docs/android/learn-more#bom
-        const val billOfMaterials = "30.0.2"
+        const val billOfMaterials = "30.1.0"
 
         // https://firebase.google.com/docs/crashlytics/get-started?platform=android
         // https://firebase.google.com/docs/crashlytics/ndk-reports
-        const val firebaseCrashlyticsGradlePlugin = "2.8.1"
+        const val firebaseCrashlyticsGradlePlugin = "2.9.0"
     }
 
     object ThirdParties {
