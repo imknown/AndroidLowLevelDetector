@@ -76,7 +76,7 @@ object Versions {
         const val kotlin = "1.7.0-RC"
 
         // https://github.com/Kotlin/kotlinx.coroutines/releases
-        const val coroutines = "1.6.1"
+        const val coroutines = "1.6.2"
 
         // https://github.com/Kotlin/kotlinx.serialization/releases
         const val serialization = "1.3.3"
