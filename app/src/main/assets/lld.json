@@ -1,5 +1,5 @@
 {
-  "version": "2022-05-30 19:20 +0800",
+  "version": "2022-06-02 19:10 +0800",
   "android": {
     "securityPatchLevel": "2022-05-05",
     "googlePlaySystemUpdates": "2022-05-01",
@@ -63,7 +63,7 @@
       "version": "102.0.5005.78"
     },
     "beta": {
-      "version": "103.0.5060.22"
+      "version": "103.0.5060.33"
     }
   }
 }
