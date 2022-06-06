@@ -88,8 +88,8 @@ dependencies {
     // endregion [Test]
 
     // region [Kotlin]
-    api("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.Kotlin.kotlin}")
-    // api("org.jetbrains.kotlin:kotlin-reflect:${Versions.Kotlin.kotlin}")
+    api(kotlin("stdlib-jdk8:${Versions.Kotlin.kotlin}"))
+    // api(kotlin("reflect:${Versions.Kotlin.kotlin}"))
     api("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.Kotlin.coroutines}")
     api("org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.Kotlin.serialization}")
     // endregion [Kotlin]
