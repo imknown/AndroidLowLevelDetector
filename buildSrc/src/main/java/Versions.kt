@@ -33,7 +33,7 @@ object Versions {
     object AndroidX {
         const val activity = "1.5.0-rc01"
 
-        const val annotation = "1.3.0"
+        const val annotation = "1.4.0-rc01"
         const val annotationExperimental = "1.2.0"
 
         const val appcompat = "1.4.1"
@@ -46,7 +46,7 @@ object Versions {
 
         const val constraintLayout = "2.1.4"
 
-        const val core = "1.8.0-rc01"
+        const val core = "1.8.0"
 
         const val fragment = "1.5.0-rc01"
 
@@ -73,7 +73,7 @@ object Versions {
     object Kotlin {
         // https://github.com/JetBrains/kotlin/releases
         // https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.jetbrains.kotlin%22
-        const val kotlin = "1.7.0-RC"
+        const val kotlin = "1.7.0-RC2"
 
         // https://github.com/Kotlin/kotlinx.coroutines/releases
         const val coroutines = "1.6.2"
@@ -97,7 +97,7 @@ object Versions {
 
     object ThirdParties {
         // https://github.com/topjohnwu/libsu/releases
-        const val libsu = "5.0.1"
+        const val libsu = "5.0.2"
 
         // https://github.com/square/leakcanary/releases
         const val leakCanary = "2.9.1"
