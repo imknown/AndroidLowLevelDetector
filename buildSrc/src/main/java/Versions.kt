@@ -1,14 +1,14 @@
 object Versions {
     object AndroidBuild {
-        const val androidGradlePlugin = "7.2.1"
+        const val androidGradlePlugin = "7.3.0-beta02"
 
         // https://developer.android.com/studio/releases/build-tools.html#notes
-        const val buildTools = "33.0.0-rc4"
+        const val buildTools = "33.0.0"
 
         const val minSdk = 21
-        const val compileSdk = 32
+        const val compileSdk = 33
         const val compileSdkPreview = "Tiramisu"
-        const val targetSdk = 32
+        const val targetSdk = 33
         const val targetSdkPreview = "Tiramisu"
 
         const val ndk = "25.0.8528842 rc4"
@@ -73,7 +73,7 @@ object Versions {
     object Kotlin {
         // https://github.com/JetBrains/kotlin/releases
         // https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.jetbrains.kotlin%22
-        const val kotlin = "1.7.0-RC2"
+        const val kotlin = "1.7.0"
 
         // https://github.com/Kotlin/kotlinx.coroutines/releases
         const val coroutines = "1.6.2"
