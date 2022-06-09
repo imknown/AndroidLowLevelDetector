@@ -37,18 +37,23 @@ import java.io.File
 class HomeViewModel : BaseListViewModel(), IAndroidVersion {
 
     companion object : IAndroidVersion {
+        // region [Build ID]
         private const val BUILD_ID_SEPARATOR = '.'
 
         private const val PROP_RO_SYSTEM_BUILD_ID = "ro.system.build.id"
         private const val PROP_RO_VENDOR_BUILD_ID = "ro.vendor.build.id"
         private const val PROP_RO_ODM_BUILD_ID = "ro.odm.build.id"
+        // endregion [Build ID]
 
+        // region [Security Patch]
         private const val PROP_SECURITY_PATCH = "ro.build.version.security_patch"
 
         private const val PROP_VENDOR_SECURITY_PATCH = "ro.vendor.build.security_patch"
 
         private const val SYSTEM_PROPERTY_LINUX_VERSION = "os.version"
+        // endregion [Security Patch]
 
+        // region [A/B]
         // https://source.android.com/devices/tech/ota/ab?hl=en
         // /* root needed */ private const val CMD_BOOT_PARTITION = "ls /dev/block/bootdevice/by-name | grep boot_"
         // private const val PROP_VIRTUAL_AB_ALLOW_NON_AB = "ro.virtual_ab.allow_non_ab"
@@ -56,20 +61,26 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         private const val PROP_VIRTUAL_AB_ENABLED = "ro.virtual_ab.enabled"
         private const val PROP_VIRTUAL_AB_RETROFIT = "ro.virtual_ab.retrofit"
         private const val PROP_SLOT_SUFFIX = "ro.boot.slot_suffix"
+        // endregion [A/B]
 
+        // region [Dynamic Partitions]
         // https://source.android.com/devices/tech/ota/dynamic_partitions/ab_legacy?hl=en
         // https://source.android.com/devices/tech/ota/dynamic_partitions/ab_launch?hl=en
         // https://codelabs.developers.google.com/codelabs/using-Android-GSI?hl=en
         private const val PROP_DYNAMIC_PARTITIONS = "ro.boot.dynamic_partitions"
         private const val PROP_DYNAMIC_PARTITIONS_RETROFIT = "ro.boot.dynamic_partitions_retrofit"
         // /* root needed */ private const val CMD_LL_DEV_BLOCK_SUPER = "ls -l /dev/block/by-name/super"
+        // endregion [Dynamic Partitions]
 
+        // region [Dynamic System]
         // https://developer.android.com/topic/dsu?hl=en
         private const val PROP_PERSIST_DYNAMIC_SYSTEM_UPDATE =
             "persist.sys.fflag.override.settings_dynamic_system"
         private const val PROP_DYNAMIC_SYSTEM_UPDATE = "sys.fflag.override.settings_dynamic_system"
         private const val DSU_LOADER_PACKAGE_NAME = "com.android.dynsystem"
+        // endregion [Dynamic System]
 
+        // region [GSI]
         // https://codelabs.developers.google.com/codelabs/using-Android-GSI?hl=en#2
         // https://developer.android.google.cn/topic/generic-system-image?hl=en
         // https://source.android.com/setup/build/gsi?hl=en
@@ -78,7 +89,9 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         private const val LD_CONFIG_FILE_ANDROID_9 = "/system/etc/ld.config*.txt"
         private const val CMD_VENDOR_NAMESPACE_DEFAULT_ISOLATED =
             "cat %s | grep -A 20 '\\[vendor\\]' | grep namespace.default.isolated"
+        // endregion [GSI]
 
+        // region [Treble]
         // https://source.android.com/devices/architecture?hl=en#hidl
         // https://source.android.com/devices/architecture/vintf/objects#device-manifest-file
         // https://source.android.com/compatibility/vts/hal-testability
@@ -91,11 +104,14 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         private const val PATH_VENDOR_VINTF = "/vendor/etc/vintf/manifest.xml"
         private const val PATH_VENDOR_VINTF_FRAGMENTS = "/vendor/etc/vintf/manifest/"
         private const val PATH_VENDOR_LEGACY_NO_FRAGMENTS = "/vendor/manifest.xml"
+        // endregion [Treble]
 
+        // region [VNDK]
         // https://source.android.com/devices/architecture/vndk?hl=en
         private const val PROP_VNDK_LITE = "ro.vndk.lite"
         private const val PROP_VNDK_VENDOR_VERSION = "ro.vndk.version"
         private const val PROP_VNDK_PRODUCT_VERSION = "ro.product.vndk.version"
+        // endregion [VNDK]
 
         // https://source.android.com/devices/bootloader/system-as-root?hl=en
         //
@@ -123,6 +139,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         // https://source.android.com/security/encryption/file-based
         // private const val PROP_CRYPTO_STATE = "ro.crypto.state"
 
+        // region [SELinux]
         // https://source.android.com/security/selinux
         // https://android.googlesource.com/platform/external/selinux/+/master/libsepol/include/sepol/policydb/policydb.h#745
         // https://github.com/torvalds/linux/blob/master/security/selinux/include/security.h#L43
@@ -134,9 +151,11 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         private const val SELINUX_STATUS_DISABLED = "Disabled"
         private const val SELINUX_STATUS_PERMISSIVE = "Permissive"
         private const val SELINUX_STATUS_ENFORCING = "Enforcing"
+        // endregion [SELinux]
 
         private const val CMD_TOYBOX_VERSION = "toybox --version"
 
+        // region [WebView]
         private const val WEB_VIEW_AOSP_PACKAGE_NAME = "com.android.webview"
         private const val WEB_VIEW_STABLE_PACKAGE_NAME = "com.google.android.webview"
         private const val WEB_VIEW_BETA_PACKAGE_NAME = "com.google.android.webview.beta"
@@ -146,6 +165,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         private const val CHROME_BETA_PACKAGE_NAME = "com.chrome.beta"
         private const val CHROME_DEV_IN_PACKAGE_NAME = "com.chrome.dev"
         private const val CHROME_CANARY_PACKAGE_NAME = "com.chrome.canary"
+        // endregion [WebView]
 
         private const val PROP_RO_PRODUCT_FIRST_API_LEVEL = "ro.product.first_api_level"
     }
