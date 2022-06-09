@@ -1,6 +1,6 @@
 object Versions {
     object AndroidBuild {
-        const val androidGradlePlugin = "7.3.0-beta02"
+        const val androidGradlePlugin = "7.2.1"
 
         // https://developer.android.com/studio/releases/build-tools.html#notes
         const val buildTools = "33.0.0"
@@ -11,8 +11,8 @@ object Versions {
         const val targetSdk = 33
         const val targetSdkPreview = "Tiramisu"
 
-        const val ndk = "25.0.8528842 rc4"
-        const val cmake = "3.23.1"
+        const val ndk = "24.0.8215888"
+        const val cmake = "3.23.2"
 
         const val versionCode = 61
         const val versionName = "1.15.9_unpublished"
@@ -24,16 +24,16 @@ object Versions {
     const val desugarJdkLibs = "1.1.5"
 
     // https://github.com/material-components/material-components-android/releases
-    const val material = "1.7.0-alpha02"
+    const val material = "1.6.0"
 
     // region [AndroidX]
     // https://maven.google.com
     // https://androidstudio.googleblog.com/
     // https://developer.android.com/jetpack/androidx/versions
     object AndroidX {
-        const val activity = "1.5.0-rc01"
+        const val activity = "1.4.0"
 
-        const val annotation = "1.4.0-rc01"
+        const val annotation = "1.3.0"
         const val annotationExperimental = "1.2.0"
 
         const val appcompat = "1.4.1"
@@ -48,15 +48,15 @@ object Versions {
 
         const val core = "1.8.0"
 
-        const val fragment = "1.5.0-rc01"
+        const val fragment = "1.4.1"
 
-        const val lifecycle = "2.5.0-rc01"
+        const val lifecycle = "2.4.1"
 
         const val preference = "1.2.0"
 
         const val recyclerView = "1.2.1"
 
-        const val savedState = "1.2.0-rc01"
+        const val savedState = "1.1.0"
 
         const val swipeRefreshLayout = "1.1.0"
 
