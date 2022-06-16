@@ -1,5 +1,5 @@
 {
-  "version": "2022-06-09 19:05 +0800",
+  "version": "2022-06-16 19:40 +0800",
   "android": {
     "securityPatchLevel": "2022-06-05",
     "googlePlaySystemUpdates": "2022-06-01",
@@ -30,22 +30,22 @@
       "name": "Tiramisu",
       "api": "33",
       "version": "13, Tiramisu",
-      "phase": "Beta 3"
+      "phase": "Beta 3.1"
     }
   },
   "linux": {
     "google": {
       "versions": [
-        "5.15.46",
-        "5.10.121",
-        "5.4.197",
-        "4.19.246",
-        "4.14.282",
-        "4.9.317"
+        "5.15.47",
+        "5.10.122",
+        "5.4.198",
+        "4.19.247",
+        "4.14.284",
+        "4.9.319"
       ]
     },
     "mainline": {
-      "version": "5.19-rc1"
+      "version": "5.19-rc2"
     }
   },
   "toybox": {
@@ -64,10 +64,10 @@
   },
   "webView": {
     "stable": {
-      "version": "102.0.5005.99"
+      "version": "102.0.5005.125"
     },
     "beta": {
-      "version": "103.0.5060.42"
+      "version": "103.0.5060.53"
     }
   }
 }
