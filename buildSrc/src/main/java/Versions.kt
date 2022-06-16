@@ -33,7 +33,7 @@ object Versions {
     object AndroidX {
         const val activity = "1.4.0"
 
-        const val annotation = "1.3.0"
+        const val annotation = "1.4.0"
         const val annotationExperimental = "1.2.0"
 
         const val appcompat = "1.4.1"
