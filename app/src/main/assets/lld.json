@@ -1,5 +1,5 @@
 {
-  "version": "2022-06-16 19:40 +0800",
+  "version": "2022-06-17 19:30 +0800",
   "android": {
     "securityPatchLevel": "2022-06-05",
     "googlePlaySystemUpdates": "2022-06-01",
@@ -30,7 +30,7 @@
       "name": "Tiramisu",
       "api": "33",
       "version": "13, Tiramisu",
-      "phase": "Beta 3.1"
+      "phase": "Beta 3.2"
     }
   },
   "linux": {
