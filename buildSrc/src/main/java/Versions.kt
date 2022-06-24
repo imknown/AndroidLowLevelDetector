@@ -85,14 +85,14 @@ object Versions {
     // https://firebase.google.com/support/release-notes/android
     // https://firebase.google.com/docs/android/setup#available-libraries
     object Firebase {
-        const val googleServices = "4.3.10"
+        const val googleServices = "4.3.12"
 
         // https://firebase.google.com/docs/android/learn-more#bom
-        const val billOfMaterials = "30.1.0"
+        const val billOfMaterials = "30.2.0"
 
         // https://firebase.google.com/docs/crashlytics/get-started?platform=android
         // https://firebase.google.com/docs/crashlytics/ndk-reports
-        const val firebaseCrashlyticsGradlePlugin = "2.9.0"
+        const val firebaseCrashlyticsGradlePlugin = "2.9.1"
     }
 
     object ThirdParties {
