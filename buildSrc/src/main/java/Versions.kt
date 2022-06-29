@@ -21,7 +21,7 @@ object Versions {
     // https://developer.android.com/studio/write/java8-support#library-desugaring
     // https://maven.google.com/web/index.html?q=desugar_jdk_libs
     // https://github.com/google/desugar_jdk_libs/blob/master/CHANGELOG.md
-    const val desugarJdkLibs = "1.1.5"
+    const val desugarJdkLibs = "1.1.6"
 
     // https://github.com/material-components/material-components-android/releases
     const val material = "1.6.1"
