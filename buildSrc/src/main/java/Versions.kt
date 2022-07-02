@@ -1,17 +1,17 @@
 object Versions {
     object AndroidBuild {
-        const val androidGradlePlugin = "7.2.1"
+        const val androidGradlePlugin = "7.3.0-beta04"
 
         // https://developer.android.com/studio/releases/build-tools.html#notes
         const val buildTools = "33.0.0"
 
         const val minSdk = 21
         const val compileSdk = 33
-        const val compileSdkPreview = "Tiramisu"
+        const val compileSdkPreview = "UpsideDownCake"
         const val targetSdk = 33
-        const val targetSdkPreview = "Tiramisu"
+        const val targetSdkPreview = "UpsideDownCake"
 
-        const val ndk = "24.0.8215888"
+        const val ndk = "25.0.8528842 rc4"
         const val cmake = "3.23.2"
 
         const val versionCode = 61
@@ -21,10 +21,10 @@ object Versions {
     // https://developer.android.com/studio/write/java8-support#library-desugaring
     // https://maven.google.com/web/index.html?q=desugar_jdk_libs
     // https://github.com/google/desugar_jdk_libs/blob/master/CHANGELOG.md
-    const val desugarJdkLibs = "1.1.6"
+    const val desugarJdkLibs = "1.2.0"
 
     // https://github.com/material-components/material-components-android/releases
-    const val material = "1.6.1"
+    const val material = "1.7.0-alpha02"
 
     // region [AndroidX]
     // https://maven.google.com
@@ -85,7 +85,7 @@ object Versions {
     // https://firebase.google.com/support/release-notes/android
     // https://firebase.google.com/docs/android/setup#available-libraries
     object Firebase {
-        const val googleServices = "4.3.12"
+        const val googleServices = "4.3.13"
 
         // https://firebase.google.com/docs/android/learn-more#bom
         const val billOfMaterials = "30.2.0"
