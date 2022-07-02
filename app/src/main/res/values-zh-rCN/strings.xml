@@ -25,8 +25,7 @@
 
     <string name="android_info_title">Android 版本</string>
     <string name="android_info">%1$s (API %2$s)</string>
-    <string name="android_info_preview">最新预览</string>
-    <string name="android_info_detail">我的: %1$s\n\n最新稳定: %2$s\n最低支持: %3$s\n%4$s: %5$s</string>
+    <string name="android_info_detail">我的: %1$s\n\n最新稳定: %2$s\n最低支持: %3$s\n最新预览: %4$s\n最新内部: %5$s</string>
 
     <string name="android_build_id_title">Android 构建 id</string>
     <string name="android_build_id">%1$s (%2$s)</string>

@@ -42,7 +42,8 @@ data class Lld(
         val support: Android,
         // https://ci.android.com
         // https://developer.android.com/preview/overview
-        val preview: Android
+        val preview: Android,
+        val internal: Android
     ) {
         @Keep
         @Serializable

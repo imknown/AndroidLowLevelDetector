@@ -423,6 +423,11 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
                     R.string.android_info,
                     "$previewVersion $previewPhase",
                     previewApi
+                ),
+                MyApplication.getMyString(
+                    R.string.android_info,
+                    lld.android.internal.version,
+                    lld.android.internal.api
                 )
             ),
             androidColor
