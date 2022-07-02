@@ -110,7 +110,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         // https://source.android.com/devices/architecture/vndk?hl=en
         private const val PROP_VNDK_LITE = "ro.vndk.lite"
         private const val PROP_VNDK_VENDOR_VERSION = "ro.vndk.version"
-        private const val PROP_VNDK_PRODUCT_VERSION = "ro.product.vndk.version"
+        // private const val PROP_VNDK_PRODUCT_VERSION = "ro.product.vndk.version"
         // endregion [VNDK]
 
         // https://source.android.com/devices/bootloader/system-as-root?hl=en
@@ -885,16 +885,10 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
 
         var isVndkBuiltInResult = translate(hasVndkVersion)
         if (hasVndkVersion) {
-            val vndkVersion = if (hasVndkVersion) {
-                vndkVersionResult
-            } else {
-                MyApplication.getMyString(android.R.string.unknownName)
-            }
-
             val hasVndkLite = getBooleanProperty(PROP_VNDK_LITE)
 
             vndkColor = if (
-                (isLatestPreviewAndroid(lld) || vndkVersion >= lld.android.stable.api) && !hasVndkLite
+                (isLatestPreviewAndroid(lld) || vndkVersionResult >= lld.android.stable.api) && !hasVndkLite
             ) {
                 R.color.colorNoProblem
             } else {
@@ -903,7 +897,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
 
             isVndkBuiltInResult += MyApplication.getMyString(
                 R.string.built_in_vndk_version_result,
-                if (hasVndkLite) "$vndkVersion, Lite" else vndkVersion
+                if (hasVndkLite) "$vndkVersionResult, Lite" else vndkVersionResult
             )
         } else {
             vndkColor = R.color.colorCritical
