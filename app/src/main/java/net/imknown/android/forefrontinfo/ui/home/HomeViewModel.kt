@@ -418,7 +418,6 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
                     lld.android.support.version,
                     lld.android.support.api
                 ),
-                MyApplication.getMyString(R.string.android_info_preview),
                 MyApplication.getMyString(
                     R.string.android_info,
                     "$previewVersion $previewPhase",
