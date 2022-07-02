@@ -828,9 +828,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         @SuppressLint("DiscouragedApi")
         // com.android.internal.R.string.config_defaultModuleMetadataProvider
         val idConfigDefaultModuleMetadataProvider = Resources.getSystem().getIdentifier(
-            "config_defaultModuleMetadataProvider",
-            "string",
-            "android"
+            "config_defaultModuleMetadataProvider", "string", "android"
         )
 
         @ColorRes var moduleColor = R.color.colorCritical
@@ -1248,7 +1246,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
             }
 
             systemApkList.forEachIndexed { index, applicationInfo ->
-                result += MyApplication.getMyString(
+                result += "- " + MyApplication.getMyString(
                     format, applicationInfo.packageName, applicationInfo.targetSdkVersion
                 )
 
