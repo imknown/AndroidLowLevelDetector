@@ -76,7 +76,7 @@ dependencies {
     api("androidx.lifecycle:lifecycle-runtime-ktx:${Versions.AndroidX.lifecycle}")
     api("androidx.lifecycle:lifecycle-viewmodel-savedstate:${Versions.AndroidX.lifecycle}")
 
-    api("androidx.preference:preference:${Versions.AndroidX.preference}")
+    api("androidx.preference:preference-ktx:${Versions.AndroidX.preference}")
 
     api("androidx.savedstate:savedstate:${Versions.AndroidX.savedState}")
     // endregion [AndroidX]
