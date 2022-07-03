@@ -3,6 +3,7 @@ package net.imknown.android.forefrontinfo.ui.settings
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -198,7 +199,7 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
         }
         packageManager.getApplicationLabel(applicationInfo) // applicationInfo.loadLabel(packageManager)
     } catch (e: PackageManager.NameNotFoundException) {
-        e.printStackTrace()
+        Log.d(javaClass.simpleName, "$packageName not found.")
         MyApplication.getMyString(android.R.string.unknownName)
     }
     // endregion [Version Info]
