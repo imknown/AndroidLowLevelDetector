@@ -97,15 +97,6 @@
     <string name="webview_detail">Latest stable: %1$s\nLatest beta: %2$s</string>
     <string name="webview_built_in_version">My built-in WebView</string>
     <string name="webview_implement_version">My WebView implementation</string>
-    <string name="webview_aosp">AOSP WebView</string>
-    <string name="webview_stable">WebView Stable</string>
-    <string name="webview_beta">WebView Beta</string>
-    <string name="webview_developer">WebView Developer</string>
-    <string name="webview_canary">WebView Canary</string>
-    <string name="chrome_stable">Chrome Stable</string>
-    <string name="chrome_beta">Chrome Beta</string>
-    <string name="chrome_developer">Chrome Developer</string>
-    <string name="chrome_canary">Chrome Canary</string>
 
     <string name="outdated_target_version_sdk_version_apk_my_first_api_level">My factory Android API: %s\n\n</string>
     <string name="outdated_target_version_sdk_version_apk_title">Outdated targetSdkVersion system apps</string>

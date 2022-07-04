@@ -3,8 +3,8 @@ package net.imknown.android.forefrontinfo.ui.home
 import android.annotation.SuppressLint
 import android.app.admin.DevicePolicyManager
 import android.content.pm.ApplicationInfo
-import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.content.pm.Signature
 import android.content.res.Resources
 import android.os.Build
 import android.provider.Settings
@@ -156,15 +156,13 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         private const val CMD_TOYBOX_VERSION = "toybox --version"
 
         // region [WebView]
-        private const val WEB_VIEW_AOSP_PACKAGE_NAME = "com.android.webview"
-        private const val WEB_VIEW_STABLE_PACKAGE_NAME = "com.google.android.webview"
-        private const val WEB_VIEW_BETA_PACKAGE_NAME = "com.google.android.webview.beta"
-        private const val WEB_VIEW_DEV_IN_PACKAGE_NAME = "com.google.android.webview.dev"
-        private const val WEB_VIEW_CANARY_PACKAGE_NAME = "com.google.android.webview.canary"
-        private const val CHROME_STABLE_PACKAGE_NAME = "com.android.chrome"
-        private const val CHROME_BETA_PACKAGE_NAME = "com.chrome.beta"
-        private const val CHROME_DEV_IN_PACKAGE_NAME = "com.chrome.dev"
-        private const val CHROME_CANARY_PACKAGE_NAME = "com.chrome.canary"
+        // Need `android.permission.DUMP`
+        // private const val CMD_DUMPSYS_WEBVIEWUPDATE = "dumpsys webviewupdate"
+        // private const val CMD_DUMPSYS_WEBVIEWUPDATE = "cmd webviewupdate dump"
+        //
+        // https://chromium.googlesource.com/chromium/src/+/main/android_webview/docs/webview-providers.md#webview-provider-options
+        // https://chromium.googlesource.com/chromium/src/+/main/android_webview/docs/webview-providers.md#package-name
+        // https://chromium.googlesource.com/chromium/src/+/main/android_webview/docs/aosp-system-integration.md#configuring-the-android-framework
         // endregion [WebView]
 
         private const val PROP_RO_PRODUCT_FIRST_API_LEVEL = "ro.product.first_api_level"
@@ -1112,37 +1110,78 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         )
     }
 
-    private fun getPackageInfo(packageName: String) =
-        try {
-            val packageManager = MyApplication.instance.packageManager
-            if (isAtLeastStableAndroid13()) {
-                val flags = PackageManager.PackageInfoFlags.of(0)
-                packageManager.getPackageInfo(packageName, flags)
-            } else {
-                @Suppress("Deprecation")
-                packageManager.getPackageInfo(packageName, 0)
-            }
-        } catch (e: Exception) {
-            Log.d(javaClass.simpleName, "$packageName not found.", e)
-            null
+    private fun getPackageInfo(packageName: String) = try {
+        val packageManager = MyApplication.instance.packageManager
+        if (isAtLeastStableAndroid13()) {
+            val flags = PackageManager.PackageInfoFlags.of(0)
+            packageManager.getPackageInfo(packageName, flags)
+        } else {
+            @Suppress("Deprecation")
+            packageManager.getPackageInfo(packageName, 0)
         }
+    } catch (e: Exception) {
+        Log.d(javaClass.simpleName, "$packageName not found.")
+        null
+    }
 
     private fun detectWebView(tempModels: ArrayList<MyModel>, lld: Lld) {
-        val builtInWebViewPackageInfo =
-            getPackageInfo(WEB_VIEW_AOSP_PACKAGE_NAME)
-                ?: getPackageInfo(WEB_VIEW_STABLE_PACKAGE_NAME)
-        val builtInWebViewVersion = builtInWebViewPackageInfo?.versionName
-            ?: MyApplication.getMyString(android.R.string.unknownName)
+        val type = "Type:" + if (isAtLeastStableAndroid10()) {
+            "Trichrome or Standalone"
+        } else if (isAtLeastStableAndroid7()) {
+            "Monochrome"
+        } else {
+            "Standalone"
+        }
 
-        val implementWebViewPackageInfo =
+        var builtInResult = ""
+        var builtInVersionName = ""
+        if (isAtLeastStableAndroid7()) {
+            val webViewProviderInfoList = getBuildInWebViewProvidersAndroid7()
+
+            val lastIndex = webViewProviderInfoList.size - 1
+            webViewProviderInfoList.forEachIndexed { index, webViewProviderInfo ->
+                builtInResult += with(webViewProviderInfo) {
+                    val packageInfo = getPackageInfo(packageName)
+                    val installed = if (packageInfo != null) {
+                        packageInfo.versionName.also {
+                            if (Version(it).isHigherThan(builtInVersionName)) {
+                                builtInVersionName = it
+                            }
+                        } + if (signatures.isNotEmpty()) ", preinstalled" else ""
+                    } else {
+                        false
+                    }
+
+                    val ending = if (index != lastIndex) "\n" else ""
+
+                    """
+                    |- $packageName
+                    |  * Description: $description
+                    |  * Is installed: $installed
+                    |  * Can be only selected by user: ${!availableByDefault}
+                    |  * Is fallback: $isFallback$ending
+                    """.trimMargin()
+                }
+            }
+        } else {
+            builtInResult = getBuildInWebViewProviderAndroid5()
+        }
+
+        val implementPackageInfo =
             WebViewCompat.getCurrentWebViewPackage(MyApplication.instance)
-        val implementWebViewVersion = implementWebViewPackageInfo?.versionName
-            ?: MyApplication.getMyString(android.R.string.unknownName)
+        val implementVersionName = implementPackageInfo?.versionName
+        val implementResult = with(implementPackageInfo) {
+            "${this?.packageName} (${this?.versionName})"
+        }
+
+        val latestResult = MyApplication.getMyString(
+            R.string.webview_detail, lld.webView.stable.version, lld.webView.beta.version
+        )
 
         val lldWebViewStable = lld.webView.stable.version
         @ColorRes val webViewColor = when {
-            Version(builtInWebViewVersion).isAtLeast(lldWebViewStable) -> R.color.colorNoProblem
-            Version(implementWebViewVersion).isAtLeast(lldWebViewStable) -> R.color.colorWaring
+            Version(builtInVersionName).isAtLeast(lldWebViewStable) -> R.color.colorNoProblem
+            Version(implementVersionName).isAtLeast(lldWebViewStable) -> R.color.colorWaring
             else -> R.color.colorCritical
         }
 
@@ -1150,45 +1189,64 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
             tempModels,
             MyApplication.getMyString(R.string.webview_title),
             """
-            |${collectWebViewInfo(builtInWebViewPackageInfo, R.string.webview_built_in_version)}
+            |${MyApplication.getMyString(R.string.webview_built_in_version)}:
+            |$type
             |
-            |${collectWebViewInfo(implementWebViewPackageInfo, R.string.webview_implement_version)}
+            |$builtInResult
             |
-            |${
-                MyApplication.getMyString(
-                    R.string.webview_detail, lld.webView.stable.version, lld.webView.beta.version
-                )
-            }
+            |${MyApplication.getMyString(R.string.webview_implement_version)}:
+            |$implementResult
+            |
+            |$latestResult
             """.trimMargin(),
             webViewColor
         )
     }
 
-    private fun getWebViewAppName(packageName: String?) = MyApplication.getMyString(
-        when (packageName) {
-            WEB_VIEW_AOSP_PACKAGE_NAME -> R.string.webview_aosp
+    private fun getBuildInWebViewProviderAndroid5(): String {
+        // frameworks/base/core/res/res/values/config.xml
+        //     com.android.internal.R.string.config_webViewPackageName
+        val idConfigWebViewPackageName = Resources.getSystem().getIdentifier(
+            "config_webViewPackageName", "string", "android"
+        )
 
-            WEB_VIEW_STABLE_PACKAGE_NAME -> R.string.webview_stable
-            WEB_VIEW_BETA_PACKAGE_NAME -> R.string.webview_beta
-            WEB_VIEW_DEV_IN_PACKAGE_NAME -> R.string.webview_developer
-            WEB_VIEW_CANARY_PACKAGE_NAME -> R.string.webview_canary
+        return MyApplication.getMyString(idConfigWebViewPackageName)
+    }
 
-            CHROME_STABLE_PACKAGE_NAME -> R.string.chrome_stable
-            CHROME_BETA_PACKAGE_NAME -> R.string.chrome_beta
-            CHROME_DEV_IN_PACKAGE_NAME -> R.string.chrome_developer
-            CHROME_CANARY_PACKAGE_NAME -> R.string.chrome_canary
-
-            else -> android.R.string.unknownName
-        }
+    private class WebViewProviderInfo(
+        val packageName: String,
+        val description: String,
+        val availableByDefault: Boolean,
+        val isFallback: Boolean,
+        val signatures: Array<Signature>
     )
 
-    private fun collectWebViewInfo(packageInfo: PackageInfo?, @StringRes descId: Int): String {
-        val desc = MyApplication.getMyString(descId)
-        val appName = getWebViewAppName(packageInfo?.packageName)
-        val versionName =
-            packageInfo?.versionName ?: MyApplication.getMyString(android.R.string.unknownName)
+    @SuppressLint("PrivateApi")
+    private fun getBuildInWebViewProvidersAndroid7(): List<WebViewProviderInfo> {
+        // frameworks/base/core/res/res/xml/config_webview_packages.xml
+        val webViewUpdateServiceClass = Class.forName("android.webkit.WebViewUpdateService")
+        val allWebViewPackages =
+            webViewUpdateServiceClass.getDeclaredMethod("getAllWebViewPackages")
+                .invoke(null) as Array<*>
 
-        return "$desc:\n$appName ($versionName)"
+        fun Any?.getWebViewProviderInfoMember(name: String) =
+            Class.forName("android.webkit.WebViewProviderInfo").getDeclaredField(name).get(this)
+
+        return allWebViewPackages.map {
+            with(it) {
+                val packageName = getWebViewProviderInfoMember("packageName") as String
+                val description = getWebViewProviderInfoMember("description") as String
+                val availableByDefault =
+                    getWebViewProviderInfoMember("availableByDefault") as Boolean
+                val isFallback = getWebViewProviderInfoMember("isFallback") as Boolean
+
+                @Suppress("UNCHECKED_CAST") val signatures =
+                    getWebViewProviderInfoMember("signatures") as Array<Signature>
+                WebViewProviderInfo(
+                    packageName, description, availableByDefault, isFallback, signatures
+                )
+            }
+        }
     }
 
     private fun getOutdatedTargetSdkVersionApkModel(lld: Lld): MyModel {
