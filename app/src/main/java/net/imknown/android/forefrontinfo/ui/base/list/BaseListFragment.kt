@@ -5,9 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.LiveData
-import androidx.recyclerview.widget.LinearLayoutManager
 import net.imknown.android.forefrontinfo.R
-import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.MyItemDecoration
 import net.imknown.android.forefrontinfo.base.mvvm.BaseFragment
 import net.imknown.android.forefrontinfo.base.mvvm.Event
@@ -81,8 +79,6 @@ abstract class BaseListFragment : BaseFragment<FragmentListBinding>() {
 
         binding.recyclerView.apply {
             setHasFixedSize(true)
-
-            layoutManager = LinearLayoutManager(MyApplication.instance)
 
             addItemDecoration(
                 MyItemDecoration(
