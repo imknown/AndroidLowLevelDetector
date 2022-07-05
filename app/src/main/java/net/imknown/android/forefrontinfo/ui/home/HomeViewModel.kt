@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.admin.DevicePolicyManager
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
-import android.content.pm.Signature
 import android.content.res.Resources
 import android.os.Build
 import android.provider.Settings
@@ -1125,7 +1124,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
     }
 
     private fun detectWebView(tempModels: ArrayList<MyModel>, lld: Lld) {
-        val type = "Type:" + if (isAtLeastStableAndroid10()) {
+        val type = "Type: " + if (isAtLeastStableAndroid10()) {
             "Trichrome or Standalone"
         } else if (isAtLeastStableAndroid7()) {
             "Monochrome"
@@ -1147,24 +1146,40 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
                             if (Version(it).isHigherThan(builtInVersionName)) {
                                 builtInVersionName = it
                             }
-                        } + if (signatures.isNotEmpty()) ", preinstalled" else ""
+                        }
                     } else {
-                        false
+                        "Not installed"
                     }
 
-                    val ending = if (index != lastIndex) "\n" else ""
-
-                    """
-                    |- $packageName
-                    |  * Description: $description
-                    |  * Is installed: $installed
-                    |  * Can be only selected by user: ${!availableByDefault}
-                    |  * Is fallback: $isFallback$ending
-                    """.trimMargin()
+                    var tempResult = "- $packageName" +
+                            "\n  - $description" +
+                            "\n  - $installed"
+                    if (!availableByDefault) {
+                        tempResult += "\n  - Can be only selected by user"
+                    }
+                    if (isFallback) {
+                        tempResult += "\n  - Fallback"
+                    }
+                    if (signatures.isNotEmpty()) {
+                        tempResult += "\n  - Singed"
+                    }
+                    if (index != lastIndex) {
+                        tempResult += "\n\n"
+                    }
+                    tempResult
                 }
             }
         } else {
-            builtInResult = getBuildInWebViewProviderAndroid5()
+            val buildInWebViewPackageName = getBuildInWebViewProviderAndroid5()
+            val buildInPackageInfo = getPackageInfo(buildInWebViewPackageName)
+            val packageManager = MyApplication.instance.packageManager
+            val label = buildInPackageInfo?.applicationInfo?.loadLabel(packageManager)
+            val versionName = buildInPackageInfo?.versionName
+            builtInResult = """
+                |- $buildInWebViewPackageName
+                |  - $label
+                |  - $versionName
+                """.trimMargin()
         }
 
         val implementPackageInfo =
@@ -1218,7 +1233,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         val description: String,
         val availableByDefault: Boolean,
         val isFallback: Boolean,
-        val signatures: Array<Signature>
+        val signatures: Array<*>
     )
 
     @SuppressLint("PrivateApi")
@@ -1241,7 +1256,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
                 val isFallback = getWebViewProviderInfoMember("isFallback") as Boolean
 
                 @Suppress("UNCHECKED_CAST") val signatures =
-                    getWebViewProviderInfoMember("signatures") as Array<Signature>
+                    getWebViewProviderInfoMember("signatures") as Array<*>
                 WebViewProviderInfo(
                     packageName, description, availableByDefault, isFallback, signatures
                 )
