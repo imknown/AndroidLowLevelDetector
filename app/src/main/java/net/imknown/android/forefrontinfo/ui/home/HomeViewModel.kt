@@ -1254,9 +1254,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
                 val availableByDefault =
                     getWebViewProviderInfoMember("availableByDefault") as Boolean
                 val isFallback = getWebViewProviderInfoMember("isFallback") as Boolean
-
-                @Suppress("UNCHECKED_CAST") val signatures =
-                    getWebViewProviderInfoMember("signatures") as Array<*>
+                val signatures = getWebViewProviderInfoMember("signatures") as Array<*>
                 WebViewProviderInfo(
                     packageName, description, availableByDefault, isFallback, signatures
                 )
