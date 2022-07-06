@@ -1141,7 +1141,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
             webViewProviderInfoList.forEachIndexed { index, webViewProviderInfo ->
                 builtInResult += with(webViewProviderInfo) {
                     val packageInfo = getPackageInfo(packageName)
-                    val installed = if (packageInfo != null) {
+                    val isInstalled = if (packageInfo != null) {
                         packageInfo.versionName.also {
                             if (Version(it).isHigherThan(builtInVersionName)) {
                                 builtInVersionName = it
@@ -1151,17 +1151,17 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
                         "Not installed"
                     }
 
-                    var tempResult = "- $packageName" +
-                            "\n  - $description" +
-                            "\n  - $installed"
+                    var tempResult = packageName +
+                            "\n  $description" +
+                            "\n  $isInstalled"
                     if (!availableByDefault) {
-                        tempResult += "\n  - Can be only selected by user"
+                        tempResult += "\nMust be chosen by user"
                     }
                     if (isFallback) {
-                        tempResult += "\n  - Fallback"
+                        tempResult += "\n  Fallback"
                     }
                     if (signatures.isNotEmpty()) {
-                        tempResult += "\n  - Singed"
+                        tempResult += "\n  Signed"
                     }
                     if (index != lastIndex) {
                         tempResult += "\n\n"
@@ -1176,9 +1176,9 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
             val label = buildInPackageInfo?.applicationInfo?.loadLabel(packageManager)
             val versionName = buildInPackageInfo?.versionName
             builtInResult = """
-                |- $buildInWebViewPackageName
-                |  - $label
-                |  - $versionName
+                |$buildInWebViewPackageName
+                |  $label
+                |  $versionName
                 """.trimMargin()
         }
 
