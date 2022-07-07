@@ -1,18 +1,22 @@
 {
-  "version": "2022-07-05 18:55 +0800",
+  "version": "2022-07-07 19:20 +0800",
   "android": {
-    "securityPatchLevel": "2022-06-05",
-    "googlePlaySystemUpdates": "2022-06-01",
+    "securityPatchLevel": "2022-07-05",
+    "googlePlaySystemUpdates": "2022-07-01",
     "build": {
-      "version": "2022-06-06",
+      "version": "2022-07-06",
       "details": [
         {
-          "id": "SQ3A.220605.009.A1",
-          "revision": "r7"
+          "id": "SQ3A.220705.001.B1",
+          "revision": "r9"
         },
         {
-          "id": "SQ3A.220605.009.B1",
-          "revision": "r8"
+          "id": "SQ3A.220705.003",
+          "revision": "r10"
+        },
+        {
+          "id": "SQ3A.220705.003.A1",
+          "revision": "r11"
         }
       ]
     },
