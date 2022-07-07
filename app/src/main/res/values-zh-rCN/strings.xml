@@ -91,6 +91,10 @@
     <string name="webview_title">WebView 版本</string>
     <string name="webview_detail">最新稳定: %1$s\n最新测试: %2$s</string>
     <string name="webview_built_in_version">我的内建 WebView</string>
+    <string name="webview_built_in_not_installed">未安装</string>
+    <string name="webview_must_be_chosen_by_user">必须由用户选择</string>
+    <string name="webview_fallback">备用</string>
+    <string name="webview_signed">已签名</string>
     <string name="webview_implement_version">我的 WebView 实现</string>
 
     <string name="outdated_target_version_sdk_version_apk_my_first_api_level">我的出厂 Android API: %s\n\n</string>

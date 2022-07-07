@@ -91,6 +91,10 @@
     <string name="webview_title">Version WebView</string>
     <string name="webview_detail">Dernier stable: %1$s\nDernier béta: %2$s</string>
     <string name="webview_built_in_version">Mon system WebView integré</string>
+    <string name="webview_built_in_not_installed">Pas installé</string>
+    <string name="webview_must_be_chosen_by_user">"Doit être choisi par l'utilisateur"</string>
+    <string name="webview_fallback">Se retirer</string>
+    <string name="webview_signed">Signé</string>
     <string name="webview_implement_version">Mon implémentation de WebView</string>
 
     <string name="outdated_target_version_sdk_version_apk_my_first_api_level">"API Android à la sortie d'usine: %s\n\n"</string>

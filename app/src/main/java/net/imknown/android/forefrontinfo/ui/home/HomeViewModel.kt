@@ -1150,23 +1150,30 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
                             }
                         }
                     } else {
-                        "Not installed"
+                        MyApplication.getMyString(R.string.webview_built_in_not_installed)
                     }
 
+                    fun subFormat(text: String) = MyApplication.getMyString(
+                        R.string.webview_sub_format, text
+                    )
+
+                    fun subFormat(@StringRes stringRes: Int) =
+                        subFormat(MyApplication.getMyString(stringRes))
+
                     var tempResult = packageName +
-                            "\n  $description" +
-                            "\n  $isInstalled"
+                            subFormat(description) +
+                            subFormat(isInstalled)
                     if (!availableByDefault) {
-                        tempResult += "\n  Must be chosen by user"
+                        tempResult += subFormat(R.string.webview_must_be_chosen_by_user)
                     }
                     if (isFallback) {
-                        tempResult += "\n  Fallback"
+                        tempResult += subFormat(R.string.webview_fallback)
                     }
                     if (signatures.isNotEmpty()) {
-                        tempResult += "\n  Signed"
+                        tempResult += subFormat(R.string.webview_signed)
                     }
                     if (index != lastIndex) {
-                        tempResult += "\n\n"
+                        tempResult += MyApplication.getMyString(R.string.webview_ending)
                     }
                     tempResult
                 }
