@@ -1132,6 +1132,8 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
             "Standalone"
         }
 
+        val packageManager = MyApplication.instance.packageManager
+
         var builtInResult = ""
         var builtInVersionName = ""
         if (isAtLeastStableAndroid7()) {
@@ -1155,7 +1157,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
                             "\n  $description" +
                             "\n  $isInstalled"
                     if (!availableByDefault) {
-                        tempResult += "\nMust be chosen by user"
+                        tempResult += "\n  Must be chosen by user"
                     }
                     if (isFallback) {
                         tempResult += "\n  Fallback"
@@ -1170,24 +1172,27 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
                 }
             }
         } else {
-            val buildInWebViewPackageName = getBuildInWebViewProviderAndroid5()
-            val buildInPackageInfo = getPackageInfo(buildInWebViewPackageName)
-            val packageManager = MyApplication.instance.packageManager
-            val label = buildInPackageInfo?.applicationInfo?.loadLabel(packageManager)
-            val versionName = buildInPackageInfo?.versionName
+            val buildInPackageName = getBuildInWebViewProviderAndroid5()
+            val buildInPackageInfo = getPackageInfo(buildInPackageName)
+            val buildInLabel = buildInPackageInfo?.applicationInfo?.loadLabel(packageManager)
+            val buildInVersionName = buildInPackageInfo?.versionName
             builtInResult = """
-                |$buildInWebViewPackageName
-                |  $label
-                |  $versionName
+                |$buildInPackageName
+                |  $buildInLabel
+                |  $buildInVersionName
                 """.trimMargin()
         }
 
         val implementPackageInfo =
             WebViewCompat.getCurrentWebViewPackage(MyApplication.instance)
+        val implementPackageName = implementPackageInfo?.packageName
+        val implementLabel = implementPackageInfo?.applicationInfo?.loadLabel(packageManager)
         val implementVersionName = implementPackageInfo?.versionName
-        val implementResult = with(implementPackageInfo) {
-            "${this?.packageName} (${this?.versionName})"
-        }
+        val implementResult = """
+                |$implementPackageName
+                |  $implementLabel
+                |  $implementVersionName
+                """.trimMargin()
 
         val latestResult = MyApplication.getMyString(
             R.string.webview_detail, lld.webView.stable.version, lld.webView.beta.version
