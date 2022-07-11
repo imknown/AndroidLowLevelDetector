@@ -7,6 +7,7 @@
         <item name="colorOnPrimary">@color/md_theme_onPrimary</item>
         <item name="colorPrimaryContainer">@color/md_theme_primaryContainer</item>
         <item name="colorOnPrimaryContainer">@color/md_theme_onPrimaryContainer</item>
+        <item name="colorPrimaryInverse">@color/md_theme_inversePrimary</item>
 
         <item name="colorSecondary">@color/md_theme_secondary</item>
         <item name="colorOnSecondary">@color/md_theme_onSecondary</item>
@@ -30,14 +31,10 @@
         <item name="colorOnSurface">@color/md_theme_onSurface</item>
         <item name="colorSurfaceVariant">@color/md_theme_surfaceVariant</item>
         <item name="colorOnSurfaceVariant">@color/md_theme_onSurfaceVariant</item>
-
-        <item name="colorOutline">@color/md_theme_outline</item>
-
-        <item name="colorOnSurfaceInverse">@color/md_theme_inverseOnSurface</item>
         <item name="colorSurfaceInverse">@color/md_theme_inverseSurface</item>
-
+        <item name="colorOnSurfaceInverse">@color/md_theme_inverseOnSurface</item>
+        <item name="colorOutline">@color/md_theme_outline</item>
         <!-- <item name="elevationOverlayColor">@color/md_theme_surfaceTint</item> -->
-        <!-- <item name="colorPrimaryInverse">@color/md_theme_inversePrimary</item> -->
         <!-- endregion [M3] -->
 
         <item name="android:statusBarColor">@color/colorStatusBar</item>

@@ -7,6 +7,7 @@
     <color name="md_theme_onPrimary">#003915</color>
     <color name="md_theme_primaryContainer">#005321</color>
     <color name="md_theme_onPrimaryContainer">#A1F6AC</color>
+    <color name="md_theme_inversePrimary">#166D33</color>
 
     <color name="md_theme_secondary">#B8CCB6</color>
     <color name="md_theme_onSecondary">#233425</color>
@@ -30,17 +31,12 @@
     <color name="md_theme_onSurface">#E2E3DD</color>
     <color name="md_theme_surfaceVariant">#414941</color>
     <color name="md_theme_onSurfaceVariant">#C1C9BE</color>
-
-    <color name="md_theme_outline">#8B9389</color>
-
-    <color name="md_theme_inverseOnSurface">#1A1C19</color>
     <color name="md_theme_inverseSurface">#E2E3DD</color>
-    <color name="md_theme_inversePrimary">#166D33</color>
+    <color name="md_theme_inverseOnSurface">#1A1C19</color>
+    <color name="md_theme_outline">#8B9389</color>
+    <color name="md_theme_surfaceTint">#86D992</color>
 
     <color name="md_theme_shadow">#000000</color>
-
-    <color name="md_theme_surfaceTint">#86D992</color>
-    <color name="md_theme_surfaceTintColor">#86D992</color>
     <!-- endregion [M3] -->
 
     <color name="colorStatusBar">@android:color/transparent</color>

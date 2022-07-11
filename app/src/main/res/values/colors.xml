@@ -9,6 +9,7 @@
     <color name="md_theme_onPrimary">#FFFFFF</color>
     <color name="md_theme_primaryContainer">#A1F6AC</color>
     <color name="md_theme_onPrimaryContainer">#002109</color>
+    <color name="md_theme_inversePrimary">#86D992</color>
 
     <color name="md_theme_secondary">#516351</color>
     <color name="md_theme_onSecondary">#FFFFFF</color>
@@ -32,17 +33,12 @@
     <color name="md_theme_onSurface">#1A1C19</color>
     <color name="md_theme_surfaceVariant">#DDE5DA</color>
     <color name="md_theme_onSurfaceVariant">#414941</color>
-
-    <color name="md_theme_outline">#727970</color>
-
-    <color name="md_theme_inverseOnSurface">#F0F1EC</color>
     <color name="md_theme_inverseSurface">#2E312E</color>
-    <color name="md_theme_inversePrimary">#86D992</color>
+    <color name="md_theme_inverseOnSurface">#F0F1EC</color>
+    <color name="md_theme_outline">#727970</color>
+    <color name="md_theme_surfaceTint">#166D33</color>
 
     <color name="md_theme_shadow">#000000</color>
-
-    <color name="md_theme_surfaceTint">#166D33</color>
-    <color name="md_theme_surfaceTintColor">#166D33</color>
     <!-- endregion [M3] -->
 
     <color name="colorStatusBar">#3000</color>
