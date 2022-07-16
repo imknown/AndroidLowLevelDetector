@@ -1,5 +1,5 @@
 {
-  "version": "2022-07-13 20:15 +0800",
+  "version": "2022-07-15 21:10 +0800",
   "android": {
     "securityPatchLevel": "2022-07-05",
     "googlePlaySystemUpdates": "2022-07-01",
@@ -34,7 +34,7 @@
       "name": "Tiramisu",
       "api": "33",
       "version": "13, Tiramisu",
-      "phase": "Beta 3.3"
+      "phase": "Beta 4"
     },
     "internal": {
       "name": "UpsideDownCake",
@@ -45,9 +45,9 @@
   "linux": {
     "google": {
       "versions": [
-        "5.15.54",
-        "5.10.130",
-        "5.4.205",
+        "5.15.55",
+        "5.10.131",
+        "5.4.206",
         "4.19.252",
         "4.14.288",
         "4.9.323"
@@ -76,7 +76,7 @@
       "version": "103.0.5060.71"
     },
     "beta": {
-      "version": "104.0.5112.37"
+      "version": "104.0.5112.46"
     }
   }
 }
