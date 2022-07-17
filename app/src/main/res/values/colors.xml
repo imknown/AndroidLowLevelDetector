@@ -44,7 +44,6 @@
     <color name="colorStatusBar">#3000</color>
     <color name="colorNavigationBar">#3000</color>
 
-    <color name="colorStateless">#EAEAEA</color>
     <color name="colorNoProblem">#ACDDB7</color>
     <color name="colorWaring">#FDD18F</color>
     <color name="colorCritical">#FFB1AC</color>
