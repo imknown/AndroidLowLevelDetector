@@ -1,6 +1,8 @@
 package net.imknown.android.forefrontinfo.ui.base.list
 
 import android.view.ViewGroup
+import androidx.annotation.AttrRes
+import androidx.core.view.isGone
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.color.MaterialColors
 
@@ -26,8 +28,13 @@ class MyAdapter : RecyclerView.Adapter<MyViewHolder>() {
 
     private fun onBindFullViewHolder(holder: MyViewHolder, position: Int) {
         with(holder.binding) {
-            val backgroundColor = MaterialColors.getColor(root, myModels[position].color)
-            tvTitle.setBackgroundColor(backgroundColor)
+            @AttrRes val color = myModels[position].color
+            if (color != 0) {
+                val backgroundColor = MaterialColors.getColor(root, color)
+                sivColor.setBackgroundColor(backgroundColor)
+            } else {
+                sivColor.isGone = true
+            }
             tvTitle.text = myModels[position].title
             tvDetail.text = myModels[position].detail
         }

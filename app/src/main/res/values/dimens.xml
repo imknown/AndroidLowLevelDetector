@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="item_card_corner_radius">4dp</dimen>
-    <dimen name="item_card_elevation">2dp</dimen>
-    <dimen name="item_card_title_padding_horizontal">10dp</dimen>
-    <dimen name="item_card_title_padding_vertical">6dp</dimen>
-    <dimen name="item_card_detail_padding_horizontal">10dp</dimen>
-    <dimen name="item_card_detail_padding_vertical">10dp</dimen>
+    <dimen name="item_card_padding">10dp</dimen>
 
     <dimen name="item_divider_space_horizontal">12dp</dimen>
     <dimen name="item_divider_space_vertical">12dp</dimen>

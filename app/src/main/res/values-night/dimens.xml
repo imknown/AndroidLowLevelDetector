@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <dimen name="item_card_elevation">0dp</dimen> <!-- To avoid overdraw -->
-</resources>

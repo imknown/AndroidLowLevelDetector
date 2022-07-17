@@ -42,7 +42,7 @@
     <color name="colorStatusBar">@android:color/transparent</color>
     <color name="colorNavigationBar">@android:color/transparent</color>
 
-    <color name="colorNoProblem">#2B5128</color>
-    <color name="colorWaring">#7E581F</color>
-    <color name="colorCritical">#812F2F</color>
+    <color name="colorNoProblem">#D02B5128</color>
+    <color name="colorWaring">#D07E581F</color>
+    <color name="colorCritical">#D0812F2F</color>
 </resources>
