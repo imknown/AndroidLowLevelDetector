@@ -3,9 +3,9 @@
     <string name="app_name">底层探测器</string>
 
     <!-- 数据 -->
-    <string name="lld_json_loading">📲 加载中…</string>
-    <string name="lld_json_offline">📴 离线 (%s)</string>
-    <string name="lld_json_online">📱 在线 (%s)</string>
+    <string name="lld_json_loading">加载中…</string>
+    <string name="lld_json_offline">离线 (%s)</string>
+    <string name="lld_json_online">在线 (%s)</string>
     <string name="lld_json_fetch_failed">在线数据获取失败.\n使用离线数据代替.\n\n%s</string>
     <string name="lld_json_save_failed">数据保存失败.\n请检查你的存储.\n\n%s</string>
     <string name="lld_json_parse_failed">数据解析失败.\n请尝试升级本程序.\n\n%s</string>
