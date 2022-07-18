@@ -11,7 +11,7 @@ object Versions {
         const val targetSdk = 33
         const val targetSdkPreview = "UpsideDownCake"
 
-        const val ndk = "25.0.8528842 rc4"
+        const val ndk = "25.0.8775105"
         const val cmake = "3.23.2"
 
         const val versionCode = 61
