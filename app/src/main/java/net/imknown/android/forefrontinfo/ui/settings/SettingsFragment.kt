@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.annotation.StringRes
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.viewModels
 import androidx.preference.ListPreference
@@ -15,6 +14,7 @@ import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.extension.isChinaMainlandTimezone
 import net.imknown.android.forefrontinfo.base.mvvm.EventObserver
 import net.imknown.android.forefrontinfo.base.mvvm.IFragmentView
+import net.imknown.android.forefrontinfo.base.mvvm.statusBarsAndNavigationBars
 
 class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
 
@@ -34,7 +34,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
         super.onViewCreated(view, savedInstanceState)
 
         ViewCompat.setOnApplyWindowInsetsListener(listView) { insetView, windowInsets ->
-            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val insets = windowInsets.getInsets(statusBarsAndNavigationBars)
             insetView.updatePadding(
                 left = insets.left,
                 right = insets.right,
