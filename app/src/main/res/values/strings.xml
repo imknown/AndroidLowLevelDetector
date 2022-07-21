@@ -96,6 +96,8 @@
     <string name="webview_title">WebView version</string>
     <string name="webview_detail">Latest stable: %1$s\nLatest beta: %2$s</string>
     <string name="webview_built_in_version">My built-in WebView</string>
+    <string name="webview_or">%1$s or %2$s</string>
+    <string name="webview_standalone">Standalone</string>
     <string name="webview_built_in_not_installed">Not installed</string>
     <string name="webview_sub_format" translatable="false">\n  %s</string>
     <string name="webview_must_be_chosen_by_user">Must be chosen by user</string>

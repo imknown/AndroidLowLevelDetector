@@ -1125,8 +1125,9 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
     }
 
     private fun detectWebView(tempModels: ArrayList<MyModel>, lld: Lld) {
-        val type = "Type: " + if (isAtLeastStableAndroid10()) {
-            "Trichrome or Standalone"
+        val type = if (isAtLeastStableAndroid10()) {
+            val standalone = MyApplication.getMyString(R.string.webview_standalone)
+            MyApplication.getMyString(R.string.webview_or, "Trichrome", standalone)
         } else if (isAtLeastStableAndroid7()) {
             "Monochrome"
         } else {
@@ -1217,8 +1218,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
             tempModels,
             MyApplication.getMyString(R.string.webview_title),
             """
-            |${MyApplication.getMyString(R.string.webview_built_in_version)}:
-            |$type
+            |${MyApplication.getMyString(R.string.webview_built_in_version)}: $type
             |
             |$builtInResult
             |

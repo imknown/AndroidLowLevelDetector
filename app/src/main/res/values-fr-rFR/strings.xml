@@ -91,6 +91,8 @@
     <string name="webview_title">Version WebView</string>
     <string name="webview_detail">Dernier stable: %1$s\nDernier béta: %2$s</string>
     <string name="webview_built_in_version">Mon system WebView integré</string>
+    <string name="webview_or">%1$s ou %2$s</string>
+    <string name="webview_standalone">Autonome</string>
     <string name="webview_built_in_not_installed">Pas installé</string>
     <string name="webview_must_be_chosen_by_user">"Doit être choisi par l'utilisateur"</string>
     <string name="webview_fallback">Se retirer</string>
