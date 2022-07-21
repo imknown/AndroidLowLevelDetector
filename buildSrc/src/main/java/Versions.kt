@@ -24,7 +24,7 @@ object Versions {
     const val desugarJdkLibs = "1.2.0"
 
     // https://github.com/material-components/material-components-android/releases
-    const val material = "1.7.0-alpha03"
+    const val material = "1.6.1"
 
     // region [AndroidX]
     // https://maven.google.com
@@ -79,7 +79,7 @@ object Versions {
         const val coroutines = "1.6.4"
 
         // https://github.com/Kotlin/kotlinx.serialization/releases
-        const val serialization = "1.3.3"
+        const val serialization = "1.4.0-RC"
     }
 
     // https://firebase.google.com/support/release-notes/android
