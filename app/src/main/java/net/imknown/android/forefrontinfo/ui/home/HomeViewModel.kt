@@ -1131,7 +1131,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         } else if (isAtLeastStableAndroid7()) {
             "Monochrome"
         } else {
-            "Standalone"
+            MyApplication.getMyString(R.string.webview_standalone)
         }
 
         val packageManager = MyApplication.instance.packageManager
