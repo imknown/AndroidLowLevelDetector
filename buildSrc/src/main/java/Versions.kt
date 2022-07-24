@@ -12,7 +12,7 @@ object Versions {
         const val targetSdkPreview = "UpsideDownCake"
 
         const val ndk = "25.0.8775105"
-        const val cmake = "3.23.2"
+        const val cmake = "3.22.1"
 
         const val versionCode = 61
         const val versionName = "1.16.0_unpublished"
