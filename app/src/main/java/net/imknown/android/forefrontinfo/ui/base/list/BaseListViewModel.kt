@@ -8,7 +8,6 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.*
 import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.R
@@ -16,6 +15,8 @@ import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.mvvm.BaseViewModel
 import net.imknown.android.forefrontinfo.base.mvvm.Event
 import net.imknown.android.forefrontinfo.base.mvvm.stringEventLiveData
+import net.imknown.android.forefrontinfo.base.shell.ShellResult
+import net.imknown.android.forefrontinfo.base.shell.impl.LibSuShell
 import net.imknown.android.forefrontinfo.base.R as BaseR
 
 abstract class BaseListViewModel : BaseViewModel() {
@@ -122,28 +123,21 @@ abstract class BaseListViewModel : BaseViewModel() {
             false
         }
 
-    protected data class MyShellResult(
-        val output: List<String>,
-        val isSuccess: Boolean
-    )
-
     @WorkerThread
-    protected fun sh(cmd: String, condition: Boolean = true): MyShellResult {
+    protected fun sh(cmd: String, condition: Boolean = true): ShellResult {
         return if (condition) {
-            val result = Shell.cmd(cmd).exec()
-            MyShellResult(result.out, result.isSuccess)
+            LibSuShell.execute(cmd)
         } else {
-            MyShellResult(emptyList(), false)
+            ShellResult()
         }
     }
 
     @MainThread
-    protected fun shAsync(cmd: String, condition: Boolean = true): Deferred<MyShellResult> {
+    protected fun shAsync(cmd: String, condition: Boolean = true): Deferred<ShellResult> {
         return viewModelScope.async(Dispatchers.IO) {
             sh(cmd, condition)
         }
     }
 
-    protected fun isShellResultSuccessful(result: MyShellResult) =
-        result.isSuccess && result.output[0].isNotEmpty()
+    protected fun isShellResultSuccessful(result: ShellResult) = result.isSuccess
 }

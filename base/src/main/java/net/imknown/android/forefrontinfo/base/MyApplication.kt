@@ -95,6 +95,7 @@ open class MyApplication : Application() {
     }
 
     private fun initShell() {
+        // Shell.enableVerboseLogging = BuildConfig.DEBUG // Has been moved to Debug BuildType
         Shell.setDefaultBuilder(
             Shell.Builder.create()
                 .setFlags(Shell.FLAG_REDIRECT_STDERR or Shell.FLAG_NON_ROOT_SHELL)
