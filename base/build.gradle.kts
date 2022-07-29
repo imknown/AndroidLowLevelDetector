@@ -103,6 +103,9 @@ dependencies {
     // api("com.github.kittinunf.fuel:fuel-coroutines:$thirdParties.fuel")
 
     api("io.github.g00fy2:versioncompare:${Versions.ThirdParties.versionCompare}")
+
+    api("dev.rikka.shizuku:api:${Versions.ThirdParties.shizuku}")
+    api("dev.rikka.shizuku:provider:${Versions.ThirdParties.shizuku}")
     // endregion [3rd Parties]
 
     api(platform("com.google.firebase:firebase-bom:${Versions.Firebase.billOfMaterials}"))

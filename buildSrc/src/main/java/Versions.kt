@@ -107,5 +107,9 @@ object Versions {
 
         // https://github.com/G00fY2/version-compare/releases
         const val versionCompare = "1.5.0"
+
+        // https://github.com/RikkaApps/Shizuku-API#add-dependency
+        // https://search.maven.org/search?q=dev.rikka
+        const val shizuku = "12.1.0"
     }
 }
