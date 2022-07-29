@@ -31,7 +31,7 @@ object Versions {
     // https://androidstudio.googleblog.com/
     // https://developer.android.com/jetpack/androidx/versions
     object AndroidX {
-        const val activity = "1.5.0"
+        const val activity = "1.5.1"
 
         const val annotation = "1.4.0"
         const val annotationExperimental = "1.2.0"
@@ -48,9 +48,9 @@ object Versions {
 
         const val core = "1.8.0"
 
-        const val fragment = "1.5.0"
+        const val fragment = "1.5.1"
 
-        const val lifecycle = "2.5.0"
+        const val lifecycle = "2.5.1"
 
         const val preference = "1.2.0"
 
@@ -88,7 +88,7 @@ object Versions {
         const val googleServices = "4.3.13"
 
         // https://firebase.google.com/docs/android/learn-more#bom
-        const val billOfMaterials = "30.3.0"
+        const val billOfMaterials = "30.3.1"
 
         // https://firebase.google.com/docs/crashlytics/get-started?platform=android
         // https://firebase.google.com/docs/crashlytics/ndk-reports
