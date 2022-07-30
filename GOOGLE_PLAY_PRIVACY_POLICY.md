@@ -35,7 +35,7 @@ For 3rd-parties:
   - android.permission.ACCESS_NETWORK_STATE
   - android.permission.WAKE_LOCK
   - com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE
-  - com.google.android.c2dm.permission.RECEIVE
+  - com.google.android.gms.permission.AD_ID
 
 ## Security
 
