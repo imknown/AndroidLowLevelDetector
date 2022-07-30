@@ -1231,6 +1231,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
     }
 
     private fun getBuildInWebViewProviderAndroid5(): String {
+        @SuppressLint("DiscouragedApi")
         // frameworks/base/core/res/res/values/config.xml
         //     com.android.internal.R.string.config_webViewPackageName
         val idConfigWebViewPackageName = Resources.getSystem().getIdentifier(
