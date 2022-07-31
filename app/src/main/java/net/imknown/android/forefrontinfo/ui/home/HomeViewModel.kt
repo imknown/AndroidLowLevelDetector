@@ -768,9 +768,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         }
         val cmd = String.format(CMD_VENDOR_NAMESPACE_DEFAULT_ISOLATED, fileLdConfig)
         val gsiCompatibilityResult = sh(cmd, isAtLeastStableAndroid9())
-        val (@StringRes result, @AttrRes color) = if (
-            isShellResultSuccessful(gsiCompatibilityResult)
-        ) {
+        val (@StringRes result, @AttrRes color) = if (gsiCompatibilityResult.isSuccess) {
             val lineResult = gsiCompatibilityResult.output[0].split('=')
             val isCompatible = lineResult.isNotEmpty() && lineResult[1].trim().toBoolean()
             if (isCompatible) {
@@ -1036,7 +1034,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         val seLinuxStatus = sh(CMD_GETENFORCE)
         val seLinuxStatusResult = seLinuxStatus.output[0]
 
-        if (isShellResultSuccessful(seLinuxStatus)) {
+        if (seLinuxStatus.isSuccess) {
             when (seLinuxStatusResult) {
                 SELINUX_STATUS_ENFORCING -> {
                     result = R.string.selinux_status_enforcing_mode
@@ -1076,7 +1074,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
 
     private fun detectToybox(tempModels: ArrayList<MyModel>, lld: Lld) {
         val toyboxVersionResult = sh(CMD_TOYBOX_VERSION, isAtLeastStableAndroid6())
-        val hasToyboxVersion = isShellResultSuccessful(toyboxVersionResult)
+        val hasToyboxVersion = toyboxVersionResult.isSuccess
 
         val toyboxVersion = if (hasToyboxVersion) {
             toyboxVersionResult.output[0]

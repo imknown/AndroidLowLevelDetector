@@ -2,13 +2,14 @@ package net.imknown.android.forefrontinfo.ui.base.list
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import androidx.annotation.MainThread
 import androidx.annotation.StringRes
-import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
@@ -102,16 +103,6 @@ abstract class BaseListViewModel : BaseViewModel() {
             MyApplication.getMyString(R.string.result_not_supported)
         }
 
-//    @SuppressLint("PrivateApi", "DiscouragedPrivateApi")
-//    protected fun setStringProperty(key: String, value: String) {
-//        Class.forName("android.os.SystemProperties").getDeclaredMethod(
-//            "set",
-//            String::class.java,
-//            String::class.java
-//        ).invoke(null, key, value)
-//    }
-
-    @SuppressLint("PrivateApi")
     protected fun getBooleanProperty(key: String, condition: Boolean = true) =
         if (condition) {
             Class.forName("android.os.SystemProperties").getDeclaredMethod(
@@ -123,7 +114,6 @@ abstract class BaseListViewModel : BaseViewModel() {
             false
         }
 
-    @WorkerThread
     protected fun sh(cmd: String, condition: Boolean = true): ShellResult {
         return if (condition) {
             LibSuShell.execute(cmd)
@@ -131,13 +121,4 @@ abstract class BaseListViewModel : BaseViewModel() {
             ShellResult()
         }
     }
-
-    @MainThread
-    protected fun shAsync(cmd: String, condition: Boolean = true): Deferred<ShellResult> {
-        return viewModelScope.async(Dispatchers.IO) {
-            sh(cmd, condition)
-        }
-    }
-
-    protected fun isShellResultSuccessful(result: ShellResult) = result.isSuccess
 }

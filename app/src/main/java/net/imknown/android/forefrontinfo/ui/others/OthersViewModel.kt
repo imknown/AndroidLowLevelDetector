@@ -171,11 +171,11 @@ class OthersViewModel : BasePureListViewModel(), IAndroidVersion {
         // region [Kernel]
         var kernelFinal: String? = null
         val kernelVerbose = sh(CMD_KERNEL_VERBOSE)
-        if (isShellResultSuccessful(kernelVerbose)) {
+        if (kernelVerbose.isSuccess) {
             kernelFinal = kernelVerbose.output[0]
         } else {
             val kernelAll = sh(CMD_KERNEL_ALL)
-            if (isShellResultSuccessful(kernelAll)) {
+            if (kernelAll.isSuccess) {
                 kernelFinal = kernelAll.output[0]
             }
         }
