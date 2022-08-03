@@ -22,15 +22,19 @@ class PropViewModel : BasePureListViewModel() {
     }
 
     override fun collectModels() = viewModelScope.launch(Dispatchers.IO) {
-        val tempModels = ArrayList<MyModel>()
+        try {
+            val tempModels = ArrayList<MyModel>()
 
-        getSystemProp(tempModels)
-        getSettings(tempModels, Settings.System::class)
-        getSettings(tempModels, Settings.Secure::class)
-        getSettings(tempModels, Settings.Global::class)
-        getBuildProp(tempModels)
+            getSystemProp(tempModels)
+            getSettings(tempModels, Settings.System::class)
+            getSettings(tempModels, Settings.Secure::class)
+            getSettings(tempModels, Settings.Global::class)
+            getBuildProp(tempModels)
 
-        setModels(tempModels)
+            setModels(tempModels)
+        } catch (e: Exception) {
+            showError(R.string.lld_json_detect_failed, e)
+        }
     }
 
     private fun getSystemProp(tempModels: ArrayList<MyModel>) {

@@ -61,141 +61,161 @@ class OthersViewModel : BasePureListViewModel(), IAndroidVersion {
     }
 
     override fun collectModels() = viewModelScope.launch(Dispatchers.IO) {
-        val tempModels = ArrayList<MyModel>()
+        try {
+            val tempModels = ArrayList<MyModel>()
 
-        // region [Basic]
-        add(tempModels, MyApplication.getMyString(R.string.build_brand), Build.BRAND)
-        add(tempModels, MyApplication.getMyString(R.string.build_manufacturer), Build.MANUFACTURER)
-        add(tempModels, MyApplication.getMyString(R.string.build_model), Build.MODEL)
-        add(tempModels, MyApplication.getMyString(R.string.build_device), Build.DEVICE)
-        add(tempModels, MyApplication.getMyString(R.string.build_product), Build.PRODUCT)
-        add(tempModels, MyApplication.getMyString(R.string.build_hardware), Build.HARDWARE)
-        add(tempModels, MyApplication.getMyString(R.string.build_board), Build.BOARD)
-
-        if (isAtLeastStableAndroid12()) {
-            add(tempModels, MyApplication.getMyString(R.string.build_soc_model), Build.SOC_MODEL)
+            // region [Basic]
+            add(tempModels, MyApplication.getMyString(R.string.build_brand), Build.BRAND)
             add(
                 tempModels,
-                MyApplication.getMyString(R.string.build_soc_manufacturer),
-                Build.SOC_MANUFACTURER
+                MyApplication.getMyString(R.string.build_manufacturer),
+                Build.MANUFACTURER
             )
+            add(tempModels, MyApplication.getMyString(R.string.build_model), Build.MODEL)
+            add(tempModels, MyApplication.getMyString(R.string.build_device), Build.DEVICE)
+            add(tempModels, MyApplication.getMyString(R.string.build_product), Build.PRODUCT)
+            add(tempModels, MyApplication.getMyString(R.string.build_hardware), Build.HARDWARE)
+            add(tempModels, MyApplication.getMyString(R.string.build_board), Build.BOARD)
 
-            add(tempModels, MyApplication.getMyString(R.string.build_hardware_sku), Build.SKU)
-            add(
-                tempModels,
-                MyApplication.getMyString(R.string.build_vendor_sku),
-                getStringProperty(HomeViewModel.PROP_VENDOR_SKU)
-            )
-            add(
-                tempModels,
-                MyApplication.getMyString(R.string.build_odm_hardware_sku),
-                Build.ODM_SKU
-            )
-        }
-        // endregion [Basic]
+            if (isAtLeastStableAndroid12()) {
+                add(
+                    tempModels,
+                    MyApplication.getMyString(R.string.build_soc_model),
+                    Build.SOC_MODEL
+                )
+                add(
+                    tempModels,
+                    MyApplication.getMyString(R.string.build_soc_manufacturer),
+                    Build.SOC_MANUFACTURER
+                )
 
-        // region [Arch & ABI]
-        // region [Binder]
-        detectBinderStatus(tempModels, DRIVER_BINDER, R.string.binder_status)
-        // endregion [Binder]
-
-        // region [Process]
-        add(tempModels, MyApplication.getMyString(R.string.current_process_bit), getProcessBit())
-        add(
-            tempModels,
-            MyApplication.getMyString(R.string.os_arch),
-            System.getProperty(SYSTEM_PROPERTY_ARCHITECTURE)
-        )
-        @Suppress("Deprecation")
-        add(tempModels, MyApplication.getMyString(R.string.build_cpu_abi), Build.CPU_ABI)
-        // endregion [Process]
-
-        add(
-            tempModels,
-            MyApplication.getMyString(R.string.current_system_abi),
-            getStringProperty(PROP_RO_PRODUCT_CPU_ABI)
-        )
-        add(
-            tempModels,
-            MyApplication.getMyString(R.string.build_supported_32_bit_abis),
-            Build.SUPPORTED_32_BIT_ABIS.joinToString()
-        )
-        add(tempModels,
-            MyApplication.getMyString(R.string.build_supported_64_bit_abis),
-            Build.SUPPORTED_64_BIT_ABIS.joinToString().takeIf { it.isNotEmpty() }
-                ?: MyApplication.getMyString(R.string.result_not_supported)
-        )
-        // endregion [Arch & ABI]
-
-        // region [ROM]
-        add(tempModels, MyApplication.getMyString(R.string.build_user), Build.USER)
-        add(tempModels, MyApplication.getMyString(R.string.build_host), Build.HOST)
-        val time = Build.TIME.formatToLocalZonedDatetimeString()
-        add(tempModels, MyApplication.getMyString(R.string.build_time), time)
-        if (isAtLeastStableAndroid6()) {
-            add(
-                tempModels,
-                MyApplication.getMyString(R.string.build_base_os),
-                Build.VERSION.BASE_OS
-            )
-        }
-        addFingerprints(tempModels)
-        add(tempModels, MyApplication.getMyString(R.string.build_id), Build.ID)
-        add(tempModels, MyApplication.getMyString(R.string.build_display), Build.DISPLAY)
-        add(tempModels, MyApplication.getMyString(R.string.build_type), Build.TYPE)
-        add(tempModels, MyApplication.getMyString(R.string.build_tags), Build.TAGS)
-        add(
-            tempModels,
-            MyApplication.getMyString(R.string.build_incremental),
-            Build.VERSION.INCREMENTAL
-        )
-        add(tempModels, MyApplication.getMyString(R.string.build_codename), Build.VERSION.CODENAME)
-        if (isAtLeastStableAndroid6()) {
-            add(
-                tempModels,
-                MyApplication.getMyString(R.string.build_preview_sdk_int),
-                Build.VERSION.PREVIEW_SDK_INT.toString()
-            )
-        }
-
-        add(
-            tempModels,
-            MyApplication.getMyString(R.string.webview_user_agent),
-            try {
-                WebSettings.getDefaultUserAgent(MyApplication.instance)
-            } catch (e: Exception) {
-                e.printStackTrace()
-                MyApplication.getMyString(android.R.string.unknownName)
+                add(tempModels, MyApplication.getMyString(R.string.build_hardware_sku), Build.SKU)
+                add(
+                    tempModels,
+                    MyApplication.getMyString(R.string.build_vendor_sku),
+                    getStringProperty(HomeViewModel.PROP_VENDOR_SKU)
+                )
+                add(
+                    tempModels,
+                    MyApplication.getMyString(R.string.build_odm_hardware_sku),
+                    Build.ODM_SKU
+                )
             }
-        )
-        // region [Kernel]
-        var kernelFinal: String? = null
-        val kernelVerbose = sh(CMD_KERNEL_VERBOSE)
-        if (kernelVerbose.isSuccess) {
-            kernelFinal = kernelVerbose.output[0]
-        } else {
-            val kernelAll = sh(CMD_KERNEL_ALL)
-            if (kernelAll.isSuccess) {
-                kernelFinal = kernelAll.output[0]
-            }
-        }
+            // endregion [Basic]
 
-        kernelFinal?.let {
+            // region [Arch & ABI]
+            // region [Binder]
+            detectBinderStatus(tempModels, DRIVER_BINDER, R.string.binder_status)
+            // endregion [Binder]
+
+            // region [Process]
             add(
                 tempModels,
-                MyApplication.getMyString(R.string.linux),
-                it
+                MyApplication.getMyString(R.string.current_process_bit),
+                getProcessBit()
             )
+            add(
+                tempModels,
+                MyApplication.getMyString(R.string.os_arch),
+                System.getProperty(SYSTEM_PROPERTY_ARCHITECTURE)
+            )
+            @Suppress("Deprecation")
+            add(tempModels, MyApplication.getMyString(R.string.build_cpu_abi), Build.CPU_ABI)
+            // endregion [Process]
+
+            add(
+                tempModels,
+                MyApplication.getMyString(R.string.current_system_abi),
+                getStringProperty(PROP_RO_PRODUCT_CPU_ABI)
+            )
+            add(
+                tempModels,
+                MyApplication.getMyString(R.string.build_supported_32_bit_abis),
+                Build.SUPPORTED_32_BIT_ABIS.joinToString()
+            )
+            add(tempModels,
+                MyApplication.getMyString(R.string.build_supported_64_bit_abis),
+                Build.SUPPORTED_64_BIT_ABIS.joinToString().takeIf { it.isNotEmpty() }
+                    ?: MyApplication.getMyString(R.string.result_not_supported)
+            )
+            // endregion [Arch & ABI]
+
+            // region [ROM]
+            add(tempModels, MyApplication.getMyString(R.string.build_user), Build.USER)
+            add(tempModels, MyApplication.getMyString(R.string.build_host), Build.HOST)
+            val time = Build.TIME.formatToLocalZonedDatetimeString()
+            add(tempModels, MyApplication.getMyString(R.string.build_time), time)
+            if (isAtLeastStableAndroid6()) {
+                add(
+                    tempModels,
+                    MyApplication.getMyString(R.string.build_base_os),
+                    Build.VERSION.BASE_OS
+                )
+            }
+            addFingerprints(tempModels)
+            add(tempModels, MyApplication.getMyString(R.string.build_id), Build.ID)
+            add(tempModels, MyApplication.getMyString(R.string.build_display), Build.DISPLAY)
+            add(tempModels, MyApplication.getMyString(R.string.build_type), Build.TYPE)
+            add(tempModels, MyApplication.getMyString(R.string.build_tags), Build.TAGS)
+            add(
+                tempModels,
+                MyApplication.getMyString(R.string.build_incremental),
+                Build.VERSION.INCREMENTAL
+            )
+            add(
+                tempModels,
+                MyApplication.getMyString(R.string.build_codename),
+                Build.VERSION.CODENAME
+            )
+            if (isAtLeastStableAndroid6()) {
+                add(
+                    tempModels,
+                    MyApplication.getMyString(R.string.build_preview_sdk_int),
+                    Build.VERSION.PREVIEW_SDK_INT.toString()
+                )
+            }
+
+            add(
+                tempModels,
+                MyApplication.getMyString(R.string.webview_user_agent),
+                try {
+                    WebSettings.getDefaultUserAgent(MyApplication.instance)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    MyApplication.getMyString(android.R.string.unknownName)
+                }
+            )
+            // region [Kernel]
+            var kernelFinal: String? = null
+            val kernelVerbose = sh(CMD_KERNEL_VERBOSE)
+            if (kernelVerbose.isSuccess) {
+                kernelFinal = kernelVerbose.output[0]
+            } else {
+                val kernelAll = sh(CMD_KERNEL_ALL)
+                if (kernelAll.isSuccess) {
+                    kernelFinal = kernelAll.output[0]
+                }
+            }
+
+            kernelFinal?.let {
+                add(
+                    tempModels, MyApplication.getMyString(R.string.linux), it
+                )
+            }
+            // endregion [Kernel]
+            // endregion [ROM]
+
+            // region [Others]
+            add(tempModels, MyApplication.getMyString(R.string.build_bootloader), Build.BOOTLOADER)
+            add(
+                tempModels, MyApplication.getMyString(R.string.build_radio), Build.getRadioVersion()
+            )
+            // endregion [Others]
+
+            setModels(tempModels)
+        } catch (e: Exception) {
+            showError(R.string.lld_json_detect_failed, e)
         }
-        // endregion [Kernel]
-        // endregion [ROM]
-
-        // region [Others]
-        add(tempModels, MyApplication.getMyString(R.string.build_bootloader), Build.BOOTLOADER)
-        add(tempModels, MyApplication.getMyString(R.string.build_radio), Build.getRadioVersion())
-        // endregion [Others]
-
-        setModels(tempModels)
     }
 
     private fun addFingerprints(tempModels: ArrayList<MyModel>) {
