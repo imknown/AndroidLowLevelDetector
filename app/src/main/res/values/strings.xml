@@ -198,7 +198,7 @@
 
     <string name="about_source_key" translatable="false">about_source_key</string>
     <string name="about_source_title">Source code</string>
-    <string name="about_source_summary">Github address of the app source code</string>
+    <string name="about_source_summary">GitHub address of the app source code</string>
     <string name="about_source_uri" translatable="false">https://github.com/imknown/AndroidLowLevelDetector</string>
 
     <string name="about_privacy_policy_key" translatable="false">about_privacy_policy_key</string>
