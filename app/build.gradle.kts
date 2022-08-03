@@ -34,7 +34,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        resourceConfigurations.addAll(listOf("zh-rCN", "fr-rFR"))
+        resourceConfigurations.addAll(listOf("zh-rCN", "zh-rTW", "fr-rFR"))
 
         buildConfigField("String", "GIT_BRANCH", "\"$currentGitBranchName\"")
 
