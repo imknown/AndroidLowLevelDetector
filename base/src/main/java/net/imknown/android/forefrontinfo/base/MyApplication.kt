@@ -11,6 +11,10 @@ import androidx.preference.PreferenceManager
 import com.google.android.material.color.DynamicColors
 import com.topjohnwu.superuser.Shell
 import net.imknown.android.forefrontinfo.base.mvvm.Event
+import net.imknown.android.forefrontinfo.base.property.PropertyManager
+import net.imknown.android.forefrontinfo.base.property.impl.DefaultProperty
+import net.imknown.android.forefrontinfo.base.shell.ShellManager
+import net.imknown.android.forefrontinfo.base.shell.impl.LibSuShell
 import java.io.File
 
 open class MyApplication : Application() {
@@ -100,6 +104,9 @@ open class MyApplication : Application() {
             Shell.Builder.create()
                 .setFlags(Shell.FLAG_REDIRECT_STDERR or Shell.FLAG_NON_ROOT_SHELL)
         )
+
+        ShellManager.shell = LibSuShell
+        PropertyManager.property = DefaultProperty
     }
 
     private fun initLanguage() {

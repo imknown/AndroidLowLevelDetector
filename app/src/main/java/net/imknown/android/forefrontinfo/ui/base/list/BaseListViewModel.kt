@@ -1,6 +1,5 @@
 package net.imknown.android.forefrontinfo.ui.base.list
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
@@ -16,8 +15,9 @@ import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.mvvm.BaseViewModel
 import net.imknown.android.forefrontinfo.base.mvvm.Event
 import net.imknown.android.forefrontinfo.base.mvvm.stringEventLiveData
+import net.imknown.android.forefrontinfo.base.property.PropertyManager
+import net.imknown.android.forefrontinfo.base.shell.ShellManager
 import net.imknown.android.forefrontinfo.base.shell.ShellResult
-import net.imknown.android.forefrontinfo.base.shell.impl.LibSuShell
 import net.imknown.android.forefrontinfo.base.R as BaseR
 
 abstract class BaseListViewModel : BaseViewModel() {
@@ -91,32 +91,23 @@ abstract class BaseListViewModel : BaseViewModel() {
             }
         }
 
-    @SuppressLint("PrivateApi")
-    protected fun getStringProperty(key: String, condition: Boolean = true) =
+    protected fun getStringProperty(key: String, condition: Boolean = true): String =
         if (condition) {
-            Class.forName("android.os.SystemProperties").getDeclaredMethod(
-                "get",
-                String::class.java,
-                String::class.java
-            ).invoke(null, key, MyApplication.getMyString(R.string.build_not_filled)) as String
+            PropertyManager.getString(key, MyApplication.getMyString(R.string.build_not_filled))
         } else {
             MyApplication.getMyString(R.string.result_not_supported)
         }
 
     protected fun getBooleanProperty(key: String, condition: Boolean = true) =
         if (condition) {
-            Class.forName("android.os.SystemProperties").getDeclaredMethod(
-                "getBoolean",
-                String::class.java,
-                Boolean::class.java
-            ).invoke(null, key, false) as Boolean
+            PropertyManager.getBoolean(key, false)
         } else {
             false
         }
 
     protected fun sh(cmd: String, condition: Boolean = true): ShellResult {
         return if (condition) {
-            LibSuShell.execute(cmd)
+            ShellManager.execute(cmd)
         } else {
             ShellResult()
         }
