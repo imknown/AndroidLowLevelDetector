@@ -118,8 +118,8 @@
     <string name="build_vendor_sku">供应商 SKU</string>
     <string name="build_odm_hardware_sku">ODM 硬件 SKU</string>
 
-    <string name="bit_32">32位</string>
-    <string name="bit_64">64位</string>
+    <string name="bit_32">32 位</string>
+    <string name="bit_64">64 位</string>
     <string name="binder_status">Binder 位数</string>
     <string name="hw_binder_status">HW Binder 位数</string>
     <string name="vnd_binder_status">VND Binder 位数</string>
