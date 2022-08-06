@@ -101,8 +101,8 @@
     <string name="webview_implement_version">我的 WebView 實現</string>
 
     <string name="outdated_target_version_sdk_version_apk_my_first_api_level">我的出廠 Android API：%s\n\n</string>
-    <string name="outdated_target_version_sdk_version_apk_title">過時 targetSdkVersion 系統程序</string>
-    <string name="outdated_target_version_sdk_version_apk_result_none">沒有過時的系統程序</string>
+    <string name="outdated_target_version_sdk_version_apk_title">過時 targetSdkVersion 系統程式</string>
+    <string name="outdated_target_version_sdk_version_apk_result_none">沒有過時的系統程式</string>
 
     <!-- 其他 -->
     <string name="build_brand">品牌</string>
@@ -173,7 +173,7 @@
     <string name="function_allow_network_data_summary">若啟用，數據將優先從遠端網路伺服器獲取，並被快取在本地儲存。</string>
 
     <string name="function_outdated_target_order_by_package_name_first_title">優先按包名排序</string>
-    <string name="function_outdated_target_order_by_package_name_first_summary">優先按包名排序過時程序，否則按 targetSdkVersion 優先。</string>
+    <string name="function_outdated_target_order_by_package_name_first_summary">優先按包名排序過時程式，否則按 targetSdkVersion 優先。</string>
 
     <string name="about_title">關於</string>
 
