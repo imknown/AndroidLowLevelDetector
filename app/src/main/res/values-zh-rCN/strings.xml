@@ -124,7 +124,7 @@
     <string name="hw_binder_status">HW Binder 位数</string>
     <string name="vnd_binder_status">VND Binder 位数</string>
     <string name="current_process_bit">当前进程位数</string>
-    <string name="os_arch">当前进程 架构</string>
+    <string name="os_arch">当前进程架构</string>
     <string name="build_cpu_abi">当前进程 ABI</string>
     <string name="current_system_abi">当前系统 ABI</string>
     <string name="build_supported_32_bit_abis">支持的 32 位 CPU ABI</string>
