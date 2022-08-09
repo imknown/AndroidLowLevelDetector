@@ -93,21 +93,24 @@ abstract class BaseListViewModel : BaseViewModel() {
 
     protected fun getStringProperty(key: String, condition: Boolean = true): String =
         if (condition) {
-            PropertyManager.getString(key, MyApplication.getMyString(R.string.build_not_filled))
+            PropertyManager.instance.getString(
+                key,
+                MyApplication.getMyString(R.string.build_not_filled)
+            )
         } else {
             MyApplication.getMyString(R.string.result_not_supported)
         }
 
     protected fun getBooleanProperty(key: String, condition: Boolean = true) =
         if (condition) {
-            PropertyManager.getBoolean(key, false)
+            PropertyManager.instance.getBoolean(key, false)
         } else {
             false
         }
 
     protected fun sh(cmd: String, condition: Boolean = true): ShellResult {
         return if (condition) {
-            ShellManager.execute(cmd)
+            ShellManager.instance.execute(cmd)
         } else {
             ShellResult()
         }

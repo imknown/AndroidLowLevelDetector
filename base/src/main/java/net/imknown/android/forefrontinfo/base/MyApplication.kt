@@ -105,8 +105,8 @@ open class MyApplication : Application() {
                 .setFlags(Shell.FLAG_REDIRECT_STDERR or Shell.FLAG_NON_ROOT_SHELL)
         )
 
-        ShellManager.shell = LibSuShell
-        PropertyManager.property = DefaultProperty
+        ShellManager.instance = ShellManager(LibSuShell)
+        PropertyManager.instance = PropertyManager(DefaultProperty)
     }
 
     private fun initLanguage() {
