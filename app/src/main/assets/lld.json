@@ -1,10 +1,10 @@
 {
-  "version": "2022-08-05 19:35 +0800",
+  "version": "2022-08-09 22:15 +0800",
   "android": {
     "securityPatchLevel": "2022-08-05",
     "googlePlaySystemUpdates": "2022-08-01",
     "build": {
-      "version": "2022-08-04",
+      "version": "2022-08-08",
       "details": [
         {
           "id": "SQ3A.220705.001.B1",
@@ -25,6 +25,10 @@
         {
           "id": "SQ3A.220705.004.A1",
           "revision": "r20"
+        },
+        {
+          "id": "SQ3A.220705.001.B2",
+          "revision": "r21"
         },
         {
           "id": "SQ3A.220705.004",
