@@ -1,5 +1,7 @@
 package net.imknown.android.forefrontinfo.ui.home
 
+import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import net.imknown.android.forefrontinfo.base.MyApplication
@@ -15,7 +17,9 @@ class HomeFragment : BaseListFragment() {
 
     override val listViewModel by viewModels<HomeViewModel>()
 
-    override fun init() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         observeLanguageEvent(MyApplication.homeLanguageEvent)
 
         listViewModel.subtitle.observe(viewLifecycleOwner) {

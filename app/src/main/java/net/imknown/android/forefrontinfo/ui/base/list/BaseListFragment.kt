@@ -35,6 +35,8 @@ abstract class BaseListFragment : BaseFragment<FragmentListBinding>() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        // super.onViewCreated(view, savedInstanceState)
+
         initViews(savedInstanceState)
 
         listViewModel.changeScrollBarModeEvent.observe(viewLifecycleOwner, EventObserver {
@@ -62,8 +64,6 @@ abstract class BaseListFragment : BaseFragment<FragmentListBinding>() {
                 listViewModel.setScrollBarMode(scrollBarMode)
             }
         })
-
-        init()
 
         listViewModel.init(savedInstanceState)
     }
@@ -109,6 +109,4 @@ abstract class BaseListFragment : BaseFragment<FragmentListBinding>() {
             adapter = myAdapter
         }
     }
-
-    abstract fun init()
 }
