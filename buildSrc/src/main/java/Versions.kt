@@ -36,7 +36,7 @@ object Versions {
         const val annotation = "1.4.0"
         const val annotationExperimental = "1.2.0"
 
-        const val appcompat = "1.4.1"
+        const val appcompat = "1.5.0"
 
         const val archCore = "2.1.0"
 
@@ -48,7 +48,7 @@ object Versions {
 
         const val core = "1.8.0"
 
-        const val fragment = "1.5.1"
+        const val fragment = "1.5.2"
 
         const val lifecycle = "2.5.1"
 
@@ -60,7 +60,7 @@ object Versions {
 
         const val swipeRefreshLayout = "1.1.0"
 
-        const val webkit = "1.4.0"
+        const val webkit = "1.5.0-rc01"
 
         // https://developer.android.com/jetpack/androidx/releases/test
         object Test {
