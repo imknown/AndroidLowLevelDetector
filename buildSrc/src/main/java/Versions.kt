@@ -24,7 +24,7 @@ object Versions {
     const val desugarJdkLibs = "1.2.0"
 
     // https://github.com/material-components/material-components-android/releases
-    const val material = "1.6.1"
+    const val material = "1.7.0-beta01"
 
     // region [AndroidX]
     // https://maven.google.com
@@ -46,7 +46,7 @@ object Versions {
 
         const val constraintLayout = "2.1.4"
 
-        const val core = "1.8.0"
+        const val core = "1.9.0-beta01"
 
         const val fragment = "1.5.2"
 
@@ -54,7 +54,7 @@ object Versions {
 
         const val preference = "1.2.0"
 
-        const val recyclerView = "1.2.1"
+        const val recyclerView = "1.3.0-beta02"
 
         const val savedState = "1.2.0"
 
@@ -73,7 +73,7 @@ object Versions {
     object Kotlin {
         // https://github.com/JetBrains/kotlin/releases
         // https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.jetbrains.kotlin%22
-        const val kotlin = "1.7.10"
+        const val kotlin = "1.7.20-Beta"
 
         // https://github.com/Kotlin/kotlinx.coroutines/releases
         const val coroutines = "1.6.4"
