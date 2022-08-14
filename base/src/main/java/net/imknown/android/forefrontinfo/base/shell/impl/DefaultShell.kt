@@ -10,19 +10,17 @@ object DefaultShell : IShell {
         process.waitFor()
 
         var output: List<String>
-        var isSuccess: Boolean
         var exitCode: Int
+        var isSuccess: Boolean
         try {
             val err = process.errorStream.bufferedReader().readLines()
-            if (err.isNotEmpty()) {
-                output = err
-                isSuccess = false
-            } else {
-                val out = process.inputStream.bufferedReader().readLines()
-                output = out
-                isSuccess = true
+            output = err.ifEmpty {
+                process.inputStream.bufferedReader().readLines()
             }
+
             exitCode = process.exitValue()
+
+            isSuccess = (exitCode == 0)
         } catch (e: Exception) {
             output = emptyList()
             isSuccess = false
