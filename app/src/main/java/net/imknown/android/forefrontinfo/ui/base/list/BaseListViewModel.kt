@@ -94,8 +94,7 @@ abstract class BaseListViewModel : BaseViewModel() {
     protected fun getStringProperty(key: String, condition: Boolean = true): String =
         if (condition) {
             PropertyManager.instance.getString(
-                key,
-                MyApplication.getMyString(R.string.build_not_filled)
+                key, MyApplication.getMyString(R.string.build_not_filled)
             )
         } else {
             MyApplication.getMyString(R.string.result_not_supported)

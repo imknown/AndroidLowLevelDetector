@@ -42,6 +42,14 @@ class MainActivity : AppCompatActivity(), IView {
         if (savedInstanceState == null) {
             supportFragmentManager.switch(R.id.navigation_home, true)
         }
+
+        mainViewModel.dealWithShiziku()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        mainViewModel.removeRequestPermissionResultListener()
     }
 
     private fun initViews() {
