@@ -1,45 +1,29 @@
 {
-  "version": "2022-08-13 12:35 +0800",
+  "version": "2022-08-22 20:05 +0800",
   "android": {
     "securityPatchLevel": "2022-08-05",
     "googlePlaySystemUpdates": "2022-08-01",
     "build": {
-      "version": "2022-08-08",
+      "version": "2022-08-15",
       "details": [
         {
-          "id": "SQ3A.220705.001.B1",
-          "revision": "r9"
+          "id": "TP1A.220624.014",
+          "revision": "r1"
         },
         {
-          "id": "SQ3A.220705.003",
-          "revision": "r10"
+          "id": "TP1A.220624.021",
+          "revision": "r2"
         },
         {
-          "id": "SQ3A.220705.003.A1",
-          "revision": "r11"
-        },
-        {
-          "id": "SQ3A.220705.003.A3",
-          "revision": "r19"
-        },
-        {
-          "id": "SQ3A.220705.004.A1",
-          "revision": "r20"
-        },
-        {
-          "id": "SQ3A.220705.001.B2",
-          "revision": "r21"
-        },
-        {
-          "id": "SQ3A.220705.004",
-          "revision": "r22"
+          "id": "TP1A.220624.021.A1",
+          "revision": "r3"
         }
       ]
     },
     "stable": {
-      "name": "Snow Cone v2",
-      "api": "32",
-      "version": "12.1, Snow Cone v2"
+      "name": "Tiramisu",
+      "api": "33",
+      "version": "13, Tiramisu"
     },
     "support": {
       "name": "Quince Tart",
@@ -47,10 +31,10 @@
       "version": "10, Quince Tart"
     },
     "preview": {
-      "name": "Tiramisu",
+      "name": "TiramisuPrivacySandbox",
       "api": "33",
-      "version": "13, Tiramisu",
-      "phase": "Beta 4.1"
+      "version": "13, TiramisuPrivacySandbox",
+      "phase": "DP4"
     },
     "internal": {
       "name": "UpsideDownCake",
@@ -61,8 +45,8 @@
   "linux": {
     "google": {
       "versions": [
-        "5.15.60",
-        "5.10.136",
+        "5.15.62",
+        "5.10.137",
         "5.4.210",
         "4.19.255",
         "4.14.290",
@@ -70,7 +54,7 @@
       ]
     },
     "mainline": {
-      "version": "5.19"
+      "version": "6.0-rc2"
     }
   },
   "toybox": {
@@ -89,10 +73,10 @@
   },
   "webView": {
     "stable": {
-      "version": "104.0.5112.69"
+      "version": "104.0.5112.97"
     },
     "beta": {
-      "version": "105.0.5195.26"
+      "version": "105.0.5195.35"
     }
   }
 }
