@@ -11,7 +11,7 @@ object Versions {
         const val targetSdk = 33
         const val targetSdkPreview = "UpsideDownCake"
 
-        const val ndk = "25.0.8775105"
+        const val ndk = "25.1.8937393"
         const val cmake = "3.22.1"
 
         const val versionCode = 62
@@ -21,7 +21,7 @@ object Versions {
     // https://developer.android.com/studio/write/java8-support#library-desugaring
     // https://maven.google.com/web/index.html?q=desugar_jdk_libs
     // https://github.com/google/desugar_jdk_libs/blob/master/CHANGELOG.md
-    const val desugarJdkLibs = "1.2.0"
+    const val desugarJdkLibs = "1.2.2"
 
     // https://github.com/material-components/material-components-android/releases
     const val material = "1.7.0-beta01"
@@ -31,7 +31,7 @@ object Versions {
     // https://androidstudio.googleblog.com/
     // https://developer.android.com/jetpack/androidx/versions
     object AndroidX {
-        const val activity = "1.5.1"
+        const val activity = "1.6.0-rc01"
 
         const val annotation = "1.4.0"
         const val annotationExperimental = "1.2.0"
@@ -46,7 +46,7 @@ object Versions {
 
         const val constraintLayout = "2.1.4"
 
-        const val core = "1.9.0-beta01"
+        const val core = "1.9.0-rc01"
 
         const val fragment = "1.5.2"
 
@@ -54,13 +54,13 @@ object Versions {
 
         const val preference = "1.2.0"
 
-        const val recyclerView = "1.3.0-beta02"
+        const val recyclerView = "1.2.1"
 
         const val savedState = "1.2.0"
 
         const val swipeRefreshLayout = "1.1.0"
 
-        const val webkit = "1.5.0-rc01"
+        const val webkit = "1.5.0"
 
         // https://developer.android.com/jetpack/androidx/releases/test
         object Test {
