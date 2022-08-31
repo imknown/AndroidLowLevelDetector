@@ -24,7 +24,7 @@ object Versions {
     const val desugarJdkLibs = "1.2.2"
 
     // https://github.com/material-components/material-components-android/releases
-    const val material = "1.7.0-beta01"
+    const val material = "1.7.0-rc01"
 
     // region [AndroidX]
     // https://maven.google.com
