@@ -1,22 +1,14 @@
 {
-  "version": "2022-08-31 08:25 +0800",
+  "version": "2022-09-07 18:00 +0800",
   "android": {
-    "securityPatchLevel": "2022-08-05",
-    "googlePlaySystemUpdates": "2022-08-01",
+    "securityPatchLevel": "2022-09-05",
+    "googlePlaySystemUpdates": "2022-09-01",
     "build": {
-      "version": "2022-08-15",
+      "version": "2022-09-06",
       "details": [
         {
-          "id": "TP1A.220624.014",
-          "revision": "r1"
-        },
-        {
-          "id": "TP1A.220624.021",
-          "revision": "r2"
-        },
-        {
-          "id": "TP1A.220624.021.A1",
-          "revision": "r3"
+          "id": "TP1A.220905.004",
+          "revision": "r4"
         }
       ]
     },
@@ -45,16 +37,16 @@
   "linux": {
     "google": {
       "versions": [
-        "5.15.63",
-        "5.10.139",
-        "5.4.211",
-        "4.19.256",
-        "4.14.291",
-        "4.9.326"
+        "5.15.65",
+        "5.10.141",
+        "5.4.212",
+        "4.19.257",
+        "4.14.292",
+        "4.9.327"
       ]
     },
     "mainline": {
-      "version": "6.0-rc3"
+      "version": "6.0-rc4"
     }
   },
   "toybox": {
@@ -73,10 +65,10 @@
   },
   "webView": {
     "stable": {
-      "version": "105.0.5195.68"
+      "version": "105.0.5195.79"
     },
     "beta": {
-      "version": "105.0.5195.68"
+      "version": "106.0.5249.23"
     }
   }
 }
