@@ -1,5 +1,5 @@
 {
-  "version": "2022-09-07 18:00 +0800",
+  "version": "2022-09-08 19:55 +0800",
   "android": {
     "securityPatchLevel": "2022-09-05",
     "googlePlaySystemUpdates": "2022-09-01",
@@ -26,7 +26,7 @@
       "name": "TiramisuPrivacySandbox",
       "api": "33",
       "version": "13, TiramisuPrivacySandbox",
-      "phase": "DP4"
+      "phase": "DP5"
     },
     "internal": {
       "name": "UpsideDownCake",
@@ -68,7 +68,7 @@
       "version": "105.0.5195.79"
     },
     "beta": {
-      "version": "106.0.5249.23"
+      "version": "106.0.5249.31"
     }
   }
 }
