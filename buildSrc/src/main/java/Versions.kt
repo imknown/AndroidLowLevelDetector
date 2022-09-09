@@ -31,12 +31,12 @@ object Versions {
     // https://androidstudio.googleblog.com/
     // https://developer.android.com/jetpack/androidx/versions
     object AndroidX {
-        const val activity = "1.6.0-rc01"
+        const val activity = "1.6.0-rc02"
 
-        const val annotation = "1.4.0"
-        const val annotationExperimental = "1.2.0"
+        const val annotation = "1.5.0-rc01"
+        const val annotationExperimental = "1.3.0"
 
-        const val appcompat = "1.5.0"
+        const val appcompat = "1.6.0-rc01"
 
         const val archCore = "2.1.0"
 
@@ -46,7 +46,7 @@ object Versions {
 
         const val constraintLayout = "2.1.4"
 
-        const val core = "1.9.0-rc01"
+        const val core = "1.9.0"
 
         const val fragment = "1.5.2"
 
@@ -73,7 +73,7 @@ object Versions {
     object Kotlin {
         // https://github.com/JetBrains/kotlin/releases
         // https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.jetbrains.kotlin%22
-        const val kotlin = "1.7.20-Beta"
+        const val kotlin = "1.7.20-RC"
 
         // https://github.com/Kotlin/kotlinx.coroutines/releases
         const val coroutines = "1.6.4"
