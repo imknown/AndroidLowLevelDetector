@@ -1,14 +1,22 @@
 {
-  "version": "2022-09-12 14:55 +0800",
+  "version": "2022-09-13 08:25 +0800",
   "android": {
     "securityPatchLevel": "2022-09-05",
     "googlePlaySystemUpdates": "2022-09-01",
     "build": {
-      "version": "2022-09-06",
+      "version": "2022-09-12",
       "details": [
         {
           "id": "TP1A.220905.004",
           "revision": "r4"
+        },
+        {
+          "id": "TP1A.220905.004.A1",
+          "revision": "r5"
+        },
+        {
+          "id": "TP1A.220905.004.A2",
+          "revision": "r6"
         }
       ]
     },
