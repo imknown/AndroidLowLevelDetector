@@ -1,14 +1,22 @@
 {
-  "version": "2022-09-09 17:45 +0800",
+  "version": "2022-09-14 17:40 +0800",
   "android": {
     "securityPatchLevel": "2022-09-05",
     "googlePlaySystemUpdates": "2022-09-01",
     "build": {
-      "version": "2022-09-06",
+      "version": "2022-09-12",
       "details": [
         {
           "id": "TP1A.220905.004",
           "revision": "r4"
+        },
+        {
+          "id": "TP1A.220905.004.A1",
+          "revision": "r5"
+        },
+        {
+          "id": "TP1A.220905.004.A2",
+          "revision": "r6"
         }
       ]
     },
@@ -23,10 +31,10 @@
       "version": "10, Quince Tart"
     },
     "preview": {
-      "name": "TiramisuPrivacySandbox",
+      "name": "Tiramisu",
       "api": "33",
-      "version": "13, TiramisuPrivacySandbox",
-      "phase": "DP5"
+      "version": "13 QPR1, Tiramisu",
+      "phase": "Beta 1"
     },
     "internal": {
       "name": "UpsideDownCake",
@@ -46,7 +54,7 @@
       ]
     },
     "mainline": {
-      "version": "6.0-rc4"
+      "version": "6.0-rc5"
     }
   },
   "toybox": {
@@ -65,7 +73,7 @@
   },
   "webView": {
     "stable": {
-      "version": "105.0.5195.79"
+      "version": "105.0.5195.124"
     },
     "beta": {
       "version": "106.0.5249.31"
