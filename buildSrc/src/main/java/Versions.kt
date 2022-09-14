@@ -97,7 +97,7 @@ object Versions {
 
     object ThirdParties {
         // https://github.com/topjohnwu/libsu/releases
-        const val libsu = "5.0.2"
+        const val libsu = "5.0.3"
 
         // https://github.com/square/leakcanary/releases
         const val leakCanary = "2.9.1"
