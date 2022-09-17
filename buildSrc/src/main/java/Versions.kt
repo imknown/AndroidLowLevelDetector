@@ -1,6 +1,6 @@
 object Versions {
     object AndroidBuild {
-        const val androidGradlePlugin = "7.3.0-rc01"
+        const val androidGradlePlugin = "7.3.0"
 
         // https://developer.android.com/studio/releases/build-tools.html#notes
         const val buildTools = "33.0.0"
@@ -82,17 +82,18 @@ object Versions {
         const val serialization = "1.4.0"
     }
 
+    // https://developers.google.com/android/guides/releases
     // https://firebase.google.com/support/release-notes/android
     // https://firebase.google.com/docs/android/setup#available-libraries
     object Firebase {
         const val googleServices = "4.3.13"
 
         // https://firebase.google.com/docs/android/learn-more#bom
-        const val billOfMaterials = "30.4.1"
+        const val billOfMaterials = "30.5.0"
 
         // https://firebase.google.com/docs/crashlytics/get-started?platform=android
         // https://firebase.google.com/docs/crashlytics/ndk-reports
-        const val firebaseCrashlyticsGradlePlugin = "2.9.1"
+        const val firebaseCrashlyticsGradlePlugin = "2.9.2"
     }
 
     object ThirdParties {
