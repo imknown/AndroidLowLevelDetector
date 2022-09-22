@@ -31,9 +31,9 @@ object Versions {
     // https://androidstudio.googleblog.com/
     // https://developer.android.com/jetpack/androidx/versions
     object AndroidX {
-        const val activity = "1.6.0-rc02"
+        const val activity = "1.6.0"
 
-        const val annotation = "1.5.0-rc01"
+        const val annotation = "1.5.0"
         const val annotationExperimental = "1.3.0"
 
         const val appcompat = "1.6.0-rc01"
@@ -48,13 +48,13 @@ object Versions {
 
         const val core = "1.9.0"
 
-        const val fragment = "1.5.2"
+        const val fragment = "1.5.3"
 
         const val lifecycle = "2.5.1"
 
         const val preference = "1.2.0"
 
-        const val recyclerView = "1.2.1"
+        const val recyclerView = "1.3.0-rc01"
 
         const val savedState = "1.2.0"
 
