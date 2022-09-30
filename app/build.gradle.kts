@@ -1,4 +1,5 @@
 import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
+import org.gradle.configurationcache.extensions.capitalized
 import java.io.FileInputStream
 import java.util.*
 
@@ -79,12 +80,19 @@ android {
         }
     }
 
+    flavorDimensions += IssueTracker::class.simpleName.toString()
+
+    productFlavors {
+        create(IssueTracker.firebase)
+        create(IssueTracker.none)
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
 
-            signingConfig = signingConfigs.getByName("release")
+            signingConfig = signingConfigs.getByName(name)
 
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -102,7 +110,7 @@ android {
             isDebuggable = true
             isJniDebuggable = true
 
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName(name)
 
             applicationIdSuffix = ".$name"
         }
@@ -132,6 +140,14 @@ android {
 
     lint {
         checkDependencies = true
+    }
+}
+
+tasks.whenTaskAdded {
+    val flavorNone = IssueTracker.none.capitalized()
+    if (name.startsWith("process$flavorNone") && name.endsWith("GoogleServices")) {
+        println("Task $name disabled.")
+        enabled = false
     }
 }
 
@@ -165,4 +181,9 @@ dependencies {
     debugImplementation("com.squareup.leakcanary:leakcanary-android:${Versions.ThirdParties.leakCanary}")
     // implementation ("com.squareup.leakcanary:plumber-android:${Versions.ThirdParties.leakCanary}")
     // endregion [3rd Parties]
+
+    val firebaseImplementation = IssueTracker.firebase + "Implementation"
+    firebaseImplementation(platform("com.google.firebase:firebase-bom:${Versions.Firebase.billOfMaterials}"))
+    firebaseImplementation("com.google.firebase:firebase-analytics-ktx")
+    firebaseImplementation("com.google.firebase:firebase-crashlytics-ndk")
 }

@@ -107,8 +107,4 @@ dependencies {
     api("dev.rikka.shizuku:api:${Versions.ThirdParties.shizuku}")
     api("dev.rikka.shizuku:provider:${Versions.ThirdParties.shizuku}")
     // endregion [3rd Parties]
-
-    api(platform("com.google.firebase:firebase-bom:${Versions.Firebase.billOfMaterials}"))
-    api("com.google.firebase:firebase-analytics-ktx")
-    api("com.google.firebase:firebase-crashlytics-ndk")
 }
