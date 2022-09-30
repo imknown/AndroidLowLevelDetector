@@ -631,23 +631,31 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
     }
 
     private fun detectSar(tempModels: ArrayList<MyModel>, mounts: List<Mount>) {
-        val isLAndroid9TheLegacySar =
-            getBooleanProperty(PROP_SYSTEM_ROOT_IMAGE, isAtLeastStableAndroid9())
+        var isTheLegacySar = false
+        var isThe2siSar = false
+        var isRecoverySar = false
+        var isSlashSar = false
 
-        val isTheLegacySarMount = isAtLeastStableAndroid9()
-                && mounts.any { it.blockDevice == "/dev/root" && it.mountPoint == "/" }
+        val isSar = if (isAtLeastStableAndroid9()) {
+            val isLAndroid9TheLegacySar = getBooleanProperty(PROP_SYSTEM_ROOT_IMAGE)
 
-        val isTheLegacySar = isLAndroid9TheLegacySar && isTheLegacySarMount
+            val isTheLegacySarMount =
+                mounts.any { it.blockDevice == "/dev/root" && it.mountPoint == "/" }
 
-        val isThe2siSar = isAtLeastStableAndroid10()
-                && mounts.none { it.blockDevice != "none" && it.mountPoint == "/system" && it.type != "tmpfs" }
+            isTheLegacySar = isLAndroid9TheLegacySar && isTheLegacySarMount
 
-        val isTwrpSar = mounts.any { it.mountPoint == "/system_root" && it.type != "tmpfs" }
+            isThe2siSar = isAtLeastStableAndroid10()
+                    && mounts.none { it.blockDevice != "none" && it.mountPoint == "/system" && it.type != "tmpfs" }
 
-        val isSlashSar = mounts.any { it.mountPoint == "/" && it.type != "rootfs" }
+            isRecoverySar = mounts.any { it.mountPoint == "/system_root" && it.type != "tmpfs" }
 
-        val isSar =
-            isTheLegacySar || isThe2siSar || isTwrpSar || isSlashSar || isAtLeastStableAndroid10()
+            isSlashSar = mounts.any { it.mountPoint == "/" && it.type != "rootfs" }
+
+            isTheLegacySar || isThe2siSar || isRecoverySar || isSlashSar || isAtLeastStableAndroid10()
+        } else {
+            false
+        }
+
         var result = translate(isSar)
 
         @AttrRes var color = R.attr.colorCritical
@@ -663,9 +671,9 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
                     color = R.attr.colorNoProblem
                     sarTypeRes = R.string.sar_type_2si
                 }
-                isTwrpSar -> {
+                isRecoverySar -> {
                     color = R.attr.colorWaring
-                    sarTypeRes = R.string.sar_type_twrp
+                    sarTypeRes = R.string.sar_type_recovery
                 }
                 isSlashSar -> {
                     color = R.attr.colorNoProblem
