@@ -1,5 +1,5 @@
 {
-  "version": "2022-09-29 20:30 +0800",
+  "version": "2022-10-02 00:20 +0800",
   "android": {
     "securityPatchLevel": "2022-09-05",
     "googlePlaySystemUpdates": "2022-09-01",
@@ -59,7 +59,7 @@
   },
   "toybox": {
     "stable": {
-      "version": "0.8.4"
+      "version": "0.8.6"
     },
     "support": {
       "version": "0.8.0"
@@ -73,7 +73,7 @@
   },
   "webView": {
     "stable": {
-      "version": "106.0.5249.65"
+      "version": "106.0.5249.79"
     },
     "beta": {
       "version": "107.0.5304.15"
