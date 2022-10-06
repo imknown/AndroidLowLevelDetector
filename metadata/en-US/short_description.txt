@@ -1,0 +1,1 @@
+Detect Treble, GSI, Mainline, APEX, system-as-root(SAR), A/B, etc. 
