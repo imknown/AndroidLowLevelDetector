@@ -1,5 +1,6 @@
 {
-  "version": "2022-10-08 05:20 +0800",
+  "scheme": 1,
+  "version": "2022-10-09 19:45 +0800",
   "android": {
     "securityPatchLevel": "2022-10-05",
     "googlePlaySystemUpdates": "2022-09-01",
@@ -29,8 +30,8 @@
     "preview": {
       "name": "Tiramisu",
       "api": "33",
-      "version": "13 QPR1, Tiramisu",
-      "phase": "Beta 2"
+      "version": "13 QPR1, Beta 2, Tiramisu",
+      "phase": ""
     },
     "internal": {
       "name": "UpsideDownCake",
