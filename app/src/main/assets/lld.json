@@ -1,22 +1,19 @@
 {
-  "version": "2022-09-29 20:30 +0800",
+  "scheme": 1,
+  "version": "2022-10-09 19:45 +0800",
   "android": {
-    "securityPatchLevel": "2022-09-05",
+    "securityPatchLevel": "2022-10-05",
     "googlePlaySystemUpdates": "2022-09-01",
     "build": {
-      "version": "2022-09-12",
+      "version": "2022-10-03",
       "details": [
         {
-          "id": "TP1A.220905.004",
-          "revision": "r4"
+          "id": "TP1A.221005.002",
+          "revision": "r7"
         },
         {
-          "id": "TP1A.220905.004.A1",
-          "revision": "r5"
-        },
-        {
-          "id": "TP1A.220905.004.A2",
-          "revision": "r6"
+          "id": "TP1A.221005.003",
+          "revision": "r8"
         }
       ]
     },
@@ -33,8 +30,8 @@
     "preview": {
       "name": "Tiramisu",
       "api": "33",
-      "version": "13 QPR1, Tiramisu",
-      "phase": "Beta 1"
+      "version": "13 QPR1, Beta 2, Tiramisu",
+      "phase": ""
     },
     "internal": {
       "name": "UpsideDownCake",
@@ -45,21 +42,21 @@
   "linux": {
     "google": {
       "versions": [
-        "5.15.71",
-        "5.10.146",
-        "5.4.215",
-        "4.19.260",
+        "5.15.72",
+        "5.10.147",
+        "5.4.217",
+        "4.19.261",
         "4.14.295",
         "4.9.330"
       ]
     },
     "mainline": {
-      "version": "6.0-rc7"
+      "version": "6.0"
     }
   },
   "toybox": {
     "stable": {
-      "version": "0.8.4"
+      "version": "0.8.6"
     },
     "support": {
       "version": "0.8.0"
@@ -73,10 +70,10 @@
   },
   "webView": {
     "stable": {
-      "version": "106.0.5249.65"
+      "version": "106.0.5249.79"
     },
     "beta": {
-      "version": "107.0.5304.15"
+      "version": "107.0.5304.25"
     }
   }
 }
