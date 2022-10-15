@@ -219,24 +219,11 @@ class OthersViewModel : BasePureListViewModel(), IAndroidVersion {
     }
 
     private fun addFingerprints(tempModels: ArrayList<MyModel>) {
-        if (isAtLeastStableAndroid10()) {
-            Build.getFingerprintedPartitions().forEach { partition ->
-                add(
-                    tempModels,
-                    MyApplication.getMyString(
-                        R.string.build_certain_fingerprint,
-                        partition.name.replaceFirstChar { it.uppercase(Locale.US) }
-                    ),
-                    partition.fingerprint
-                )
-            }
-        } else {
-            add(
-                tempModels,
-                MyApplication.getMyString(R.string.build_stock_fingerprint),
-                Build.FINGERPRINT
-            )
-        }
+        add(
+            tempModels,
+            MyApplication.getMyString(R.string.build_stock_fingerprint),
+            Build.FINGERPRINT
+        )
 
         if (isAtLeastStableAndroid10()) {
             add(
@@ -245,6 +232,35 @@ class OthersViewModel : BasePureListViewModel(), IAndroidVersion {
                 // Build.VERSION.PREVIEW_SDK_FINGERPRINT
                 getStringProperty(PROP_PREVIEW_SDK_FINGERPRINT)
             )
+        }
+
+        addPartitionFingerprints(tempModels)
+    }
+
+    private fun addPartitionFingerprints(tempModels: ArrayList<MyModel>) {
+        fun partitionFingerprint(name: String) = "ro.$name.build.fingerprint"
+
+        // Build.getFingerprintedPartitions()
+        val partitions = arrayOf(
+            "bootimage",
+            "odm",
+            "product",
+            "system",
+            "system_ext",
+            "vendor",
+            "vendor_dlkm"
+        )
+
+        partitions.forEach {
+            val partitionFingerprintProperty = partitionFingerprint(it)
+            val fingerprint = getStringProperty(partitionFingerprintProperty)
+            if (fingerprint != MyApplication.getMyString(android.R.string.unknownName)) {
+                add(
+                    tempModels,
+                    MyApplication.getMyString(R.string.build_certain_fingerprint, it),
+                    fingerprint
+                )
+            }
         }
     }
 
