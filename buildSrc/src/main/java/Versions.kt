@@ -1,6 +1,6 @@
 object Versions {
     object AndroidBuild {
-        const val androidGradlePlugin = "7.3.0"
+        const val androidGradlePlugin = "7.3.1"
 
         // https://developer.android.com/studio/releases/build-tools.html#notes
         const val buildTools = "33.0.0"
@@ -86,10 +86,10 @@ object Versions {
     // https://firebase.google.com/support/release-notes/android
     // https://firebase.google.com/docs/android/setup#available-libraries
     object Firebase {
-        const val googleServices = "4.3.13"
+        const val googleServices = "4.3.14"
 
         // https://firebase.google.com/docs/android/learn-more#bom
-        const val billOfMaterials = "30.5.0"
+        const val billOfMaterials = "31.0.0"
 
         // https://firebase.google.com/docs/crashlytics/get-started?platform=android
         // https://firebase.google.com/docs/crashlytics/ndk-reports
