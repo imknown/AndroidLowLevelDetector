@@ -1,0 +1,23 @@
+Features:
+* Detect Android version
+* Detect Android Build Id version
+* Detect Android security patch level
+* Detect Vendor security patch level
+* Detect Project Mainline module version (Google Play system update)
+* Detect Linux kernel
+* Detect A/B or A-Only
+* Detect Dynamic Partitions
+* Detect Dynamic System Update(DSU)
+* Detect Project Treble
+* Detect GSI compatibility
+* Detect Binder bitness
+* Detect Process/VM architecture
+* Detect Vendor NDK
+* Detect System-as-root
+* Detect (flattened) APEX
+* Detect Toybox
+* Detect WebView implement
+* Detect outdatedTargetSdkVersion apk
+* Dark mode supported
+* Online/offline mode (fetching data from remote server or local)
+* MultiWindow/FreeForm/Foldable/Landscape supported
