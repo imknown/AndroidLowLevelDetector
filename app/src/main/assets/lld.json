@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2022-10-19 20:05 +0800",
+  "version": "2022-10-21 19:40 +0800",
   "android": {
     "securityPatchLevel": "2022-10-05",
     "googlePlaySystemUpdates": "2022-09-01",
@@ -30,7 +30,7 @@
     "preview": {
       "name": "Tiramisu",
       "api": "33",
-      "version": "13 QPR1, Beta 2, Tiramisu",
+      "version": "13 QPR1, Beta 3, Tiramisu",
       "phase": ""
     },
     "internal": {
@@ -73,7 +73,7 @@
       "version": "106.0.5249.126"
     },
     "beta": {
-      "version": "107.0.5304.36"
+      "version": "107.0.5304.54"
     }
   }
 }
