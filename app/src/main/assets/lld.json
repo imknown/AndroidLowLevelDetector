@@ -1,18 +1,26 @@
 {
   "scheme": 1,
-  "version": "2022-10-26 21:50 +0800",
+  "version": "2022-10-27 06:30 +0800",
   "android": {
     "securityPatchLevel": "2022-10-05",
     "googlePlaySystemUpdates": "2022-09-01",
     "build": {
-      "version": "2022-10-03",
+      "version": "2022-10-13",
       "details": [
         {
-          "id": "TP1A.221005.002",
-          "revision": "r7"
+          "id": "TD1A.220804.031",
+          "revision": "r11"
         },
         {
-          "id": "TP1A.221005.003",
+          "id": "TD1A.220804.009.A5",
+          "revision": "r10"
+        },
+        {
+          "id": "TD1A.220804.009.A2"
+          "revision": "r9"
+        },
+        {
+          "id": "TP1A.221005.003"
           "revision": "r8"
         }
       ]
