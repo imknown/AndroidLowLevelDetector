@@ -24,14 +24,14 @@ object Versions {
     const val desugarJdkLibs = "1.2.2"
 
     // https://github.com/material-components/material-components-android/releases
-    const val material = "1.7.0-rc01"
+    const val material = "1.7.0"
 
     // region [AndroidX]
     // https://maven.google.com
     // https://androidstudio.googleblog.com/
     // https://developer.android.com/jetpack/androidx/versions
     object AndroidX {
-        const val activity = "1.6.0"
+        const val activity = "1.6.1"
 
         const val annotation = "1.5.0"
         const val annotationExperimental = "1.3.0"
@@ -48,7 +48,7 @@ object Versions {
 
         const val core = "1.9.0"
 
-        const val fragment = "1.5.3"
+        const val fragment = "1.5.4"
 
         const val lifecycle = "2.5.1"
 
@@ -79,7 +79,7 @@ object Versions {
         const val coroutines = "1.6.4"
 
         // https://github.com/Kotlin/kotlinx.serialization/releases
-        const val serialization = "1.4.0"
+        const val serialization = "1.4.1"
     }
 
     // https://developers.google.com/android/guides/releases
@@ -89,7 +89,7 @@ object Versions {
         const val googleServices = "4.3.14"
 
         // https://firebase.google.com/docs/android/learn-more#bom
-        const val billOfMaterials = "31.0.0"
+        const val billOfMaterials = "31.0.2"
 
         // https://firebase.google.com/docs/crashlytics/get-started?platform=android
         // https://firebase.google.com/docs/crashlytics/ndk-reports
@@ -111,6 +111,6 @@ object Versions {
 
         // https://github.com/RikkaApps/Shizuku-API#add-dependency
         // https://search.maven.org/search?q=dev.rikka
-        const val shizuku = "12.1.0"
+        const val shizuku = "12.2.0"
     }
 }
