@@ -244,6 +244,7 @@ class OthersViewModel : BasePureListViewModel(), IAndroidVersion {
         val partitions = arrayOf(
             "bootimage",
             "odm",
+            "oem",
             "product",
             "system",
             "system_ext",
@@ -254,7 +255,7 @@ class OthersViewModel : BasePureListViewModel(), IAndroidVersion {
         partitions.forEach {
             val partitionFingerprintProperty = partitionFingerprint(it)
             val fingerprint = getStringProperty(partitionFingerprintProperty)
-            if (fingerprint != MyApplication.getMyString(android.R.string.unknownName)) {
+            if (fingerprint != MyApplication.getMyString(R.string.build_not_filled)) {
                 add(
                     tempModels,
                     MyApplication.getMyString(R.string.build_certain_fingerprint, it),
