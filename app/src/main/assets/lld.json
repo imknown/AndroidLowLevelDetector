@@ -1,19 +1,23 @@
 {
   "scheme": 1,
-  "version": "2022-11-07 19:25 +0800",
+  "version": "2022-11-08 19:25 +0800",
   "android": {
-    "securityPatchLevel": "2022-10-05",
-    "googlePlaySystemUpdates": "2022-09-01",
+    "securityPatchLevel": "2022-11-05",
+    "googlePlaySystemUpdates": "2022-11-01",
     "build": {
-      "version": "2022-10-03",
+      "version": "2022-11-07",
       "details": [
         {
-          "id": "TP1A.221005.002",
-          "revision": "r7"
+          "id": "TP1A.221105.002",
+          "revision": "r12"
         },
         {
-          "id": "TP1A.221005.003",
-          "revision": "r8"
+          "id": "TD1A.221105.001",
+          "revision": "r13"
+        },
+        {
+          "id": "TD1A.221105.003",
+          "revision": "r14"
         }
       ]
     },
@@ -30,7 +34,7 @@
     "preview": {
       "name": "Tiramisu",
       "api": "33",
-      "version": "13 QPR1, Beta 3, Tiramisu",
+      "version": "13 QPR1, Beta 3.1, Tiramisu",
       "phase": ""
     },
     "internal": {
