@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2022-11-08 19:25 +0800",
+  "version": "2022-11-09 19:30 +0800",
   "android": {
     "securityPatchLevel": "2022-11-05",
     "googlePlaySystemUpdates": "2022-11-01",
@@ -18,6 +18,10 @@
         {
           "id": "TD1A.221105.003",
           "revision": "r14"
+        },
+        {
+          "id": "TD1A.221105.001.A1",
+          "revision": "r15"
         }
       ]
     },
@@ -74,7 +78,7 @@
   },
   "webView": {
     "stable": {
-      "version": "107.0.5304.91"
+      "version": "107.0.5304.105"
     },
     "beta": {
       "version": "108.0.5359.28"
