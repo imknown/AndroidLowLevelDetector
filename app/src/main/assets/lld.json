@@ -1,19 +1,27 @@
 {
   "scheme": 1,
-  "version": "2022-10-28 21:15 +0800",
+  "version": "2022-11-26 15:50 +0800",
   "android": {
-    "securityPatchLevel": "2022-10-05",
-    "googlePlaySystemUpdates": "2022-09-01",
+    "securityPatchLevel": "2022-11-05",
+    "googlePlaySystemUpdates": "2022-11-01",
     "build": {
-      "version": "2022-10-03",
+      "version": "2022-11-08",
       "details": [
         {
-          "id": "TP1A.221005.002",
-          "revision": "r7"
+          "id": "TP1A.221105.002",
+          "revision": "r12"
         },
         {
-          "id": "TP1A.221005.003",
-          "revision": "r8"
+          "id": "TD1A.221105.001",
+          "revision": "r13"
+        },
+        {
+          "id": "TD1A.221105.003",
+          "revision": "r14"
+        },
+        {
+          "id": "TD1A.221105.001.A1",
+          "revision": "r15"
         }
       ]
     },
@@ -30,7 +38,7 @@
     "preview": {
       "name": "Tiramisu",
       "api": "33",
-      "version": "13 QPR1, Beta 3, Tiramisu",
+      "version": "13 QPR1, Beta 3.1, Tiramisu",
       "phase": ""
     },
     "internal": {
@@ -42,16 +50,16 @@
   "linux": {
     "google": {
       "versions": [
-        "5.15.75",
-        "5.10.151",
-        "5.4.220",
-        "4.19.262",
-        "4.14.296",
-        "4.9.331"
+        "5.15.79",
+        "5.10.156",
+        "5.4.225",
+        "4.19.267",
+        "4.14.300",
+        "4.9.334"
       ]
     },
     "mainline": {
-      "version": "6.1-rc2"
+      "version": "6.1-rc6"
     }
   },
   "toybox": {
@@ -70,10 +78,10 @@
   },
   "webView": {
     "stable": {
-      "version": "107.0.5304.91"
+      "version": "107.0.5304.141"
     },
     "beta": {
-      "version": "107.0.5304.91"
+      "version": "108.0.5359.47"
     }
   }
 }
