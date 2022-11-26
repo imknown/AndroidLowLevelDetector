@@ -64,9 +64,9 @@ object Versions {
 
         // https://developer.android.com/jetpack/androidx/releases/test
         object Test {
-            const val junit = "4.13.2"
-            const val extJunit = "1.1.3"
-            const val espressoCore = "3.4.0"
+            const val core = "1.5.0"
+            const val espressoCore = "3.5.0"
+            const val extJunit = "1.1.4"
         }
     }
 

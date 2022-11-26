@@ -84,9 +84,9 @@ dependencies {
     // endregion [AndroidX]
 
     // region [Test]
-    testImplementation("junit:junit:${Versions.AndroidX.Test.junit}")
-    androidTestImplementation("androidx.test.ext:junit:${Versions.AndroidX.Test.extJunit}")
-    androidTestImplementation("androidx.test.espresso:espresso-core:${Versions.AndroidX.Test.espressoCore}")
+    androidTestImplementation("androidx.test:core-ktx:${Versions.AndroidX.Test.core}")
+    androidTestImplementation("androidx.test:espresso:espresso-core:${Versions.AndroidX.Test.espressoCore}")
+    androidTestImplementation("androidx.test.ext:junit-ktx:${Versions.AndroidX.Test.extJunit}")
     // endregion [Test]
 
     // region [Kotlin]
