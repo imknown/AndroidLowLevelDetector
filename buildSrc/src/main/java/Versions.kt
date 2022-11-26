@@ -3,7 +3,7 @@ object Versions {
         const val androidGradlePlugin = "7.3.1"
 
         // https://developer.android.com/studio/releases/build-tools.html#notes
-        const val buildTools = "33.0.0"
+        const val buildTools = "33.0.1"
 
         const val minSdk = 21
         const val compileSdk = 33
@@ -89,7 +89,7 @@ object Versions {
         const val googleServices = "4.3.14"
 
         // https://firebase.google.com/docs/android/learn-more#bom
-        const val billOfMaterials = "31.0.2"
+        const val billOfMaterials = "31.1.0"
 
         // https://firebase.google.com/docs/crashlytics/get-started?platform=android
         // https://firebase.google.com/docs/crashlytics/ndk-reports
@@ -101,7 +101,7 @@ object Versions {
         const val libsu = "5.0.3"
 
         // https://github.com/square/leakcanary/releases
-        const val leakCanary = "2.9.1"
+        const val leakCanary = "2.10"
 
         // https://github.com/kittinunf/fuel/releases
         const val fuel = "2.3.1"
