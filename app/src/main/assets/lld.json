@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2022-11-26 15:50 +0800",
+  "version": "2022-11-27 15:20 +0800",
   "android": {
     "securityPatchLevel": "2022-11-05",
     "googlePlaySystemUpdates": "2022-11-01",
@@ -50,7 +50,7 @@
   "linux": {
     "google": {
       "versions": [
-        "5.15.79",
+        "5.15.80",
         "5.10.156",
         "5.4.225",
         "4.19.267",
