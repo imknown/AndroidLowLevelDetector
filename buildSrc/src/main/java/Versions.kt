@@ -1,6 +1,6 @@
 object Versions {
     object AndroidBuild {
-        const val androidGradlePlugin = "7.3.1"
+        const val androidGradlePlugin = "7.4.0-rc01"
 
         // https://developer.android.com/studio/releases/build-tools.html#notes
         const val buildTools = "33.0.1"
@@ -21,10 +21,10 @@ object Versions {
     // https://developer.android.com/studio/write/java8-support#library-desugaring
     // https://maven.google.com/web/index.html?q=desugar_jdk_libs
     // https://github.com/google/desugar_jdk_libs/blob/master/CHANGELOG.md
-    const val desugarJdkLibs = "1.2.2"
+    const val desugarJdkLibs = "2.0.0"
 
     // https://github.com/material-components/material-components-android/releases
-    const val material = "1.7.0"
+    const val material = "1.8.0-alpha03"
 
     // region [AndroidX]
     // https://maven.google.com
@@ -73,7 +73,7 @@ object Versions {
     object Kotlin {
         // https://github.com/JetBrains/kotlin/releases
         // https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.jetbrains.kotlin%22
-        const val kotlin = "1.7.20"
+        const val kotlin = "1.8.0-Beta"
 
         // https://github.com/Kotlin/kotlinx.coroutines/releases
         const val coroutines = "1.6.4"
