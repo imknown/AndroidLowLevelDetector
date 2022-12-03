@@ -11,6 +11,10 @@ data class Lld(
     val toybox: Toyboxes,
     val webView: WebViews
 ) : BaseInfo() {
+    companion object {
+        const val SCHEME_VERSION = 1
+    }
+
     // https://source.android.com/security/enhancements/enhancements9
     // https://source.android.com/setup/start/p-release-notes
     // https://developer.android.com/about/versions/10
