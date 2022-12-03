@@ -4,7 +4,6 @@ import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 
@@ -30,6 +29,3 @@ inline fun <T : ViewBinding> View.viewBinding(
 inline fun <T : ViewBinding> View.viewBinding(
     crossinline bind: (View) -> T
 ) = lazy { bind(this) }
-
-val statusBarsAndNavigationBars =
-    WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.navigationBars()

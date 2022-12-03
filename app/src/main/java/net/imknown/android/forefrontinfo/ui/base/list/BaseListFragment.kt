@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.lifecycle.LiveData
 import com.google.android.material.color.MaterialColors
@@ -13,7 +14,6 @@ import net.imknown.android.forefrontinfo.base.MyItemDecoration
 import net.imknown.android.forefrontinfo.base.mvvm.BaseFragment
 import net.imknown.android.forefrontinfo.base.mvvm.Event
 import net.imknown.android.forefrontinfo.base.mvvm.EventObserver
-import net.imknown.android.forefrontinfo.base.mvvm.statusBarsAndNavigationBars
 import net.imknown.android.forefrontinfo.databinding.FragmentListBinding
 import com.google.android.material.R as materialR
 
@@ -70,7 +70,7 @@ abstract class BaseListFragment : BaseFragment<FragmentListBinding>() {
 
     private fun initViews(savedInstanceState: Bundle?) {
         ViewCompat.setOnApplyWindowInsetsListener(binding.recyclerView) { view, windowInsets ->
-            val insets = windowInsets.getInsets(statusBarsAndNavigationBars)
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
             view.updatePadding(
                 left = insets.left,
                 right = insets.right,
