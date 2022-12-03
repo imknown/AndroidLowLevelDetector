@@ -30,12 +30,14 @@
         app:iconSpaceReserved="false">
 
         <SwitchPreferenceCompat
+            android:widgetLayout="@layout/preference_widget_material_switch"
             app:iconSpaceReserved="false"
             app:key="@string/function_allow_network_data_key"
             app:summary="@string/function_allow_network_data_summary"
             app:title="@string/function_allow_network_data_title" />
 
         <SwitchPreferenceCompat
+            android:widgetLayout="@layout/preference_widget_material_switch"
             app:iconSpaceReserved="false"
             app:key="@string/function_outdated_target_order_by_package_name_first_key"
             app:summary="@string/function_outdated_target_order_by_package_name_first_summary"
