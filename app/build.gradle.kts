@@ -161,9 +161,9 @@ dependencies {
     // region [AndroidX]
     implementation("androidx.cardview:cardview:${Versions.AndroidX.cardView}")
 
-    implementation("androidx.coordinatorlayout:coordinatorlayout:${Versions.AndroidX.coordinatorLayout}")
-
     implementation("androidx.constraintlayout:constraintlayout:${Versions.AndroidX.constraintLayout}")
+
+    implementation("androidx.coordinatorlayout:coordinatorlayout:${Versions.AndroidX.coordinatorLayout}")
 
     implementation("androidx.recyclerview:recyclerview:${Versions.AndroidX.recyclerView}")
 
