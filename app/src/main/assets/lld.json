@@ -1,27 +1,23 @@
 {
   "scheme": 1,
-  "version": "2022-12-03 12:24 +0800",
+  "version": "2022-12-08 21:00 +0800",
   "android": {
-    "securityPatchLevel": "2022-11-05",
-    "googlePlaySystemUpdates": "2022-11-01",
+    "securityPatchLevel": "2022-12-05",
+    "googlePlaySystemUpdates": "2022-12-01",
     "build": {
-      "version": "2022-11-08",
+      "version": "2022-12-05",
       "details": [
         {
-          "id": "TP1A.221105.002",
-          "revision": "r12"
+          "id": "TQ1A.221205.011",
+          "revision": "r16"
         },
         {
-          "id": "TD1A.221105.001",
-          "revision": "r13"
+          "id": "TQ1A.221205.011.B1",
+          "revision": "r17"
         },
         {
-          "id": "TD1A.221105.003",
-          "revision": "r14"
-        },
-        {
-          "id": "TD1A.221105.001.A1",
-          "revision": "r15"
+          "id": "TQ1A.221205.012",
+          "revision": "r18"
         }
       ]
     },
@@ -50,16 +46,16 @@
   "linux": {
     "google": {
       "versions": [
-        "5.15.81",
-        "5.10.157",
-        "5.4.225",
-        "4.19.267",
-        "4.14.300",
-        "4.9.334"
+        "5.15.82",
+        "5.10.158",
+        "5.4.226",
+        "4.19.268",
+        "4.14.301",
+        "4.9.335"
       ]
     },
     "mainline": {
-      "version": "6.1-rc7"
+      "version": "6.1-rc8"
     }
   },
   "toybox": {
@@ -81,7 +77,7 @@
       "version": "108.0.5359.79"
     },
     "beta": {
-      "version": "109.0.5414.23"
+      "version": "109.0.5414.34"
     }
   }
 }
