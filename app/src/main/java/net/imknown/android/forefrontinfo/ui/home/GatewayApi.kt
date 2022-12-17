@@ -17,7 +17,7 @@ object GatewayApi {
     private const val URL_PREFIX_LLD_JSON_GITEE = "gitee.com/$REPOSITORY_NAME/raw"
     private const val URL_PREFIX_LLD_JSON_GITHUB = "raw.githubusercontent.com/$REPOSITORY_NAME"
 
-    suspend fun fetchLldJson() = suspendCancellableCoroutine<String> { cont ->
+    suspend fun fetchLldJson() = suspendCancellableCoroutine { cont ->
         val urlPrefixLldJson = if (isChinaMainlandTimezone()) {
             URL_PREFIX_LLD_JSON_GITEE
         } else {
