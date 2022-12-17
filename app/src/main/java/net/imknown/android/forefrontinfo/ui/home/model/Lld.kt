@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 @Keep
 @Serializable
 data class Lld(
+    val scheme: Int,
     val android: Androids,
     val linux: Linuxes,
     val toybox: Toyboxes,
