@@ -1,5 +1,6 @@
 package net.imknown.android.forefrontinfo.ui.base.list
 
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
@@ -16,8 +17,10 @@ import net.imknown.android.forefrontinfo.base.mvvm.BaseViewModel
 import net.imknown.android.forefrontinfo.base.mvvm.Event
 import net.imknown.android.forefrontinfo.base.mvvm.stringEventLiveData
 import net.imknown.android.forefrontinfo.base.property.PropertyManager
+import net.imknown.android.forefrontinfo.base.property.impl.ShizukuProperty
 import net.imknown.android.forefrontinfo.base.shell.ShellManager
 import net.imknown.android.forefrontinfo.base.shell.ShellResult
+import rikka.shizuku.Shizuku
 import net.imknown.android.forefrontinfo.base.R as BaseR
 
 abstract class BaseListViewModel : BaseViewModel() {
@@ -41,6 +44,16 @@ abstract class BaseListViewModel : BaseViewModel() {
 
     abstract fun collectModels(): Job
 
+    fun beforeCollectModels() {
+        if (!Shizuku.isPreV11() && Shizuku.pingBinder()
+            && Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED
+        ) {
+            PropertyManager.instance = PropertyManager(ShizukuProperty)
+        }
+
+        collectModels()
+    }
+
     fun init(savedInstanceState: Bundle?) {
         viewModelScope.launch(Dispatchers.IO) {
             val scrollBarMode = MyApplication.sharedPreferences.getString(
@@ -51,7 +64,7 @@ abstract class BaseListViewModel : BaseViewModel() {
 
             // When activity is recreated, use LiveData to restore the data
             if (hasNoData(savedInstanceState)) {
-                collectModels()
+                beforeCollectModels()
             }
         }
     }

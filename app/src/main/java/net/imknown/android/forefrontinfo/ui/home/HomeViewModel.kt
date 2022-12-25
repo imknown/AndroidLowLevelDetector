@@ -55,10 +55,16 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         // region [A/B]
         // https://source.android.com/devices/tech/ota/ab?hl=en
         // /* root needed */ private const val CMD_BOOT_PARTITION = "ls /dev/block/bootdevice/by-name | grep boot_"
-        // private const val PROP_VIRTUAL_AB_ALLOW_NON_AB = "ro.virtual_ab.allow_non_ab"
         private const val PROP_AB_UPDATE = "ro.build.ab_update"
         private const val PROP_VIRTUAL_AB_ENABLED = "ro.virtual_ab.enabled"
         private const val PROP_VIRTUAL_AB_RETROFIT = "ro.virtual_ab.retrofit"
+        private const val PROP_VIRTUAL_AB_ALLOW_NON_AB = "ro.virtual_ab.allow_non_ab"
+        private const val PROP_VIRTUAL_AB_COMPRESSION_ENABLED = "ro.virtual_ab.compression.enabled"
+        private const val PROP_VIRTUAL_AB_IO_URING_ENABLEDB = "ro.virtual_ab.io_uring.enabled"
+        private const val PROP_VIRTUAL_AB_COMPRESSION_XOR_ENABLED =
+            "ro.virtual_ab.compression.xor.enabled"
+        private const val PROP_VIRTUAL_AB_USERSPACE_SNAPSHOTS_ENABLED =
+            "ro.virtual_ab.userspace.snapshots.enabled"
         private const val PROP_SLOT_SUFFIX = "ro.boot.slot_suffix"
         // endregion [A/B]
 
@@ -108,8 +114,9 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         // region [VNDK]
         // https://source.android.com/devices/architecture/vndk?hl=en
         private const val PROP_VNDK_LITE = "ro.vndk.lite"
-        private const val PROP_VNDK_VENDOR_VERSION = "ro.vndk.version"
-        // private const val PROP_VNDK_PRODUCT_VERSION = "ro.product.vndk.version"
+        private const val PROP_VNDK_VERSION = "ro.vndk.version"
+        private const val PROP_VENDOR_VNDK_VERSION = "ro.vendor.vndk.version"
+        private const val PROP_PRODUCT_VNDK_VERSION = "ro.product.vndk.version"
         // endregion [VNDK]
 
         // https://source.android.com/devices/bootloader/system-as-root?hl=en
@@ -315,6 +322,8 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
     private suspend fun detect(lld: Lld) {
         val tempModels = ArrayList<MyModel>()
 
+        detectDetector(tempModels)
+
         detectAndroid(tempModels, lld)
 
         detectBuildId(tempModels, lld)
@@ -375,6 +384,10 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         detectOutdatedTargetSdkVersionApk(tempModels, lld)
 
         setModels(tempModels)
+    }
+
+    private fun detectDetector(tempModels: ArrayList<MyModel>) {
+
     }
 
     private fun detectAndroid(tempModels: ArrayList<MyModel>, lld: Lld) {
@@ -599,6 +612,8 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
 
         val isAbEnable =
             isAbUpdateSupported || isPropertyValueNotEmpty(slotSuffixResult) || isVirtualAb
+
+        PROP_VIRTUAL_AB_ALLOW_NON_AB
 
         var abResult = translate(isAbEnable)
 
@@ -877,9 +892,11 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
 
     private fun detectVndk(tempModels: ArrayList<MyModel>, lld: Lld) {
         val vndkVersionResult =
-            getStringProperty(PROP_VNDK_VENDOR_VERSION, isAtLeastStableAndroid8())
-//        val vndkProductVersionResult =
-//            getStringProperty(PROP_VNDK_PRODUCT_VERSION, isAtLeastStableAndroid8())
+            getStringProperty(PROP_VNDK_VERSION, isAtLeastStableAndroid8())
+        val vendorVndkVersionResult =
+            getStringProperty(PROP_VENDOR_VNDK_VERSION, isAtLeastStableAndroid8())
+        val productVndkVersionResult =
+            getStringProperty(PROP_PRODUCT_VNDK_VERSION, isAtLeastStableAndroid8())
         val hasVndkVersion = isPropertyValueNotEmpty(vndkVersionResult)
 
         @AttrRes val vndkColor: Int

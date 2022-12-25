@@ -1,11 +1,9 @@
 package net.imknown.android.forefrontinfo.ui
 
 import android.os.Bundle
-import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -14,9 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.commitNow
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.mvvm.IView
 import net.imknown.android.forefrontinfo.base.mvvm.viewBinding
@@ -43,13 +38,7 @@ class MainActivity : AppCompatActivity(), IView {
             supportFragmentManager.switch(R.id.navigation_home, true)
         }
 
-        mainViewModel.dealWithShizuku()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        mainViewModel.removeRequestPermissionResultListener()
+        mainViewModel.requestShizikuPermission()
     }
 
     private fun initViews() {
@@ -88,14 +77,6 @@ class MainActivity : AppCompatActivity(), IView {
 
     private fun initSubtitle() {
         setSupportActionBar(binding.toolbar)
-
-        lifecycleScope.launch(Dispatchers.IO) {
-            val subtitleTextView = Toolbar::class.java
-                .getDeclaredField("mSubtitleTextView")
-                .apply { isAccessible = true }
-                .get(binding.toolbar) as TextView
-            subtitleTextView.isVerticalScrollBarEnabled = false
-        }
     }
 
     private fun FragmentManager.switch(@IdRes selectedId: Int, isFirst: Boolean = false) {

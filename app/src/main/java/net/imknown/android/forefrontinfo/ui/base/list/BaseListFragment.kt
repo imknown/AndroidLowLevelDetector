@@ -30,7 +30,7 @@ abstract class BaseListFragment : BaseFragment<FragmentListBinding>() {
         event.observe(viewLifecycleOwner, EventObserver {
             binding.swipeRefreshLayout.isRefreshing = true
 
-            listViewModel.collectModels()
+            listViewModel.beforeCollectModels()
         })
     }
 
@@ -93,7 +93,7 @@ abstract class BaseListFragment : BaseFragment<FragmentListBinding>() {
         }
 
         binding.swipeRefreshLayout.setOnRefreshListener {
-            listViewModel.collectModels()
+            listViewModel.beforeCollectModels()
         }
 
         binding.recyclerView.apply {

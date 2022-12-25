@@ -7,8 +7,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
-import net.imknown.android.forefrontinfo.base.property.PropertyManager
-import net.imknown.android.forefrontinfo.base.property.impl.ShizukuProperty
 import rikka.shizuku.Shizuku
 
 class MainViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
@@ -29,48 +27,31 @@ class MainViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
     private fun getSavedStateLastId() = savedStateHandle[SAVED_STATE_HANDLE_KEY_LAST_ID]
         ?: R.id.navigation_home
 
-    private val requestPermissionResultListener =
-        Shizuku.OnRequestPermissionResultListener { _, grantResult ->
-            removeRequestPermissionResultListener()
-
-            if (grantResult == PackageManager.PERMISSION_GRANTED) {
-                PropertyManager.instance = PropertyManager(ShizukuProperty)
-            }
-        }
-
-    fun dealWithShizuku() {
+    fun requestShizikuPermission() {
         if (Shizuku.isPreV11() || !Shizuku.pingBinder()) {
             return
         }
 
         if (Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED) {
-            PropertyManager.instance = PropertyManager(ShizukuProperty)
-        } else if (Shizuku.shouldShowRequestPermissionRationale()) {
-            // Doing nothing is OK
-        } else {
-            val shizukuFirstAskingKey =
-                MyApplication.getMyString(R.string.function_shizuku_first_asking_key)
-            val isShizukuFirstAsking =
-                MyApplication.sharedPreferences.getBoolean(shizukuFirstAskingKey, true)
-            if (!isShizukuFirstAsking) {
-                return
-            }
-
-            MyApplication.sharedPreferences.edit {
-                putBoolean(shizukuFirstAskingKey, false)
-            }
-
-            addRequestPermissionResultListener()
-
-            Shizuku.requestPermission(0)
+            return
         }
-    }
 
-    private fun addRequestPermissionResultListener() {
-        Shizuku.addRequestPermissionResultListener(requestPermissionResultListener)
-    }
+        if (Shizuku.shouldShowRequestPermissionRationale()) {
+            return
+        }
 
-    fun removeRequestPermissionResultListener() {
-        Shizuku.removeRequestPermissionResultListener(requestPermissionResultListener)
+        val shizukuFirstAskingKey =
+            MyApplication.getMyString(R.string.function_shizuku_first_asking_key)
+        val isShizukuFirstAsking =
+            MyApplication.sharedPreferences.getBoolean(shizukuFirstAskingKey, true)
+        if (!isShizukuFirstAsking) {
+            return
+        }
+
+        MyApplication.sharedPreferences.edit {
+            putBoolean(shizukuFirstAskingKey, false)
+        }
+
+        Shizuku.requestPermission(0)
     }
 }

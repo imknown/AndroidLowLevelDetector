@@ -16,7 +16,6 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:subtitle="@string/lld_json_loading"
             tools:title="@string/app_name" />
     </com.google.android.material.appbar.AppBarLayout>
 
