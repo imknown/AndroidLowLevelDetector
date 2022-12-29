@@ -1,6 +1,6 @@
 object Versions {
     object AndroidBuild {
-        const val androidGradlePlugin = "7.4.0-rc02"
+        const val androidGradlePlugin = "7.4.0-rc03"
 
         // https://developer.android.com/studio/releases/build-tools.html#notes
         const val buildTools = "33.0.1"
@@ -73,7 +73,7 @@ object Versions {
     object Kotlin {
         // https://github.com/JetBrains/kotlin/releases
         // https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.jetbrains.kotlin%22
-        const val kotlin = "1.8.0-RC2"
+        const val kotlin = "1.8.0"
 
         // https://github.com/Kotlin/kotlinx.coroutines/releases
         const val coroutines = "1.6.4"
