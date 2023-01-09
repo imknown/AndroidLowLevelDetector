@@ -24,7 +24,7 @@ object Versions {
     const val desugarJdkLibs = "2.0.0"
 
     // https://github.com/material-components/material-components-android/releases
-    const val material = "1.8.0-beta01"
+    const val material = "1.8.0-rc01"
 
     // region [AndroidX]
     // https://maven.google.com
@@ -65,8 +65,8 @@ object Versions {
         // https://developer.android.com/jetpack/androidx/releases/test
         object Test {
             const val core = "1.5.0"
-            const val espressoCore = "3.5.0"
-            const val extJunit = "1.1.4"
+            const val espressoCore = "3.5.1"
+            const val extJunit = "1.1.5"
         }
     }
 
@@ -98,7 +98,7 @@ object Versions {
 
     object ThirdParties {
         // https://github.com/topjohnwu/libsu/releases
-        const val libsu = "5.0.3"
+        const val libsu = "5.0.4"
 
         // https://github.com/square/leakcanary/releases
         const val leakCanary = "2.10"
