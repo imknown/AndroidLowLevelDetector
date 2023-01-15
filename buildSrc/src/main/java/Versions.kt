@@ -1,6 +1,6 @@
 object Versions {
     object AndroidBuild {
-        const val androidGradlePlugin = "7.4.0-rc03"
+        const val androidGradlePlugin = "7.4.0"
 
         // https://developer.android.com/studio/releases/build-tools.html#notes
         const val buildTools = "33.0.1"
@@ -31,14 +31,14 @@ object Versions {
     // https://androidstudio.googleblog.com/
     // https://developer.android.com/jetpack/androidx/versions
     object AndroidX {
-        const val activity = "1.7.0-alpha02"
+        const val activity = "1.7.0-alpha03"
 
-        const val annotation = "1.5.0"
+        const val annotation = "1.6.0-alpha01"
         const val annotationExperimental = "1.3.0"
 
         const val appcompat = "1.7.0-alpha01"
 
-        const val archCore = "2.1.0"
+        const val archCore = "2.2.0-alpha01"
 
         const val cardView = "1.0.0"
 
@@ -46,7 +46,7 @@ object Versions {
 
         const val coordinatorLayout = "1.2.0"
 
-        const val core = "1.9.0"
+        const val core = "1.10.0-alpha01"
 
         const val fragment = "1.6.0-alpha04"
 
@@ -60,7 +60,7 @@ object Versions {
 
         const val swipeRefreshLayout = "1.2.0-alpha01"
 
-        const val webkit = "1.6.0-beta01"
+        const val webkit = "1.6.0-rc01"
 
         // https://developer.android.com/jetpack/androidx/releases/test
         object Test {
