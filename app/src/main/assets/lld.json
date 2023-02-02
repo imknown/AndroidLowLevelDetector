@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2023-02-01 20:20 +0800",
+  "version": "2023-02-02 20:40 +0800",
   "android": {
     "securityPatchLevel": "2023-01-05",
     "googlePlaySystemUpdates": "2023-01-01",
@@ -46,7 +46,7 @@
     "preview": {
       "name": "Tiramisu",
       "api": "33",
-      "version": "13 QPR2, Beta 2.1, Tiramisu",
+      "version": "13 QPR2, Beta 3, Tiramisu",
       "phase": ""
     },
     "internal": {
@@ -86,10 +86,10 @@
   },
   "webView": {
     "stable": {
-      "version": "109.0.5414.118"
+      "version": "110.0.5481.61"
     },
     "beta": {
-      "version": "110.0.5481.50"
+      "version": "110.0.5481.61"
     }
   }
 }
