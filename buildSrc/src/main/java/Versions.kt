@@ -1,9 +1,9 @@
 object Versions {
     object AndroidBuild {
-        const val androidGradlePlugin = "7.4.0"
+        const val androidGradlePlugin = "7.4.1"
 
         // https://developer.android.com/studio/releases/build-tools.html#notes
-        const val buildTools = "33.0.1"
+        const val buildTools = "34.0.0-rc1"
 
         const val minSdk = 21
         const val compileSdk = 33
@@ -11,7 +11,7 @@ object Versions {
         const val targetSdk = 33
         const val targetSdkPreview = "UpsideDownCake"
 
-        const val ndk = "25.1.8937393"
+        const val ndk = "25.2.9519653"
         const val cmake = "3.22.1"
 
         const val versionCode = 62
@@ -31,26 +31,26 @@ object Versions {
     // https://androidstudio.googleblog.com/
     // https://developer.android.com/jetpack/androidx/versions
     object AndroidX {
-        const val activity = "1.7.0-alpha04"
+        const val activity = "1.8.0-alpha01"
 
-        const val annotation = "1.6.0-beta01"
-        const val annotationExperimental = "1.3.0"
+        const val annotation = "1.6.0-dev01"
+        const val annotationExperimental = "1.4.0-dev01"
 
-        const val appcompat = "1.7.0-alpha01"
+        const val appcompat = "1.7.0-alpha02"
 
-        const val archCore = "2.2.0-beta01"
+        const val archCore = "2.2.0-rc01"
 
         const val cardView = "1.0.0"
 
-        const val constraintLayout = "2.2.0-alpha06"
+        const val constraintLayout = "2.2.0-alpha07"
 
         const val coordinatorLayout = "1.2.0"
 
         const val core = "1.10.0-alpha02"
 
-        const val fragment = "1.6.0-alpha04"
+        const val fragment = "1.6.0-alpha05"
 
-        const val lifecycle = "2.6.0-alpha05"
+        const val lifecycle = "2.6.0-beta01"
 
         const val preference = "1.2.0"
 
@@ -60,7 +60,7 @@ object Versions {
 
         const val swipeRefreshLayout = "1.2.0-alpha01"
 
-        const val webkit = "1.7.0-alpha01"
+        const val webkit = "1.7.0-alpha02"
 
         // https://developer.android.com/jetpack/androidx/releases/test
         object Test {
@@ -73,7 +73,7 @@ object Versions {
     object Kotlin {
         // https://github.com/JetBrains/kotlin/releases
         // https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.jetbrains.kotlin%22
-        const val kotlin = "1.8.10"
+        const val kotlin = "1.8.20-Beta"
 
         // https://github.com/Kotlin/kotlinx.coroutines/releases
         const val coroutines = "1.6.4"
