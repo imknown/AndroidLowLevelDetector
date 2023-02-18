@@ -32,7 +32,7 @@ object Versions {
     // https://androidstudio.googleblog.com/
     // https://developer.android.com/jetpack/androidx/versions
     object AndroidX {
-        const val activity = "1.8.0-alpha01"
+        const val activity = "1.7.0-beta01"
 
         const val annotation = "1.6.0-dev01"
         const val annotationExperimental = "1.4.0-dev01"
