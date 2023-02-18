@@ -89,11 +89,11 @@ object Versions {
         const val googleServices = "4.3.15"
 
         // https://firebase.google.com/docs/android/learn-more#bom
-        const val billOfMaterials = "31.2.0"
+        const val billOfMaterials = "31.2.2"
 
         // https://firebase.google.com/docs/crashlytics/get-started?platform=android
         // https://firebase.google.com/docs/crashlytics/ndk-reports
-        const val firebaseCrashlyticsGradlePlugin = "2.9.2"
+        const val firebaseCrashlyticsGradlePlugin = "2.9.4"
     }
 
     object ThirdParties {
