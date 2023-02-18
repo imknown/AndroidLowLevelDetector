@@ -7,6 +7,7 @@ object Versions {
 
         const val minSdk = 21
         const val compileSdk = 33
+        const val compileSdkExtension = 4
         const val compileSdkPreview = "UpsideDownCake"
         const val targetSdk = 33
         const val targetSdkPreview = "UpsideDownCake"

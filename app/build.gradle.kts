@@ -1,7 +1,7 @@
 import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
 import org.gradle.configurationcache.extensions.capitalized
 import java.io.FileInputStream
-import java.util.*
+import java.util.Properties
 
 plugins {
     id("com.android.application")
@@ -16,6 +16,7 @@ plugins {
 
 android {
     compileSdk = Versions.AndroidBuild.compileSdk
+    compileSdkExtension = Versions.AndroidBuild.compileSdkExtension
     // compileSdkPreview = Versions.AndroidBuild.compileSdkPreview
     buildToolsVersion = Versions.AndroidBuild.buildTools
 

@@ -6,6 +6,7 @@ plugins {
 
 android {
     compileSdk = Versions.AndroidBuild.compileSdk
+    compileSdkExtension = Versions.AndroidBuild.compileSdkExtension
     // compileSdkPreview = Versions.AndroidBuild.compileSdkPreview
     buildToolsVersion = Versions.AndroidBuild.buildTools
 
