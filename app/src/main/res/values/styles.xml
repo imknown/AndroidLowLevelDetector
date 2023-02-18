@@ -5,4 +5,9 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
     </style>
+
+    <style name="MonetMaterialAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <!--<item name="android:background">?attr/colorSurface</item>-->
+        <item name="dialogCornerRadius">@dimen/my_m3_alert_dialog_corner_size</item>
+    </style>
 </resources>
