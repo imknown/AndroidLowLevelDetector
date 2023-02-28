@@ -1,6 +1,6 @@
 object Versions {
     object AndroidBuild {
-        const val androidGradlePlugin = "7.4.1"
+        const val androidGradlePlugin = "8.0.0-beta03"
 
         // https://developer.android.com/studio/releases/build-tools.html#notes
         const val buildTools = "34.0.0-rc1"
@@ -25,7 +25,7 @@ object Versions {
     const val desugarJdkLibs = "2.0.2"
 
     // https://github.com/material-components/material-components-android/releases
-    const val material = "1.9.0-alpha01"
+    const val material = "1.9.0-alpha02"
 
     // region [AndroidX]
     // https://maven.google.com
@@ -34,12 +34,12 @@ object Versions {
     object AndroidX {
         const val activity = "1.7.0-beta01"
 
-        const val annotation = "1.6.0-dev01"
+        const val annotation = "1.6.0"
         const val annotationExperimental = "1.4.0-dev01"
 
         const val appcompat = "1.7.0-alpha02"
 
-        const val archCore = "2.2.0-rc01"
+        const val archCore = "2.2.0"
 
         const val cardView = "1.0.0"
 
@@ -47,11 +47,11 @@ object Versions {
 
         const val coordinatorLayout = "1.2.0"
 
-        const val core = "1.10.0-alpha02"
+        const val core = "1.10.0-beta01"
 
-        const val fragment = "1.6.0-alpha05"
+        const val fragment = "1.6.0-alpha06"
 
-        const val lifecycle = "2.6.0-beta01"
+        const val lifecycle = "2.6.0-rc01"
 
         const val preference = "1.2.0"
 
@@ -80,7 +80,7 @@ object Versions {
         const val coroutines = "1.6.4"
 
         // https://github.com/Kotlin/kotlinx.serialization/releases
-        const val serialization = "1.5.0-RC"
+        const val serialization = "1.5.0"
     }
 
     // https://developers.google.com/android/guides/releases
