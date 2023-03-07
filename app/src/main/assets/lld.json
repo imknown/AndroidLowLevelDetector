@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2023-03-06 19:40 +0800",
+  "version": "2023-03-07 19:40 +0800",
   "android": {
     "securityPatchLevel": "2023-02-05",
     "googlePlaySystemUpdates": "2023-02-01",
@@ -78,10 +78,10 @@
   },
   "webView": {
     "stable": {
-      "version": "111.0.5563.49"
+      "version": "111.0.5563.58"
     },
     "beta": {
-      "version": "111.0.5563.49"
+      "version": "111.0.5563.58"
     }
   }
 }
