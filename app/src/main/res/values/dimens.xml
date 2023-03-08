@@ -4,7 +4,4 @@
 
     <dimen name="item_divider_space_horizontal">12dp</dimen>
     <dimen name="item_divider_space_vertical">12dp</dimen>
-
-    <!-- ..\material-1.9.0-alpha01\res\values\values.xml: m3_alert_dialog_corner_size -->
-    <dimen name="my_m3_alert_dialog_corner_size">28dp</dimen>
 </resources>
