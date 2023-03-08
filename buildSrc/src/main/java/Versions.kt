@@ -1,6 +1,6 @@
 object Versions {
     object AndroidBuild {
-        const val androidGradlePlugin = "8.0.0-beta03"
+        const val androidGradlePlugin = "8.0.0-beta04"
 
         // https://developer.android.com/studio/releases/build-tools.html#notes
         const val buildTools = "34.0.0-rc1"
@@ -32,7 +32,7 @@ object Versions {
     // https://androidstudio.googleblog.com/
     // https://developer.android.com/jetpack/androidx/versions
     object AndroidX {
-        const val activity = "1.7.0-beta01"
+        const val activity = "1.7.0-beta02"
 
         const val annotation = "1.6.0"
         const val annotationExperimental = "1.4.0-dev01"
@@ -90,7 +90,7 @@ object Versions {
         const val googleServices = "4.3.15"
 
         // https://firebase.google.com/docs/android/learn-more#bom
-        const val billOfMaterials = "31.2.2"
+        const val billOfMaterials = "31.2.3"
 
         // https://firebase.google.com/docs/crashlytics/get-started?platform=android
         // https://firebase.google.com/docs/crashlytics/ndk-reports
