@@ -1,9 +1,9 @@
 {
   "scheme": 1,
-  "version": "2023-03-07 19:40 +0800",
+  "version": "2023-03-09 20:55 +0800",
   "android": {
-    "securityPatchLevel": "2023-02-05",
-    "googlePlaySystemUpdates": "2023-02-01",
+    "securityPatchLevel": "2023-03-05",
+    "googlePlaySystemUpdates": "2023-03-01",
     "build": {
       "version": "2023-01-26",
       "details": [
@@ -31,20 +31,20 @@
       "version": "13, Tiramisu"
     },
     "support": {
-      "name": "Quince Tart",
-      "api": "29",
-      "version": "10, Quince Tart"
+      "name": "Red Velvet Cake",
+      "api": "30",
+      "version": "11, Red Velvet Cake"
     },
     "preview": {
       "name": "Upside Down Cake",
       "api": "34",
-      "version": "14 DP1, Upside Down Cake",
+      "version": "14 DP2, Upside Down Cake",
       "phase": ""
     },
     "internal": {
       "name": "Vanilla Ice Cream",
       "api": "35",
-      "version": "15 Internal, Vanilla Ice Cream"
+      "version": "15 Alpha, Vanilla Ice Cream"
     }
   },
   "linux": {
@@ -67,7 +67,7 @@
       "version": "0.8.6"
     },
     "support": {
-      "version": "0.8.0"
+      "version": "0.8.3"
     },
     "mainline": {
       "version": "0.8.9"
