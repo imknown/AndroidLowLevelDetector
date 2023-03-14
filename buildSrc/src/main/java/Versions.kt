@@ -1,13 +1,13 @@
 object Versions {
     object AndroidBuild {
-        const val androidGradlePlugin = "8.0.0-beta04"
+        const val androidGradlePlugin = "8.0.0-beta05"
 
         // https://developer.android.com/studio/releases/build-tools.html#notes
-        const val buildTools = "34.0.0-rc1"
+        const val buildTools = "34.0.0-rc2"
 
         const val minSdk = 21
         const val compileSdk = 33
-        const val compileSdkExtension = 4
+        const val compileSdkExtension = 5
         const val compileSdkPreview = "UpsideDownCake"
         const val targetSdk = 33
         const val targetSdkPreview = "UpsideDownCake"
