@@ -1,27 +1,27 @@
 {
   "scheme": 1,
-  "version": "2023-03-13 22:20 +0800",
+  "version": "2023-03-14 20:30 +0800",
   "android": {
     "securityPatchLevel": "2023-03-05",
     "googlePlaySystemUpdates": "2023-03-01",
     "build": {
-      "version": "2023-01-26",
+      "version": "2023-03-13",
       "details": [
         {
-          "id": "TQ1A.230205.001.A2",
-          "revision": "r27"
+          "id": "TQ2A.230305.008",
+          "revision": "r32"
         },
         {
-          "id": "TQ1A.230205.001.B2",
-          "revision": "r28"
+          "id": "TQ2A.230305.008.A1",
+          "revision": "r33"
         },
         {
-          "id": "TQ1A.230205.001.D2",
-          "revision": "r29"
+          "id": "TQ2A.230305.008.A32",
+          "revision": "r34"
         },
         {
-          "id": "TQ1A.230205.002",
-          "revision": "r30"
+          "id": "TQ2A.230305.008.C1",
+          "revision": "r35"
         }
       ]
     },
