@@ -32,7 +32,7 @@ object Versions {
     // https://androidstudio.googleblog.com/
     // https://developer.android.com/jetpack/androidx/versions
     object AndroidX {
-        const val activity = "1.7.0-beta02"
+        const val activity = "1.7.0-rc01"
 
         const val annotation = "1.6.0"
         const val annotationExperimental = "1.4.0-dev01"
@@ -47,21 +47,21 @@ object Versions {
 
         const val coordinatorLayout = "1.2.0"
 
-        const val core = "1.10.0-beta01"
+        const val core = "1.10.0-rc01"
 
-        const val fragment = "1.6.0-alpha06"
+        const val fragment = "1.6.0-alpha07"
 
-        const val lifecycle = "2.6.0-rc01"
+        const val lifecycle = "2.6.0"
 
         const val preference = "1.2.0"
 
-        const val recyclerView = "1.3.0-rc01"
+        const val recyclerView = "1.3.0"
 
         const val savedState = "1.2.0"
 
         const val swipeRefreshLayout = "1.2.0-alpha01"
 
-        const val webkit = "1.7.0-alpha02"
+        const val webkit = "1.7.0-alpha03"
 
         // https://developer.android.com/jetpack/androidx/releases/test
         object Test {
@@ -74,7 +74,7 @@ object Versions {
     object Kotlin {
         // https://github.com/JetBrains/kotlin/releases
         // https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.jetbrains.kotlin%22
-        const val kotlin = "1.8.20-Beta"
+        const val kotlin = "1.8.20-RC"
 
         // https://github.com/Kotlin/kotlinx.coroutines/releases
         const val coroutines = "1.6.4"
