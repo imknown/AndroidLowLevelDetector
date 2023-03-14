@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity(), IView {
             supportFragmentManager.switch(R.id.navigation_home, true)
         }
 
-        mainViewModel.dealWithShiziku()
+        mainViewModel.dealWithShizuku()
     }
 
     override fun onDestroy() {

@@ -38,7 +38,7 @@ class MainViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
             }
         }
 
-    fun dealWithShiziku() {
+    fun dealWithShizuku() {
         if (Shizuku.isPreV11() || !Shizuku.pingBinder()) {
             return
         }
