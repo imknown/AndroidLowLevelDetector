@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2023-03-14 20:30 +0800",
+  "version": "2023-03-16 20:05 +0800",
   "android": {
     "securityPatchLevel": "2023-03-05",
     "googlePlaySystemUpdates": "2023-03-01",
@@ -81,7 +81,7 @@
       "version": "111.0.5563.58"
     },
     "beta": {
-      "version": "112.0.5615.18"
+      "version": "112.0.5615.29"
     }
   }
 }
