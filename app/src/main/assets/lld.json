@@ -1,11 +1,11 @@
 {
   "scheme": 1,
-  "version": "2023-03-18 11:10 +0800",
+  "version": "2023-03-21 20:40 +0800",
   "android": {
     "securityPatchLevel": "2023-03-05",
     "googlePlaySystemUpdates": "2023-03-01",
     "build": {
-      "version": "2023-03-13",
+      "version": "2023-03-20",
       "details": [
         {
           "id": "TQ2A.230305.008",
@@ -22,6 +22,14 @@
         {
           "id": "TQ2A.230305.008.C1",
           "revision": "r35"
+        },
+        {
+          "id": "TQ2A.230305.008.E1",
+          "revision": "r36"
+        },
+        {
+          "id": "TQ2A.230305.008.F1",
+          "revision": "r37"
         }
       ]
     },
@@ -59,7 +67,7 @@
       ]
     },
     "mainline": {
-      "version": "6.3-rc2"
+      "version": "6.3-rc3"
     }
   },
   "toybox": {
