@@ -1,6 +1,6 @@
 object Versions {
     object AndroidBuild {
-        const val androidGradlePlugin = "8.0.0-beta05"
+        const val androidGradlePlugin = "8.0.0-rc01"
 
         // https://developer.android.com/studio/releases/build-tools.html#notes
         const val buildTools = "34.0.0-rc2"
@@ -22,19 +22,19 @@ object Versions {
     // https://developer.android.com/studio/write/java8-support#library-desugaring
     // https://maven.google.com/web/index.html?q=desugar_jdk_libs
     // https://github.com/google/desugar_jdk_libs/blob/master/CHANGELOG.md
-    const val desugarJdkLibs = "2.0.2"
+    const val desugarJdkLibs = "2.0.3"
 
     // https://github.com/material-components/material-components-android/releases
-    const val material = "1.9.0-alpha02"
+    const val material = "1.9.0-beta01"
 
     // region [AndroidX]
     // https://maven.google.com
     // https://androidstudio.googleblog.com/
     // https://developer.android.com/jetpack/androidx/versions
     object AndroidX {
-        const val activity = "1.7.0-rc01"
+        const val activity = "1.7.0"
 
-        const val annotation = "1.6.0"
+        const val annotation = "1.7.0-alpha01"
         const val annotationExperimental = "1.4.0-dev01"
 
         const val appcompat = "1.7.0-alpha02"
@@ -43,21 +43,21 @@ object Versions {
 
         const val cardView = "1.0.0"
 
-        const val constraintLayout = "2.2.0-alpha07"
+        const val constraintLayout = "2.2.0-alpha09"
 
         const val coordinatorLayout = "1.2.0"
 
-        const val core = "1.10.0-rc01"
+        const val core = "1.11.0-alpha01"
 
-        const val fragment = "1.6.0-alpha07"
+        const val fragment = "1.6.0-alpha08"
 
-        const val lifecycle = "2.6.0"
+        const val lifecycle = "2.6.1"
 
         const val preference = "1.2.0"
 
         const val recyclerView = "1.3.0"
 
-        const val savedState = "1.2.0"
+        const val savedState = "1.2.1"
 
         const val swipeRefreshLayout = "1.2.0-alpha01"
 
@@ -74,7 +74,7 @@ object Versions {
     object Kotlin {
         // https://github.com/JetBrains/kotlin/releases
         // https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.jetbrains.kotlin%22
-        const val kotlin = "1.8.20-RC"
+        const val kotlin = "1.8.20"
 
         // https://github.com/Kotlin/kotlinx.coroutines/releases
         const val coroutines = "1.6.4"
@@ -90,7 +90,7 @@ object Versions {
         const val googleServices = "4.3.15"
 
         // https://firebase.google.com/docs/android/learn-more#bom
-        const val billOfMaterials = "31.2.3"
+        const val billOfMaterials = "31.4.0"
 
         // https://firebase.google.com/docs/crashlytics/get-started?platform=android
         // https://firebase.google.com/docs/crashlytics/ndk-reports
@@ -99,7 +99,7 @@ object Versions {
 
     object ThirdParties {
         // https://github.com/topjohnwu/libsu/releases
-        const val libsu = "5.0.4"
+        const val libsu = "5.0.5"
 
         // https://github.com/square/leakcanary/releases
         const val leakCanary = "2.10"
