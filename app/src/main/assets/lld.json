@@ -1,9 +1,9 @@
 {
   "scheme": 1,
-  "version": "2023-04-03 21:40 +0800",
+  "version": "2023-04-04 21:10 +0800",
   "android": {
-    "securityPatchLevel": "2023-03-05",
-    "googlePlaySystemUpdates": "2023-03-01",
+    "securityPatchLevel": "2023-04-05",
+    "googlePlaySystemUpdates": "2023-04-01",
     "build": {
       "version": "2023-03-20",
       "details": [
