@@ -47,9 +47,9 @@ object Versions {
 
         const val coordinatorLayout = "1.2.0"
 
-        const val core = "1.11.0-alpha01"
+        const val core = "1.11.0-alpha02"
 
-        const val fragment = "1.6.0-alpha08"
+        const val fragment = "1.6.0-alpha09"
 
         const val lifecycle = "2.6.1"
 
@@ -61,7 +61,7 @@ object Versions {
 
         const val swipeRefreshLayout = "1.2.0-alpha01"
 
-        const val webkit = "1.7.0-alpha03"
+        const val webkit = "1.7.0-beta01"
 
         // https://developer.android.com/jetpack/androidx/releases/test
         object Test {
@@ -77,7 +77,7 @@ object Versions {
         const val kotlin = "1.8.20"
 
         // https://github.com/Kotlin/kotlinx.coroutines/releases
-        const val coroutines = "1.6.4"
+        const val coroutines = "1.7.0-Beta"
 
         // https://github.com/Kotlin/kotlinx.serialization/releases
         const val serialization = "1.5.0"
@@ -105,7 +105,7 @@ object Versions {
         const val leakCanary = "2.10"
 
         // https://github.com/kittinunf/fuel/releases
-        const val fuel = "2.3.1"
+        const val fuel = "3.0.0-alpha01"
 
         // https://github.com/G00fY2/version-compare/releases
         const val versionCompare = "1.5.0"
