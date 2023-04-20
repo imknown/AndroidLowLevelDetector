@@ -1,35 +1,27 @@
 {
   "scheme": 1,
-  "version": "2023-04-06 21:00 +0800",
+  "version": "2023-04-20 20:00 +0800",
   "android": {
     "securityPatchLevel": "2023-04-05",
     "googlePlaySystemUpdates": "2023-04-01",
     "build": {
-      "version": "2023-03-20",
+      "version": "2023-04-10",
       "details": [
         {
-          "id": "TQ2A.230305.008",
-          "revision": "r32"
+          "id": "TQ2A.230405.003",
+          "revision": "r38"
         },
         {
-          "id": "TQ2A.230305.008.A1",
-          "revision": "r33"
+          "id": "TQ2A.230405.003.A2",
+          "revision": "r39"
         },
         {
-          "id": "TQ2A.230305.008.A32",
-          "revision": "r34"
+          "id": "TQ2A.230405.003.B2",
+          "revision": "r40"
         },
         {
-          "id": "TQ2A.230305.008.C1",
-          "revision": "r35"
-        },
-        {
-          "id": "TQ2A.230305.008.E1",
-          "revision": "r36"
-        },
-        {
-          "id": "TQ2A.230305.008.F1",
-          "revision": "r37"
+          "id": "TQ2A.230405.003.E1",
+          "revision": "r41"
         }
       ]
     },
@@ -46,7 +38,7 @@
     "preview": {
       "name": "Upside Down Cake",
       "api": "34",
-      "version": "14 DP2, Upside Down Cake",
+      "version": "14 Beta 1, Upside Down Cake",
       "phase": ""
     },
     "internal": {
@@ -58,16 +50,16 @@
   "linux": {
     "google": {
       "versions": [
-        "6.1.23",
-        "5.15.106",
-        "5.10.177",
-        "5.4.240",
-        "4.19.280",
-        "4.14.312"
+        "6.1.25",
+        "5.15.108",
+        "5.10.178",
+        "5.4.241",
+        "4.19.281",
+        "4.14.313"
       ]
     },
     "mainline": {
-      "version": "6.3-rc5"
+      "version": "6.3-rc7"
     }
   },
   "toybox": {
@@ -86,10 +78,10 @@
   },
   "webView": {
     "stable": {
-      "version": "112.0.5615.48"
+      "version": "112.0.5615.136"
     },
     "beta": {
-      "version": "113.0.5672.24"
+      "version": "113.0.5672.51"
     }
   }
 }
