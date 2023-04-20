@@ -1,9 +1,9 @@
 object Versions {
     object AndroidBuild {
-        const val androidGradlePlugin = "8.0.0-rc01"
+        const val androidGradlePlugin = "8.0.0"
 
         // https://developer.android.com/studio/releases/build-tools.html#notes
-        const val buildTools = "34.0.0-rc2"
+        const val buildTools = "34.0.0-rc3"
 
         const val minSdk = 21
         const val compileSdk = 33
@@ -25,14 +25,14 @@ object Versions {
     const val desugarJdkLibs = "2.0.3"
 
     // https://github.com/material-components/material-components-android/releases
-    const val material = "1.9.0-beta01"
+    const val material = "1.9.0-rc01"
 
     // region [AndroidX]
     // https://maven.google.com
     // https://androidstudio.googleblog.com/
     // https://developer.android.com/jetpack/androidx/versions
     object AndroidX {
-        const val activity = "1.7.0"
+        const val activity = "1.7.1"
 
         const val annotation = "1.7.0-alpha01"
         const val annotationExperimental = "1.4.0-dev01"
@@ -49,7 +49,7 @@ object Versions {
 
         const val core = "1.11.0-alpha02"
 
-        const val fragment = "1.6.0-alpha09"
+        const val fragment = "1.6.0-beta01"
 
         const val lifecycle = "2.6.1"
 
@@ -77,7 +77,7 @@ object Versions {
         const val kotlin = "1.8.20"
 
         // https://github.com/Kotlin/kotlinx.coroutines/releases
-        const val coroutines = "1.7.0-Beta"
+        const val coroutines = "1.7.0-RC"
 
         // https://github.com/Kotlin/kotlinx.serialization/releases
         const val serialization = "1.5.0"
@@ -90,11 +90,11 @@ object Versions {
         const val googleServices = "4.3.15"
 
         // https://firebase.google.com/docs/android/learn-more#bom
-        const val billOfMaterials = "31.4.0"
+        const val billOfMaterials = "31.5.0"
 
         // https://firebase.google.com/docs/crashlytics/get-started?platform=android
         // https://firebase.google.com/docs/crashlytics/ndk-reports
-        const val firebaseCrashlyticsGradlePlugin = "2.9.4"
+        const val firebaseCrashlyticsGradlePlugin = "2.9.5"
     }
 
     object ThirdParties {
@@ -105,7 +105,7 @@ object Versions {
         const val leakCanary = "2.10"
 
         // https://github.com/kittinunf/fuel/releases
-        const val fuel = "3.0.0-alpha01"
+        const val fuel = "2.3.1"
 
         // https://github.com/G00fY2/version-compare/releases
         const val versionCompare = "1.5.0"
