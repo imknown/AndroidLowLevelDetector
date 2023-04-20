@@ -1,4 +1,4 @@
-import org.codehaus.groovy.runtime.ProcessGroovyMethods
+import org.gradle.api.provider.ProviderFactory
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -11,4 +11,5 @@ fun getCurrentDatetime(): String {
     return formatter.format(datetime)
 }
 
-fun String.execute() = ProcessGroovyMethods.getText(ProcessGroovyMethods.execute(this)).trim()
+fun ProviderFactory.execute(vararg args: Any) =
+    exec { commandLine(*args) }.standardOutput.asText.get().trim()

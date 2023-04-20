@@ -27,7 +27,7 @@ android {
         versionName = Versions.AndroidBuild.versionName
 
         val currentDatetime = getCurrentDatetime()
-        val currentGitBranchName = "git rev-parse --abbrev-ref HEAD".execute()
+        val currentGitBranchName = providers.execute("git", "rev-parse", "--abbrev-ref", "HEAD")
         base.archivesName.set("lld-$versionName-$versionCode-$currentDatetime-$currentGitBranchName")
 
         minSdk = Versions.AndroidBuild.minSdk
