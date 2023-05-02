@@ -1,27 +1,19 @@
 {
   "scheme": 1,
-  "version": "2023-04-27 20:05 +0800",
+  "version": "2023-05-02 11:15 +0800",
   "android": {
-    "securityPatchLevel": "2023-04-05",
-    "googlePlaySystemUpdates": "2023-04-01",
+    "securityPatchLevel": "2023-05-05",
+    "googlePlaySystemUpdates": "2023-05-01",
     "build": {
-      "version": "2023-04-10",
+      "version": "2023-05-01",
       "details": [
         {
-          "id": "TQ2A.230405.003",
-          "revision": "r38"
+          "id": "TQ2A.230505.002",
+          "revision": "r43"
         },
         {
-          "id": "TQ2A.230405.003.A2",
-          "revision": "r39"
-        },
-        {
-          "id": "TQ2A.230405.003.B2",
-          "revision": "r40"
-        },
-        {
-          "id": "TQ2A.230405.003.E1",
-          "revision": "r41"
+          "id": "TQ2A.230505.002.A1",
+          "revision": "r44"
         }
       ]
     },
@@ -50,8 +42,8 @@
   "linux": {
     "google": {
       "versions": [
-        "6.1.26",
-        "5.15.109",
+        "6.1.27",
+        "5.15.110",
         "5.10.179",
         "5.4.242",
         "4.19.282",
