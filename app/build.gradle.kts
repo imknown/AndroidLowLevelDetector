@@ -54,13 +54,6 @@ android {
     }
 
     signingConfigs {
-        create("config") {
-            enableV1Signing = true
-            enableV2Signing = true
-            enableV3Signing = true
-            enableV4Signing = true
-        }
-
         create("release") {
             val keystorePropertiesFile = file("$rootDir/local.properties")
             val keystoreProperties = Properties().apply {
@@ -71,6 +64,11 @@ android {
             storePassword = keystoreProperties["storePassword"].toString()
             keyAlias = keystoreProperties["keyAlias"].toString()
             keyPassword = keystoreProperties["keyPassword"].toString()
+
+            enableV1Signing = true
+            enableV2Signing = true
+            enableV3Signing = true
+            enableV4Signing = true
         }
 
         getByName("debug") {
@@ -78,6 +76,11 @@ android {
             storePassword = "android"
             keyAlias = "androiddebugkey"
             keyPassword = "android"
+
+            enableV1Signing = true
+            enableV2Signing = true
+            enableV3Signing = true
+            enableV4Signing = true
         }
     }
 
