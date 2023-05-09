@@ -1,6 +1,6 @@
 object Versions {
     object AndroidBuild {
-        const val androidGradlePlugin = "8.0.0"
+        const val androidGradlePlugin = "8.1.0-beta02"
 
         // https://developer.android.com/studio/releases/build-tools.html#notes
         const val buildTools = "34.0.0-rc3"
@@ -25,7 +25,7 @@ object Versions {
     const val desugarJdkLibs = "2.0.3"
 
     // https://github.com/material-components/material-components-android/releases
-    const val material = "1.9.0-rc01"
+    const val material = "1.9.0"
 
     // region [AndroidX]
     // https://maven.google.com
@@ -74,10 +74,10 @@ object Versions {
     object Kotlin {
         // https://github.com/JetBrains/kotlin/releases
         // https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.jetbrains.kotlin%22
-        const val kotlin = "1.8.20"
+        const val kotlin = "1.8.21"
 
         // https://github.com/Kotlin/kotlinx.coroutines/releases
-        const val coroutines = "1.7.0-RC"
+        const val coroutines = "1.7.0"
 
         // https://github.com/Kotlin/kotlinx.serialization/releases
         const val serialization = "1.5.0"
@@ -90,7 +90,7 @@ object Versions {
         const val googleServices = "4.3.15"
 
         // https://firebase.google.com/docs/android/learn-more#bom
-        const val billOfMaterials = "31.5.0"
+        const val billOfMaterials = "32.0.0"
 
         // https://firebase.google.com/docs/crashlytics/get-started?platform=android
         // https://firebase.google.com/docs/crashlytics/ndk-reports
