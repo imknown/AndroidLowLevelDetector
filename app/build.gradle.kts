@@ -87,8 +87,8 @@ android {
     flavorDimensions += IssueTracker::class.simpleName.toString()
 
     productFlavors {
-        create(IssueTracker.firebase)
-        create(IssueTracker.none)
+        create(IssueTracker.foss.name)
+        create(IssueTracker.firebase.name)
     }
 
     buildTypes {
@@ -148,7 +148,7 @@ android {
 }
 
 tasks.whenTaskAdded {
-    val flavorNone = IssueTracker.none.capitalized()
+    val flavorNone = IssueTracker.foss.name.capitalized()
     if (name.startsWith("process$flavorNone") && name.endsWith("GoogleServices")) {
         println("Task $name disabled.")
         enabled = false
@@ -186,7 +186,7 @@ dependencies {
     // implementation ("com.squareup.leakcanary:plumber-android:${Versions.ThirdParties.leakCanary}")
     // endregion [3rd Parties]
 
-    val firebaseImplementation = IssueTracker.firebase + "Implementation"
+    val firebaseImplementation = IssueTracker.firebase.name + "Implementation"
     firebaseImplementation(platform("com.google.firebase:firebase-bom:${Versions.Firebase.billOfMaterials}"))
     firebaseImplementation("com.google.firebase:firebase-analytics-ktx")
     firebaseImplementation("com.google.firebase:firebase-crashlytics-ndk")

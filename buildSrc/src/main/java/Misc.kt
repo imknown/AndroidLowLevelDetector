@@ -1,4 +1,3 @@
-object IssueTracker {
-    const val firebase = "firebase"
-    const val none = "none"
+enum class IssueTracker {
+    foss, firebase
 }
