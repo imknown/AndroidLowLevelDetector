@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2023-05-24 22:05 +0800",
+  "version": "2023-05-26 20:25 +0800",
   "android": {
     "securityPatchLevel": "2023-05-05",
     "googlePlaySystemUpdates": "2023-05-01",
@@ -38,7 +38,7 @@
     "preview": {
       "name": "Upside Down Cake",
       "api": "34",
-      "version": "14 Beta 2, Upside Down Cake",
+      "version": "14 Beta 2.1, Upside Down Cake",
       "phase": ""
     },
     "internal": {
@@ -50,8 +50,8 @@
   "linux": {
     "google": {
       "versions": [
-        "6.1.29",
-        "5.15.112",
+        "6.1.30",
+        "5.15.113",
         "5.10.180",
         "5.4.243",
         "4.19.283",
@@ -78,10 +78,10 @@
   },
   "webView": {
     "stable": {
-      "version": "113.0.5672.163"
+      "version": "114.0.5735.53"
     },
     "beta": {
-      "version": "114.0.5735.33"
+      "version": "114.0.5735.53"
     }
   }
 }
