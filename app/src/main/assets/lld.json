@@ -1,27 +1,23 @@
 {
   "scheme": 1,
-  "version": "2023-06-13 19:30 +0800",
+  "version": "2023-06-15 20:20 +0800",
   "android": {
     "securityPatchLevel": "2023-06-05",
     "googlePlaySystemUpdates": "2023-05-01",
     "build": {
-      "version": "2023-05-17",
+      "version": "2023-06-13",
       "details": [
         {
-          "id": "TQ2A.230505.002",
-          "revision": "r43"
+          "id": "TQ3A.230605.010",
+          "revision": "r50"
         },
         {
-          "id": "TQ2A.230505.002.A1",
-          "revision": "r44"
+          "id": "TQ3A.230605.011",
+          "revision": "r51"
         },
         {
-          "id": "TQ2A.230505.002.G1",
-          "revision": "r45"
-        },
-        {
-          "id": "TQ2B.230505.005.A1",
-          "revision": "r49"
+          "id": "TQ3A.230605.012",
+          "revision": "r52"
         }
       ]
     },
@@ -38,7 +34,7 @@
     "preview": {
       "name": "Upside Down Cake",
       "api": "34",
-      "version": "14 Beta 3, Upside Down Cake",
+      "version": "14 Beta 3.1, Upside Down Cake",
       "phase": ""
     },
     "internal": {
@@ -50,12 +46,12 @@
   "linux": {
     "google": {
       "versions": [
-        "6.1.33",
-        "5.15.116",
-        "5.10.183",
-        "5.4.246",
-        "4.19.285",
-        "4.14.317"
+        "6.1.34",
+        "5.15.117",
+        "5.10.184",
+        "5.4.247",
+        "4.19.286",
+        "4.14.318"
       ]
     },
     "mainline": {
@@ -78,10 +74,10 @@
   },
   "webView": {
     "stable": {
-      "version": "114.0.5735.61"
+      "version": "114.0.5735.131"
     },
     "beta": {
-      "version": "115.0.5790.21"
+      "version": "115.0.5790.32"
     }
   }
 }
