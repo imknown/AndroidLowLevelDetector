@@ -1,11 +1,11 @@
 {
   "scheme": 1,
-  "version": "2023-06-19 19:15 +0800",
+  "version": "2023-06-21 18:50 +0800",
   "android": {
     "securityPatchLevel": "2023-06-05",
     "googlePlaySystemUpdates": "2023-05-01",
     "build": {
-      "version": "2023-06-13",
+      "version": "2023-06-20",
       "details": [
         {
           "id": "TQ3A.230605.010",
@@ -18,6 +18,18 @@
         {
           "id": "TQ3A.230605.012",
           "revision": "r52"
+        },
+        {
+          "id": "TQ3A.230605.010.A1",
+          "revision": "r53"
+        },
+        {
+          "id": "TQ3A.230605.012.A1",
+          "revision": "r54"
+        },
+        {
+          "id": "TQ3A.230605.009.A1",
+          "revision": "r56"
         }
       ]
     },
