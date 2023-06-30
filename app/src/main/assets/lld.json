@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2023-06-28 21:30 +0800",
+  "version": "2023-06-30 20:30 +0800",
   "android": {
     "securityPatchLevel": "2023-06-05",
     "googlePlaySystemUpdates": "2023-05-01",
@@ -38,6 +38,10 @@
         {
           "id": "TQ3C.230605.010.C2",
           "revision": "r59"
+        },
+        {
+          "id": "TQ3C.230605.010.D1",
+          "revision": "r60"
         }
       ]
     },
