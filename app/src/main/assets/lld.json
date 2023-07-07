@@ -1,47 +1,23 @@
 {
   "scheme": 1,
-  "version": "2023-07-03 20:50 +0800",
+  "version": "2023-07-08 06:45 +0800",
   "android": {
-    "securityPatchLevel": "2023-06-05",
-    "googlePlaySystemUpdates": "2023-05-01",
+    "securityPatchLevel": "2023-07-05",
+    "googlePlaySystemUpdates": "2023-07-01",
     "build": {
-      "version": "2023-06-20",
+      "version": "2023-07-07",
       "details": [
         {
-          "id": "TQ3A.230605.010",
-          "revision": "r50"
+          "id": "TQ3A.230705.001",
+          "revision": "r61"
         },
         {
-          "id": "TQ3A.230605.011",
-          "revision": "r51"
+          "id": "TQ3A.230705.001.A1",
+          "revision": "r62"
         },
         {
-          "id": "TQ3A.230605.012",
-          "revision": "r52"
-        },
-        {
-          "id": "TQ3A.230605.010.A1",
-          "revision": "r53"
-        },
-        {
-          "id": "TQ3A.230605.012.A1",
-          "revision": "r54"
-        },
-        {
-          "id": "TQ3A.230605.009.A1",
-          "revision": "r56"
-        },
-        {
-          "id": "TQ3C.230605.010.C1",
-          "revision": "r58"
-        },
-        {
-          "id": "TQ3C.230605.010.C2",
-          "revision": "r59"
-        },
-        {
-          "id": "TQ3C.230605.010.D1",
-          "revision": "r60"
+          "id": "TQ3A.230705.001.B4",
+          "revision": "r63"
         }
       ]
     },
@@ -70,8 +46,8 @@
   "linux": {
     "google": {
       "versions": [
-        "6.1.37",
-        "5.15.119",
+        "6.1.38",
+        "5.15.120",
         "5.10.186",
         "5.4.249",
         "4.19.288",
@@ -101,7 +77,7 @@
       "version": "114.0.5735.196"
     },
     "beta": {
-      "version": "115.0.5790.53"
+      "version": "115.0.5790.69"
     }
   }
 }
