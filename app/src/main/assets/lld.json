@@ -1,27 +1,23 @@
 {
   "scheme": 1,
-  "version": "2023-06-08 21:00 +0800",
+  "version": "2023-07-08 06:45 +0800",
   "android": {
-    "securityPatchLevel": "2023-06-05",
-    "googlePlaySystemUpdates": "2023-05-01",
+    "securityPatchLevel": "2023-07-05",
+    "googlePlaySystemUpdates": "2023-07-01",
     "build": {
-      "version": "2023-05-17",
+      "version": "2023-07-07",
       "details": [
         {
-          "id": "TQ2A.230505.002",
-          "revision": "r43"
+          "id": "TQ3A.230705.001",
+          "revision": "r61"
         },
         {
-          "id": "TQ2A.230505.002.A1",
-          "revision": "r44"
+          "id": "TQ3A.230705.001.A1",
+          "revision": "r62"
         },
         {
-          "id": "TQ2A.230505.002.G1",
-          "revision": "r45"
-        },
-        {
-          "id": "TQ2B.230505.005.A1",
-          "revision": "r49"
+          "id": "TQ3A.230705.001.B4",
+          "revision": "r63"
         }
       ]
     },
@@ -31,35 +27,35 @@
       "version": "13, Tiramisu"
     },
     "support": {
-      "name": "Red Velvet Cake",
+      "name": "RedVelvetCake",
       "api": "30",
-      "version": "11, Red Velvet Cake"
+      "version": "11, RedVelvetCake"
     },
     "preview": {
-      "name": "Upside Down Cake",
+      "name": "UpsideDownCake",
       "api": "34",
-      "version": "14 Beta 3, Upside Down Cake",
+      "version": "14 Beta 3.1, UpsideDownCake",
       "phase": ""
     },
     "internal": {
-      "name": "Vanilla Ice Cream",
+      "name": "VanillaIceCream",
       "api": "35",
-      "version": "15 Alpha, Vanilla Ice Cream"
+      "version": "15 Alpha, VanillaIceCream"
     }
   },
   "linux": {
     "google": {
       "versions": [
-        "6.1.32",
-        "5.15.115",
-        "5.10.182",
-        "5.4.245",
-        "4.19.284",
-        "4.14.316"
+        "6.1.38",
+        "5.15.120",
+        "5.10.186",
+        "5.4.249",
+        "4.19.288",
+        "4.14.320"
       ]
     },
     "mainline": {
-      "version": "6.4-rc5"
+      "version": "6.4"
     }
   },
   "toybox": {
@@ -78,10 +74,10 @@
   },
   "webView": {
     "stable": {
-      "version": "114.0.5735.61"
+      "version": "114.0.5735.196"
     },
     "beta": {
-      "version": "115.0.5790.21"
+      "version": "115.0.5790.69"
     }
   }
 }
