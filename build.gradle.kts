@@ -4,14 +4,8 @@ plugins {
     id("com.android.library") version Versions.AndroidBuild.androidGradlePlugin apply false
     kotlin("android") version Versions.Kotlin.kotlin apply false
     kotlin("plugin.serialization") version Versions.Kotlin.kotlin apply false
-}
-
-buildscript {
-    dependencies {
-        classpath("com.google.gms:google-services:${Versions.Firebase.googleServices}")
-
-        classpath("com.google.firebase:firebase-crashlytics-gradle:${Versions.Firebase.firebaseCrashlyticsGradlePlugin}")
-    }
+    id("com.google.gms.google-services") version Versions.Firebase.googleServices apply false
+    id("com.google.firebase.crashlytics") version Versions.Firebase.firebaseCrashlyticsGradlePlugin apply false
 }
 
 extensions.findByName("buildScan")?.withGroovyBuilder {

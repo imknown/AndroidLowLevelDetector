@@ -1,6 +1,6 @@
 object Versions {
     object AndroidBuild {
-        const val androidGradlePlugin = "8.2.0-alpha07"
+        const val androidGradlePlugin = "8.2.0-alpha11"
 
         // https://developer.android.com/studio/releases/build-tools.html#notes
         const val buildTools = "34.0.0"
@@ -25,13 +25,13 @@ object Versions {
     const val desugarJdkLibs = "2.0.3"
 
     // https://github.com/material-components/material-components-android/releases
-    const val material = "1.9.0"
+    const val material = "1.11.0-alpha01"
 
     // region [AndroidX]
     // https://maven.google.com
     object AndroidX {
         // https://developer.android.com/jetpack/androidx/releases/activity
-        const val activity = "1.8.0-alpha05"
+        const val activity = "1.8.0-alpha06"
 
         // https://developer.android.com/jetpack/androidx/releases/annotation
         const val annotation = "1.7.0-alpha02"
@@ -87,10 +87,10 @@ object Versions {
     object Kotlin {
         // https://github.com/JetBrains/kotlin/releases
         // https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.jetbrains.kotlin%22
-        const val kotlin = "1.8.22"
+        const val kotlin = "1.9.0"
 
         // https://github.com/Kotlin/kotlinx.coroutines/releases
-        const val coroutines = "1.7.1"
+        const val coroutines = "1.7.2"
 
         // https://github.com/Kotlin/kotlinx.serialization/releases
         const val serialization = "1.5.1"
@@ -103,11 +103,11 @@ object Versions {
         const val googleServices = "4.3.15"
 
         // https://firebase.google.com/docs/android/learn-more#bom
-        const val billOfMaterials = "32.1.0"
+        const val billOfMaterials = "32.1.1"
 
         // https://firebase.google.com/docs/crashlytics/get-started?platform=android
         // https://firebase.google.com/docs/crashlytics/ndk-reports
-        const val firebaseCrashlyticsGradlePlugin = "2.9.5"
+        const val firebaseCrashlyticsGradlePlugin = "2.9.6"
     }
 
     object ThirdParties {
@@ -115,7 +115,7 @@ object Versions {
         const val libsu = "5.1.0"
 
         // https://github.com/square/leakcanary/releases
-        const val leakCanary = "2.11"
+        const val leakCanary = "2.12"
 
         // https://github.com/kittinunf/fuel/releases
         const val fuel = "2.3.1"
