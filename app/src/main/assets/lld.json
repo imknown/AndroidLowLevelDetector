@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2023-07-26 19:45 +0800",
+  "version": "2023-07-27 22:40 +0800",
   "android": {
     "securityPatchLevel": "2023-07-05",
     "googlePlaySystemUpdates": "2023-07-01",
@@ -46,7 +46,7 @@
     "preview": {
       "name": "UpsideDownCake",
       "api": "34",
-      "version": "14 Beta 4, UpsideDownCake",
+      "version": "14 Beta 4.1, UpsideDownCake",
       "phase": ""
     },
     "internal": {
@@ -58,10 +58,10 @@
   "linux": {
     "google": {
       "versions": [
-        "6.1.40",
-        "5.15.122",
-        "5.10.187",
-        "5.4.250",
+        "6.1.42",
+        "5.15.123",
+        "5.10.188",
+        "5.4.251",
         "4.19.289",
         "4.14.320"
       ]
@@ -89,7 +89,7 @@
       "version": "115.0.5790.138"
     },
     "beta": {
-      "version": "116.0.5845.41"
+      "version": "116.0.5845.51"
     }
   }
 }
