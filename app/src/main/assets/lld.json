@@ -1,43 +1,43 @@
 {
   "scheme": 1,
-  "version": "2023-09-18 22:10 +0800",
+  "version": "2023-09-19 21:00 +0800",
   "android": {
     "securityPatchLevel": "2023-09-05",
     "googlePlaySystemUpdates": "2023-09-01",
     "build": {
-      "version": "2023-08-07",
+      "version": "2023-09-18",
       "details": [
         {
-          "id": "TQ3A.230805.001",
-          "revision": "r67"
+          "id": "TQ3A.230901.001",
+          "revision": "r75"
         },
         {
-          "id": "TQ3A.230805.001.A1",
-          "revision": "r68"
+          "id": "TQ3A.230901.001.B1",
+          "revision": "r76"
         },
         {
-          "id": "TQ3A.230805.001.A2",
-          "revision": "r69"
+          "id": "TQ3A.230901.001.C1",
+          "revision": "r77"
         },
         {
-          "id": "TQ3A.230805.001.A3",
-          "revision": "r70"
+          "id": "TQ3A.230901.001.C2",
+          "revision": "r78"
         },
         {
-          "id": "TQ3A.230805.001.B1",
-          "revision": "r71"
+          "id": "TQ3A.230901.001.C3",
+          "revision": "r79"
         },
         {
-          "id": "TQ3C.230805.001.A3",
-          "revision": "r72"
+          "id": "TQ3C.230901.001.A1",
+          "revision": "r80"
         },
         {
-          "id": "TQ3C.230805.001.A4",
-          "revision": "r73"
+          "id": "TQ3C.230901.001.A2",
+          "revision": "r81"
         },
         {
-          "id": "TQ3C.230805.001.B2",
-          "revision": "r74"
+          "id": "TQ3C.230901.001.B1",
+          "revision": "r82"
         }
       ]
     },
@@ -66,9 +66,9 @@
   "linux": {
     "google": {
       "versions": [
-        "6.1.53",
-        "5.15.131",
-        "5.10.194",
+        "6.1.54",
+        "5.15.132",
+        "5.10.195",
         "5.4.256",
         "4.19.294",
         "4.14.325"
