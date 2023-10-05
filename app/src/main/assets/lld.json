@@ -1,50 +1,26 @@
 {
   "scheme": 1,
-  "version": "2023-10-04 08:55 +0800",
+  "version": "2023-10-05 09:55 +0800",
   "android": {
-    "securityPatchLevel": "2023-09-05",
-    "googlePlaySystemUpdates": "2023-09-01",
+    "securityPatchLevel": "2023-10-05",
+    "googlePlaySystemUpdates": "2023-10-01",
     "build": {
-      "version": "2023-09-18",
+      "version": "2023-10-03",
       "details": [
         {
-          "id": "TQ3A.230901.001",
-          "revision": "r75"
+          "id": "UP1A.231005.007",
+          "revision": "r1"
         },
         {
-          "id": "TQ3A.230901.001.B1",
-          "revision": "r76"
-        },
-        {
-          "id": "TQ3A.230901.001.C1",
-          "revision": "r77"
-        },
-        {
-          "id": "TQ3A.230901.001.C2",
-          "revision": "r78"
-        },
-        {
-          "id": "TQ3A.230901.001.C3",
-          "revision": "r79"
-        },
-        {
-          "id": "TQ3C.230901.001.A1",
-          "revision": "r80"
-        },
-        {
-          "id": "TQ3C.230901.001.A2",
-          "revision": "r81"
-        },
-        {
-          "id": "TQ3C.230901.001.B1",
-          "revision": "r82"
+          "id": "UP1A.231005.007.A1",
+          "revision": "r2"
         }
       ]
     },
     "stable": {
       "name": "Tiramisu",
-      "api": "33",
-      "version": "13, Tiramisu"
+      "api": "14",
+      "version": "14, UpsideDownCake"
     },
     "support": {
       "name": "RedVelvetCake",
@@ -54,7 +30,7 @@
     "preview": {
       "name": "UpsideDownCake",
       "api": "34",
-      "version": "14 Beta 5.3, UpsideDownCake",
+      "version": "14 QRP Beta 1, UpsideDownCake",
       "phase": ""
     },
     "internal": {
@@ -94,10 +70,10 @@
   },
   "webView": {
     "stable": {
-      "version": "117.0.5938.153"
+      "version": "118.0.5993.48"
     },
     "beta": {
-      "version": "118.0.5993.32"
+      "version": "118.0.5993.48"
     }
   }
 }
