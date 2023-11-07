@@ -1,19 +1,23 @@
 {
   "scheme": 1,
-  "version": "2023-11-03 21:30 +0800",
+  "version": "2023-11-07 19:30 +0800",
   "android": {
-    "securityPatchLevel": "2023-10-06",
-    "googlePlaySystemUpdates": "2023-10-01",
+    "securityPatchLevel": "2023-11-05",
+    "googlePlaySystemUpdates": "2023-11-01",
     "build": {
-      "version": "2023-10-03",
+      "version": "2023-11-06",
       "details": [
         {
-          "id": "UP1A.231005.007",
-          "revision": "r1"
+          "id": "UD1A.231105.004",
+          "revision": "r12"
         },
         {
-          "id": "UP1A.231005.007.A1",
-          "revision": "r2"
+          "id": "UP1A.231105.001",
+          "revision": "r13"
+        },
+        {
+          "id": "UP1A.231105.003",
+          "revision": "r14"
         }
       ]
     },
