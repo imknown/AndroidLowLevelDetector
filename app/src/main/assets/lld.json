@@ -1,11 +1,11 @@
 {
   "scheme": 1,
-  "version": "2023-11-13 20:05 +0800",
+  "version": "2023-11-15 19:20 +0800",
   "android": {
     "securityPatchLevel": "2023-11-05",
     "googlePlaySystemUpdates": "2023-11-01",
     "build": {
-      "version": "2023-11-06",
+      "version": "2023-11-09",
       "details": [
         {
           "id": "UD1A.231105.004",
@@ -78,7 +78,7 @@
   },
   "webView": {
     "stable": {
-      "version": "119.0.6045.134"
+      "version": "119.0.6045.163"
     },
     "beta": {
       "version": "120.0.6099.19"
