@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2023-11-20 18:50 +0800",
+  "version": "2023-11-21 18:40 +0800",
   "android": {
     "securityPatchLevel": "2023-11-05",
     "googlePlaySystemUpdates": "2023-11-01",
@@ -50,7 +50,7 @@
   "linux": {
     "google": {
       "versions": [
-        "6.1.62",
+        "6.1.63",
         "5.15.139",
         "5.10.201",
         "5.4.261",
