@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2023-11-21 18:40 +0800",
+  "version": "2023-11-22 19:45 +0800",
   "android": {
     "securityPatchLevel": "2023-11-05",
     "googlePlaySystemUpdates": "2023-11-01",
@@ -38,7 +38,7 @@
     "preview": {
       "name": "UpsideDownCake",
       "api": "34",
-      "version": "14 QPR2 Beta 1, UpsideDownCake",
+      "version": "14 QPR2 Beta 1.1, UpsideDownCake",
       "phase": ""
     },
     "internal": {
