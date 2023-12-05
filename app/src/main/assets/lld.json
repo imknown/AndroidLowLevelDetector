@@ -1,8 +1,8 @@
 {
   "scheme": 1,
-  "version": "2023-12-04 19:40 +0800",
+  "version": "2023-12-05 19:15 +0800",
   "android": {
-    "securityPatchLevel": "2023-11-05",
+    "securityPatchLevel": "2023-12-05",
     "googlePlaySystemUpdates": "2023-11-01",
     "build": {
       "version": "2023-11-09",
