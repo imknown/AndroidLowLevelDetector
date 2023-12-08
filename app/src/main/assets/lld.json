@@ -1,11 +1,11 @@
 {
   "scheme": 1,
-  "version": "2023-12-08 19:50 +0800",
+  "version": "2023-12-08 19:55 +0800",
   "android": {
     "securityPatchLevel": "2023-12-05",
     "googlePlaySystemUpdates": "2023-11-01",
     "build": {
-      "version": "2023-11-09",
+      "version": "2023-12-07",
       "details": [
         {
           "id": "UQ1A.231205.014",
