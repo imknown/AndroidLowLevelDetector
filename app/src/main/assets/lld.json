@@ -1,23 +1,23 @@
 {
   "scheme": 1,
-  "version": "2024-01-02 19:00 +0800",
+  "version": "2024-01-04 18:40 +0800",
   "android": {
-    "securityPatchLevel": "2023-12-05",
-    "googlePlaySystemUpdates": "2023-11-01",
+    "securityPatchLevel": "2024-01-05",
+    "googlePlaySystemUpdates": "2024-01-01",
     "build": {
-      "version": "2023-12-07",
+      "version": "2024-01-03",
       "details": [
         {
-          "id": "UQ1A.231205.014",
-          "revision": "r16"
+          "id": "UQ1A.240105.002",
+          "revision": "r19"
         },
         {
-          "id": "UQ1A.231205.015",
-          "revision": "r17"
+          "id": "UQ1A.240105.004",
+          "revision": "r20"
         },
         {
-          "id": "UQ1A.231205.015.A1",
-          "revision": "r18"
+          "id": "UQ1A.240105.004.A1",
+          "revision": "r21"
         }
       ]
     },
@@ -74,7 +74,7 @@
   },
   "webView": {
     "stable": {
-      "version": "120.0.6099.144"
+      "version": "120.0.6099.193"
     },
     "beta": {
       "version": "121.0.6167.18"
