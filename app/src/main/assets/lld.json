@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2024-01-24 18:55 +0800",
+  "version": "2024-01-25 19:50 +0800",
   "android": {
     "securityPatchLevel": "2024-01-05",
     "googlePlaySystemUpdates": "2024-01-01",
@@ -34,7 +34,7 @@
     "preview": {
       "name": "UpsideDownCake",
       "api": "34",
-      "version": "14 QPR2 Beta 3, UpsideDownCake",
+      "version": "14 QPR2 Beta 3.1, UpsideDownCake",
       "phase": ""
     },
     "internal": {
@@ -78,7 +78,7 @@
       "version": "121.0.6167.101"
     },
     "beta": {
-      "version": "121.0.6167.101"
+      "version": "122.0.6261.5"
     }
   }
 }
