@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2024-02-15 18:45 +0800",
+  "version": "2024-02-17 11:10 +0800",
   "android": {
     "securityPatchLevel": "2024-02-05",
     "googlePlaySystemUpdates": "2024-01-01",
@@ -34,9 +34,14 @@
       ]
     },
     "stable": {
-      "name": "Tiramisu",
+      "name": "UpsideDownCake",
       "api": "34",
       "version": "14, UpsideDownCake"
+    },
+    "stablePreview": {
+      "name": "UpsideDownCake",
+      "api": "34",
+      "version": "14 QPR3 Beta 1, UpsideDownCake"
     },
     "support": {
       "name": "RedVelvetCake",
@@ -44,22 +49,22 @@
       "version": "11, RedVelvetCake"
     },
     "preview": {
-      "name": "UpsideDownCake",
-      "api": "34",
-      "version": "14 QPR3 Beta 1, UpsideDownCake",
+      "name": "VanillaIceCream",
+      "api": "35",
+      "version": "15 DP1, VanillaIceCream",
       "phase": ""
     },
     "internal": {
-      "name": "VanillaIceCream",
-      "api": "35",
-      "version": "15 Alpha, VanillaIceCream"
+      "name": "W",
+      "api": "36",
+      "version": "16 internal, W"
     }
   },
   "linux": {
     "google": {
       "versions": [
-        "6.6.16",
-        "6.1.77",
+        "6.6.17",
+        "6.1.78",
         "5.15.148",
         "5.10.209",
         "5.4.268",
