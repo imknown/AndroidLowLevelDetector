@@ -1,35 +1,15 @@
 {
   "scheme": 1,
-  "version": "2024-03-04 18:30 +0800",
+  "version": "2024-03-05 19:15 +0800",
   "android": {
-    "securityPatchLevel": "2024-02-05",
+    "securityPatchLevel": "2024-03-05",
     "googlePlaySystemUpdates": "2024-01-01",
     "build": {
-      "version": "2024-02-05",
+      "version": "2024-03-05",
       "details": [
         {
-          "id": "UQ1A.240205.002",
-          "revision": "r22"
-        },
-        {
-          "id": "UQ1A.240205.002.A1",
-          "revision": "r23"
-        },
-        {
-          "id": "UQ1A.240205.002.B1",
-          "revision": "r24"
-        },
-        {
-          "id": "UQ1A.240205.004",
-          "revision": "r25"
-        },
-        {
-          "id": "UQ1A.240205.004.A1",
-          "revision": "r26"
-        },
-        {
-          "id": "UQ1A.240205.004.B1",
-          "revision": "r27"
+          "id": "AP1A.240305.019.A1",
+          "revision": "r29"
         }
       ]
     },
@@ -44,9 +24,9 @@
       "version": "14 QPR3 Beta 1, UpsideDownCake"
     },
     "support": {
-      "name": "RedVelvetCake",
-      "api": "30",
-      "version": "11, RedVelvetCake"
+      "name": "SnowCone",
+      "api": "31",
+      "version": "12, SnowCone"
     },
     "preview": {
       "name": "VanillaIceCream",
@@ -80,7 +60,7 @@
       "version": "0.8.9"
     },
     "support": {
-      "version": "0.8.3"
+      "version": "0.8.4"
     },
     "mainline": {
       "version": "0.8.10"
