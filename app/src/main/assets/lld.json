@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2024-03-07 18:50 +0800",
+  "version": "2024-03-08 18:35 +0800",
   "android": {
     "securityPatchLevel": "2024-03-05",
     "googlePlaySystemUpdates": "2024-01-01",
@@ -21,7 +21,7 @@
     "stablePreview": {
       "name": "UpsideDownCake",
       "api": "34",
-      "version": "14 QPR3 Beta 1, UpsideDownCake"
+      "version": "14 QPR3 Beta 2, UpsideDownCake"
     },
     "support": {
       "name": "SnowCone",
