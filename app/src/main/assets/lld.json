@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2024-03-21 22:40 +0800",
+  "version": "2024-03-22 19:40 +0800",
   "android": {
     "securityPatchLevel": "2024-03-05",
     "googlePlaySystemUpdates": "2024-01-01",
@@ -31,7 +31,7 @@
     "preview": {
       "name": "VanillaIceCream",
       "api": "35",
-      "version": "15 DP1, VanillaIceCream",
+      "version": "15 DP2, VanillaIceCream",
       "phase": ""
     },
     "internal": {
