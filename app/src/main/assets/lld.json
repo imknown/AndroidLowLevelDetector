@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2024-03-27 19:20 +0800",
+  "version": "2024-03-30 07:15 +0800",
   "android": {
     "securityPatchLevel": "2024-03-05",
     "googlePlaySystemUpdates": "2024-01-01",
@@ -74,7 +74,7 @@
       "version": "123.0.6312.80"
     },
     "beta": {
-      "version": "124.0.6367.4"
+      "version": "124.0.6367.18"
     }
   }
 }
