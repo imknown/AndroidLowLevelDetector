@@ -1,15 +1,19 @@
 {
   "scheme": 1,
-  "version": "2024-04-01 21:55 +0800",
+  "version": "2024-04-04 09:00 +0800",
   "android": {
-    "securityPatchLevel": "2024-03-05",
+    "securityPatchLevel": "2024-04-05",
     "googlePlaySystemUpdates": "2024-01-01",
     "build": {
-      "version": "2024-03-05",
+      "version": "2024-04-01",
       "details": [
         {
-          "id": "AP1A.240305.019.A1",
-          "revision": "r29"
+          "id": "AP1A.240405.002",
+          "revision": "r30"
+        },
+        {
+          "id": "AP1A.240405.002.A1",
+          "revision": "r31"
         }
       ]
     },
@@ -21,7 +25,7 @@
     "stablePreview": {
       "name": "UpsideDownCake",
       "api": "34",
-      "version": "14 QPR3 Beta 2, UpsideDownCake"
+      "version": "14 QPR3 Beta 2.1, UpsideDownCake"
     },
     "support": {
       "name": "SnowCone",
@@ -43,8 +47,8 @@
   "linux": {
     "google": {
       "versions": [
-        "6.6.23",
-        "6.1.83",
+        "6.6.24",
+        "6.1.84",
         "5.15.153",
         "5.10.214",
         "5.4.273",
@@ -71,10 +75,10 @@
   },
   "webView": {
     "stable": {
-      "version": "123.0.6312.80"
+      "version": "123.0.6312.99"
     },
     "beta": {
-      "version": "124.0.6367.18"
+      "version": "124.0.6367.28"
     }
   }
 }
