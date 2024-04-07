@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2024-04-04 09:00 +0800",
+  "version": "2024-04-07 18:35 +0800",
   "android": {
     "securityPatchLevel": "2024-04-05",
     "googlePlaySystemUpdates": "2024-01-01",
@@ -47,7 +47,7 @@
   "linux": {
     "google": {
       "versions": [
-        "6.6.24",
+        "6.6.25",
         "6.1.84",
         "5.15.153",
         "5.10.214",
