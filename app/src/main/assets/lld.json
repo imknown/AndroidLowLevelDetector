@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2024-04-08 19:05 +0800",
+  "version": "2024-04-10 19:55 +0800",
   "android": {
     "securityPatchLevel": "2024-04-05",
     "googlePlaySystemUpdates": "2024-01-01",
@@ -70,7 +70,7 @@
       "version": "0.8.10"
     },
     "master": {
-      "version": "0.8.10"
+      "version": "0.8.11"
     }
   },
   "webView": {
