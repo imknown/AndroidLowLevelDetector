@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2024-04-17 19:10 +0800",
+  "version": "2024-04-18 18:30 +0800",
   "android": {
     "securityPatchLevel": "2024-04-05",
     "googlePlaySystemUpdates": "2024-01-01",
@@ -14,6 +14,14 @@
         {
           "id": "AP1A.240405.002.A1",
           "revision": "r31"
+        },
+        {
+          "id": "AP1A.240405.002.A2",
+          "revision": "r32"
+        },
+        {
+          "id": "AP1A.240405.002.B1",
+          "revision": "r33"
         }
       ]
     },
@@ -78,7 +86,7 @@
       "version": "124.0.6367.54"
     },
     "beta": {
-      "version": "124.0.6367.54"
+      "version": "125.0.6422.3"
     }
   }
 }
