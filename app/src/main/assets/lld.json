@@ -1,11 +1,11 @@
 {
   "scheme": 1,
-  "version": "2024-05-06 18:50 +0800",
+  "version": "2024-05-07 19:10 +0800",
   "android": {
-    "securityPatchLevel": "2024-04-05",
-    "googlePlaySystemUpdates": "2024-01-01",
+    "securityPatchLevel": "2024-05-05",
+    "googlePlaySystemUpdates": "2024-05-01",
     "build": {
-      "version": "2024-04-01",
+      "version": "2024-04-15",
       "details": [
         {
           "id": "AP1A.240405.002",
