@@ -1,11 +1,11 @@
 {
   "scheme": 1,
-  "version": "2024-05-13 18:45 +0800",
+  "version": "2024-05-15 18:55 +0800",
   "android": {
     "securityPatchLevel": "2024-05-05",
     "googlePlaySystemUpdates": "2024-05-01",
     "build": {
-      "version": "2024-05-07",
+      "version": "2024-05-14",
       "details": [
         {
           "id": "AP1A.240505.004",
@@ -22,6 +22,26 @@
         {
           "id": "AP1A.240505.005.B1",
           "revision": "r37"
+        },
+        {
+          "id": "UD2A.240505.001",
+          "revision": "r41"
+        },
+        {
+          "id": "UD2A.240505.001.A1",
+          "revision": "r42"
+        },
+        {
+          "id": "UD2A.240505.001.B1",
+          "revision": "r43"
+        },
+        {
+          "id": "UD2A.240505.001.D1",
+          "revision": "r44"
+        },
+        {
+          "id": "UD2A.240505.001.W1",
+          "revision": "r45"
         }
       ]
     },
