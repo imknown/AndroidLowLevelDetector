@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2024-05-15 18:55 +0800",
+  "version": "2024-05-16 18:45 +0800",
   "android": {
     "securityPatchLevel": "2024-05-05",
     "googlePlaySystemUpdates": "2024-05-01",
@@ -63,7 +63,7 @@
     "preview": {
       "name": "VanillaIceCream",
       "api": "35",
-      "version": "15 Beta 1.2, VanillaIceCream",
+      "version": "15 Beta 2, VanillaIceCream",
       "phase": ""
     },
     "internal": {
@@ -103,10 +103,10 @@
   },
   "webView": {
     "stable": {
-      "version": "125.0.6422.35"
+      "version": "125.0.6422.53"
     },
     "beta": {
-      "version": "125.0.6422.34"
+      "version": "125.0.6422.53"
     }
   }
 }
