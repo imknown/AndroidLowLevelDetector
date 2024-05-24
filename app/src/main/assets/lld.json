@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2024-05-22 20:45 +0800",
+  "version": "2024-05-24 18:55 +0800",
   "android": {
     "securityPatchLevel": "2024-05-05",
     "googlePlaySystemUpdates": "2024-05-01",
@@ -53,7 +53,7 @@
     "stablePreview": {
       "name": "UpsideDownCake",
       "api": "34",
-      "version": "14 QPR3 Beta 2.1, UpsideDownCake"
+      "version": "14 QPR3 Beta 2.2, UpsideDownCake"
     },
     "support": {
       "name": "SnowCone",
@@ -103,10 +103,10 @@
   },
   "webView": {
     "stable": {
-      "version": "125.0.6422.72"
+      "version": "125.0.6422.113"
     },
     "beta": {
-      "version": "126.0.6478.8"
+      "version": "126.0.6478.17"
     }
   }
 }
