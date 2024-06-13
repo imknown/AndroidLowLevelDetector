@@ -1,47 +1,15 @@
 {
   "scheme": 1,
-  "version": "2024-06-10 09:15 +0800",
+  "version": "2024-06-13 21:15 +0800",
   "android": {
     "securityPatchLevel": "2024-06-05",
     "googlePlaySystemUpdates": "2024-06-01",
     "build": {
-      "version": "2024-05-14",
+      "version": "2024-05-18",
       "details": [
         {
-          "id": "AP1A.240505.004",
-          "revision": "r34"
-        },
-        {
-          "id": "AP1A.240505.005",
-          "revision": "r35"
-        },
-        {
-          "id": "AP1A.240505.005.A1",
-          "revision": "r36"
-        },
-        {
-          "id": "AP1A.240505.005.B1",
-          "revision": "r37"
-        },
-        {
-          "id": "UD2A.240505.001",
-          "revision": "r41"
-        },
-        {
-          "id": "UD2A.240505.001.A1",
-          "revision": "r42"
-        },
-        {
-          "id": "UD2A.240505.001.B1",
-          "revision": "r43"
-        },
-        {
-          "id": "UD2A.240505.001.D1",
-          "revision": "r44"
-        },
-        {
-          "id": "UD2A.240505.001.W1",
-          "revision": "r45"
+          "id": "AP2A.240605.024",
+          "revision": "r50"
         }
       ]
     },
@@ -75,8 +43,8 @@
   "linux": {
     "google": {
       "versions": [
-        "6.6.32",
-        "6.1.92",
+        "6.6.33",
+        "6.1.93",
         "5.15.160",
         "5.10.218",
         "5.4.277",
@@ -103,10 +71,10 @@
   },
   "webView": {
     "stable": {
-      "version": "126.0.6478.40"
+      "version": "126.0.6478.50"
     },
     "beta": {
-      "version": "126.0.6478.40"
+      "version": "127.0.6533.2"
     }
   }
 }
