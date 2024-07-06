@@ -1,19 +1,23 @@
 {
   "scheme": 1,
-  "version": "2024-07-02 21:00 +0800",
+  "version": "2024-07-06 16:20 +0800",
   "android": {
-    "securityPatchLevel": "2024-06-05",
-    "googlePlaySystemUpdates": "2024-06-01",
+    "securityPatchLevel": "2024-07-05",
+    "googlePlaySystemUpdates": "2024-07-01",
     "build": {
-      "version": "2024-06-17",
+      "version": "2024-07-02",
       "details": [
         {
-          "id": "AP2A.240605.024",
-          "revision": "r50"
+          "id": "AP2A.240705.004",
+          "revision": "r52"
         },
         {
-          "id": "AP2A.240605.024.A1",
-          "revision": "r51"
+          "id": "AP2A.240705.005",
+          "revision": "r53"
+        },
+        {
+          "id": "AP2A.240705.005.A1",
+          "revision": "r54"
         }
       ]
     },
@@ -47,12 +51,12 @@
   "linux": {
     "google": {
       "versions": [
-        "6.6.36",
-        "6.1.96",
-        "5.15.161",
-        "5.10.220",
-        "5.4.278",
-        "4.19.316"
+        "6.6.37",
+        "6.1.97",
+        "5.15.162",
+        "5.10.221",
+        "5.4.279",
+        "4.19.317"
       ]
     },
     "mainline": {
