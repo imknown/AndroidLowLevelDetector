@@ -146,6 +146,10 @@ android {
     lint {
         checkDependencies = true
     }
+
+    packaging {
+        resources.excludes += "DebugProbesKt.bin"
+    }
 }
 
 tasks.whenTaskAdded {
