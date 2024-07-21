@@ -211,7 +211,7 @@
     <string name="about_licenses_key" translatable="false">about_licenses_key</string>
     <string name="about_licenses_title">License</string>
     <string name="about_licenses_summary">Referenced open-source repositories</string>
-    <string name="about_licenses_uri" translatable="false">https://github.com/imknown/AndroidLowLevelDetector/blob/master/buildSrc/src/main/java/Versions.kt</string>
+    <string name="about_licenses_uri" translatable="false">https://github.com/imknown/AndroidLowLevelDetector/blob/master/gradle/toml</string>
 
     <string name="about_translator_more_info_key" translatable="false">about_translator_more_info_key</string>
     <string name="translation_language_and_translator">English (US), translator: imknown</string>
