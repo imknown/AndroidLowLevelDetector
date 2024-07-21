@@ -1,83 +1,88 @@
 {
   "scheme": 1,
-  "version": "2023-07-08 06:45 +0800",
+  "version": "2024-07-19 19:15 +0800",
   "android": {
-    "securityPatchLevel": "2023-07-05",
-    "googlePlaySystemUpdates": "2023-07-01",
+    "securityPatchLevel": "2024-07-05",
+    "googlePlaySystemUpdates": "2024-07-01",
     "build": {
-      "version": "2023-07-07",
+      "version": "2024-07-02",
       "details": [
         {
-          "id": "TQ3A.230705.001",
-          "revision": "r61"
+          "id": "AP2A.240705.004",
+          "revision": "r52"
         },
         {
-          "id": "TQ3A.230705.001.A1",
-          "revision": "r62"
+          "id": "AP2A.240705.005",
+          "revision": "r53"
         },
         {
-          "id": "TQ3A.230705.001.B4",
-          "revision": "r63"
+          "id": "AP2A.240705.005.A1",
+          "revision": "r54"
         }
       ]
     },
     "stable": {
-      "name": "Tiramisu",
-      "api": "33",
-      "version": "13, Tiramisu"
-    },
-    "support": {
-      "name": "RedVelvetCake",
-      "api": "30",
-      "version": "11, RedVelvetCake"
-    },
-    "preview": {
       "name": "UpsideDownCake",
       "api": "34",
-      "version": "14 Beta 3.1, UpsideDownCake",
+      "version": "14, UpsideDownCake"
+    },
+    "stablePreview": {
+      "name": "UpsideDownCake",
+      "api": "34",
+      "version": "14 QPR3 Beta 2.2, UpsideDownCake"
+    },
+    "support": {
+      "name": "SnowCone",
+      "api": "31",
+      "version": "12, SnowCone"
+    },
+    "preview": {
+      "name": "VanillaIceCream",
+      "api": "35",
+      "version": "15 Beta 4, VanillaIceCream",
       "phase": ""
     },
     "internal": {
-      "name": "VanillaIceCream",
-      "api": "35",
-      "version": "15 Alpha, VanillaIceCream"
+      "name": "W",
+      "api": "36",
+      "version": "16 internal, W"
     }
   },
   "linux": {
     "google": {
       "versions": [
-        "6.1.38",
-        "5.15.120",
-        "5.10.186",
-        "5.4.249",
-        "4.19.288",
-        "4.14.320"
+        "6.6.41",
+        "6.1.100",
+        "5.15.163",
+        "5.10.222",
+        "5.4.280",
+        "4.19.318"
       ]
     },
     "mainline": {
-      "version": "6.4"
+      "version": "6.10"
     }
   },
   "toybox": {
     "stable": {
-      "version": "0.8.6"
+      "version": "0.8.9"
     },
     "support": {
-      "version": "0.8.3"
+      "version": "0.8.4"
     },
     "mainline": {
-      "version": "0.8.9"
+      "version": "0.8.11"
     },
     "master": {
-      "version": "0.8.9"
+      "version": "0.8.11"
     }
   },
   "webView": {
     "stable": {
-      "version": "114.0.5735.196"
+      "version": "127.0.6533.51"
     },
     "beta": {
-      "version": "115.0.5790.69"
+      "version": "127.0.6533.51"
     }
   }
 }
