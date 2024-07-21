@@ -1,0 +1,35 @@
+[versions]
+# https://github.com/topjohnwu/libsu/releases
+libsu = "6.0.0"
+
+# https://github.com/square/leakcanary/releases
+leakCanary = "2.14"
+leakCanary-alpha = "v3.0-alpha-8"
+
+# https://github.com/kittinunf/fuel/releases
+fuel = "2.3.1"
+fuel-alpha = "3.0.0-alpha03"
+
+# https://github.com/G00fY2/version-compare/releases
+versionCompare = "1.5.0"
+
+# https://github.com/RikkaApps/Shizuku-API#add-dependency
+shizuku = "13.1.5"
+
+[libraries]
+libsu = { group = "com.github.topjohnwu.libsu", name = "core", version.ref = "libsu" }
+
+leakCanary-android = { group = "com.squareup.leakcanary", name = "leakcanary-android", version.ref = "leakCanary" }
+leakCanary-plumber-android = { group = "com.squareup.leakcanary", name = "plumber-android", version.ref = "leakCanary" }
+
+fuel = { group = "com.github.kittinunf.fuel", name = "fuel", version.ref = "fuel" }
+fuel-coroutines = { group = "com.github.kittinunf.fuel", name = "fuel-coroutines", version.ref = "fuel" }
+
+versionCompare = { group = "io.github.g00fy2", name = "versioncompare", version.ref = "versionCompare" }
+
+shizuku-api = { group = "dev.rikka.shizuku", name = "api", version.ref = "shizuku" }
+shizuku-provider = { group = "dev.rikka.shizuku", name = "provider", version.ref = "shizuku" }
+
+[bundles]
+
+[plugins]

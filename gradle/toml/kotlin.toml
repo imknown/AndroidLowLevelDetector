@@ -1,0 +1,28 @@
+[versions]
+# https://github.com/JetBrains/kotlin/releases
+kotlin = "2.0.0"
+kotlin-rc = "2.0.10-RC"
+kotlin-beta = "2.0.20-Beta2"
+
+# https://github.com/Kotlin/kotlinx.coroutines/releases
+kotlinx-coroutines = "1.8.1"
+kotlinx-coroutines-rc = "1.9.0-RC"
+
+# https://github.com/Kotlin/kotlinx.serialization/releases
+kotlinx-serialization = "1.7.1"
+
+# https://github.com/ktorio/ktor/releases
+ktor = "2.3.12"
+ktor-beta = "3.0.0-beta-2"
+
+[libraries]
+kotlin = { group = "org.jetbrains.kotlin", name = "stdlib-jdk8", version.ref = "kotlin" }
+kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+
+[bundles]
+
+[plugins]
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+
+kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

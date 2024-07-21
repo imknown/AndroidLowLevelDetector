@@ -1,38 +1,33 @@
 import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
-import org.gradle.configurationcache.extensions.capitalized
 import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
-    id("com.android.application")
+    alias(libsAndroid.plugins.android.application)
 
-    id("kotlin-android")
-
-    kotlin("plugin.serialization")
-
-    id("com.google.gms.google-services")
-    id("com.google.firebase.crashlytics")
+    alias(libsKotlin.plugins.kotlin.android)
+    alias(libsKotlin.plugins.kotlinx.serialization)
 }
 
 android {
-    compileSdk = Versions.AndroidBuild.compileSdk
-    // compileSdkExtension = Versions.AndroidBuild.compileSdkExtension
-    // compileSdkPreview = Versions.AndroidBuild.compileSdkPreview
-    buildToolsVersion = Versions.AndroidBuild.buildTools
+    namespace = "net.imknown.android.forefrontinfo"
+
+    compileSdk = libsBuild.versions.compileSdk.get().toInt()
+    // compileSdkExtension = libsBuild.versions.compileSdkExtension.get().toInt()
+    // compileSdkPreview = libsBuild.versions.compileSdkPreview.get()
+    buildToolsVersion = libsBuild.versions.buildTools.get()
 
     defaultConfig {
-        namespace = "net.imknown.android.forefrontinfo"
-
-        versionCode = Versions.AndroidBuild.versionCode
-        versionName = Versions.AndroidBuild.versionName
+        versionCode = libsBuild.versions.versionCode.get().toInt()
+        versionName = libsBuild.versions.versionName.get()
 
         val currentDatetime = getCurrentDatetime()
         val currentGitBranchName = providers.execute("git", "rev-parse", "--abbrev-ref", "HEAD")
         base.archivesName.set("lld-$versionName-$versionCode-$currentDatetime-$currentGitBranchName")
 
-        minSdk = Versions.AndroidBuild.minSdk
-        targetSdk = Versions.AndroidBuild.targetSdk
-        // targetSdkPreview = Versions.AndroidBuild.targetSdkPreview
+        minSdk = libsBuild.versions.minSdk.get().toInt()
+        targetSdk = libsBuild.versions.targetSdk.get().toInt()
+        // targetSdkPreview = libsBuild.versions.targetSdkPreview.get()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -40,8 +35,9 @@ android {
 
         buildConfigField("String", "GIT_BRANCH", "\"$currentGitBranchName\"")
 
-        ndkVersion = Versions.AndroidBuild.ndk
+        ndkVersion = libsBuild.versions.ndk.get()
 
+        @Suppress("UnstableApiUsage")
         externalNativeBuild {
             cmake {
                 arguments += listOf("-DANDROID_ARM_NEON=TRUE", "-DANDROID_TOOLCHAIN=clang")
@@ -87,8 +83,8 @@ android {
     flavorDimensions += IssueTracker::class.simpleName.toString()
 
     productFlavors {
-        create(IssueTracker.foss.name)
-        create(IssueTracker.firebase.name)
+        create(IssueTracker.Foss.name)
+        create(IssueTracker.Firebase.name)
     }
 
     buildTypes {
@@ -104,10 +100,6 @@ android {
                 "proguard-firebase-rules.pro",
                 "proguard-rules-kotlinx-serialization-json.pro"
             )
-
-            configure<CrashlyticsExtension> {
-                nativeSymbolUploadEnabled = true
-            }
         }
 
         debug {
@@ -134,7 +126,7 @@ android {
     externalNativeBuild {
         cmake {
             path("CMakeLists.txt")
-            version = Versions.AndroidBuild.cmake
+            version = libsBuild.versions.cmake.get()
         }
     }
 
@@ -150,13 +142,20 @@ android {
     packaging {
         resources.excludes += "DebugProbesKt.bin"
     }
-}
 
-tasks.whenTaskAdded {
-    val flavorNone = IssueTracker.foss.name.capitalized()
-    if (name.startsWith("process$flavorNone") && name.endsWith("GoogleServices")) {
-        println("Task $name disabled.")
-        enabled = false
+    applicationVariants.forEach { variant ->
+        if (variant.flavorName == IssueTracker.Firebase.name) {
+            plugins {
+                alias(libsGoogle.plugins.googleServices)
+                alias(libsGoogle.plugins.firebase.crashlytics)
+            }
+
+            if (variant.buildType.name == "release") {
+                configure<CrashlyticsExtension> {
+                    nativeSymbolUploadEnabled = true
+                }
+            }
+        }
     }
 }
 
@@ -165,34 +164,35 @@ dependencies {
 
     implementation(project(":base"))
 
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:${Versions.desugarJdkLibs}")
+    coreLibraryDesugaring(libsAndroid.desugarJdkLibs)
 
     // region [AndroidX]
-    implementation("androidx.cardview:cardview:${Versions.AndroidX.cardView}")
+    implementation(libsAndroid.cardView)
 
-    implementation("androidx.constraintlayout:constraintlayout:${Versions.AndroidX.constraintLayout}")
+    implementation(libsAndroid.constraintLayout)
 
-    implementation("androidx.coordinatorlayout:coordinatorlayout:${Versions.AndroidX.coordinatorLayout}")
+    implementation(libsAndroid.coordinatorLayout)
 
-    implementation("androidx.recyclerview:recyclerview:${Versions.AndroidX.recyclerView}")
+    implementation(libsAndroid.recyclerView)
 
-    implementation("androidx.swiperefreshlayout:swiperefreshlayout:${Versions.AndroidX.swipeRefreshLayout}")
-    implementation("androidx.webkit:webkit:${Versions.AndroidX.webkit}")
+    implementation(libsAndroid.swipeRefreshLayout)
+    implementation(libsAndroid.webkit)
     // endregion [AndroidX]
 
     // region [Test]
-    androidTestImplementation("androidx.test:core-ktx:${Versions.AndroidX.Test.core}")
-    androidTestImplementation("androidx.test.espresso:espresso-core:${Versions.AndroidX.Test.espressoCore}")
-    androidTestImplementation("androidx.test.ext:junit-ktx:${Versions.AndroidX.Test.extJunit}")
+    testImplementation(libsAndroid.junit)
+    androidTestImplementation(libsAndroid.test.core)
+    androidTestImplementation(libsAndroid.test.espresso.core)
+    androidTestImplementation(libsAndroid.test.ext.junit)
     // endregion [Test]
 
     // region [3rd Parties]
-    debugImplementation("com.squareup.leakcanary:leakcanary-android:${Versions.ThirdParties.leakCanary}")
-    // implementation ("com.squareup.leakcanary:plumber-android:${Versions.ThirdParties.leakCanary}")
+    debugImplementation(libsThirdParty.leakCanary.android)
+    // implementation(libsThirdParty.leakCanary.plumber.android)
     // endregion [3rd Parties]
 
-    val firebaseImplementation = IssueTracker.firebase.name + "Implementation"
-    firebaseImplementation(platform("com.google.firebase:firebase-bom:${Versions.Firebase.billOfMaterials}"))
-    firebaseImplementation("com.google.firebase:firebase-analytics-ktx")
-    firebaseImplementation("com.google.firebase:firebase-crashlytics-ndk")
+    val firebaseImplementation = IssueTracker.Firebase.name + "Implementation"
+    firebaseImplementation(platform(libsGoogle.firebase.bom))
+    firebaseImplementation(libsGoogle.firebase.analytics)
+    firebaseImplementation(libsGoogle.firebase.crashlytics.ndk)
 }

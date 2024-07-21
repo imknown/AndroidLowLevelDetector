@@ -1,0 +1,25 @@
+[versions]
+# https://developer.android.com/studio/releases/build-tools.html#notes
+buildTools = "35.0.0"
+
+minSdk = "21"
+
+compileSdk = "35"
+compileSdkPreview = "VanillaIceCream"
+
+compileSdkExtension = "13"
+
+targetSdk = "35"
+targetSdkPreview = "VanillaIceCream"
+
+ndk = "27.0.12077973"
+cmake = "3.22.1"
+
+versionCode = "62"
+versionName = "1.17.0_unpublished"
+
+[libraries]
+
+[bundles]
+
+[plugins]

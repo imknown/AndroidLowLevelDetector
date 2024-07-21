@@ -1,20 +1,19 @@
 plugins {
-    id("com.android.library")
+    alias(libsAndroid.plugins.android.library)
 
-    kotlin("android")
+    alias(libsKotlin.plugins.kotlin.android)
 }
 
 android {
-    compileSdk = Versions.AndroidBuild.compileSdk
-    // compileSdkExtension = Versions.AndroidBuild.compileSdkExtension
-    // compileSdkPreview = Versions.AndroidBuild.compileSdkPreview
-    buildToolsVersion = Versions.AndroidBuild.buildTools
+    namespace = "net.imknown.android.forefrontinfo.base"
+
+    compileSdk = libsBuild.versions.compileSdk.get().toInt()
+    // compileSdkExtension = libsBuild.versions.compileSdkExtension.get().toInt()
+    // compileSdkPreview = libsBuild.versions.compileSdkPreview.get()
+    buildToolsVersion = libsBuild.versions.buildTools.get()
 
     defaultConfig {
-        namespace = "net.imknown.android.forefrontinfo.base"
-
-        minSdk = Versions.AndroidBuild.minSdk
-        // targetSdkPreview = Versions.AndroidBuild.targetSdkPreview
+        minSdk = libsBuild.versions.minSdk.get().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -54,57 +53,55 @@ android {
 dependencies {
     api(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:${Versions.desugarJdkLibs}")
+    coreLibraryDesugaring(libsAndroid.desugarJdkLibs)
 
-    api("com.google.android.material:material:${Versions.material}")
+    api(libsGoogle.material)
 
     // region [AndroidX]
-    api("androidx.activity:activity-ktx:${Versions.AndroidX.activity}")
+    api(libsAndroid.activity)
 
-    api("androidx.annotation:annotation:${Versions.AndroidX.annotation}")
-    api("androidx.annotation:annotation-experimental:${Versions.AndroidX.annotationExperimental}")
+    api(libsAndroid.annotation)
+    api(libsAndroid.annotation.experimental)
 
-    api("androidx.appcompat:appcompat:${Versions.AndroidX.appcompat}")
-    api("androidx.appcompat:appcompat-resources:${Versions.AndroidX.appcompat}")
+    api(libsAndroid.appcompat)
+    api(libsAndroid.appcompat.resources)
 
-    api("androidx.arch.core:core-common:${Versions.AndroidX.archCore}")
-    api("androidx.arch.core:core-runtime:${Versions.AndroidX.archCore}")
+    api(libsAndroid.arch.core.common)
+    api(libsAndroid.arch.core.runtime)
 
-    api("androidx.core:core-ktx:${Versions.AndroidX.core}")
+    api(libsAndroid.core)
 
-    api("androidx.fragment:fragment-ktx:${Versions.AndroidX.fragment}")
+    api(libsAndroid.fragment)
 
-    api("androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.AndroidX.lifecycle}")
-    api("androidx.lifecycle:lifecycle-runtime-ktx:${Versions.AndroidX.lifecycle}")
-    api("androidx.lifecycle:lifecycle-viewmodel-savedstate:${Versions.AndroidX.lifecycle}")
+    api(libsAndroid.lifecycle.viewmodel)
+    api(libsAndroid.lifecycle.viewmodel.savedstate)
 
-    api("androidx.preference:preference-ktx:${Versions.AndroidX.preference}")
+    api(libsAndroid.preference)
 
-    api("androidx.savedstate:savedstate:${Versions.AndroidX.savedState}")
-    // endregion [AndroidX]
+    api(libsAndroid.savedState)
 
     // region [Test]
-    androidTestImplementation("androidx.test:core-ktx:${Versions.AndroidX.Test.core}")
-    androidTestImplementation("androidx.test.espresso:espresso-core:${Versions.AndroidX.Test.espressoCore}")
-    androidTestImplementation("androidx.test.ext:junit-ktx:${Versions.AndroidX.Test.extJunit}")
+    testImplementation(libsAndroid.junit)
+    androidTestImplementation(libsAndroid.test.core)
+    androidTestImplementation(libsAndroid.test.espresso.core)
+    androidTestImplementation(libsAndroid.test.ext.junit)
     // endregion [Test]
+    // endregion [AndroidX]
 
     // region [Kotlin]
-    api(kotlin("stdlib-jdk8:${Versions.Kotlin.kotlin}"))
-    // api(kotlin("reflect:${Versions.Kotlin.kotlin}"))
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.Kotlin.coroutines}")
-    api("org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.Kotlin.serialization}")
+    api(libsKotlin.kotlinx.coroutines.android)
+    api(libsKotlin.kotlinx.serialization.json)
     // endregion [Kotlin]
 
     // region [3rd Parties]
-    api("com.github.topjohnwu.libsu:core:${Versions.ThirdParties.libsu}")
+    api(libsThirdParty.libsu)
 
-    api("com.github.kittinunf.fuel:fuel:${Versions.ThirdParties.fuel}")
-    // api("com.github.kittinunf.fuel:fuel-coroutines:$thirdParties.fuel")
+    api(libsThirdParty.fuel)
+    // api(libsThirdParty.fuel.coroutines)
 
-    api("io.github.g00fy2:versioncompare:${Versions.ThirdParties.versionCompare}")
+    api(libsThirdParty.versionCompare)
 
-    api("dev.rikka.shizuku:api:${Versions.ThirdParties.shizuku}")
-    api("dev.rikka.shizuku:provider:${Versions.ThirdParties.shizuku}")
+    api(libsThirdParty.shizuku.api)
+    api(libsThirdParty.shizuku.provider)
     // endregion [3rd Parties]
 }

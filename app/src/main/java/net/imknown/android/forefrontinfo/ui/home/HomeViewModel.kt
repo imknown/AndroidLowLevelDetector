@@ -848,10 +848,9 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
                     val flags = PackageManager.PackageInfoFlags.of(0)
                     packageManager.getPackageInfo(moduleProvider, flags)
                 } else {
-                    @Suppress("Deprecation")
                     packageManager.getPackageInfo(moduleProvider, 0)
                 }
-                versionName = packageInfo.versionName
+                versionName = packageInfo?.versionName ?: ""
 
                 if (versionName >= latestGooglePlaySystemUpdates
                     || "$versionName-01" >= latestGooglePlaySystemUpdates
@@ -993,7 +992,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         @StringRes val result: Int
         @AttrRes val color: Int
         when (storageEncryptionStatus) {
-            DevicePolicyManager.ENCRYPTION_STATUS_ACTIVATING,
+            // DevicePolicyManager.ENCRYPTION_STATUS_ACTIVATING,
             DevicePolicyManager.ENCRYPTION_STATUS_ACTIVE,
             DevicePolicyManager.ENCRYPTION_STATUS_ACTIVE_PER_USER -> {
                 result = R.string.result_encrypted
@@ -1121,7 +1120,6 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
             val flags = PackageManager.PackageInfoFlags.of(0)
             packageManager.getPackageInfo(packageName, flags)
         } else {
-            @Suppress("Deprecation")
             packageManager.getPackageInfo(packageName, 0)
         }
     } catch (e: Exception) {
@@ -1151,11 +1149,11 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
                 builtInResult += with(webViewProviderInfo) {
                     val packageInfo = getPackageInfo(packageName)
                     val isInstalled = if (packageInfo != null) {
-                        packageInfo.versionName.also {
+                        packageInfo.versionName?.also {
                             if (Version(it).isHigherThan(builtInVersionName)) {
                                 builtInVersionName = it
                             }
-                        }
+                        } ?: MyApplication.getMyString(android.R.string.unknownName)
                     } else {
                         MyApplication.getMyString(R.string.webview_built_in_not_installed)
                     }
@@ -1287,7 +1285,6 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
             val flags = PackageManager.ApplicationInfoFlags.of(0)
             packageManager.getInstalledApplications(flags)
         } else {
-            @Suppress("Deprecation")
             packageManager.getInstalledApplications(0)
         }
         var systemApkList = installedApplications.filter {

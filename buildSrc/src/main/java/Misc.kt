@@ -1,3 +1,3 @@
 enum class IssueTracker {
-    foss, firebase
+    Foss, Firebase
 }

@@ -20,6 +20,8 @@ interface IAndroidVersion {
     fun isAtLeastStableAndroid11() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
     fun isAtLeastStableAndroid12() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
     fun isAtLeastStableAndroid13() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+    // fun isAtLeastStableAndroid14() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE
+    // fun isAtLeastStableAndroid15() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM
 
     fun isStableAndroid() = Build.VERSION.CODENAME == CODENAME_RELEASE
     fun isPreviewAndroid() = !isStableAndroid()
