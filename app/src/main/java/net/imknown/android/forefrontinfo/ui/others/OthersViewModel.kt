@@ -14,7 +14,6 @@ import net.imknown.android.forefrontinfo.ui.base.IAndroidVersion
 import net.imknown.android.forefrontinfo.ui.base.list.BasePureListViewModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.home.HomeViewModel
-import java.util.*
 
 class OthersViewModel : BasePureListViewModel(), IAndroidVersion {
 

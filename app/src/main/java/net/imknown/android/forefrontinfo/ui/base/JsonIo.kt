@@ -2,7 +2,6 @@ package net.imknown.android.forefrontinfo.ui.base
 
 import android.content.res.AssetManager
 import android.util.Log
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication

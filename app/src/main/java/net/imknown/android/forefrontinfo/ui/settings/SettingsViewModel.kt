@@ -21,7 +21,7 @@ import net.imknown.android.forefrontinfo.base.mvvm.stringEventLiveData
 import net.imknown.android.forefrontinfo.ui.base.IAndroidVersion
 import net.imknown.android.forefrontinfo.ui.base.JsonIo
 import java.security.MessageDigest
-import java.util.*
+import java.util.Locale
 import net.imknown.android.forefrontinfo.base.R as BaseR
 
 class SettingsViewModel : BaseViewModel(), IAndroidVersion {

@@ -10,7 +10,8 @@ import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.ui.base.list.BasePureListViewModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
-import java.util.*
+import java.util.Locale
+import java.util.Properties
 import kotlin.reflect.KClass
 
 class PropViewModel : BasePureListViewModel() {

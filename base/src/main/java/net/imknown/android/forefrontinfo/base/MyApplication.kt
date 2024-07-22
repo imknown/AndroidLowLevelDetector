@@ -1,7 +1,11 @@
 package net.imknown.android.forefrontinfo.base
 
 import android.app.Application
-import android.content.*
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.content.SharedPreferences
 import android.os.Environment
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
