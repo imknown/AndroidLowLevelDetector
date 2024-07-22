@@ -97,8 +97,7 @@ android {
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
-                "proguard-firebase-rules.pro",
-                "proguard-rules-kotlinx-serialization-json.pro"
+                "proguard-firebase-rules.pro"
             )
         }
 
