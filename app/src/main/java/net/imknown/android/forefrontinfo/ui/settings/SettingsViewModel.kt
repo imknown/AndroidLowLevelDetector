@@ -107,7 +107,6 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
             val flags = PackageManager.PackageInfoFlags.of(0)
             packageManager.getPackageInfo(packageName, flags)
         } else {
-            @Suppress("Deprecation")
             packageManager.getPackageInfo(packageName, 0)
         }
         val firstInstallTime = packageInfo.firstInstallTime.formatToLocalZonedDatetimeString()
@@ -150,7 +149,6 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
                 )
                 packageManager.getPackageInfo(packageName, flags)
             } else {
-                @Suppress("Deprecation")
                 packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNING_CERTIFICATES)
             }
             packageInfo?.signingInfo?.apkContentsSigners
@@ -194,7 +192,6 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
             val flags = PackageManager.ApplicationInfoFlags.of(0)
             packageManager.getApplicationInfo(packageName, flags)
         } else {
-            @Suppress("Deprecation")
             packageManager.getApplicationInfo(packageName, 0)
         }
         packageManager.getApplicationLabel(applicationInfo) // applicationInfo.loadLabel(packageManager)
