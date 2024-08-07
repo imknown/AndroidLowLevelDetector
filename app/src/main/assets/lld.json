@@ -1,23 +1,31 @@
 {
   "scheme": 1,
-  "version": "2024-07-27 22:20 +0800",
+  "version": "2024-08-07 20:20 +0800",
   "android": {
-    "securityPatchLevel": "2024-07-05",
+    "securityPatchLevel": "2024-08-05",
     "googlePlaySystemUpdates": "2024-07-01",
     "build": {
-      "version": "2024-07-02",
+      "version": "2024-08-06",
       "details": [
         {
-          "id": "AP2A.240705.004",
-          "revision": "r52"
+          "id": "AP2A.240805.005",
+          "revision": "r55"
         },
         {
-          "id": "AP2A.240705.005",
-          "revision": "r53"
+          "id": "AP2A.240805.005.A1",
+          "revision": "r56"
         },
         {
-          "id": "AP2A.240705.005.A1",
-          "revision": "r54"
+          "id": "AP2A.240805.005.D1",
+          "revision": "r59"
+        },
+        {
+          "id": "AP2A.240805.005.E1",
+          "revision": "r60"
+        },
+        {
+          "id": "AP2A.240805.005.F1",
+          "revision": "r61"
         }
       ]
     },
@@ -39,7 +47,7 @@
     "preview": {
       "name": "VanillaIceCream",
       "api": "35",
-      "version": "15 Beta 4, VanillaIceCream",
+      "version": "15 Beta 4.1, VanillaIceCream",
       "phase": ""
     },
     "internal": {
@@ -51,8 +59,8 @@
   "linux": {
     "google": {
       "versions": [
-        "6.6.43",
-        "6.1.102",
+        "6.6.44",
+        "6.1.103",
         "5.15.164",
         "5.10.223",
         "5.4.281",
@@ -60,7 +68,7 @@
       ]
     },
     "mainline": {
-      "version": "6.10"
+      "version": "6.11-rc2"
     }
   },
   "toybox": {
@@ -79,10 +87,10 @@
   },
   "webView": {
     "stable": {
-      "version": "127.0.6533.64"
+      "version": "127.0.6533.103"
     },
     "beta": {
-      "version": "128.0.6613.6"
+      "version": "128.0.6613.14"
     }
   }
 }
