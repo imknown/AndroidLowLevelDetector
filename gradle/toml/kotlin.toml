@@ -1,8 +1,8 @@
 [versions]
 # https://github.com/JetBrains/kotlin/releases
-kotlin = "2.0.0"
-kotlin-rc = "2.0.10-RC"
-kotlin-beta = "2.0.20-Beta2"
+kotlin = "2.0.10"
+kotlin-rc = "2.0.20-RC"
+kotlin-beta = "placeholder"
 
 # https://github.com/Kotlin/kotlinx.coroutines/releases
 kotlinx-coroutines = "1.8.1"
