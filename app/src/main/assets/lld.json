@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2024-08-07 20:20 +0800",
+  "version": "2024-08-08 18:50 +0800",
   "android": {
     "securityPatchLevel": "2024-08-05",
     "googlePlaySystemUpdates": "2024-07-01",
@@ -14,6 +14,14 @@
         {
           "id": "AP2A.240805.005.A1",
           "revision": "r56"
+        },
+        {
+          "id": "AP2A.240805.005.B1",
+          "revision": "r57"
+        },
+        {
+          "id": "AP2A.240805.005.C1",
+          "revision": "r58"
         },
         {
           "id": "AP2A.240805.005.D1",
@@ -90,7 +98,7 @@
       "version": "127.0.6533.103"
     },
     "beta": {
-      "version": "128.0.6613.14"
+      "version": "128.0.6613.25"
     }
   }
 }
