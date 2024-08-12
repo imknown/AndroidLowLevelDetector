@@ -1,7 +1,6 @@
 # https://maven.google.com
 [versions]
-androidGradlePlugin = "8.5.2"
-androidGradlePlugin-rc = "8.6.0-rc01"
+androidGradlePlugin = "8.6.0-rc01"
 androidGradlePlugin-beta = "placeholder"
 androidGradlePlugin-canary = "8.7.0-canary04"
 
