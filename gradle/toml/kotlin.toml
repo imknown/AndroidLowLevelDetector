@@ -26,3 +26,5 @@ ktor-client = ["ktor-client-core", "ktor-client-okhttp", "ktor-client-logging"]
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+
+kotlinx-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
