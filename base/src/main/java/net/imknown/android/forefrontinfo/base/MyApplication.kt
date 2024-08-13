@@ -26,6 +26,8 @@ open class MyApplication : Application() {
     companion object {
         lateinit var instance: MyApplication
 
+        var userService: IUserService? = null
+
         val homeLanguageEvent: LiveData<Event<Unit>> by lazy { instance._homeLanguageEvent }
         val othersLanguageEvent: LiveData<Event<Unit>> by lazy { instance._othersLanguageEvent }
         val propLanguageEvent: LiveData<Event<Unit>> by lazy { instance._propLanguageEvent }

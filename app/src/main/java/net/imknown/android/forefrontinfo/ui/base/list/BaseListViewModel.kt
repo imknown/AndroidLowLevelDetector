@@ -16,7 +16,6 @@ import net.imknown.android.forefrontinfo.base.mvvm.BaseViewModel
 import net.imknown.android.forefrontinfo.base.mvvm.Event
 import net.imknown.android.forefrontinfo.base.mvvm.stringEventLiveData
 import net.imknown.android.forefrontinfo.base.property.PropertyManager
-import net.imknown.android.forefrontinfo.base.shell.ShellManager
 import net.imknown.android.forefrontinfo.base.shell.ShellResult
 import net.imknown.android.forefrontinfo.base.R as BaseR
 
@@ -109,7 +108,8 @@ abstract class BaseListViewModel : BaseViewModel() {
 
     protected fun sh(cmd: String, condition: Boolean = true): ShellResult {
         return if (condition) {
-            ShellManager.instance.execute(cmd)
+            MyApplication.userService?.execute(cmd) ?: ShellResult()
+//             ShellManager.instance.execute(cmd)
         } else {
             ShellResult()
         }

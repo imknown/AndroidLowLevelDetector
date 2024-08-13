@@ -2,6 +2,8 @@ plugins {
     alias(libsAndroid.plugins.android.library)
 
     alias(libsKotlin.plugins.kotlin.android)
+
+    alias(libsKotlin.plugins.kotlinx.parcelize)
 }
 
 android {
@@ -43,6 +45,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+        aidl = true
     }
 
     lint {

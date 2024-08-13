@@ -68,7 +68,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         // https://codelabs.developers.google.com/codelabs/using-Android-GSI?hl=en
         private const val PROP_DYNAMIC_PARTITIONS = "ro.boot.dynamic_partitions"
         private const val PROP_DYNAMIC_PARTITIONS_RETROFIT = "ro.boot.dynamic_partitions_retrofit"
-        // /* root needed */ private const val CMD_LL_DEV_BLOCK_SUPER = "ls -l /dev/block/by-name/super"
+         /* root needed */ private const val CMD_LL_DEV_BLOCK_SUPER = "ls -l /dev/block/by-name/super"
         // endregion [Dynamic Partitions]
 
         // region [Dynamic System]
@@ -703,8 +703,8 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         val isDynamicPartitionsRetrofit =
             getBooleanProperty(PROP_DYNAMIC_PARTITIONS_RETROFIT, isAtLeastStableAndroid10())
 
-//        val superPartitionResult = sh(CMD_LL_DEV_BLOCK_SUPER, isAtLeastStableAndroid10())
-//        val hasSuperPartition = isShellResultSuccessful(superPartitionResult)
+        val superPartitionResult = sh(CMD_LL_DEV_BLOCK_SUPER, isAtLeastStableAndroid10())
+        val hasSuperPartition = superPartitionResult.isSuccess
 
         val isDynamicPartitionsEnabled =
             isDynamicPartitions || isDynamicPartitionsRetrofit // || hasSuperPartition
