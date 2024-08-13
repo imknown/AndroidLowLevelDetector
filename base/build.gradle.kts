@@ -1,5 +1,7 @@
 plugins {
     alias(libsAndroid.plugins.lowleveldetector.android.library)
+
+    alias(libsKotlin.plugins.kotlinx.parcelize)
 }
 
 android {
