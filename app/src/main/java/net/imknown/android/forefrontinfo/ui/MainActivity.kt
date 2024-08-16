@@ -14,9 +14,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.commitNow
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.mvvm.IView
 import net.imknown.android.forefrontinfo.base.mvvm.viewBinding
@@ -40,7 +43,18 @@ class MainActivity : AppCompatActivity(), IView {
         initViews()
 
         if (savedInstanceState == null) {
-            //supportFragmentManager.switch(R.id.navigation_home, true)
+            lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    val state = MyApplication.instance.state
+                    state.collect { value: Boolean? ->
+                        if (value == null) {
+                            return@collect
+                        }
+                        state.value = null
+                        supportFragmentManager.switch(R.id.navigation_home)
+                    }
+                }
+            }
         }
     }
 
@@ -90,9 +104,9 @@ class MainActivity : AppCompatActivity(), IView {
         }
     }
 
-    private fun FragmentManager.switch(@IdRes selectedId: Int, isFirst: Boolean = false) {
+    private fun FragmentManager.switch(@IdRes selectedId: Int) {
         val lastId = mainViewModel.lastId
-        if (selectedId == lastId && !isFirst) {
+        if (selectedId == lastId) {
             return
         }
 

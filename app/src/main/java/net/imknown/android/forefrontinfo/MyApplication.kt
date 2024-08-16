@@ -21,7 +21,6 @@ import androidx.preference.PreferenceManager
 import com.google.android.material.color.DynamicColors
 import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import net.imknown.android.forefrontinfo.base.IUserService
 import net.imknown.android.forefrontinfo.base.mvvm.Event
 import net.imknown.android.forefrontinfo.base.property.PropertyManager
@@ -142,12 +141,11 @@ open class MyApplication : Application() {
         registerReceiver(receiver, IntentFilter(Intent.ACTION_LOCALE_CHANGED))
     }
 
-    private val _state = MutableStateFlow<Boolean?>(null)
-    val state: StateFlow<Boolean?> = _state
+    val state = MutableStateFlow<Boolean?>(null)
 
     private fun dealWithShizuku() {
         if (Shizuku.isPreV11() || !Shizuku.pingBinder()) {
-            _state.value = false
+            state.value = false
             return
         }
 
@@ -155,7 +153,7 @@ open class MyApplication : Application() {
             bindShizukuUserService()
         } else if (Shizuku.shouldShowRequestPermissionRationale()) {
             // User denied permission
-            _state.value = false
+            state.value = false
         } else {
             addRequestPermissionResultListener()
 
@@ -170,7 +168,7 @@ open class MyApplication : Application() {
             if (grantResult == PackageManager.PERMISSION_GRANTED) {
                 bindShizukuUserService()
             } else {
-                _state.value = false
+                state.value = false
             }
         }
 
@@ -180,13 +178,13 @@ open class MyApplication : Application() {
         try {
             if (Shizuku.getVersion() < 10) {
                 Log.i("bindUserService", "requires Shizuku API 10")
-                _state.value = false
+                state.value = false
             } else {
                 Shizuku.bindUserService(userServiceArgs, userServiceConnection)
             }
         } catch (tr: Throwable) {
             tr.printStackTrace()
-            _state.value = false
+            state.value = false
         }
     }
 
@@ -226,14 +224,14 @@ open class MyApplication : Application() {
                 try {
                     // Process: net.imknown.android.forefrontinfo.debug
                     // Thread: main
-                    _state.value = true
+                    state.value = true
                 }  catch (e: RemoteException) {
                     e.printStackTrace()
-                    _state.value = false
+                    state.value = false
                 }
             } else {
                 Log.e("zzz", "Invalid binder for $componentName")
-                _state.value = false
+                state.value = false
             }
         }
 

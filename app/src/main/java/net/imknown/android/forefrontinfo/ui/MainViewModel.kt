@@ -3,7 +3,6 @@ package net.imknown.android.forefrontinfo.ui
 import androidx.annotation.IdRes
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import net.imknown.android.forefrontinfo.R
 
 class MainViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
 
@@ -20,6 +19,5 @@ class MainViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
     }
 
     @IdRes
-    private fun getSavedStateLastId() = savedStateHandle[SAVED_STATE_HANDLE_KEY_LAST_ID]
-        ?: R.id.navigation_home
+    private fun getSavedStateLastId(): Int? = savedStateHandle[SAVED_STATE_HANDLE_KEY_LAST_ID]
 }
