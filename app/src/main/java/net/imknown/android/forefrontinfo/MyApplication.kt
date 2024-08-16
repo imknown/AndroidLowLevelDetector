@@ -13,27 +13,25 @@ import android.os.Environment
 import android.os.IBinder
 import android.os.RemoteException
 import android.util.Log
-import androidx.annotation.Keep
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.preference.PreferenceManager
 import com.google.android.material.color.DynamicColors
 import com.topjohnwu.superuser.Shell
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import net.imknown.android.forefrontinfo.base.IUserService
 import net.imknown.android.forefrontinfo.base.mvvm.Event
 import net.imknown.android.forefrontinfo.base.property.PropertyManager
 import net.imknown.android.forefrontinfo.base.property.impl.DefaultProperty
 import net.imknown.android.forefrontinfo.base.property.impl.ShizukuProperty
 import net.imknown.android.forefrontinfo.base.shell.ShellManager
-import net.imknown.android.forefrontinfo.base.shell.ShellResult
 import net.imknown.android.forefrontinfo.base.shell.impl.LibSuShell
 import rikka.shizuku.Shizuku
 import rikka.shizuku.Shizuku.UserServiceArgs
 import java.io.File
-import kotlin.system.exitProcess
 import net.imknown.android.forefrontinfo.base.R as baseR
 
 open class MyApplication : Application() {
@@ -144,29 +142,21 @@ open class MyApplication : Application() {
         registerReceiver(receiver, IntentFilter(Intent.ACTION_LOCALE_CHANGED))
     }
 
+    private val _state = MutableStateFlow<Boolean?>(null)
+    val state: StateFlow<Boolean?> = _state
 
     private fun dealWithShizuku() {
         if (Shizuku.isPreV11() || !Shizuku.pingBinder()) {
+            _state.value = false
             return
         }
 
         if (Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED) {
-            handleShizukuUserService()
+            bindShizukuUserService()
         } else if (Shizuku.shouldShowRequestPermissionRationale()) {
-            // Doing nothing is OK
+            // User denied permission
+            _state.value = false
         } else {
-            val shizukuFirstAskingKey =
-                getMyString(R.string.function_shizuku_first_asking_key)
-            val isShizukuFirstAsking =
-                sharedPreferences.getBoolean(shizukuFirstAskingKey, true)
-            if (!isShizukuFirstAsking) {
-                return
-            }
-
-            sharedPreferences.edit {
-                putBoolean(shizukuFirstAskingKey, false)
-            }
-
             addRequestPermissionResultListener()
 
             Shizuku.requestPermission(0)
@@ -178,23 +168,29 @@ open class MyApplication : Application() {
             removeRequestPermissionResultListener()
 
             if (grantResult == PackageManager.PERMISSION_GRANTED) {
-                handleShizukuUserService()
+                bindShizukuUserService()
+            } else {
+                _state.value = false
             }
         }
 
-    private fun handleShizukuUserService() {
+    private fun bindShizukuUserService() {
         PropertyManager.instance = PropertyManager(ShizukuProperty)
 
         try {
             if (Shizuku.getVersion() < 10) {
                 Log.i("bindUserService", "requires Shizuku API 10")
+                _state.value = false
             } else {
                 Shizuku.bindUserService(userServiceArgs, userServiceConnection)
             }
         } catch (tr: Throwable) {
             tr.printStackTrace()
+            _state.value = false
         }
+    }
 
+    private fun checkShizukuStatue() {
         try {
             if (Shizuku.getVersion() < 12) {
                 Log.i("peekUserService", "requires Shizuku API 12")
@@ -219,47 +215,6 @@ open class MyApplication : Application() {
         Shizuku.removeRequestPermissionResultListener(requestPermissionResultListener)
     }
 
-    /** Invoke on process `system_process` */
-    class UserService : IUserService.Stub {
-        /**
-         * Constructor is required.
-         */
-        @Suppress("unused")
-        constructor() {
-            Log.i("UserService", "constructor")
-        }
-
-        /**
-         * Constructor with Context. This is only available from Shizuku API v13.
-         *
-         * This method need to be annotated with [Keep] to prevent ProGuard from removing it.
-         *
-         * @param context Context created with createPackageContextAsUser
-         * @see [code used to create the instance of this class](https://github.com/RikkaApps/Shizuku-API/blob/672f5efd4b33c2441dbf609772627e63417587ac/server-shared/src/main/java/rikka/shizuku/server/UserService.java.L66)
-         */
-        @Suppress("unused")
-        @Keep
-        constructor(context: Context) {
-            Log.i("UserService", "constructor with Context: context=$context")
-        }
-
-        /** Reserved destroy method */
-        override fun destroy() {
-            Log.i("UserService", "destroy")
-            exitProcess(0)
-        }
-
-        override fun exit() {
-            destroy()
-        }
-
-        override fun execute(command: String): ShellResult {
-            ShellManager.instance = ShellManager(LibSuShell)
-            val a = ShellManager.instance.execute(command)
-            return a
-        }
-    }
-
     private val userServiceArgs: UserServiceArgs = UserServiceArgs(
         ComponentName(BuildConfig.APPLICATION_ID, UserService::class.java.getName())
     ).daemon(false).processNameSuffix("service").debuggable(BuildConfig.DEBUG).version(BuildConfig.VERSION_CODE)
@@ -271,11 +226,14 @@ open class MyApplication : Application() {
                 try {
                     // Process: net.imknown.android.forefrontinfo.debug
                     // Thread: main
+                    _state.value = true
                 }  catch (e: RemoteException) {
                     e.printStackTrace()
+                    _state.value = false
                 }
             } else {
                 Log.e("zzz", "Invalid binder for $componentName")
+                _state.value = false
             }
         }
 
@@ -284,19 +242,17 @@ open class MyApplication : Application() {
         }
     }
 
-//    override fun onDestroy() {
-//        super.onDestroy()
-//
-//        removeRequestPermissionResultListener()
-//
-//        try {
-//            if (Shizuku.getVersion() < 10) {
-//                Log.i("unbindUserService", "unbindUserService requires Shizuku API 10")
-//            } else {
-//                Shizuku.unbindUserService(userServiceArgs, userServiceConnection, true)
-//            }
-//        } catch (tr: Throwable) {
-//            tr.printStackTrace()
-//        }
-//    }
+    private fun destroyShizuku() {
+        removeRequestPermissionResultListener()
+
+        try {
+            if (Shizuku.getVersion() < 10) {
+                Log.i("unbindUserService", "unbindUserService requires Shizuku API 10")
+            } else {
+                Shizuku.unbindUserService(userServiceArgs, userServiceConnection, true)
+            }
+        } catch (tr: Throwable) {
+            tr.printStackTrace()
+        }
+    }
 }
