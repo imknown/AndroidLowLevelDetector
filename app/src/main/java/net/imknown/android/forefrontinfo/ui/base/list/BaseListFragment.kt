@@ -61,11 +61,11 @@ abstract class BaseListFragment : BaseFragment<FragmentListBinding>() {
 
         listViewModel.scrollBarMode.observe(viewLifecycleOwner, EventObserver {
             it?.let { scrollBarMode ->
-                listViewModel.setScrollBarMode(scrollBarMode)
+                listViewModel.setScrollBarMode(context, scrollBarMode)
             }
         })
 
-        listViewModel.init(savedInstanceState)
+        listViewModel.init(context, savedInstanceState)
     }
 
     private fun initViews(savedInstanceState: Bundle?) {

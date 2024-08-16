@@ -1,5 +1,6 @@
 package net.imknown.android.forefrontinfo.ui.base.list
 
+import android.content.Context
 import android.os.Bundle
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
@@ -10,12 +11,13 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.BuildConfig
+import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
-import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.mvvm.BaseViewModel
 import net.imknown.android.forefrontinfo.base.mvvm.Event
 import net.imknown.android.forefrontinfo.base.mvvm.stringEventLiveData
 import net.imknown.android.forefrontinfo.base.property.PropertyManager
+import net.imknown.android.forefrontinfo.base.shell.ShellManager
 import net.imknown.android.forefrontinfo.base.shell.ShellResult
 import net.imknown.android.forefrontinfo.base.R as BaseR
 
@@ -40,13 +42,13 @@ abstract class BaseListViewModel : BaseViewModel() {
 
     abstract fun collectModels(): Job
 
-    fun init(savedInstanceState: Bundle?) {
+    fun init(context: Context?, savedInstanceState: Bundle?) {
         viewModelScope.launch(Dispatchers.IO) {
             val scrollBarMode = MyApplication.sharedPreferences.getString(
                 MyApplication.getMyString(R.string.interface_scroll_bar_key),
                 MyApplication.getMyString(BaseR.string.interface_no_scroll_bar_value)
             )!!
-            setScrollBarMode(scrollBarMode)
+            setScrollBarMode(context, scrollBarMode)
 
             // When activity is recreated, use LiveData to restore the data
             if (hasNoData(savedInstanceState)) {
@@ -108,8 +110,8 @@ abstract class BaseListViewModel : BaseViewModel() {
 
     protected fun sh(cmd: String, condition: Boolean = true): ShellResult {
         return if (condition) {
-            MyApplication.userService?.execute(cmd) ?: ShellResult()
-//             ShellManager.instance.execute(cmd)
+            MyApplication.userService?.execute(cmd)
+                ?: ShellManager.instance.execute(cmd)
         } else {
             ShellResult()
         }

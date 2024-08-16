@@ -10,8 +10,8 @@ import androidx.fragment.app.viewModels
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
-import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.extension.isChinaMainlandTimezone
 import net.imknown.android.forefrontinfo.base.mvvm.EventObserver
 import net.imknown.android.forefrontinfo.base.mvvm.IFragmentView
@@ -59,7 +59,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
         // region [Scroll Bar Mode]
         settingsViewModel.scrollBarModeChangedEvent.observe(viewLifecycleOwner, EventObserver {
             it?.let { scrollBarMode ->
-                settingsViewModel.setScrollBarMode(scrollBarMode)
+                settingsViewModel.setScrollBarMode(context, scrollBarMode)
             }
         })
 
@@ -69,7 +69,7 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
 
         val scrollBarModePref =
             findPreference<ListPreference>(MyApplication.getMyString(R.string.interface_scroll_bar_key))!!
-        settingsViewModel.setScrollBarMode(scrollBarModePref.value)
+        settingsViewModel.setScrollBarMode(context, scrollBarModePref.value)
         // endregion [Scroll Bar Mode]
 
         settingsViewModel.showMessageEvent.observe(viewLifecycleOwner, EventObserver {

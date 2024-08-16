@@ -3,7 +3,7 @@ package net.imknown.android.forefrontinfo.ui.base
 import android.app.ActivityManager
 import android.os.Build
 import androidx.core.content.ContextCompat
-import net.imknown.android.forefrontinfo.base.MyApplication
+import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 
 interface IAndroidVersion {

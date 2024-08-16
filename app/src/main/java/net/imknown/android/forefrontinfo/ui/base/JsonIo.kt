@@ -3,8 +3,8 @@ package net.imknown.android.forefrontinfo.ui.base
 import android.content.res.AssetManager
 import android.util.Log
 import kotlinx.serialization.json.Json
+import net.imknown.android.forefrontinfo.MyApplication
 import net.imknown.android.forefrontinfo.R
-import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import java.io.BufferedReader
 import java.io.File

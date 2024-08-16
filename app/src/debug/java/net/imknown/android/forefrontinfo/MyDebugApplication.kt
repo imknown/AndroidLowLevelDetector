@@ -8,7 +8,6 @@ import com.github.kittinunf.fuel.core.interceptors.LogResponseInterceptor
 import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.DEBUG_PROPERTY_NAME
 import kotlinx.coroutines.DEBUG_PROPERTY_VALUE_ON
-import net.imknown.android.forefrontinfo.base.MyApplication
 
 class MyDebugApplication : MyApplication() {
     override fun onCreate() {
