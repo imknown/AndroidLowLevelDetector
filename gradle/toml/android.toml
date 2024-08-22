@@ -38,7 +38,7 @@ coordinatorLayout-alpha = "1.3.0-alpha02"
 
 # https://developer.android.com/jetpack/androidx/releases/core
 core = "1.13.1"
-core-alpha = "1.15.0-alpha01"
+core-alpha = "1.15.0-alpha02"
 
 # https://developer.android.com/jetpack/androidx/releases/fragment
 fragment = "1.8.2"
@@ -51,7 +51,8 @@ preference = "1.2.1"
 
 # https://developer.android.com/jetpack/androidx/releases/recyclerview
 recyclerView = "1.3.2"
-recyclerView-alpha = "1.4.0-alpha02"
+recyclerView-beta = "1.4.0-beta01"
+recyclerView-alpha = "placeholder"
 
 # https://developer.android.com/jetpack/androidx/releases/savedstate
 savedState = "1.2.1"
@@ -63,7 +64,8 @@ swipeRefreshLayout-alpha = "1.2.0-alpha01"
 
 # https://developer.android.com/jetpack/androidx/releases/webkit
 webkit = "1.11.0"
-webkit-alpha = "1.12.0-alpha02"
+webkit-beta = "1.12.0-beta01"
+webkit-alpha = "placeholder"
 
 # https://developer.android.com/jetpack/androidx/releases/test
 # region [Test]
