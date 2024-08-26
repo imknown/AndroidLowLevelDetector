@@ -196,7 +196,7 @@
     <string name="about_shop_title">Store page</string>
     <string name="about_shop_summary">Open the page of current app in the store</string>
     <string name="about_shop_uri" translatable="false">https://play.google.com/store/apps/details?id=net.imknown.android.forefrontinfo</string>
-    <string name="about_shop_china_mainland_uri" translatable="false">https://coolapk.com/apk/net.imknown.android.forefrontinfo</string>
+    <string name="about_shop_china_mainland_uri" translatable="false">https://github.com/imknown/AndroidLowLevelDetector</string>
 
     <string name="about_source_key" translatable="false">about_source_key</string>
     <string name="about_source_title">Source code</string>
