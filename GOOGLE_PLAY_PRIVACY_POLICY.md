@@ -30,12 +30,24 @@ For 3rd-parties:
   - This permission is only used to retrieve prebuilt ROM system apps,  
     and no user installed apps will be retrieved.
 
-- Used by Firebase:
-  - android.permission.INTERNET
-  - android.permission.ACCESS_NETWORK_STATE
-  - android.permission.WAKE_LOCK
-  - com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE
-  - com.google.android.gms.permission.AD_ID
+- Used by `Play services`:
+  - `Play services measurement`:
+    - android.permission.ACCESS_NETWORK_STATE
+    - android.permission.INTERNET
+    - android.permission.WAKE_LOCK
+    - com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE
+  - `Play services measurement api`:
+    - android.permission.ACCESS_ADSERVICES_AD_ID
+    - android.permission.ACCESS_ADSERVICES_ATTRIBUTION
+    - android.permission.ACCESS_NETWORK_STAT
+    - android.permission.INTERNET
+    - android.permission.WAKE_LOCK
+    - com.google.android.gms.permission.AD_ID
+  - `Play services ads identifier`:
+    - com.google.android.gms.permission.AD_ID
+
+- Used by `androidx.core`:
+  - net.imknown.android.forefrontinfo.debug.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
 
 ## Security
 
