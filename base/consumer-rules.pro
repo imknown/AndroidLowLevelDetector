@@ -1,2 +1,0 @@
-# https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/lifecycle/lifecycle-viewmodel-savedstate/proguard-rules.pro
--keepclassmembers, allowobfuscation class * extends androidx.lifecycle.ViewModel { *; }
