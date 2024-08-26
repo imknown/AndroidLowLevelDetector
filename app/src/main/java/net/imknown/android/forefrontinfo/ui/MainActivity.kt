@@ -43,13 +43,13 @@ class MainActivity : AppCompatActivity(), IView {
             supportFragmentManager.switch(R.id.navigation_home, true)
         }
 
-        mainViewModel.dealWithShizuku()
+//        mainViewModel.dealWithShizuku()
     }
 
     override fun onDestroy() {
         super.onDestroy()
 
-        mainViewModel.removeRequestPermissionResultListener()
+//        mainViewModel.removeRequestPermissionResultListener()
     }
 
     private fun initViews() {

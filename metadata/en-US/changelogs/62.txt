@@ -1,5 +1,4 @@
 * Initial F-Droid release
-* Initial Shizuku support
 * New translations
 * Database updates
 * Updated dependencies

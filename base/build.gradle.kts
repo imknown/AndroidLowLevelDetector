@@ -91,7 +91,7 @@ dependencies {
 
     api(libsThirdParty.versionCompare)
 
-    api(libsThirdParty.shizuku.api)
-    api(libsThirdParty.shizuku.provider)
+//    api(libsThirdParty.shizuku.api)
+//    api(libsThirdParty.shizuku.provider)
     // endregion [3rd Parties]
 }
