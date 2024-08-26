@@ -17,7 +17,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:targetApi="S">
+        tools:targetApi="TIRAMISU">
 
         <activity
             android:name=".ui.MainActivity"
