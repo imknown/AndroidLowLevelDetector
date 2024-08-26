@@ -76,7 +76,6 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         private const val PROP_PERSIST_DYNAMIC_SYSTEM_UPDATE =
             "persist.sys.fflag.override.settings_dynamic_system"
         private const val PROP_DYNAMIC_SYSTEM_UPDATE = "sys.fflag.override.settings_dynamic_system"
-        private const val DSU_LOADER_PACKAGE_NAME = "com.android.dynsystem"
         // endregion [Dynamic System]
 
         // region [GSI]
@@ -805,7 +804,6 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         val isDsuEnabled =
             getBooleanProperty(PROP_PERSIST_DYNAMIC_SYSTEM_UPDATE, isAtLeastStableAndroid10())
                     || getBooleanProperty(PROP_DYNAMIC_SYSTEM_UPDATE, isAtLeastStableAndroid10())
-                    || getPackageInfo(DSU_LOADER_PACKAGE_NAME) != null
         add(
             tempModels,
             MyApplication.getMyString(R.string.dsu_status_title),
