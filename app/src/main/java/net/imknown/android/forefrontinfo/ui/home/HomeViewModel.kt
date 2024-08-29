@@ -59,6 +59,8 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         private const val PROP_AB_UPDATE = "ro.build.ab_update"
         private const val PROP_VIRTUAL_AB_ENABLED = "ro.virtual_ab.enabled"
         private const val PROP_VIRTUAL_AB_RETROFIT = "ro.virtual_ab.retrofit"
+//        private const val PROP_VIRTUAL_AB_COMPRESSION_XOR_ENABLED = "ro.virtual_ab.compression.xor.enabled"
+//        private const val PROP_VIRTUAL_AB_USERSPACE_SNAPSHOTS_ENABLED = "ro.virtual_ab.userspace.snapshots.enabled"
         private const val PROP_SLOT_SUFFIX = "ro.boot.slot_suffix"
         // endregion [A/B]
 
@@ -605,6 +607,10 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
             if (isVirtualAb) {
                 val isVirtualAbRetrofit =
                     getBooleanProperty(PROP_VIRTUAL_AB_RETROFIT, isAtLeastStableAndroid11())
+//                val isVirtualAbCompressionXorEnabled =
+//                    getBooleanProperty(PROP_VIRTUAL_AB_COMPRESSION_XOR_ENABLED, isAtLeastStableAndroid13())
+//                val isVirtualAbUserspaceSnapshotsEnabled =
+//                    getBooleanProperty(PROP_VIRTUAL_AB_USERSPACE_SNAPSHOTS_ENABLED, isAtLeastStableAndroid13())
 
                 abResult += MyApplication.getMyString(
                     if (isVirtualAbRetrofit) {
