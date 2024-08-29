@@ -2,6 +2,7 @@ package net.imknown.android.forefrontinfo.ui.others
 
 import android.annotation.SuppressLint
 import android.os.Build
+import android.util.Log
 import android.webkit.WebSettings
 import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
@@ -253,7 +254,13 @@ class OthersViewModel : BasePureListViewModel(), IAndroidVersion {
 
         partitions.forEach {
             val partitionFingerprintProperty = partitionFingerprint(it)
-            val fingerprint = getStringProperty(partitionFingerprintProperty)
+            val fingerprint = try {
+                getStringProperty(partitionFingerprintProperty)
+            } catch (e: Exception) {
+                val result = "Key `$partitionFingerprintProperty` Error: ${e.message}. Caused by: ${e.cause?.message}"
+                Log.e(javaClass.simpleName, result)
+                MyApplication.getMyString(R.string.build_not_filled)
+            }
             if (fingerprint != MyApplication.getMyString(R.string.build_not_filled)) {
                 add(
                     tempModels,
