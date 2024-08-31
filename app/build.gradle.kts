@@ -7,6 +7,9 @@ plugins {
 
     alias(libsKotlin.plugins.kotlin.android)
     alias(libsKotlin.plugins.kotlinx.serialization)
+
+    alias(libsGoogle.plugins.googleServices)
+    alias(libsGoogle.plugins.firebase.crashlytics)
 }
 
 android {
@@ -51,7 +54,7 @@ android {
     }
 
     signingConfigs {
-        create("release") {
+        register("release") {
             val keystorePropertiesFile = file("$rootDir/local.properties")
             val keystoreProperties = Properties().apply {
                 load(FileInputStream(keystorePropertiesFile))
@@ -68,7 +71,7 @@ android {
             enableV4Signing = true
         }
 
-        getByName("debug") {
+        named("debug") {
             storeFile = file("$rootDir/keys/debug.keystore")
             storePassword = "android"
             keyAlias = "androiddebugkey"
@@ -84,8 +87,8 @@ android {
     flavorDimensions += IssueTracker::class.simpleName.toString()
 
     productFlavors {
-        create(IssueTracker.Foss.name)
-        create(IssueTracker.Firebase.name)
+        register(IssueTracker.Foss.name)
+        register(IssueTracker.Firebase.name)
     }
 
     buildTypes {
@@ -100,6 +103,10 @@ android {
                 "proguard-rules.pro",
                 "proguard-firebase-rules.pro"
             )
+
+            configure<CrashlyticsExtension> {
+                nativeSymbolUploadEnabled = true
+            }
         }
 
         debug {
@@ -145,20 +152,32 @@ android {
     packaging {
         resources.excludes += "DebugProbesKt.bin"
     }
+}
 
-    applicationVariants.forEach { variant ->
-        if (variant.flavorName == IssueTracker.Firebase.name) {
-            plugins {
-                alias(libsGoogle.plugins.googleServices)
-                alias(libsGoogle.plugins.firebase.crashlytics)
-            }
+fun Task.disable() {
+    println("Task $name disabled.")
+    enabled = false
+}
 
-            if (variant.buildType.name == "release") {
-                configure<CrashlyticsExtension> {
-                    nativeSymbolUploadEnabled = true
-                }
-            }
-        }
+// gradle.taskGraph.whenReady {
+//    tasks.forEach { task ->
+tasks.configureEach {
+    val task = this
+
+    val flavorFoss = IssueTracker.Foss.name
+
+    val isGoogleServices = task.name.startsWith("process$flavorFoss")
+            && task.name.endsWith("GoogleServices")
+    if (isGoogleServices) {
+        task.disable()
+        return@configureEach
+    }
+
+    val isFirebaseCrashlytics = task.name.contains("Crashlytics")
+            && task.name.contains(flavorFoss)
+    if (isFirebaseCrashlytics) {
+        task.disable()
+        return@configureEach
     }
 }
 
