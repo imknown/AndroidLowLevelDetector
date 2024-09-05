@@ -1,50 +1,22 @@
 {
   "scheme": 1,
-  "version": "2024-08-30 23:20 +0800",
+  "version": "2024-09-05 20:10 +0800",
   "android": {
-    "securityPatchLevel": "2024-08-05",
-    "googlePlaySystemUpdates": "2024-07-01",
+    "securityPatchLevel": "2024-09-05",
+    "googlePlaySystemUpdates": "2024-09-01",
     "build": {
-      "version": "2024-08-21",
+      "version": "2024-09-03",
       "details": [
         {
-          "id": "AP2A.240805.005",
-          "revision": "r55"
-        },
-        {
-          "id": "AP2A.240805.005.A1",
-          "revision": "r56"
-        },
-        {
-          "id": "AP2A.240805.005.B1",
-          "revision": "r57"
-        },
-        {
-          "id": "AP2A.240805.005.C1",
-          "revision": "r58"
-        },
-        {
-          "id": "AP2A.240805.005.D1",
-          "revision": "r59"
-        },
-        {
-          "id": "AP2A.240805.005.E1",
-          "revision": "r60"
-        },
-        {
-          "id": "AP2A.240805.005.F1",
-          "revision": "r61"
-        },
-        {
-          "id": "AD1A.240530.047",
-          "revision": "r66"
+          "id": "AP3A.240905.015.A2",
+          "revision": "r1"
         }
       ]
     },
     "stable": {
-      "name": "UpsideDownCake",
-      "api": "34",
-      "version": "14, UpsideDownCake"
+      "name": "VanillaIceCream",
+      "api": "35",
+      "version": "15, VanillaIceCream"
     },
     "stablePreview": {
       "name": "VanillaIceCream",
@@ -59,7 +31,7 @@
     "preview": {
       "name": "VanillaIceCream",
       "api": "35",
-      "version": "15 Beta 4.2, VanillaIceCream",
+      "version": "15 QPR1 Beta 1.1, VanillaIceCream",
       "phase": ""
     },
     "internal": {
@@ -71,21 +43,21 @@
   "linux": {
     "google": {
       "versions": [
-        "6.6.48",
-        "6.1.107",
-        "5.15.165",
-        "5.10.224",
-        "5.4.282",
-        "4.19.320"
+        "6.6.49",
+        "6.1.108",
+        "5.15.166",
+        "5.10.225",
+        "5.4.283",
+        "4.19.321"
       ]
     },
     "mainline": {
-      "version": "6.11-rc5"
+      "version": "6.11-rc6"
     }
   },
   "toybox": {
     "stable": {
-      "version": "0.8.9"
+      "version": "0.8.11"
     },
     "support": {
       "version": "0.8.4"
@@ -99,10 +71,10 @@
   },
   "webView": {
     "stable": {
-      "version": "128.0.6613.99"
+      "version": "128.0.6613.127"
     },
     "beta": {
-      "version": "129.0.6668.20"
+      "version": "129.0.6668.31"
     }
   }
 }
