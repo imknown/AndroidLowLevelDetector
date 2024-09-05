@@ -7,16 +7,16 @@ androidGradlePlugin-canary = "8.7.0-canary04"
 # https://developer.android.com/studio/write/java8-support#library-desugaring
 # https://maven.google.com/web/index.html?q=desugar_jdk_libs
 # https://github.com/google/desugar_jdk_libs/blob/master/CHANGELOG.md
-desugarJdkLibs = "2.1.1"
+desugarJdkLibs = "2.1.2"
 
 # region [AndroidX]
 # https://developer.android.com/jetpack/androidx/releases/activity
-activity = "1.9.1"
-activity-alpha = "1.10.0-alpha01"
+activity = "1.9.2"
+activity-alpha = "1.10.0-alpha02"
 
 # https://developer.android.com/jetpack/androidx/releases/annotation
 annotation = "1.8.2"
-annotation-alpha = "1.9.0-alpha01"
+annotation-alpha = "1.9.0-alpha03"
 annotation-experimental = "1.4.1"
 
 # https://developer.android.com/jetpack/androidx/releases/appcompat
@@ -30,7 +30,7 @@ cardView = "1.0.0"
 
 # https://developer.android.com/jetpack/androidx/releases/constraintlayout
 constraintLayout = "2.1.4"
-constraintLayout-alpha = "2.2.0-alpha14"
+constraintLayout-alpha = "2.2.0-beta01"
 
 # https://developer.android.com/jetpack/androidx/releases/coordinatorlayout
 coordinatorLayout = "1.2.0"
@@ -41,10 +41,11 @@ core = "1.13.1"
 core-alpha = "1.15.0-alpha02"
 
 # https://developer.android.com/jetpack/androidx/releases/fragment
-fragment = "1.8.2"
+fragment = "1.8.3"
 
 # https://developer.android.com/jetpack/androidx/releases/lifecycle
-lifecycle = "2.8.4"
+lifecycle = "2.8.5"
+lifecycle-alpha = "2.9.0-alpha02"
 
 # https://developer.android.com/jetpack/androidx/releases/preference
 preference = "1.2.1"
@@ -63,8 +64,8 @@ swipeRefreshLayout = "1.1.0"
 swipeRefreshLayout-alpha = "1.2.0-alpha01"
 
 # https://developer.android.com/jetpack/androidx/releases/webkit
-webkit = "1.11.0"
-webkit-beta = "1.12.0-beta01"
+webkit = "1.12.0-rc01"
+webkit-beta = "placeholder"
 webkit-alpha = "placeholder"
 
 # https://developer.android.com/jetpack/androidx/releases/test
