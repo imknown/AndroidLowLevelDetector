@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2024-09-09 17:55 +0800",
+  "version": "2024-09-13 17:30 +0800",
   "android": {
     "securityPatchLevel": "2024-09-05",
     "googlePlaySystemUpdates": "2024-09-01",
@@ -31,7 +31,7 @@
     "preview": {
       "name": "VanillaIceCream",
       "api": "35",
-      "version": "15 QPR1 Beta 1.1, VanillaIceCream",
+      "version": "15 QPR1 Beta 2, VanillaIceCream",
       "phase": ""
     },
     "internal": {
@@ -43,12 +43,12 @@
   "linux": {
     "google": {
       "versions": [
-        "6.6.50",
-        "6.1.109",
-        "5.15.166",
-        "5.10.225",
-        "5.4.283",
-        "4.19.321"
+        "6.6.51",
+        "6.1.110",
+        "5.15.167",
+        "5.10.226",
+        "5.4.284",
+        "4.19.322"
       ]
     },
     "mainline": {
@@ -71,10 +71,10 @@
   },
   "webView": {
     "stable": {
-      "version": "128.0.6613.127"
+      "version": "129.0.6668.38"
     },
     "beta": {
-      "version": "129.0.6668.31"
+      "version": "129.0.6668.38"
     }
   }
 }
