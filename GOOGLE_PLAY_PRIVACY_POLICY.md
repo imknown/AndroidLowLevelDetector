@@ -47,7 +47,7 @@ For 3rd-parties:
     - com.google.android.gms.permission.AD_ID
 
 - Used by `androidx.core`:
-  - net.imknown.android.forefrontinfo.debug.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+  - net.imknown.android.forefrontinfo.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
 
 ## Security
 
