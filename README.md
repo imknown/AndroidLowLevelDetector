@@ -50,27 +50,23 @@ Just use `Pull Request`.
 Translations are also welcome.
 
 ## Build
-### Firebase
-- If you do **not** want to build with Firebase, please remove:
-  1. (Optional) `GMS` and `Firebase` **dependencies** in file `$rootDir/build.gradle`;
-  1. (Required) `GMS` **plugin ids** in file `$rootDir/app/build.gradle`;
-  1. (Optional) `Firebase` **plugin ids** in file `$rootDir/app/build.gradle`;
-  1. (Optional) `Firebase Crashlytics` **release** configs in `buildTypes` in file `$rootDir/app/build.gradle`.
+### Flavor
+- Firebase  
+Choose `Firebase` in `Build Variants`, then follow Firebase Official Guide.
+
+- FOSS  
+Choose `Foss` in `Build Variants`.
 
 ### Release
-- If you do **not** want to build with release mode, please remove:
-  1. `release` in `signingConfigs` in file `app/build.gradle`;
-  1. `signingConfig signingConfigs.release` in `release` of `buildTypes` in file `app/build.gradle`.
+Provide the whole following properties in file `$rootDir/local.properties`:
 
-- If you **want** to build with release mode, please provide the whole following properties in file `$rootDir/local.properties`:
+``` ini
+storeFile=<Yours>
+storePassword=<Yours>
+keyAlias=<Yours>
+keyPassword=<Yours>
+```
 
-  ``` ini
-  storeFile=<Yours>
-  storePassword=<Yours>
-  keyAlias=<Yours>
-  keyPassword=<Yours>
-  ```
-
-  The location of `storeFile` can be `../keys/release.jks`.  
-  It has been already ignored in file `$rootDir/.gitingore` by default.  
-  So you can put your own private certificate or signing key there safely.
+The location of `storeFile` can be `../keys/release.jks`.  
+It has been already ignored in file `$rootDir/.gitingore` by default.  
+So you can put your own private certificate or signing key there safely.
