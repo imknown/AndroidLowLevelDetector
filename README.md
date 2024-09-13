@@ -14,7 +14,6 @@ Some source codes refer to [Magisk][Magisk], [OpenGApps][OpenGApps], [TrebleInfo
 ## Download
 1. https://play.google.com/store/apps/details?id=net.imknown.android.forefrontinfo
 2. https://github.com/imknown/AndroidLowLevelDetector/releases
-3. https://coolapk.com/apk/net.imknown.android.forefrontinfo
 
 ## Features
 <details>
