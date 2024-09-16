@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2024-09-13 17:30 +0800",
+  "version": "2024-09-16 09:40 +0800",
   "android": {
     "securityPatchLevel": "2024-09-05",
     "googlePlaySystemUpdates": "2024-09-01",
@@ -21,7 +21,7 @@
     "stablePreview": {
       "name": "VanillaIceCream",
       "api": "35",
-      "version": "15 QPR1 Beta 1.1, VanillaIceCream"
+      "version": "15 QPR1 Beta 2, VanillaIceCream"
     },
     "support": {
       "name": "SnowCone",
@@ -52,7 +52,7 @@
       ]
     },
     "mainline": {
-      "version": "6.11-rc7"
+      "version": "6.11"
     }
   },
   "toybox": {
