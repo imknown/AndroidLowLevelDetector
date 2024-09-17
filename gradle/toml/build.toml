@@ -13,7 +13,7 @@ targetSdk = "35"
 targetSdkPreview = "VanillaIceCream"
 
 ndk = "27.1.12297006"
-cmake = "3.22.1"
+cmake = "3.30.3"
 
 versionCode = "64"
 versionName = "1.17.2_unpublished"
