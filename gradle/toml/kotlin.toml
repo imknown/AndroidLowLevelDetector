@@ -11,7 +11,7 @@ kotlinx-serialization = "1.7.2"
 
 # https://github.com/ktorio/ktor/releases
 ktor = "3.0.0-rc-1"
-ktor-beta = "placeholder"
+ktor-beta = "3.0.0-beta-2"
 
 [libraries]
 kotlin = { group = "org.jetbrains.kotlin", name = "stdlib-jdk8", version.ref = "kotlin" }
