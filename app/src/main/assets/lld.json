@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2024-09-27 19:10 +0800",
+  "version": "2024-09-30 19:05 +0800",
   "android": {
     "securityPatchLevel": "2024-09-05",
     "googlePlaySystemUpdates": "2024-09-01",
@@ -52,7 +52,7 @@
       ]
     },
     "mainline": {
-      "version": "6.11"
+      "version": "6.12-rc1"
     }
   },
   "toybox": {
