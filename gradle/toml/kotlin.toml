@@ -1,6 +1,6 @@
 [versions]
 # https://github.com/JetBrains/kotlin/releases
-kotlin = "2.0.20"
+kotlin = "2.0.21-RC"
 kotlin-beta = "2.1.0-beta1"
 
 # https://github.com/Kotlin/kotlinx.coroutines/releases
