@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2024-10-02 10:00 +0800",
+  "version": "2024-10-03 18:45 +0800",
   "android": {
     "securityPatchLevel": "2024-09-05",
     "googlePlaySystemUpdates": "2024-09-01",
@@ -37,7 +37,7 @@
     "internal": {
       "name": "W",
       "api": "36",
-      "version": "16 internal, W"
+      "version": "16 internal, W/Baklava"
     }
   },
   "linux": {
@@ -74,7 +74,7 @@
       "version": "129.0.6668.81"
     },
     "beta": {
-      "version": "130.0.6723.17"
+      "version": "130.0.6723.27"
     }
   }
 }
