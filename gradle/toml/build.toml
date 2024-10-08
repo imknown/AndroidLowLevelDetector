@@ -5,15 +5,15 @@ buildTools = "35.0.0"
 minSdk = "21"
 
 compileSdk = "35"
-compileSdkPreview = "VanillaIceCream"
+compileSdkPreview = "W/Baklava"
 
 compileSdkExtension = "13"
 
 targetSdk = "35"
-targetSdkPreview = "VanillaIceCream"
+targetSdkPreview = "W/Baklava"
 
 ndk = "28.0.12433566 rc1"
-cmake = "3.30.3"
+cmake = "3.30.4"
 
 versionCode = "64"
 versionName = "1.17.2_unpublished"
