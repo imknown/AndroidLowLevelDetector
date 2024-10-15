@@ -10,6 +10,7 @@
         android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?attr/colorSurfaceContainer"
         app:liftOnScroll="false">
 
         <com.google.android.material.appbar.MaterialToolbar
