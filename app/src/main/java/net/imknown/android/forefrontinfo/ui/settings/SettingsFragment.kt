@@ -15,6 +15,7 @@ import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.extension.isChinaMainlandTimezone
 import net.imknown.android.forefrontinfo.base.mvvm.EventObserver
 import net.imknown.android.forefrontinfo.base.mvvm.IFragmentView
+import com.google.android.material.R as materialR
 
 class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
 
@@ -33,12 +34,15 @@ class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        listView.clipToPadding = false
+        val bottomR = materialR.dimen.design_bottom_navigation_height
+        val bottom = resources.getDimensionPixelSize(bottomR)
         ViewCompat.setOnApplyWindowInsetsListener(listView) { insetView, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
             insetView.updatePadding(
                 left = insets.left,
                 right = insets.right,
-                bottom = insets.bottom
+                bottom = insets.bottom + (insets.bottom + bottom)
             )
 
             windowInsets

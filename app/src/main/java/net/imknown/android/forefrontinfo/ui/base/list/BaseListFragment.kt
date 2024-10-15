@@ -69,12 +69,14 @@ abstract class BaseListFragment : BaseFragment<FragmentListBinding>() {
     }
 
     private fun initViews(savedInstanceState: Bundle?) {
+        val bottomR = materialR.dimen.design_bottom_navigation_height
+        val bottom = resources.getDimensionPixelSize(bottomR)
         ViewCompat.setOnApplyWindowInsetsListener(binding.recyclerView) { view, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
             view.updatePadding(
                 left = insets.left,
                 right = insets.right,
-                bottom = insets.bottom
+                bottom = insets.bottom + (insets.bottom + bottom)
             )
 
             windowInsets
