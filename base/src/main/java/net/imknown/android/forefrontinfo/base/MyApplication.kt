@@ -53,6 +53,7 @@ open class MyApplication : Application() {
         fun getMyString(@StringRes resId: Int, vararg formatArgs: Any?) =
             instance.getString(resId, *formatArgs)
 
+        // FIXME: wrong system bar color
         fun setMyTheme(themesValue: String) {
             @AppCompatDelegate.NightMode val mode = when (themesValue) {
                 getMyString(R.string.interface_themes_follow_system_value) -> {
