@@ -5,7 +5,7 @@
 googleServices-gradlePlugin = "4.4.2"
 
 # https://firebase.google.com/docs/android/learn-more#bom
-firebase-bom = "33.3.0"
+firebase-bom = "33.4.0"
 
 # https://firebase.google.com/docs/crashlytics/get-started?platform=android
 # https://firebase.google.com/docs/crashlytics/ndk-reports
@@ -13,7 +13,7 @@ firebase-crashlytics-gradlePlugin = "3.0.2"
 
 # https://github.com/material-components/material-components-android/releases
 material = "1.12.0"
-material-alpha = "1.13.0-alpha06"
+material-alpha = "1.13.0-alpha07"
 
 [libraries]
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
