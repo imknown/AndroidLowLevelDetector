@@ -189,11 +189,11 @@ class OthersViewModel : BasePureListViewModel(), IAndroidVersion {
             var kernelFinal: String? = null
             val kernelVerbose = sh(CMD_KERNEL_VERBOSE)
             if (kernelVerbose.isSuccess) {
-                kernelFinal = kernelVerbose.output[0]
+                kernelFinal = kernelVerbose.output.getOrNull(0)
             } else {
                 val kernelAll = sh(CMD_KERNEL_ALL)
                 if (kernelAll.isSuccess) {
-                    kernelFinal = kernelAll.output[0]
+                    kernelFinal = kernelAll.output.getOrNull(0)
                 }
             }
 

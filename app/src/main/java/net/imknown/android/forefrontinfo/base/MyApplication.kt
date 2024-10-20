@@ -14,6 +14,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.preference.PreferenceManager
 import com.google.android.material.color.DynamicColors
 import com.topjohnwu.superuser.Shell
+import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.base.mvvm.Event
 import net.imknown.android.forefrontinfo.base.property.PropertyManager
 import net.imknown.android.forefrontinfo.base.property.impl.DefaultProperty
@@ -88,7 +89,7 @@ open class MyApplication : Application() {
 
         initTheme()
 
-        initShell()
+        initShellAndProperty()
 
         initLanguage()
     }
@@ -103,14 +104,17 @@ open class MyApplication : Application() {
         setMyTheme(themesValue)
     }
 
-    private fun initShell() {
-        // Shell.enableVerboseLogging = BuildConfig.DEBUG // Has been moved to Debug BuildType
+    private fun initShellAndProperty() {
+        Shell.enableVerboseLogging = BuildConfig.DEBUG
+        Shell.enableLegacyStderrRedirection = true
         Shell.setDefaultBuilder(
             Shell.Builder.create()
-                .setFlags(Shell.FLAG_REDIRECT_STDERR or Shell.FLAG_NON_ROOT_SHELL)
+                .setFlags(Shell.FLAG_NON_ROOT_SHELL)
+//                .setInitializers(Shell.Initializer::class.java)
         )
 
         ShellManager.instance = ShellManager(LibSuShell)
+
         PropertyManager.instance = PropertyManager(DefaultProperty)
     }
 

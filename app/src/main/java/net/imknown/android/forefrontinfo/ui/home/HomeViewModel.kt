@@ -782,8 +782,11 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         val cmd = String.format(CMD_VENDOR_NAMESPACE_DEFAULT_ISOLATED, fileLdConfig)
         val gsiCompatibilityResult = sh(cmd, isAtLeastStableAndroid9())
         val (@StringRes result, @AttrRes color) = if (gsiCompatibilityResult.isSuccess) {
-            val lineResult = gsiCompatibilityResult.output[0].split('=')
-            val isCompatible = lineResult.isNotEmpty() && lineResult[1].trim().toBoolean()
+            val firstLine = gsiCompatibilityResult.output.getOrNull(0)
+                ?: MyApplication.getMyString(android.R.string.unknownName)
+            val lineResult = firstLine.split('=')
+            val isCompatible = lineResult.isNotEmpty()
+                    && lineResult.getOrNull(1)?.trim().toBoolean()
             if (isCompatible) {
                 Pair(R.string.result_compliant, R.attr.colorNoProblem)
             } else {
@@ -1043,7 +1046,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         @AttrRes val color: Int
 
         val seLinuxStatus = sh(CMD_GETENFORCE)
-        val seLinuxStatusResult = seLinuxStatus.output[0]
+        val seLinuxStatusResult = seLinuxStatus.output.getOrNull(0)
 
         if (seLinuxStatus.isSuccess) {
             when (seLinuxStatusResult) {
@@ -1066,7 +1069,7 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
                 }
             }
         } else {
-            if (seLinuxStatusResult.endsWith(CMD_ERROR_PERMISSION_DENIED)) {
+            if (seLinuxStatusResult?.endsWith(CMD_ERROR_PERMISSION_DENIED) == true) {
                 result = R.string.selinux_status_enforcing_mode
                 color = R.attr.colorNoProblem
             } else {
@@ -1088,7 +1091,8 @@ class HomeViewModel : BaseListViewModel(), IAndroidVersion {
         val hasToyboxVersion = toyboxVersionResult.isSuccess
 
         val toyboxVersion = if (hasToyboxVersion) {
-            toyboxVersionResult.output[0]
+            toyboxVersionResult.output.getOrNull(0)
+                ?: MyApplication.getMyString(android.R.string.unknownName)
         } else {
             translate(false)
         }
