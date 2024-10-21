@@ -81,18 +81,8 @@ dependencies {
     // endregion [Test]
     // endregion [AndroidX]
 
-    // region [Kotlin]
-    api(libsKotlin.kotlinx.coroutines.android)
-    api(libsKotlin.kotlinx.serialization.json)
-    // endregion [Kotlin]
-
     // region [3rd Parties]
     api(libsThirdParty.libsu)
-
-    api(libsThirdParty.fuel)
-    // api(libsThirdParty.fuel.coroutines)
-
-    api(libsThirdParty.versionCompare)
 
 //    api(libsThirdParty.shizuku.api)
 //    api(libsThirdParty.shizuku.provider)

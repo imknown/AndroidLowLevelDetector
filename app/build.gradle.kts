@@ -208,9 +208,21 @@ dependencies {
     androidTestImplementation(libsAndroid.test.ext.junit)
     // endregion [Test]
 
+    // region [Kotlin]
+    implementation(libsKotlin.kotlinx.coroutines.android)
+    implementation(libsKotlin.kotlinx.serialization.json)
+
+    implementation("io.ktor:ktor-client-core:3.0.0")
+    implementation("io.ktor:ktor-client-okhttp:3.0.0")
+    implementation("io.ktor:ktor-client-logging:3.0.0")
+    implementation("org.slf4j:slf4j-android:2.0.7")
+    // endregion [Kotlin]
+
     // region [3rd Parties]
     debugImplementation(libsThirdParty.leakCanary.android)
     // implementation(libsThirdParty.leakCanary.plumber.android)
+
+    implementation(libsThirdParty.versionCompare)
     // endregion [3rd Parties]
 
     val firebaseImplementation = IssueTracker.Firebase.name + "Implementation"
