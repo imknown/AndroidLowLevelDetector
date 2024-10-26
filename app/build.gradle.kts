@@ -215,7 +215,6 @@ dependencies {
     implementation("io.ktor:ktor-client-core:3.0.0")
     implementation("io.ktor:ktor-client-okhttp:3.0.0")
     implementation("io.ktor:ktor-client-logging:3.0.0")
-    implementation("org.slf4j:slf4j-android:2.0.7")
     // endregion [Kotlin]
 
     // region [3rd Parties]
