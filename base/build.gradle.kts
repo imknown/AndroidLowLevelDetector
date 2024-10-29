@@ -48,31 +48,7 @@ dependencies {
 
     coreLibraryDesugaring(libsAndroid.desugarJdkLibs)
 
-    api(libsGoogle.material)
-
     // region [AndroidX]
-    api(libsAndroid.activity)
-
-    api(libsAndroid.annotation)
-    api(libsAndroid.annotation.experimental)
-
-    api(libsAndroid.appcompat)
-    api(libsAndroid.appcompat.resources)
-
-    api(libsAndroid.arch.core.common)
-    api(libsAndroid.arch.core.runtime)
-
-    api(libsAndroid.core)
-
-    api(libsAndroid.fragment)
-
-    api(libsAndroid.lifecycle.viewmodel)
-    api(libsAndroid.lifecycle.viewmodel.savedstate)
-
-    api(libsAndroid.preference)
-
-    api(libsAndroid.savedState)
-
     // region [Test]
     testImplementation(libsAndroid.junit)
     androidTestImplementation(libsAndroid.test.core)

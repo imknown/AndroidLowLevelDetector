@@ -189,13 +189,35 @@ dependencies {
     coreLibraryDesugaring(libsAndroid.desugarJdkLibs)
 
     // region [AndroidX]
+    implementation(libsAndroid.activity)
+
+    implementation(libsAndroid.annotation)
+    implementation(libsAndroid.annotation.experimental)
+
+    implementation(libsAndroid.appcompat)
+    implementation(libsAndroid.appcompat.resources)
+
+    implementation(libsAndroid.arch.core.common)
+    implementation(libsAndroid.arch.core.runtime)
+
     implementation(libsAndroid.cardView)
 
     implementation(libsAndroid.constraintLayout)
 
     implementation(libsAndroid.coordinatorLayout)
 
+    implementation(libsAndroid.core)
+
+    implementation(libsAndroid.fragment)
+
+    implementation(libsAndroid.lifecycle.viewmodel)
+    implementation(libsAndroid.lifecycle.viewmodel.savedstate)
+
+    implementation(libsAndroid.preference)
+
     implementation(libsAndroid.recyclerView)
+
+    implementation(libsAndroid.savedState)
 
     implementation(libsAndroid.swipeRefreshLayout)
     implementation(libsAndroid.webkit)
@@ -212,9 +234,9 @@ dependencies {
     implementation(libsKotlin.kotlinx.coroutines.android)
     implementation(libsKotlin.kotlinx.serialization.json)
 
-    implementation("io.ktor:ktor-client-core:3.0.0")
-    implementation("io.ktor:ktor-client-okhttp:3.0.0")
-    implementation("io.ktor:ktor-client-logging:3.0.0")
+    implementation(libsKotlin.ktor.client.core)
+    implementation(libsKotlin.ktor.client.okhttp)
+    implementation(libsKotlin.ktor.client.logging)
     // endregion [Kotlin]
 
     // region [3rd Parties]
@@ -224,8 +246,12 @@ dependencies {
     implementation(libsThirdParty.versionCompare)
     // endregion [3rd Parties]
 
+    // region [Google]
+    implementation(libsGoogle.material)
+
     val firebaseImplementation = IssueTracker.Firebase.name + "Implementation"
     firebaseImplementation(platform(libsGoogle.firebase.bom))
     firebaseImplementation(libsGoogle.firebase.analytics)
     firebaseImplementation(libsGoogle.firebase.crashlytics.ndk)
+    // endregion [Google]
 }
