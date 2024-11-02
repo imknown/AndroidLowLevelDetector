@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2024-10-31 20:00 +0800",
+  "version": "2024-11-02 08:15 +0800",
   "android": {
     "securityPatchLevel": "2024-10-05",
     "googlePlaySystemUpdates": "2024-10-01",
@@ -39,17 +39,17 @@
       "phase": ""
     },
     "internal": {
-      "name": "W",
+      "name": "Baklava",
       "api": "36",
-      "version": "16 internal, W/Baklava"
+      "version": "16 internal, Baklava"
     }
   },
   "linux": {
     "google": {
       "versions": [
-        "6.6.58",
-        "6.1.114",
-        "5.15.169",
+        "6.6.59",
+        "6.1.115",
+        "5.15.170",
         "5.10.228",
         "5.4.284",
         "4.19.322"
