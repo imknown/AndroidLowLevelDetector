@@ -40,13 +40,13 @@ object GatewayApi {
         }
 
         val url = "https://$urlPrefixLldJson/${BuildConfig.GIT_BRANCH}/app/src/main/assets/${JsonIo.LLD_JSON_NAME}"
-        val response: HttpResponse = client.get(url){
+        val response: HttpResponse = client.get(url) {
             headers {
                 append(HEADER_REFERER_KEY, HEADER_REFERER_VALUE)
             }
         }
         return client.use {
-             response.body()
+            response.body()
         }
     }
 }
