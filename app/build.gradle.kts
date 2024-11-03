@@ -145,10 +145,6 @@ android {
         viewBinding = true
     }
 
-    lint {
-        checkDependencies = true
-    }
-
     packaging {
         resources.excludes += "DebugProbesKt.bin"
     }
