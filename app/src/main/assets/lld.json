@@ -1,9 +1,9 @@
 {
   "scheme": 1,
-  "version": "2024-11-04 18:45 +0800",
+  "version": "2024-11-05 18:50 +0800",
   "android": {
-    "securityPatchLevel": "2024-10-05",
-    "googlePlaySystemUpdates": "2024-10-01",
+    "securityPatchLevel": "2024-11-05",
+    "googlePlaySystemUpdates": "2024-11-01",
     "build": {
       "version": "2024-10-14",
       "details": [
@@ -35,7 +35,7 @@
     "preview": {
       "name": "VanillaIceCream",
       "api": "35",
-      "version": "15 QPR1 Beta 2, VanillaIceCream",
+      "version": "15 QPR1 Beta 3, VanillaIceCream",
       "phase": ""
     },
     "internal": {
