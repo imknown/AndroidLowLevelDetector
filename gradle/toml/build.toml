@@ -5,12 +5,12 @@ buildTools = "35.0.0"
 minSdk = "21"
 
 compileSdk = "35"
-compileSdkPreview = "W/Baklava"
+compileSdkPreview = "Baklava"
 
 compileSdkExtension = "13"
 
 targetSdk = "35"
-targetSdkPreview = "W/Baklava"
+targetSdkPreview = "Baklava"
 
 ndk = "28.0.12433566 rc1"
 cmake = "3.30.5"
