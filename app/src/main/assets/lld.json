@@ -1,19 +1,19 @@
 {
   "scheme": 1,
-  "version": "2024-11-06 20:00 +0800",
+  "version": "2024-11-07 19:45 +0800",
   "android": {
     "securityPatchLevel": "2024-11-05",
     "googlePlaySystemUpdates": "2024-11-01",
     "build": {
-      "version": "2024-10-14",
+      "version": "2024-11-06",
       "details": [
         {
-          "id": "AP3A.241005.015",
-          "revision": "r2"
+          "id": "AP3A.241105.007",
+          "revision": "r4"
         },
         {
-          "id": "AP3A.241005.015.A2",
-          "revision": "r3"
+          "id": "AP3A.241105.008",
+          "revision": "r5"
         }
       ]
     },
@@ -75,10 +75,10 @@
   },
   "webView": {
     "stable": {
-      "version": "130.0.6723.102"
+      "version": "131.0.6778.39"
     },
     "beta": {
-      "version": "131.0.6778.22"
+      "version": "131.0.6778.39"
     }
   }
 }
