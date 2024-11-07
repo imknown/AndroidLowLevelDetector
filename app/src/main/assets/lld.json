@@ -1,19 +1,19 @@
 {
   "scheme": 1,
-  "version": "2024-11-02 08:15 +0800",
+  "version": "2024-11-07 19:45 +0800",
   "android": {
-    "securityPatchLevel": "2024-10-05",
-    "googlePlaySystemUpdates": "2024-10-01",
+    "securityPatchLevel": "2024-11-05",
+    "googlePlaySystemUpdates": "2024-11-01",
     "build": {
-      "version": "2024-10-14",
+      "version": "2024-11-06",
       "details": [
         {
-          "id": "AP3A.241005.015",
-          "revision": "r2"
+          "id": "AP3A.241105.007",
+          "revision": "r4"
         },
         {
-          "id": "AP3A.241005.015.A2",
-          "revision": "r3"
+          "id": "AP3A.241105.008",
+          "revision": "r5"
         }
       ]
     },
@@ -35,7 +35,7 @@
     "preview": {
       "name": "VanillaIceCream",
       "api": "35",
-      "version": "15 QPR1 Beta 2, VanillaIceCream",
+      "version": "15 QPR1 Beta 3, VanillaIceCream",
       "phase": ""
     },
     "internal": {
@@ -56,7 +56,7 @@
       ]
     },
     "mainline": {
-      "version": "6.12-rc5"
+      "version": "6.12-rc6"
     }
   },
   "toybox": {
@@ -75,10 +75,10 @@
   },
   "webView": {
     "stable": {
-      "version": "130.0.6723.86"
+      "version": "131.0.6778.39"
     },
     "beta": {
-      "version": "131.0.6778.22"
+      "version": "131.0.6778.39"
     }
   }
 }
