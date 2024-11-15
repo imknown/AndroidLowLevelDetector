@@ -18,7 +18,6 @@ import net.imknown.android.forefrontinfo.base.mvvm.stringEventLiveData
 import net.imknown.android.forefrontinfo.base.property.PropertyManager
 import net.imknown.android.forefrontinfo.base.shell.ShellManager
 import net.imknown.android.forefrontinfo.base.shell.ShellResult
-import net.imknown.android.forefrontinfo.base.R as BaseR
 
 abstract class BaseListViewModel : BaseViewModel() {
     private val _models by lazy { MutableLiveData<ArrayList<MyModel>>() }
@@ -34,7 +33,7 @@ abstract class BaseListViewModel : BaseViewModel() {
         MyApplication.sharedPreferences.stringEventLiveData(
             viewModelScope,
             MyApplication.getMyString(R.string.interface_scroll_bar_key),
-            MyApplication.getMyString(BaseR.string.interface_no_scroll_bar_value)
+            MyApplication.getMyString(R.string.interface_no_scroll_bar_value)
         )
     }
     val scrollBarMode: LiveData<Event<String?>> by lazy { _scrollBarMode }
@@ -45,7 +44,7 @@ abstract class BaseListViewModel : BaseViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             val scrollBarMode = MyApplication.sharedPreferences.getString(
                 MyApplication.getMyString(R.string.interface_scroll_bar_key),
-                MyApplication.getMyString(BaseR.string.interface_no_scroll_bar_value)
+                MyApplication.getMyString(R.string.interface_no_scroll_bar_value)
             )!!
             setScrollBarMode(scrollBarMode)
 

@@ -7,8 +7,8 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
-import net.imknown.android.forefrontinfo.base.R
 
 abstract class BaseViewModel : ViewModel() {
     private val _changeScrollBarModeEvent by lazy { MutableLiveData<Event<Boolean>>() }

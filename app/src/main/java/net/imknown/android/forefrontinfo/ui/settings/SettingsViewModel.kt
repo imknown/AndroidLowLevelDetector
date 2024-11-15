@@ -22,7 +22,6 @@ import net.imknown.android.forefrontinfo.ui.base.IAndroidVersion
 import net.imknown.android.forefrontinfo.ui.base.JsonIo
 import java.security.MessageDigest
 import java.util.Locale
-import net.imknown.android.forefrontinfo.base.R as BaseR
 
 class SettingsViewModel : BaseViewModel(), IAndroidVersion {
     companion object {
@@ -41,8 +40,8 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
     private val _themesPrefChangeEvent by lazy {
         MyApplication.sharedPreferences.stringEventLiveData(
             viewModelScope,
-            MyApplication.getMyString(BaseR.string.interface_themes_key),
-            MyApplication.getMyString(BaseR.string.interface_themes_follow_system_value)
+            MyApplication.getMyString(R.string.interface_themes_key),
+            MyApplication.getMyString(R.string.interface_themes_follow_system_value)
         )
     }
     val themesPrefChangeEvent: LiveData<Event<String?>> by lazy { _themesPrefChangeEvent }
@@ -51,7 +50,7 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
         MyApplication.sharedPreferences.stringEventLiveData(
             viewModelScope,
             MyApplication.getMyString(R.string.interface_scroll_bar_key),
-            MyApplication.getMyString(BaseR.string.interface_no_scroll_bar_value)
+            MyApplication.getMyString(R.string.interface_no_scroll_bar_value)
         )
     }
     val scrollBarModeChangedEvent: LiveData<Event<String?>> by lazy { _scrollBarModeChangedEvent }
