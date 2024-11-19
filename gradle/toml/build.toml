@@ -7,7 +7,7 @@ minSdk = "21"
 compileSdk = "35"
 compileSdkPreview = "Baklava"
 
-compileSdkExtension = "13"
+compileSdkExtension = "14" # 35-ext14
 
 targetSdk = "35"
 targetSdkPreview = "Baklava"
