@@ -52,6 +52,10 @@ android {
         }
     }
 
+    androidResources {
+        // localeFilters += listOf("zh-rCN", "zh-rTW", "fr-rFR")
+    }
+
     signingConfigs {
         register("release") {
             val keystorePropertiesFile = file("$rootDir/local.properties")
