@@ -43,7 +43,6 @@ android {
         externalNativeBuild {
             cmake {
                 arguments += listOf("-DANDROID_ARM_NEON=TRUE", "-DANDROID_TOOLCHAIN=clang")
-                arguments += listOf("-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON")
 
                 cFlags += listOf("-D__STDC_FORMAT_MACROS")
 
