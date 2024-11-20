@@ -19,6 +19,7 @@ android {
     // compileSdkExtension = libsBuild.versions.compileSdkExtension.get().toInt()
     // compileSdkPreview = libsBuild.versions.compileSdkPreview.get()
     buildToolsVersion = libsBuild.versions.buildTools.get()
+    // buildToolsVersion = libsBuild.versions.buildToolsPreview.get()
 
     defaultConfig {
         versionCode = libsBuild.versions.versionCode.get().toInt()

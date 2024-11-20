@@ -1,6 +1,7 @@
 [versions]
 # https://developer.android.com/studio/releases/build-tools.html#notes
 buildTools = "35.0.0"
+buildToolsPreview = "36.0.0-rc1"
 
 minSdk = "21"
 
