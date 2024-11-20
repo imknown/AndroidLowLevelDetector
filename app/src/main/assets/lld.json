@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2024-11-18 21:45 +0800",
+  "version": "2024-11-20 19:25 +0800",
   "android": {
     "securityPatchLevel": "2024-11-05",
     "googlePlaySystemUpdates": "2024-11-01",
@@ -33,15 +33,15 @@
       "version": "12, SnowCone"
     },
     "preview": {
-      "name": "VanillaIceCream",
-      "api": "35",
-      "version": "15 QPR2 Beta 1, VanillaIceCream",
+      "name": "Baklava",
+      "api": "36",
+      "version": "16 DP1, Baklava",
       "phase": ""
     },
     "internal": {
       "name": "Baklava",
       "api": "36",
-      "version": "16 internal, Baklava"
+      "version": "16 DP1, Baklava"
     }
   },
   "linux": {
@@ -75,7 +75,7 @@
   },
   "webView": {
     "stable": {
-      "version": "131.0.6778.39"
+      "version": "131.0.6778.81"
     },
     "beta": {
       "version": "132.0.6834.5"
