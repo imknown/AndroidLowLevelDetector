@@ -40,7 +40,6 @@ android {
 
         ndkVersion = libsBuild.versions.ndk.get()
 
-        @Suppress("UnstableApiUsage")
         externalNativeBuild {
             cmake {
                 arguments += listOf("-DANDROID_ARM_NEON=TRUE", "-DANDROID_TOOLCHAIN=clang")
