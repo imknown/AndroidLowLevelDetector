@@ -14,7 +14,7 @@ targetSdk = "35"
 targetSdkPreview = "Baklava"
 
 ndk = "28.0.12674087 rc2"
-cmake = "3.31.0"
+cmake = "3.31.1"
 
 versionCode = "64"
 versionName = "1.17.2_unpublished"
