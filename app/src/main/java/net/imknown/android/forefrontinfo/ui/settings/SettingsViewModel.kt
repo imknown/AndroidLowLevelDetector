@@ -102,12 +102,7 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
         // endregion [installer]
 
         // region [install time]
-        val packageInfo = if (isAtLeastStableAndroid13()) {
-            val flags = PackageManager.PackageInfoFlags.of(0)
-            packageManager.getPackageInfo(packageName, flags)
-        } else {
-            packageManager.getPackageInfo(packageName, 0)
-        }
+        val packageInfo = getPackageInfo2(packageManager, packageName)
         val firstInstallTime = packageInfo.firstInstallTime.formatToLocalZonedDatetimeString()
         val lastUpdateTime = packageInfo.lastUpdateTime.formatToLocalZonedDatetimeString()
         // endregion [install time]
@@ -171,16 +166,6 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
             KEY_SHA_256_PUBLIC_DEBUG -> R.string.about_distributor_public_debug
             else -> android.R.string.unknownName
         }
-    }
-
-    private fun getInstallerPackageName(
-        packageName: String,
-        packageManager: PackageManager
-    ) = if (isAtLeastStableAndroid11()) {
-        packageManager.getInstallSourceInfo(packageName).installingPackageName
-    } else {
-        @Suppress("Deprecation")
-        packageManager.getInstallerPackageName(packageName)
     }
 
     private fun getApplicationLabel(
