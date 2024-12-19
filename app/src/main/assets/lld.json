@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2024-12-17 18:55 +0800",
+  "version": "2024-12-19 19:55 +0800",
   "android": {
     "securityPatchLevel": "2024-12-05",
     "googlePlaySystemUpdates": "2024-12-01",
@@ -43,7 +43,7 @@
     "preview": {
       "name": "Baklava",
       "api": "36",
-      "version": "16 DP1, Baklava",
+      "version": "16 DP2, Baklava",
       "phase": ""
     },
     "internal": {
@@ -83,10 +83,10 @@
   },
   "webView": {
     "stable": {
-      "version": "131.0.6778.135"
+      "version": "131.0.6778.200"
     },
     "beta": {
-      "version": "132.0.6834.43"
+      "version": "132.0.6834.56"
     }
   }
 }
