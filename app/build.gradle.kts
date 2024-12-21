@@ -35,8 +35,6 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        resourceConfigurations.addAll(listOf("zh-rCN", "zh-rTW", "fr-rFR"))
-
         buildConfigField("String", "GIT_BRANCH", "\"$currentGitBranchName\"")
 
         ndkVersion = libsBuild.versions.ndk.get()
@@ -53,7 +51,7 @@ android {
     }
 
     androidResources {
-        // localeFilters += listOf("zh-rCN", "zh-rTW", "fr-rFR")
+        localeFilters += listOf("zh-rCN", "zh-rTW", "fr-rFR")
     }
 
     signingConfigs {
