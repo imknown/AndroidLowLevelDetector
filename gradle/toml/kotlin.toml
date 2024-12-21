@@ -1,16 +1,16 @@
 [versions]
 # https://github.com/JetBrains/kotlin/releases
 kotlin = "2.1.0"
-kotlin-beta = "2.1.0-beta2"
+kotlin-beta = "2.1.20-Beta1"
 
 # https://github.com/Kotlin/kotlinx.coroutines/releases
-kotlinx-coroutines = "1.9.0"
+kotlinx-coroutines = "1.10.1"
 
 # https://github.com/Kotlin/kotlinx.serialization/releases
 kotlinx-serialization = "1.8.0-RC"
 
 # https://github.com/ktorio/ktor/releases
-ktor = "3.0.2"
+ktor = "3.0.3"
 ktor-beta = "3.0.0-beta-2"
 
 [libraries]
