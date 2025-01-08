@@ -1,27 +1,23 @@
 {
   "scheme": 1,
-  "version": "2025-01-07 21:25 +0800",
+  "version": "2025-01-08 21:45 +0800",
   "android": {
     "securityPatchLevel": "2025-01-05",
     "googlePlaySystemUpdates": "2025-01-01",
     "build": {
-      "version": "2024-12-10",
+      "version": "2025-01-07",
       "details": [
         {
-          "id": "AP4A.241205.013",
-          "revision": "r6"
+          "id": "AP4A.250105.002",
+          "revision": "r10"
         },
         {
-          "id": "AP4A.241205.013.A2",
-          "revision": "r7"
+          "id": "AP4A.250105.002.A1",
+          "revision": "r11"
         },
         {
-          "id": "AP4A.241205.013.B1",
-          "revision": "r8"
-        },
-        {
-          "id": "AP4A.241205.013.C1",
-          "revision": "r9"
+          "id": "AP4A.250105.002.B1",
+          "revision": "r12"
         }
       ]
     },
