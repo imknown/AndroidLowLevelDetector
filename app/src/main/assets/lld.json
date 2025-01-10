@@ -1,27 +1,23 @@
 {
   "scheme": 1,
-  "version": "2025-01-07 21:25 +0800",
+  "version": "2025-01-10 19:00 +0800",
   "android": {
     "securityPatchLevel": "2025-01-05",
     "googlePlaySystemUpdates": "2025-01-01",
     "build": {
-      "version": "2024-12-10",
+      "version": "2025-01-07",
       "details": [
         {
-          "id": "AP4A.241205.013",
-          "revision": "r6"
+          "id": "AP4A.250105.002",
+          "revision": "r10"
         },
         {
-          "id": "AP4A.241205.013.A2",
-          "revision": "r7"
+          "id": "AP4A.250105.002.A1",
+          "revision": "r11"
         },
         {
-          "id": "AP4A.241205.013.B1",
-          "revision": "r8"
-        },
-        {
-          "id": "AP4A.241205.013.C1",
-          "revision": "r9"
+          "id": "AP4A.250105.002.B1",
+          "revision": "r12"
         }
       ]
     },
@@ -33,7 +29,7 @@
     "stablePreview": {
       "name": "VanillaIceCream",
       "api": "35",
-      "version": "15 QPR2 Beta 2, VanillaIceCream"
+      "version": "15 QPR2 Beta 2.1, VanillaIceCream"
     },
     "support": {
       "name": "SnowCone",
@@ -55,12 +51,11 @@
   "linux": {
     "google": {
       "versions": [
-        "6.6.69",
-        "6.1.123",
-        "5.15.175",
-        "5.10.232",
-        "5.4.288",
-        "4.19.325"
+        "6.6.70",
+        "6.1.124",
+        "5.15.176",
+        "5.10.233",
+        "5.4.289"
       ]
     },
     "mainline": {
@@ -83,10 +78,10 @@
   },
   "webView": {
     "stable": {
-      "version": "131.0.6778.200"
+      "version": "132.0.6834.79"
     },
     "beta": {
-      "version": "132.0.6834.56"
+      "version": "132.0.6834.79"
     }
   }
 }
