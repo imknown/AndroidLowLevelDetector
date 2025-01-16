@@ -11,7 +11,7 @@ desugarJdkLibs = "2.1.4"
 
 # region [AndroidX]
 # https://developer.android.com/jetpack/androidx/releases/activity
-activity = "1.10.0-rc01"
+activity = "1.10.0"
 activity-alpha = "1.10.0-beta01"
 
 # https://developer.android.com/jetpack/androidx/releases/annotation
@@ -53,7 +53,7 @@ lifecycle-alpha = "2.9.0-alpha08"
 preference = "1.2.1"
 
 # https://developer.android.com/jetpack/androidx/releases/recyclerview
-recyclerView = "1.4.0-rc01"
+recyclerView = "1.4.0"
 recyclerView-beta = "1.4.0-beta01"
 recyclerView-alpha = "1.4.0-alpha02"
 
@@ -68,7 +68,7 @@ swipeRefreshLayout-alpha = "1.2.0-alpha01"
 # https://developer.android.com/jetpack/androidx/releases/webkit
 webkit = "1.12.1"
 webkit-beta = "1.12.0-beta01"
-webkit-alpha = "1.13.0-alpha02"
+webkit-alpha = "1.13.0-alpha03"
 
 # https://developer.android.com/jetpack/androidx/releases/test
 # region [Test]
