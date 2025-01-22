@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2025-01-21 20:35 +0800",
+  "version": "2025-01-22 20:35 +0800",
   "android": {
     "securityPatchLevel": "2025-01-05",
     "googlePlaySystemUpdates": "2025-01-01",
@@ -18,6 +18,10 @@
         {
           "id": "AP4A.250105.002.B1",
           "revision": "r12"
+        },
+        {
+          "id": "AP4A.250105.002.C1",
+          "revision": "r13"
         }
       ]
     },
@@ -29,7 +33,7 @@
     "stablePreview": {
       "name": "VanillaIceCream",
       "api": "35",
-      "version": "15 QPR2 Beta 2.1, VanillaIceCream"
+      "version": "15 QPR2 Beta 3, VanillaIceCream"
     },
     "support": {
       "name": "SnowCone",
