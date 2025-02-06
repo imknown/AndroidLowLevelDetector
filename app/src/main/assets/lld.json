@@ -1,27 +1,27 @@
 {
   "scheme": 1,
-  "version": "2025-01-30 09:35 +0800",
+  "version": "2025-02-06 22:10 +0800",
   "android": {
-    "securityPatchLevel": "2025-01-05",
-    "googlePlaySystemUpdates": "2025-01-01",
+    "securityPatchLevel": "2025-02-05",
+    "googlePlaySystemUpdates": "2025-02-01",
     "build": {
-      "version": "2025-01-07",
+      "version": "2025-02-04",
       "details": [
         {
-          "id": "AP4A.250105.002",
-          "revision": "r10"
+          "id": "AP4A.250205.002",
+          "revision": "r14"
         },
         {
-          "id": "AP4A.250105.002.A1",
-          "revision": "r11"
+          "id": "AP4A.250205.002.A1",
+          "revision": "r15"
         },
         {
-          "id": "AP4A.250105.002.B1",
-          "revision": "r12"
+          "id": "AP4A.250205.002.B2",
+          "revision": "r16"
         },
         {
-          "id": "AP4A.250105.002.C1",
-          "revision": "r13"
+          "id": "AP4A.250205.002.C1",
+          "revision": "r17"
         }
       ]
     },
@@ -55,15 +55,16 @@
   "linux": {
     "google": {
       "versions": [
-        "6.6.74",
-        "6.1.127",
-        "5.15.177",
-        "5.10.233",
-        "5.4.289"
+        "6.12.12",
+        "6.6.75",
+        "6.1.128",
+        "5.15.178",
+        "5.10.234",
+        "5.4.290"
       ]
     },
     "mainline": {
-      "version": "6.13"
+      "version": "6.14-rc1"
     }
   },
   "toybox": {
@@ -82,10 +83,10 @@
   },
   "webView": {
     "stable": {
-      "version": "133.0.6943.39"
+      "version": "133.0.6943.49"
     },
     "beta": {
-      "version": "133.0.6943.39"
+      "version": "134.0.6998.4"
     }
   }
 }
