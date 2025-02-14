@@ -16,11 +16,8 @@ object DefaultShell : IShell {
             exitCode = process.exitValue()
             isSuccess = (exitCode == 0)
 
-            output += if (isSuccess) {
-                process.inputStream.bufferedReader().readLines()
-            } else {
-                process.errorStream.bufferedReader().readLines()
-            }
+            val stream = with(process) { if (isSuccess) inputStream else errorStream }
+            output += stream.bufferedReader().readLines()
         } catch (e: Exception) {
             output += (e.message ?: "")
         }
