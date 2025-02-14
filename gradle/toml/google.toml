@@ -9,7 +9,7 @@ firebase-bom = "33.9.0"
 
 # https://firebase.google.com/docs/crashlytics/get-started?platform=android
 # https://firebase.google.com/docs/crashlytics/ndk-reports
-firebase-crashlytics-gradlePlugin = "3.0.2"
+firebase-crashlytics-gradlePlugin = "3.0.3"
 
 # https://github.com/material-components/material-components-android/releases
 material = "1.12.0"
