@@ -2,9 +2,9 @@ package net.imknown.android.forefrontinfo.ui.settings
 
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.util.Log
 import androidx.annotation.StringRes
+import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -59,7 +59,7 @@ class SettingsViewModel : BaseViewModel(), IAndroidVersion {
     val showMessageEvent: LiveData<Event<Int>> by lazy { _showMessageEvent }
 
     fun openInExternal(@StringRes uriResId: Int) = viewModelScope.launch(Dispatchers.Default) {
-        val uri = Uri.parse(MyApplication.getMyString(uriResId))
+        val uri = MyApplication.getMyString(uriResId).toUri()
         val intent = Intent(Intent.ACTION_VIEW, uri).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
