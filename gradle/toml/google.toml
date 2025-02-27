@@ -13,7 +13,7 @@ firebase-crashlytics-gradlePlugin = "3.0.3"
 
 # https://github.com/material-components/material-components-android/releases
 material = "1.12.0"
-material-alpha = "1.13.0-alpha10"
+material-alpha = "1.13.0-alpha11"
 
 [libraries]
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
