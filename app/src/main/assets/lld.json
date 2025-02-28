@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2025-02-25 21:00 +0800",
+  "version": "2025-02-28 08:45 +0800",
   "android": {
     "securityPatchLevel": "2025-02-05",
     "googlePlaySystemUpdates": "2025-02-01",
@@ -43,13 +43,13 @@
     "preview": {
       "name": "Baklava",
       "api": "36",
-      "version": "16 Beta 2, Baklava",
+      "version": "16 Beta 2.1, Baklava",
       "phase": ""
     },
     "internal": {
       "name": "Baklava",
       "api": "36",
-      "version": "16 Beta 2, Baklava"
+      "version": "16 Beta 2.1, Baklava"
     }
   },
   "linux": {
@@ -83,10 +83,10 @@
   },
   "webView": {
     "stable": {
-      "version": "133.0.6943.121"
+      "version": "134.0.6998.39"
     },
     "beta": {
-      "version": "134.0.6998.24"
+      "version": "134.0.6998.39"
     }
   }
 }
