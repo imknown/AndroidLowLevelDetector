@@ -13,8 +13,8 @@ compileSdkExtension = "14" # 35-ext14
 targetSdk = "35"
 targetSdkPreview = "Baklava"
 
-ndk = "28.0.13004108"
-cmake = "3.31.5"
+ndk = "29.0.13113456 rc1"
+cmake = "3.31.6"
 
 versionCode = "64"
 versionName = "1.17.2_unpublished"
