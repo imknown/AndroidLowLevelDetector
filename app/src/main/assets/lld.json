@@ -1,27 +1,27 @@
 {
   "scheme": 1,
-  "version": "2025-02-28 20:10 +0800",
+  "version": "2025-03-06 09:55 +0800",
   "android": {
-    "securityPatchLevel": "2025-02-05",
-    "googlePlaySystemUpdates": "2025-02-01",
+    "securityPatchLevel": "2025-03-05",
+    "googlePlaySystemUpdates": "2025-03-01",
     "build": {
-      "version": "2025-02-04",
+      "version": "2025-03-04",
       "details": [
         {
-          "id": "AP4A.250205.002",
-          "revision": "r14"
+          "id": "BP1A.250305.019",
+          "revision": "r20"
         },
         {
-          "id": "AP4A.250205.002.A1",
-          "revision": "r15"
+          "id": "BP1A.250305.020",
+          "revision": "r21"
         },
         {
-          "id": "AP4A.250205.002.B2",
-          "revision": "r16"
+          "id": "BP1A.250305.020.A2",
+          "revision": "r22"
         },
         {
-          "id": "AP4A.250205.002.C1",
-          "revision": "r17"
+          "id": "BP1A.250305.020.T2",
+          "revision": "r23"
         }
       ]
     },
@@ -47,9 +47,9 @@
       "phase": ""
     },
     "internal": {
-      "name": "Baklava",
-      "api": "36",
-      "version": "16 Beta 2.1, Baklava"
+      "name": "C",
+      "api": "37",
+      "version": "17 Internal, C"
     }
   },
   "linux": {
@@ -64,7 +64,7 @@
       ]
     },
     "mainline": {
-      "version": "6.14-rc4"
+      "version": "6.14-rc5"
     }
   },
   "toybox": {
