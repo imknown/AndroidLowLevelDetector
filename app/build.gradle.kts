@@ -17,9 +17,12 @@ android {
 
     compileSdk = libsBuild.versions.compileSdk.get().toInt()
     // compileSdkExtension = libsBuild.versions.compileSdkExtension.get().toInt()
-    // compileSdkPreview = libsBuild.versions.compileSdkPreview.get()
     buildToolsVersion = libsBuild.versions.buildTools.get()
-    // buildToolsVersion = libsBuild.versions.buildToolsPreview.get()
+    val isPreview = libsBuild.versions.isPreview.get().toBoolean()
+    if (isPreview) {
+        compileSdkPreview = libsBuild.versions.compileSdkPreview.get()
+        buildToolsVersion = libsBuild.versions.buildToolsPreview.get()
+    }
 
     defaultConfig {
         versionCode = libsBuild.versions.versionCode.get().toInt()
@@ -31,7 +34,9 @@ android {
 
         minSdk = libsBuild.versions.minSdk.get().toInt()
         targetSdk = libsBuild.versions.targetSdk.get().toInt()
-        // targetSdkPreview = libsBuild.versions.targetSdkPreview.get()
+        if (isPreview) {
+            targetSdkPreview = libsBuild.versions.targetSdkPreview.get()
+        }
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
