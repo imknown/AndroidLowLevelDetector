@@ -68,7 +68,7 @@ swipeRefreshLayout = "1.1.0"
 swipeRefreshLayout-alpha = "1.2.0-beta01"
 
 # https://developer.android.com/jetpack/androidx/releases/webkit
-webkit = "1.13.0-rc01"
+webkit = "1.13.0"
 webkit-beta = "1.12.0-beta01"
 webkit-alpha = "1.13.0-alpha03"
 
