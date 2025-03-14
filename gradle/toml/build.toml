@@ -19,7 +19,7 @@ ndk = "29.0.13113456 rc1"
 cmake = "3.31.6"
 
 versionCode = "64"
-versionName = "1.17.2_unpublished"
+versionName = "1.17.2" # "_unpublished"
 
 [libraries]
 
