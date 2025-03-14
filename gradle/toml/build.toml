@@ -10,7 +10,7 @@ minSdk = "21"
 compileSdk = "36"
 compileSdkPreview = "C"
 
-compileSdkExtension = "15" # 35-ext15 (Wear OS 5.1)
+compileSdkExtension = "17" # 36-ext17 (Android 16 Beta 3)
 
 targetSdk = "36"
 targetSdkPreview = "C"
