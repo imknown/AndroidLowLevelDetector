@@ -2,18 +2,18 @@
 isPreview = "false" # true
 
 # https://developer.android.com/studio/releases/build-tools.html#notes
-buildTools = "35.0.0"
+buildTools = "36.0.0"
 buildToolsPreview = "36.0.0-rc5"
 
 minSdk = "21"
 
-compileSdk = "35"
-compileSdkPreview = "Baklava"
+compileSdk = "36"
+compileSdkPreview = "C"
 
-compileSdkExtension = "14" # 35-ext14
+compileSdkExtension = "15" # 35-ext15 (Wear OS 5.1)
 
-targetSdk = "35"
-targetSdkPreview = "Baklava"
+targetSdk = "36"
+targetSdkPreview = "C"
 
 ndk = "29.0.13113456 rc1"
 cmake = "3.31.6"
