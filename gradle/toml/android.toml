@@ -1,7 +1,7 @@
 # https://maven.google.com
 [versions]
 androidGradlePlugin = "8.9.0"
-androidGradlePlugin-beta = "8.9.0-beta01"
+androidGradlePlugin-beta = "8.10.0-beta01"
 androidGradlePlugin-canary = "8.10.0-alpha08"
 
 # https://developer.android.com/studio/write/java8-support#library-desugaring
