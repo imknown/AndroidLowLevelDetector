@@ -57,6 +57,7 @@ android {
 
     androidResources {
         localeFilters += listOf("zh-rCN", "zh-rTW", "fr-rFR")
+        generateLocaleConfig = true
     }
 
     signingConfigs {
