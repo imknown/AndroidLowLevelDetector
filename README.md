@@ -8,12 +8,13 @@ Some source codes refer to [Magisk][Magisk], [OpenGApps][OpenGApps], [TrebleInfo
 [TrebleCheck]:https://github.com/kevintresuelo/treble
 
 ## Source
-- https://github.com/imknown/AndroidLowLevelDetector
-- https://gitee.com/imknown/AndroidLowLevelDetector (Mirror)
+1. https://github.com/imknown/AndroidLowLevelDetector
+1. https://gitee.com/imknown/AndroidLowLevelDetector (Mirror)
 
 ## Download
 1. https://play.google.com/store/apps/details?id=net.imknown.android.forefrontinfo
-2. https://github.com/imknown/AndroidLowLevelDetector/releases
+1. https://github.com/imknown/AndroidLowLevelDetector/releases
+1. https://gitee.com/imknown/AndroidLowLevelDetector/releases (Mirror)
 
 ## Features
 <details>
