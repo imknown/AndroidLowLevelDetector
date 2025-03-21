@@ -12,15 +12,11 @@ desugarJdkLibs = "2.1.5"
 # region [AndroidX]
 # https://developer.android.com/jetpack/androidx/releases/activity
 activity = "1.10.1"
-activity-alpha = "1.10.0-beta01"
 
 # https://developer.android.com/jetpack/androidx/releases/annotation
 annotation = "1.9.1"
-annotation-beta = "1.9.0-beta01"
-annotation-alpha = "1.9.0-alpha03"
 
 annotation-experimental = "1.4.1"
-annotation-experimental-alpha = "1.5.0-alpha01"
 
 # https://developer.android.com/jetpack/androidx/releases/appcompat
 appcompat = "1.7.0"
@@ -33,44 +29,33 @@ cardView = "1.0.0"
 
 # https://developer.android.com/jetpack/androidx/releases/constraintlayout
 constraintLayout = "2.2.1"
-constraintLayout-alpha = "2.2.0-beta01"
 
 # https://developer.android.com/jetpack/androidx/releases/coordinatorlayout
 coordinatorLayout = "1.3.0"
-coordinatorLayout-beta = "1.3.0-beta01"
-coordinatorLayout-alpha = "1.3.0-alpha02"
 
 # https://developer.android.com/jetpack/androidx/releases/core
 core = "1.15.0"
-core-alpha = "1.16.0-alpha02"
 
 # https://developer.android.com/jetpack/androidx/releases/fragment
 fragment = "1.8.6"
 
 # https://developer.android.com/jetpack/androidx/releases/lifecycle
 lifecycle = "2.8.7"
-lifecycle-alpha = "2.9.0-alpha11"
 
 # https://developer.android.com/jetpack/androidx/releases/preference
 preference = "1.2.1"
 
 # https://developer.android.com/jetpack/androidx/releases/recyclerview
 recyclerView = "1.4.0"
-recyclerView-beta = "1.4.0-beta01"
-recyclerView-alpha = "1.4.0-alpha02"
 
 # https://developer.android.com/jetpack/androidx/releases/savedstate
 savedState = "1.2.1"
-savedState-alpha = "1.3.0-alpha09"
 
 # https://developer.android.com/jetpack/androidx/releases/swiperefreshlayout
 swipeRefreshLayout = "1.1.0"
-swipeRefreshLayout-alpha = "1.2.0-beta01"
 
 # https://developer.android.com/jetpack/androidx/releases/webkit
 webkit = "1.13.0"
-webkit-beta = "1.12.0-beta01"
-webkit-alpha = "1.13.0-alpha03"
 
 # https://developer.android.com/jetpack/androidx/releases/test
 # region [Test]
@@ -92,9 +77,9 @@ appcompat-resources = { group = "androidx.appcompat", name = "appcompat-resource
 arch-core-common = { group = "androidx.arch.core", name = "core-common", version.ref = "arch-core" }
 arch-core-runtime = { group = "androidx.arch.core", name = "core-runtime", version.ref = "arch-core" }
 cardView = { group = "androidx.cardview", name = "cardview", version.ref = "cardView" }
-core = { group = "androidx.core", name = "core-ktx", version.ref = "core" }
 constraintLayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintLayout" }
 coordinatorLayout = { group = "androidx.coordinatorlayout", name = "coordinatorlayout", version.ref = "coordinatorLayout" }
+core = { group = "androidx.core", name = "core-ktx", version.ref = "core" }
 fragment = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragment" }
 lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 lifecycle-viewmodel-savedstate = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-savedstate", version.ref = "lifecycle" }

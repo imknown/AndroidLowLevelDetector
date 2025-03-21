@@ -4,7 +4,6 @@ libsu = "6.0.0"
 
 # https://github.com/square/leakcanary/releases
 leakCanary = "2.14"
-leakCanary-alpha = "v3.0-alpha-8"
 
 # https://github.com/G00fY2/version-compare/releases
 versionCompare = "1.5.0"
