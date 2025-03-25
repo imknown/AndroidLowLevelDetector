@@ -23,5 +23,8 @@ shizuku-api = { group = "dev.rikka.shizuku", name = "api", version.ref = "shizuk
 shizuku-provider = { group = "dev.rikka.shizuku", name = "provider", version.ref = "shizuku" }
 
 [bundles]
+leakCanary = ["leakCanary-android"] # "leakCanary-plumber-android"
+
+shizuku = ["shizuku-api", "shizuku-provider"]
 
 [plugins]

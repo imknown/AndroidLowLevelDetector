@@ -22,6 +22,7 @@ firebase-crashlytics-ndk = { group = "com.google.firebase", name = "firebase-cra
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 [bundles]
+firebase = ["firebase-analytics", "firebase-crashlytics-ndk"]
 
 [plugins]
 googleServices = { id = "com.google.gms.google-services", version.ref = "googleServices-gradlePlugin" }
