@@ -12,7 +12,6 @@ kotlinx-serialization = "1.8.0"
 ktor = "3.1.1"
 
 [libraries]
-kotlin = { group = "org.jetbrains.kotlin", name = "stdlib-jdk8", version.ref = "kotlin" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 
