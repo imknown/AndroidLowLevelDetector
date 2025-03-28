@@ -21,6 +21,8 @@ cmake = "3.31.6"
 versionCode = "65"
 versionName = "1.17.3_unpublished"
 
+javaToolchain = "21"
+
 [libraries]
 
 [bundles]

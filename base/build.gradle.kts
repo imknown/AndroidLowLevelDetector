@@ -28,15 +28,19 @@ android {
         isCoreLibraryDesugaringEnabled = true
     }
 
+    // region [Toolchain]
+    val javaToolchain = libsBuild.versions.javaToolchain.get().toInt()
+
 //    java {
 //        toolchain {
-//            languageVersion = JavaLanguageVersion.of(17)
+//            languageVersion = JavaLanguageVersion.of(javaToolchain)
 //        }
 //    }
 
     kotlin {
-        jvmToolchain(17)
+        jvmToolchain(javaToolchain)
     }
+    // endregion [Toolchain]
 }
 
 dependencies {
