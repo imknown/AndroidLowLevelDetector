@@ -8,7 +8,6 @@ import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -20,6 +19,7 @@ import kotlinx.coroutines.launch
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.mvvm.IView
 import net.imknown.android.forefrontinfo.base.mvvm.viewBinding
+import net.imknown.android.forefrontinfo.base.mvvm.windowInsetsCompatTypes
 import net.imknown.android.forefrontinfo.databinding.MainActivityBinding
 import net.imknown.android.forefrontinfo.ui.home.HomeFragment
 import net.imknown.android.forefrontinfo.ui.others.OthersFragment
@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity(), IView {
         enableEdgeToEdge()
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.appBar) { view, windowInsets ->
-            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val insets = windowInsets.getInsets(windowInsetsCompatTypes)
             view.updatePadding(
                 left = insets.left,
                 right = insets.right,
@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity(), IView {
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.bottomNavigationView) { view, windowInsets ->
-            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val insets = windowInsets.getInsets(windowInsetsCompatTypes)
             view.updatePadding(
                 left = insets.left,
                 right = insets.right,

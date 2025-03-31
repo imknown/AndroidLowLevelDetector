@@ -4,10 +4,13 @@ import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 
 interface IView
+
+val windowInsetsCompatTypes = WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
 
 inline fun <T : ViewBinding> Activity.viewBinding(
     crossinline inflate: (LayoutInflater) -> T
