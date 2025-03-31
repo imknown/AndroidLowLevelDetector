@@ -13,11 +13,11 @@ import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.extension.isChinaMainlandTimezone
 import net.imknown.android.forefrontinfo.base.mvvm.EventObserver
-import net.imknown.android.forefrontinfo.base.mvvm.IFragmentView
+import net.imknown.android.forefrontinfo.base.mvvm.FragmentMixin
 import net.imknown.android.forefrontinfo.base.mvvm.windowInsetsCompatTypes
 import com.google.android.material.R as materialR
 
-class SettingsFragment : PreferenceFragmentCompat(), IFragmentView {
+class SettingsFragment : PreferenceFragmentCompat(), FragmentMixin {
 
     companion object {
         fun newInstance() = SettingsFragment()

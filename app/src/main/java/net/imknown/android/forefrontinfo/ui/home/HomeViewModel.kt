@@ -24,7 +24,7 @@ import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.extension.formatToLocalZonedDatetimeString
 import net.imknown.android.forefrontinfo.base.mvvm.Event
 import net.imknown.android.forefrontinfo.base.mvvm.booleanEventLiveData
-import net.imknown.android.forefrontinfo.ui.base.IAndroidVersion
+import net.imknown.android.forefrontinfo.ui.base.AndroidVersionMixin
 import net.imknown.android.forefrontinfo.ui.base.JsonIo
 import net.imknown.android.forefrontinfo.ui.base.fromJson
 import net.imknown.android.forefrontinfo.ui.base.list.BaseListViewModel
@@ -33,9 +33,9 @@ import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.home.model.Subtitle
 import java.io.File
 
-class HomeViewModel : BaseListViewModel(), IAndroidVersion {
+class HomeViewModel : BaseListViewModel(), AndroidVersionMixin {
 
-    companion object : IAndroidVersion {
+    companion object : AndroidVersionMixin {
         // region [Build ID]
         private const val BUILD_ID_SEPARATOR = '.'
 

@@ -11,12 +11,12 @@ import kotlinx.coroutines.launch
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.extension.formatToLocalZonedDatetimeString
-import net.imknown.android.forefrontinfo.ui.base.IAndroidVersion
+import net.imknown.android.forefrontinfo.ui.base.AndroidVersionMixin
 import net.imknown.android.forefrontinfo.ui.base.list.BasePureListViewModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.home.HomeViewModel
 
-class OthersViewModel : BasePureListViewModel(), IAndroidVersion {
+class OthersViewModel : BasePureListViewModel(), AndroidVersionMixin {
 
     companion object {
         private const val PROP_RO_PRODUCT_CPU_ABI = "ro.product.cpu.abi"

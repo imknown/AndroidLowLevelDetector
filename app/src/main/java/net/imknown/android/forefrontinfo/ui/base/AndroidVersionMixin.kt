@@ -6,7 +6,7 @@ import androidx.core.content.ContextCompat
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 
-interface IAndroidVersion {
+interface AndroidVersionMixin {
     companion object {
         private const val CODENAME_RELEASE = "REL"
     }

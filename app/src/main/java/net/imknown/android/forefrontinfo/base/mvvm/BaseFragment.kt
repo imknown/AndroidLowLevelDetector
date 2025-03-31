@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 
-abstract class BaseFragment<T : ViewBinding> : Fragment(), IFragmentView {
+abstract class BaseFragment<T : ViewBinding> : Fragment(), FragmentMixin {
     override val visualContext by lazy { context }
 
     private var _binding: T? = null

@@ -17,7 +17,6 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.imknown.android.forefrontinfo.R
-import net.imknown.android.forefrontinfo.base.mvvm.IView
 import net.imknown.android.forefrontinfo.base.mvvm.viewBinding
 import net.imknown.android.forefrontinfo.base.mvvm.windowInsetsCompatTypes
 import net.imknown.android.forefrontinfo.databinding.MainActivityBinding
@@ -26,7 +25,7 @@ import net.imknown.android.forefrontinfo.ui.others.OthersFragment
 import net.imknown.android.forefrontinfo.ui.prop.PropFragment
 import net.imknown.android.forefrontinfo.ui.settings.SettingsFragment
 
-class MainActivity : AppCompatActivity(), IView {
+class MainActivity : AppCompatActivity() {
 
     private val binding by viewBinding(MainActivityBinding::inflate)
 

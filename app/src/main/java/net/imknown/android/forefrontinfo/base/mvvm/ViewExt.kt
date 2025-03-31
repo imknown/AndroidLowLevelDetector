@@ -8,8 +8,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 
-interface IView
-
 val windowInsetsCompatTypes = WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
 
 inline fun <T : ViewBinding> Activity.viewBinding(
