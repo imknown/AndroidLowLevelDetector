@@ -2,12 +2,12 @@ package net.imknown.android.forefrontinfo.ui
 
 import android.os.Bundle
 import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -52,7 +52,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        enableEdgeToEdge()
+        // https://developer.android.com/design/ui/mobile/guides/foundations/system-bars#button_modes
+        // https://developer.android.com/develop/ui/views/layout/edge-to-edge#create-transparent
+        // https://developer.android.com/develop/ui/views/layout/edge-to-edge-manually#change-color
+        // https://developer.android.com/develop/ui/compose/layouts/system-bars#create-transparent
+        // enableEdgeToEdge()
+        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.appBar) { view, windowInsets ->
             val insets = windowInsets.getInsets(windowInsetsCompatTypes)
