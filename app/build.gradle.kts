@@ -130,20 +130,6 @@ android {
         isCoreLibraryDesugaringEnabled = true
     }
 
-    // region [Toolchain]
-    val javaToolchain = libsBuild.versions.javaToolchain.get().toInt()
-
-//    java {
-//        toolchain {
-//            languageVersion = JavaLanguageVersion.of(javaToolchain)
-//        }
-//    }
-
-    kotlin {
-        jvmToolchain(javaToolchain)
-    }
-    // endregion [Toolchain]
-
     externalNativeBuild {
         cmake {
             path("CMakeLists.txt")
@@ -160,6 +146,16 @@ android {
         resources.excludes += "DebugProbesKt.bin"
     }
 }
+
+// region [Toolchain]
+// https://developer.android.com/build/jdks
+// https://kotlinlang.org/docs/gradle-configure-project.html
+// https://docs.gradle.org/current/userguide/toolchains.html
+private val javaToolchain = libsBuild.versions.javaToolchain.get().toInt()
+kotlin {
+    jvmToolchain(javaToolchain)
+}
+// endregion [Toolchain]
 
 fun Task.disable() {
     println("Task $name disabled.")

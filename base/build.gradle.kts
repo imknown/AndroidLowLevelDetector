@@ -27,21 +27,17 @@ android {
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
     }
-
-    // region [Toolchain]
-    val javaToolchain = libsBuild.versions.javaToolchain.get().toInt()
-
-//    java {
-//        toolchain {
-//            languageVersion = JavaLanguageVersion.of(javaToolchain)
-//        }
-//    }
-
-    kotlin {
-        jvmToolchain(javaToolchain)
-    }
-    // endregion [Toolchain]
 }
+
+// region [Toolchain]
+// https://developer.android.com/build/jdks
+// https://kotlinlang.org/docs/gradle-configure-project.html
+// https://docs.gradle.org/current/userguide/toolchains.html
+private val javaToolchain = libsBuild.versions.javaToolchain.get().toInt()
+kotlin {
+    jvmToolchain(javaToolchain)
+}
+// endregion [Toolchain]
 
 dependencies {
     api(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
