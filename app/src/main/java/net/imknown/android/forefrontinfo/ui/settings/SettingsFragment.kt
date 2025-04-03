@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.annotation.StringRes
 import androidx.core.view.ViewCompat
+import androidx.core.view.doOnLayout
 import androidx.core.view.updatePadding
 import androidx.fragment.app.viewModels
 import androidx.preference.ListPreference
@@ -15,7 +16,7 @@ import net.imknown.android.forefrontinfo.base.extension.isChinaMainlandTimezone
 import net.imknown.android.forefrontinfo.base.mvvm.EventObserver
 import net.imknown.android.forefrontinfo.base.mvvm.FragmentMixin
 import net.imknown.android.forefrontinfo.base.mvvm.windowInsetsCompatTypes
-import com.google.android.material.R as materialR
+import net.imknown.android.forefrontinfo.ui.MainActivity
 
 class SettingsFragment : PreferenceFragmentCompat(), FragmentMixin {
 
@@ -34,21 +35,26 @@ class SettingsFragment : PreferenceFragmentCompat(), FragmentMixin {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initWindowInsets()
+
+        initViews()
+    }
+
+    private fun initWindowInsets() {
         listView.clipToPadding = false
-        val bottomR = materialR.dimen.design_bottom_navigation_height
-        val bottom = resources.getDimensionPixelSize(bottomR)
-        ViewCompat.setOnApplyWindowInsetsListener(listView) { insetView, windowInsets ->
+
+        ViewCompat.setOnApplyWindowInsetsListener(listView) { rv, windowInsets ->
             val insets = windowInsets.getInsets(windowInsetsCompatTypes)
-            insetView.updatePadding(
-                left = insets.left,
-                right = insets.right,
-                bottom = insets.bottom + (insets.bottom + bottom)
-            )
+            (activity as? MainActivity)?.binding?.bottomNavigationView?.doOnLayout { bnv ->
+                rv.updatePadding(
+                    left = insets.left,
+                    right = insets.right,
+                    bottom = bnv.height
+                )
+            }
 
             windowInsets
         }
-
-        initViews()
     }
 
     private fun initViews() {

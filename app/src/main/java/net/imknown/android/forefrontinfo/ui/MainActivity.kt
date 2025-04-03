@@ -27,7 +27,7 @@ import net.imknown.android.forefrontinfo.ui.settings.SettingsFragment
 
 class MainActivity : AppCompatActivity() {
 
-    private val binding by viewBinding(MainActivityBinding::inflate)
+    internal val binding by viewBinding(MainActivityBinding::inflate)
 
     private val mainViewModel by viewModels<MainViewModel>()
 
@@ -35,6 +35,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(binding.root)
+
+        initWindowInsets()
 
         initViews()
 
@@ -51,7 +53,7 @@ class MainActivity : AppCompatActivity() {
 //        mainViewModel.removeRequestPermissionResultListener()
     }
 
-    private fun initViews() {
+    private fun initWindowInsets() {
         // https://developer.android.com/design/ui/mobile/guides/foundations/system-bars#button_modes
         // https://developer.android.com/develop/ui/views/layout/edge-to-edge#create-transparent
         // https://developer.android.com/develop/ui/views/layout/edge-to-edge-manually#change-color
@@ -59,9 +61,9 @@ class MainActivity : AppCompatActivity() {
         // enableEdgeToEdge()
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.appBar) { view, windowInsets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.appBar) { appBar, windowInsets ->
             val insets = windowInsets.getInsets(windowInsetsCompatTypes)
-            view.updatePadding(
+            appBar.updatePadding(
                 left = insets.left,
                 right = insets.right,
                 top = insets.top
@@ -70,9 +72,9 @@ class MainActivity : AppCompatActivity() {
             windowInsets
         }
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.bottomNavigationView) { view, windowInsets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.bottomNavigationView) { bnView, windowInsets ->
             val insets = windowInsets.getInsets(windowInsetsCompatTypes)
-            view.updatePadding(
+            bnView.updatePadding(
                 left = insets.left,
                 right = insets.right,
                 bottom = insets.bottom
@@ -80,7 +82,9 @@ class MainActivity : AppCompatActivity() {
 
             windowInsets
         }
+    }
 
+    private fun initViews() {
         initSubtitle()
 
         binding.bottomNavigationView.setOnItemSelectedListener {

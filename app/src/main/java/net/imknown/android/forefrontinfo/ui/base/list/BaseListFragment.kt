@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
+import androidx.core.view.doOnLayout
 import androidx.core.view.updatePadding
 import androidx.lifecycle.LiveData
 import com.google.android.material.color.MaterialColors
@@ -14,6 +15,7 @@ import net.imknown.android.forefrontinfo.base.mvvm.Event
 import net.imknown.android.forefrontinfo.base.mvvm.EventObserver
 import net.imknown.android.forefrontinfo.base.mvvm.windowInsetsCompatTypes
 import net.imknown.android.forefrontinfo.databinding.FragmentListBinding
+import net.imknown.android.forefrontinfo.ui.MainActivity
 import com.google.android.material.R as materialR
 
 abstract class BaseListFragment : BaseFragment<FragmentListBinding>() {
@@ -35,6 +37,8 @@ abstract class BaseListFragment : BaseFragment<FragmentListBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         // super.onViewCreated(view, savedInstanceState)
+
+        initWindowInsets()
 
         initViews(savedInstanceState)
 
@@ -67,20 +71,22 @@ abstract class BaseListFragment : BaseFragment<FragmentListBinding>() {
         listViewModel.init(savedInstanceState)
     }
 
-    private fun initViews(savedInstanceState: Bundle?) {
-        val bottomR = materialR.dimen.design_bottom_navigation_height
-        val bottom = resources.getDimensionPixelSize(bottomR)
-        ViewCompat.setOnApplyWindowInsetsListener(binding.recyclerView) { view, windowInsets ->
+    private fun initWindowInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.recyclerView) { rv, windowInsets ->
             val insets = windowInsets.getInsets(windowInsetsCompatTypes)
-            view.updatePadding(
-                left = insets.left,
-                right = insets.right,
-                bottom = insets.bottom + (insets.bottom + bottom)
-            )
+            (activity as? MainActivity)?.binding?.bottomNavigationView?.doOnLayout { bnv ->
+                rv.updatePadding(
+                    left = insets.left,
+                    right = insets.right,
+                    bottom = bnv.height
+                )
+            }
 
             windowInsets
         }
+    }
 
+    private fun initViews(savedInstanceState: Bundle?) {
         val color = MaterialColors.getColor(binding.root, materialR.attr.colorOnPrimaryContainer)
         binding.swipeRefreshLayout.setColorSchemeColors(color)
         val backgroundColor =
