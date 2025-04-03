@@ -43,8 +43,8 @@ class SettingsFragment : PreferenceFragmentCompat(), FragmentMixin {
     private fun initWindowInsets() {
         listView.clipToPadding = false
 
-        ViewCompat.setOnApplyWindowInsetsListener(listView) { rv, windowInsets ->
-            val insets = windowInsets.getInsets(windowInsetsCompatTypes)
+        ViewCompat.setOnApplyWindowInsetsListener(listView) { rv, windowInsetsCompat ->
+            val insets = windowInsetsCompat.getInsets(windowInsetsCompatTypes)
             (activity as? MainActivity)?.binding?.bottomNavigationView?.doOnLayout { bnv ->
                 rv.updatePadding(
                     left = insets.left,
@@ -53,7 +53,7 @@ class SettingsFragment : PreferenceFragmentCompat(), FragmentMixin {
                 )
             }
 
-            windowInsets
+            windowInsetsCompat
         }
     }
 

@@ -61,26 +61,30 @@ class MainActivity : AppCompatActivity() {
         // enableEdgeToEdge()
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.appBar) { appBar, windowInsets ->
-            val insets = windowInsets.getInsets(windowInsetsCompatTypes)
+        // https://developer.android.com/develop/ui/views/layout/edge-to-edge#material-components
+        // https://developer.android.com/develop/ui/compose/layouts/insets#material3-components
+        ViewCompat.setOnApplyWindowInsetsListener(binding.appBar) { appBar, windowInsetsCompat ->
+            val insets = windowInsetsCompat.getInsets(windowInsetsCompatTypes)
             appBar.updatePadding(
                 left = insets.left,
                 right = insets.right,
                 top = insets.top
             )
 
-            windowInsets
+            windowInsetsCompat
         }
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.bottomNavigationView) { bnView, windowInsets ->
-            val insets = windowInsets.getInsets(windowInsetsCompatTypes)
+        // https://developer.android.com/develop/ui/views/layout/edge-to-edge#material-components
+        // https://developer.android.com/develop/ui/compose/layouts/insets#material3-components
+        ViewCompat.setOnApplyWindowInsetsListener(binding.bottomNavigationView) { bnView, windowInsetsCompat ->
+            val insets = windowInsetsCompat.getInsets(windowInsetsCompatTypes)
             bnView.updatePadding(
                 left = insets.left,
                 right = insets.right,
                 bottom = insets.bottom
             )
 
-            windowInsets
+            windowInsetsCompat
         }
     }
 

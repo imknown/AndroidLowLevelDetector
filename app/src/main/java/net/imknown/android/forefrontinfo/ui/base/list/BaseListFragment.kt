@@ -72,8 +72,8 @@ abstract class BaseListFragment : BaseFragment<FragmentListBinding>() {
     }
 
     private fun initWindowInsets() {
-        ViewCompat.setOnApplyWindowInsetsListener(binding.recyclerView) { rv, windowInsets ->
-            val insets = windowInsets.getInsets(windowInsetsCompatTypes)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.recyclerView) { rv, windowInsetsCompat ->
+            val insets = windowInsetsCompat.getInsets(windowInsetsCompatTypes)
             (activity as? MainActivity)?.binding?.bottomNavigationView?.doOnLayout { bnv ->
                 rv.updatePadding(
                     left = insets.left,
@@ -82,7 +82,7 @@ abstract class BaseListFragment : BaseFragment<FragmentListBinding>() {
                 )
             }
 
-            windowInsets
+            windowInsetsCompat
         }
     }
 
