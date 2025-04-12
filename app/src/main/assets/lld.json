@@ -1,16 +1,12 @@
 {
   "scheme": 1,
-  "version": "2025-04-11 22:45 +0800",
+  "version": "2025-04-12 22:10 +0800",
   "android": {
     "securityPatchLevel": "2025-04-05",
     "googlePlaySystemUpdates": "2025-04-01",
     "build": {
       "version": "2025-04-10",
       "details": [
-        {
-          "id": "BD4A.250405.003",
-          "revision": "r25"
-        },
         {
           "id": "BP1A.250405.007",
           "revision": "r26"
