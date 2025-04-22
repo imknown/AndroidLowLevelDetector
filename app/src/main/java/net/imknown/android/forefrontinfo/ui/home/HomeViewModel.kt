@@ -24,18 +24,32 @@ import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.extension.formatToLocalZonedDatetimeString
 import net.imknown.android.forefrontinfo.base.mvvm.Event
 import net.imknown.android.forefrontinfo.base.mvvm.booleanEventLiveData
-import net.imknown.android.forefrontinfo.ui.base.AndroidVersionMixin
 import net.imknown.android.forefrontinfo.ui.base.JsonIo
 import net.imknown.android.forefrontinfo.ui.base.fromJson
+import net.imknown.android.forefrontinfo.ui.base.getAndroidApiLevel
+import net.imknown.android.forefrontinfo.ui.base.getAndroidVersionName
+import net.imknown.android.forefrontinfo.ui.base.isAtLeastStableAndroid10
+import net.imknown.android.forefrontinfo.ui.base.isAtLeastStableAndroid11
+import net.imknown.android.forefrontinfo.ui.base.isAtLeastStableAndroid12
+import net.imknown.android.forefrontinfo.ui.base.isAtLeastStableAndroid13
+import net.imknown.android.forefrontinfo.ui.base.isAtLeastStableAndroid6
+import net.imknown.android.forefrontinfo.ui.base.isAtLeastStableAndroid7
+import net.imknown.android.forefrontinfo.ui.base.isAtLeastStableAndroid8
+import net.imknown.android.forefrontinfo.ui.base.isAtLeastStableAndroid9
+import net.imknown.android.forefrontinfo.ui.base.isGoEdition
+import net.imknown.android.forefrontinfo.ui.base.isLatestPreviewAndroid
+import net.imknown.android.forefrontinfo.ui.base.isLatestStableAndroid
+import net.imknown.android.forefrontinfo.ui.base.isPreviewAndroid
+import net.imknown.android.forefrontinfo.ui.base.isSupportedByUpstreamAndroid
 import net.imknown.android.forefrontinfo.ui.base.list.BaseListViewModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.home.model.Subtitle
 import java.io.File
 
-class HomeViewModel : BaseListViewModel(), AndroidVersionMixin {
+class HomeViewModel : BaseListViewModel() {
 
-    companion object : AndroidVersionMixin {
+    companion object {
         // region [Build ID]
         private const val BUILD_ID_SEPARATOR = '.'
 
@@ -390,7 +404,7 @@ class HomeViewModel : BaseListViewModel(), AndroidVersionMixin {
         val previewPhase = lld.android.preview.phase
 
         var myAndroidVersionName = getAndroidVersionName()
-        if (isGoEdition()) {
+        if (MyApplication.instance.isGoEdition()) {
             myAndroidVersionName += " (Go)"
         }
 
@@ -1130,7 +1144,7 @@ class HomeViewModel : BaseListViewModel(), AndroidVersionMixin {
         } else {
             packageManager.getPackageInfo(packageName, 0)
         }
-    } catch (e: Exception) {
+    } catch (_: Exception) {
         Log.d(javaClass.simpleName, "$packageName not found.")
         null
     }

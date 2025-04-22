@@ -14,17 +14,15 @@ import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.extension.isChinaMainlandTimezone
 import net.imknown.android.forefrontinfo.base.mvvm.EventObserver
-import net.imknown.android.forefrontinfo.base.mvvm.FragmentMixin
+import net.imknown.android.forefrontinfo.base.mvvm.toast
 import net.imknown.android.forefrontinfo.base.mvvm.windowInsetsCompatTypes
 import net.imknown.android.forefrontinfo.ui.MainActivity
 
-class SettingsFragment : PreferenceFragmentCompat(), FragmentMixin {
+class SettingsFragment : PreferenceFragmentCompat() {
 
     companion object {
         fun newInstance() = SettingsFragment()
     }
-
-    override val visualContext by lazy { context }
 
     private val settingsViewModel by viewModels<SettingsViewModel>()
 
@@ -83,7 +81,7 @@ class SettingsFragment : PreferenceFragmentCompat(), FragmentMixin {
         // endregion [Scroll Bar Mode]
 
         settingsViewModel.showMessageEvent.observe(viewLifecycleOwner, EventObserver {
-            toast(it)
+            context?.toast(it)
         })
 
         val aboutShopPref = findPreference(R.string.about_shop_key)

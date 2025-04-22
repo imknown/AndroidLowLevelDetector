@@ -18,12 +18,14 @@ import net.imknown.android.forefrontinfo.base.extension.formatToLocalZonedDateti
 import net.imknown.android.forefrontinfo.base.mvvm.BaseViewModel
 import net.imknown.android.forefrontinfo.base.mvvm.Event
 import net.imknown.android.forefrontinfo.base.mvvm.stringEventLiveData
-import net.imknown.android.forefrontinfo.ui.base.AndroidVersionMixin
 import net.imknown.android.forefrontinfo.ui.base.JsonIo
+import net.imknown.android.forefrontinfo.ui.base.isAtLeastStableAndroid11
+import net.imknown.android.forefrontinfo.ui.base.isAtLeastStableAndroid13
+import net.imknown.android.forefrontinfo.ui.base.isAtLeastStableAndroid9
 import java.security.MessageDigest
 import java.util.Locale
 
-class SettingsViewModel : BaseViewModel(), AndroidVersionMixin {
+class SettingsViewModel : BaseViewModel() {
     companion object {
         private const val ALGORITHM_SHA256 = "SHA-256"
 

@@ -13,6 +13,7 @@ import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.mvvm.BaseFragment
 import net.imknown.android.forefrontinfo.base.mvvm.Event
 import net.imknown.android.forefrontinfo.base.mvvm.EventObserver
+import net.imknown.android.forefrontinfo.base.mvvm.toast
 import net.imknown.android.forefrontinfo.base.mvvm.windowInsetsCompatTypes
 import net.imknown.android.forefrontinfo.databinding.FragmentListBinding
 import net.imknown.android.forefrontinfo.ui.MainActivity
@@ -57,7 +58,7 @@ abstract class BaseListFragment : BaseFragment<FragmentListBinding>() {
         })
 
         listViewModel.showErrorEvent.observe(viewLifecycleOwner, EventObserver {
-            toast(it)
+            context?.toast(it)
 
             binding.swipeRefreshLayout.isRefreshing = false
         })
