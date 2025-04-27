@@ -64,6 +64,7 @@ android {
             res.srcDirs(
                 "base".toResString() + "Launcher",
                 "ui".toResString(), // Main
+                "ui/base/list".toResString(),
             )
         }
     }
