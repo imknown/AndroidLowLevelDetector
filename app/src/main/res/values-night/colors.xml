@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="ic_launcher_background">#069868</color>
-
     <!-- region [M3] -->
     <color name="md_theme_primary">#A6D394</color>
     <color name="md_theme_onPrimary">#13380A</color>

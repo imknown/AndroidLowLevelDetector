@@ -62,6 +62,7 @@ android {
             fun String.toResString() = "$javaPathString/$javaPackageName/$this/res"
 
             res.srcDirs(
+                "base".toResString() + "Launcher",
                 "ui".toResString(), // Main
             )
         }
