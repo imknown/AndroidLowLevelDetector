@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorNoProblem">#D02B5128</color>
+    <color name="colorWaring">#D07E581F</color>
+    <color name="colorCritical">#D0812F2F</color>
+</resources>
