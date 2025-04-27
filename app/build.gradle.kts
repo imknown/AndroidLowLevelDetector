@@ -63,6 +63,7 @@ android {
             val baseResString = "base".toResString()
 
             res.srcDirs(
+                baseResString,
                 "${baseResString}Launcher",
                 "${baseResString}Backup",
                 "ui".toResString(), // Main
