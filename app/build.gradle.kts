@@ -66,6 +66,7 @@ android {
                 baseResString,
                 "${baseResString}Launcher",
                 "${baseResString}Backup",
+                "${baseResString}Theme",
                 "ui".toResString(), // Main
                 "ui/base/list".toResString(),
                 "ui/home".toResString(),
