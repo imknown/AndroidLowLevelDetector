@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_others">Others</string>
+
+    <string name="build_brand">Brand</string>
+    <string name="build_manufacturer">Manufacturer</string>
+    <string name="build_model">Model name for sales</string>
+    <string name="build_device">Codename for the developer</string>
+    <string name="build_product">Name of overall product</string>
+    <string name="build_hardware">Hardware name</string>
+    <string name="build_board">Board model</string>
+    <string name="build_soc_model">SoC model</string>
+    <string name="build_soc_manufacturer">SoC manufacturer</string>
+    <string name="build_hardware_sku">SKU of hardware</string>
+    <string name="build_vendor_sku">Vendor SKU</string>
+    <string name="build_odm_hardware_sku">SKU of ODM hardware</string>
+
+    <string name="bit_32">32bit</string>
+    <string name="bit_64">64bit</string>
+    <string name="binder_status">Binder bit</string>
+    <string name="hw_binder_status">HW Binder bit</string>
+    <string name="vnd_binder_status">VND Binder bit</string>
+    <string name="current_process_bit">Current process bit</string>
+    <string name="os_arch">Current process architecture</string>
+    <string name="build_cpu_abi">Current process ABI</string>
+    <string name="current_system_abi">Current system ABI</string>
+    <string name="build_supported_32_bit_abis">Supported 32bit CPU ABIs</string>
+    <string name="build_supported_64_bit_abis">Supported 64bit CPU ABIs</string>
+
+    <string name="build_user">ROM builder</string>
+    <string name="build_host">ROM build machine name</string>
+    <string name="build_time">ROM build time</string>
+    <string name="build_base_os">ROM based on (Secondary development)</string>
+    <string name="build_certain_fingerprint">%s fingerprint</string>
+    <string name="build_stock_fingerprint">Stock ROM fingerprint</string>
+    <string name="build_stock_preview_fingerprint">Stock ROM preview fingerprint</string>
+    <string name="build_id">ROM build ID</string>
+    <string name="build_display">ROM build ID for user</string>
+    <string name="build_type">ROM build type</string>
+    <string name="build_tags">ROM build tags</string>
+    <string name="build_incremental">Git commit hash</string>
+    <string name="build_codename">Git branch codename (REL: stable release version)</string>
+    <string name="build_preview_sdk_int">Developer preview revision of pre-release SDK</string>
+
+    <string name="webview_user_agent">WebView User-Agent</string>
+    <string name="linux">Linux kernel</string>
+
+    <string name="build_bootloader">Bootloader version</string>
+    <string name="build_radio">Baseband version</string>
+
+    <string name="build_not_filled">**NOT FILLED**</string>
+</resources>

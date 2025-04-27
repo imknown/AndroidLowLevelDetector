@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_settings">Paramètres</string>
+
+    <string name="interface_title">Interface</string>
+    <string name="interface_scroll_bar_title">Mode de défilement</string>
+    <string name="interface_scroll_bar_summary">Cliquez ici pour voir le mode de défilement</string>
+    <string name="interface_no_scroll_bar_key">Aucun</string>
+    <string name="interface_normal_scroll_bar_key">Normale</string>
+    <!--<string name="interface_fast_scroll_bar_key">Tirrable</string>-->
+
+    <string name="interface_themes_title">Thème</string>
+    <string name="interface_themes_summary">Cliquez pour voir le selecteur de thème</string>
+    <string name="interface_themes_follow_system_key">Système</string>
+    <string name="interface_themes_power_saver_key">Economiseur de batterie</string>
+    <string name="interface_themes_always_light_key">Toujours clair</string>
+    <string name="interface_themes_always_dark_key">Toujours Sombre (AMOLED)</string>
+
+    <string name="function_title">Fonctions</string>
+    <string name="function_allow_network_data_title">Activer les données en ligne</string>
+    <string name="function_allow_network_data_summary">Lorsque cette option est activée, les données seront préalablement extraites du serveur réseau distant, puis mises en cache sur le stockage local.</string>
+
+    <string name="function_outdated_target_order_by_package_name_first_title">"Commandez d'abord par nom de colis"</string>
+    <string name="function_outdated_target_order_by_package_name_first_summary">"Commandez d'abord les applications obsolètes par nom de package, sinon par targetSdkVersion d'abord."</string>
+
+    <string name="about_title">À propos</string>
+
+    <string name="no_browser_found">Aucun navigateur disponible</string>
+
+    <string name="about_shop_title">Play Store</string>
+    <string name="about_shop_summary">"Ouvre la page de l'application dans Play Store"</string>
+
+    <string name="about_source_title">Code source</string>
+    <string name="about_source_summary">"L'adresse GitHub du code sourcce de l'application"</string>
+
+    <string name="about_privacy_policy_title">Politique de confidentialité</string>
+    <string name="about_privacy_policy_summary">"Voyez ce qui se passe quand vous utilisez l'application"</string>
+
+    <string name="about_licenses_title">Licences</string>
+    <string name="about_licenses_summary">Les dépots open-source.</string>
+
+    <string name="translation_language_and_translator">Français (FR), traducteur: LiteApplication</string>
+    <string name="translator_website">https://litepress.ddns.net</string>
+    <string name="translator_more_info">https://github.com/LiteApplication</string>
+
+    <string name="about_version_title">Version</string>
+    <string name="about_version_summary">Version: %1$s (Iteration times: %2$d)\nDonnées intégrées: %3$s\nDistributeur: %4$s\nInstallateur: %5$s\nPremière installation: %6$s\nDernière mise à jour: %7$s</string>
+
+    <string name="about_installer_cl">Ligne de commande</string>
+
+    <string name="about_distributor_google">Google</string>
+    <string name="about_distributor_imknown">imknown</string>
+    <string name="about_distributor_public_debug">Débogage public</string>
+</resources>

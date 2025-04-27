@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_others">其他</string>
+
+    <string name="build_brand">品牌</string>
+    <string name="build_manufacturer">製造商</string>
+    <string name="build_model">銷售型號</string>
+    <string name="build_device">開發代號</string>
+    <string name="build_product">總產品名稱</string>
+    <string name="build_hardware">硬體名稱</string>
+    <string name="build_board">主板型號</string>
+    <string name="build_soc_model">SoC 型號</string>
+    <string name="build_soc_manufacturer">SoC 製造商</string>
+    <string name="build_hardware_sku">硬體 SKU</string>
+    <string name="build_vendor_sku">Vendor SKU</string>
+    <string name="build_odm_hardware_sku">ODM 硬體 SKU</string>
+
+    <string name="bit_32">32 位</string>
+    <string name="bit_64">64 位</string>
+    <string name="binder_status">Binder 位數</string>
+    <string name="hw_binder_status">HW Binder 位數</string>
+    <string name="vnd_binder_status">VND Binder 位數</string>
+    <string name="current_process_bit">目前處理程序位元數</string>
+    <string name="os_arch">目前處理程序架構</string>
+    <string name="build_cpu_abi">目前處理程序 ABI</string>
+    <string name="current_system_abi">目前系統 ABI</string>
+    <string name="build_supported_32_bit_abis">支援的 32 位 CPU ABI</string>
+    <string name="build_supported_64_bit_abis">支援的 64 位 CPU ABI</string>
+
+    <string name="build_user">ROM 構建者</string>
+    <string name="build_host">ROM 構建的主機名</string>
+    <string name="build_time">ROM 構建時間</string>
+    <string name="build_base_os">基於的系統（二次開發）</string>
+    <string name="build_certain_fingerprint">%s 指紋</string>
+    <string name="build_stock_fingerprint">原機系統指紋</string>
+    <string name="build_stock_preview_fingerprint">原機系統預覽指紋</string>
+    <string name="build_id">ROM 構建 ID</string>
+    <string name="build_display">給用戶看的 ROM 構建 ID</string>
+    <string name="build_type">ROM 構建類型</string>
+    <string name="build_tags">ROM 構建描述標籤</string>
+    <string name="build_incremental">Git 提交的 Hash</string>
+    <string name="build_codename">Git 分支代號（REL：正式）</string>
+    <string name="build_preview_sdk_int">預先發行 SDK 開發者預覽修訂號</string>
+
+    <string name="webview_user_agent">WebView User-Agent</string>
+    <string name="linux">Linux Kernel</string>
+
+    <string name="build_bootloader">Bootloader 版本</string>
+    <string name="build_radio">基帶版本</string>
+
+    <string name="build_not_filled">**未填寫**</string>
+</resources>

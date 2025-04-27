@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_settings">設定</string>
+
+    <string name="interface_title">界面</string>
+    <string name="interface_scroll_bar_title">滾動條模式</string>
+    <string name="interface_scroll_bar_summary">點擊以顯示滾動條模式</string>
+    <string name="interface_no_scroll_bar_key">無</string>
+    <string name="interface_normal_scroll_bar_key">普通</string>
+    <!--<string name="interface_fast_scroll_bar_key">可拖拽</string>-->
+
+    <string name="interface_themes_title">主題</string>
+    <string name="interface_themes_summary">點擊以顯示主題選擇器</string>
+    <string name="interface_themes_follow_system_key">跟隨系統</string>
+    <string name="interface_themes_power_saver_key">跟隨省電模式</string>
+    <string name="interface_themes_always_light_key">總是淺色</string>
+    <string name="interface_themes_always_dark_key">總是深色</string>
+
+    <string name="function_title">功能</string>
+    <string name="function_allow_network_data_title">允許網路數據</string>
+    <string name="function_allow_network_data_summary">若啟用，數據將優先從遠端網路伺服器獲取，並被快取在本地儲存。</string>
+
+    <string name="function_outdated_target_order_by_package_name_first_title">優先按包名排序</string>
+    <string name="function_outdated_target_order_by_package_name_first_summary">優先按包名排序過時程式，否則按 targetSdkVersion 優先。</string>
+
+    <string name="about_title">關於</string>
+
+    <string name="no_browser_found">無可用瀏覽器</string>
+
+    <string name="about_shop_title">應用商店頁面</string>
+    <string name="about_shop_summary">打開本程式商店所在的頁面</string>
+
+    <string name="about_source_title">原始碼</string>
+    <string name="about_source_summary">本程式原始碼的 GitHub 網址</string>
+
+    <string name="about_privacy_policy_title">隱私政策</string>
+    <string name="about_privacy_policy_summary">看看使用本程式時會發生什麼</string>
+
+    <string name="about_licenses_title">協議</string>
+    <string name="about_licenses_summary">引用的開源庫</string>
+
+    <string name="translation_language_and_translator">繁體中文（臺灣），翻譯：bluehomewu</string>
+    <string name="translator_website">https://github.com/bluehomewu</string>
+    <string name="translator_more_info">https://github.com/bluehomewu</string>
+
+    <string name="about_version_title">版本</string>
+    <string name="about_version_summary">版本號：%1$s（疊代次數：%2$d）\n內建數據版本：%3$s\n分發者：%4$s\n安裝者：%5$s\n首次安裝：%6$s\n上次更新：%7$s</string>
+
+    <string name="about_installer_cl">命令行</string>
+
+    <string name="about_distributor_google">Google</string>
+    <string name="about_distributor_imknown">imknown</string>
+    <string name="about_distributor_public_debug">公共偵錯</string>
+</resources>

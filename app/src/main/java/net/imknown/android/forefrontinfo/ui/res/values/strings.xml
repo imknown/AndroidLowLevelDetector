@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="lld_json_loading">LOADING…</string>
+    <string name="lld_json_offline">OFFLINE (%s)</string>
+    <string name="lld_json_online">ONLINE (%s)</string>
+    <string name="lld_json_fetch_failed">Online data fetching failed.\nUse local data instead.\n\n%s</string>
+    <string name="lld_json_save_failed">Data saving failed.\nPlease check your storage.\n\n%s</string>
+    <string name="lld_json_parse_failed">Data parsing failed.\nPlease try to upgrade this app.\n\n%s</string>
+    <string name="lld_json_detect_failed">Detecting failed.\nPlease try to upgrade this app.\n\n%s</string>
+</resources>

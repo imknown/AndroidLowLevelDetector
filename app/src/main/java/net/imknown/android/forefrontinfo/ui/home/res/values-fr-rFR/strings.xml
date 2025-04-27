@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_home">Menu</string>
+
+    <string name="result_supported">Supporté</string>
+    <string name="result_not_supported">Non supporté</string>
+    <string name="result_unidentified">Non identifié</string>
+    <string name="result_enabled">Activée</string>
+    <string name="result_disabled">Désactivé</string>
+
+    <string name="android_info_title">"Version d'Android"</string>
+    <string name="android_info">%1$s (API %2$s)</string>
+    <string name="android_info_detail">Moi: %1$s\n\nDernière stable: %2$s\nPlus faible prise en charge: %3$s\nDernière aperçu: %4$s\nDernière interne: %5$s</string>
+
+    <string name="android_build_id_title">Id de build Android</string>
+    <string name="android_build_id_detail">Moi: %1$s\nMon system: %2$s\nMon vendor: %3$s\nMon ODM: %4$s\n\nDernière stable: %5$s\n%6$s</string>
+    <string name="android_build_id">%1$s (%2$s)</string>
+
+    <string name="security_patch_level_title">Niveau du patch de sécurité Android</string>
+    <string name="vendor_security_patch_level_title">Niveau du patch de sécurité Vendor</string>
+    <string name="security_patch_level_detail">Moi: %1$s\n\nDernière stable: %2$s</string>
+
+    <string name="performance_class_title">Niveau de performance</string>
+
+    <string name="linux_title">Version du noyau Linux</string>
+    <string name="linux_version_detail">Moi: %1$s\n\nDernière support: %2$s\nMainline: %3$s</string>
+
+    <string name="ab_seamless_update_status_title">Mise à jour A/B seamless</string>
+    <string name="virtual_ab">\u0020(Virtuel)</string>
+    <string name="virtual_ab_retrofit">\u0020(Virtuel, rénové)</string>
+    <string name="current_using_ab_slot_result">\u0020(Courant: %s)</string>
+
+    <string name="sar_status_title">Status System-as-root</string>
+    <string name="sar_type_legacy">Héritage, Android 9</string>
+
+    <string name="dynamic_partitions_status_title">Status du Partitions dynamiques</string>
+    <string name="dynamic_partitions_enabled_retrofitted">\u0020(Rénové)</string>
+
+    <string name="treble_status_title">Status du Projet Treble</string>
+    <string name="treble_legacy_no_fragments">\u0020(Héritage, pas de fragments)</string>
+    <string name="treble_other">\u0020(Autre)</string>
+
+    <string name="gsi_status_title">Compatibilité GSI</string>
+    <string name="result_compliant">Conforme à Treble</string>
+    <string name="result_not_compliant">Non conforme à Treble</string>
+
+    <string name="dsu_status_title">Status du Mise à jour du système dynamique(DSU)</string>
+
+    <string name="mainline_title">Project Mainline module version\n(Mise à jour du système Google Play)</string>
+    <string name="mainline_detail">Moi: %1$s (%2$s)\n\nDernière: %3$s</string>
+
+    <string name="vndk_built_in_title">Status du NDK Vendor integré</string>
+    <string name="built_in_vndk_version_result">\u0020(Niveau: %s)</string>
+
+    <string name="apex_status_title">Status APEX</string>
+    <string name="apex_legacy_flattened">\u0020(Héritage aplati)</string>
+
+    <string name="developer_options_status_title">Statut des options pour de développeurs</string>
+
+    <string name="adb_debugging_status_title">Statut de débogage ADB</string>
+
+    <string name="adb_authentication_status_title">"Statut d'authentification ADB"</string>
+
+    <string name="encryption_status_title">Statut de chiffrement</string>
+    <string name="result_encrypted">Crypté</string>
+    <string name="result_encrypted_no_key_set">"Chiffré mais le mot de passe n'a pas été défini"</string>
+    <string name="result_not_encrypted">Non crypté</string>
+
+    <string name="selinux_status">Status SELinux</string>
+    <string name="selinux_status_enforcing_mode">Mode forcé</string>
+    <string name="selinux_status_permissive_mode">Mode permissif</string>
+
+    <string name="toybox_built_in_title">Version de Toybox intégrée</string>
+    <string name="toybox_built_in_detail">Moi: %1$s\n\nDernier stable: %2$s\nPlus faible support: %3$s\nMaster: %4$s</string>
+
+    <string name="webview_title">Version WebView</string>
+    <string name="webview_detail">Dernier stable: %1$s\nDernier béta: %2$s</string>
+    <string name="webview_built_in_version">Mon system WebView integré</string>
+    <string name="webview_or">%1$s ou %2$s</string>
+    <string name="webview_standalone">Autonome</string>
+    <string name="webview_built_in_not_installed">Pas installé</string>
+    <string name="webview_must_be_chosen_by_user">"Doit être choisi par l'utilisateur"</string>
+    <string name="webview_fallback">Se retirer</string>
+    <string name="webview_signed">Signé</string>
+    <string name="webview_implement_version">Mon implémentation de WebView</string>
+
+    <string name="outdated_target_version_sdk_version_apk_my_first_api_level">"API Android à la sortie d'usine: %s\n\n"</string>
+    <string name="outdated_target_version_sdk_version_apk_title">Les application system avec targetVersionSdk dépassé</string>
+    <string name="outdated_target_version_sdk_version_apk_result_none">"Pas d'application dépassé"</string>
+</resources>

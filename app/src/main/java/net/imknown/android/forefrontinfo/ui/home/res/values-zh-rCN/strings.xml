@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_home">首页</string>
+
+    <string name="result_supported">支持</string>
+    <string name="result_not_supported">不支持</string>
+    <string name="result_unidentified">无法辨别</string>
+    <string name="result_enabled">已启用</string>
+    <string name="result_disabled">已禁用</string>
+
+    <string name="android_info_title">Android 版本</string>
+    <string name="android_info">%1$s（API %2$s）</string>
+    <string name="android_info_detail">我的：%1$s\n\n最新稳定：%2$s\n最低支持：%3$s\n最新预览：%4$s\n最新内部：%5$s</string>
+
+    <string name="android_build_id_title">Android 构建 id</string>
+    <string name="android_build_id">%1$s（%2$s）</string>
+    <string name="android_build_id_detail">我的：%1$s\n我的系统：%2$s\n我的供应商：%3$s\n我的 ODM：%4$s\n\n最新稳定：%5$s\n%6$s</string>
+
+    <string name="security_patch_level_title">Android 安全补丁等级</string>
+    <string name="vendor_security_patch_level_title">供应商安全补丁等级</string>
+    <string name="security_patch_level_detail">我的：%1$s\n\n最新稳定：%2$s</string>
+
+    <string name="performance_class_title">性能等级</string>
+
+    <string name="linux_title">Linux 内核版本</string>
+    <string name="linux_version_detail">我的：%1$s\n\n最新支持：%2$s\nMainline：%3$s</string>
+
+    <string name="ab_seamless_update_status_title">A/B 无缝升级状态</string>
+    <string name="virtual_ab">（虚拟的）</string>
+    <string name="virtual_ab_retrofit">（虚拟的，改造的）</string>
+    <string name="current_using_ab_slot_result">（当前：%s）</string>
+
+    <string name="sar_status_title">System-as-root 状态</string>
+    <string name="sar_type_legacy">旧版，Android 9</string>
+
+    <string name="dynamic_partitions_status_title">动态分区状态</string>
+    <string name="dynamic_partitions_enabled_retrofitted">（改造的）</string>
+
+    <string name="treble_status_title">Project Treble 状态</string>
+    <string name="treble_legacy_no_fragments">（旧版，无片段）</string>
+    <string name="treble_other">（其他）</string>
+
+    <string name="gsi_status_title">GSI 兼容性</string>
+    <string name="result_compliant">遵从 Treble</string>
+    <string name="result_not_compliant">未遵从 Treble</string>
+
+    <string name="dsu_status_title">动态系统更新（DSU）状态</string>
+
+    <string name="mainline_title">Project Mainline 模块版本\n（Google Play 系统更新）</string>
+    <string name="mainline_detail">我的：%1$s（%2$s）\n\n最新：%3$s</string>
+
+    <string name="vndk_built_in_title">内建供应商 NDK 状态</string>
+    <string name="built_in_vndk_version_result">（等级：%s）</string>
+
+    <string name="apex_status_title">APEX 状态</string>
+    <string name="apex_legacy_flattened">（旧版扁平的）</string>
+
+    <string name="developer_options_status_title">开发者选项状态</string>
+
+    <string name="adb_debugging_status_title">ADB 调试状态</string>
+
+    <string name="adb_authentication_status_title">ADB 验证状态</string>
+
+    <string name="encryption_status_title">加密状态</string>
+    <string name="result_encrypted">已加密</string>
+    <string name="result_encrypted_no_key_set">已加密，但密码未设置</string>
+    <string name="result_not_encrypted">未加密</string>
+
+    <string name="selinux_status">SELinux 状态</string>
+    <string name="selinux_status_enforcing_mode">强制模式</string>
+    <string name="selinux_status_permissive_mode">宽容模式</string>
+
+    <string name="toybox_built_in_title">内建 Toybox 版本</string>
+    <string name="toybox_built_in_detail">我的：%1$s\n\n最新稳定：%2$s\n最低支持：%3$s\nMaster：%4$s</string>
+
+    <string name="webview_title">WebView 版本</string>
+    <string name="webview_detail">最新稳定：%1$s\n最新测试：%2$s</string>
+    <string name="webview_built_in_version">我的内建 WebView</string>
+    <string name="webview_or">%1$s 或者 %2$s</string>
+    <string name="webview_standalone">独立的</string>
+    <string name="webview_built_in_not_installed">未安装</string>
+    <string name="webview_must_be_chosen_by_user">必须由用户选择</string>
+    <string name="webview_fallback">备用</string>
+    <string name="webview_signed">已签名</string>
+    <string name="webview_implement_version">我的 WebView 实现</string>
+
+    <string name="outdated_target_version_sdk_version_apk_my_first_api_level">我的出厂 Android API：%s\n\n</string>
+    <string name="outdated_target_version_sdk_version_apk_title">过时 targetSdkVersion 系统程序</string>
+    <string name="outdated_target_version_sdk_version_apk_result_none">没有过时的系统程序</string>
+</resources>
