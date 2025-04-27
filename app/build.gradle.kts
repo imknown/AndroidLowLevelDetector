@@ -60,9 +60,11 @@ android {
             val javaPathString = java.directories.toList()[0] // "src/main/java"
             val javaPackageName = namespace?.replace('.', File.separatorChar) // "net/imknown/android/forefrontinfo"
             fun String.toResString() = "$javaPathString/$javaPackageName/$this/res"
+            val baseResString = "base".toResString()
 
             res.srcDirs(
-                "base".toResString() + "Launcher",
+                "${baseResString}Launcher",
+                "${baseResString}Backup",
                 "ui".toResString(), // Main
                 "ui/base/list".toResString(),
             )
