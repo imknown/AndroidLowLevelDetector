@@ -68,6 +68,10 @@ android {
                 "${baseResString}Backup",
                 "ui".toResString(), // Main
                 "ui/base/list".toResString(),
+                "ui/home".toResString(),
+                "ui/others".toResString(),
+                "ui/prop".toResString(),
+                "ui/settings".toResString()
             )
         }
     }
