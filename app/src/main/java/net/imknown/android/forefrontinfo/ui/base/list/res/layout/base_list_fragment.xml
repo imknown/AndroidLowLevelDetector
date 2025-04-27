@@ -15,6 +15,6 @@
         android:scrollbars="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:itemCount="10"
-        tools:listitem="@layout/fragment_list_item" />
+        tools:listitem="@layout/my_view_holder" />
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

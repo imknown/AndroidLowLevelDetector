@@ -15,14 +15,14 @@ import net.imknown.android.forefrontinfo.base.mvvm.Event
 import net.imknown.android.forefrontinfo.base.mvvm.EventObserver
 import net.imknown.android.forefrontinfo.base.mvvm.toast
 import net.imknown.android.forefrontinfo.base.mvvm.windowInsetsCompatTypes
-import net.imknown.android.forefrontinfo.databinding.FragmentListBinding
+import net.imknown.android.forefrontinfo.databinding.BaseListFragmentBinding
 import net.imknown.android.forefrontinfo.ui.MainActivity
 import com.google.android.material.R as materialR
 
-abstract class BaseListFragment : BaseFragment<FragmentListBinding>() {
+abstract class BaseListFragment : BaseFragment<BaseListFragmentBinding>() {
 
-    override val inflate: (LayoutInflater, ViewGroup?, Boolean) -> FragmentListBinding =
-        FragmentListBinding::inflate
+    override val inflate: (LayoutInflater, ViewGroup?, Boolean) -> BaseListFragmentBinding =
+        BaseListFragmentBinding::inflate
 
     protected val myAdapter by lazy { MyAdapter() }
 
