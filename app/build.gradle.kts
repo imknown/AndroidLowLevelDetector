@@ -154,7 +154,7 @@ android {
 
     externalNativeBuild {
         cmake {
-            path("CMakeLists.txt")
+            path("src/main/cpp/CMakeLists.txt")
             version = libsBuild.versions.cmake.get()
         }
     }
