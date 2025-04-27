@@ -55,6 +55,18 @@ android {
         }
     }
 
+    sourceSets {
+        getByName("main") {
+            val javaPathString = java.directories.toList()[0] // "src/main/java"
+            val javaPackageName = namespace?.replace('.', File.separatorChar) // "net/imknown/android/forefrontinfo"
+            fun String.toResString() = "$javaPathString/$javaPackageName/$this/res"
+
+            res.srcDirs(
+                "ui".toResString(), // Main
+            )
+        }
+    }
+
     androidResources {
         localeFilters += listOf("zh-rCN", "zh-rTW", "fr-rFR")
         generateLocaleConfig = true
