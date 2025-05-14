@@ -116,7 +116,9 @@ android {
     flavorDimensions += IssueTracker::class.simpleName.toString()
 
     productFlavors {
-        register(IssueTracker.Foss.name)
+        register(IssueTracker.Foss.name) {
+            isDefault = true
+        }
         register(IssueTracker.Firebase.name)
     }
 
