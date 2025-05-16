@@ -41,5 +41,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "AndroidLowLevelDetector"
 
+include(":binderDetector")
 include(":base")
 include(":app")

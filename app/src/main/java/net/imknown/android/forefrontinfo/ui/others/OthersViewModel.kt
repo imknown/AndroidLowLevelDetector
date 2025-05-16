@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.extension.formatToLocalZonedDatetimeString
+import net.imknown.android.forefrontinfo.binderdetector.BinderDetector
 import net.imknown.android.forefrontinfo.ui.base.isAtLeastStableAndroid10
 import net.imknown.android.forefrontinfo.ui.base.isAtLeastStableAndroid12
 import net.imknown.android.forefrontinfo.ui.base.isAtLeastStableAndroid6
@@ -273,16 +274,14 @@ class OthersViewModel : BasePureListViewModel() {
         }
     }
 
-    private external fun getBinderVersion(driver: String): Int
-
     private fun detectBinderStatus(
         tempModels: ArrayList<MyModel>,
         driver: String,
         @StringRes titleId: Int
     ) {
         val binderVersion = try {
-            System.loadLibrary("BinderDetector")
-            getBinderVersion(driver)
+            System.loadLibrary(BinderDetector.PREFIX)
+            BinderDetector.getBinderVersion(driver)
         } catch (e: UnsatisfiedLinkError) {
             e.printStackTrace()
         }

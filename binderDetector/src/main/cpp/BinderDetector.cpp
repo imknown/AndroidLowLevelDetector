@@ -55,7 +55,7 @@ int getErrorNo(JNIEnv *env, jstring driver,
 }
 
 extern "C" JNIEXPORT jint JNICALL
-Java_net_imknown_android_forefrontinfo_ui_others_OthersViewModel_getBinderVersion(
+Java_net_imknown_android_forefrontinfo_binderdetector_BinderDetector_getBinderVersion(
         JNIEnv *env,
         jobject instance,
         jstring driver

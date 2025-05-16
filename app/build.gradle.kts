@@ -41,18 +41,6 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField("String", "GIT_BRANCH", "\"$currentGitBranchName\"")
-
-        ndkVersion = libsBuild.versions.ndk.get()
-
-        externalNativeBuild {
-            cmake {
-                arguments += listOf("-DANDROID_ARM_NEON=TRUE", "-DANDROID_TOOLCHAIN=clang")
-
-                cFlags += listOf("-D__STDC_FORMAT_MACROS")
-
-                cppFlags += listOf("-fexceptions", "-frtti", "-std=c++17")
-            }
-        }
     }
 
     sourceSets {
@@ -154,13 +142,6 @@ android {
         isCoreLibraryDesugaringEnabled = true
     }
 
-    externalNativeBuild {
-        cmake {
-            path("src/main/cpp/CMakeLists.txt")
-            version = libsBuild.versions.cmake.get()
-        }
-    }
-
     buildFeatures {
         buildConfig = true
         viewBinding = true
@@ -211,6 +192,7 @@ tasks.configureEach {
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 
+    implementation(project(":binderDetector"))
     implementation(project(":base"))
 
     coreLibraryDesugaring(libsAndroid.desugarJdkLibs)
