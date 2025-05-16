@@ -16,7 +16,7 @@ targetSdk = "36"
 targetSdkPreview = "C"
 
 ndk = "29.0.13113456 rc1"
-cmake = "3.31.6"
+cmake = "4.0.2"
 
 versionCode = "65"
 versionName = "1.17.3_unpublished"
