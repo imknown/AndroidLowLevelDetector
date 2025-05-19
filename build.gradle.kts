@@ -4,6 +4,7 @@ plugins {
     alias(libsAndroid.plugins.android.library) apply false
 
     alias(libsKotlin.plugins.kotlin.android) apply false
+    alias(libsKotlin.plugins.kotlin.multiplatform) apply false
     alias(libsKotlin.plugins.kotlinx.serialization) apply false
 
     alias(libsGoogle.plugins.googleServices) apply false

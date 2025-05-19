@@ -1,9 +1,11 @@
+import com.android.tools.r8.internal.he
+import java.awt.Desktop
 import kotlin.collections.plusAssign
 
 plugins {
     alias(libsAndroid.plugins.android.library)
 
-    alias(libsKotlin.plugins.kotlin.android)
+    alias(libsKotlin.plugins.kotlin.multiplatform)
 }
 
 android {
@@ -21,25 +23,25 @@ android {
     defaultConfig {
         minSdk = libsBuild.versions.minSdk.get().toInt()
 
-        externalNativeBuild {
-            cmake {
-                arguments += listOf("-DANDROID_ARM_NEON=TRUE", "-DANDROID_TOOLCHAIN=clang")
-
-                cFlags += listOf("-D__STDC_FORMAT_MACROS")
-
-                cppFlags += listOf("-fexceptions", "-frtti", "-std=c++17")
-            }
-        }
+//        externalNativeBuild {
+//            cmake {
+//                arguments += listOf("-DANDROID_ARM_NEON=TRUE", "-DANDROID_TOOLCHAIN=clang")
+//
+//                cFlags += listOf("-D__STDC_FORMAT_MACROS")
+//
+//                cppFlags += listOf("-fexceptions", "-frtti", "-std=c++17")
+//            }
+//        }
     }
 
     ndkVersion = libsBuild.versions.ndk.get()
 
-    externalNativeBuild {
-        cmake {
-            path("src/main/cpp/CMakeLists.txt")
-            version = libsBuild.versions.cmake.get()
-        }
-    }
+//    externalNativeBuild {
+//        cmake {
+//            path("src/main/cpp/CMakeLists.txt")
+//            version = libsBuild.versions.cmake.get()
+//        }
+//    }
 }
 
 // region [Toolchain]
@@ -49,5 +51,27 @@ android {
 private val javaToolchain = libsBuild.versions.javaToolchain.get().toInt()
 kotlin {
     jvmToolchain(javaToolchain)
+
+    androidTarget()
+
+    val androidTargets = listOf(
+        androidNativeArm64(),
+        androidNativeArm32(),
+        androidNativeX64(),
+        androidNativeX86()
+    )
+    androidTargets.forEach {
+        it.binaries {
+            executable()
+//            sharedLib("BinderDetector")
+        }
+
+        with(it) {
+            compilations.getByName("main") {
+                val binderDetector by cinterops.creating {
+                }
+            }
+        }
+    }
 }
 // endregion [Toolchain]
