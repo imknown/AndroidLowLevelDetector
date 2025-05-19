@@ -1,7 +1,7 @@
 plugins {
     alias(libsAndroid.plugins.android.library)
 
-    alias(libsKotlin.plugins.kotlin.android)
+    alias(libsKotlin.plugins.kotlin.multiplatform)
 }
 
 private val buildVersion = libsBuild.versions
@@ -25,25 +25,25 @@ android {
     defaultConfig {
         minSdk = buildVersion.minSdk.get().toInt()
 
-        externalNativeBuild {
-            cmake {
-                arguments += listOf("-DANDROID_ARM_NEON=TRUE", "-DANDROID_TOOLCHAIN=clang")
-
-                cFlags += listOf("-D__STDC_FORMAT_MACROS")
-
-                cppFlags += listOf("-fexceptions", "-frtti", "-std=c++17")
-            }
-        }
+//        externalNativeBuild {
+//            cmake {
+//                arguments += listOf("-DANDROID_ARM_NEON=TRUE", "-DANDROID_TOOLCHAIN=clang")
+//
+//                cFlags += listOf("-D__STDC_FORMAT_MACROS")
+//
+//                cppFlags += listOf("-fexceptions", "-frtti", "-std=c++17")
+//            }
+//        }
     }
 
     ndkVersion = buildVersion.ndk.get()
 
-    externalNativeBuild {
-        cmake {
-            path("src/main/cpp/CMakeLists.txt")
-            version = buildVersion.cmake.get()
-        }
-    }
+//    externalNativeBuild {
+//        cmake {
+//            path("src/main/cpp/CMakeLists.txt")
+//            version = buildVersion.cmake.get()
+//        }
+//    }
 }
 
 // region [Toolchain]
@@ -52,5 +52,27 @@ android {
 // https://docs.gradle.org/current/userguide/toolchains.html
 kotlin {
     jvmToolchain(buildVersion.javaToolchain.get().toInt())
+
+    androidTarget()
+
+    val androidTargets = listOf(
+        androidNativeArm64(),
+        androidNativeArm32(),
+        androidNativeX64(),
+        androidNativeX86()
+    )
+    androidTargets.forEach {
+        it.binaries {
+            executable()
+//            sharedLib("BinderDetector")
+        }
+
+        with(it) {
+            compilations.getByName("main") {
+                val binderDetector by cinterops.creating {
+                }
+            }
+        }
+    }
 }
 // endregion [Toolchain]

@@ -1,0 +1,9 @@
+headers = stdlib.h asm-generic/ioctl.h
+
+package = net.imknown.android.forefrontinfo.binderdetector
+
+---
+
+struct binder_version {
+    __s32 protocol_version;
+};
