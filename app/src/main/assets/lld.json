@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2025-05-19 18:55 +0800",
+  "version": "2025-05-22 20:30 +0800",
   "android": {
     "securityPatchLevel": "2025-05-05",
     "googlePlaySystemUpdates": "2025-05-01",
@@ -94,7 +94,7 @@
       "version": "136.0.7103.125"
     },
     "beta": {
-      "version": "137.0.7151.23"
+      "version": "137.0.7151.44"
     }
   }
 }
