@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2025-05-23 18:45 +0800",
+  "version": "2025-05-26 20:35 +0800",
   "android": {
     "securityPatchLevel": "2025-05-05",
     "googlePlaySystemUpdates": "2025-05-01",
@@ -72,7 +72,7 @@
       ]
     },
     "mainline": {
-      "version": "6.15-rc7"
+      "version": "6.15"
     }
   },
   "toybox": {
