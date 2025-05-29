@@ -13,6 +13,11 @@ import io.ktor.http.headers
 import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.base.extension.isChinaMainlandTimezone
 import net.imknown.android.forefrontinfo.ui.base.JsonIo
+import java.io.IOException
+import java.net.Proxy
+import java.net.ProxySelector
+import java.net.SocketAddress
+import java.net.URI
 
 object GatewayApi {
     private const val HEADER_REFERER_KEY = "Referer"
@@ -31,6 +36,29 @@ object GatewayApi {
         }
 
         val client = HttpClient(OkHttp) {
+            engine {
+                config {
+                    // region [Proxy]
+                    // Fix: java.lang.IllegalArgumentException: port out of range:-1
+                    // Steps to reproduce (small probability): Change Wifi proxy from "Manual" to "PAC"
+                    // https://github.com/square/okhttp/issues/6877#issuecomment-1438554879
+                    val proxySelector = object : ProxySelector() {
+                        override fun select(uri: URI?): List<Proxy> = try {
+                            getDefault().select(uri)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            listOf(Proxy.NO_PROXY)
+                        }
+
+                        override fun connectFailed(uri: URI?, sa: SocketAddress?, ioe: IOException?) {
+                            getDefault().connectFailed(uri, sa, ioe)
+                        }
+                    }
+                    proxySelector(proxySelector)
+                    // endregion [Proxy]
+                }
+            }
+
             if (BuildConfig.DEBUG) {
                 install(Logging) {
                     logger = Logger.ANDROID
