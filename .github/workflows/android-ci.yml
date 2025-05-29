@@ -13,13 +13,17 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: set up JDK 21
+
+    # region [JDK]
+    - name: Set up JDK
       uses: actions/setup-java@v4
       with:
         java-version: '21'
         distribution: 'temurin'
         cache: gradle
+    # endregion [JDK]
 
+    # region [Android SDK]
     # https://github.com/android-actions/setup-android
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
@@ -32,8 +36,12 @@ jobs:
     - name: Install Android SDK NDK
       # https://github.com/android/ndk/releases
       run: sdkmanager --install "ndk;29.0.13113456"
+    # endregion [Android SDK]
 
+    # region [Gradle]
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+
     - name: Build with Gradle
       run: ./gradlew assembleFossDebug
+    # endregion [Gradle]
