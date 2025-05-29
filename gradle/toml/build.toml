@@ -15,7 +15,9 @@ compileSdkExtension = "17" # 36-ext17 (Android 16 Beta 3)
 targetSdk = "36"
 targetSdkPreview = "C"
 
+# https://github.com/android/ndk/releases
 ndk = "29.0.13113456 rc1"
+# https://cmake.org/cmake/help/latest/release/index.html
 cmake = "4.0.2"
 
 versionCode = "65"
