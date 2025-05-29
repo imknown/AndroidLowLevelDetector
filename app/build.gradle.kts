@@ -73,6 +73,10 @@ android {
     signingConfigs {
         register("release") {
             val keystorePropertiesFile = file("$rootDir/local.properties")
+            if (!keystorePropertiesFile.exists()) {
+                return@register
+            }
+
             val keystoreProperties = Properties().apply {
                 load(FileInputStream(keystorePropertiesFile))
             }
