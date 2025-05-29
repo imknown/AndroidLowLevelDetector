@@ -44,3 +44,21 @@ rootProject.name = "AndroidLowLevelDetector"
 include(":binderDetector")
 include(":base")
 include(":app")
+
+// region [Build Scan]
+// https://gradle.com/scans/gradle/
+// https://docs.gradle.com/develocity/gradle-plugin/current/
+plugins {
+    // https://plugins.gradle.org/plugin/com.gradle.develocity
+    id("com.gradle.develocity") version "4.0.2"
+}
+
+develocity {
+    buildScan {
+        termsOfUseUrl = "https://gradle.com/help/legal-terms-of-use"
+        termsOfUseAgree = "yes"
+
+        publishing.onlyIf { false }
+    }
+}
+// endregion [Build Scan]

@@ -9,8 +9,3 @@ plugins {
     alias(libsGoogle.plugins.googleServices) apply false
     alias(libsGoogle.plugins.firebase.crashlytics) apply false
 }
-
-extensions.findByName("buildScan")?.withGroovyBuilder {
-    setProperty("termsOfServiceUrl", "https://gradle.com/terms-of-service")
-    setProperty("termsOfServiceAgree", "yes")
-}
