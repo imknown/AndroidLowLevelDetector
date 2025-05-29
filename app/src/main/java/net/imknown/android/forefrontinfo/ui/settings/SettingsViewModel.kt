@@ -129,7 +129,7 @@ class SettingsViewModel : BaseViewModel() {
     }
 
     data class Version(
-        @StringRes val id: Int,
+        @param:StringRes val id: Int,
         val versionName: String,
         val versionCode: Int,
         val assetLldVersion: String,
