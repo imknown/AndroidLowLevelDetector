@@ -20,12 +20,15 @@ jobs:
         distribution: 'temurin'
         cache: gradle
 
+    # https://github.com/android-actions/setup-android
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
       with:
         packages: ''
+    # https://developer.android.com/tools/sdkmanager#install
     - name: Install Android SDK
-      run: sdkmanager cmake ndk
+      run: sdkmanager --install "cmake:4.0.2" "ndk:29.0.13113456 rc1"
+
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
