@@ -1,29 +1,40 @@
 package net.imknown.android.forefrontinfo.ui.home
 
+import android.app.Application
 import androidx.annotation.MainThread
 import androidx.annotation.StringRes
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.createSavedStateHandle
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.preference.PreferenceManager
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.R
-import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.extension.fullMessage
 import net.imknown.android.forefrontinfo.ui.base.list.BaseListViewModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.common.LldManager
+import net.imknown.android.forefrontinfo.ui.common.State
 import net.imknown.android.forefrontinfo.ui.common.toObjectOrThrow
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.home.repository.HomeRepository
+import net.imknown.android.forefrontinfo.ui.settings.SettingsViewModel
 
 private typealias LldAndError = Pair<Lld?, String?>
 
+@Stable
 class HomeViewModel(
+    private val application: Application,
     private val homeRepository: HomeRepository,
     private val savedStateHandle: SavedStateHandle
 ) : BaseListViewModel() {
@@ -35,14 +46,31 @@ class HomeViewModel(
             initializer {
                 val repository = this[MY_REPOSITORY_KEY] as HomeRepository
                 val savedStateHandle = createSavedStateHandle()
-                HomeViewModel(repository, savedStateHandle)
+                val application = this[APPLICATION_KEY] as Application
+                HomeViewModel(application, repository, savedStateHandle)
             }
         }
     }
 
+    init {
+        viewModelScope.launch {
+            snapshotFlow { SettingsViewModel.outdatedOrderChangedCount }
+                .drop(1) // Ignore default value 0
+                .collect {
+                    val state = modelsState
+                    if (state is State.Done) {
+                        val models = state.toValue()
+                        payloadOutdatedTargetSdkVersionApk(models)
+                        setModels(ArrayList(models))
+                    }
+                }
+        }
+    }
+
     override suspend fun collectModels(): List<MyModel> {
-        val allowNetwork = MyApplication.sharedPreferences.getBoolean(
-            MyApplication.getMyString(R.string.function_allow_network_data_key), false
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(application)
+        val allowNetwork = sharedPreferences.getBoolean(
+            application.getString(R.string.function_allow_network_data_key), false
         )
 
         return if (allowNetwork) {
@@ -98,7 +126,7 @@ class HomeViewModel(
         } catch (e: Exception) {
             val errorMessage = errorMessage(R.string.lld_json_save_failed, e)
 
-            val lld = LldManager.getAssetLld(MyApplication.instance.assets)
+            val lld = LldManager.getAssetLld(application.assets)
             return lld to errorMessage
         }
 
@@ -108,7 +136,7 @@ class HomeViewModel(
             } to null
         } catch (e: Exception) {
             val lld = withContext(Dispatchers.IO) {
-                LldManager.getAssetLld(MyApplication.instance.assets)
+                LldManager.getAssetLld(application.assets)
             }
 
             val errorMessage = errorMessage(R.string.lld_json_parse_failed, e)
@@ -161,7 +189,7 @@ class HomeViewModel(
         if (BuildConfig.DEBUG) {
             cause.printStackTrace()
         }
-        return MyApplication.getMyString(messageId, cause.fullMessage)
+        return application.getString(messageId, cause.fullMessage)
     }
 
     @MainThread

@@ -2,6 +2,11 @@ package net.imknown.android.forefrontinfo.ui.settings
 
 import android.content.pm.PackageManager
 import androidx.annotation.StringRes
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
@@ -9,16 +14,13 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.ui.base.BaseViewModel
 import net.imknown.android.forefrontinfo.ui.common.State
 import net.imknown.android.forefrontinfo.ui.settings.repository.SettingsRepository
 
+@Stable
 class SettingsViewModel(
     private val settingsRepository: SettingsRepository,
     private val savedStateHandle: SavedStateHandle
@@ -35,34 +37,37 @@ class SettingsViewModel(
             }
         }
 
-        val scrollBarModeChangedSharedFlow: SharedFlow<String?>
-            field = MutableSharedFlow()
+        var scrollBarModeChanged by mutableStateOf<String?>(null)
+            private set
 
-        val outdatedOrderChangedSharedFlow: SharedFlow<Unit>
-            field = MutableSharedFlow()
+        var themeChanged by mutableStateOf<String?>(null)
+            private set
+
+        var outdatedOrderChangedCount by mutableIntStateOf(0)
+            private set
     }
 
-    fun emitScrollBarModeChangedSharedFlow(scrollBarMode: String?) {
-        viewModelScope.launch {
-            scrollBarModeChangedSharedFlow.emit(scrollBarMode)
-        }
+    fun emitScrollBarModeChanged(scrollBarMode: String?) {
+        scrollBarModeChanged = scrollBarMode
     }
 
-    fun emitOutdatedOrderChangedSharedFlow() {
-        viewModelScope.launch {
-            outdatedOrderChangedSharedFlow.emit(Unit)
-        }
+    fun emitThemeChanged(theme: String?) {
+        themeChanged = theme
+    }
+
+    fun emitOutdatedOrderChanged() {
+        outdatedOrderChangedCount++
     }
 
     // region [Version Info]
-    val version: StateFlow<State<SettingsRepository.Version>>
-        field = MutableStateFlow<State<SettingsRepository.Version>>(State.NotInitialized)
+    var version by mutableStateOf<State<SettingsRepository.Version>>(State.NotInitialized)
+        private set
 
     fun setBuiltInDataVersion(
         packageManager: PackageManager, packageName: String
     ) {
         viewModelScope.launch {
-            version.value = State.Done(settingsRepository.getBuiltInDataVersion(packageManager, packageName))
+            version = State.Done(settingsRepository.getBuiltInDataVersion(packageManager, packageName))
         }
     }
     // endregion [Version Info]

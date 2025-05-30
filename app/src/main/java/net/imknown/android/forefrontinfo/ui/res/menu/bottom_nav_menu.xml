@@ -3,22 +3,18 @@
 
     <item
         android:id="@+id/navigation_home"
-        android:icon="@drawable/ic_home_24dp"
-        android:title="@string/title_home" />
+        android:title="" />
 
     <item
         android:id="@+id/navigation_others"
-        android:icon="@drawable/ic_others_24dp"
-        android:title="@string/title_others" />
+        android:title="" />
 
     <item
         android:id="@+id/navigation_prop"
-        android:icon="@drawable/ic_prop_24dp"
-        android:title="@string/title_prop" />
+        android:title="" />
 
     <item
         android:id="@+id/navigation_settings"
-        android:icon="@drawable/ic_settings_24dp"
-        android:title="@string/title_settings" />
+        android:title="" />
 
 </menu>
