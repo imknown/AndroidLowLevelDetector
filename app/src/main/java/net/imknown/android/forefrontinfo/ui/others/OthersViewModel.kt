@@ -1,14 +1,15 @@
 package net.imknown.android.forefrontinfo.ui.others
 
+import android.app.Application
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.ui.base.list.BaseListViewModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid10
@@ -18,6 +19,7 @@ import net.imknown.android.forefrontinfo.ui.others.datasource.ArchitectureDataSo
 import net.imknown.android.forefrontinfo.ui.others.repository.OthersRepository
 
 class OthersViewModel(
+    private val application: Application,
     private val othersRepository: OthersRepository,
     private val savedStateHandle: SavedStateHandle
 ) : BaseListViewModel() {
@@ -29,7 +31,8 @@ class OthersViewModel(
             initializer {
                 val repository = this[MY_REPOSITORY_KEY] as OthersRepository
                 val savedStateHandle = createSavedStateHandle()
-                OthersViewModel(repository, savedStateHandle)
+                val application = this[APPLICATION_KEY] as Application
+                OthersViewModel(application, repository, savedStateHandle)
             }
         }
     }
@@ -97,7 +100,7 @@ class OthersViewModel(
             if (isAtLeastAndroid6()) {
                 tempModels += othersRepository.getPreviewSdkInt()
             }
-            tempModels += othersRepository.getDefaultUserAgent(MyApplication.instance)
+            tempModels += othersRepository.getDefaultUserAgent(application)
             tempModels += othersRepository.getKernelVersion()
             // endregion [ROM]
 
