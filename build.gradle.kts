@@ -3,6 +3,7 @@ plugins {
     alias(libsAndroid.plugins.android.application) apply false
     alias(libsAndroid.plugins.android.library) apply false
 
+    alias(libsKotlin.plugins.compose.compiler) apply false
     alias(libsKotlin.plugins.kotlinx.serialization) apply false
 
     alias(libsGoogle.plugins.googleServices) apply false

@@ -1,31 +1,54 @@
 package net.imknown.android.forefrontinfo.ui.base.list
 
-import android.os.Bundle
 import androidx.annotation.MainThread
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import net.imknown.android.forefrontinfo.ui.base.BaseViewModel
 import net.imknown.android.forefrontinfo.ui.common.State
 
+@Stable
 abstract class BaseListViewModel : BaseViewModel() {
-    val modelsStateFlow: StateFlow<State<List<MyModel>>>
-        field = MutableStateFlow<State<List<MyModel>>>(State.NotInitialized)
+    var modelsState by mutableStateOf<State<List<MyModel>>>(State.NotInitialized)
+        private set
+
+    var loading by mutableStateOf(false)
+        private set
+
+    private var refreshJob: Job? = null
 
     abstract suspend fun collectModels(): List<MyModel>
 
-    suspend fun init(savedInstanceState: Bundle?) {
-        // When activity is recreated, use StateFlow to restore the data
-        if (hasNoData(savedInstanceState)) {
-            val list = collectModels()
-            setModels(list)
+    fun init() {
+        if (hasNoData() && !loading) {
+            refresh()
         }
     }
 
-    fun hasNoData(savedInstanceState: Bundle?) =
-        savedInstanceState == null || modelsStateFlow.value == State.NotInitialized
+    fun refresh() {
+        if (loading) return
+
+        loading = true
+
+        refreshJob?.cancel()
+        refreshJob = viewModelScope.launch {
+            try {
+                val list = collectModels()
+                setModels(list)
+            } finally {
+                loading = false
+            }
+        }
+    }
+
+    fun hasNoData() = modelsState == State.NotInitialized
 
     @MainThread
     fun setModels(tempModels: List<MyModel>) {
-        modelsStateFlow.value = State.Done(tempModels)
+        modelsState = State.Done(tempModels)
     }
 }

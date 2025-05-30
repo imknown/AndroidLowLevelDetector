@@ -1,6 +1,7 @@
 package net.imknown.android.forefrontinfo.ui.prop
 
 import android.provider.Settings
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
@@ -13,6 +14,7 @@ import net.imknown.android.forefrontinfo.ui.base.list.BaseListViewModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.prop.repository.PropRepository
 
+@Stable
 class PropViewModel(
     private val propRepository: PropRepository,
     private val savedStateHandle: SavedStateHandle
