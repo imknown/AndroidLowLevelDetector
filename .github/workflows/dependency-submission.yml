@@ -3,6 +3,11 @@ name: Dependency Submission
 on:
   push:
     branches: [ "develop" ]
+    paths: [ "**.kts", "**.dcl", "**.toml", "**.properties" ]
+  pull_request:
+    branches: [ "develop" ]
+    paths: [ "**.kts", "**.dcl", "**.toml", "**.properties" ]
+  workflow_dispatch:
 
 permissions:
   contents: write
