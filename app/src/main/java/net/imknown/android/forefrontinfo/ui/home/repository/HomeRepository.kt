@@ -11,6 +11,7 @@ import android.util.Log
 import androidx.annotation.AttrRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
+import androidx.preference.PreferenceManager
 import androidx.webkit.WebViewCompat
 import io.github.g00fy2.versioncompare.Version
 import net.imknown.android.forefrontinfo.R
@@ -1129,7 +1130,7 @@ class HomeRepository(
                 R.attr.colorCritical
             }
         } else {
-            val shouldOrderByPackageNameFirst = MyApplication.sharedPreferences.getBoolean(
+            val shouldOrderByPackageNameFirst = PreferenceManager.getDefaultSharedPreferences(MyApplication.instance).getBoolean(
                 MyApplication.getMyString(R.string.function_outdated_target_order_by_package_name_first_key),
                 false
             )
