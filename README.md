@@ -1,4 +1,9 @@
 # AndroidLowLevelDetector
+
+[![Android CI](https://github.com/imknown/AndroidLowLevelDetector/actions/workflows/android-ci.yml/badge.svg)](https://github.com/imknown/AndroidLowLevelDetector/actions/workflows/android-ci.yml)
+[![Dependabot Updates](https://github.com/imknown/AndroidLowLevelDetector/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/imknown/AndroidLowLevelDetector/actions/workflows/dependabot/dependabot-updates)
+[![Dependency Submission](https://github.com/imknown/AndroidLowLevelDetector/actions/workflows/dependency-submission.yml/badge.svg)](https://github.com/imknown/AndroidLowLevelDetector/actions/workflows/dependency-submission.yml)
+
 Detect Treble, GSI, Mainline, APEX, system-as-root(SAR), A/B, etc. .  
 Some source codes refer to [Magisk][Magisk], [OpenGApps][OpenGApps], [TrebleInfo][TrebleInfo], [TrebleCheck][TrebleCheck], etc. .
 
