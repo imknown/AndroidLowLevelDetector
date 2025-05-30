@@ -8,6 +8,7 @@ plugins {
     alias(libsAndroid.plugins.android.application)
 
     alias(libsKotlin.plugins.kotlin.android)
+    alias(libsKotlin.plugins.compose.compiler)
     alias(libsKotlin.plugins.kotlinx.serialization)
 
     alias(libsGoogle.plugins.googleServices)
@@ -156,6 +157,7 @@ android {
 
     buildFeatures {
         buildConfig = true
+        compose = true
         viewBinding = true
     }
 
@@ -211,11 +213,29 @@ dependencies {
 
     // region [AndroidX]
     implementation(libsAndroid.activity.ktx)
+
+    // region [Compose]
+    val composeBom = platform(libsAndroid.compose.bom)
+    implementation(composeBom)
+    implementation(libsAndroid.activity.compose)
+    implementation(libsAndroid.lifecycle.runtime.compose)
+    implementation(libsAndroid.lifecycle.viewmodel.compose)
+    implementation(libsAndroid.compose.ui)
+    implementation(libsAndroid.compose.ui.tooling.preview)
+    implementation(libsAndroid.compose.material3)
+
+    debugImplementation(libsAndroid.compose.ui.test.manifest)
+    debugImplementation(libsAndroid.compose.ui.tooling)
+    androidTestImplementation(composeBom)
+    androidTestImplementation(libsAndroid.compose.ui.test.junit4)
+    // endregion [Compose]
+
     implementation(libsAndroid.bundles.annotation)
     implementation(libsAndroid.bundles.appcompat)
     implementation(libsAndroid.bundles.arch.core)
     implementation(libsAndroid.cardView)
     implementation(libsAndroid.constraintLayout)
+    implementation(libsAndroid.constraintLayout.compose)
     implementation(libsAndroid.coordinatorLayout)
     implementation(libsAndroid.core.ktx)
     implementation(libsAndroid.fragment.ktx)
