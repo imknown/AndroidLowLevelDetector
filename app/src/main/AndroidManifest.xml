@@ -21,7 +21,7 @@
         tools:targetApi="TIRAMISU">
 
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.MainActivity2"
             android:exported="true"
             android:launchMode="singleTop">
             <intent-filter>
