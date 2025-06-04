@@ -4,9 +4,9 @@
 # https://developer.android.com/studio/releases
 # https://androidstudio.googleblog.com/
 # https://maven.google.com/web/index.html#com.android.tools.build:gradle
-androidGradlePlugin = "8.10.1"
-androidGradlePlugin-beta = "8.10.1"
-androidGradlePlugin-canary = "8.12.0-alpha02"
+androidGradlePlugin = "8.11.0-rc01"
+androidGradlePlugin-beta = "8.11.0-rc01"
+androidGradlePlugin-canary = "8.12.0-alpha03"
 
 # https://developer.android.com/studio/write/java8-support#library-desugaring
 # https://maven.google.com/web/index.html?q=desugar_jdk_libs
