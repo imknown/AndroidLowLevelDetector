@@ -1,16 +1,10 @@
 package net.imknown.android.forefrontinfo.base
 
 import android.app.Application
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.os.Environment
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.preference.PreferenceManager
 import com.google.android.material.color.DynamicColors
 import com.topjohnwu.superuser.Shell
@@ -20,17 +14,12 @@ import net.imknown.android.forefrontinfo.base.property.PropertyManager
 import net.imknown.android.forefrontinfo.base.property.impl.DefaultProperty
 import net.imknown.android.forefrontinfo.base.shell.ShellManager
 import net.imknown.android.forefrontinfo.base.shell.impl.LibSuShell
-import net.imknown.android.forefrontinfo.ui.base.Event
 import java.io.File
 
 open class MyApplication : Application() {
 
     companion object {
         lateinit var instance: MyApplication
-
-        val homeLanguageEvent: LiveData<Event<Unit>> by lazy { instance._homeLanguageEvent }
-        val othersLanguageEvent: LiveData<Event<Unit>> by lazy { instance._othersLanguageEvent }
-        val propLanguageEvent: LiveData<Event<Unit>> by lazy { instance._propLanguageEvent }
 
         val sharedPreferences: SharedPreferences by lazy {
             PreferenceManager.getDefaultSharedPreferences(instance)
@@ -55,7 +44,7 @@ open class MyApplication : Application() {
         fun getMyString(@StringRes resId: Int, vararg formatArgs: Any?) =
             instance.getString(resId, *formatArgs)
 
-        fun setMyTheme(themesValue: String) {
+        fun setMyTheme(themesValue: String?) {
             @AppCompatDelegate.NightMode val mode = when (themesValue) {
                 getMyString(R.string.interface_themes_follow_system_value) -> {
                     AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
@@ -70,17 +59,13 @@ open class MyApplication : Application() {
                     AppCompatDelegate.MODE_NIGHT_YES
                 }
                 else -> {
-                    AppCompatDelegate.MODE_NIGHT_YES
+                    AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
                 }
             }
 
             AppCompatDelegate.setDefaultNightMode(mode)
         }
     }
-
-    private val _homeLanguageEvent by lazy { MutableLiveData<Event<Unit>>() }
-    private val _othersLanguageEvent by lazy { MutableLiveData<Event<Unit>>() }
-    private val _propLanguageEvent by lazy { MutableLiveData<Event<Unit>>() }
 
     override fun onCreate() {
         super.onCreate()
@@ -90,8 +75,6 @@ open class MyApplication : Application() {
         initTheme()
 
         initShellAndProperty()
-
-        initLanguage()
     }
 
     private fun initTheme() {
@@ -115,17 +98,5 @@ open class MyApplication : Application() {
         ShellManager.instance = ShellManager(LibSuShell)
 
         PropertyManager.instance = PropertyManager(DefaultProperty)
-    }
-
-    private fun initLanguage() {
-        val receiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent) {
-                _homeLanguageEvent.value = Event(Unit)
-                _othersLanguageEvent.value = Event(Unit)
-                _propLanguageEvent.value = Event(Unit)
-            }
-        }
-
-        registerReceiver(receiver, IntentFilter(Intent.ACTION_LOCALE_CHANGED))
     }
 }

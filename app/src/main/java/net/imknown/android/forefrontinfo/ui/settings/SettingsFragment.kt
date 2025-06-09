@@ -1,23 +1,30 @@
 package net.imknown.android.forefrontinfo.ui.settings
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.StringRes
+import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.doOnLayout
 import androidx.core.view.updatePadding
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.SwitchPreferenceCompat
+import kotlinx.coroutines.launch
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.extension.isChinaMainlandTimezone
 import net.imknown.android.forefrontinfo.ui.MainActivity
-import net.imknown.android.forefrontinfo.ui.base.EventObserver
 import net.imknown.android.forefrontinfo.ui.base.ext.toast
 import net.imknown.android.forefrontinfo.ui.base.ext.windowInsetsCompatTypes
+import net.imknown.android.forefrontinfo.ui.common.State
+import net.imknown.android.forefrontinfo.ui.common.setScrollBarMode
 import net.imknown.android.forefrontinfo.ui.settings.datasource.AppInfoDataSource
 import net.imknown.android.forefrontinfo.ui.settings.datasource.FingerprintDataSource
 import net.imknown.android.forefrontinfo.ui.settings.repository.SettingsRepository
@@ -71,33 +78,30 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private fun initViews() {
         // region [Theme]
-        settingsViewModel.themesPrefChangeEvent.observe(viewLifecycleOwner, EventObserver {
-            it?.let { themesValue ->
-                MyApplication.setMyTheme(themesValue)
-            }
-        })
+        val themeModePref = findPreference<ListPreference>(MyApplication.getMyString(R.string.interface_themes_key))
+        themeModePref?.setOnPreferenceChangeListener { preference, newValue ->
+            MyApplication.setMyTheme(newValue as? String)
+            true
+        }
         // endregion [Theme]
 
-        // region [Scroll Bar Mode]
-        settingsViewModel.scrollBarModeChangedEvent.observe(viewLifecycleOwner, EventObserver {
-            it?.let { scrollBarMode ->
-                settingsViewModel.setScrollBarMode(scrollBarMode)
-            }
-        })
-
-        settingsViewModel.changeScrollBarModeEvent.observe(viewLifecycleOwner, EventObserver {
-            listView.isVerticalScrollBarEnabled = it
-        })
-
+        // region [ScrollBar Mode]
         val scrollBarModePref = findPreference<ListPreference>(MyApplication.getMyString(R.string.interface_scroll_bar_key))
-        scrollBarModePref?.let {
-            settingsViewModel.setScrollBarMode(it.value)
-        }
-        // endregion [Scroll Bar Mode]
+        listView.setScrollBarMode(scrollBarModePref?.value)
 
-        settingsViewModel.showMessageEvent.observe(viewLifecycleOwner, EventObserver {
-            context?.toast(it)
-        })
+        scrollBarModePref?.setOnPreferenceChangeListener { preference, newValue ->
+            val scrollBarMode = newValue as? String
+            listView.setScrollBarMode(scrollBarMode)
+            settingsViewModel.emitScrollBarModeChangedSharedFlow(scrollBarMode)
+            true
+        }
+        // endregion [ScrollBar Mode]
+
+        val outdatedOrderPref = findPreference<SwitchPreferenceCompat>(MyApplication.getMyString(R.string.function_outdated_target_order_by_package_name_first_key))
+        outdatedOrderPref?.setOnPreferenceChangeListener { preference, newValue ->
+            settingsViewModel.emitOutdatedOrderChangedSharedFlow()
+            true
+        }
 
         val aboutShopPref = findPreferenceOrNull(R.string.about_shop_key)
         setOnOpenInExternalListener(
@@ -122,17 +126,25 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         // region [Version Info]
         val versionPref = findPreferenceOrNull(R.string.about_version_key)
-        settingsViewModel.version.observe(viewLifecycleOwner) {
-            versionPref?.summary = MyApplication.getMyString(
-                it.id,
-                it.versionName,
-                it.versionCode,
-                it.assetLldVersion,
-                it.distributor,
-                it.installer,
-                it.firstInstallTime,
-                it.lastUpdateTime
-            )
+        viewLifecycleOwner.lifecycleScope.launch {
+            settingsViewModel.version.flowWithLifecycle(viewLifecycleOwner.lifecycle).collect { stateVersion ->
+                if (stateVersion is State.NotInitialized) {
+                    return@collect
+                }
+
+                val version = stateVersion.toValue()
+
+                versionPref?.summary = MyApplication.getMyString(
+                    version.id,
+                    version.versionName,
+                    version.versionCode,
+                    version.assetLldVersion,
+                    version.distributor,
+                    version.installer,
+                    version.firstInstallTime,
+                    version.lastUpdateTime
+                )
+            }
         }
 
         val context = MyApplication.instance
@@ -141,7 +153,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         // region [Version Click]
         versionPref?.setOnPreferenceClickListener {
-            settingsViewModel.versionClicked()
+            settingsViewModel.getVersionClickedMessage()?.let {
+                this.context?.toast(it)
+            }
 
             true
         }
@@ -153,9 +167,22 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private fun setOnOpenInExternalListener(pref: Preference?, @StringRes uriResId: Int) {
         pref?.setOnPreferenceClickListener {
-            settingsViewModel.openInExternal(uriResId)
+            openInExternal(uriResId)
 
             true
+        }
+    }
+
+    fun openInExternal(@StringRes uriResId: Int) {
+        val uri = MyApplication.getMyString(uriResId).toUri()
+        val intent = Intent(Intent.ACTION_VIEW, uri).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        val component = intent.resolveActivity(MyApplication.instance.packageManager)
+        if (component != null) {
+            MyApplication.instance.startActivity(intent)
+        } else {
+            context?.toast(R.string.no_browser_found)
         }
     }
 }

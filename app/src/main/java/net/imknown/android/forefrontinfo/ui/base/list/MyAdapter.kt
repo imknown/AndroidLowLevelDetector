@@ -29,7 +29,7 @@ class MyAdapter : RecyclerView.Adapter<MyViewHolder>() {
     private fun onBindFullViewHolder(holder: MyViewHolder, position: Int) {
         with(holder.binding) {
             @AttrRes val color = myModels[position].color
-            if (color != 0) {
+            if (color != RES_ID_NONE) {
                 val backgroundColor = MaterialColors.getColor(root, color)
                 sivColor.setBackgroundColor(backgroundColor)
             } else {

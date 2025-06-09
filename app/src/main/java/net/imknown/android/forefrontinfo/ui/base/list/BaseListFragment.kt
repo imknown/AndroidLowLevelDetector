@@ -7,16 +7,20 @@ import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.core.view.doOnLayout
 import androidx.core.view.updatePadding
-import androidx.lifecycle.LiveData
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.color.MaterialColors
+import kotlinx.coroutines.launch
 import net.imknown.android.forefrontinfo.R
+import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.databinding.BaseListFragmentBinding
 import net.imknown.android.forefrontinfo.ui.MainActivity
 import net.imknown.android.forefrontinfo.ui.base.BaseFragment
-import net.imknown.android.forefrontinfo.ui.base.Event
-import net.imknown.android.forefrontinfo.ui.base.EventObserver
 import net.imknown.android.forefrontinfo.ui.base.ext.toast
 import net.imknown.android.forefrontinfo.ui.base.ext.windowInsetsCompatTypes
+import net.imknown.android.forefrontinfo.ui.common.State
+import net.imknown.android.forefrontinfo.ui.common.setScrollBarMode
+import net.imknown.android.forefrontinfo.ui.settings.SettingsViewModel
 import com.google.android.material.R as materialR
 
 abstract class BaseListFragment : BaseFragment<BaseListFragmentBinding>() {
@@ -28,14 +32,6 @@ abstract class BaseListFragment : BaseFragment<BaseListFragmentBinding>() {
 
     protected abstract val listViewModel: BaseListViewModel
 
-    protected fun observeLanguageEvent(event: LiveData<Event<Unit>>) {
-        event.observe(viewLifecycleOwner, EventObserver {
-            binding.swipeRefreshLayout.isRefreshing = true
-
-            listViewModel.collectModels()
-        })
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -43,31 +39,55 @@ abstract class BaseListFragment : BaseFragment<BaseListFragmentBinding>() {
 
         initViews(savedInstanceState)
 
-        listViewModel.changeScrollBarModeEvent.observe(viewLifecycleOwner, EventObserver {
-            binding.recyclerView.isVerticalScrollBarEnabled = it
-        })
+        // region [ScrollBar Mode]
+        val scrollBarModeKey = MyApplication.getMyString(R.string.interface_scroll_bar_key)
+        val scrollBarMode = MyApplication.sharedPreferences.getString(scrollBarModeKey, null)
+        binding.recyclerView.setScrollBarMode(scrollBarMode)
 
-        listViewModel.models.observe(viewLifecycleOwner) {
-            listViewModel.showModels(myAdapter.myModels, it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            SettingsViewModel.scrollBarModeChangedSharedFlow.flowWithLifecycle(viewLifecycleOwner.lifecycle).collect {
+                binding.recyclerView.setScrollBarMode(it)
+            }
+        }
+        // endregion [ScrollBar Mode]
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            listViewModel.modelsStateFlow.flowWithLifecycle(viewLifecycleOwner.lifecycle).collect { stateMyModels ->
+                if (stateMyModels == State.NotInitialized) {
+                    return@collect
+                }
+
+                listViewModel.showModels(myAdapter.myModels, stateMyModels.toValue())
+            }
         }
 
-        listViewModel.showModelsEvent.observe(viewLifecycleOwner, EventObserver {
-            myAdapter.notifyDataSetChanged()
+        viewLifecycleOwner.lifecycleScope.launch {
+            listViewModel.showModelsEventStateFlow.flowWithLifecycle(viewLifecycleOwner.lifecycle).collect { state ->
+                if (state == State.NotInitialized) {
+                    return@collect
+                }
 
-            binding.swipeRefreshLayout.isRefreshing = false
-        })
+                myAdapter.notifyDataSetChanged()
 
-        listViewModel.showErrorEvent.observe(viewLifecycleOwner, EventObserver {
-            context?.toast(it)
+                binding.swipeRefreshLayout.isRefreshing = false
 
-            binding.swipeRefreshLayout.isRefreshing = false
-        })
-
-        listViewModel.scrollBarMode.observe(viewLifecycleOwner, EventObserver {
-            it?.let { scrollBarMode ->
-                listViewModel.setScrollBarMode(scrollBarMode)
+                listViewModel.clearShowModelsEventStateFlow()
             }
-        })
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            listViewModel.showErrorEventStateFlow.flowWithLifecycle(viewLifecycleOwner.lifecycle).collect { stateMessage ->
+                if (stateMessage == State.NotInitialized) {
+                    return@collect
+                }
+
+                context?.toast(stateMessage.toValue())
+
+                binding.swipeRefreshLayout.isRefreshing = false
+
+                listViewModel.clearShowErrorEventStateFlow()
+            }
+        }
 
         listViewModel.init(savedInstanceState)
     }
