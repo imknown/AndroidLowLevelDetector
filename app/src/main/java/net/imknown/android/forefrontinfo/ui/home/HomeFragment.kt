@@ -1,9 +1,12 @@
 package net.imknown.android.forefrontinfo.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewmodel.MutableCreationExtras
+import androidx.preference.SwitchPreferenceCompat
+import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.ui.base.EventObserver
 import net.imknown.android.forefrontinfo.ui.base.list.BaseListFragment
@@ -42,6 +45,8 @@ class HomeFragment : BaseListFragment() {
         listViewModel.outdatedOrderProp.observe(viewLifecycleOwner, EventObserver {
             listViewModel.payloadOutdatedTargetSdkVersionApk(myAdapter.myModels)
         })
+
+        val key = MyApplication.getMyString(R.string.function_outdated_target_order_by_package_name_first_key)
 
         listViewModel.showOutdatedOrderEvent.observe(viewLifecycleOwner, EventObserver {
             myAdapter.notifyItemChanged(myAdapter.myModels.lastIndex, MyAdapter.PAYLOAD_DETAILS)

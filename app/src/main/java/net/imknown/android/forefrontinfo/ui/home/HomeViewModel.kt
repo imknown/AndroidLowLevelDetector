@@ -16,7 +16,6 @@ import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.ui.base.Event
-import net.imknown.android.forefrontinfo.ui.base.booleanEventLiveData
 import net.imknown.android.forefrontinfo.ui.base.list.BaseListViewModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.common.LldManager
@@ -41,14 +40,14 @@ class HomeViewModel(
         }
     }
 
-    private val _outdatedOrderProp by lazy {
-        MyApplication.sharedPreferences.booleanEventLiveData(
-            viewModelScope,
-            MyApplication.getMyString(R.string.function_outdated_target_order_by_package_name_first_key),
-            false
-        )
-    }
-    val outdatedOrderProp: LiveData<Event<Boolean>> by lazy { _outdatedOrderProp }
+//    private val _outdatedOrderProp by lazy {
+//        MyApplication.sharedPreferences.booleanEventLiveData(
+//            viewModelScope,
+//            MyApplication.getMyString(R.string.function_outdated_target_order_by_package_name_first_key),
+//            false
+//        )
+//    }
+//    val outdatedOrderProp: LiveData<Event<Boolean>> by lazy { _outdatedOrderProp }
 
     private val _showOutdatedOrderEvent by lazy { MutableLiveData<Event<Unit>>() }
     val showOutdatedOrderEvent: LiveData<Event<Unit>> by lazy { _showOutdatedOrderEvent }

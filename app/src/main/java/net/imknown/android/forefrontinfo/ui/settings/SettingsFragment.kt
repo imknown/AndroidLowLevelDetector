@@ -1,8 +1,10 @@
 package net.imknown.android.forefrontinfo.ui.settings
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.StringRes
+import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.doOnLayout
 import androidx.core.view.updatePadding
@@ -18,6 +20,7 @@ import net.imknown.android.forefrontinfo.ui.MainActivity
 import net.imknown.android.forefrontinfo.ui.base.EventObserver
 import net.imknown.android.forefrontinfo.ui.base.ext.toast
 import net.imknown.android.forefrontinfo.ui.base.ext.windowInsetsCompatTypes
+import net.imknown.android.forefrontinfo.ui.common.setScrollBarMode
 import net.imknown.android.forefrontinfo.ui.settings.datasource.AppInfoDataSource
 import net.imknown.android.forefrontinfo.ui.settings.datasource.FingerprintDataSource
 import net.imknown.android.forefrontinfo.ui.settings.repository.SettingsRepository
@@ -78,26 +81,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
         })
         // endregion [Theme]
 
-        // region [Scroll Bar Mode]
+        // region [ScrollBar Mode]
         settingsViewModel.scrollBarModeChangedEvent.observe(viewLifecycleOwner, EventObserver {
-            it?.let { scrollBarMode ->
-                settingsViewModel.setScrollBarMode(scrollBarMode)
-            }
-        })
-
-        settingsViewModel.changeScrollBarModeEvent.observe(viewLifecycleOwner, EventObserver {
-            listView.isVerticalScrollBarEnabled = it
+            listView.setScrollBarMode(it)
         })
 
         val scrollBarModePref = findPreference<ListPreference>(MyApplication.getMyString(R.string.interface_scroll_bar_key))
-        scrollBarModePref?.let {
-            settingsViewModel.setScrollBarMode(it.value)
-        }
-        // endregion [Scroll Bar Mode]
-
-        settingsViewModel.showMessageEvent.observe(viewLifecycleOwner, EventObserver {
-            context?.toast(it)
-        })
+        listView.setScrollBarMode(scrollBarModePref?.value)
+        // endregion [ScrollBar Mode]
 
         val aboutShopPref = findPreferenceOrNull(R.string.about_shop_key)
         setOnOpenInExternalListener(
@@ -141,7 +132,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         // region [Version Click]
         versionPref?.setOnPreferenceClickListener {
-            settingsViewModel.versionClicked()
+            settingsViewModel.getVersionClickedMessage()?.let {
+                this.context?.toast(it)
+            }
 
             true
         }
@@ -153,9 +146,22 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private fun setOnOpenInExternalListener(pref: Preference?, @StringRes uriResId: Int) {
         pref?.setOnPreferenceClickListener {
-            settingsViewModel.openInExternal(uriResId)
+            openInExternal(uriResId)
 
             true
+        }
+    }
+
+    fun openInExternal(@StringRes uriResId: Int) {
+        val uri = MyApplication.getMyString(uriResId).toUri()
+        val intent = Intent(Intent.ACTION_VIEW, uri).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        val component = intent.resolveActivity(MyApplication.instance.packageManager)
+        if (component != null) {
+            MyApplication.instance.startActivity(intent)
+        } else {
+            context?.toast(R.string.no_browser_found)
         }
     }
 }

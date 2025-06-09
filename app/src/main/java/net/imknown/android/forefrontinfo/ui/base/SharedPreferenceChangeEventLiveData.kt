@@ -1,7 +1,8 @@
 package net.imknown.android.forefrontinfo.ui.base
 
 import android.content.SharedPreferences
-import androidx.lifecycle.LiveData
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,8 +17,7 @@ abstract class SharedPreferenceChangeEventLiveData<T>(
     protected val sharedPrefs: SharedPreferences,
     private val key: String,
     private val defValue: T
-) : LiveData<Event<T>>() {
-
+) : DefaultLifecycleObserver {
     private val preferenceChangeListener =
         SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
             scope.launch {
@@ -28,20 +28,18 @@ abstract class SharedPreferenceChangeEventLiveData<T>(
                 val event = withContext(Dispatchers.Default) {
                     getValueFromPreferences(key, defValue)
                 }
-                value = Event(event)
+//                value = Event(event)
             }
         }
 
     abstract suspend fun getValueFromPreferences(key: String, defValue: T): T
 
-    override fun onActive() {
-        super.onActive()
+    override fun onCreate(owner: LifecycleOwner) {
         // value = getValueFromPreferences(key, defValue)
         sharedPrefs.registerOnSharedPreferenceChangeListener(preferenceChangeListener)
     }
 
-    override fun onInactive() {
-        super.onInactive()
+    override fun onDestroy(owner: LifecycleOwner) {
         sharedPrefs.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener)
     }
 }
