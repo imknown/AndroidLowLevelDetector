@@ -1,8 +1,7 @@
 package net.imknown.android.forefrontinfo.ui.home
 
+import androidx.annotation.MainThread
 import androidx.annotation.StringRes
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
@@ -15,8 +14,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
-import net.imknown.android.forefrontinfo.ui.base.Event
-import net.imknown.android.forefrontinfo.ui.base.booleanEventLiveData
 import net.imknown.android.forefrontinfo.ui.base.list.BaseListViewModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.common.LldManager
@@ -40,18 +37,6 @@ class HomeViewModel(
             }
         }
     }
-
-    private val _outdatedOrderProp by lazy {
-        MyApplication.sharedPreferences.booleanEventLiveData(
-            viewModelScope,
-            MyApplication.getMyString(R.string.function_outdated_target_order_by_package_name_first_key),
-            false
-        )
-    }
-    val outdatedOrderProp: LiveData<Event<Boolean>> by lazy { _outdatedOrderProp }
-
-    private val _showOutdatedOrderEvent by lazy { MutableLiveData<Event<Unit>>() }
-    val showOutdatedOrderEvent: LiveData<Event<Unit>> by lazy { _showOutdatedOrderEvent }
 
     override fun collectModels()  {
         val allowNetwork = MyApplication.sharedPreferences.getBoolean(
@@ -182,18 +167,16 @@ class HomeViewModel(
         }
     }
 
-    fun payloadOutdatedTargetSdkVersionApk(myModels: List<MyModel>) {
+    @MainThread
+    suspend fun payloadOutdatedTargetSdkVersionApk(myModels: List<MyModel>) {
         if (myModels.isEmpty()) {
             return
         }
 
-        viewModelScope.launch {
-            val lld = fetchOfflineLldOrNull()
-                ?: return@launch
-            myModels.last().detail = withContext(Dispatchers.Default) {
-                homeRepository.getOutdatedTargetSdkVersionApkModel(lld).detail
-            }
-            _showOutdatedOrderEvent.value = Event(Unit)
+        val lld = fetchOfflineLldOrNull()
+            ?: return
+        myModels.last().detail = withContext(Dispatchers.Default) {
+            homeRepository.getOutdatedTargetSdkVersionApkModel(lld).detail
         }
     }
 }

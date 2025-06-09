@@ -1,10 +1,7 @@
 package net.imknown.android.forefrontinfo.ui.prop
 
-import android.os.Bundle
-import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewmodel.MutableCreationExtras
-import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.ui.base.list.BaseListFragment
 import net.imknown.android.forefrontinfo.ui.prop.datasource.PropertiesDataSource
 import net.imknown.android.forefrontinfo.ui.prop.datasource.SettingsDataSource
@@ -27,10 +24,4 @@ class PropFragment : BaseListFragment() {
             PropViewModel.Factory
         }
     )
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        observeLanguageEvent(MyApplication.propLanguageEvent)
-    }
 }
