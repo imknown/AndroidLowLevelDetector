@@ -10,6 +10,7 @@ import androidx.core.view.updatePadding
 import androidx.lifecycle.LiveData
 import com.google.android.material.color.MaterialColors
 import net.imknown.android.forefrontinfo.R
+import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.mvvm.BaseFragment
 import net.imknown.android.forefrontinfo.base.mvvm.Event
 import net.imknown.android.forefrontinfo.base.mvvm.EventObserver
@@ -17,6 +18,7 @@ import net.imknown.android.forefrontinfo.base.mvvm.toast
 import net.imknown.android.forefrontinfo.base.mvvm.windowInsetsCompatTypes
 import net.imknown.android.forefrontinfo.databinding.BaseListFragmentBinding
 import net.imknown.android.forefrontinfo.ui.MainActivity
+import net.imknown.android.forefrontinfo.ui.common.setScrollBarMode
 import com.google.android.material.R as materialR
 
 abstract class BaseListFragment : BaseFragment<BaseListFragmentBinding>() {
@@ -43,9 +45,15 @@ abstract class BaseListFragment : BaseFragment<BaseListFragmentBinding>() {
 
         initViews(savedInstanceState)
 
-        listViewModel.changeScrollBarModeEvent.observe(viewLifecycleOwner, EventObserver {
-            binding.recyclerView.isVerticalScrollBarEnabled = it
+        // region [ScrollBar Mode]
+        listViewModel.scrollBarMode.observe(viewLifecycleOwner, EventObserver {
+            binding.recyclerView.setScrollBarMode(it)
         })
+
+        val key = MyApplication.getMyString(R.string.interface_scroll_bar_key)
+        val scrollBarMode = MyApplication.sharedPreferences.getString(key, null)
+        binding.recyclerView.setScrollBarMode(scrollBarMode)
+        // endregion [ScrollBar Mode]
 
         listViewModel.models.observe(viewLifecycleOwner) {
             listViewModel.showModels(myAdapter.myModels, it)
@@ -61,12 +69,6 @@ abstract class BaseListFragment : BaseFragment<BaseListFragmentBinding>() {
             context?.toast(it)
 
             binding.swipeRefreshLayout.isRefreshing = false
-        })
-
-        listViewModel.scrollBarMode.observe(viewLifecycleOwner, EventObserver {
-            it?.let { scrollBarMode ->
-                listViewModel.setScrollBarMode(scrollBarMode)
-            }
         })
 
         listViewModel.init(savedInstanceState)

@@ -14,6 +14,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.preference.PreferenceManager
 import com.google.android.material.color.DynamicColors
 import com.topjohnwu.superuser.Shell
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.mvvm.Event
@@ -28,9 +30,15 @@ open class MyApplication : Application() {
     companion object {
         lateinit var instance: MyApplication
 
-        val homeLanguageEvent: LiveData<Event<Unit>> by lazy { instance._homeLanguageEvent }
-        val othersLanguageEvent: LiveData<Event<Unit>> by lazy { instance._othersLanguageEvent }
-        val propLanguageEvent: LiveData<Event<Unit>> by lazy { instance._propLanguageEvent }
+        private val _sharedFlow = MutableSharedFlow<Boolean>()
+        val sharedFlow = _sharedFlow.asSharedFlow()
+
+        private val _homeLanguageEvent by lazy { MutableLiveData<Event<Unit>>() }
+        val homeLanguageEvent: LiveData<Event<Unit>> by lazy { _homeLanguageEvent }
+        private val _othersLanguageEvent by lazy { MutableLiveData<Event<Unit>>() }
+        val othersLanguageEvent: LiveData<Event<Unit>> by lazy { _othersLanguageEvent }
+        private val _propLanguageEvent by lazy { MutableLiveData<Event<Unit>>() }
+        val propLanguageEvent: LiveData<Event<Unit>> by lazy { _propLanguageEvent }
 
         val sharedPreferences: SharedPreferences by lazy {
             PreferenceManager.getDefaultSharedPreferences(instance)
@@ -77,10 +85,6 @@ open class MyApplication : Application() {
             AppCompatDelegate.setDefaultNightMode(mode)
         }
     }
-
-    private val _homeLanguageEvent by lazy { MutableLiveData<Event<Unit>>() }
-    private val _othersLanguageEvent by lazy { MutableLiveData<Event<Unit>>() }
-    private val _propLanguageEvent by lazy { MutableLiveData<Event<Unit>>() }
 
     override fun onCreate() {
         super.onCreate()

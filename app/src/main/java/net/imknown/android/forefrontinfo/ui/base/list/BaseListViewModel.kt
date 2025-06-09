@@ -9,10 +9,10 @@ import androidx.lifecycle.viewModelScope
 import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
+import net.imknown.android.forefrontinfo.base.extension.fullMessage
 import net.imknown.android.forefrontinfo.base.mvvm.BaseViewModel
 import net.imknown.android.forefrontinfo.base.mvvm.Event
 import net.imknown.android.forefrontinfo.base.mvvm.stringEventLiveData
-import net.imknown.android.forefrontinfo.base.extension.fullMessage
 
 abstract class BaseListViewModel : BaseViewModel() {
     private val _models by lazy { MutableLiveData<List<MyModel>>() }
@@ -36,11 +36,6 @@ abstract class BaseListViewModel : BaseViewModel() {
     abstract fun collectModels()
 
     fun init(savedInstanceState: Bundle?) {
-        val scrollBarMode = MyApplication.sharedPreferences.getString(
-            MyApplication.getMyString(R.string.interface_scroll_bar_key), null
-        ) ?: MyApplication.getMyString(R.string.interface_no_scroll_bar_value)
-        setScrollBarMode(scrollBarMode)
-
         // When activity is recreated, use LiveData to restore the data
         if (hasNoData(savedInstanceState)) {
             collectModels()

@@ -1,9 +1,7 @@
 package net.imknown.android.forefrontinfo.ui.settings
 
-import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.annotation.StringRes
-import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -13,9 +11,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.mvvm.BaseViewModel
@@ -58,27 +54,6 @@ class SettingsViewModel(
     }
     val scrollBarModeChangedEvent: LiveData<Event<String?>> by lazy { _scrollBarModeChangedEvent }
 
-    private val _showMessageEvent by lazy { MutableLiveData<Event<Int>>() }
-    val showMessageEvent: LiveData<Event<Int>> by lazy { _showMessageEvent }
-
-    fun openInExternal(@StringRes uriResId: Int) = viewModelScope.launch {
-        val resolved = withContext(Dispatchers.Default) {
-            val uri = MyApplication.getMyString(uriResId).toUri()
-            val intent = Intent(Intent.ACTION_VIEW, uri).apply {
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            }
-            val resolved = intent.resolveActivity(MyApplication.instance.packageManager) != null
-            if (resolved) {
-                MyApplication.instance.startActivity(intent)
-            }
-            resolved
-        }
-
-        if (!resolved) {
-            _showMessageEvent.value = Event(R.string.no_browser_found)
-        }
-    }
-
     // region [Version Info]
     private val _version by lazy { MutableLiveData<SettingsRepository.Version>() }
     val version: LiveData<SettingsRepository.Version> by lazy { _version }
@@ -93,14 +68,19 @@ class SettingsViewModel(
     // region [Version Click]
     private var timesLeft = 7
 
-    fun versionClicked() {
-        if (timesLeft < 0) {
-            return
+    @StringRes
+    fun getVersionClickedMessage(): Int? {
+        if (timesLeft <= 0) {
+            return null
         }
 
-        if (--timesLeft == 0) {
-            _showMessageEvent.value = Event(R.string.about_version_click)
+        timesLeft--
+
+        if (timesLeft > 0) {
+            return null
         }
+
+        return R.string.about_version_click
     }
     // endregion [Version Click]
 }
