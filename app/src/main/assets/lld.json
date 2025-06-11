@@ -1,35 +1,19 @@
 {
   "scheme": 1,
-  "version": "2025-06-11 08:50 +0800",
+  "version": "2025-06-11 08:55 +0800",
   "android": {
-    "securityPatchLevel": "2025-05-05",
-    "googlePlaySystemUpdates": "2025-05-01",
+    "securityPatchLevel": "2025-06-05",
+    "googlePlaySystemUpdates": "2025-06-01",
     "build": {
-      "version": "2025-05-06",
+      "version": "2025-06-10",
       "details": [
         {
-          "id": "BD4A.250505.003",
-          "revision": "r31"
+          "id": "BP2A.250605.031.A2",
+          "revision": "r1"
         },
         {
-          "id": "BP1A.250505.005",
-          "revision": "r32"
-        },
-        {
-          "id": "BP1A.250505.005.A1",
-          "revision": "r33"
-        },
-        {
-          "id": "BP1A.250505.005.B1",
-          "revision": "r34"
-        },
-        {
-          "id": "BP1A.250505.005.C1",
-          "revision": "r35"
-        },
-        {
-          "id": "BP1A.250505.005.D1",
-          "revision": "r36"
+          "id": "BP2A.250605.031.A3",
+          "revision": "r2"
         }
       ]
     },
