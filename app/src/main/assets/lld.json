@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2025-06-25 22:00 +0800",
+  "version": "2025-06-26 09:25 +0800",
   "android": {
     "securityPatchLevel": "2025-06-05",
     "googlePlaySystemUpdates": "2025-06-01",
@@ -25,7 +25,7 @@
     "stablePreview": {
       "name": "Baklava",
       "api": "36",
-      "version": "16 QPR1 Beta 2, Baklava"
+      "version": "16 QPR1 Beta 2.1, Baklava"
     },
     "support": {
       "name": "Tiramisu",
@@ -35,7 +35,7 @@
     "preview": {
       "name": "Baklava",
       "api": "36",
-      "version": "16 QPR1 Beta 2, Baklava",
+      "version": "16 QPR1 Beta 2.1, Baklava",
       "phase": ""
     },
     "internal": {
