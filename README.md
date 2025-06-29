@@ -58,10 +58,18 @@ Translations are also welcome.
 ## Build
 ### Flavor
 - Firebase  
-Choose `Firebase` in `Build Variants`, then follow Firebase Official Guide.
+The Google Play version.  
+Will collect your information then upload,  
+using Firebase Analytics & Crashlytics.  
+Follow Firebase Official Guide.  
+See [Privacy Policy][Privacy Policy].
 
-- FOSS  
-Choose `Foss` in `Build Variants`.
+- FOSS (Default)  
+Will **NOT** collect your information.  
+See [Free and open-source software][FOSS].
+
+[Privacy Policy]: /GOOGLE_PLAY_PRIVACY_POLICY.md
+[FOSS]: https://en.wikipedia.org/wiki/Free_and_open-source_software
 
 ### Release
 Provide the whole following properties in file `$rootDir/local.properties`:
