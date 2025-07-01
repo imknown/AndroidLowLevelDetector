@@ -2,10 +2,10 @@
 # https://developers.google.com/android/guides/releases
 # https://firebase.google.com/support/release-notes/android
 # https://firebase.google.com/docs/android/setup#available-libraries
-googleServices-gradlePlugin = "4.4.2"
+googleServices-gradlePlugin = "4.4.3"
 
 # https://firebase.google.com/docs/android/learn-more#bom
-firebase-bom = "33.15.0"
+firebase-bom = "33.16.0"
 
 # https://firebase.google.com/docs/crashlytics/get-started?platform=android
 # https://firebase.google.com/docs/crashlytics/ndk-reports
