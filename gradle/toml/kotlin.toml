@@ -9,7 +9,7 @@ kotlinx-coroutines = "1.10.2"
 kotlinx-serialization = "1.9.0"
 
 # https://github.com/ktorio/ktor/releases
-ktor = "3.1.3"
+ktor = "3.2.1"
 
 [libraries]
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
