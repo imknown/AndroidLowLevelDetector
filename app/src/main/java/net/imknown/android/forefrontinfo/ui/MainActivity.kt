@@ -1,11 +1,11 @@
 package net.imknown.android.forefrontinfo.ui
 
 import android.os.Bundle
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -15,6 +15,7 @@ import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.databinding.MainActivityBinding
 import net.imknown.android.forefrontinfo.ui.base.ext.viewBinding
 import net.imknown.android.forefrontinfo.ui.base.ext.windowInsetsCompatTypes
+import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid10
 import net.imknown.android.forefrontinfo.ui.home.HomeFragment
 import net.imknown.android.forefrontinfo.ui.others.OthersFragment
 import net.imknown.android.forefrontinfo.ui.prop.PropFragment
@@ -27,6 +28,15 @@ class MainActivity : AppCompatActivity() {
     private val mainViewModel by viewModels<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // https://developer.android.com/design/ui/mobile/guides/foundations/system-bars#button_modes
+        // https://developer.android.com/develop/ui/views/layout/edge-to-edge#create-transparent
+        // https://developer.android.com/develop/ui/views/layout/edge-to-edge-manually#change-color
+        // https://developer.android.com/develop/ui/compose/layouts/system-bars#create-transparent
+        enableEdgeToEdge()
+        if (isAtLeastStableAndroid10()) {
+            window.setNavigationBarContrastEnforced(false)
+        }
+
         super.onCreate(savedInstanceState)
 
         setContentView(binding.root)
@@ -49,13 +59,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initWindowInsets() {
-        // https://developer.android.com/design/ui/mobile/guides/foundations/system-bars#button_modes
-        // https://developer.android.com/develop/ui/views/layout/edge-to-edge#create-transparent
-        // https://developer.android.com/develop/ui/views/layout/edge-to-edge-manually#change-color
-        // https://developer.android.com/develop/ui/compose/layouts/system-bars#create-transparent
-        // enableEdgeToEdge()
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-
         // https://developer.android.com/develop/ui/views/layout/edge-to-edge#material-components
         // https://developer.android.com/develop/ui/compose/layouts/insets#material3-components
         ViewCompat.setOnApplyWindowInsetsListener(binding.appBar) { appBar, windowInsetsCompat ->

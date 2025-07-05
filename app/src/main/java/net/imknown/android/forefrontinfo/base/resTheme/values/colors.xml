@@ -143,7 +143,4 @@
     <color name="md_theme_surfaceContainerHigh_highContrast">#E7E9DF</color>
     <color name="md_theme_surfaceContainerHighest_highContrast">#E1E4DA</color>
     <!-- endregion [M3] -->
-
-    <color name="colorStatusBar">#3000</color>
-    <color name="colorNavigationBar">#3000</color>
 </resources>

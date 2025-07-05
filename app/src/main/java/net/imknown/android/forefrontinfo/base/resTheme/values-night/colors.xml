@@ -143,7 +143,4 @@
     <color name="md_theme_surfaceContainerHigh_highContrast">#272B25</color>
     <color name="md_theme_surfaceContainerHighest_highContrast">#32362F</color>
     <!-- endregion [M3] -->
-
-    <color name="colorStatusBar">@android:color/transparent</color>
-    <color name="colorNavigationBar">@android:color/transparent</color>
 </resources>

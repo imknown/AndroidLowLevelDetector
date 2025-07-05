@@ -51,11 +51,6 @@
         <item name="colorSurfaceContainerHighest">@color/md_theme_surfaceContainerHighest</item>
         <!-- endregion [M3] -->
 
-        <item name="android:statusBarColor">@color/colorStatusBar</item>
-        <item name="android:navigationBarColor">@color/colorNavigationBar</item>
-        <item name="android:enforceStatusBarContrast" tools:targetApi="q">false</item>
-        <item name="android:enforceNavigationBarContrast" tools:targetApi="q">false</item>
-
         <item name="colorNoProblem">@color/colorNoProblem</item>
         <item name="colorWaring">@color/colorWaring</item>
         <item name="colorCritical">@color/colorCritical</item>
