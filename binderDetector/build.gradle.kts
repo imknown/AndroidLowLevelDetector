@@ -1,5 +1,3 @@
-import kotlin.collections.plusAssign
-
 plugins {
     alias(libsAndroid.plugins.android.library)
 

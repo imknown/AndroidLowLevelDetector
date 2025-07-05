@@ -43,6 +43,8 @@ android {
         buildConfigField("String", "GIT_BRANCH", "\"$currentGitBranchName\"")
     }
 
+    ndkVersion = libsBuild.versions.ndk.get()
+
     sourceSets {
         getByName("main") {
             val javaPathString = java.directories.toList()[0] // "src/main/java"
