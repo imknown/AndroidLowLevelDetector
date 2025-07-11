@@ -1,9 +1,9 @@
 {
   "scheme": 1,
-  "version": "2025-07-07 20:00 +0800",
+  "version": "2025-07-10 20:00 +0800",
   "android": {
-    "securityPatchLevel": "2025-06-05",
-    "googlePlaySystemUpdates": "2025-06-01",
+    "securityPatchLevel": "2025-07-05",
+    "googlePlaySystemUpdates": "2025-07-01",
     "build": {
       "version": "2025-06-10",
       "details": [
@@ -78,7 +78,7 @@
       "version": "138.0.7204.63"
     },
     "beta": {
-      "version": "139.0.7258.3"
+      "version": "139.0.7258.32"
     }
   }
 }
