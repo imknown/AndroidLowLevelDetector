@@ -12,6 +12,8 @@ Some source codes refer to [Magisk][Magisk], [OpenGApps][OpenGApps], [TrebleInfo
 [TrebleInfo]:https://github.com/penn5/TrebleCheck
 [TrebleCheck]:https://github.com/kevintresuelo/treble
 
+<img src="art/Dark.png" width="250px" alt="Dark" /> <img src="art/Light.png" width="250px" alt="Light" />
+
 ## Source
 1. https://github.com/imknown/AndroidLowLevelDetector
 1. https://gitee.com/imknown/AndroidLowLevelDetector (Mirror)
