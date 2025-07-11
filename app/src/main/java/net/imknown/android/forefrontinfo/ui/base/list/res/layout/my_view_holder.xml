@@ -27,6 +27,7 @@
                 android:id="@+id/tvTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="?attr/colorOnSurface"
                 android:textDirection="locale"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -45,6 +46,7 @@
             android:id="@+id/tvDetail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="?attr/colorOnSurfaceVariant"
             android:textDirection="locale"
             android:textSize="16sp"
             tools:text="@string/android_info_detail" />
