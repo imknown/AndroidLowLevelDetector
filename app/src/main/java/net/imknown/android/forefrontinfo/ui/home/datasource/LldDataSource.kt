@@ -1,5 +1,6 @@
 package net.imknown.android.forefrontinfo.ui.home.datasource
 
+import android.net.TrafficStats
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.okhttp.OkHttp
@@ -13,6 +14,7 @@ import io.ktor.http.headers
 import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.base.extension.isChinaMainlandTimezone
 import net.imknown.android.forefrontinfo.ui.common.LldManager
+import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid16
 import java.io.IOException
 import java.net.Proxy
 import java.net.ProxySelector
@@ -43,6 +45,21 @@ class LldDataSource {
 
         val client = HttpClient(OkHttp) {
             engine {
+                addInterceptor { chain ->
+                    val thread = Thread.currentThread()
+                    val id = if (isAtLeastStableAndroid16()) {
+                        thread.threadId()
+                    } else {
+                        @Suppress("DEPRECATION")
+                        thread.id
+                    }.toInt()
+                    TrafficStats.setThreadStatsTag(id)
+
+                    val request = chain.request()
+                    val response = chain.proceed(request)
+                    response
+                }
+
                 config {
                     // region [Proxy]
                     // Fix: java.lang.IllegalArgumentException: port out of range:-1
