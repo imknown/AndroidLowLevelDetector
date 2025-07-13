@@ -93,8 +93,8 @@ core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core" }
 
 fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragment" }
 
-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
+lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 lifecycle-viewmodel-savedstate = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-savedstate", version.ref = "lifecycle" }
 
 preference-ktx = { group = "androidx.preference", name = "preference-ktx", version.ref = "preference" }
@@ -115,7 +115,7 @@ test-ext-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.
 annotation = ["annotation", "annotation-experimental"]
 appcompat = ["appcompat", "appcompat-resources"]
 arch-core = ["arch-core-common", "arch-core-runtime"]
-lifecycle = ["lifecycle-viewmodel-ktx", "lifecycle-runtime-ktx", "lifecycle-viewmodel-savedstate"]
+lifecycle = ["lifecycle-runtime-ktx", "lifecycle-viewmodel-ktx", "lifecycle-viewmodel-savedstate"]
 
 test = ["test-core-ktx", "test-espresso-core", "test-ext-junit-ktx"]
 
