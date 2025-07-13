@@ -43,10 +43,15 @@ data class Lld(
         val build: Build,
         // https://www.android.com
         val stable: Android,
+        // Beta
+        // https://developer.android.com/preview/overview
+        // https://developer.android.com/about/versions/16/release-notes-qpr
+        val stablePreview: Android,
         // https://source.android.com/security/bulletin/
         val support: Android,
+        // Canary
         // https://ci.android.com
-        // https://developer.android.com/preview/overview
+        // https://developer.android.com/about/canary
         val preview: Android,
         val internal: Android
     ) {

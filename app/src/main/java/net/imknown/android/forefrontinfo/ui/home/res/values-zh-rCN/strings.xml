@@ -18,7 +18,7 @@
 
     <string name="android_info_title">Android 版本</string>
     <string name="android_info">%1$s（API %2$s）</string>
-    <string name="android_info_detail">我的：%1$s\n\n最新稳定：%2$s\n最低支持：%3$s\n最新预览：%4$s\n最新内部：%5$s</string>
+    <string name="android_info_detail">我的：%1$s\n\n最新稳定：%2$s\n最低支持：%3$s\n最新 Beta：%4$s\n最新预览：%5$s\n最新内部：%6$s</string>
 
     <string name="android_build_id_title">Android 构建 id</string>
     <string name="android_build_id">%1$s（%2$s）</string>
@@ -82,7 +82,7 @@
     <string name="toybox_built_in_detail">我的：%1$s\n\n最新稳定：%2$s\n最低支持：%3$s\nMaster：%4$s</string>
 
     <string name="webview_title">WebView 版本</string>
-    <string name="webview_detail">最新稳定：%1$s\n最新测试：%2$s</string>
+    <string name="webview_detail">最新稳定：%1$s\n最新 Beta：%2$s</string>
     <string name="webview_built_in_version">我的内建 WebView</string>
     <string name="webview_or">%1$s 或者 %2$s</string>
     <string name="webview_standalone">独立的</string>

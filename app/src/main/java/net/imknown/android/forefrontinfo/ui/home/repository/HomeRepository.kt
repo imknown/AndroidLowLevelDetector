@@ -94,13 +94,19 @@ class HomeRepository(
         val lowestSupport = MyApplication.getMyString(R.string.android_info, support.version, support.api)
         // endregion [LowestSupport]
 
-        // region [LatestPreview]
-        val preview = lld.android.preview
-        val previewVersion = preview.version
-        val previewPhase = preview.phase
-        val previewApi = preview.api
-        val latestPreview = MyApplication.getMyString(R.string.android_info, "$previewVersion $previewPhase", previewApi)
-        // endregion [LatestPreview]
+        // region [Beta]
+        val lldStablePreview = lld.android.stablePreview
+        val stablePreviewVersion = lldStablePreview.version
+        val stablePreviewApi = lldStablePreview.api
+        val stablePreview = MyApplication.getMyString(R.string.android_info, stablePreviewVersion, stablePreviewApi)
+        // endregion [Beta]
+
+        // region [Canary]
+        val lldPreview = lld.android.preview
+        val previewVersion = lldPreview.version
+        val previewApi = lldPreview.api
+        val latestPreview = MyApplication.getMyString(R.string.android_info, previewVersion, previewApi)
+        // endregion [Canary]
 
         // region [LatestInternal]
         val internal = lld.android.internal
@@ -113,9 +119,10 @@ class HomeRepository(
             else -> R.attr.colorCritical
         }
 
+        val infoDetailArgs = arrayOf(mine, latestStable, lowestSupport, stablePreview, latestPreview, latestInternal)
         return toColoredMyModel(
             MyApplication.getMyString(R.string.android_info_title),
-            MyApplication.getMyString(R.string.android_info_detail, mine, latestStable, lowestSupport, latestPreview, latestInternal),
+            MyApplication.getMyString(R.string.android_info_detail, *infoDetailArgs),
             color
         )
     }
