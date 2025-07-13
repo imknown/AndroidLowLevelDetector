@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2025-07-10 20:00 +0800",
+  "version": "2025-07-11 21:30 +0800",
   "android": {
     "securityPatchLevel": "2025-07-05",
     "googlePlaySystemUpdates": "2025-07-01",
@@ -35,7 +35,7 @@
     "preview": {
       "name": "Baklava",
       "api": "36",
-      "version": "16 QPR1 Beta 2.1, Baklava",
+      "version": "16 Canary, Baklava",
       "phase": ""
     },
     "internal": {
@@ -47,10 +47,10 @@
   "linux": {
     "google": {
       "versions": [
-        "6.12.36",
-        "6.6.96",
-        "6.1.143",
-        "5.15.186",
+        "6.12.37",
+        "6.6.97",
+        "6.1.144",
+        "5.15.187",
         "5.10.239",
         "5.4.295"
       ]
