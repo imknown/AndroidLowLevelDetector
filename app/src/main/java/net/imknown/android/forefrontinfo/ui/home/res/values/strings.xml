@@ -18,7 +18,7 @@
 
     <string name="android_info_title">Android version</string>
     <string name="android_info">%1$s (API %2$s)</string>
-    <string name="android_info_detail">Mine: %1$s\n\nLatest stable: %2$s\nLowest support: %3$s\nLatest Beta：%4$s\nLatest preview: %5$s\nLatest internal: %6$s</string>
+    <string name="android_info_detail">Mine: %1$s\n\nLatest stable: %2$s\nLowest support: %3$s\nLatest Beta: %4$s\nLatest preview: %5$s\nLatest internal: %6$s</string>
 
     <string name="android_build_id_title">Android build ids</string>
     <string name="android_build_id_detail">Mine: %1$s\nMy system: %2$s\nMy vendor: %3$s\nMy ODM: %4$s\n\nLatest stable: %5$s\n%6$s</string>
