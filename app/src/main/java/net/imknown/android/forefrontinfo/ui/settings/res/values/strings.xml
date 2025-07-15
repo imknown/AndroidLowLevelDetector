@@ -34,8 +34,6 @@
     <string name="function_outdated_target_order_by_package_name_first_title">Order by package name first</string>
     <string name="function_outdated_target_order_by_package_name_first_summary">Order the outdated apps by package name first, otherwise by the targetSdkVersion first.</string>
 
-    <!--    <string name="function_shizuku_first_asking_key" translatable="false">function_shizuku_first_asking_key</string>-->
-
     <string name="about_title">About</string>
 
     <string name="no_browser_found">No available browser</string>

@@ -50,7 +50,5 @@ dependencies {
 
     // region [3rd Parties]
     api(libsThirdParty.libsu)
-
-//    api(libsThirdParty.bundles.shizuku)
     // endregion [3rd Parties]
 }

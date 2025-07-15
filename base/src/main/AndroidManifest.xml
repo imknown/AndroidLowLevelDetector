@@ -1,10 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:tools="http://schemas.android.com/tools">
-
-<!--    <uses-sdk tools:overrideLibrary="-->
-<!--        rikka.shizuku.api,-->
-<!--        rikka.shizuku.aidl,-->
-<!--        rikka.shizuku.shared,-->
-<!--        rikka.shizuku.provider-->
-<!--        " />-->
-</manifest>
+<manifest />

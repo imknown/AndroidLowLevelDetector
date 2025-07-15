@@ -48,8 +48,6 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             supportFragmentManager.switch(R.id.navigation_home, true)
         }
-
-//        mainViewModel.dealWithShizuku()
     }
 
     override fun onDestroy() {
