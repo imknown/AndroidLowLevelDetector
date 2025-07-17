@@ -61,12 +61,19 @@ swipeRefreshLayout = "1.1.0"
 # https://developer.android.com/jetpack/androidx/releases/webkit
 webkit = "1.14.0"
 
-# https://developer.android.com/jetpack/androidx/releases/test
+# https://developer.android.com/training/testing/local-tests#dependencies
 # region [Test]
+# https://github.com/junit-team/junit4/releases
+junit = "4.13.2"
+# endregion [Test]
+
+# https://developer.android.com/jetpack/androidx/releases/test
+# https://developer.android.com/training/testing/instrumented-tests/androidx-test-libraries/test-setup#add-gradle
+# region [Android Test]
 test-core = "1.6.1"
 test-espresso = "3.6.1"
 test-ext-junit = "1.2.1"
-# endregion [Test]
+# endregion [Android Test]
 # endregion [AndroidX]
 
 [libraries]
@@ -107,8 +114,8 @@ swipeRefreshLayout = { group = "androidx.swiperefreshlayout", name = "swiperefre
 
 webkit = { group = "androidx.webkit", name = "webkit", version.ref = "webkit" }
 
+junit = { group = "junit", name = "junit", version.ref = "junit" }
 test-core-ktx = { group = "androidx.test", name = "core-ktx", version.ref = "test-core" }
-test-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "test-espresso" }
 test-ext-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "test-ext-junit" }
 
 [bundles]
@@ -117,7 +124,8 @@ appcompat = ["appcompat", "appcompat-resources"]
 arch-core = ["arch-core-common", "arch-core-runtime"]
 lifecycle = ["lifecycle-runtime-ktx", "lifecycle-viewmodel-ktx", "lifecycle-viewmodel-savedstate"]
 
-test = ["test-core-ktx", "test-espresso-core", "test-ext-junit-ktx"]
+test = ["junit"]
+androidTest = ["test-core-ktx", "test-ext-junit-ktx"]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }

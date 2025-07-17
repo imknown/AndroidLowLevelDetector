@@ -45,7 +45,8 @@ dependencies {
     coreLibraryDesugaring(libsAndroid.desugarJdkLibs)
 
     // region [AndroidX]
-    androidTestImplementation(libsAndroid.bundles.test)
+    testImplementation(libsAndroid.bundles.test)
+    androidTestImplementation(libsAndroid.bundles.androidTest)
     // endregion [AndroidX]
 
     // region [3rd Parties]

@@ -220,7 +220,8 @@ dependencies {
     implementation(libsAndroid.swipeRefreshLayout)
     implementation(libsAndroid.webkit)
 
-    androidTestImplementation(libsAndroid.bundles.test)
+    testImplementation(libsAndroid.bundles.test)
+    androidTestImplementation(libsAndroid.bundles.androidTest)
     // endregion [AndroidX]
 
     // region [Kotlin]
