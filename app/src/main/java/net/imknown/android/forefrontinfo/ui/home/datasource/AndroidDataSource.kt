@@ -21,10 +21,12 @@ class AndroidDataSource {
         // region [A/B]
         // https://source.android.com/devices/tech/ota/ab?hl=en
         // /* root needed */ private const val CMD_BOOT_PARTITION = "ls /dev/block/bootdevice/by-name | grep boot_"
-        // private const val PROP_VIRTUAL_AB_ALLOW_NON_AB = "ro.virtual_ab.allow_non_ab"
         const val PROP_AB_UPDATE = "ro.build.ab_update"
         const val PROP_VIRTUAL_AB_ENABLED = "ro.virtual_ab.enabled"
         const val PROP_VIRTUAL_AB_RETROFIT = "ro.virtual_ab.retrofit"
+        // const val PROP_VIRTUAL_AB_ALLOW_NON_AB = "ro.virtual_ab.allow_non_ab"
+        // const val PROP_VIRTUAL_AB_COMPRESSION_ENABLED = "ro.virtual_ab.compression.enabled"
+        // const val PROP_VIRTUAL_AB_IO_URING_ENABLED = "ro.virtual_ab.io_uring.enabled"
         // const val PROP_VIRTUAL_AB_COMPRESSION_XOR_ENABLED = "ro.virtual_ab.compression.xor.enabled"
         // const val PROP_VIRTUAL_AB_USERSPACE_SNAPSHOTS_ENABLED = "ro.virtual_ab.userspace.snapshots.enabled"
         const val PROP_SLOT_SUFFIX = "ro.boot.slot_suffix"
@@ -86,8 +88,9 @@ class AndroidDataSource {
         // region [VNDK]
         // https://source.android.com/devices/architecture/vndk?hl=en
         const val PROP_VNDK_LITE = "ro.vndk.lite"
-        const val PROP_VNDK_VENDOR_VERSION = "ro.vndk.version"
-        // const val PROP_VNDK_PRODUCT_VERSION = "ro.product.vndk.version"
+        const val PROP_VNDK_VERSION = "ro.vndk.version"
+        // const val PROP_VENDOR_VNDK_VERSION = "ro.vendor.vndk.version"
+        // const val PROP_PRODUCT_VNDK_VERSION = "ro.product.vndk.version"
         // endregion [VNDK]
 
         // region [APEX]

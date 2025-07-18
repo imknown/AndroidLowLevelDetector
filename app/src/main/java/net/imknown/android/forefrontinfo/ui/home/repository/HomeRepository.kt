@@ -285,8 +285,11 @@ class HomeRepository(
         if (isAbEnable) {
             if (isVirtualAb) {
                 val isVirtualAbRetrofit = getBooleanProperty(AndroidDataSource.PROP_VIRTUAL_AB_RETROFIT, isAtLeastStableAndroid11())
-//                val isVirtualAbCompressionXorEnabled = getBooleanProperty(AndroidDataSource.PROP_VIRTUAL_AB_COMPRESSION_XOR_ENABLED, isAtLeastStableAndroid13())
-//                val isVirtualAbUserspaceSnapshotsEnabled = getBooleanProperty(AndroidDataSource.PROP_VIRTUAL_AB_USERSPACE_SNAPSHOTS_ENABLED, isAtLeastStableAndroid13())
+                // val isVirtualAbCompressionXorEnabled = getBooleanProperty(AndroidDataSource.PROP_VIRTUAL_AB_COMPRESSION_XOR_ENABLED, isAtLeastStableAndroid13())
+                // val isVirtualAbUserspaceSnapshotsEnabled = getBooleanProperty(AndroidDataSource.PROP_VIRTUAL_AB_USERSPACE_SNAPSHOTS_ENABLED, isAtLeastStableAndroid13())
+                // val isAllowNonAb = getBooleanProperty(AndroidDataSource.PROP_VIRTUAL_AB_ALLOW_NON_AB, isAtLeastStableAndroid13())
+                // val isCompressionEnabled = getBooleanProperty(AndroidDataSource.PROP_VIRTUAL_AB_COMPRESSION_ENABLED, isAtLeastStableAndroid13())
+                // val isIoUringEnabled = getBooleanProperty(AndroidDataSource.PROP_VIRTUAL_AB_IO_URING_ENABLED, isAtLeastStableAndroid13())
 
                 abResult += MyApplication.getMyString(
                     if (isVirtualAbRetrofit) {
@@ -553,8 +556,10 @@ class HomeRepository(
     }
 
     fun detectVndk(lld: Lld): MyModel {
-        val vndkVersionResult = getStringProperty(AndroidDataSource.PROP_VNDK_VENDOR_VERSION, isAtLeastStableAndroid8())
-//        val vndkProductVersionResult = getStringProperty(AndroidDataSource.PROP_VNDK_PRODUCT_VERSION, isAtLeastStableAndroid8())
+        val vndkVersionResult = getStringProperty(AndroidDataSource.PROP_VNDK_VERSION, isAtLeastStableAndroid8())
+        // val vendorVndkVersionResult = getStringProperty(AndroidDataSource.PROP_VENDOR_VNDK_VERSION, isAtLeastStableAndroid8())
+        // val productVndkVersionResult = getStringProperty(AndroidDataSource.PROP_PRODUCT_VNDK_VERSION, isAtLeastStableAndroid8())
+
         val hasVndkVersion = isPropertyValueNotEmpty(vndkVersionResult)
 
         @AttrRes val vndkColor: Int
