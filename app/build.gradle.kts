@@ -235,6 +235,8 @@ dependencies {
     debugImplementation(libsThirdParty.bundles.leakCanary)
 
     implementation(libsThirdParty.versionCompare)
+
+    implementation(libsThirdParty.libsu)
     // endregion [3rd Parties]
 
     // region [Google]

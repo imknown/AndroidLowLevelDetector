@@ -1,6 +1,6 @@
 package net.imknown.android.forefrontinfo.ui.others.datasource
 
-import net.imknown.android.forefrontinfo.base.shell.getShellResultByCondition
+import net.imknown.android.forefrontinfo.ui.common.getShellResult
 
 class KernelDataSource {
     companion object {
@@ -8,7 +8,7 @@ class KernelDataSource {
         private const val CMD_KERNEL_ALL = "uname -a"
     }
 
-    fun getKernelVersion() = getShellResultByCondition(CMD_KERNEL_VERBOSE)
+    fun getKernelVersion() = getShellResult(CMD_KERNEL_VERBOSE)
 
-    fun getKernelAll() = getShellResultByCondition(CMD_KERNEL_ALL)
+    fun getKernelAll() = getShellResult(CMD_KERNEL_ALL)
 }

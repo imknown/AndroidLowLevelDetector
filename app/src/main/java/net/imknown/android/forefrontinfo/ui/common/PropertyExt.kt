@@ -2,8 +2,7 @@ package net.imknown.android.forefrontinfo.ui.common
 
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
-import net.imknown.android.forefrontinfo.base.property.getBooleanPropertyByCondition
-import net.imknown.android.forefrontinfo.base.property.getStringPropertyByCondition
+import net.imknown.android.forefrontinfo.base.property.PropertyManager
 
 fun getStringProperty(
     key: String, condition: Boolean = true
@@ -13,16 +12,18 @@ fun getStringProperty(
         isAtLeastStableAndroid6()
         || key.length < 31 // Avoid Android 5.0 crash: "key.length > 31"
     ) {
-        getStringPropertyByCondition(
-            key,
-            condition,
-            MyApplication.getMyString(R.string.build_not_filled),
+        if (condition) {
+            PropertyManager.instance.getString(key, MyApplication.getMyString(R.string.build_not_filled))
+        } else {
             notSupport
-        )
+        }
     } else {
         notSupport
     }
 }
 
-fun getBooleanProperty(key: String, condition: Boolean = true) =
-    getBooleanPropertyByCondition(key, condition)
+fun getBooleanProperty(key: String, condition: Boolean = true) = if (condition) {
+    PropertyManager.instance.getBoolean(key, false)
+} else {
+    false
+}

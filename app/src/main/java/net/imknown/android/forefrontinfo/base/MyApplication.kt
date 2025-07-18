@@ -11,9 +11,9 @@ import com.topjohnwu.superuser.Shell
 import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.property.PropertyManager
-import net.imknown.android.forefrontinfo.base.property.impl.DefaultProperty
+import net.imknown.android.forefrontinfo.base.property.impl.PropertyDefault
 import net.imknown.android.forefrontinfo.base.shell.ShellManager
-import net.imknown.android.forefrontinfo.base.shell.impl.LibSuShell
+import net.imknown.android.forefrontinfo.ui.common.ShellLibSu
 import java.io.File
 
 open class MyApplication : Application() {
@@ -95,8 +95,8 @@ open class MyApplication : Application() {
 //                .setInitializers(Shell.Initializer::class.java)
         )
 
-        ShellManager.instance = ShellManager(LibSuShell)
+        ShellManager.instance = ShellManager(ShellLibSu)
 
-        PropertyManager.instance = PropertyManager(DefaultProperty)
+        PropertyManager.instance = PropertyManager(PropertyDefault)
     }
 }

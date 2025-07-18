@@ -4,7 +4,7 @@ import net.imknown.android.forefrontinfo.base.extension.fullMessage
 import net.imknown.android.forefrontinfo.base.shell.IShell
 import net.imknown.android.forefrontinfo.base.shell.ShellResult
 
-object DefaultShell : IShell {
+object ShellDefault : IShell {
     override fun execute(cmd: String): ShellResult {
         val output = mutableListOf<String>()
         var exitCode: Int? = null

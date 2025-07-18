@@ -48,8 +48,4 @@ dependencies {
     testImplementation(libsAndroid.bundles.test)
     androidTestImplementation(libsAndroid.bundles.androidTest)
     // endregion [AndroidX]
-
-    // region [3rd Parties]
-    api(libsThirdParty.libsu)
-    // endregion [3rd Parties]
 }

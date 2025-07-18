@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import net.imknown.android.forefrontinfo.base.property.IProperty
 
 @SuppressLint("PrivateApi")
-object DefaultProperty : IProperty {
+object PropertyDefault : IProperty {
     private val systemPropertiesClass = Class.forName("android.os.SystemProperties")
 
     override fun getString(key: String, default: String): String =

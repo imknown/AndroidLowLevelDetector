@@ -1,6 +1,6 @@
 package net.imknown.android.forefrontinfo.ui.prop.datasource
 
-import net.imknown.android.forefrontinfo.base.shell.getShellResultByCondition
+import net.imknown.android.forefrontinfo.ui.common.getShellResult
 import java.util.Properties
 
 class PropertiesDataSource {
@@ -22,5 +22,5 @@ class PropertiesDataSource {
             .sortedBy { it.first.toString() }
     }
 
-    fun getBuildProp() = getShellResultByCondition(CMD_GETPROP)
+    fun getBuildProp() = getShellResult(CMD_GETPROP)
 }

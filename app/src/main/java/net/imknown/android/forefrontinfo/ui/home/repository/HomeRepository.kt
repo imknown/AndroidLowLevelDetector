@@ -22,6 +22,7 @@ import net.imknown.android.forefrontinfo.ui.base.list.toColoredMyModel
 import net.imknown.android.forefrontinfo.ui.common.getAndroidApiLevel
 import net.imknown.android.forefrontinfo.ui.common.getAndroidVersionName
 import net.imknown.android.forefrontinfo.ui.common.getBooleanProperty
+import net.imknown.android.forefrontinfo.ui.common.getShellResult
 import net.imknown.android.forefrontinfo.ui.common.getStringProperty
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid10
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid11
@@ -36,7 +37,6 @@ import net.imknown.android.forefrontinfo.ui.common.isLatestPreviewAndroid
 import net.imknown.android.forefrontinfo.ui.common.isLatestStableAndroid
 import net.imknown.android.forefrontinfo.ui.common.isPreviewAndroid
 import net.imknown.android.forefrontinfo.ui.common.isSupportedByUpstreamAndroid
-import net.imknown.android.forefrontinfo.ui.common.sh
 import net.imknown.android.forefrontinfo.ui.home.datasource.AndroidDataSource
 import net.imknown.android.forefrontinfo.ui.home.datasource.LldDataSource
 import net.imknown.android.forefrontinfo.ui.home.datasource.MountDataSource
@@ -466,7 +466,7 @@ class HomeRepository(
             else -> "NOT_EXIST"
         }
         val cmd = String.format(AndroidDataSource.CMD_VENDOR_NAMESPACE_DEFAULT_ISOLATED, fileLdConfig)
-        val gsiCompatibilityResult = sh(cmd, isAtLeastStableAndroid9())
+        val gsiCompatibilityResult = getShellResult(cmd, isAtLeastStableAndroid9())
         val (@StringRes result, @AttrRes color) = if (gsiCompatibilityResult.isSuccess) {
             val firstLine = gsiCompatibilityResult.output.getOrNull(0)
                 ?: MyApplication.getMyString(android.R.string.unknownName)
@@ -713,7 +713,7 @@ class HomeRepository(
         @StringRes val result: Int
         @AttrRes val color: Int
 
-        val seLinuxStatus = sh(AndroidDataSource.CMD_GETENFORCE)
+        val seLinuxStatus = getShellResult(AndroidDataSource.CMD_GETENFORCE)
         val seLinuxStatusResult = seLinuxStatus.output.getOrNull(0)
 
         if (seLinuxStatus.isSuccess) {
@@ -754,7 +754,7 @@ class HomeRepository(
     }
 
     fun detectToybox(lld: Lld): MyModel {
-        val toyboxVersionResult = sh(AndroidDataSource.CMD_TOYBOX_VERSION, isAtLeastStableAndroid6())
+        val toyboxVersionResult = getShellResult(AndroidDataSource.CMD_TOYBOX_VERSION, isAtLeastStableAndroid6())
         val hasToyboxVersion = toyboxVersionResult.isSuccess
 
         val toyboxVersion = if (hasToyboxVersion) {
