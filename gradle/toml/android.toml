@@ -70,9 +70,8 @@ junit = "4.13.2"
 # https://developer.android.com/jetpack/androidx/releases/test
 # https://developer.android.com/training/testing/instrumented-tests/androidx-test-libraries/test-setup#add-gradle
 # region [Android Test]
-test-core = "1.6.1"
-test-espresso = "3.6.1"
-test-ext-junit = "1.2.1"
+test-core = "1.7.0-rc01"
+test-ext-junit = "1.3.0-rc01"
 # endregion [Android Test]
 # endregion [AndroidX]
 
