@@ -6,6 +6,7 @@ buildTools = "36.0.0"
 buildToolsPreview = "36.0.0"
 
 minSdk = "21"
+minSdkFirebase = "23"
 
 compileSdk = "36"
 compileSdkPreview = "C"

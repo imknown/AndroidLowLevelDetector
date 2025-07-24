@@ -113,7 +113,9 @@ android {
         register(IssueTracker.Foss.name) {
             isDefault = true
         }
-        register(IssueTracker.Firebase.name)
+        register(IssueTracker.Firebase.name) {
+            minSdk = libsBuild.versions.minSdkFirebase.get().toInt()
+        }
     }
 
     buildTypes {

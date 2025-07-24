@@ -5,14 +5,14 @@
 googleServices-gradlePlugin = "4.4.3"
 
 # https://firebase.google.com/docs/android/learn-more#bom
-firebase-bom = "33.16.0"
+firebase-bom = "34.0.0"
 
 # https://firebase.google.com/docs/crashlytics/get-started?platform=android
 # https://firebase.google.com/docs/crashlytics/ndk-reports
 # https://maven.google.com/web/index.html?#com.google.firebase:firebase-crashlytics-gradle
 # https://maven.google.com/web/index.html?#com.google.firebase:firebase-crashlytics-buildtools
 # https://maven.google.com/web/index.html?#com.google.firebase.crashlytics:com.google.firebase.crashlytics.gradle.plugin
-firebase-crashlytics-gradlePlugin = "3.0.4"
+firebase-crashlytics-gradlePlugin = "3.0.5"
 
 # https://github.com/material-components/material-components-android/releases
 material = "1.12.0"
