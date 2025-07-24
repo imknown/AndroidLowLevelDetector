@@ -1,6 +1,8 @@
 import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
+import org.gradle.kotlin.dsl.support.uppercaseFirstChar
 import java.io.FileInputStream
 import java.util.Properties
+import kotlin.reflect.KFunction1
 
 plugins {
     alias(libsAndroid.plugins.android.application)
@@ -244,7 +246,9 @@ dependencies {
     // region [Google]
     implementation(libsGoogle.material)
 
-    val firebaseImplementation = IssueTracker.Firebase.name + "Implementation"
+    val implementationRef: KFunction1<*, *> = ::implementation
+    val firebaseImplementation = IssueTracker.Firebase.name + implementationRef.name.uppercaseFirstChar()
+    // val firebaseImplementation by configurations
     firebaseImplementation(platform(libsGoogle.firebase.bom))
     firebaseImplementation(libsGoogle.bundles.firebase)
     // endregion [Google]
