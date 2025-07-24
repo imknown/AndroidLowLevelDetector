@@ -48,7 +48,7 @@ android {
     ndkVersion = libsBuild.versions.ndk.get()
 
     sourceSets {
-        getByName("main") {
+        named("main") {
             val javaPathString = java.directories.toList()[0] // "src/main/java"
             val javaPackageName = namespace?.replace('.', File.separatorChar) // "net/imknown/android/forefrontinfo"
             fun String.toResString() = "$javaPathString/$javaPackageName/$this/res"
@@ -114,6 +114,7 @@ android {
     productFlavors {
         register(IssueTracker.Foss.name) {
             isDefault = true
+            versionNameSuffix = "-$name"
         }
         register(IssueTracker.Firebase.name) {
             minSdk = libsBuild.versions.minSdkFirebase.get().toInt()
