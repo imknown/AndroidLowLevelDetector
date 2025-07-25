@@ -33,7 +33,7 @@ fun isLatestPreviewAndroid(lld: Lld) = isPreviewAndroid()
 fun isSupportedByUpstreamAndroid(lld: Lld) = isStableAndroid()
         && Build.VERSION.SDK_INT >= lld.android.support.api.toInt()
 
-/** For Android 11+, use `Build.VERSION.RELEASE_OR_CODENAME` (`ro.build.version.release_or_codename`) */
+/** For minSdk ≥ Android 11, use [Build.VERSION.RELEASE_OR_CODENAME] (`ro.build.version.release_or_codename`) */
 fun getAndroidVersionName(): String = if (isStableAndroid()) {
     Build.VERSION.RELEASE
 } else {
