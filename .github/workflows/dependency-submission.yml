@@ -20,8 +20,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # https://github.com/actions/checkout
       - uses: actions/checkout@v4
 
+      # https://github.com/actions/gradle-build-tools-actions
+      # https://github.com/gradle/actions
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
@@ -34,7 +37,7 @@ jobs:
       # https://developer.android.com/tools/sdkmanager#install
       # https://github.com/imknown/AndroidLowLevelDetector/blob/develop/gradle/toml/build.toml
       - name: Install Android SDK Cmake
-        run: sdkmanager --install "cmake;4.0.2"
+        run: sdkmanager --install "cmake;4.0.3"
       - name: Install Android SDK NDK
         # https://github.com/android/ndk/releases
         run: sdkmanager --install "ndk;29.0.13599879"

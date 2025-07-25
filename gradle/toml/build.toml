@@ -19,7 +19,7 @@ targetSdkPreview = "CANARY"
 # https://github.com/android/ndk/releases
 ndk = "29.0.13599879" # Beta 2, but RC 2 in Android SDK Manager
 # https://cmake.org/cmake/help/latest/release/index.html
-cmake = "4.0.2"
+cmake = "4.0.3"
 
 versionCode = "65"
 versionName = "1.17.3_unpublished"
