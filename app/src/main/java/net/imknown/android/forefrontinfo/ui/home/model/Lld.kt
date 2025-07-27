@@ -40,6 +40,8 @@ data class Lld(
         val googlePlaySystemUpdates: String,
         // https://source.android.com/setup/start/build-numbers?hl=en#source-code-tags-and-builds
         // https://android.googlesource.com/platform/frameworks/base/+refs
+        // https://developers.google.com/android/images
+        // https://developers.google.com/android/ota
         val build: Build,
         // https://www.android.com
         val stable: Android,
