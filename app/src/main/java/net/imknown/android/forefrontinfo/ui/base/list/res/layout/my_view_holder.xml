@@ -2,11 +2,12 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/Widget.Material3.CardView.Elevated"
+    style="@style/Widget.Material3.CardView.Filled"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
+    app:cardBackgroundColor="?attr/colorSurfaceBright"
     tools:context=".ui.base.list.MyAdapter"
     tools:layout_marginHorizontal="@dimen/item_divider_space_horizontal"
     tools:layout_marginTop="@dimen/item_divider_space_vertical">
