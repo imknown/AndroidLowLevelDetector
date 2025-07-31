@@ -134,9 +134,9 @@ class HomeRepository(
         val odmBuildIdResult = getStringProperty(AndroidDataSource.PROP_RO_ODM_BUILD_ID, isAtLeastStableAndroid9())
 
         fun isBuildIdAndroid8CtsFormat(buildId: String) =
-            isAtLeastStableAndroid8() && buildId.split(AndroidDataSource.BUILD_ID_SEPARATOR).size > 2
+            isAtLeastStableAndroid8() && buildId.split(AndroidDataSource.BUILD_ID_SEPARATOR).size >= 3
 
-        val buildIdForCompare = if (
+        val myBuildIdForCompare = if (
             isBuildIdAndroid8CtsFormat(buildIdResult) || isAtLeastStableAndroid9().not()
         ) {
             buildIdResult
@@ -146,30 +146,44 @@ class HomeRepository(
 
         var builds = ""
         val build = lld.android.build
-        val details = build.details
-        details.forEachIndexed { index, detail ->
+        val lldDetails = build.details
+        lldDetails.forEachIndexed { index, detail ->
             builds += MyApplication.getMyString(R.string.android_build_id, detail.id, detail.revision)
 
-            if (index != details.size - 1) {
+            if (index != lldDetails.size - 1) {
                 builds += "\n"
             }
         }
 
         // region [Color]
-        val firstDetailId = details[0].id
-        fun getDate(buildId: String) = buildId.split(AndroidDataSource.BUILD_ID_SEPARATOR)[1]
-        fun isUpdateToLatestStable() = buildIdForCompare.first() > firstDetailId.first()
-        fun isDateHigherThanConfig() = (
-                isLatestStableAndroid(lld)
-                    && isBuildIdAndroid8CtsFormat(buildIdForCompare)
-                    && getDate(buildIdForCompare) >= getDate(firstDetailId)
-            )
-            || isUpdateToLatestStable()
-            || isLatestPreviewAndroid(lld)
+        val lldFirstBuildId = lldDetails[0].id
+        fun getDate(buildId: String) = buildId.split(AndroidDataSource.BUILD_ID_SEPARATOR)[1] // "250705"
+        fun isDateHigherThanConfig(): Boolean {
+            if (!isBuildIdAndroid8CtsFormat(myBuildIdForCompare)) {
+                return false
+            }
+
+            val myBuildIdDate = getDate(myBuildIdForCompare)
+            val myBuildIdDateIntOrNull = myBuildIdDate.toIntOrNull()
+            val lldFirstBuildIdDate = getDate(lldFirstBuildId)
+            val lldFirstBuildIdDateIntOrNull = lldFirstBuildIdDate.toIntOrNull()
+            if (myBuildIdDateIntOrNull == null || lldFirstBuildIdDateIntOrNull == null) {
+                return false
+            }
+
+            val offset = if (isLatestStableAndroid(lld)) {
+               0
+            } else {
+                /** [isLatestPreviewAndroid] */
+                250205 - 250101
+            }
+
+            return (myBuildIdDateIntOrNull + offset) >= lldFirstBuildIdDateIntOrNull
+        }
 
         @AttrRes val buildIdColor = when {
             isDateHigherThanConfig() -> R.attr.colorNoProblem
-            isLatestStableAndroid(lld) -> R.attr.colorWaring
+            isLatestStableAndroid(lld) || isLatestPreviewAndroid(lld) -> R.attr.colorWaring
             else -> R.attr.colorCritical
         }
         // endregion [Color]
