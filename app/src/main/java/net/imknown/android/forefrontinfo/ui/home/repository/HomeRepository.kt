@@ -46,7 +46,6 @@ import java.io.File
 
 class HomeRepository(
     private val lldDataSource: LldDataSource,
-    private val androidDataSource: AndroidDataSource,
     private val mountDataSource: MountDataSource,
     private val appInfoDataSource: AppInfoDataSource
 ) {

@@ -9,7 +9,6 @@ import androidx.lifecycle.viewmodel.MutableCreationExtras
 import kotlinx.coroutines.launch
 import net.imknown.android.forefrontinfo.ui.base.list.BaseListFragment
 import net.imknown.android.forefrontinfo.ui.base.list.MyAdapter
-import net.imknown.android.forefrontinfo.ui.home.datasource.AndroidDataSource
 import net.imknown.android.forefrontinfo.ui.home.datasource.LldDataSource
 import net.imknown.android.forefrontinfo.ui.home.datasource.MountDataSource
 import net.imknown.android.forefrontinfo.ui.home.repository.HomeRepository
@@ -26,7 +25,7 @@ class HomeFragment : BaseListFragment() {
         extrasProducer = {
             MutableCreationExtras(defaultViewModelCreationExtras).apply {
                 val repository = HomeRepository(
-                    LldDataSource(), AndroidDataSource(), MountDataSource(), AppInfoDataSource()
+                    LldDataSource(), MountDataSource(), AppInfoDataSource()
                 )
                 this[HomeViewModel.MY_REPOSITORY_KEY] = repository
             }
