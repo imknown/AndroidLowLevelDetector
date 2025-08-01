@@ -40,7 +40,7 @@ jobs:
         run: sdkmanager --install "cmake;4.0.3"
       - name: Install Android SDK NDK
         # https://github.com/android/ndk/releases
-        run: sdkmanager --install "ndk;29.0.13599879"
+        run: sdkmanager --install "ndk;29.0.13846066"
       # endregion [Android SDK]
 
       - name: Run dependency submission
