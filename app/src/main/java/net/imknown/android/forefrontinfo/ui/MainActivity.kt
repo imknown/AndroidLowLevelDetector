@@ -88,15 +88,15 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
 
         binding.bottomNavigationView.setOnItemSelectedListener {
-            supportFragmentManager.switch(it.itemId)
+            supportFragmentManager.switch(it.itemId, false)
 
             true
         }
     }
 
-    private fun FragmentManager.switch(@IdRes selectedId: Int, isFirst: Boolean = false) {
+    private fun FragmentManager.switch(@IdRes selectedId: Int, isFirstTime: Boolean) {
         val lastId = mainViewModel.lastId
-        if (selectedId == lastId && !isFirst) {
+        if (selectedId == lastId && !isFirstTime) {
             return
         }
 
