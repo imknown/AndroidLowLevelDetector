@@ -15,15 +15,8 @@ abstract class BaseListViewModel : BaseViewModel() {
     private val _modelsStateFlow by lazy { MutableStateFlow<State<List<MyModel>>>(State.NotInitialized) }
     val modelsStateFlow by lazy { _modelsStateFlow.asStateFlow() }
 
-    private val _showModelsEventStateFlow by lazy { MutableStateFlow<State<Unit>>(State.NotInitialized) }
-    val showModelsEventStateFlow by lazy { _showModelsEventStateFlow.asStateFlow() }
-
     private val _showErrorEventStateFlow by lazy { MutableStateFlow<State<String>>(State.NotInitialized) }
     val showErrorEventStateFlow by lazy { _showErrorEventStateFlow.asStateFlow() }
-
-    fun clearShowModelsEventStateFlow() {
-        _showModelsEventStateFlow.value = State.NotInitialized
-    }
 
     fun clearShowErrorEventStateFlow() {
         _showErrorEventStateFlow.value = State.NotInitialized
@@ -39,23 +32,11 @@ abstract class BaseListViewModel : BaseViewModel() {
     }
 
     fun hasNoData(savedInstanceState: Bundle?) =
-        (savedInstanceState == null || _showModelsEventStateFlow.value == State.NotInitialized) && _showErrorEventStateFlow.value == State.NotInitialized
+        savedInstanceState == null || _modelsStateFlow.value == State.NotInitialized
 
     @MainThread
     protected fun setModels(tempModels: List<MyModel>) {
         _modelsStateFlow.value = State.Done(tempModels)
-    }
-
-    @MainThread
-    fun showModels(myModels: MutableList<MyModel>, newModels: List<MyModel>) {
-        if (newModels.isEmpty()) {
-            return
-        }
-
-        myModels.clear()
-        myModels.addAll(newModels)
-
-        _showModelsEventStateFlow.value = State.Done(Unit)
     }
 
     @MainThread

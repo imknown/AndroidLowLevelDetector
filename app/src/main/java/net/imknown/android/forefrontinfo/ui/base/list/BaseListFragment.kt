@@ -57,21 +57,14 @@ abstract class BaseListFragment : BaseFragment<BaseListFragmentBinding>() {
                     return@collect
                 }
 
-                listViewModel.showModels(myAdapter.myModels, stateMyModels.toValue())
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            listViewModel.showModelsEventStateFlow.flowWithLifecycle(viewLifecycleOwner.lifecycle).collect { state ->
-                if (state == State.NotInitialized) {
-                    return@collect
-                }
+                val myModels = myAdapter.myModels
+                val newModels = stateMyModels.toValue()
+                myModels.clear()
+                myModels.addAll(newModels)
 
                 myAdapter.notifyDataSetChanged()
 
                 binding.swipeRefreshLayout.isRefreshing = false
-
-                listViewModel.clearShowModelsEventStateFlow()
             }
         }
 
