@@ -50,12 +50,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-
-//        mainViewModel.removeRequestPermissionResultListener()
-    }
-
     private fun initWindowInsets() {
         // https://developer.android.com/develop/ui/views/layout/edge-to-edge#material-components
         // https://developer.android.com/develop/ui/compose/layouts/insets#material3-components
