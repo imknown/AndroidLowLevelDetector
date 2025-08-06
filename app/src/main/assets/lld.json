@@ -1,15 +1,15 @@
 {
   "scheme": 1,
-  "version": "2025-08-05 09:05 +0800",
+  "version": "2025-08-06 10:10 +0800",
   "android": {
     "securityPatchLevel": "2025-08-05",
     "googlePlaySystemUpdates": "2025-07-01",
     "build": {
-      "version": "2025-07-08",
+      "version": "2025-08-05",
       "details": [
         {
-          "id": "BP2A.250705.008",
-          "revision": "r3"
+          "id": "BP2A.250805.005",
+          "revision": "r4"
         }
       ]
     },
