@@ -21,7 +21,7 @@ jobs:
 
     steps:
       # https://github.com/actions/checkout
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       # https://github.com/actions/gradle-build-tools-actions
       # https://github.com/gradle/actions
