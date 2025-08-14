@@ -818,40 +818,44 @@ class HomeRepository(
         if (isAtLeastStableAndroid7()) {
             val webViewProviderInfoList = getBuildInWebViewProvidersAndroid7()
 
-            val lastIndex = webViewProviderInfoList.size - 1
-            webViewProviderInfoList.forEachIndexed { index, webViewProviderInfo ->
-                builtInResult += with(webViewProviderInfo) {
-                    val packageInfo = getPackageInfoOrNull(packageName)
-                    val isInstalled = if (packageInfo != null) {
-                        packageInfo.versionName?.also {
-                            if (Version(it).isHigherThan(builtInVersionName)) {
-                                builtInVersionName = it
-                            }
-                        } ?: MyApplication.getMyString(android.R.string.unknownName)
-                    } else {
-                        MyApplication.getMyString(R.string.webview_built_in_not_installed)
-                    }
+            if (webViewProviderInfoList.isEmpty()) {
+                builtInResult = MyApplication.getMyString(R.string.build_not_filled)
+            } else {
+                val lastIndex = webViewProviderInfoList.size - 1
+                webViewProviderInfoList.forEachIndexed { index, webViewProviderInfo ->
+                    builtInResult += with(webViewProviderInfo) {
+                        val packageInfo = getPackageInfoOrNull(packageName)
+                        val isInstalled = if (packageInfo != null) {
+                            packageInfo.versionName?.also {
+                                if (Version(it).isHigherThan(builtInVersionName)) {
+                                    builtInVersionName = it
+                                }
+                            } ?: MyApplication.getMyString(android.R.string.unknownName)
+                        } else {
+                            MyApplication.getMyString(R.string.webview_built_in_not_installed)
+                        }
 
-                    fun subFormat(text: String) =
-                        MyApplication.getMyString(R.string.webview_sub_format, text)
+                        fun subFormat(text: String) =
+                            MyApplication.getMyString(R.string.webview_sub_format, text)
 
-                    fun subFormat(@StringRes stringRes: Int) =
-                        subFormat(MyApplication.getMyString(stringRes))
+                        fun subFormat(@StringRes stringRes: Int) =
+                            subFormat(MyApplication.getMyString(stringRes))
 
-                    var tempResult = packageName + subFormat(description) + subFormat(isInstalled)
-                    if (!availableByDefault) {
-                        tempResult += subFormat(R.string.webview_must_be_chosen_by_user)
+                        var tempResult = packageName + subFormat(description) + subFormat(isInstalled)
+                        if (!availableByDefault) {
+                            tempResult += subFormat(R.string.webview_must_be_chosen_by_user)
+                        }
+                        if (isFallback) {
+                            tempResult += subFormat(R.string.webview_fallback)
+                        }
+                        if (signatures.isNotEmpty()) {
+                            tempResult += subFormat(R.string.webview_signed)
+                        }
+                        if (index != lastIndex) {
+                            tempResult += MyApplication.getMyString(R.string.webview_ending)
+                        }
+                        tempResult
                     }
-                    if (isFallback) {
-                        tempResult += subFormat(R.string.webview_fallback)
-                    }
-                    if (signatures.isNotEmpty()) {
-                        tempResult += subFormat(R.string.webview_signed)
-                    }
-                    if (index != lastIndex) {
-                        tempResult += MyApplication.getMyString(R.string.webview_ending)
-                    }
-                    tempResult
                 }
             }
         } else {
@@ -927,22 +931,45 @@ class HomeRepository(
     @SuppressLint("PrivateApi")
     private fun getBuildInWebViewProvidersAndroid7(): List<WebViewProviderInfo> {
         // frameworks/base/core/res/res/xml/config_webview_packages.xml
-        val webViewUpdateServiceClass = Class.forName("android.webkit.WebViewUpdateService")
-        val allWebViewPackages =
+        val allWebViewPackages = try {
+            val webViewUpdateServiceClass = Class.forName("android.webkit.WebViewUpdateService")
             webViewUpdateServiceClass.getDeclaredMethod("getAllWebViewPackages")
                 .invoke(null) as Array<*>
+        } catch (e: Exception) {
+            Log.w(javaClass.simpleName, e.fullMessage)
+            emptyArray<Any>()
+        }
 
-        fun Any?.getWebViewProviderInfoMember(name: String) =
+        fun Any?.getWebViewProviderInfoMemberOrThrow(name: String) =
             Class.forName("android.webkit.WebViewProviderInfo").getDeclaredField(name).get(this)
 
-        return allWebViewPackages.map {
+        return allWebViewPackages.toList().map {
             with(it) {
-                val packageName = getWebViewProviderInfoMember("packageName") as String
-                val description = getWebViewProviderInfoMember("description") as String
-                val availableByDefault =
-                    getWebViewProviderInfoMember("availableByDefault") as Boolean
-                val isFallback = getWebViewProviderInfoMember("isFallback") as Boolean
-                val signatures = getWebViewProviderInfoMember("signatures") as Array<*>
+                val packageName = try {
+                    getWebViewProviderInfoMemberOrThrow("packageName") as String
+                } catch (e: Exception) {
+                    MyApplication.getMyString(R.string.build_not_filled)
+                }
+                val description = try {
+                    getWebViewProviderInfoMemberOrThrow("description") as String
+                } catch (e: Exception) {
+                    MyApplication.getMyString(R.string.build_not_filled)
+                }
+                val availableByDefault = try {
+                    getWebViewProviderInfoMemberOrThrow("availableByDefault") as Boolean
+                } catch (e: Exception) {
+                    false
+                }
+                val isFallback = try {
+                    getWebViewProviderInfoMemberOrThrow("isFallback") as Boolean
+                } catch (e: Exception) {
+                    false
+                }
+                val signatures = try {
+                    getWebViewProviderInfoMemberOrThrow("signatures") as Array<*>
+                } catch (e: Exception) {
+                    emptyArray<Any>()
+                }
                 WebViewProviderInfo(
                     packageName, description, availableByDefault, isFallback, signatures
                 )
