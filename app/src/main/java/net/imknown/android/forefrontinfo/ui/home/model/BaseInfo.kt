@@ -5,6 +5,4 @@ import kotlinx.serialization.Serializable
 
 @Keep
 @Serializable
-open class BaseInfo {
-    lateinit var version: String
-}
+class BaseInfo(val version: String)

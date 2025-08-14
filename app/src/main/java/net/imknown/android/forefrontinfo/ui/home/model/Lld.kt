@@ -7,11 +7,12 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Lld(
     val scheme: Int,
+    val version: String,
     val android: Androids,
     val linux: Linuxes,
     val toybox: Toyboxes,
     val webView: WebViews
-) : BaseInfo() {
+) {
     companion object {
         const val SCHEME_VERSION = 1
     }
@@ -62,8 +63,9 @@ data class Lld(
         data class Android(
             val name: String,
             val api: String,
+            val version: String,
             val phase: String? = null
-        ) : BaseInfo()
+        )
 
         // https://android.googlesource.com/platform/build/+refs
         // https://android.googlesource.com/platform/build/+/refs/tags/android-12.0.0_r29/core/build_id.mk
@@ -73,8 +75,9 @@ data class Lld(
         @Keep
         @Serializable
         data class Build(
+            val version: String,
             val details: List<Detail>
-        ) : BaseInfo() {
+        ) {
             @Keep
             @Serializable
             data class Detail(
