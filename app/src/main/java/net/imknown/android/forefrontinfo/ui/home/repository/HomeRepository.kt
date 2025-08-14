@@ -211,7 +211,7 @@ class HomeRepository(
         return tempModels
     }
 
-    fun detectSecurityPatch(lld: Lld, mySecurityPatch: String, @StringRes titleId: Int): MyModel {
+    private fun detectSecurityPatch(lld: Lld, mySecurityPatch: String, @StringRes titleId: Int): MyModel {
         val lldSecurityPatch = lld.android.securityPatchLevel
         @AttrRes val securityPatchColor = when {
             !isPropertyValueNotEmpty(mySecurityPatch) -> R.attr.colorCritical
@@ -429,8 +429,7 @@ class HomeRepository(
 
         var trebleResult = toSupportOrNotString(isTrebleEnabled)
 
-        val pathVendorSku = String.format(
-            AndroidDataSource.PATH_VENDOR_VINTF_SKU,
+        val pathVendorSku = AndroidDataSource.PATH_VENDOR_VINTF_SKU.format(
             getStringProperty(AndroidDataSource.PROP_VENDOR_SKU, isAtLeastStableAndroid12())
         )
 
@@ -478,7 +477,7 @@ class HomeRepository(
             isAtLeastStableAndroid9() -> AndroidDataSource.LD_CONFIG_FILE_ANDROID_9
             else -> "NOT_EXIST"
         }
-        val cmd = String.format(AndroidDataSource.CMD_VENDOR_NAMESPACE_DEFAULT_ISOLATED, fileLdConfig)
+        val cmd = AndroidDataSource.CMD_VENDOR_NAMESPACE_DEFAULT_ISOLATED.format(fileLdConfig)
         val gsiCompatibilityResult = getShellResult(cmd, isAtLeastStableAndroid9())
         val (@StringRes result, @AttrRes color) = if (gsiCompatibilityResult.isSuccess) {
             val firstLine = gsiCompatibilityResult.output.getOrNull(0)

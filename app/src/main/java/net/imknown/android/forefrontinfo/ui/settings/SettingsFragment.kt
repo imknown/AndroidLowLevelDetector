@@ -173,7 +173,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
-    fun openInExternal(@StringRes uriResId: Int) {
+    private fun openInExternal(@StringRes uriResId: Int) {
         val uri = MyApplication.getMyString(uriResId).toUri()
         val intent = Intent(Intent.ACTION_VIEW, uri).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
