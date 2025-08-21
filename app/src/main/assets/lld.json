@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2025-08-21 12:35 +0800",
+  "version": "2025-08-21 19:10 +0800",
   "android": {
     "securityPatchLevel": "2025-08-05",
     "googlePlaySystemUpdates": "2025-07-01",
@@ -43,7 +43,7 @@
   "linux": {
     "google": {
       "versions": [
-        "6.12.42",
+        "6.12.43",
         "6.6.102",
         "6.1.148",
         "5.15.189",
