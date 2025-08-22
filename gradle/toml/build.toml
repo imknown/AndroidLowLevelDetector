@@ -3,7 +3,7 @@ isPreview = "false" # true
 
 # https://developer.android.com/studio/releases/build-tools.html#notes
 buildTools = "36.0.0"
-buildToolsPreview = "36.0.0"
+buildToolsPreview = "36.1.0-rc1"
 
 minSdk = "21"
 minSdkFirebase = "23"
@@ -11,7 +11,7 @@ minSdkFirebase = "23"
 compileSdk = "36"
 compileSdkPreview = "CANARY"
 
-compileSdkExtension = "17" # 36-ext17 (Android 16 Beta 3)
+compileSdkExtension = "19" # 36-ext19 (Android 16 QPR2 Beta 1)
 
 targetSdk = "36"
 targetSdkPreview = "CANARY"
