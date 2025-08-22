@@ -61,9 +61,14 @@ data class Lld(
         @Keep
         @Serializable
         data class Android(
+            /** Dessert name */
             val name: String,
             val api: String,
+            val apiFull: String,
+            val extension: Int,
+            /** Major figure with "$[phase], $[name]" */
             val version: String,
+            /** Deprecated: "Preview" used to be: "$[version] $[phase]" */
             val phase: String? = null
         )
 

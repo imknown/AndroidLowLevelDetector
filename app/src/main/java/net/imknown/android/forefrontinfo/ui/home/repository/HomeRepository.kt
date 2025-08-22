@@ -19,9 +19,10 @@ import net.imknown.android.forefrontinfo.base.extension.formatToLocalZonedDateti
 import net.imknown.android.forefrontinfo.base.extension.fullMessage
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.base.list.toColoredMyModel
-import net.imknown.android.forefrontinfo.ui.common.getAndroidApiLevel
+import net.imknown.android.forefrontinfo.ui.common.getAndroidApiFull
 import net.imknown.android.forefrontinfo.ui.common.getAndroidVersionName
 import net.imknown.android.forefrontinfo.ui.common.getBooleanProperty
+import net.imknown.android.forefrontinfo.ui.common.getSdkExtension
 import net.imknown.android.forefrontinfo.ui.common.getShellResult
 import net.imknown.android.forefrontinfo.ui.common.getStringProperty
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid10
@@ -43,6 +44,7 @@ import net.imknown.android.forefrontinfo.ui.home.datasource.MountDataSource
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.settings.datasource.AppInfoDataSource
 import java.io.File
+import java.lang.reflect.Modifier
 
 class HomeRepository(
     private val lldDataSource: LldDataSource,
@@ -76,49 +78,63 @@ class HomeRepository(
 
     fun detectAndroid(lld: Lld): MyModel {
         // region [Mine]
+        val fields = try {
+            val versionCodesFullClass = Build.VERSION_CODES_FULL::class.java // TODO
+            versionCodesFullClass.fields
+        } catch (e: Exception) {
+            Log.w(javaClass.simpleName, "Failed to get mainline version. ${e.fullMessage}")
+            emptyArray()
+        }
+        val a = fields.mapNotNull {
+            try {
+                it.isAccessible = true
+                val name = it.name
+                val value = it.getInt(null)
+                Pair(name, value)
+            } catch (e: Exception) {
+                Log.w(javaClass.simpleName, e.fullMessage)
+                null
+            }
+        }.sortedBy { it.second }
+        a.last() // TODO
+
         var myAndroidVersionName = getAndroidVersionName()
         if (MyApplication.instance.isGoEdition()) {
             myAndroidVersionName += " (Go)"
         }
-        val mine = MyApplication.getMyString(R.string.android_info, myAndroidVersionName, getAndroidApiLevel())
+        val myApiFull = getAndroidApiFull()
+        var mine = MyApplication.getMyString(R.string.android_info, myAndroidVersionName, myApiFull)
+
+        var myExtension = -1
+        if (isAtLeastStableAndroid11()) {
+            myExtension = getSdkExtension()
+            mine += "\n" + MyApplication.getMyString(R.string.android_info_sdk_extension,myExtension)
+        }
         // endregion [Mine]
 
-        // region [LatestStable]
-        val stable = lld.android.stable
-        val latestStable = MyApplication.getMyString(R.string.android_info, stable.version, stable.api)
-        // endregion [LatestStable]
+        fun oneLine(android: Lld.Androids.Android) =
+            MyApplication.getMyString(R.string.android_info, android.version, android.apiFull)
 
-        // region [LowestSupport]
-        val support = lld.android.support
-        val lowestSupport = MyApplication.getMyString(R.string.android_info, support.version, support.api)
-        // endregion [LowestSupport]
+        val lldAndroid = lld.android
 
-        // region [Beta]
-        val lldStablePreview = lld.android.stablePreview
-        val stablePreviewVersion = lldStablePreview.version
-        val stablePreviewApi = lldStablePreview.api
-        val stablePreview = MyApplication.getMyString(R.string.android_info, stablePreviewVersion, stablePreviewApi)
-        // endregion [Beta]
+        var latestStable = oneLine(lldAndroid.stable)
+        if (isAtLeastStableAndroid11()) {
+            latestStable += "\n" + MyApplication.getMyString(R.string.android_info_sdk_extension,lldAndroid.stable.extension) + "\n"
+        }
+        val lowestSupport = oneLine(lldAndroid.support)
+        val stablePreview = oneLine(lldAndroid.stablePreview) // Beta
+        val latestPreview = oneLine(lldAndroid.preview) // Canary
+        val latestInternal = oneLine(lldAndroid.internal)
 
-        // region [Canary]
-        val lldPreview = lld.android.preview
-        val previewVersion = lldPreview.version
-        val previewApi = lldPreview.api
-        val latestPreview = MyApplication.getMyString(R.string.android_info, previewVersion, previewApi)
-        // endregion [Canary]
-
-        // region [LatestInternal]
-        val internal = lld.android.internal
-        val latestInternal = MyApplication.getMyString(R.string.android_info, internal.version, internal.api)
-        // endregion [LatestInternal]
+        val infoDetailArgs = arrayOf(mine, latestStable, lowestSupport, stablePreview, latestPreview, latestInternal)
 
         @AttrRes val color = when {
-            isLatestStableAndroid(lld) || isLatestPreviewAndroid(lld) -> R.attr.colorNoProblem
+            (isLatestStableAndroid(lld) && myExtension >= lldAndroid.stable.extension)
+                || (isLatestPreviewAndroid(lld) && myExtension >= lldAndroid.preview.extension) -> R.attr.colorNoProblem
             isSupportedByUpstreamAndroid(lld) -> R.attr.colorWaring
             else -> R.attr.colorCritical
         }
 
-        val infoDetailArgs = arrayOf(mine, latestStable, lowestSupport, stablePreview, latestPreview, latestInternal)
         return toColoredMyModel(
             MyApplication.getMyString(R.string.android_info_title),
             MyApplication.getMyString(R.string.android_info_detail, *infoDetailArgs),
@@ -936,14 +952,14 @@ class HomeRepository(
             webViewUpdateServiceClass.getDeclaredMethod("getAllWebViewPackages")
                 .invoke(null) as Array<*>
         } catch (e: Exception) {
-            Log.w(javaClass.simpleName, e.fullMessage)
+            Log.w(javaClass.simpleName, "getAllWebViewPackages: ${e.fullMessage}")
             emptyArray<Any>()
         }
 
         fun Any?.getWebViewProviderInfoMemberOrThrow(name: String) =
             Class.forName("android.webkit.WebViewProviderInfo").getDeclaredField(name).get(this)
 
-        fun String.log(e: Exception) = Log.w("WebViewProvider", "$this: ${e.fullMessage}")
+        fun String.log(e: Exception) = Log.w(javaClass.simpleName, "WebViewProvider $this: ${e.fullMessage}")
 
         return allWebViewPackages.toList().map {
             with(it) {

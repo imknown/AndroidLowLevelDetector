@@ -1,8 +1,11 @@
 package net.imknown.android.forefrontinfo.ui.common
 
+import android.annotation.SuppressLint
 import android.app.ActivityManager
 import android.content.Context
 import android.os.Build
+import android.os.ext.SdkExtensions
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 
@@ -28,7 +31,7 @@ fun isLatestStableAndroid(lld: Lld) = isStableAndroid()
         && Build.VERSION.SDK_INT >= lld.android.stable.api.toInt()
 
 fun isLatestPreviewAndroid(lld: Lld) = isPreviewAndroid()
-        && getAndroidVersionName() >= lld.android.preview.name[0].toString()
+        && Build.VERSION.SDK_INT >= lld.android.preview.api.toInt()
 
 fun isSupportedByUpstreamAndroid(lld: Lld) = isStableAndroid()
         && Build.VERSION.SDK_INT >= lld.android.support.api.toInt()
@@ -50,11 +53,25 @@ private fun Context.isLowRamDevice() = ContextCompat.getSystemService(
     this, ActivityManager::class.java
 )?.isLowRamDevice == true
 
-fun getAndroidApiLevel() = if (isStableAndroid()) {
+private fun getAndroidApiLevel() = if (isStableAndroid()) {
     Build.VERSION.SDK_INT
 } else {
     Build.VERSION_CODES.CUR_DEVELOPMENT
 }
+
+@SuppressLint("WrongConstant")
+@RequiresApi(Build.VERSION_CODES.BAKLAVA)
+private fun getAndroidApiLevelMinor() = Build.getMinorSdkVersion(Build.VERSION.SDK_INT_FULL)
+
+fun getAndroidApiFull() = getAndroidApiLevel().toString() + if (isAtLeastStableAndroid16() && isStableAndroid() ) {
+    "." + getAndroidApiLevelMinor()
+} else {
+    ""
+}
+
+@SuppressLint("WrongConstant")
+@RequiresApi(Build.VERSION_CODES.R)
+fun getSdkExtension() = SdkExtensions.getExtensionVersion(Build.VERSION.SDK_INT)
 
 //fun Context.getAndroidApiLevelDynamic() = packageManager.getApplicationInfo(
 //    "android", 0
