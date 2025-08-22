@@ -18,6 +18,8 @@
 
     <string name="android_info_title">Android version</string>
     <string name="android_info">%1$s (API %2$s)</string>
+    <string name="android_info_preview">Preview</string>
+    <string name="android_info_sdk_extension">SDK Extension: %1$s</string>
     <string name="android_info_detail">Mine: %1$s\n\nLatest stable: %2$s\nLowest support: %3$s\nLatest Beta: %4$s\nLatest preview: %5$s\nLatest internal: %6$s</string>
 
     <string name="android_build_id_title">Android build ids</string>

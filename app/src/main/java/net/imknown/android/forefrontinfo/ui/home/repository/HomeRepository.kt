@@ -19,15 +19,17 @@ import net.imknown.android.forefrontinfo.base.extension.formatToLocalZonedDateti
 import net.imknown.android.forefrontinfo.base.extension.fullMessage
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.base.list.toColoredMyModel
-import net.imknown.android.forefrontinfo.ui.common.getAndroidApiLevel
-import net.imknown.android.forefrontinfo.ui.common.getAndroidVersionName
+import net.imknown.android.forefrontinfo.ui.common.getAndroidApiLevelMinor
+import net.imknown.android.forefrontinfo.ui.common.getAndroidDessertPreview
 import net.imknown.android.forefrontinfo.ui.common.getBooleanProperty
+import net.imknown.android.forefrontinfo.ui.common.getSdkExtension
 import net.imknown.android.forefrontinfo.ui.common.getShellResult
 import net.imknown.android.forefrontinfo.ui.common.getStringProperty
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid10
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid11
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid12
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid13
+import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid16
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid6
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid7
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid8
@@ -35,11 +37,14 @@ import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid9
 import net.imknown.android.forefrontinfo.ui.common.isGoEdition
 import net.imknown.android.forefrontinfo.ui.common.isLatestPreviewAndroid
 import net.imknown.android.forefrontinfo.ui.common.isLatestStableAndroid
-import net.imknown.android.forefrontinfo.ui.common.isPreviewAndroid
+import net.imknown.android.forefrontinfo.ui.common.isStableAndroid
 import net.imknown.android.forefrontinfo.ui.common.isSupportedByUpstreamAndroid
+import net.imknown.android.forefrontinfo.ui.common.sdkInt
+import net.imknown.android.forefrontinfo.ui.common.sdkIntFull
 import net.imknown.android.forefrontinfo.ui.home.datasource.AndroidDataSource
 import net.imknown.android.forefrontinfo.ui.home.datasource.LldDataSource
 import net.imknown.android.forefrontinfo.ui.home.datasource.MountDataSource
+import net.imknown.android.forefrontinfo.ui.home.model.EXTENSION_NONE
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.settings.datasource.AppInfoDataSource
 import java.io.File
@@ -76,49 +81,64 @@ class HomeRepository(
 
     fun detectAndroid(lld: Lld): MyModel {
         // region [Mine]
-        var myAndroidVersionName = getAndroidVersionName()
-        if (MyApplication.instance.isGoEdition()) {
-            myAndroidVersionName += " (Go)"
+        val myApiFull = if (isAtLeastStableAndroid16()) {
+            "$sdkInt.${getAndroidApiLevelMinor(sdkIntFull)}"
+        } else {
+            sdkInt.toString()
         }
-        val mine = MyApplication.getMyString(R.string.android_info, myAndroidVersionName, getAndroidApiLevel())
+
+        var myNameAndDessert = if (isStableAndroid()) {
+            val dessert = lld.android.known.find {
+                it.api.toInt() == sdkInt
+            }?.name
+                ?: MyApplication.getMyString(android.R.string.unknownName)
+            Build.VERSION.RELEASE + ", " + dessert
+        } else {
+            val android = lld.android.known.find {
+                it.apiFull == myApiFull
+            }
+            if (android != null) {
+                val preview = MyApplication.getMyString(R.string.android_info_preview)
+                android.version + " $preview, " + android.name
+            } else {
+                getAndroidDessertPreview()
+            }
+        }
+        if (MyApplication.instance.isGoEdition()) {
+            myNameAndDessert += " (Go)"
+        }
+
+        var mine = MyApplication.getMyString(R.string.android_info, myNameAndDessert, myApiFull)
+
+        var myExtension = EXTENSION_NONE
+        if (isAtLeastStableAndroid11()) {
+            myExtension = getSdkExtension(Build.VERSION.SDK_INT)
+            mine += "\n" + MyApplication.getMyString(R.string.android_info_sdk_extension,myExtension)
+        }
         // endregion [Mine]
 
-        // region [LatestStable]
-        val stable = lld.android.stable
-        val latestStable = MyApplication.getMyString(R.string.android_info, stable.version, stable.api)
-        // endregion [LatestStable]
+        fun oneLine(android: Lld.Androids.Android) =
+            MyApplication.getMyString(R.string.android_info, android.version, android.apiFull)
 
-        // region [LowestSupport]
-        val support = lld.android.support
-        val lowestSupport = MyApplication.getMyString(R.string.android_info, support.version, support.api)
-        // endregion [LowestSupport]
+        val lldAndroid = lld.android
 
-        // region [Beta]
-        val lldStablePreview = lld.android.stablePreview
-        val stablePreviewVersion = lldStablePreview.version
-        val stablePreviewApi = lldStablePreview.api
-        val stablePreview = MyApplication.getMyString(R.string.android_info, stablePreviewVersion, stablePreviewApi)
-        // endregion [Beta]
+        var latestStable = oneLine(lldAndroid.stable)
+        if (isAtLeastStableAndroid11()) {
+            latestStable += "\n" + MyApplication.getMyString(R.string.android_info_sdk_extension,lldAndroid.stable.extension) + "\n"
+        }
+        val lowestSupport = oneLine(lldAndroid.support)
+        val stablePreview = oneLine(lldAndroid.stablePreview) // Beta
+        val latestPreview = oneLine(lldAndroid.preview) // Canary
+        val latestInternal = oneLine(lldAndroid.internal)
 
-        // region [Canary]
-        val lldPreview = lld.android.preview
-        val previewVersion = lldPreview.version
-        val previewApi = lldPreview.api
-        val latestPreview = MyApplication.getMyString(R.string.android_info, previewVersion, previewApi)
-        // endregion [Canary]
-
-        // region [LatestInternal]
-        val internal = lld.android.internal
-        val latestInternal = MyApplication.getMyString(R.string.android_info, internal.version, internal.api)
-        // endregion [LatestInternal]
+        val infoDetailArgs = arrayOf(mine, latestStable, lowestSupport, stablePreview, latestPreview, latestInternal)
 
         @AttrRes val color = when {
-            isLatestStableAndroid(lld) || isLatestPreviewAndroid(lld) -> R.attr.colorNoProblem
+            (isLatestStableAndroid(lld) || isLatestPreviewAndroid(lld)) && myExtension >= lldAndroid.stable.extension -> R.attr.colorNoProblem
             isSupportedByUpstreamAndroid(lld) -> R.attr.colorWaring
             else -> R.attr.colorCritical
         }
 
-        val infoDetailArgs = arrayOf(mine, latestStable, lowestSupport, stablePreview, latestPreview, latestInternal)
         return toColoredMyModel(
             MyApplication.getMyString(R.string.android_info_title),
             MyApplication.getMyString(R.string.android_info_detail, *infoDetailArgs),
@@ -1005,9 +1025,7 @@ class HomeRepository(
         }
         var systemApkList = installedApplications.filter {
             val systemFlags = it.flags and (ApplicationInfo.FLAG_UPDATED_SYSTEM_APP or ApplicationInfo.FLAG_SYSTEM)
-            (systemFlags > 0) && (it.targetSdkVersion < Build.VERSION.SDK_INT
-                    || (isPreviewAndroid() && it.targetSdkVersion == Build.VERSION.SDK_INT)
-            )
+            (systemFlags > 0) && (it.targetSdkVersion < sdkInt)
         }
 
         var result = MyApplication.getMyString(

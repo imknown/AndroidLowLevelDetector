@@ -18,6 +18,8 @@
 
     <string name="android_info_title">Android 版本</string>
     <string name="android_info">%1$s（API %2$s）</string>
+    <string name="android_info_preview">預覽</string>
+    <string name="android_info_sdk_extension">SDK 擴充: %1$s</string>
     <string name="android_info_detail">我的：%1$s\n\n最新穩定：%2$s\n最低支援：%3$s\n最新 Beta：%4$s\n最新預覽：%5$s\n最新內部：%6$s</string>
 
     <string name="android_build_id_title">Android 構建 ID</string>

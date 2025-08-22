@@ -1,7 +1,13 @@
 package net.imknown.android.forefrontinfo.ui.home.model
 
 import androidx.annotation.Keep
+import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
+
+const val CODENAME_NONE = ""
+const val CODENAME_CANARY = "CANARY"
+const val EXTENSION_NONE = 0
+const val SCHEME_VERSION = 1
 
 @Keep
 @Serializable
@@ -13,10 +19,6 @@ data class Lld(
     val toybox: Toyboxes,
     val webView: WebViews
 ) {
-    companion object {
-        const val SCHEME_VERSION = 1
-    }
-
     // https://source.android.com/security/enhancements/enhancements9
     // https://source.android.com/setup/start/p-release-notes
     // https://developer.android.com/about/versions/10
@@ -56,14 +58,21 @@ data class Lld(
         // https://ci.android.com
         // https://developer.android.com/about/canary
         val preview: Android,
-        val internal: Android
+        val internal: Android,
+        val known: List<Android>
     ) {
         @Keep
         @Serializable
         data class Android(
-            val name: String,
             val api: String,
+            val apiFull: String,
             val version: String,
+            /** Dessert */
+            val name: String,
+            // https://android.googlesource.com/platform/build/release/+/refs/heads/main/flag_values/trunk_staging/RELEASE_PLATFORM_VERSION_KNOWN_CODENAMES.textproto
+            @EncodeDefault val codename: String = CODENAME_NONE,
+            @EncodeDefault val extension: Int = EXTENSION_NONE,
+            /** Deprecated: "Preview" used to be: "$[version] $[phase]" */
             val phase: String? = null
         )
 
