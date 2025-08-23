@@ -943,33 +943,50 @@ class HomeRepository(
         fun Any?.getWebViewProviderInfoMemberOrThrow(name: String) =
             Class.forName("android.webkit.WebViewProviderInfo").getDeclaredField(name).get(this)
 
+        fun String.log(e: Exception) = Log.w("WebViewProvider", "$this: ${e.fullMessage}")
+
         return allWebViewPackages.toList().map {
             with(it) {
+                val packageNameField = "packageName"
                 val packageName = try {
-                    getWebViewProviderInfoMemberOrThrow("packageName") as String
+                    getWebViewProviderInfoMemberOrThrow(packageNameField) as String
                 } catch (e: Exception) {
+                    packageNameField.log(e)
                     MyApplication.getMyString(R.string.build_not_filled)
                 }
+
+                val descriptionField = "description"
                 val description = try {
-                    getWebViewProviderInfoMemberOrThrow("description") as String
+                    getWebViewProviderInfoMemberOrThrow(descriptionField) as String
                 } catch (e: Exception) {
+                    descriptionField.log(e)
                     MyApplication.getMyString(R.string.build_not_filled)
                 }
+
+                val availableByDefaultField = "availableByDefault"
                 val availableByDefault = try {
-                    getWebViewProviderInfoMemberOrThrow("availableByDefault") as Boolean
+                    getWebViewProviderInfoMemberOrThrow(availableByDefaultField) as Boolean
                 } catch (e: Exception) {
+                    availableByDefaultField.log(e)
                     false
                 }
+
+                val isFallbackField = "isFallback"
                 val isFallback = try {
-                    getWebViewProviderInfoMemberOrThrow("isFallback") as Boolean
+                    getWebViewProviderInfoMemberOrThrow(isFallbackField) as Boolean
                 } catch (e: Exception) {
+                    isFallbackField.log(e)
                     false
                 }
+
+                val signaturesField = "signatures"
                 val signatures = try {
-                    getWebViewProviderInfoMemberOrThrow("signatures") as Array<*>
+                    getWebViewProviderInfoMemberOrThrow(signaturesField) as Array<*>
                 } catch (e: Exception) {
+                    signaturesField.log(e)
                     emptyArray<Any>()
                 }
+
                 WebViewProviderInfo(
                     packageName, description, availableByDefault, isFallback, signatures
                 )
