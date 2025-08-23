@@ -10,11 +10,13 @@ minSdkFirebase = "23"
 
 compileSdk = "36"
 compileSdkPreview = "CANARY"
+# compileSdkPreview = "Baklava" # (Android 16 QPR2 Beta 1)
 
-compileSdkExtension = "19" # 36-ext19 (Android 16 QPR2 Beta 1)
+compileSdkExtension = "19" # 36-ext19 (Android 16 QPR1 Beta 3.1)
 
 targetSdk = "36"
 targetSdkPreview = "CANARY"
+# targetSdkPreview = "Baklava" # (Android 16 QPR2 Beta 1)
 
 # https://github.com/android/ndk/releases
 ndk = "29.0.13846066" # Beta 3, but RC 3 in Android SDK Manager
