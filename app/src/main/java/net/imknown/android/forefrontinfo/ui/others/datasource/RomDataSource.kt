@@ -19,7 +19,7 @@ class RomDataSource {
     fun getIncremental(): String = Build.VERSION.INCREMENTAL
     fun getCodename(): String = Build.VERSION.CODENAME
     @RequiresApi(Build.VERSION_CODES.M)
-    fun getPreviewDdkInt(): Int = Build.VERSION.PREVIEW_SDK_INT
+    fun getPreviewSdkInt(): Int = Build.VERSION.PREVIEW_SDK_INT
 
     fun getDefaultUserAgentOrThrow(context: Context): String = WebSettings.getDefaultUserAgent(context)
 }

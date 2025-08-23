@@ -127,7 +127,7 @@ class OthersRepository(
     fun getIncremental() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_incremental), romDataSource.getIncremental())
     fun getCodename() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_codename), romDataSource.getCodename())
     @RequiresApi(Build.VERSION_CODES.M)
-    fun getPreviewDdkInt() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_preview_sdk_int), romDataSource.getPreviewDdkInt().toString())
+    fun getPreviewSdkInt() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_preview_sdk_int), romDataSource.getPreviewSdkInt().toString())
 
     // region [Fingerprint]
     fun getFingerprint() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_stock_fingerprint), fingerprintDataSource.getFingerprint())

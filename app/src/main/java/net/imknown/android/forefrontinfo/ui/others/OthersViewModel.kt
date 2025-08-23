@@ -99,7 +99,7 @@ class OthersViewModel(
                 tempModels += othersRepository.getIncremental()
                 tempModels += othersRepository.getCodename()
                 if (isAtLeastStableAndroid6()) {
-                    tempModels += othersRepository.getPreviewDdkInt()
+                    tempModels += othersRepository.getPreviewSdkInt()
                 }
                 tempModels += othersRepository.getDefaultUserAgent(MyApplication.instance)
                 tempModels += othersRepository.getKernelVersion()
