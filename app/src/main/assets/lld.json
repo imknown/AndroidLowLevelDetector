@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2025-08-21 19:10 +0800",
+  "version": "2025-08-25 13:25 +0800",
   "android": {
     "securityPatchLevel": "2025-08-05",
     "googlePlaySystemUpdates": "2025-07-01",
@@ -16,27 +16,37 @@
     "stable": {
       "name": "Baklava",
       "api": "36",
+      "apiFull": "36.0",
+      "extension": 19,
       "version": "16, Baklava"
     },
     "stablePreview": {
       "name": "Baklava",
       "api": "36",
-      "version": "16 QPR2 Beta 1, Baklava"
+      "apiFull": "36.1",
+      "extension": 19,
+      "version": "16 QPR2 Beta 1, Baklava.1"
     },
     "support": {
       "name": "Tiramisu",
       "api": "33",
+      "apiFull": "33",
+      "extension": 5,
       "version": "13, Tiramisu"
     },
     "preview": {
       "name": "Baklava",
       "api": "36",
-      "version": "16 Canary, Baklava",
+      "apiFull": "36.1",
+      "extension": 19,
+      "version": "16 Canary, Baklava.1",
       "phase": ""
     },
     "internal": {
-      "name": "C",
+      "name": "Cinnamon Bun",
       "api": "37",
+      "apiFull": "37.0",
+      "extension": -1,
       "version": "17 Internal, Cinnamon Bun"
     }
   },
