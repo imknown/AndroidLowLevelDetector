@@ -13,7 +13,7 @@ import kotlin.reflect.KClass
 
 private const val CODENAME_RELEASE = "REL"
 
-/** [Build.VERSION_CODES_FULL].SDK_INT_MULTIPLIER */
+/** See: [Build.VERSION_CODES_FULL].SDK_INT_MULTIPLIER */
 private const val SDK_INT_MULTIPLIER = 1_00000
 
 /** See: [Build.VERSION].RESOURCES_SDK_INT */
@@ -43,6 +43,7 @@ private fun listCodes(kClass: KClass<*>): List<Pair<String?, Int>> {
 
 private fun latestApiOrNull(kClass: KClass<*>) = listCodes(kClass).lastOrNull()?.second
 
+/** E.g.: 36 */
 val sdkInt: Int by lazy {
     if (isStableAndroid()) {
         Build.VERSION.SDK_INT
@@ -52,6 +53,7 @@ val sdkInt: Int by lazy {
     }
 }
 
+/** E.g.: 3600001 */
 private val sdkIntFull: Int by lazy {
     if (isAtLeastStableAndroid16()) {
         if (isStableAndroid()) {
