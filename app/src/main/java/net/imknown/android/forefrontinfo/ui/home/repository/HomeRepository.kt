@@ -44,7 +44,6 @@ import net.imknown.android.forefrontinfo.ui.common.sdkIntFull
 import net.imknown.android.forefrontinfo.ui.home.datasource.AndroidDataSource
 import net.imknown.android.forefrontinfo.ui.home.datasource.LldDataSource
 import net.imknown.android.forefrontinfo.ui.home.datasource.MountDataSource
-import net.imknown.android.forefrontinfo.ui.home.model.EXTENSION_NONE
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.settings.datasource.AppInfoDataSource
 import java.io.File
@@ -108,13 +107,7 @@ class HomeRepository(
             myNameAndDessert += " (Go)"
         }
 
-        var mine = MyApplication.getMyString(R.string.android_info, myNameAndDessert, myApiFull)
-
-        var myExtension = EXTENSION_NONE
-        if (isAtLeastStableAndroid11()) {
-            myExtension = getSdkExtension(Build.VERSION.SDK_INT)
-            mine += "\n" + MyApplication.getMyString(R.string.android_info_sdk_extension,myExtension)
-        }
+        val mine = MyApplication.getMyString(R.string.android_info, myNameAndDessert, myApiFull)
         // endregion [Mine]
 
         fun oneLine(android: Lld.Androids.Android) =
@@ -122,10 +115,7 @@ class HomeRepository(
 
         val lldAndroid = lld.android
 
-        var latestStable = oneLine(lldAndroid.stable)
-        if (isAtLeastStableAndroid11()) {
-            latestStable += "\n" + MyApplication.getMyString(R.string.android_info_sdk_extension,lldAndroid.stable.extension) + "\n"
-        }
+        val latestStable = oneLine(lldAndroid.stable)
         val lowestSupport = oneLine(lldAndroid.support)
         val stablePreview = oneLine(lldAndroid.stablePreview) // Beta
         val latestPreview = oneLine(lldAndroid.preview) // Canary
@@ -134,7 +124,7 @@ class HomeRepository(
         val infoDetailArgs = arrayOf(mine, latestStable, lowestSupport, stablePreview, latestPreview, latestInternal)
 
         @AttrRes val color = when {
-            (isLatestStableAndroid(lld) || isLatestPreviewAndroid(lld)) && myExtension >= lldAndroid.stable.extension -> R.attr.colorNoProblem
+            isLatestStableAndroid(lld) || isLatestPreviewAndroid(lld) -> R.attr.colorNoProblem
             isSupportedByUpstreamAndroid(lld) -> R.attr.colorWaring
             else -> R.attr.colorCritical
         }
@@ -142,6 +132,23 @@ class HomeRepository(
         return toColoredMyModel(
             MyApplication.getMyString(R.string.android_info_title),
             MyApplication.getMyString(R.string.android_info_detail, *infoDetailArgs),
+            color
+        )
+    }
+
+    fun detectSdkExtension(lld: Lld): MyModel {
+        val lldStableExtension = lld.android.stable.extension
+
+        val (myExtension, color) = if (isAtLeastStableAndroid11()) {
+            val myExtension = getSdkExtension(Build.VERSION.SDK_INT)
+            val color = myExtension >= lldStableExtension
+            myExtension to color
+        } else {
+            MyApplication.getMyString(R.string.result_not_supported) to false
+        }
+        return toColoredMyModel(
+            MyApplication.getMyString(R.string.android_sdk_extension_title),
+            MyApplication.getMyString(R.string.android_sdk_extension_detail, myExtension, lldStableExtension),
             color
         )
     }

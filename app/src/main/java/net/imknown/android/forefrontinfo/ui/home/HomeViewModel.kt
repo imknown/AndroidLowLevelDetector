@@ -141,6 +141,7 @@ class HomeViewModel(
 
             withContext(Dispatchers.Default) {
                 tempModels += homeRepository.detectAndroid(lld)
+                tempModels += homeRepository.detectSdkExtension(lld)
                 tempModels += homeRepository.detectBuildId(lld)
                 tempModels += homeRepository.detectSecurityPatches(lld)
                 tempModels += homeRepository.detectPerformanceClass()
