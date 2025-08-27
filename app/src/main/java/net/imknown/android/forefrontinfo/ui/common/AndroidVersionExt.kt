@@ -67,15 +67,13 @@ private val sdkIntFull: Int by lazy {
     }
 }
 
-/** E.g.: "36.1" */
+/** E.g.: "35", "36.1" */
 val sdkFull: String by lazy {
-     "$sdkInt.${sdkIntFull.toMinor()}"
-}
-
-private fun Int.toMinor(): Int = if (isAtLeastAndroid16()) {
-    Build.getMinorSdkVersion(this)
-} else {
-    this % SDK_INT_MULTIPLIER
+    if (isAtLeastAndroid16()) {
+        "$sdkInt.${Build.getMinorSdkVersion(sdkIntFull)}"
+    } else {
+        sdkInt.toString()
+    }
 }
 
 fun isAtLeastAndroid6() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M || sdkInt >= Build.VERSION_CODES.M
