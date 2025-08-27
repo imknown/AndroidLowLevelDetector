@@ -19,38 +19,33 @@ data class Lld(
     val toybox: Toyboxes,
     val webView: WebViews
 ) {
-    // https://source.android.com/security/enhancements/enhancements9
-    // https://source.android.com/setup/start/p-release-notes
-    // https://developer.android.com/about/versions/10
-    //
     // https://en.wikipedia.org/wiki/Android_version_history
-    // https://developer.android.com/about/dashboards?hl=en
-    // https://www.bidouille.org/misc/androidcharts
     //
-    // https://mta.qq.com/mta/data/device/os
-    // https://compass.umeng.com/#hardwareList
-    // https://tongji.baidu.com/research/app
+    // https://developer.android.com/about/dashboards?hl=en
+    //
+    // https://apilevels.com/
+    // https://targetsdk.com/
+    //
+    // https://www.bidouille.org/misc/androidcharts
+    // https://composables.com/android-distribution-chart
+    // https://telemetrydeck.com/survey/android/Android/sdkVersions/
     // https://www.appbrain.com/stats/top-android-sdk-versions
     // https://gs.statcounter.com/android-version-market-share/
     @Keep
     @Serializable
     data class Androids(
         // https://source.android.com/security/bulletin#bulletins
-        // https://source.android.com/setup/start/build-numbers?hl=en#source-code-tags-and-builds
-        // https://android.googlesource.com/platform/build/+/master/core/version_defaults.mk
         val securityPatchLevel: String,
         // https://source.android.com/security/bulletin#bulletins
         val googlePlaySystemUpdates: String,
-        // https://source.android.com/setup/start/build-numbers?hl=en#source-code-tags-and-builds
-        // https://android.googlesource.com/platform/frameworks/base/+refs
-        // https://developers.google.com/android/images
-        // https://developers.google.com/android/ota
         val build: Build,
         // https://www.android.com
         val stable: Android,
         // Beta
         // https://developer.android.com/preview/overview
+        // https://developer.android.com/about/versions/16/release-notes
         // https://developer.android.com/about/versions/16/release-notes-qpr
+        // https://developer.android.com/about/versions/16/qpr2/release-notes
         val stablePreview: Android,
         // https://source.android.com/security/bulletin/
         val support: Android,
@@ -76,11 +71,12 @@ data class Lld(
             val phase: String? = null
         )
 
-        // https://android.googlesource.com/platform/build/+refs
-        // https://android.googlesource.com/platform/build/+/refs/tags/android-12.0.0_r29/core/build_id.mk
-        // https://android.googlesource.com/platform/build/+/master/core/build_id.mk
-        //
+        // https://source.android.com/setup/start/build-numbers?hl=en#source-code-tags-and-builds
         // https://developers.google.com/android/images
+        // https://developers.google.com/android/ota
+        // https://android.googlesource.com/platform/build/+refs
+        // https://android.googlesource.com/platform/build/+/refs/tags/android-16.0.0_r2/core/build_id.mk
+        // https://android.googlesource.com/platform/build/+/master/core/build_id.mk
         @Keep
         @Serializable
         data class Build(
@@ -121,12 +117,12 @@ data class Lld(
     @Keep
     @Serializable
     data class Toyboxes(
-        // https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-12.0.0_r29/toys.h
+        // https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-16.0.0_r1/toys.h
         val stable: BaseInfo,
-        // https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-security-10.0.0_r63/main.c
+        // https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-security-13.0.0_r1/toys.h#137
         val support: BaseInfo,
-        // https://android.googlesource.com/platform/external/toybox/+/master/toys.h#135
-        // https://android.googlesource.com/platform/external/toybox/+/upstream-master/toys.h#135
+        // https://android.googlesource.com/platform/external/toybox/+/master/toys.h#144
+        // https://android.googlesource.com/platform/external/toybox/+/upstream-master/toys.h#144
         val master: BaseInfo
     )
 
