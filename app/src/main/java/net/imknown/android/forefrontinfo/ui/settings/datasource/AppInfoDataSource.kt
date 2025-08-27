@@ -3,13 +3,13 @@ package net.imknown.android.forefrontinfo.ui.settings.datasource
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
-import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid11
-import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid13
+import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid11
+import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid13
 
 class AppInfoDataSource {
     fun getPackageInfoOrThrow(
         packageManager: PackageManager, packageName: String
-    ): PackageInfo = if (isAtLeastStableAndroid13()) {
+    ): PackageInfo = if (isAtLeastAndroid13()) {
         val flags = PackageManager.PackageInfoFlags.of(0)
         packageManager.getPackageInfo(packageName, flags)
     } else {
@@ -18,7 +18,7 @@ class AppInfoDataSource {
 
     private fun getApplicationInfoOrThrow(
         packageManager: PackageManager, packageName: String
-    ): ApplicationInfo = if (isAtLeastStableAndroid13()) {
+    ): ApplicationInfo = if (isAtLeastAndroid13()) {
         val flags = PackageManager.ApplicationInfoFlags.of(0)
         packageManager.getApplicationInfo(packageName, flags)
     } else {
@@ -27,7 +27,7 @@ class AppInfoDataSource {
 
     fun getInstallerPackageNameOrNullOrThrow(
         packageManager: PackageManager, packageName: String
-    ): String? = if (isAtLeastStableAndroid11()) {
+    ): String? = if (isAtLeastAndroid11()) {
         packageManager.getInstallSourceInfo(packageName).installingPackageName
     } else {
         @Suppress("Deprecation")

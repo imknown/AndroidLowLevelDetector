@@ -24,14 +24,14 @@ import net.imknown.android.forefrontinfo.ui.common.getBooleanProperty
 import net.imknown.android.forefrontinfo.ui.common.getSdkExtension
 import net.imknown.android.forefrontinfo.ui.common.getShellResult
 import net.imknown.android.forefrontinfo.ui.common.getStringProperty
-import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid10
-import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid11
-import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid12
-import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid13
-import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid6
-import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid7
-import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid8
-import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid9
+import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid10
+import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid11
+import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid12
+import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid13
+import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid6
+import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid7
+import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid8
+import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid9
 import net.imknown.android.forefrontinfo.ui.common.isGoEdition
 import net.imknown.android.forefrontinfo.ui.common.isLatestPreviewAndroid
 import net.imknown.android.forefrontinfo.ui.common.isLatestStableAndroid
@@ -131,7 +131,7 @@ class HomeRepository(
     fun detectSdkExtension(lld: Lld): MyModel {
         val lldStableExtension = lld.android.stable.extension
 
-        val (myExtension, color) = if (isAtLeastStableAndroid11()) {
+        val (myExtension, color) = if (isAtLeastAndroid11()) {
             val myExtension = getSdkExtension(Build.VERSION.SDK_INT)
             val color = myExtension >= lldStableExtension
             myExtension to color
@@ -147,15 +147,15 @@ class HomeRepository(
 
     fun detectBuildId(lld: Lld): MyModel {
         val buildIdResult = Build.ID
-        val systemBuildIdResult = getStringProperty(AndroidDataSource.PROP_RO_SYSTEM_BUILD_ID, isAtLeastStableAndroid9())
-        val vendorBuildIdResult = getStringProperty(AndroidDataSource.PROP_RO_VENDOR_BUILD_ID, isAtLeastStableAndroid9())
-        val odmBuildIdResult = getStringProperty(AndroidDataSource.PROP_RO_ODM_BUILD_ID, isAtLeastStableAndroid9())
+        val systemBuildIdResult = getStringProperty(AndroidDataSource.PROP_RO_SYSTEM_BUILD_ID, isAtLeastAndroid9())
+        val vendorBuildIdResult = getStringProperty(AndroidDataSource.PROP_RO_VENDOR_BUILD_ID, isAtLeastAndroid9())
+        val odmBuildIdResult = getStringProperty(AndroidDataSource.PROP_RO_ODM_BUILD_ID, isAtLeastAndroid9())
 
         fun isBuildIdAndroid8CtsFormat(buildId: String) =
-            isAtLeastStableAndroid8() && buildId.split(AndroidDataSource.BUILD_ID_SEPARATOR).size >= 3
+            isAtLeastAndroid8() && buildId.split(AndroidDataSource.BUILD_ID_SEPARATOR).size >= 3
 
         val myBuildIdForCompare = if (
-            isBuildIdAndroid8CtsFormat(buildIdResult) || isAtLeastStableAndroid9().not()
+            isBuildIdAndroid8CtsFormat(buildIdResult) || isAtLeastAndroid9().not()
         ) {
             buildIdResult
         } else {
@@ -217,14 +217,14 @@ class HomeRepository(
     fun detectSecurityPatches(lld: Lld): List<MyModel> {
         val tempModels = mutableListOf<MyModel>()
 
-        val mySecurityPatch = if (isAtLeastStableAndroid6()) {
+        val mySecurityPatch = if (isAtLeastAndroid6()) {
             Build.VERSION.SECURITY_PATCH
         } else {
             getStringProperty(AndroidDataSource.PROP_SECURITY_PATCH)
         }
         tempModels += detectSecurityPatch(lld, mySecurityPatch, R.string.security_patch_level_title)
 
-        val mySecurityPatchVendor = getStringProperty(AndroidDataSource.PROP_VENDOR_SECURITY_PATCH, isAtLeastStableAndroid9())
+        val mySecurityPatchVendor = getStringProperty(AndroidDataSource.PROP_VENDOR_SECURITY_PATCH, isAtLeastAndroid9())
         tempModels += detectSecurityPatch(lld, mySecurityPatchVendor, R.string.vendor_security_patch_level_title)
 
         return tempModels
@@ -253,7 +253,7 @@ class HomeRepository(
     fun detectPerformanceClass(): MyModel {
         @AttrRes var performanceColorRes = R.attr.colorCritical
 
-        val result = if (isAtLeastStableAndroid12()) {
+        val result = if (isAtLeastAndroid12()) {
             val performanceClass = Build.VERSION.MEDIA_PERFORMANCE_CLASS
             if (performanceClass == Build.VERSION.SDK_INT) {
                 performanceColorRes = R.attr.colorNoProblem
@@ -307,16 +307,16 @@ class HomeRepository(
     }
 
     fun detectAb(): MyModel {
-        val isAbUpdateSupported = getBooleanProperty(AndroidDataSource.PROP_AB_UPDATE, isAtLeastStableAndroid7())
-        val slotSuffixResult = getStringProperty(AndroidDataSource.PROP_SLOT_SUFFIX, isAtLeastStableAndroid7())
-        val isVirtualAb = getBooleanProperty(AndroidDataSource.PROP_VIRTUAL_AB_ENABLED, isAtLeastStableAndroid11())
+        val isAbUpdateSupported = getBooleanProperty(AndroidDataSource.PROP_AB_UPDATE, isAtLeastAndroid7())
+        val slotSuffixResult = getStringProperty(AndroidDataSource.PROP_SLOT_SUFFIX, isAtLeastAndroid7())
+        val isVirtualAb = getBooleanProperty(AndroidDataSource.PROP_VIRTUAL_AB_ENABLED, isAtLeastAndroid11())
         val isAbEnable = isAbUpdateSupported || isPropertyValueNotEmpty(slotSuffixResult) || isVirtualAb
 
         var abResult = toSupportOrNotString(isAbEnable)
 
         if (isAbEnable) {
             if (isVirtualAb) {
-                val isVirtualAbRetrofit = getBooleanProperty(AndroidDataSource.PROP_VIRTUAL_AB_RETROFIT, isAtLeastStableAndroid11())
+                val isVirtualAbRetrofit = getBooleanProperty(AndroidDataSource.PROP_VIRTUAL_AB_RETROFIT, isAtLeastAndroid11())
                 // val isVirtualAbCompressionXorEnabled = getBooleanProperty(AndroidDataSource.PROP_VIRTUAL_AB_COMPRESSION_XOR_ENABLED, isAtLeastStableAndroid13())
                 // val isVirtualAbUserspaceSnapshotsEnabled = getBooleanProperty(AndroidDataSource.PROP_VIRTUAL_AB_USERSPACE_SNAPSHOTS_ENABLED, isAtLeastStableAndroid13())
                 // val isAllowNonAb = getBooleanProperty(AndroidDataSource.PROP_VIRTUAL_AB_ALLOW_NON_AB, isAtLeastStableAndroid13())
@@ -350,7 +350,7 @@ class HomeRepository(
         var isRecoverySar = false
         var isSlashSar = false
 
-        val isSar = if (isAtLeastStableAndroid9()) {
+        val isSar = if (isAtLeastAndroid9()) {
             val isLAndroid9TheLegacySar = getBooleanProperty(AndroidDataSource.PROP_SYSTEM_ROOT_IMAGE)
 
             val isTheLegacySarMount = mounts.any {
@@ -359,7 +359,7 @@ class HomeRepository(
 
             isTheLegacySar = isLAndroid9TheLegacySar && isTheLegacySarMount
 
-            isThe2siSar = isAtLeastStableAndroid10()
+            isThe2siSar = isAtLeastAndroid10()
                     && mounts.none {
                         it.blockDevice != "none" && it.mountPoint == "/system" && it.type != "tmpfs"
                     }
@@ -372,7 +372,7 @@ class HomeRepository(
                 it.mountPoint == "/" && it.type != "rootfs"
             }
 
-            isTheLegacySar || isThe2siSar || isRecoverySar || isSlashSar || isAtLeastStableAndroid10()
+            isTheLegacySar || isThe2siSar || isRecoverySar || isSlashSar || isAtLeastAndroid10()
         } else {
             false
         }
@@ -419,9 +419,9 @@ class HomeRepository(
 
     fun detectDynamicPartitions(): MyModel {
         val isDynamicPartitions =
-            getBooleanProperty(AndroidDataSource.PROP_DYNAMIC_PARTITIONS, isAtLeastStableAndroid10())
+            getBooleanProperty(AndroidDataSource.PROP_DYNAMIC_PARTITIONS, isAtLeastAndroid10())
         val isDynamicPartitionsRetrofit =
-            getBooleanProperty(AndroidDataSource.PROP_DYNAMIC_PARTITIONS_RETROFIT, isAtLeastStableAndroid10())
+            getBooleanProperty(AndroidDataSource.PROP_DYNAMIC_PARTITIONS_RETROFIT, isAtLeastAndroid10())
 
 //        val superPartitionResult = sh(CMD_LL_DEV_BLOCK_SUPER, isAtLeastStableAndroid10())
 //        val hasSuperPartition =  superPartitionResult.isSuccess
@@ -444,12 +444,12 @@ class HomeRepository(
 
     // region [Treble & GSI]
     private fun detectTreble(): Pair<MyModel, Boolean> {
-        val isTrebleEnabled = getBooleanProperty(AndroidDataSource.PROP_TREBLE_ENABLED, isAtLeastStableAndroid8())
+        val isTrebleEnabled = getBooleanProperty(AndroidDataSource.PROP_TREBLE_ENABLED, isAtLeastAndroid8())
 
         var trebleResult = toSupportOrNotString(isTrebleEnabled)
 
         val pathVendorSku = AndroidDataSource.PATH_VENDOR_VINTF_SKU.format(
-            getStringProperty(AndroidDataSource.PROP_VENDOR_SKU, isAtLeastStableAndroid12())
+            getStringProperty(AndroidDataSource.PROP_VENDOR_SKU, isAtLeastAndroid12())
         )
 
         @AttrRes val trebleColor = if (isTrebleEnabled) {
@@ -492,12 +492,12 @@ class HomeRepository(
         tempModels += myModel
 
         val fileLdConfig = when {
-            isAtLeastStableAndroid11() -> AndroidDataSource.LD_CONFIG_FILE_ANDROID_11
-            isAtLeastStableAndroid9() -> AndroidDataSource.LD_CONFIG_FILE_ANDROID_9
+            isAtLeastAndroid11() -> AndroidDataSource.LD_CONFIG_FILE_ANDROID_11
+            isAtLeastAndroid9() -> AndroidDataSource.LD_CONFIG_FILE_ANDROID_9
             else -> "NOT_EXIST"
         }
         val cmd = AndroidDataSource.CMD_VENDOR_NAMESPACE_DEFAULT_ISOLATED.format(fileLdConfig)
-        val gsiCompatibilityResult = getShellResult(cmd, isAtLeastStableAndroid9())
+        val gsiCompatibilityResult = getShellResult(cmd, isAtLeastAndroid9())
         val (@StringRes result, @AttrRes color) = if (gsiCompatibilityResult.isSuccess) {
             val firstLine = gsiCompatibilityResult.output.getOrNull(0)
                 ?: MyApplication.getMyString(android.R.string.unknownName)
@@ -510,7 +510,7 @@ class HomeRepository(
                 R.string.result_not_compliant to R.attr.colorWaring
             }
         } else {
-            if (isTrebleEnabled && isAtLeastStableAndroid9()) {
+            if (isTrebleEnabled && isAtLeastAndroid9()) {
                 R.string.result_unidentified to R.attr.colorWaring
             } else {
                 R.string.result_not_supported to R.attr.colorCritical
@@ -529,8 +529,8 @@ class HomeRepository(
 
     /** {@link android.util.FeatureFlagUtils} */
     fun detectDsu(): MyModel {
-        val isDsuEnabled = getBooleanProperty(AndroidDataSource.PROP_PERSIST_DYNAMIC_SYSTEM_UPDATE, isAtLeastStableAndroid10())
-                || getBooleanProperty(AndroidDataSource.PROP_DYNAMIC_SYSTEM_UPDATE, isAtLeastStableAndroid10())
+        val isDsuEnabled = getBooleanProperty(AndroidDataSource.PROP_PERSIST_DYNAMIC_SYSTEM_UPDATE, isAtLeastAndroid10())
+                || getBooleanProperty(AndroidDataSource.PROP_DYNAMIC_SYSTEM_UPDATE, isAtLeastAndroid10())
         return toColoredMyModel(
             MyApplication.getMyString(R.string.dsu_status_title),
             toSupportOrNotString(isDsuEnabled),
@@ -587,7 +587,7 @@ class HomeRepository(
     }
 
     fun detectVndk(lld: Lld): MyModel {
-        val vndkVersionResult = getStringProperty(AndroidDataSource.PROP_VNDK_VERSION, isAtLeastStableAndroid8())
+        val vndkVersionResult = getStringProperty(AndroidDataSource.PROP_VNDK_VERSION, isAtLeastAndroid8())
         // val vendorVndkVersionResult = getStringProperty(AndroidDataSource.PROP_VENDOR_VNDK_VERSION, isAtLeastStableAndroid8())
         // val productVndkVersionResult = getStringProperty(AndroidDataSource.PROP_PRODUCT_VNDK_VERSION, isAtLeastStableAndroid8())
 
@@ -624,9 +624,9 @@ class HomeRepository(
     }
 
     fun detectApex(): MyModel {
-        val apexUpdatable = getBooleanProperty(AndroidDataSource.PROP_APEX_UPDATABLE, isAtLeastStableAndroid10())
+        val apexUpdatable = getBooleanProperty(AndroidDataSource.PROP_APEX_UPDATABLE, isAtLeastAndroid10())
 
-        val isFlattenedApexMounted = isAtLeastStableAndroid10() && mounts.any {
+        val isFlattenedApexMounted = isAtLeastAndroid10() && mounts.any {
             it.mountPoint.startsWith("/apex/") && it.mountPoint.contains("@")
         }
 
@@ -785,7 +785,7 @@ class HomeRepository(
     }
 
     fun detectToybox(lld: Lld): MyModel {
-        val toyboxVersionResult = getShellResult(AndroidDataSource.CMD_TOYBOX_VERSION, isAtLeastStableAndroid6())
+        val toyboxVersionResult = getShellResult(AndroidDataSource.CMD_TOYBOX_VERSION, isAtLeastAndroid6())
         val hasToyboxVersion = toyboxVersionResult.isSuccess
 
         val toyboxVersion = if (hasToyboxVersion) {
@@ -821,10 +821,10 @@ class HomeRepository(
 
     // region [WebView]
     fun detectWebView(lld: Lld): MyModel {
-        val type = if (isAtLeastStableAndroid10()) {
+        val type = if (isAtLeastAndroid10()) {
             val standalone = MyApplication.getMyString(R.string.webview_standalone)
             MyApplication.getMyString(R.string.webview_or, "Trichrome", standalone)
-        } else if (isAtLeastStableAndroid7()) {
+        } else if (isAtLeastAndroid7()) {
             "Monochrome"
         } else {
             MyApplication.getMyString(R.string.webview_standalone)
@@ -834,7 +834,7 @@ class HomeRepository(
 
         var builtInResult = ""
         var builtInVersionName = ""
-        if (isAtLeastStableAndroid7()) {
+        if (isAtLeastAndroid7()) {
             val webViewProviderInfoList = getBuildInWebViewProvidersAndroid7()
 
             if (webViewProviderInfoList.isEmpty()) {
@@ -1016,7 +1016,7 @@ class HomeRepository(
 
     fun getOutdatedTargetSdkVersionApkModel(lld: Lld): MyModel {
         val packageManager = MyApplication.instance.packageManager
-        val installedApplications = if (isAtLeastStableAndroid13()) {
+        val installedApplications = if (isAtLeastAndroid13()) {
             val flags = PackageManager.ApplicationInfoFlags.of(0)
             packageManager.getInstalledApplications(flags)
         } else {

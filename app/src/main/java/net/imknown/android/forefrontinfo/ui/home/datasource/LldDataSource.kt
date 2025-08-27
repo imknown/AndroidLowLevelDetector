@@ -14,7 +14,7 @@ import io.ktor.http.headers
 import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.base.extension.isChinaMainlandTimezone
 import net.imknown.android.forefrontinfo.ui.common.LldManager
-import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid16
+import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid16
 import java.io.IOException
 import java.net.Proxy
 import java.net.ProxySelector
@@ -47,7 +47,7 @@ class LldDataSource {
             engine {
                 addInterceptor { chain ->
                     val thread = Thread.currentThread()
-                    val id = if (isAtLeastStableAndroid16()) {
+                    val id = if (isAtLeastAndroid16()) {
                         thread.threadId()
                     } else {
                         @Suppress("DEPRECATION")

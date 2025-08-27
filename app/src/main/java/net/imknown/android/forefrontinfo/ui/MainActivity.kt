@@ -15,7 +15,7 @@ import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.databinding.MainActivityBinding
 import net.imknown.android.forefrontinfo.ui.base.ext.viewBinding
 import net.imknown.android.forefrontinfo.ui.base.ext.windowInsetsCompatTypes
-import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid10
+import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid10
 import net.imknown.android.forefrontinfo.ui.home.HomeFragment
 import net.imknown.android.forefrontinfo.ui.others.OthersFragment
 import net.imknown.android.forefrontinfo.ui.prop.PropFragment
@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         // https://developer.android.com/develop/ui/views/layout/edge-to-edge-manually#change-color
         // https://developer.android.com/develop/ui/compose/layouts/system-bars#create-transparent
         enableEdgeToEdge()
-        if (isAtLeastStableAndroid10()) {
+        if (isAtLeastAndroid10()) {
             window.setNavigationBarContrastEnforced(false)
         }
 

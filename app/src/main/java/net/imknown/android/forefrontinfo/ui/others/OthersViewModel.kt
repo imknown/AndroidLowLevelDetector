@@ -13,9 +13,9 @@ import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.ui.base.list.BaseListViewModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
-import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid10
-import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid12
-import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid6
+import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid10
+import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid12
+import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid6
 import net.imknown.android.forefrontinfo.ui.others.datasource.ArchitectureDataSource
 import net.imknown.android.forefrontinfo.ui.others.repository.OthersRepository
 
@@ -50,7 +50,7 @@ class OthersViewModel(
                 tempModels += othersRepository.getHardware()
                 tempModels += othersRepository.getBoard()
 
-                if (isAtLeastStableAndroid12()) {
+                if (isAtLeastAndroid12()) {
                     tempModels += othersRepository.getSocModel()
                     tempModels += othersRepository.getSocManufacturer()
                     tempModels += othersRepository.getSku()
@@ -82,12 +82,12 @@ class OthersViewModel(
                 tempModels += othersRepository.getUser()
                 tempModels += othersRepository.getHost()
                 tempModels += othersRepository.getTime()
-                if (isAtLeastStableAndroid6()) {
+                if (isAtLeastAndroid6()) {
                     tempModels += othersRepository.getBaseOs()
                 }
                 // region [Fingerprints]
                 tempModels += othersRepository.getFingerprint()
-                if (isAtLeastStableAndroid10()) {
+                if (isAtLeastAndroid10()) {
                     tempModels += othersRepository.getPreviewSdkFingerprint()
                 }
                 tempModels += othersRepository.getPartitionFingerprints()
@@ -98,7 +98,7 @@ class OthersViewModel(
                 tempModels += othersRepository.getTags()
                 tempModels += othersRepository.getIncremental()
                 tempModels += othersRepository.getCodename()
-                if (isAtLeastStableAndroid6()) {
+                if (isAtLeastAndroid6()) {
                     tempModels += othersRepository.getPreviewSdkInt()
                 }
                 tempModels += othersRepository.getDefaultUserAgent(MyApplication.instance)

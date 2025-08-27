@@ -55,7 +55,7 @@ val sdkInt: Int by lazy {
 
 /** E.g.: 3600001 */
 private val sdkIntFull: Int by lazy {
-    if (isAtLeastStableAndroid16()) {
+    if (isAtLeastAndroid16()) {
         if (isStableAndroid()) {
             Build.VERSION.SDK_INT_FULL
         } else {
@@ -72,24 +72,24 @@ val sdkFull: String by lazy {
      "$sdkInt.${sdkIntFull.toMinor()}"
 }
 
-private fun Int.toMinor(): Int = if (isAtLeastStableAndroid16()) {
+private fun Int.toMinor(): Int = if (isAtLeastAndroid16()) {
     Build.getMinorSdkVersion(this)
 } else {
     this % SDK_INT_MULTIPLIER
 }
 
-fun isAtLeastStableAndroid6() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M || sdkInt >= Build.VERSION_CODES.M
-fun isAtLeastStableAndroid7() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N || sdkInt >= Build.VERSION_CODES.N
-fun isAtLeastStableAndroid8() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O || sdkInt >= Build.VERSION_CODES.O
-fun isAtLeastStableAndroid8P1() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1 || sdkInt >= Build.VERSION_CODES.O_MR1
-fun isAtLeastStableAndroid9() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P || sdkInt >= Build.VERSION_CODES.P
-fun isAtLeastStableAndroid10() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q || sdkInt >= Build.VERSION_CODES.Q
-fun isAtLeastStableAndroid11() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R || sdkInt >= Build.VERSION_CODES.R
-fun isAtLeastStableAndroid12() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S || sdkInt >= Build.VERSION_CODES.S
-fun isAtLeastStableAndroid13() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU || sdkInt >= Build.VERSION_CODES.TIRAMISU
-// fun isAtLeastStableAndroid14() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE || sdkInt >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE
-// fun isAtLeastStableAndroid15() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM || sdkInt >= Build.VERSION_CODES.VANILLA_ICE_CREAM
-fun isAtLeastStableAndroid16() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA || sdkInt >= Build.VERSION_CODES.BAKLAVA
+fun isAtLeastAndroid6() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M || sdkInt >= Build.VERSION_CODES.M
+fun isAtLeastAndroid7() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N || sdkInt >= Build.VERSION_CODES.N
+fun isAtLeastAndroid8() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O || sdkInt >= Build.VERSION_CODES.O
+fun isAtLeastAndroid8p1() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1 || sdkInt >= Build.VERSION_CODES.O_MR1
+fun isAtLeastAndroid9() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P || sdkInt >= Build.VERSION_CODES.P
+fun isAtLeastAndroid10() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q || sdkInt >= Build.VERSION_CODES.Q
+fun isAtLeastAndroid11() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R || sdkInt >= Build.VERSION_CODES.R
+fun isAtLeastAndroid12() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S || sdkInt >= Build.VERSION_CODES.S
+fun isAtLeastAndroid13() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU || sdkInt >= Build.VERSION_CODES.TIRAMISU
+// fun isAtLeastAndroid14() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE || sdkInt >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE
+// fun isAtLeastAndroid15() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM || sdkInt >= Build.VERSION_CODES.VANILLA_ICE_CREAM
+fun isAtLeastAndroid16() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA || sdkInt >= Build.VERSION_CODES.BAKLAVA
 
 fun isStableAndroid() = Build.VERSION.CODENAME == CODENAME_RELEASE
 fun isPreviewAndroid() = !isStableAndroid()
@@ -108,7 +108,7 @@ fun isSupportedByUpstreamAndroid(lld: Lld) = isStableAndroid()
  * [Build.VERSION.RELEASE_OR_PREVIEW_DISPLAY]: Android 13+
  * [Build.VERSION.CODENAME]
  */
-fun getAndroidDessertPreview(): String = if (isAtLeastStableAndroid13()) {
+fun getAndroidDessertPreview(): String = if (isAtLeastAndroid13()) {
     val codename = Build.VERSION.CODENAME
     codename + if (codename != Build.VERSION.RELEASE_OR_PREVIEW_DISPLAY) {
         ", " + Build.VERSION.RELEASE_OR_PREVIEW_DISPLAY
@@ -119,7 +119,7 @@ fun getAndroidDessertPreview(): String = if (isAtLeastStableAndroid13()) {
     Build.VERSION.CODENAME
 }
 
-fun Context.isGoEdition() = isAtLeastStableAndroid8P1() && isLowRamDevice()
+fun Context.isGoEdition() = isAtLeastAndroid8p1() && isLowRamDevice()
 
 private fun Context.isLowRamDevice() = ContextCompat.getSystemService(
     this, ActivityManager::class.java

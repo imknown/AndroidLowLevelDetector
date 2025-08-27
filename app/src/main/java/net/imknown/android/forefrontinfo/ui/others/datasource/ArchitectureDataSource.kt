@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Build
 import net.imknown.android.forefrontinfo.binderdetector.BinderDetector
 import net.imknown.android.forefrontinfo.ui.common.getStringProperty
-import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid6
+import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid6
 
 class ArchitectureDataSource {
     companion object {
@@ -31,7 +31,7 @@ class ArchitectureDataSource {
     // endregion [Binder]
 
     // region [Process]
-    fun isProcess64BitOrThrow() = if (isAtLeastStableAndroid6()) {
+    fun isProcess64BitOrThrow() = if (isAtLeastAndroid6()) {
         android.os.Process.is64Bit()
     } else {
         val vmRuntimePath = "dalvik.system.VMRuntime"
