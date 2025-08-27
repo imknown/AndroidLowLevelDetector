@@ -171,7 +171,7 @@ class HomeRepository(
             }
 
             val offset = if (isLatestStableAndroid(lld)) {
-               0
+                0
             } else {
                 /** [isLatestPreviewAndroid] */
                 250205 - 250101
@@ -1004,10 +1004,10 @@ class HomeRepository(
             packageManager.getInstalledApplications(0)
         }
         var systemApkList = installedApplications.filter {
-            (it.flags and (ApplicationInfo.FLAG_UPDATED_SYSTEM_APP or ApplicationInfo.FLAG_SYSTEM) > 0)
-                    && (it.targetSdkVersion < Build.VERSION.SDK_INT
-                    /* */ || (isPreviewAndroid() && it.targetSdkVersion == Build.VERSION.SDK_INT)
-                    )
+            val systemFlags = it.flags and (ApplicationInfo.FLAG_UPDATED_SYSTEM_APP or ApplicationInfo.FLAG_SYSTEM)
+            (systemFlags > 0) && (it.targetSdkVersion < Build.VERSION.SDK_INT
+                    || (isPreviewAndroid() && it.targetSdkVersion == Build.VERSION.SDK_INT)
+            )
         }
 
         var result = MyApplication.getMyString(
