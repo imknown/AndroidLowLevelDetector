@@ -936,14 +936,14 @@ class HomeRepository(
             webViewUpdateServiceClass.getDeclaredMethod("getAllWebViewPackages")
                 .invoke(null) as Array<*>
         } catch (e: Exception) {
-            Log.w(javaClass.simpleName, e.fullMessage)
+            Log.w(javaClass.simpleName, "getAllWebViewPackages: ${e.fullMessage}")
             emptyArray<Any>()
         }
 
         fun Any?.getWebViewProviderInfoMemberOrThrow(name: String) =
             Class.forName("android.webkit.WebViewProviderInfo").getDeclaredField(name).get(this)
 
-        fun String.log(e: Exception) = Log.w("WebViewProvider", "$this: ${e.fullMessage}")
+        fun String.log(e: Exception) = Log.w(javaClass.simpleName, "WebViewProvider $this: ${e.fullMessage}")
 
         return allWebViewPackages.toList().map {
             with(it) {
