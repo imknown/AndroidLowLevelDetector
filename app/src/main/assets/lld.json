@@ -1,54 +1,50 @@
 {
   "scheme": 1,
-  "version": "2025-08-25 18:45 +0800",
+  "version": "2025-08-27 10:25 +0800",
   "android": {
     "securityPatchLevel": "2025-08-05",
     "googlePlaySystemUpdates": "2025-07-01",
     "build": {
       "version": "2025-08-05",
       "details": [
-        {
-          "id": "BP2A.250805.005",
-          "revision": "r4"
-        }
+        { "id": "BP2A.250805.005", "revision": "r4" }
       ]
     },
     "stable": {
-      "name": "Baklava",
-      "api": "36",
-      "apiFull": "36.0",
-      "extension": 19,
-      "version": "16, Baklava"
+      "api": "36", "apiFull": "36.0", "version": "16, Baklava", "name": "Baklava", "extension": 19
     },
     "stablePreview": {
-      "name": "Baklava",
-      "api": "36",
-      "apiFull": "36.1",
-      "extension": 19,
-      "version": "16 QPR2 Beta 1, Baklava.1"
+      "api": "36", "apiFull": "36.1", "version": "16 QPR2 Beta 1, Baklava.1", "name": "Baklava.1"
     },
     "support": {
-      "name": "Tiramisu",
-      "api": "33",
-      "apiFull": "33",
-      "extension": 5,
-      "version": "13, Tiramisu"
+      "api": "33", "apiFull": "33", "version": "13, Tiramisu", "name": "Tiramisu"
     },
     "preview": {
-      "name": "Baklava",
-      "api": "36",
-      "apiFull": "36.1",
-      "extension": 19,
-      "version": "16 Canary, Baklava.1",
-      "phase": ""
+      "api": "36", "apiFull": "36.1", "version": "16 Canary, Baklava.1", "name": "Baklava.1", "phase": ""
     },
     "internal": {
-      "name": "Cinnamon Bun",
-      "api": "37",
-      "apiFull": "37.0",
-      "extension": -1,
-      "version": "17 Internal, Cinnamon Bun"
-    }
+      "api": "37", "apiFull": "37.0", "version": "17 Internal, Cinnamon Bun", "name": "Cinnamon Bun"
+    },
+    "known": [
+      { "api": "21", "apiFull": "21", "version": "5.0", "name": "Lollipop", "codename": "Lollipop" },
+      { "api": "22", "apiFull": "22", "version": "5.1", "name": "Lollipop", "codename": "LollipopMr1" },
+      { "api": "23", "apiFull": "23", "version": "6.0", "name": "Marshmallow", "codename": "M" },
+      { "api": "24", "apiFull": "24", "version": "7.0", "name": "Nougat", "codename": "N" },
+      { "api": "25", "apiFull": "25", "version": "7.1", "name": "Nougat", "codename": "NMr1" },
+      { "api": "26", "apiFull": "26", "version": "8.0", "name": "Oreo", "codename": "O" },
+      { "api": "27", "apiFull": "27", "version": "8.1", "name": "Oreo", "codename": "OMr1" },
+      { "api": "28", "apiFull": "28", "version": "9", "name": "Pie", "codename": "P" },
+      { "api": "29", "apiFull": "29", "version": "10", "name": "Quince Tart", "codename": "Q" },
+      { "api": "30", "apiFull": "30", "version": "11", "name": "Red Velvet Cake", "codename": "R" },
+      { "api": "31", "apiFull": "31", "version": "12", "name": "Snow Cone", "codename": "S" },
+      { "api": "32", "apiFull": "32", "version": "12L", "name": "Snow Cone V2", "codename": "Sv2" },
+      { "api": "33", "apiFull": "33", "version": "13", "name": "Tiramisu", "codename": "Tiramisu" },
+      { "api": "34", "apiFull": "34", "version": "14", "name": "Upside Down Cake", "codename": "UpsideDownCake" },
+      { "api": "35", "apiFull": "35", "version": "15", "name": "Vanilla Ice Cream", "codename": "VanillaIceCream" },
+      { "api": "36", "apiFull": "36.0", "version": "16", "name": "Baklava", "codename": "Baklava" },
+      { "api": "36", "apiFull": "36.1", "version": "16 QPR2", "name": "Baklava.1", "codename": "Baklava" },
+      { "api": "37", "apiFull": "37.0", "version": "17", "name": "Cinnamon Bun", "codename": "CinnamonBun" }
+    ]
   },
   "linux": {
     "google": {
