@@ -13,6 +13,9 @@ import kotlin.reflect.KClass
 
 private const val CODENAME_RELEASE = "REL"
 
+/** [Build.VERSION_CODES_FULL].SDK_INT_MULTIPLIER */
+private const val SDK_INT_MULTIPLIER = 1_00000
+
 /** See: [Build.VERSION].RESOURCES_SDK_INT */
 private fun listCodes(kClass: KClass<*>): List<Pair<String?, Int>> {
     val fields = try {
@@ -40,7 +43,7 @@ private fun listCodes(kClass: KClass<*>): List<Pair<String?, Int>> {
 
 private fun latestApiOrNull(kClass: KClass<*>) = listCodes(kClass).lastOrNull()?.second
 
-val sdkInt by lazy {
+val sdkInt: Int by lazy {
     if (isStableAndroid()) {
         Build.VERSION.SDK_INT
     } else {
@@ -49,8 +52,8 @@ val sdkInt by lazy {
     }
 }
 
-val sdkIntFull by lazy {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
+private val sdkIntFull: Int by lazy {
+    if (isAtLeastStableAndroid16()) {
         if (isStableAndroid()) {
             Build.VERSION.SDK_INT_FULL
         } else {
@@ -58,8 +61,19 @@ val sdkIntFull by lazy {
                 ?: Build.VERSION.SDK_INT_FULL
         }
     } else {
-        sdkInt
+        sdkInt * SDK_INT_MULTIPLIER
     }
+}
+
+/** E.g.: "36.1" */
+val sdkFull: String by lazy {
+     "$sdkInt.${sdkIntFull.toMinor()}"
+}
+
+private fun Int.toMinor(): Int = if (isAtLeastStableAndroid16()) {
+    Build.getMinorSdkVersion(this)
+} else {
+    this % SDK_INT_MULTIPLIER
 }
 
 fun isAtLeastStableAndroid6() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M || sdkInt >= Build.VERSION_CODES.M
@@ -82,7 +96,7 @@ fun isLatestStableAndroid(lld: Lld) = isStableAndroid()
         && Build.VERSION.SDK_INT >= lld.android.stable.api.toInt()
 
 fun isLatestPreviewAndroid(lld: Lld) = isPreviewAndroid()
-        && sdkInt >= lld.android.preview.api.toInt()
+        && sdkFull >= lld.android.preview.apiFull
 
 fun isSupportedByUpstreamAndroid(lld: Lld) = isStableAndroid()
         && Build.VERSION.SDK_INT >= lld.android.support.api.toInt()
@@ -108,9 +122,6 @@ fun Context.isGoEdition() = isAtLeastStableAndroid8P1() && isLowRamDevice()
 private fun Context.isLowRamDevice() = ContextCompat.getSystemService(
     this, ActivityManager::class.java
 )?.isLowRamDevice == true
-
-@RequiresApi(Build.VERSION_CODES.BAKLAVA)
-fun getAndroidApiLevelMinor(sdkIntFull: Int): Int = Build.getMinorSdkVersion(sdkIntFull)
 
 @RequiresApi(Build.VERSION_CODES.R)
 fun getSdkExtension(extension: Int): Int = SdkExtensions.getExtensionVersion(extension)

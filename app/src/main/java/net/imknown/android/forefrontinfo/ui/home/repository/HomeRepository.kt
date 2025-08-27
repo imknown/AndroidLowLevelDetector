@@ -19,7 +19,6 @@ import net.imknown.android.forefrontinfo.base.extension.formatToLocalZonedDateti
 import net.imknown.android.forefrontinfo.base.extension.fullMessage
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.base.list.toColoredMyModel
-import net.imknown.android.forefrontinfo.ui.common.getAndroidApiLevelMinor
 import net.imknown.android.forefrontinfo.ui.common.getAndroidDessertPreview
 import net.imknown.android.forefrontinfo.ui.common.getBooleanProperty
 import net.imknown.android.forefrontinfo.ui.common.getSdkExtension
@@ -29,7 +28,6 @@ import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid10
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid11
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid12
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid13
-import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid16
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid6
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid7
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastStableAndroid8
@@ -39,8 +37,8 @@ import net.imknown.android.forefrontinfo.ui.common.isLatestPreviewAndroid
 import net.imknown.android.forefrontinfo.ui.common.isLatestStableAndroid
 import net.imknown.android.forefrontinfo.ui.common.isStableAndroid
 import net.imknown.android.forefrontinfo.ui.common.isSupportedByUpstreamAndroid
+import net.imknown.android.forefrontinfo.ui.common.sdkFull
 import net.imknown.android.forefrontinfo.ui.common.sdkInt
-import net.imknown.android.forefrontinfo.ui.common.sdkIntFull
 import net.imknown.android.forefrontinfo.ui.home.datasource.AndroidDataSource
 import net.imknown.android.forefrontinfo.ui.home.datasource.LldDataSource
 import net.imknown.android.forefrontinfo.ui.home.datasource.MountDataSource
@@ -80,12 +78,6 @@ class HomeRepository(
 
     fun detectAndroid(lld: Lld): MyModel {
         // region [Mine]
-        val myApiFull = if (isAtLeastStableAndroid16()) {
-            "$sdkInt.${getAndroidApiLevelMinor(sdkIntFull)}"
-        } else {
-            sdkInt.toString()
-        }
-
         var myNameAndDessert = if (isStableAndroid()) {
             val dessert = lld.android.known.find {
                 it.api.toInt() == sdkInt
@@ -94,7 +86,7 @@ class HomeRepository(
             Build.VERSION.RELEASE + ", " + dessert
         } else {
             val android = lld.android.known.find {
-                it.apiFull == myApiFull
+                it.apiFull == sdkFull
             }
             if (android != null) {
                 val preview = MyApplication.getMyString(R.string.android_info_preview)
@@ -107,7 +99,7 @@ class HomeRepository(
             myNameAndDessert += " (Go)"
         }
 
-        val mine = MyApplication.getMyString(R.string.android_info, myNameAndDessert, myApiFull)
+        val mine = MyApplication.getMyString(R.string.android_info, myNameAndDessert, sdkFull)
         // endregion [Mine]
 
         fun oneLine(android: Lld.Androids.Android) =
