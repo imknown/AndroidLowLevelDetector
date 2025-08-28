@@ -13,7 +13,7 @@ class FingerprintDataSource {
     fun getPreviewSdkFingerprint() = getStringProperty(PROP_PREVIEW_SDK_FINGERPRINT)
 
     /** [Build.getFingerprintedPartitions] */
-    fun getPartitions() = arrayOf(
+    fun getPartitions() = listOf(
         "bootimage", "odm", "odm_dlkm", "oem", "product", "system", "system_dlkm", "system_ext", "vendor", "vendor_dlkm"
     )
 

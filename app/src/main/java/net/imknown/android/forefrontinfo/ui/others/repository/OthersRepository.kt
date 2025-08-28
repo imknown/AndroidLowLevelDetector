@@ -133,18 +133,19 @@ class OthersRepository(
     fun getFingerprint() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_stock_fingerprint), fingerprintDataSource.getFingerprint())
     fun getPreviewSdkFingerprint() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_stock_preview_fingerprint), fingerprintDataSource.getPreviewSdkFingerprint())
     fun getPartitionFingerprints(): List<MyModel> {
-        val tempModels = mutableListOf<MyModel>()
         val partitions = fingerprintDataSource.getPartitions()
-        partitions.forEach {
+        return partitions.mapNotNull {
             val partitionFingerprintProperty = fingerprintDataSource.getPartitionFingerprint(it)
             val fingerprint = fingerprintDataSource.getPartitionFingerprintProperty(partitionFingerprintProperty)
             if (fingerprint != MyApplication.getMyString(R.string.build_not_filled)
                 && fingerprint != MyApplication.getMyString(R.string.result_not_supported)
             ) {
-                tempModels += toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_certain_fingerprint, it), fingerprint)
+                val title = MyApplication.getMyString(R.string.build_certain_fingerprint, it)
+                toTranslatedDetailMyModel(title, fingerprint)
+            } else {
+                null
             }
         }
-        return tempModels
     }
     // endregion [Fingerprint]
 

@@ -77,15 +77,17 @@ class HomeRepository(
     }
 
     fun detectAndroid(lld: Lld): MyModel {
+        val lldAndroid = lld.android
+
         // region [Mine]
         var myNameAndDessert = if (isStableAndroid()) {
-            val dessert = lld.android.known.find {
+            val dessert = lldAndroid.known.find {
                 it.api.toInt() == sdkInt
             }?.name
                 ?: MyApplication.getMyString(android.R.string.unknownName)
             Build.VERSION.RELEASE + ", " + dessert
         } else {
-            val android = lld.android.known.find {
+            val android = lldAndroid.known.find {
                 it.apiFull == sdkFull
             }
             if (android != null) {
@@ -104,8 +106,6 @@ class HomeRepository(
 
         fun oneLine(android: Lld.Androids.Android) =
             MyApplication.getMyString(R.string.android_info, android.version, android.apiFull)
-
-        val lldAndroid = lld.android
 
         val latestStable = oneLine(lldAndroid.stable)
         val lowestSupport = oneLine(lldAndroid.support)
