@@ -23,8 +23,8 @@ ndk = "29.0.13846066" # Beta 3, but RC 3 in Android SDK Manager
 # https://cmake.org/cmake/help/latest/release/index.html
 cmake = "4.1.0"
 
-versionCode = "67"
-versionName = "1.18.2"
+versionCode = "68"
+versionName = "1.18.3_unpublished"
 
 javaToolchain = "21"
 
