@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2025-08-29 21:25 +0800",
+  "version": "2025-08-31 10:50 +0800",
   "android": {
     "securityPatchLevel": "2025-08-05",
     "googlePlaySystemUpdates": "2025-07-01",
@@ -26,13 +26,13 @@
       "api": "37", "apiFull": "37.0", "version": "17 Internal, Cinnamon Bun", "name": "Cinnamon Bun"
     },
     "known": [
-      { "api": "21", "apiFull": "21", "version": "5.0", "name": "Lollipop", "codename": "Lollipop" },
-      { "api": "22", "apiFull": "22", "version": "5.1", "name": "Lollipop MR1", "codename": "LollipopMr1" },
-      { "api": "23", "apiFull": "23", "version": "6.0", "name": "Marshmallow", "codename": "M" },
+      { "api": "21", "apiFull": "21", "version": "5.0", "name": "Lollipop", "codename": "L" },
+      { "api": "22", "apiFull": "22", "version": "5.1", "name": "Lollipop MR1", "codename": "LMR1" },
+      { "api": "23", "apiFull": "23", "version": "6.0", "name": "Marshmallow", "codename": "MNC" },
       { "api": "24", "apiFull": "24", "version": "7.0", "name": "Nougat", "codename": "N" },
-      { "api": "25", "apiFull": "25", "version": "7.1", "name": "Nougat MR1", "codename": "NMr1" },
+      { "api": "25", "apiFull": "25", "version": "7.1", "name": "Nougat MR1", "codename": "NMR1" },
       { "api": "26", "apiFull": "26", "version": "8.0", "name": "Oreo", "codename": "O" },
-      { "api": "27", "apiFull": "27", "version": "8.1", "name": "Oreo MR1", "codename": "OMr1" },
+      { "api": "27", "apiFull": "27", "version": "8.1", "name": "Oreo MR1", "codename": "OMR1" },
       { "api": "28", "apiFull": "28", "version": "9", "name": "Pie", "codename": "P" },
       { "api": "29", "apiFull": "29", "version": "10", "name": "Quince Tart", "codename": "Q" },
       { "api": "30", "apiFull": "30", "version": "11", "name": "Red Velvet Cake", "codename": "R" },
