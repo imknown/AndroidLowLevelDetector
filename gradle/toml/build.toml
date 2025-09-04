@@ -19,7 +19,7 @@ targetSdkPreview = "CANARY"
 # targetSdkPreview = "Baklava" # (Android 16 QPR2 Beta 1)
 
 # https://github.com/android/ndk/releases
-ndk = "29.0.13846066" # Beta 3, but RC 3 in Android SDK Manager
+ndk = "29.0.14033849" # Beta 4, but RC 4 in Android SDK Manager
 # https://cmake.org/cmake/help/latest/release/index.html
 cmake = "4.1.0"
 
