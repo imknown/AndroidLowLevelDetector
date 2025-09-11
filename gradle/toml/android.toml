@@ -15,7 +15,7 @@ desugarJdkLibs = "2.1.5"
 
 # region [AndroidX]
 # https://developer.android.com/jetpack/androidx/releases/activity
-activity = "1.11.0-rc01"
+activity = "1.11.0"
 
 # https://developer.android.com/jetpack/androidx/releases/annotation
 annotation = "1.9.1"
