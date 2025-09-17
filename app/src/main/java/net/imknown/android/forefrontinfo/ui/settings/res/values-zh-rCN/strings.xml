@@ -13,8 +13,8 @@
     <string name="interface_themes_summary">点击以显示主题选择器</string>
     <string name="interface_themes_follow_system_key">跟随系统</string>
     <string name="interface_themes_power_saver_key">跟随省电模式</string>
-    <string name="interface_themes_always_light_key">总是亮色</string>
-    <string name="interface_themes_always_dark_key">总是暗色</string>
+    <string name="interface_themes_always_light_key">总是浅色</string>
+    <string name="interface_themes_always_dark_key">总是深色</string>
 
     <string name="function_title">功能</string>
     <string name="function_allow_network_data_title">允许网络数据</string>

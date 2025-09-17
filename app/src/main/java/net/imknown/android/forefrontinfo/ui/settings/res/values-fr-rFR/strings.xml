@@ -14,7 +14,7 @@
     <string name="interface_themes_follow_system_key">Système</string>
     <string name="interface_themes_power_saver_key">Economiseur de batterie</string>
     <string name="interface_themes_always_light_key">Toujours clair</string>
-    <string name="interface_themes_always_dark_key">Toujours Sombre (AMOLED)</string>
+    <string name="interface_themes_always_dark_key">Toujours sombre</string>
 
     <string name="function_title">Fonctions</string>
     <string name="function_allow_network_data_title">Activer les données en ligne</string>
