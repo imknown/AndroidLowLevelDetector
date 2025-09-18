@@ -6,6 +6,7 @@ import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid13
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid9
 import java.security.MessageDigest
 import java.util.Locale
+import android.R as androidR
 
 class FingerprintDataSource {
     companion object {
@@ -49,6 +50,6 @@ class FingerprintDataSource {
         KEY_SHA_256_GOOGLE -> R.string.about_distributor_google
         KEY_SHA_256_IMKNOWN -> R.string.about_distributor_imknown
         KEY_SHA_256_PUBLIC_DEBUG -> R.string.about_distributor_public_debug
-        else -> android.R.string.unknownName
+        else -> androidR.string.unknownName
     }
 }

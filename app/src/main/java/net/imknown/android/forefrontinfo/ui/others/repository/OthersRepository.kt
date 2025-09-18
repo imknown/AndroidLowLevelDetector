@@ -15,6 +15,7 @@ import net.imknown.android.forefrontinfo.ui.others.datasource.FingerprintDataSou
 import net.imknown.android.forefrontinfo.ui.others.datasource.KernelDataSource
 import net.imknown.android.forefrontinfo.ui.others.datasource.OthersDataSource
 import net.imknown.android.forefrontinfo.ui.others.datasource.RomDataSource
+import android.R as androidR
 
 class OthersRepository(
     private val basicDataSource: BasicDataSource,
@@ -57,7 +58,7 @@ class OthersRepository(
                 R.string.result_not_supported
             }
             -ArchitectureDataSource.ERRNO_PERMISSION_DENIED -> {
-                android.R.string.unknownName
+                androidR.string.unknownName
             }
             ArchitectureDataSource.BINDER64_PROTOCOL_VERSION -> {
                 R.string.bit_64
@@ -66,7 +67,7 @@ class OthersRepository(
                 R.string.bit_32
             }
             else -> {
-                android.R.string.unknownName
+                androidR.string.unknownName
             }
         }
 
@@ -94,7 +95,7 @@ class OthersRepository(
         } catch (e: Exception) {
             e.printStackTrace()
             null
-        } ?: MyApplication.getMyString(android.R.string.unknownName)
+        } ?: MyApplication.getMyString(androidR.string.unknownName)
         return toTranslatedDetailMyModel(MyApplication.getMyString(R.string.os_arch), a)
     }
     // endregion [Process]
@@ -154,7 +155,7 @@ class OthersRepository(
             romDataSource.getDefaultUserAgentOrThrow(context)
         } catch (e: Exception) {
             e.printStackTrace()
-            MyApplication.getMyString(android.R.string.unknownName)
+            MyApplication.getMyString(androidR.string.unknownName)
         }
         return toTranslatedDetailMyModel(MyApplication.getMyString(R.string.webview_user_agent), userAgent)
     }

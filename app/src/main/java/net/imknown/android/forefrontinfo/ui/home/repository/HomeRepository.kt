@@ -45,6 +45,7 @@ import net.imknown.android.forefrontinfo.ui.home.datasource.MountDataSource
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.settings.datasource.AppInfoDataSource
 import java.io.File
+import android.R as androidR
 
 class HomeRepository(
     private val lldDataSource: LldDataSource,
@@ -65,7 +66,7 @@ class HomeRepository(
                 R.attr.colorCritical
             }
         } else {
-            datetimeFormatted = MyApplication.getMyString(android.R.string.unknownName)
+            datetimeFormatted = MyApplication.getMyString(androidR.string.unknownName)
             color = R.attr.colorCritical
         }
 
@@ -84,7 +85,7 @@ class HomeRepository(
             val dessert = lldAndroid.known.find {
                 it.api.toInt() == sdkInt
             }?.name
-                ?: MyApplication.getMyString(android.R.string.unknownName)
+                ?: MyApplication.getMyString(androidR.string.unknownName)
             Build.VERSION.RELEASE + ", " + dessert
         } else {
             val android = lldAndroid.known.find {
@@ -402,7 +403,7 @@ class HomeRepository(
                 }
                 else -> {
                     color = R.attr.colorCritical
-                    sarTypeRes = android.R.string.unknownName
+                    sarTypeRes = androidR.string.unknownName
                 }
             }
 
@@ -500,7 +501,7 @@ class HomeRepository(
         val gsiCompatibilityResult = getShellResult(cmd, isAtLeastAndroid9())
         val (@StringRes result, @AttrRes color) = if (gsiCompatibilityResult.isSuccess) {
             val firstLine = gsiCompatibilityResult.output.getOrNull(0)
-                ?: MyApplication.getMyString(android.R.string.unknownName)
+                ?: MyApplication.getMyString(androidR.string.unknownName)
             val lineResult = firstLine.split('=')
             val isCompatible = lineResult.isNotEmpty()
                     && lineResult.getOrNull(1)?.trim().toBoolean()
@@ -541,7 +542,7 @@ class HomeRepository(
     /** {@link com.android.settings.deviceinfo.firmwareversion.MainlineModuleVersionPreferenceController} */
     fun detectMainline(lld: Lld): MyModel {
         var versionName = MyApplication.getMyString(R.string.result_not_supported)
-        var moduleProvider = MyApplication.getMyString(android.R.string.unknownName)
+        var moduleProvider = MyApplication.getMyString(androidR.string.unknownName)
         val latestGooglePlaySystemUpdates = lld.android.googlePlaySystemUpdates
 
         fun getResult() = MyApplication.getMyString(
@@ -763,7 +764,7 @@ class HomeRepository(
                     color = R.attr.colorCritical
                 }
                 else -> {
-                    result = android.R.string.unknownName
+                    result = androidR.string.unknownName
                     color = R.attr.colorCritical
                 }
             }
@@ -772,7 +773,7 @@ class HomeRepository(
                 result = R.string.selinux_status_enforcing_mode
                 color = R.attr.colorNoProblem
             } else {
-                result = android.R.string.unknownName
+                result = androidR.string.unknownName
                 color = R.attr.colorCritical
             }
         }
@@ -790,7 +791,7 @@ class HomeRepository(
 
         val toyboxVersion = if (hasToyboxVersion) {
             toyboxVersionResult.output.getOrNull(0)
-                ?: MyApplication.getMyString(android.R.string.unknownName)
+                ?: MyApplication.getMyString(androidR.string.unknownName)
         } else {
             toSupportOrNotString(false)
         }
@@ -849,7 +850,7 @@ class HomeRepository(
                                 if (Version(it).isHigherThan(builtInVersionName)) {
                                     builtInVersionName = it
                                 }
-                            } ?: MyApplication.getMyString(android.R.string.unknownName)
+                            } ?: MyApplication.getMyString(androidR.string.unknownName)
                         } else {
                             MyApplication.getMyString(R.string.webview_built_in_not_installed)
                         }

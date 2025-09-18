@@ -10,6 +10,7 @@ import net.imknown.android.forefrontinfo.ui.base.list.toTranslatedDetailMyModel
 import net.imknown.android.forefrontinfo.ui.prop.datasource.PropertiesDataSource
 import net.imknown.android.forefrontinfo.ui.prop.datasource.SettingsDataSource
 import kotlin.reflect.KClass
+import android.R as androidR
 
 class PropRepository(
     private val propertiesDataSource: PropertiesDataSource,
@@ -56,7 +57,7 @@ class PropRepository(
                 )
             } catch (e: Exception) {
                 Log.w(javaClass.simpleName, "$key: ${e.fullMessage}")
-                MyApplication.getMyString(android.R.string.unknownName)
+                MyApplication.getMyString(androidR.string.unknownName)
             }
             tempModels.add(toTranslatedDetailMyModel(key, value))
         }

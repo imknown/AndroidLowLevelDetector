@@ -13,6 +13,7 @@ import net.imknown.android.forefrontinfo.base.extension.fullMessage
 import net.imknown.android.forefrontinfo.ui.common.LldManager
 import net.imknown.android.forefrontinfo.ui.settings.datasource.AppInfoDataSource
 import net.imknown.android.forefrontinfo.ui.settings.datasource.FingerprintDataSource
+import android.R as androidR
 
 class SettingsRepository(
     private val appInfoDataSource: AppInfoDataSource,
@@ -25,7 +26,7 @@ class SettingsRepository(
         val assetLldVersion = withContext(Dispatchers.IO) {
             LldManager.getAssetLldVersion(MyApplication.instance.assets)
                 ?.formatToLocalZonedDatetimeString()
-                ?: MyApplication.getMyString(android.R.string.unknownName)
+                ?: MyApplication.getMyString(androidR.string.unknownName)
         }
         // endregion [lld]
 
@@ -55,7 +56,7 @@ class SettingsRepository(
                     appInfoDataSource.getApplicationLabelOrThrow(packageManager, packageName)
                 } catch (e: Exception) {
                     Log.w(javaClass.simpleName, "$packageName not found. ${e.fullMessage}")
-                    MyApplication.getMyString(android.R.string.unknownName)
+                    MyApplication.getMyString(androidR.string.unknownName)
                 }
             }
             installerLabel?.let {
@@ -77,7 +78,7 @@ class SettingsRepository(
                 val lastUpdateTime = packageInfo.lastUpdateTime.formatToLocalZonedDatetimeString()
                 firstInstallTime to lastUpdateTime
             } else {
-                val unknown = MyApplication.getMyString(android.R.string.unknownName)
+                val unknown = MyApplication.getMyString(androidR.string.unknownName)
                 unknown to unknown
             }
         }
