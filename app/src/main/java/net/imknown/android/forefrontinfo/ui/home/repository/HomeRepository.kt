@@ -81,22 +81,24 @@ class HomeRepository(
         val lldAndroid = lld.android
 
         // region [Mine]
-        var myNameAndDessert = if (isStableAndroid()) {
-            val dessert = lldAndroid.known.find {
-                it.api.toInt() == sdkInt
-            }?.name
-                ?: MyApplication.getMyString(androidR.string.unknownName)
-            Build.VERSION.RELEASE + ", " + dessert
-        } else {
-            val android = lldAndroid.known.find {
-                it.apiFull == sdkFull
-            }
-            if (android != null) {
+        val android = lldAndroid.known.find {
+            it.apiFull == sdkFull
+        }
+        var myNameAndDessert = if (android != null) {
+            val theInfix = if (isStableAndroid()) {
+                ""
+            } else {
                 val preview = MyApplication.getMyString(R.string.android_info_preview)
-                android.version + " $preview, " + android.name
+                " $preview"
+            }
+            android.version + theInfix + ", " + android.name
+        } else {
+            val theSuffix = if (isStableAndroid()) {
+                MyApplication.getMyString(androidR.string.unknownName)
             } else {
                 getAndroidDessertPreview()
             }
+            Build.VERSION.RELEASE + ", " + theSuffix
         }
         if (MyApplication.instance.isGoEdition()) {
             myNameAndDessert += " (Go)"
