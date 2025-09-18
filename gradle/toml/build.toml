@@ -9,6 +9,7 @@ minSdk = "21"
 minSdkFirebase = "23"
 
 compileSdk = "36"
+compileSdkMinor = "1"
 compileSdkPreview = "CANARY"
 # compileSdkPreview = "Baklava" # (Android 16 QPR2 Beta 1)
 

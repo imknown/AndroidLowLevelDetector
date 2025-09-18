@@ -8,6 +8,7 @@ android {
     namespace = "net.imknown.android.forefrontinfo.base"
 
     compileSdk = libsBuild.versions.compileSdk.get().toInt()
+    compileSdkMinor = libsBuild.versions.compileSdkMinor.get().toInt()
     // compileSdkExtension = libsBuild.versions.compileSdkExtension.get().toInt()
     buildToolsVersion = libsBuild.versions.buildTools.get()
     val isPreview = libsBuild.versions.isPreview.get().toBoolean()
