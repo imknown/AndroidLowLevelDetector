@@ -85,20 +85,32 @@ class HomeRepository(
             it.apiFull == sdkFull
         }
         var myNameAndDessert = if (android != null) {
-            val theInfix = if (isStableAndroid()) {
+            val version = android.version + if (isStableAndroid()) {
                 ""
             } else {
                 val preview = MyApplication.getMyString(R.string.android_info_preview)
                 " $preview"
             }
-            android.version + theInfix + ", " + android.name
+            val name = android.name
+            "$version, $name"
         } else {
-            val theSuffix = if (isStableAndroid()) {
-                MyApplication.getMyString(androidR.string.unknownName)
+            val version = Build.VERSION.RELEASE + if (isStableAndroid()) {
+                ""
+            } else {
+                val preview = MyApplication.getMyString(R.string.android_info_preview)
+                " $preview"
+            }
+            val name = if (isStableAndroid()) {
+//                val last = getStringProperty(
+//                    AndroidDataSource.PROP_KNOWN_CODENAMES, isAtLeastAndroid13()
+//                ).split(",").lastOrNull()
+//                last?.takeIf { it != MyApplication.getMyString(R.string.build_not_filled) }
+//                    ?: MyApplication.getMyString(androidR.string.unknownName)
+                "" // TODO
             } else {
                 getAndroidDessertPreview()
             }
-            Build.VERSION.RELEASE + ", " + theSuffix
+            "$version, $name"
         }
         if (MyApplication.instance.isGoEdition()) {
             myNameAndDessert += " (Go)"

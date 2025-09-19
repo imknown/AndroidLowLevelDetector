@@ -2,6 +2,10 @@ package net.imknown.android.forefrontinfo.ui.home.datasource
 
 class AndroidDataSource {
     companion object {
+//        // region [Android]
+//        const val PROP_KNOWN_CODENAMES = "ro.build.version.known_codenames"
+//        // endregion [Android]
+
         // region [BuildId]
         const val BUILD_ID_SEPARATOR = '.'
 

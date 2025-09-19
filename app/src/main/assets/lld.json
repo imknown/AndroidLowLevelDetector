@@ -40,10 +40,7 @@
       { "api": "32", "apiFull": "32", "version": "12L", "name": "Snow Cone V2", "codename": "Sv2" },
       { "api": "33", "apiFull": "33", "version": "13", "name": "Tiramisu", "codename": "Tiramisu" },
       { "api": "34", "apiFull": "34", "version": "14", "name": "Upside Down Cake", "codename": "UpsideDownCake" },
-      { "api": "35", "apiFull": "35", "version": "15", "name": "Vanilla Ice Cream", "codename": "VanillaIceCream" },
-      { "api": "36", "apiFull": "36.0", "version": "16", "name": "Baklava", "codename": "Baklava" },
-      { "api": "36", "apiFull": "36.1", "version": "16 QPR2", "name": "Baklava.1", "codename": "Baklava" },
-      { "api": "37", "apiFull": "37.0", "version": "17", "name": "Cinnamon Bun", "codename": "CinnamonBun" }
+      { "api": "35", "apiFull": "35", "version": "15", "name": "Vanilla Ice Cream", "codename": "VanillaIceCream" }
     ]
   },
   "linux": {

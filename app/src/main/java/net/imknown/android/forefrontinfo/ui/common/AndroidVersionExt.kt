@@ -17,7 +17,7 @@ private const val CODENAME_RELEASE = "REL"
 private const val SDK_INT_MULTIPLIER = 1_00000
 
 /** See: [Build.VERSION].RESOURCES_SDK_INT */
-private fun listCodes(kClass: KClass<*>): List<Pair<String?, Int>> {
+ fun listCodes(kClass: KClass<*>): List<Pair<String?, Int>> {
     val fields = try {
         kClass.java.fields
     } catch (e: Exception) {
@@ -41,15 +41,27 @@ private fun listCodes(kClass: KClass<*>): List<Pair<String?, Int>> {
     }.sortedBy { it.second }
 }
 
-private fun latestApiOrNull(kClass: KClass<*>) = listCodes(kClass).lastOrNull()?.second
+private fun latestApiOrNull(kClass: KClass<*>) = listCodes(kClass).lastOrNull()
 
 /** E.g.: 36 */
 val sdkInt: Int by lazy {
     if (isStableAndroid()) {
         Build.VERSION.SDK_INT
     } else {
-        latestApiOrNull(Build.VERSION_CODES::class)
+        latestApiOrNull(Build.VERSION_CODES::class)?.second
             ?: Build.VERSION.SDK_INT
+    }
+}
+
+val lastestApi by lazy {
+    latestApiOrNull(Build.VERSION_CODES::class)
+}
+
+val lastestApiFull by lazy {
+    if (isAtLeastAndroid16()) {
+        latestApiOrNull(Build.VERSION_CODES_FULL::class)
+    } else {
+        lastestApi
     }
 }
 
@@ -59,7 +71,7 @@ private val sdkIntFull: Int by lazy {
         if (isStableAndroid()) {
             Build.VERSION.SDK_INT_FULL
         } else {
-            latestApiOrNull(Build.VERSION_CODES_FULL::class)
+            lastestApiFull?.second
                 ?: Build.VERSION.SDK_INT_FULL
         }
     } else {
@@ -106,15 +118,18 @@ fun isSupportedByUpstreamAndroid(lld: Lld) = isStableAndroid()
  * [Build.VERSION.RELEASE_OR_PREVIEW_DISPLAY]: Android 13+
  * [Build.VERSION.CODENAME]
  */
-fun getAndroidDessertPreview(): String = if (isAtLeastAndroid13()) {
+fun getAndroidDessertPreview(): String {
     val codename = Build.VERSION.CODENAME
-    codename + if (codename != Build.VERSION.RELEASE_OR_PREVIEW_DISPLAY) {
-        ", " + Build.VERSION.RELEASE_OR_PREVIEW_DISPLAY
+    val suffix = if (isAtLeastAndroid13()) {
+        if (codename != CODENAME_RELEASE && codename != Build.VERSION.RELEASE_OR_PREVIEW_DISPLAY) {
+            ", " + Build.VERSION.RELEASE_OR_PREVIEW_DISPLAY
+        } else {
+            ""
+        }
     } else {
         ""
     }
-} else {
-    Build.VERSION.CODENAME
+    return "$codename$suffix"
 }
 
 fun Context.isGoEdition() = isAtLeastAndroid8p1() && isLowRamDevice()
