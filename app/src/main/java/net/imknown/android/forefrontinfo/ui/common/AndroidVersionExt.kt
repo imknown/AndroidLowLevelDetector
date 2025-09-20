@@ -9,6 +9,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import net.imknown.android.forefrontinfo.base.extension.fullMessage
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
+import java.util.Locale
 import kotlin.reflect.KClass
 
 private const val CODENAME_RELEASE = "REL"
@@ -16,8 +17,10 @@ private const val CODENAME_RELEASE = "REL"
 /** See: [Build.VERSION_CODES_FULL].SDK_INT_MULTIPLIER */
 private const val SDK_INT_MULTIPLIER = 1_00000
 
+data class ApiAndDessert(val api: Int, val dessert: String)
+
 /** See: [Build.VERSION].RESOURCES_SDK_INT */
-private fun listCodes(kClass: KClass<*>): List<Pair<String?, Int>> {
+private fun getApiAndDesserts(kClass: KClass<*>): List<ApiAndDessert> {
     val fields = try {
         kClass.java.fields
     } catch (e: Exception) {
@@ -28,9 +31,9 @@ private fun listCodes(kClass: KClass<*>): List<Pair<String?, Int>> {
         try {
             it.isAccessible = true
 
-            val value = it.getInt(null)
-            if (value != Build.VERSION_CODES.CUR_DEVELOPMENT) {
-                Pair(it.name, value)
+            val api = it.getInt(null)
+            if (api != Build.VERSION_CODES.CUR_DEVELOPMENT) {
+                ApiAndDessert(api, it.name.toPascalCase())
             } else {
                 null
             }
@@ -38,17 +41,35 @@ private fun listCodes(kClass: KClass<*>): List<Pair<String?, Int>> {
             Log.w(kClass.simpleName, "Failed to get $it. ${e.fullMessage}")
             null
         }
-    }.sortedBy { it.second }
+    }.sortedBy(ApiAndDessert::api)
 }
 
-private fun latestApiOrNull(kClass: KClass<*>) = listCodes(kClass).lastOrNull()?.second
+private fun String.toPascalCase(): String {
+    return split('_').joinToString(" ") { word ->
+        word.lowercase().replaceFirstChar { char -> char.titlecase(Locale.US) }
+    }
+}
+
+private fun getLatestApiAndDessertOrNull(kClass: KClass<*>) = getApiAndDesserts(kClass).lastOrNull()
+
+private val lastestApiAndDessert by lazy {
+    getLatestApiAndDessertOrNull(Build.VERSION_CODES::class)
+}
+
+val lastestApiFullAndDessert by lazy {
+    if (isAtLeastAndroid16()) {
+        getLatestApiAndDessertOrNull(Build.VERSION_CODES_FULL::class)
+    } else {
+        lastestApiAndDessert
+    }
+}
 
 /** E.g.: 36 */
 val sdkInt: Int by lazy {
     if (isStableAndroid()) {
         Build.VERSION.SDK_INT
     } else {
-        latestApiOrNull(Build.VERSION_CODES::class)
+        lastestApiAndDessert?.api
             ?: Build.VERSION.SDK_INT
     }
 }
@@ -59,7 +80,7 @@ private val sdkIntFull: Int by lazy {
         if (isStableAndroid()) {
             Build.VERSION.SDK_INT_FULL
         } else {
-            latestApiOrNull(Build.VERSION_CODES_FULL::class)
+            lastestApiFullAndDessert?.api
                 ?: Build.VERSION.SDK_INT_FULL
         }
     } else {
@@ -101,20 +122,19 @@ fun isLatestPreviewAndroid(lld: Lld) = isPreviewAndroid()
 fun isSupportedByUpstreamAndroid(lld: Lld) = isStableAndroid()
         && Build.VERSION.SDK_INT >= lld.android.support.api.toInt()
 
-/**
- * [Build.VERSION.RELEASE_OR_CODENAME]: Android 11+
- * [Build.VERSION.RELEASE_OR_PREVIEW_DISPLAY]: Android 13+
- * [Build.VERSION.CODENAME]
- */
-fun getAndroidDessertPreview(): String = if (isAtLeastAndroid13()) {
+/** [Build.VERSION.RELEASE_OR_CODENAME]: Android 11+ */
+fun getAndroidDessertPreview(): String {
     val codename = Build.VERSION.CODENAME
-    codename + if (codename != Build.VERSION.RELEASE_OR_PREVIEW_DISPLAY) {
-        ", " + Build.VERSION.RELEASE_OR_PREVIEW_DISPLAY
+    val suffix = if (isAtLeastAndroid13()) {
+        if (codename != CODENAME_RELEASE && codename != Build.VERSION.RELEASE_OR_PREVIEW_DISPLAY) {
+            ", " + Build.VERSION.RELEASE_OR_PREVIEW_DISPLAY
+        } else {
+            ""
+        }
     } else {
         ""
     }
-} else {
-    Build.VERSION.CODENAME
+    return "$codename$suffix"
 }
 
 fun Context.isGoEdition() = isAtLeastAndroid8p1() && isLowRamDevice()

@@ -37,6 +37,7 @@ import net.imknown.android.forefrontinfo.ui.common.isLatestPreviewAndroid
 import net.imknown.android.forefrontinfo.ui.common.isLatestStableAndroid
 import net.imknown.android.forefrontinfo.ui.common.isStableAndroid
 import net.imknown.android.forefrontinfo.ui.common.isSupportedByUpstreamAndroid
+import net.imknown.android.forefrontinfo.ui.common.lastestApiFullAndDessert
 import net.imknown.android.forefrontinfo.ui.common.sdkFull
 import net.imknown.android.forefrontinfo.ui.common.sdkInt
 import net.imknown.android.forefrontinfo.ui.home.datasource.AndroidDataSource
@@ -84,27 +85,35 @@ class HomeRepository(
         val android = lldAndroid.known.find {
             it.apiFull == sdkFull
         }
-        var myNameAndDessert = if (android != null) {
-            val theInfix = if (isStableAndroid()) {
+        var myVersionAndDessert = if (android != null) {
+            val version = android.version + if (isStableAndroid()) {
                 ""
             } else {
                 val preview = MyApplication.getMyString(R.string.android_info_preview)
                 " $preview"
             }
-            android.version + theInfix + ", " + android.name
+            val dessert = android.name
+            "$version, $dessert"
         } else {
-            val theSuffix = if (isStableAndroid()) {
-                MyApplication.getMyString(androidR.string.unknownName)
+            val version = Build.VERSION.RELEASE + if (isStableAndroid()) {
+                ""
+            } else {
+                val preview = MyApplication.getMyString(R.string.android_info_preview)
+                " $preview"
+            }
+            val dessert = if (isStableAndroid()) {
+                lastestApiFullAndDessert?.dessert
+                    ?: MyApplication.getMyString(androidR.string.unknownName)
             } else {
                 getAndroidDessertPreview()
             }
-            Build.VERSION.RELEASE + ", " + theSuffix
+            "$version, $dessert"
         }
         if (MyApplication.instance.isGoEdition()) {
-            myNameAndDessert += " (Go)"
+            myVersionAndDessert += " (Go)"
         }
 
-        val mine = MyApplication.getMyString(R.string.android_info, myNameAndDessert, sdkFull)
+        val mine = MyApplication.getMyString(R.string.android_info, myVersionAndDessert, sdkFull)
         // endregion [Mine]
 
         fun oneLine(android: Lld.Androids.Android) =
