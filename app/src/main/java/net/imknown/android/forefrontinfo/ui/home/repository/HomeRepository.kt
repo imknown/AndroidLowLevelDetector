@@ -10,6 +10,10 @@ import android.provider.Settings
 import android.util.Log
 import androidx.annotation.AttrRes
 import androidx.annotation.StringRes
+import androidx.core.backported.fixes.BackportedFixManager
+import androidx.core.backported.fixes.KnownIssue
+import androidx.core.backported.fixes.KnownIssues
+import androidx.core.backported.fixes.Status
 import androidx.core.content.ContextCompat
 import androidx.webkit.WebViewCompat
 import io.github.g00fy2.versioncompare.Version
@@ -151,6 +155,39 @@ class HomeRepository(
             MyApplication.getMyString(R.string.android_info_detail, *infoDetailArgs),
             color
         )
+    }
+
+    fun detectBackportedFix(): MyModel {
+        val manager = BackportedFixManager()
+        fun createKi(
+            id: Long, alias: Int?, precondition: () -> Boolean = { true }
+        ) = KnownIssue::class.java.getDeclaredConstructor(
+            Long::class.javaPrimitiveType,
+            Int::class.javaObjectType,
+            Function0::class.java
+        ).apply {
+            isAccessible = true
+        }.newInstance(id, alias, precondition)
+
+        // https://cs.android.com/android/platform/superproject/+/android-latest-release:cts/backported_fixes/approved/
+        listOf(
+            KnownIssues.KI_350037023, // Alias 1
+            KnownIssues.KI_372917199, // Alias 2
+            KnownIssues.KI_350037348, // Alias 3
+            createKi(385124056L, 4), // Alias 4
+            KnownIssues.KI_398591036, // Alias 5
+            KnownIssues.KI_452390376, // Alias 6
+        ).forEach {
+            val status = manager.getStatus(it)
+            when (status) {
+                Status.Unknown -> "Unknown"
+                Status.Fixed -> "Fixed"
+                Status.NotApplicable -> "NotApplicable"
+                Status.NotFixed -> "NotFixed"
+            }
+        }
+
+        return MyModel("TODO", "TODO")
     }
 
     fun detectSdkExtension(lld: Lld?): MyModel {

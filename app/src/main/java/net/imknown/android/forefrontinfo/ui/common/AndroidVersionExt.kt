@@ -135,6 +135,16 @@ fun initMyAndroid() {
 // region [IsAtLeast]
 private val sdkInt get() = myAndroid.api
 
+/** [Build.VERSION_CODES_FULL].SDK_INT_MULTIPLIER */
+private const val SDK_INT_MULTIPLIER = 100000
+private val sdkIntFull: Int get() {
+    val figures = myAndroid.apiFull.split('.')
+    val major = figures[0].toInt()
+    val minor = figures.getOrNull(1)?.toInt()
+        ?: 0
+    return major * SDK_INT_MULTIPLIER + minor
+}
+
 fun isAtLeastAndroid6() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M || sdkInt >= Build.VERSION_CODES.M
 fun isAtLeastAndroid7() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N || sdkInt >= Build.VERSION_CODES.N
 fun isAtLeastAndroid8() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O || sdkInt >= Build.VERSION_CODES.O
@@ -147,6 +157,7 @@ fun isAtLeastAndroid13() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
 // fun isAtLeastAndroid14() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE || sdkInt >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE
 fun isAtLeastAndroid15() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM || sdkInt >= Build.VERSION_CODES.VANILLA_ICE_CREAM
 fun isAtLeastAndroid16() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA || sdkInt >= Build.VERSION_CODES.BAKLAVA
+fun isAtLeastAndroid16Qpr2() = Build.VERSION.SDK_INT_FULL >= Build.VERSION_CODES_FULL.BAKLAVA_1 || sdkIntFull >= Build.VERSION_CODES_FULL.BAKLAVA_1
 // endregion [IsAtLeast]
 
 // region [Stable/Preview]
