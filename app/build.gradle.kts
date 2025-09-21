@@ -123,7 +123,7 @@ dependencies {
     implementation(libsAndroid.cardView)
     implementation(libsAndroid.constraintLayout)
     implementation(libsAndroid.coordinatorLayout)
-    implementation(libsAndroid.core)
+    implementation(libsAndroid.bundles.core)
     implementation(libsAndroid.fragment)
     implementation(libsAndroid.bundles.lifecycle)
     implementation(libsAndroid.preference)
