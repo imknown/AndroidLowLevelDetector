@@ -17,6 +17,7 @@ import net.imknown.android.forefrontinfo.base.extension.fullMessage
 import net.imknown.android.forefrontinfo.ui.base.list.BaseListViewModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.common.LldManager
+import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid16Qpr2
 import net.imknown.android.forefrontinfo.ui.common.toObjectOrThrow
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.home.repository.HomeRepository
@@ -131,6 +132,9 @@ class HomeViewModel(
 
         withContext(Dispatchers.Default) {
             tempModels += homeRepository.detectAndroid(lld)
+            if (isAtLeastAndroid16Qpr2()) {
+                tempModels += homeRepository.detectBackportedFix()
+            }
             tempModels += homeRepository.detectSdkExtension(lld)
             tempModels += homeRepository.detectBuildId(lld)
             tempModels += homeRepository.detectSecurityPatches(lld)
