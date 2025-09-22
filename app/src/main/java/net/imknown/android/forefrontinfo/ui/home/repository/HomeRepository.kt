@@ -19,7 +19,7 @@ import net.imknown.android.forefrontinfo.base.extension.formatToLocalZonedDateti
 import net.imknown.android.forefrontinfo.base.extension.fullMessage
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.base.list.toColoredMyModel
-import net.imknown.android.forefrontinfo.ui.common.getAndroidDessertPreview
+import net.imknown.android.forefrontinfo.ui.common.CODENAME_CANARY
 import net.imknown.android.forefrontinfo.ui.common.getBooleanProperty
 import net.imknown.android.forefrontinfo.ui.common.getSdkExtension
 import net.imknown.android.forefrontinfo.ui.common.getShellResult
@@ -35,7 +35,7 @@ import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid9
 import net.imknown.android.forefrontinfo.ui.common.isGoEdition
 import net.imknown.android.forefrontinfo.ui.common.isLatestPreviewAndroid
 import net.imknown.android.forefrontinfo.ui.common.isLatestStableAndroid
-import net.imknown.android.forefrontinfo.ui.common.isStableAndroid
+import net.imknown.android.forefrontinfo.ui.common.isPreviewAndroid
 import net.imknown.android.forefrontinfo.ui.common.isSupportedByUpstreamAndroid
 import net.imknown.android.forefrontinfo.ui.common.lastestApiFullAndDessert
 import net.imknown.android.forefrontinfo.ui.common.sdkFull
@@ -85,28 +85,27 @@ class HomeRepository(
         val android = lldAndroid.known.find {
             it.apiFull == sdkFull
         }
-        var myVersionAndDessert = if (android != null) {
-            val version = android.version + if (isStableAndroid()) {
-                ""
-            } else {
+
+        fun String.toStableOrPreview(): String {
+            var versionTemp = this
+            if (isPreviewAndroid()) {
                 val preview = MyApplication.getMyString(R.string.android_info_preview)
-                " $preview"
+                versionTemp += " $preview"
+
+                if (Build.VERSION.CODENAME == CODENAME_CANARY) {
+                    versionTemp += " $CODENAME_CANARY"
+                }
             }
+            return versionTemp
+        }
+        var myVersionAndDessert = if (android != null) {
+            val version = android.version.toStableOrPreview()
             val dessert = android.name
             "$version, $dessert"
         } else {
-            val version = Build.VERSION.RELEASE + if (isStableAndroid()) {
-                ""
-            } else {
-                val preview = MyApplication.getMyString(R.string.android_info_preview)
-                " $preview"
-            }
-            val dessert = if (isStableAndroid()) {
-                lastestApiFullAndDessert?.dessert
+            val version = Build.VERSION.RELEASE.toStableOrPreview()
+            val dessert = lastestApiFullAndDessert?.dessert
                     ?: MyApplication.getMyString(androidR.string.unknownName)
-            } else {
-                getAndroidDessertPreview()
-            }
             "$version, $dessert"
         }
         if (MyApplication.instance.isGoEdition()) {

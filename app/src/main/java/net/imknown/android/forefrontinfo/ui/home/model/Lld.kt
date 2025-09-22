@@ -3,9 +3,8 @@ package net.imknown.android.forefrontinfo.ui.home.model
 import androidx.annotation.Keep
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
+import net.imknown.android.forefrontinfo.ui.common.CODENAME_NONE
 
-const val CODENAME_NONE = ""
-const val CODENAME_CANARY = "CANARY"
 const val EXTENSION_NONE = 0
 const val SCHEME_VERSION = 1
 

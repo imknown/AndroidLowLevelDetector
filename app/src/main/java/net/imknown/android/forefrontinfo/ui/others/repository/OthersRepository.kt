@@ -9,6 +9,8 @@ import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.extension.formatToLocalZonedDatetimeString
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.base.list.toTranslatedDetailMyModel
+import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid13
+import net.imknown.android.forefrontinfo.ui.common.isPreviewAndroid
 import net.imknown.android.forefrontinfo.ui.others.datasource.ArchitectureDataSource
 import net.imknown.android.forefrontinfo.ui.others.datasource.BasicDataSource
 import net.imknown.android.forefrontinfo.ui.others.datasource.FingerprintDataSource
@@ -126,7 +128,16 @@ class OthersRepository(
     fun getType() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_type), romDataSource.getType())
     fun getTags() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_tags), romDataSource.getTags())
     fun getIncremental() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_incremental), romDataSource.getIncremental())
-    fun getCodename() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_codename), romDataSource.getCodename())
+    fun getCodename(): MyModel {
+        var detail = romDataSource.getCodename()
+        if (isPreviewAndroid() && isAtLeastAndroid13()) {
+            val previewDisplay = romDataSource.getReleaseOrPreviewDisplay()
+            if (detail != previewDisplay) {
+                detail += " ($previewDisplay)"
+            }
+        }
+        return toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_codename), detail)
+    }
     @RequiresApi(Build.VERSION_CODES.M)
     fun getPreviewSdkInt() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_preview_sdk_int), romDataSource.getPreviewSdkInt().toString())
 

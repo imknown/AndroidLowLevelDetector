@@ -18,6 +18,8 @@ class RomDataSource {
     fun getTags(): String = Build.TAGS
     fun getIncremental(): String = Build.VERSION.INCREMENTAL
     fun getCodename(): String = Build.VERSION.CODENAME
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    fun getReleaseOrPreviewDisplay(): String = Build.VERSION.RELEASE_OR_PREVIEW_DISPLAY
     @RequiresApi(Build.VERSION_CODES.M)
     fun getPreviewSdkInt(): Int = Build.VERSION.PREVIEW_SDK_INT
 

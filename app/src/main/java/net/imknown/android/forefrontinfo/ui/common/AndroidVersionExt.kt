@@ -12,7 +12,9 @@ import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import java.util.Locale
 import kotlin.reflect.KClass
 
-private const val CODENAME_RELEASE = "REL"
+const val CODENAME_NONE = ""
+const val CODENAME_CANARY = "CANARY"
+const val CODENAME_RELEASE = "REL"
 
 /** See: [Build.VERSION_CODES_FULL].SDK_INT_MULTIPLIER */
 private const val SDK_INT_MULTIPLIER = 1_00000
@@ -121,21 +123,6 @@ fun isLatestPreviewAndroid(lld: Lld) = isPreviewAndroid()
 
 fun isSupportedByUpstreamAndroid(lld: Lld) = isStableAndroid()
         && Build.VERSION.SDK_INT >= lld.android.support.api.toInt()
-
-/** [Build.VERSION.RELEASE_OR_CODENAME]: Android 11+ */
-fun getAndroidDessertPreview(): String {
-    val codename = Build.VERSION.CODENAME
-    val suffix = if (isAtLeastAndroid13()) {
-        if (codename != CODENAME_RELEASE && codename != Build.VERSION.RELEASE_OR_PREVIEW_DISPLAY) {
-            ", " + Build.VERSION.RELEASE_OR_PREVIEW_DISPLAY
-        } else {
-            ""
-        }
-    } else {
-        ""
-    }
-    return "$codename$suffix"
-}
 
 fun Context.isGoEdition() = isAtLeastAndroid8p1() && isLowRamDevice()
 
