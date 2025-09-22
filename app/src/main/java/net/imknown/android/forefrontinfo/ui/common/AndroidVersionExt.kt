@@ -14,7 +14,7 @@ import kotlin.reflect.KClass
 
 const val CODENAME_NONE = ""
 const val CODENAME_CANARY = "CANARY"
-const val CODENAME_RELEASE = "REL"
+private const val CODENAME_RELEASE = "REL"
 
 /** See: [Build.VERSION_CODES_FULL].SDK_INT_MULTIPLIER */
 private const val SDK_INT_MULTIPLIER = 1_00000
