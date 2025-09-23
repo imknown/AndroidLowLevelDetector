@@ -5,7 +5,7 @@
 googleServices-gradlePlugin = "4.4.3"
 
 # https://firebase.google.com/docs/android/learn-more#bom
-firebase-bom = "34.2.0"
+firebase-bom = "34.3.0"
 
 # https://firebase.google.com/docs/crashlytics/get-started?platform=android
 # https://firebase.google.com/docs/crashlytics/ndk-reports
