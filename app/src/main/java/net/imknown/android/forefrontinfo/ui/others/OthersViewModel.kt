@@ -79,7 +79,6 @@ class OthersViewModel(
 
                 // region [ROM]
                 tempModels += othersRepository.getUser()
-                tempModels += othersRepository.getUser()
                 tempModels += othersRepository.getHost()
                 tempModels += othersRepository.getTime()
                 if (isAtLeastAndroid6()) {
