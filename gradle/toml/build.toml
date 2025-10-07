@@ -11,16 +11,16 @@ minSdkFirebase = "23"
 compileSdk = "36"
 compileSdkMinor = "1"
 compileSdkPreview = "CANARY"
-# compileSdkPreview = "Baklava" # (Android 16 QPR2 Beta 1)
+# compileSdkPreview = "Baklava"
 
-compileSdkExtension = "20" # 36.1-ext20 (Android 16 QPR2 Beta 2)
+compileSdkExtension = "20" # 36.1-ext20
 
 targetSdk = "36"
 targetSdkPreview = "CANARY"
-# targetSdkPreview = "Baklava" # (Android 16 QPR2 Beta 1)
+# targetSdkPreview = "Baklava"
 
 # https://github.com/android/ndk/releases
-ndk = "29.0.14033849" # Beta 4, but RC 4 in Android SDK Manager
+ndk = "29.0.14206865"
 # https://cmake.org/cmake/help/latest/release/index.html
 cmake = "4.1.1"
 
