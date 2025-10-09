@@ -1,13 +1,16 @@
 {
   "scheme": 1,
-  "version": "2025-10-08 11:05 +0800",
+  "version": "2025-10-09 09:35 +0800",
   "android": {
     "securityPatchLevel": "2025-09-05",
     "googlePlaySystemUpdates": "2025-09-01",
     "build": {
       "version": "2025-09-03",
       "details": [
-        { "id": "BP3A.250905.014", "revision": "r?" }
+        { "id": "BD3A.251005.003.J5", "revision": "r7" },
+        { "id": "BD3A.251005.003.W3", "revision": "r8" },
+        { "id": "BP3A.251005.004.A2", "revision": "r9" },
+        { "id": "BP3A.251005.004.B1", "revision": "r10" }
       ]
     },
     "stable": {
