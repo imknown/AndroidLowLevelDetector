@@ -13,8 +13,6 @@ permissions:
   contents: write
 
 jobs:
-  # https://github.com/gradle/actions/blob/main/docs/dependency-submission.md
-  # https://github.com/actions/gradle-build-tools-actions/blob/main/docs/dependency-submission.md
   dependency-submission:
 
     runs-on: ubuntu-latest
@@ -23,10 +21,9 @@ jobs:
       # https://github.com/actions/checkout
       - uses: actions/checkout@v5
 
-      # https://github.com/actions/gradle-build-tools-actions
       # https://github.com/gradle/actions
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v5
 
       # region [Android SDK]
       # https://github.com/android-actions/setup-android
@@ -43,8 +40,9 @@ jobs:
         run: sdkmanager --install "ndk;29.0.14206865"
       # endregion [Android SDK]
 
+      # https://github.com/gradle/actions/blob/main/docs/dependency-submission.md
       - name: Run dependency submission
-        uses: gradle/actions/dependency-submission@v4
+        uses: gradle/actions/dependency-submission@v5
         with:
           gradle-project-path: "."
           gradle-build-module: ":app"
