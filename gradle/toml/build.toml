@@ -22,7 +22,7 @@ targetSdkPreview = "CANARY"
 # https://github.com/android/ndk/releases
 ndk = "29.0.14206865"
 # https://cmake.org/cmake/help/latest/release/index.html
-cmake = "4.1.1"
+cmake = "4.1.2"
 
 versionCode = "69"
 versionName = "1.18.4_unpublished"
