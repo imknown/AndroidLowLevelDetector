@@ -2,16 +2,16 @@
 # https://developers.google.com/android/guides/releases
 # https://firebase.google.com/support/release-notes/android
 # https://firebase.google.com/docs/android/setup#available-libraries
-googleServices-gradlePlugin = "4.4.3"
+# https://maven.google.com/web/index.html?q=google-services
+googleServices-gradlePlugin = "4.4.4"
 
 # https://firebase.google.com/docs/android/learn-more#bom
-firebase-bom = "34.3.0"
+# https://maven.google.com/web/index.html?q=firebase-bom
+firebase-bom = "34.4.0"
 
 # https://firebase.google.com/docs/crashlytics/get-started?platform=android
 # https://firebase.google.com/docs/crashlytics/ndk-reports
-# https://maven.google.com/web/index.html?#com.google.firebase:firebase-crashlytics-gradle
-# https://maven.google.com/web/index.html?#com.google.firebase:firebase-crashlytics-buildtools
-# https://maven.google.com/web/index.html?#com.google.firebase.crashlytics:com.google.firebase.crashlytics.gradle.plugin
+# https://maven.google.com/web/index.html?q=crashlytics
 firebase-crashlytics-gradlePlugin = "3.0.6"
 
 # https://github.com/material-components/material-components-android/releases

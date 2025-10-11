@@ -3,7 +3,7 @@
 # https://developer.android.com/build/releases/gradle-plugin
 # https://developer.android.com/studio/releases
 # https://androidstudio.googleblog.com/
-# https://maven.google.com/web/index.html#com.android.tools.build:gradle
+# https://maven.google.com/web/index.html?q=com.android.tools.build
 androidGradlePlugin = "8.13.0"
 androidGradlePlugin-beta = "8.13.0"
 androidGradlePlugin-canary = "9.0.0-alpha10"
