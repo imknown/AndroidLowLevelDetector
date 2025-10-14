@@ -7,13 +7,18 @@ plugins {
 android {
     namespace = "net.imknown.android.forefrontinfo.base"
 
-    compileSdk = libsBuild.versions.compileSdk.get().toInt()
-    compileSdkMinor = libsBuild.versions.compileSdkMinor.get().toInt()
-    // compileSdkExtension = libsBuild.versions.compileSdkExtension.get().toInt()
+    compileSdk {
+        version = release(libsBuild.versions.compileSdk.get().toInt()) {
+            minorApiLevel = libsBuild.versions.compileSdkMinor.get().toInt()
+            // sdkExtension = libsBuild.versions.compileSdkExtension.get().toInt()
+        }
+    }
     buildToolsVersion = libsBuild.versions.buildTools.get()
     val isPreview = libsBuild.versions.isPreview.get().toBoolean()
     if (isPreview) {
-        compileSdkPreview = libsBuild.versions.compileSdkPreview.get()
+        compileSdk {
+            version = preview(libsBuild.versions.compileSdkPreview.get())
+        }
         buildToolsVersion = libsBuild.versions.buildToolsPreview.get()
     }
 
