@@ -4,26 +4,26 @@ plugins {
     alias(libsKotlin.plugins.kotlin.android)
 }
 
+private val buildVersion = libsBuild.versions
+
 android {
     namespace = "net.imknown.android.forefrontinfo.binderDetector"
 
+    val isPreview = buildVersion.isPreview.get().toBoolean()
     compileSdk {
-        version = release(libsBuild.versions.compileSdk.get().toInt()) {
-            minorApiLevel = libsBuild.versions.compileSdkMinor.get().toInt()
-            // sdkExtension = libsBuild.versions.compileSdkExtension.get().toInt()
+        version = if (isPreview) {
+            preview(buildVersion.compileSdkPreview.get())
+        } else {
+            release(buildVersion.compileSdk.get().toInt()) {
+                minorApiLevel = buildVersion.compileSdkMinor.get().toInt()
+                // sdkExtension = buildVersion.compileSdkExtension.get().toInt()
+            }
         }
     }
-    buildToolsVersion = libsBuild.versions.buildTools.get()
-    val isPreview = libsBuild.versions.isPreview.get().toBoolean()
-    if (isPreview) {
-        compileSdk {
-            version = preview(libsBuild.versions.compileSdkPreview.get())
-        }
-        buildToolsVersion = libsBuild.versions.buildToolsPreview.get()
-    }
+    buildToolsVersion = (if (isPreview) buildVersion.buildToolsPreview else buildVersion.buildTools).get()
 
     defaultConfig {
-        minSdk = libsBuild.versions.minSdk.get().toInt()
+        minSdk = buildVersion.minSdk.get().toInt()
 
         externalNativeBuild {
             cmake {
@@ -36,12 +36,12 @@ android {
         }
     }
 
-    ndkVersion = libsBuild.versions.ndk.get()
+    ndkVersion = buildVersion.ndk.get()
 
     externalNativeBuild {
         cmake {
             path("src/main/cpp/CMakeLists.txt")
-            version = libsBuild.versions.cmake.get()
+            version = buildVersion.cmake.get()
         }
     }
 }
@@ -50,8 +50,7 @@ android {
 // https://developer.android.com/build/jdks
 // https://kotlinlang.org/docs/gradle-configure-project.html
 // https://docs.gradle.org/current/userguide/toolchains.html
-private val javaToolchain = libsBuild.versions.javaToolchain.get().toInt()
 kotlin {
-    jvmToolchain(javaToolchain)
+    jvmToolchain(buildVersion.javaToolchain.get().toInt())
 }
 // endregion [Toolchain]

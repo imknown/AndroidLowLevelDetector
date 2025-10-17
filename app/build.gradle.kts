@@ -14,36 +14,36 @@ plugins {
     alias(libsGoogle.plugins.firebase.crashlytics)
 }
 
+private val buildVersion = libsBuild.versions
+
 android {
     namespace = "net.imknown.android.forefrontinfo"
 
+    val isPreview = buildVersion.isPreview.get().toBoolean()
     compileSdk {
-        version = release(libsBuild.versions.compileSdk.get().toInt()) {
-            minorApiLevel = libsBuild.versions.compileSdkMinor.get().toInt()
-            // sdkExtension = libsBuild.versions.compileSdkExtension.get().toInt()
+        version = if (isPreview) {
+            preview(buildVersion.compileSdkPreview.get())
+        } else {
+            release(buildVersion.compileSdk.get().toInt()) {
+                minorApiLevel = buildVersion.compileSdkMinor.get().toInt()
+                // sdkExtension = buildVersion.compileSdkExtension.get().toInt()
+            }
         }
     }
-    buildToolsVersion = libsBuild.versions.buildTools.get()
-    val isPreview = libsBuild.versions.isPreview.get().toBoolean()
-    if (isPreview) {
-        compileSdk {
-            version = preview(libsBuild.versions.compileSdkPreview.get())
-        }
-        buildToolsVersion = libsBuild.versions.buildToolsPreview.get()
-    }
+    buildToolsVersion = (if (isPreview) buildVersion.buildToolsPreview else buildVersion.buildTools).get()
 
     defaultConfig {
-        versionCode = libsBuild.versions.versionCode.get().toInt()
-        versionName = libsBuild.versions.versionName.get()
+        versionCode = buildVersion.versionCode.get().toInt()
+        versionName = buildVersion.versionName.get()
 
         val currentDatetime = getCurrentDatetime()
         val currentGitBranchName = providers.execute("git", "rev-parse", "--abbrev-ref", "HEAD")
         base.archivesName.set("lld-$versionName-$versionCode-$currentDatetime-$currentGitBranchName")
 
-        minSdk = libsBuild.versions.minSdk.get().toInt()
-        targetSdk = libsBuild.versions.targetSdk.get().toInt()
+        minSdk = buildVersion.minSdk.get().toInt()
+        targetSdk = buildVersion.targetSdk.get().toInt()
         if (isPreview) {
-            targetSdkPreview = libsBuild.versions.targetSdkPreview.get()
+            targetSdkPreview = buildVersion.targetSdkPreview.get()
         }
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -51,7 +51,7 @@ android {
         buildConfigField("String", "GIT_BRANCH", "\"$currentGitBranchName\"")
     }
 
-    ndkVersion = libsBuild.versions.ndk.get()
+    ndkVersion = buildVersion.ndk.get()
 
     sourceSets {
         named("main") {
@@ -123,7 +123,7 @@ android {
             versionNameSuffix = "-$name"
         }
         register(IssueTracker.Firebase.name) {
-            minSdk = libsBuild.versions.minSdkFirebase.get().toInt()
+            minSdk = buildVersion.minSdkFirebase.get().toInt()
         }
     }
 
@@ -173,9 +173,8 @@ android {
 // https://developer.android.com/build/jdks
 // https://kotlinlang.org/docs/gradle-configure-project.html
 // https://docs.gradle.org/current/userguide/toolchains.html
-private val javaToolchain = libsBuild.versions.javaToolchain.get().toInt()
 kotlin {
-    jvmToolchain(javaToolchain)
+    jvmToolchain(buildVersion.javaToolchain.get().toInt())
 }
 // endregion [Toolchain]
 
