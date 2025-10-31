@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2025-10-31 12:55 +0800",
+  "version": "2025-10-31 19:20 +0800",
   "android": {
     "securityPatchLevel": "2025-10-05",
     "googlePlaySystemUpdates": "2025-10-01",
@@ -12,20 +12,25 @@
         { "id": "BP3A.251005.004.A2", "revision": "r9" },
         { "id": "BP3A.251005.004.B1", "revision": "r10" },
         { "id": "BD3A.251005.003", "revision": "r11" },
-        { "id": "BD3A.251005.003.J2", "revision": "r12" }
+        { "id": "BD3A.251005.003.J2", "revision": "r12" },
+        { "id": "BD3A.251005.003.J6", "revision": "r13" },
+        { "id": "BD3A.251005.003.W4", "revision": "r14" },
+        { "id": "BP3A.251005.004.A3", "revision": "r15" },
+        { "id": "BP3A.251005.004.B2", "revision": "r16" },
+        { "id": "BP3A.251005.004.B3", "revision": "r17" }
       ]
     },
     "stable": {
       "api": "36", "apiFull": "36.0", "version": "16, Baklava", "name": "Baklava", "extension": 19
     },
     "stablePreview": {
-      "api": "36", "apiFull": "36.1", "version": "16 QPR2 Beta 3.2, Baklava.1", "name": "Baklava.1"
+      "api": "36", "apiFull": "36.1", "version": "16.1 (QPR2) Beta 3.2, Baklava.1", "name": "Baklava.1"
     },
     "support": {
       "api": "33", "apiFull": "33", "version": "13, Tiramisu", "name": "Tiramisu"
     },
     "preview": {
-      "api": "36", "apiFull": "36.1", "version": "16 QPR2 Canary, Baklava.1", "name": "Baklava.1", "phase": ""
+      "api": "36", "apiFull": "36.1", "version": "16.1 (QPR2) Canary, Baklava.1", "name": "Baklava.1", "phase": ""
     },
     "internal": {
       "api": "37", "apiFull": "37.0", "version": "17 Internal, Cinnamon Bun", "name": "Cinnamon Bun"
@@ -47,12 +52,12 @@
       { "api": "34", "apiFull": "34", "version": "14", "name": "Upside Down Cake", "codename": "UpsideDownCake" },
       { "api": "35", "apiFull": "35", "version": "15", "name": "Vanilla Ice Cream", "codename": "VanillaIceCream" },
       { "api": "36", "apiFull": "36.0", "version": "16", "name": "Baklava", "codename": "Baklava" },
-      { "api": "36", "apiFull": "36.1", "version": "16 QPR2", "name": "Baklava.1", "codename": "Baklava" },
+      { "api": "36", "apiFull": "36.1", "version": "16.1 (QPR2)", "name": "Baklava.1", "codename": "Baklava" },
       { "api": "37", "apiFull": "37.0", "version": "17", "name": "Cinnamon Bun", "codename": "CinnamonBun" }
     ]
   },
   "linux": {
-    "google": { "versions": [ "6.12.55", "6.6.114", "6.1.157", "5.15.195", "5.10.245", "5.4.300" ] },
+    "google": { "versions": [ "6.12.56", "6.6.115", "6.1.158", "5.15.196", "5.10.246", "5.4.301" ] },
     "mainline": { "version": "6.18-rc3" }
   },
   "toybox": {
@@ -63,6 +68,6 @@
   },
   "webView": {
     "stable": { "version": "142.0.7444.48" },
-    "beta": { "version": "142.0.7444.48" }
+    "beta": { "version": "143.0.7499.3" }
   }
 }
