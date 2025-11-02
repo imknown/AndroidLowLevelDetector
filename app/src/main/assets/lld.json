@@ -1,11 +1,11 @@
 {
   "scheme": 1,
-  "version": "2025-11-02 10:20 +0800",
+  "version": "2025-11-02 11:50 +0800",
   "android": {
     "securityPatchLevel": "2025-10-05",
     "googlePlaySystemUpdates": "2025-10-01",
     "build": {
-      "version": "2025-10-27",
+      "version": "2025-11-01",
       "details": [
         { "id": "BD3A.251005.003.J5", "revision": "r7" },
         { "id": "BD3A.251005.003.W3", "revision": "r8" },
