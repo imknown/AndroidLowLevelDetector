@@ -5,8 +5,7 @@ isPreview = "false" # true
 buildTools = "36.1.0"
 buildToolsPreview = "36.1.0"
 
-minSdk = "21"
-minSdkFirebase = "23"
+minSdk = "23"
 
 compileSdk = "36"
 compileSdkMinor = "1"

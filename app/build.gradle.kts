@@ -122,9 +122,7 @@ android {
             isDefault = true
             versionNameSuffix = "-$name"
         }
-        register(IssueTracker.Firebase.name) {
-            minSdk = buildVersion.minSdkFirebase.get().toInt()
-        }
+        register(IssueTracker.Firebase.name)
     }
 
     buildTypes {
