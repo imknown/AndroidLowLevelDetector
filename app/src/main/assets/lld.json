@@ -1,32 +1,25 @@
 {
   "scheme": 1,
-  "version": "2025-11-10 22:30 +0800",
+  "version": "2025-11-12 18:45 +0800",
   "android": {
     "securityPatchLevel": "2025-11-05",
     "googlePlaySystemUpdates": "2025-10-01",
     "build": {
-      "version": "2025-11-01",
+      "version": "2025-11-11",
       "details": [
-        { "id": "BD3A.251005.003.J5", "revision": "r7" },
-        { "id": "BD3A.251005.003.W3", "revision": "r8" },
-        { "id": "BP3A.251005.004.A2", "revision": "r9" },
-        { "id": "BP3A.251005.004.B1", "revision": "r10" },
-        { "id": "BD3A.251005.003", "revision": "r11" },
-        { "id": "BD3A.251005.003.J2", "revision": "r12" },
-        { "id": "BD3A.251005.003.J6", "revision": "r13" },
-        { "id": "BD3A.251005.003.W4", "revision": "r14" },
-        { "id": "BP3A.251005.004.A3", "revision": "r15" },
-        { "id": "BP3A.251005.004.B2", "revision": "r16" },
-        { "id": "BP3A.251005.004.B3", "revision": "r17" },
-        { "id": "BD3A.251005.003.E1", "revision": "r18" },
-        { "id": "BD3A.251005.003.F1", "revision": "r19" }
+        { "id": "BD3A.251105.010.E1", revision: "1" },
+        { "id": "BD3A.251105.010.F1", revision: "2" },
+        { "id": "BD3A.251105.010.J3", revision: "3" },
+        { "id": "BP3A.251105.015", revision: "4" },
+        { "id": "BP3A.251105.015.J1", revision: "5" },
+        { "id": "BP3A.251105.013.A1", revision: "6" }
       ]
     },
     "stable": {
       "api": "36", "apiFull": "36.0", "version": "16, Baklava", "name": "Baklava", "extension": 19
     },
     "stablePreview": {
-      "api": "36", "apiFull": "36.1", "version": "16.1 (QPR2) Beta 3.2, Baklava.1", "name": "Baklava.1"
+      "api": "36", "apiFull": "36.1", "version": "16.1 (QPR2) Beta 3.3, Baklava.1", "name": "Baklava.1"
     },
     "support": {
       "api": "33", "apiFull": "33", "version": "13, Tiramisu", "name": "Tiramisu"
@@ -69,7 +62,7 @@
     "master": { "version": "0.8.13" }
   },
   "webView": {
-    "stable": { "version": "142.0.7444.138" },
+    "stable": { "version": "142.0.7444.158" },
     "beta": { "version": "143.0.7499.15" }
   }
 }
