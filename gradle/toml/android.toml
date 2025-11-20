@@ -15,7 +15,7 @@ desugarJdkLibs = "2.1.5"
 
 # region [AndroidX]
 # https://developer.android.com/jetpack/androidx/releases/activity
-activity = "1.12.0-rc01"
+activity = "1.12.0"
 
 # https://developer.android.com/jetpack/androidx/releases/annotation
 annotation = "1.9.1"
@@ -44,7 +44,7 @@ core = "1.17.0"
 fragment = "1.8.9"
 
 # https://developer.android.com/jetpack/androidx/releases/lifecycle
-lifecycle = "2.10.0-rc01"
+lifecycle = "2.10.0"
 
 # https://developer.android.com/jetpack/androidx/releases/preference
 preference = "1.2.1"
@@ -56,7 +56,7 @@ recyclerView = "1.4.0"
 savedState = "1.4.0"
 
 # https://developer.android.com/jetpack/androidx/releases/swiperefreshlayout
-swipeRefreshLayout = "1.1.0"
+swipeRefreshLayout = "1.2.0-rc01"
 
 # https://developer.android.com/jetpack/androidx/releases/webkit
 webkit = "1.14.0"
