@@ -5,8 +5,8 @@
 # https://androidstudio.googleblog.com/
 # https://maven.google.com/web/index.html?q=com.android.tools.build
 androidGradlePlugin = "8.13.1"
-androidGradlePlugin-beta = "9.0.0-beta01"
-androidGradlePlugin-canary = "9.0.0-beta01"
+androidGradlePlugin-beta = "9.0.0-beta02"
+androidGradlePlugin-canary = "9.0.0-beta02"
 
 # https://developer.android.com/studio/write/java8-support#library-desugaring
 # https://maven.google.com/web/index.html?q=desugar_jdk_libs
