@@ -14,6 +14,7 @@ import net.imknown.android.forefrontinfo.base.property.PropertyManager
 import net.imknown.android.forefrontinfo.base.property.impl.PropertyDefault
 import net.imknown.android.forefrontinfo.base.shell.ShellManager
 import net.imknown.android.forefrontinfo.ui.common.ShellLibSu
+import net.imknown.android.forefrontinfo.ui.common.initMyAndroid
 import java.io.File
 
 open class MyApplication : Application() {
@@ -71,6 +72,8 @@ open class MyApplication : Application() {
         super.onCreate()
 
         instance = this@MyApplication
+
+        initMyAndroid()
 
         initTheme()
 

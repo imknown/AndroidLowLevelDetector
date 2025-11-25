@@ -37,9 +37,8 @@ import net.imknown.android.forefrontinfo.ui.common.isLatestPreviewAndroid
 import net.imknown.android.forefrontinfo.ui.common.isLatestStableAndroid
 import net.imknown.android.forefrontinfo.ui.common.isPreviewAndroid
 import net.imknown.android.forefrontinfo.ui.common.isSupportedByUpstreamAndroid
-import net.imknown.android.forefrontinfo.ui.common.lastestApiFullAndDessert
-import net.imknown.android.forefrontinfo.ui.common.sdkFull
-import net.imknown.android.forefrontinfo.ui.common.sdkInt
+import net.imknown.android.forefrontinfo.ui.common.myAndroid
+import net.imknown.android.forefrontinfo.ui.common.toPascalCase
 import net.imknown.android.forefrontinfo.ui.home.datasource.AndroidDataSource
 import net.imknown.android.forefrontinfo.ui.home.datasource.LldDataSource
 import net.imknown.android.forefrontinfo.ui.home.datasource.MountDataSource
@@ -83,36 +82,40 @@ class HomeRepository(
 
         // region [Mine]
         val android = lldAndroid.known.find {
-            it.apiFull == sdkFull
+            it.apiFull == myAndroid.apiFull
         }
 
         fun String.toStableOrPreview(): String {
             var versionTemp = this
             if (isPreviewAndroid()) {
-                val preview = MyApplication.getMyString(R.string.android_info_preview)
-                versionTemp += " $preview"
-
-                if (Build.VERSION.CODENAME == CODENAME_CANARY) {
-                    versionTemp += " $CODENAME_CANARY"
+                val preview = if (Build.VERSION.CODENAME == CODENAME_CANARY) {
+                    CODENAME_CANARY.toPascalCase()
+                } else {
+                    MyApplication.getMyString(R.string.android_info_preview)
                 }
+                versionTemp += " $preview"
             }
             return versionTemp
         }
-        var myVersionAndDessert = if (android != null) {
-            val version = android.version.toStableOrPreview()
-            val dessert = android.name
-            "$version, $dessert"
-        } else {
-            val version = Build.VERSION.RELEASE.toStableOrPreview()
-            val dessert = lastestApiFullAndDessert?.dessert
-                    ?: MyApplication.getMyString(androidR.string.unknownName)
-            "$version, $dessert"
+
+        if (android != null) {
+            with (android) {
+                myAndroid.api = api.toInt()
+                myAndroid.apiFull = apiFull
+                myAndroid.version = version
+                myAndroid.dessert = name
+            }
         }
+
+        val version = myAndroid.version.toStableOrPreview()
+        val dessert = myAndroid.dessert
+            ?: MyApplication.getMyString(androidR.string.unknownName)
+        var myVersionAndDessert = "$version, $dessert"
         if (MyApplication.instance.isGoEdition()) {
             myVersionAndDessert += " (Go)"
         }
 
-        val mine = MyApplication.getMyString(R.string.android_info, myVersionAndDessert, sdkFull)
+        val mine = MyApplication.getMyString(R.string.android_info, myVersionAndDessert, myAndroid.apiFull)
         // endregion [Mine]
 
         fun oneLine(android: Lld.Androids.Android) =
@@ -1035,7 +1038,7 @@ class HomeRepository(
         }
         var systemApkList = installedApplications.filter {
             val systemFlags = it.flags and (ApplicationInfo.FLAG_UPDATED_SYSTEM_APP or ApplicationInfo.FLAG_SYSTEM)
-            (systemFlags > 0) && (it.targetSdkVersion < sdkInt)
+            (systemFlags > 0) && (it.targetSdkVersion < myAndroid.api)
         }
 
         var result = MyApplication.getMyString(
