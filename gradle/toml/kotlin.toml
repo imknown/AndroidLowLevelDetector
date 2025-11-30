@@ -1,6 +1,6 @@
 [versions]
 # https://github.com/JetBrains/kotlin/releases
-kotlin = "2.2.21"
+kotlin = "2.3.0-RC2"
 
 # https://github.com/Kotlin/kotlinx.coroutines/releases
 kotlinx-coroutines = "1.10.2"
@@ -23,6 +23,4 @@ ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version
 ktor-client = ["ktor-client-core", "ktor-client-okhttp", "ktor-client-logging"]
 
 [plugins]
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

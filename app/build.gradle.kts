@@ -7,7 +7,6 @@ import kotlin.reflect.KFunction1
 plugins {
     alias(libsAndroid.plugins.android.application)
 
-    alias(libsKotlin.plugins.kotlin.android)
     alias(libsKotlin.plugins.kotlinx.serialization)
 
     alias(libsGoogle.plugins.googleServices)
@@ -60,7 +59,7 @@ android {
             fun String.toResString() = "$javaPathString/$javaPackageName/$this/res"
             val baseResString = "base".toResString()
 
-            res.srcDirs(
+            res.directories += listOf(
                 baseResString,
                 "${baseResString}Launcher",
                 "${baseResString}Backup",
