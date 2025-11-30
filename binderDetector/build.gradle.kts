@@ -1,7 +1,5 @@
 plugins {
     alias(libsAndroid.plugins.android.library)
-
-    alias(libsKotlin.plugins.kotlin.android)
 }
 
 private val buildVersion = libsBuild.versions
