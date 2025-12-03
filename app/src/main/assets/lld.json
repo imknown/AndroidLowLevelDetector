@@ -1,8 +1,8 @@
 {
   "scheme": 1,
-  "version": "2025-11-25 20:35 +0800",
+  "version": "2025-12-02 19:20 +0800",
   "android": {
-    "securityPatchLevel": "2025-11-05",
+    "securityPatchLevel": "2025-12-05",
     "googlePlaySystemUpdates": "2025-10-01",
     "build": {
       "version": "2025-11-11",
@@ -52,8 +52,8 @@
     ]
   },
   "linux": {
-    "google": { "versions": [ "6.12.59", "6.6.117", "6.1.158", "5.15.196", "5.10.246", "5.4.301" ] },
-    "mainline": { "version": "6.18-rc7" }
+    "google": { "versions": [ "6.12.60", "6.6.118", "6.1.158", "5.15.196", "5.10.246", "5.4.301" ] },
+    "mainline": { "version": "6.18" }
   },
   "toybox": {
     "stable": { "version": "0.8.12" },
