@@ -4,12 +4,10 @@ import android.provider.Settings
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
-import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.ui.base.list.BaseListViewModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
@@ -32,8 +30,7 @@ class PropViewModel(
         }
     }
 
-    override fun collectModels() {
-        viewModelScope.launch {
+    override suspend fun collectModels(): List<MyModel> {
             val tempModels = mutableListOf<MyModel>()
 
             withContext(Dispatchers.Default) {
@@ -46,7 +43,6 @@ class PropViewModel(
                 tempModels += propRepository.getBuildProp()
             }
 
-            setModels(tempModels)
-        }
+            return tempModels
     }
 }

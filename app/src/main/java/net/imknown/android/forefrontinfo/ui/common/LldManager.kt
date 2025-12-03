@@ -12,28 +12,28 @@ import java.io.File
 import java.io.FileWriter
 
 object LldManager {
-    val savedLldJsonFile by lazy {
+    val savedLldJsonFileOrThrow by lazy {
         File(MyApplication.getDownloadDir(), LldDataSource.LLD_JSON_NAME)
     }
 
-    private fun deleteDirtyDirectory() {
-        if (!savedLldJsonFile.deleteRecursively()) {
+    private fun deleteDirtyDirectoryOrThrow() {
+        if (!savedLldJsonFileOrThrow.deleteRecursively()) {
             Log.e(javaClass.simpleName, "Delete dirty directory failed.")
         } else {
             Log.i(javaClass.simpleName, "Dirty directory deleted.")
         }
     }
 
-    fun copyJsonIfNeeded() {
+    fun copyJsonIfNeededOrThrow() {
         var shouldCopy = false
 
-        if (savedLldJsonFile.exists()) {
-            if (savedLldJsonFile.isDirectory) {
-                deleteDirtyDirectory()
+        if (savedLldJsonFileOrThrow.exists()) {
+            if (savedLldJsonFileOrThrow.isDirectory) {
+                deleteDirtyDirectoryOrThrow()
                 shouldCopy = true
             } else {
                 val savedLldVersion = try {
-                    savedLldJsonFile.toObjectOrThrow<Lld>().version
+                    savedLldJsonFileOrThrow.toObjectOrThrow<Lld>().version
                 } catch (e: Exception) {
                     val message = MyApplication.getMyString(R.string.lld_json_parse_failed, e.fullMessage)
                     Log.e(javaClass.simpleName, message)
@@ -57,9 +57,9 @@ object LldManager {
             return
         }
 
-        copyAssetsFileToContextFilesDir(
+        copyAssetsFileToContextFilesDirOrThrow(
             MyApplication.instance.assets,
-            savedLldJsonFile,
+            savedLldJsonFileOrThrow,
             LldDataSource.LLD_JSON_NAME
         )
     }
@@ -67,7 +67,7 @@ object LldManager {
     /**
      * https://discuss.kotlinlang.org/t/copy-file-from-res/7068/10
      */
-    private fun copyAssetsFileToContextFilesDir(
+    private fun copyAssetsFileToContextFilesDirOrThrow(
         assets: AssetManager,
         savedFile: File,
         assetName: String
@@ -83,12 +83,12 @@ object LldManager {
         }
     }
 
-    fun saveLldJsonFile(lldString: String) {
-        if (savedLldJsonFile.exists() && savedLldJsonFile.isDirectory) {
-            deleteDirtyDirectory()
+    fun saveLldJsonFileOrThrow(lldString: String) {
+        if (savedLldJsonFileOrThrow.exists() && savedLldJsonFileOrThrow.isDirectory) {
+            deleteDirtyDirectoryOrThrow()
         }
 
-        FileWriter(savedLldJsonFile).use {
+        FileWriter(savedLldJsonFileOrThrow).use {
             it.write(lldString)
         }
     }

@@ -16,7 +16,6 @@ import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.databinding.BaseListFragmentBinding
 import net.imknown.android.forefrontinfo.ui.MainActivity
 import net.imknown.android.forefrontinfo.ui.base.BaseFragment
-import net.imknown.android.forefrontinfo.ui.base.ext.toast
 import net.imknown.android.forefrontinfo.ui.base.ext.windowInsetsCompatTypes
 import net.imknown.android.forefrontinfo.ui.common.State
 import net.imknown.android.forefrontinfo.ui.common.setScrollBarMode
@@ -69,20 +68,8 @@ abstract class BaseListFragment : BaseFragment<BaseListFragmentBinding>() {
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            listViewModel.showErrorEventStateFlow.flowWithLifecycle(viewLifecycleOwner.lifecycle).collect { stateMessage ->
-                if (stateMessage == State.NotInitialized) {
-                    return@collect
-                }
-
-                context?.toast(stateMessage.toValue())
-
-                binding.swipeRefreshLayout.isRefreshing = false
-
-                listViewModel.clearShowErrorEventStateFlow()
-            }
+            listViewModel.init(savedInstanceState)
         }
-
-        listViewModel.init(savedInstanceState)
     }
 
     private fun initWindowInsets() {
@@ -114,7 +101,10 @@ abstract class BaseListFragment : BaseFragment<BaseListFragmentBinding>() {
         }
 
         binding.swipeRefreshLayout.setOnRefreshListener {
-            listViewModel.collectModels()
+            viewLifecycleOwner.lifecycleScope.launch {
+                val list = listViewModel.collectModels()
+                listViewModel.setModels(list)
+            }
         }
 
         binding.recyclerView.apply {
