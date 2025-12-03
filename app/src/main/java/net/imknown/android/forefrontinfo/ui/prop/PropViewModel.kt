@@ -4,12 +4,10 @@ import android.provider.Settings
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
-import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.ui.base.list.BaseListViewModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
@@ -32,21 +30,19 @@ class PropViewModel(
         }
     }
 
-    override fun collectModels() {
-        viewModelScope.launch {
-            val tempModels = mutableListOf<MyModel>()
+    override suspend fun collectModels(): List<MyModel> {
+        val tempModels = mutableListOf<MyModel>()
 
-            withContext(Dispatchers.Default) {
-                tempModels += propRepository.getSystemProp()
+        withContext(Dispatchers.Default) {
+            tempModels += propRepository.getSystemProp()
 
-                tempModels += propRepository.getSettings(Settings.System::class)
-                tempModels += propRepository.getSettings(Settings.Secure::class)
-                tempModels += propRepository.getSettings(Settings.Global::class)
+            tempModels += propRepository.getSettings(Settings.System::class)
+            tempModels += propRepository.getSettings(Settings.Secure::class)
+            tempModels += propRepository.getSettings(Settings.Global::class)
 
-                tempModels += propRepository.getBuildProp()
-            }
-
-            setModels(tempModels)
+            tempModels += propRepository.getBuildProp()
         }
+
+        return tempModels
     }
 }

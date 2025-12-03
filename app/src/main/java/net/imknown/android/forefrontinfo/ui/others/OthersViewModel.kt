@@ -3,12 +3,10 @@ package net.imknown.android.forefrontinfo.ui.others
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
-import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.ui.base.list.BaseListViewModel
@@ -36,81 +34,79 @@ class OthersViewModel(
         }
     }
 
-    override fun collectModels() {
-        viewModelScope.launch {
-            val tempModels = mutableListOf<MyModel>()
+    override suspend fun collectModels(): List<MyModel> {
+        val tempModels = mutableListOf<MyModel>()
 
-            withContext(Dispatchers.Default) {
-                // region [Basic]
-                tempModels += othersRepository.getBrand()
-                tempModels += othersRepository.getManufacturer()
-                tempModels += othersRepository.getModel()
-                tempModels += othersRepository.getDevice()
-                tempModels += othersRepository.getProduct()
-                tempModels += othersRepository.getHardware()
-                tempModels += othersRepository.getBoard()
+        withContext(Dispatchers.Default) {
+            // region [Basic]
+            tempModels += othersRepository.getBrand()
+            tempModels += othersRepository.getManufacturer()
+            tempModels += othersRepository.getModel()
+            tempModels += othersRepository.getDevice()
+            tempModels += othersRepository.getProduct()
+            tempModels += othersRepository.getHardware()
+            tempModels += othersRepository.getBoard()
 
-                if (isAtLeastAndroid12()) {
-                    tempModels += othersRepository.getSocModel()
-                    tempModels += othersRepository.getSocManufacturer()
-                    tempModels += othersRepository.getSku()
-                    tempModels += othersRepository.getVendorSku()
-                    tempModels += othersRepository.getOdmSku()
-                }
-                // endregion [Basic]
-
-                // region [Arch & ABI]
-                // region [Binder]
-                tempModels += othersRepository.getBinderStatus(ArchitectureDataSource.DRIVER_BINDER)
-                // endregion [Binder]
-
-                // region [Process]
-                tempModels += othersRepository.getProcessBit()
-                tempModels += othersRepository.getArchitecture()
-                // endregion [Process]
-
-                // region [ABI]
-                tempModels += othersRepository.getCpuAbi()
-                tempModels += othersRepository.getPropertyCpuAbi()
-                tempModels += othersRepository.getSupported32BitAbis()
-                tempModels += othersRepository.getSupported64BitAbis()
-                // endregion [ABI]
-                // endregion [Arch & ABI]
-
-                // region [ROM]
-                tempModels += othersRepository.getUser()
-                tempModels += othersRepository.getHost()
-                tempModels += othersRepository.getTime()
-                if (isAtLeastAndroid6()) {
-                    tempModels += othersRepository.getBaseOs()
-                }
-                // region [Fingerprints]
-                tempModels += othersRepository.getFingerprint()
-                if (isAtLeastAndroid10()) {
-                    tempModels += othersRepository.getPreviewSdkFingerprint()
-                }
-                tempModels += othersRepository.getPartitionFingerprints()
-                // endregion [Fingerprints]
-                tempModels += othersRepository.getId()
-                tempModels += othersRepository.getDisplay()
-                tempModels += othersRepository.getType()
-                tempModels += othersRepository.getTags()
-                tempModels += othersRepository.getIncremental()
-                tempModels += othersRepository.getCodename()
-                if (isAtLeastAndroid6()) {
-                    tempModels += othersRepository.getPreviewSdkInt()
-                }
-                tempModels += othersRepository.getDefaultUserAgent(MyApplication.instance)
-                tempModels += othersRepository.getKernelVersion()
-                // endregion [ROM]
-
-                // region [Others]
-                tempModels += othersRepository.getBootloader()
-                tempModels += othersRepository.getRadioVersionOrNull()
-                // endregion [Others]
+            if (isAtLeastAndroid12()) {
+                tempModels += othersRepository.getSocModel()
+                tempModels += othersRepository.getSocManufacturer()
+                tempModels += othersRepository.getSku()
+                tempModels += othersRepository.getVendorSku()
+                tempModels += othersRepository.getOdmSku()
             }
+            // endregion [Basic]
 
-            setModels(tempModels)
+            // region [Arch & ABI]
+            // region [Binder]
+            tempModels += othersRepository.getBinderStatus(ArchitectureDataSource.DRIVER_BINDER)
+            // endregion [Binder]
+
+            // region [Process]
+            tempModels += othersRepository.getProcessBit()
+            tempModels += othersRepository.getArchitecture()
+            // endregion [Process]
+
+            // region [ABI]
+            tempModels += othersRepository.getCpuAbi()
+            tempModels += othersRepository.getPropertyCpuAbi()
+            tempModels += othersRepository.getSupported32BitAbis()
+            tempModels += othersRepository.getSupported64BitAbis()
+            // endregion [ABI]
+            // endregion [Arch & ABI]
+
+            // region [ROM]
+            tempModels += othersRepository.getUser()
+            tempModels += othersRepository.getHost()
+            tempModels += othersRepository.getTime()
+            if (isAtLeastAndroid6()) {
+                tempModels += othersRepository.getBaseOs()
+            }
+            // region [Fingerprints]
+            tempModels += othersRepository.getFingerprint()
+            if (isAtLeastAndroid10()) {
+                tempModels += othersRepository.getPreviewSdkFingerprint()
+            }
+            tempModels += othersRepository.getPartitionFingerprints()
+            // endregion [Fingerprints]
+            tempModels += othersRepository.getId()
+            tempModels += othersRepository.getDisplay()
+            tempModels += othersRepository.getType()
+            tempModels += othersRepository.getTags()
+            tempModels += othersRepository.getIncremental()
+            tempModels += othersRepository.getCodename()
+            if (isAtLeastAndroid6()) {
+                tempModels += othersRepository.getPreviewSdkInt()
+            }
+            tempModels += othersRepository.getDefaultUserAgent(MyApplication.instance)
+            tempModels += othersRepository.getKernelVersion()
+            // endregion [ROM]
+
+            // region [Others]
+            tempModels += othersRepository.getBootloader()
+            tempModels += othersRepository.getRadioVersionOrNull()
+            // endregion [Others]
         }
+
+        return tempModels
     }
 }

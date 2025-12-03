@@ -5,21 +5,23 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
-import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
+import net.imknown.android.forefrontinfo.base.extension.fullMessage
 import net.imknown.android.forefrontinfo.ui.base.list.BaseListViewModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.common.LldManager
 import net.imknown.android.forefrontinfo.ui.common.toObjectOrThrow
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.home.repository.HomeRepository
+
+private typealias LldAndError = Pair<Lld?, String?>
 
 class HomeViewModel(
     private val homeRepository: HomeRepository,
@@ -38,134 +40,128 @@ class HomeViewModel(
         }
     }
 
-    override fun collectModels()  {
+    override suspend fun collectModels(): List<MyModel> {
         val allowNetwork = MyApplication.sharedPreferences.getBoolean(
             MyApplication.getMyString(R.string.function_allow_network_data_key), false
         )
 
-        if (allowNetwork) {
+        return if (allowNetwork) {
             tryDetectOnline()
         } else {
-            tryDetectOffline()
+            tryDetectOffline(null)
         }
     }
 
     // region [Lld]
-    private fun tryDetectOnline() {
-        viewModelScope.launch {
-            val lldString = try {
-                withContext(Dispatchers.Default) {
-                    homeRepository.fetchOnlineLldJsonStringOrThrow()
-                }
-            } catch (e: Exception) {
-                showError(R.string.lld_json_fetch_failed, e)
-                tryDetectOffline()
-                return@launch
-            }
-
-            val lld = try {
-                lldString.toObjectOrThrow<Lld>()
-            } catch (e: Exception) {
-                showError(R.string.lld_json_parse_failed, e)
-                tryDetectOffline()
-                return@launch
-            }
-
-            tryDetect(lld, R.string.lld_json_online)
-
-            try {
-                withContext(Dispatchers.IO) {
-                    LldManager.saveLldJsonFile(lldString)
-                }
-            } catch (e: Exception) {
-                showError(R.string.lld_json_save_failed, e)
-            }
-        }
-    }
-
-    private fun tryDetectOffline() {
-        viewModelScope.launch {
-            val lld = fetchOfflineLldOrNull()
-            tryDetect(lld, R.string.lld_json_offline)
-        }
-    }
-
-    private suspend fun fetchOfflineLldOrNull(): Lld? {
-        try {
+    private suspend fun tryDetectOnline(): List<MyModel> {
+        val lldString = try {
             withContext(Dispatchers.IO) {
-                LldManager.copyJsonIfNeeded()
+                homeRepository.fetchOnlineLldJsonStringOrThrow()
             }
         } catch (e: Exception) {
-            showError(R.string.lld_json_save_failed, e)
-
-            val lld = LldManager.getAssetLld(MyApplication.instance.assets)
-            return lld
+            val errorMessage = errorMessage(R.string.lld_json_fetch_failed, e)
+            return tryDetectOffline(errorMessage)
         }
 
         val lld = try {
             withContext(Dispatchers.IO) {
-                homeRepository.fetchOfflineLldFileOrThrow().toObjectOrThrow<Lld>()
+                lldString.toObjectOrThrow<Lld>()
             }
         } catch (e: Exception) {
-            showError(R.string.lld_json_parse_failed, e)
-
-            withContext(Dispatchers.IO) {
-                LldManager.getAssetLld(MyApplication.instance.assets)
-            }
+            val errorMessage = errorMessage(R.string.lld_json_parse_failed, e)
+            return tryDetectOffline(errorMessage)
         }
 
-        return lld
+        val errorMessage = try {
+            withContext(Dispatchers.IO) {
+                LldManager.saveLldJsonFileOrThrow(lldString)
+            }
+            null
+        } catch (e: Exception) {
+            errorMessage(R.string.lld_json_save_failed, e)
+        }
+
+        return detect(lld, listOf(errorMessage), R.string.lld_json_online)
+    }
+
+    private suspend fun tryDetectOffline(errorMessage: String?): List<MyModel> {
+        val lldAndError = fetchOfflineLldOrNull()
+        val errorMessages = listOf(errorMessage, lldAndError.second)
+        return detect(lldAndError.first, errorMessages, R.string.lld_json_offline)
+    }
+
+    private suspend fun fetchOfflineLldOrNull(): LldAndError {
+        try {
+            withContext(Dispatchers.IO) {
+                LldManager.copyJsonIfNeededOrThrow()
+            }
+        } catch (e: Exception) {
+            val errorMessage = errorMessage(R.string.lld_json_save_failed, e)
+
+            val lld = LldManager.getAssetLld(MyApplication.instance.assets)
+            return lld to errorMessage
+        }
+
+        val lldAndError = try {
+            withContext(Dispatchers.IO) {
+                homeRepository.fetchOfflineLldFileOrThrow().toObjectOrThrow<Lld>()
+            } to null
+        } catch (e: Exception) {
+            val lld = withContext(Dispatchers.IO) {
+                LldManager.getAssetLld(MyApplication.instance.assets)
+            }
+
+            val errorMessage = errorMessage(R.string.lld_json_parse_failed, e)
+
+            lld to errorMessage
+        }
+
+        return lldAndError
     }
     // endregion [Lld]
 
-    private fun tryDetect(lld: Lld?, @StringRes modeResId: Int) {
-        return try {
-            detectOrThrow(lld, modeResId)
-        } catch (e: Exception) {
-            showError(R.string.lld_json_detect_failed, e)
+    private suspend fun detect(
+        lld: Lld?, errorMessage: List<String?>, @StringRes modeResId: Int
+    ): List<MyModel> {
+        val tempModels = mutableListOf<MyModel>()
+
+        withContext(Dispatchers.Default) {
+            tempModels += homeRepository.detectMode(lld, errorMessage, modeResId)
         }
+
+        withContext(Dispatchers.Default) {
+            tempModels += homeRepository.detectAndroid(lld)
+            tempModels += homeRepository.detectSdkExtension(lld)
+            tempModels += homeRepository.detectBuildId(lld)
+            tempModels += homeRepository.detectSecurityPatches(lld)
+            tempModels += homeRepository.detectPerformanceClass()
+            tempModels += homeRepository.detectKernel(lld)
+            tempModels += homeRepository.detectAb()
+            tempModels += homeRepository.detectSar()
+            tempModels += homeRepository.detectDynamicPartitions()
+            tempModels += homeRepository.detectTrebleAndGsiCompatibility()
+            tempModels += homeRepository.detectDsu()
+            tempModels += homeRepository.detectMainline(lld)
+            tempModels += homeRepository.detectVndk(lld)
+            tempModels += homeRepository.detectApex()
+            tempModels += homeRepository.detectDeveloperOptions()
+            tempModels += homeRepository.detectAdb()
+            tempModels += homeRepository.detectAdbAuthentication()
+            tempModels += homeRepository.detectEncryption()
+            tempModels += homeRepository.detectSELinux()
+            tempModels += homeRepository.detectToybox(lld)
+            tempModels += homeRepository.detectWebView(lld)
+            tempModels += homeRepository.getOutdatedTargetSdkVersionApkModel(lld)
+        }
+
+        return tempModels
     }
 
-    private fun detectOrThrow(lld: Lld?, @StringRes modeResId: Int) {
-        viewModelScope.launch {
-            val tempModels = mutableListOf<MyModel>()
-
-            withContext(Dispatchers.Default) {
-                tempModels += homeRepository.detectMode(lld, modeResId)
-            }
-
-            if (lld == null) {
-                setModels(tempModels)
-                return@launch
-            }
-
-            withContext(Dispatchers.Default) {
-                tempModels += homeRepository.detectAndroid(lld)
-                tempModels += homeRepository.detectSdkExtension(lld)
-                tempModels += homeRepository.detectBuildId(lld)
-                tempModels += homeRepository.detectSecurityPatches(lld)
-                tempModels += homeRepository.detectPerformanceClass()
-                tempModels += homeRepository.detectKernel(lld)
-                tempModels += homeRepository.detectAb()
-                tempModels += homeRepository.detectSar()
-                tempModels += homeRepository.detectDynamicPartitions()
-                tempModels += homeRepository.detectTrebleAndGsiCompatibility()
-                tempModels += homeRepository.detectDsu()
-                tempModels += homeRepository.detectMainline(lld)
-                tempModels += homeRepository.detectVndk(lld)
-                tempModels += homeRepository.detectApex()
-                tempModels += homeRepository.detectDeveloperOptions()
-                tempModels += homeRepository.detectAdb()
-                tempModels += homeRepository.detectAdbAuthentication()
-                tempModels += homeRepository.detectEncryption()
-                tempModels += homeRepository.detectSELinux()
-                tempModels += homeRepository.detectToybox(lld)
-                tempModels += homeRepository.detectWebView(lld)
-                tempModels += homeRepository.getOutdatedTargetSdkVersionApkModel(lld)
-            }
-
-            setModels(tempModels)
+    private fun errorMessage(@StringRes messageId: Int, cause: Exception): String {
+        if (BuildConfig.DEBUG) {
+            cause.printStackTrace()
         }
+        return MyApplication.getMyString(messageId, cause.fullMessage)
     }
 
     @MainThread
@@ -174,7 +170,7 @@ class HomeViewModel(
             return
         }
 
-        val lld = fetchOfflineLldOrNull()
+        val lld = fetchOfflineLldOrNull().first
             ?: return
         myModels.last().detail = withContext(Dispatchers.Default) {
             homeRepository.getOutdatedTargetSdkVersionApkModel(lld).detail

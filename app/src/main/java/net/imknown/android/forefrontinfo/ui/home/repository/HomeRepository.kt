@@ -55,7 +55,7 @@ class HomeRepository(
     fun fetchOfflineLldFileOrThrow() = lldDataSource.fetchOfflineLldFileOrThrow()
     suspend fun fetchOnlineLldJsonStringOrThrow() = lldDataSource.fetchOnlineLldJsonStringOrThrow()
 
-    fun detectMode(lld: Lld?, modeResId: Int): MyModel {
+    fun detectMode(lld: Lld?, errors: List<String?>, modeResId: Int): MyModel {
         @AttrRes val color: Int
         val datetimeFormatted: String
         if (lld != null) {
@@ -70,18 +70,23 @@ class HomeRepository(
             color = R.attr.colorCritical
         }
 
+        val result = errors.filterNotNull()
+            .takeIf { it.isNotEmpty() }
+            ?.joinToString(separator = "\n\n", prefix = "\n\n")
+            .orEmpty()
+
         return toColoredMyModel(
             MyApplication.getMyString(R.string.lld_json_mode_title),
-            MyApplication.getMyString(modeResId, datetimeFormatted),
+            MyApplication.getMyString(modeResId, datetimeFormatted) + result,
             color
         )
     }
 
-    fun detectAndroid(lld: Lld): MyModel {
-        val lldAndroid = lld.android
+    fun detectAndroid(lld: Lld?): MyModel {
+        val lldAndroid = lld?.android
 
         // region [Mine]
-        val android = lldAndroid.known.find {
+        val android = lldAndroid?.known?.find {
             it.apiFull == myAndroid.apiFull
         }
 
@@ -99,7 +104,7 @@ class HomeRepository(
         }
 
         if (android != null) {
-            with (android) {
+            with(android) {
                 myAndroid.api = api.toInt()
                 myAndroid.apiFull = apiFull
                 myAndroid.version = version
@@ -118,18 +123,24 @@ class HomeRepository(
         val mine = MyApplication.getMyString(R.string.android_info, myVersionAndDessert, myAndroid.apiFull)
         // endregion [Mine]
 
-        fun oneLine(android: Lld.Androids.Android) =
-            MyApplication.getMyString(R.string.android_info, android.version, android.apiFull)
+        fun oneLine(android: Lld.Androids.Android?): String {
+            val version = android?.version
+                ?: MyApplication.getMyString(androidR.string.unknownName)
+            val apiFull = android?.apiFull
+                ?: MyApplication.getMyString(androidR.string.unknownName)
+            return MyApplication.getMyString(R.string.android_info, version, apiFull)
+        }
 
-        val latestStable = oneLine(lldAndroid.stable)
-        val lowestSupport = oneLine(lldAndroid.support)
-        val stablePreview = oneLine(lldAndroid.stablePreview) // Beta
-        val latestPreview = oneLine(lldAndroid.preview) // Canary
-        val latestInternal = oneLine(lldAndroid.internal)
+        val latestStable = oneLine(lldAndroid?.stable)
+        val lowestSupport = oneLine(lldAndroid?.support)
+        val stablePreview = oneLine(lldAndroid?.stablePreview) // Beta
+        val latestPreview = oneLine(lldAndroid?.preview) // Canary
+        val latestInternal = oneLine(lldAndroid?.internal)
 
         val infoDetailArgs = arrayOf(mine, latestStable, lowestSupport, stablePreview, latestPreview, latestInternal)
 
         @AttrRes val color = when {
+            lld == null -> R.attr.colorCritical
             isLatestStableAndroid(lld) || isLatestPreviewAndroid(lld) -> R.attr.colorNoProblem
             isSupportedByUpstreamAndroid(lld) -> R.attr.colorWaring
             else -> R.attr.colorCritical
@@ -142,66 +153,74 @@ class HomeRepository(
         )
     }
 
-    fun detectSdkExtension(lld: Lld): MyModel {
-        val lldStableExtension = lld.android.stable.extension
+    fun detectSdkExtension(lld: Lld?): MyModel {
+        val lldStableExtension = lld?.android?.stable?.extension
 
         val (myExtension, color) = if (isAtLeastAndroid11()) {
             val myExtension = getSdkExtension(Build.VERSION.SDK_INT)
-            val color = myExtension >= lldStableExtension
+            val color = lldStableExtension != null && myExtension >= lldStableExtension
             myExtension to color
         } else {
             MyApplication.getMyString(R.string.result_not_supported) to false
         }
+        val lldStableExtensionString = lldStableExtension?.toString()
+            ?: MyApplication.getMyString(androidR.string.unknownName)
         return toColoredMyModel(
             MyApplication.getMyString(R.string.android_sdk_extension_title),
-            MyApplication.getMyString(R.string.android_sdk_extension_detail, myExtension, lldStableExtension),
+            MyApplication.getMyString(R.string.android_sdk_extension_detail, myExtension, lldStableExtensionString),
             color
         )
     }
 
-    fun detectBuildId(lld: Lld): MyModel {
+    fun detectBuildId(lld: Lld?): MyModel {
         val buildIdResult = Build.ID
         val systemBuildIdResult = getStringProperty(AndroidDataSource.PROP_RO_SYSTEM_BUILD_ID, isAtLeastAndroid9())
         val vendorBuildIdResult = getStringProperty(AndroidDataSource.PROP_RO_VENDOR_BUILD_ID, isAtLeastAndroid9())
         val odmBuildIdResult = getStringProperty(AndroidDataSource.PROP_RO_ODM_BUILD_ID, isAtLeastAndroid9())
 
-        fun isBuildIdAndroid8CtsFormat(buildId: String) =
-            isAtLeastAndroid8() && buildId.split(AndroidDataSource.BUILD_ID_SEPARATOR).size >= 3
+        val build = lld?.android?.build
 
-        val myBuildIdForCompare = if (
-            isBuildIdAndroid8CtsFormat(buildIdResult) || isAtLeastAndroid9().not()
-        ) {
-            buildIdResult
-        } else {
-            systemBuildIdResult
-        }
+        val version = build?.version
+            ?: MyApplication.getMyString(androidR.string.unknownName)
 
-        var builds = ""
-        val build = lld.android.build
-        val lldDetails = build.details
-        lldDetails.forEachIndexed { index, detail ->
-            builds += MyApplication.getMyString(R.string.android_build_id, detail.id, detail.revision)
-
-            if (index != lldDetails.size - 1) {
-                builds += "\n"
-            }
-        }
+        val lldDetails = build?.details
+        val builds = lldDetails?.joinToString("\n") { detail ->
+            MyApplication.getMyString(R.string.android_build_id, detail.id, detail.revision)
+        } ?: MyApplication.getMyString(androidR.string.unknownName)
 
         // region [Color]
-        val lldFirstBuildId = lldDetails[0].id
-        fun getDate(buildId: String) = buildId.split(AndroidDataSource.BUILD_ID_SEPARATOR)[1] // "250705"
         fun isDateHigherThanConfig(): Boolean {
+            if (lld == null) {
+                return false
+            }
+
+            fun isBuildIdAndroid8CtsFormat(buildId: String) =
+                isAtLeastAndroid8() && buildId.split(AndroidDataSource.BUILD_ID_SEPARATOR).size >= 3
+
+            val myBuildIdForCompare = if (
+                isBuildIdAndroid8CtsFormat(buildIdResult) || isAtLeastAndroid9().not()
+            ) {
+                buildIdResult
+            } else {
+                systemBuildIdResult
+            }
+
             if (!isBuildIdAndroid8CtsFormat(myBuildIdForCompare)) {
                 return false
             }
 
+            fun getDate(buildId: String) = buildId.split(AndroidDataSource.BUILD_ID_SEPARATOR)[1] // "250705"
+
             val myBuildIdDate = getDate(myBuildIdForCompare)
             val myBuildIdDateIntOrNull = myBuildIdDate.toIntOrNull()
+                ?: return false
+
+            val lldFirstDetail = lldDetails?.getOrNull(0)
+                ?: return false
+            val lldFirstBuildId = lldFirstDetail.id
             val lldFirstBuildIdDate = getDate(lldFirstBuildId)
             val lldFirstBuildIdDateIntOrNull = lldFirstBuildIdDate.toIntOrNull()
-            if (myBuildIdDateIntOrNull == null || lldFirstBuildIdDateIntOrNull == null) {
-                return false
-            }
+                ?: return false
 
             val offset = if (isLatestStableAndroid(lld)) {
                 0
@@ -214,21 +233,24 @@ class HomeRepository(
         }
 
         @AttrRes val buildIdColor = when {
+            lld == null -> R.attr.colorCritical
             isDateHigherThanConfig() -> R.attr.colorNoProblem
             isLatestStableAndroid(lld) || isLatestPreviewAndroid(lld) -> R.attr.colorWaring
             else -> R.attr.colorCritical
         }
         // endregion [Color]
 
+        val infoDetailArgs = arrayOf(buildIdResult, systemBuildIdResult, vendorBuildIdResult, odmBuildIdResult, version, builds)
+
         return toColoredMyModel(
             MyApplication.getMyString(R.string.android_build_id_title),
-            MyApplication.getMyString(R.string.android_build_id_detail, buildIdResult, systemBuildIdResult, vendorBuildIdResult, odmBuildIdResult, build.version, builds),
+            MyApplication.getMyString(R.string.android_build_id_detail, *infoDetailArgs),
             buildIdColor
         )
     }
 
     // region [SecurityPatch]
-    fun detectSecurityPatches(lld: Lld): List<MyModel> {
+    fun detectSecurityPatches(lld: Lld?): List<MyModel> {
         val tempModels = mutableListOf<MyModel>()
 
         val mySecurityPatch = if (isAtLeastAndroid6()) {
@@ -244,18 +266,25 @@ class HomeRepository(
         return tempModels
     }
 
-    private fun detectSecurityPatch(lld: Lld, mySecurityPatch: String, @StringRes titleId: Int): MyModel {
-        val lldSecurityPatch = lld.android.securityPatchLevel
+    private fun detectSecurityPatch(lld: Lld?, mySecurityPatch: String, @StringRes titleId: Int): MyModel {
+        val lldSecurityPatch = lld?.android?.securityPatchLevel
         @AttrRes val securityPatchColor = when {
+            lldSecurityPatch == null -> R.attr.colorCritical
             !isPropertyValueNotEmpty(mySecurityPatch) -> R.attr.colorCritical
             mySecurityPatch >= lldSecurityPatch -> R.attr.colorNoProblem
             getSecurityPatchYearMonth(mySecurityPatch) >= getSecurityPatchYearMonth(lldSecurityPatch) -> R.attr.colorWaring
             else -> R.attr.colorCritical
         }
 
+        val infoDetailArgs = arrayOf(
+            mySecurityPatch,
+            lldSecurityPatch
+                ?: MyApplication.getMyString(androidR.string.unknownName)
+        )
+
         return toColoredMyModel(
             MyApplication.getMyString(titleId),
-            MyApplication.getMyString(R.string.security_patch_level_detail, mySecurityPatch, lldSecurityPatch),
+            MyApplication.getMyString(R.string.security_patch_level_detail, *infoDetailArgs),
             securityPatchColor
         )
     }
@@ -291,15 +320,15 @@ class HomeRepository(
         )
     }
 
-    fun detectKernel(lld: Lld): MyModel {
+    fun detectKernel(lld: Lld?): MyModel {
         val linuxVersionString = System.getProperty(AndroidDataSource.SYSTEM_PROPERTY_LINUX_VERSION)
         val linuxVersion = Version(linuxVersionString)
 
         @AttrRes var linuxColor = R.attr.colorCritical
 
-        val linux = lld.linux
-        val versionsSupported = linux.google.versions
-        versionsSupported.forEach {
+        val linux = lld?.linux
+        val versionsSupported = linux?.google?.versions
+        versionsSupported?.forEach {
             if (linuxVersion.major == Version(it).major
                 && linuxVersion.minor == Version(it).minor
             ) {
@@ -313,9 +342,15 @@ class HomeRepository(
             }
         }
 
+        val support = versionsSupported?.joinToString("｜")
+            ?: MyApplication.getMyString(androidR.string.unknownName)
+
+        val mainline = linux?.mainline?.version
+            ?: MyApplication.getMyString(androidR.string.unknownName)
+
         return toColoredMyModel(
             MyApplication.getMyString(R.string.linux_title),
-            MyApplication.getMyString(R.string.linux_version_detail, linuxVersionString, versionsSupported.joinToString("｜"), linux.mainline.version),
+            MyApplication.getMyString(R.string.linux_version_detail, linuxVersionString, support, mainline),
             linuxColor
         )
     }
@@ -553,13 +588,17 @@ class HomeRepository(
     }
 
     /** {@link com.android.settings.deviceinfo.firmwareversion.MainlineModuleVersionPreferenceController} */
-    fun detectMainline(lld: Lld): MyModel {
+    fun detectMainline(lld: Lld?): MyModel {
         var versionName = MyApplication.getMyString(R.string.result_not_supported)
         var moduleProvider = MyApplication.getMyString(androidR.string.unknownName)
-        val latestGooglePlaySystemUpdates = lld.android.googlePlaySystemUpdates
+        val latestGooglePlaySystemUpdates = lld?.android?.googlePlaySystemUpdates
 
         fun getResult() = MyApplication.getMyString(
-            R.string.mainline_detail, versionName, moduleProvider, latestGooglePlaySystemUpdates
+            R.string.mainline_detail,
+            versionName,
+            moduleProvider,
+            latestGooglePlaySystemUpdates
+                ?: MyApplication.getMyString(androidR.string.unknownName)
         )
 
         @SuppressLint("DiscouragedApi")
@@ -578,10 +617,12 @@ class HomeRepository(
                 val packageInfo = getPackageInfoOrNull(moduleProvider)
                 versionName = packageInfo?.versionName ?: ""
 
-                if (versionName >= latestGooglePlaySystemUpdates
-                    || "$versionName-01" >= latestGooglePlaySystemUpdates
-                ) {
-                    moduleColor = R.attr.colorNoProblem
+                if (latestGooglePlaySystemUpdates != null) {
+                    if (versionName >= latestGooglePlaySystemUpdates
+                        || "$versionName-01" >= latestGooglePlaySystemUpdates
+                    ) {
+                        moduleColor = R.attr.colorNoProblem
+                    }
                 }
 
                 getResult()
@@ -600,7 +641,7 @@ class HomeRepository(
         )
     }
 
-    fun detectVndk(lld: Lld): MyModel {
+    fun detectVndk(lld: Lld?): MyModel {
         val vndkVersionResult = getStringProperty(AndroidDataSource.PROP_VNDK_VERSION, isAtLeastAndroid8())
         // val vendorVndkVersionResult = getStringProperty(AndroidDataSource.PROP_VENDOR_VNDK_VERSION, isAtLeastStableAndroid8())
         // val productVndkVersionResult = getStringProperty(AndroidDataSource.PROP_PRODUCT_VNDK_VERSION, isAtLeastStableAndroid8())
@@ -613,13 +654,17 @@ class HomeRepository(
         if (hasVndkVersion) {
             val hasVndkLite = getBooleanProperty(AndroidDataSource.PROP_VNDK_LITE)
 
-            vndkColor = if (
-                (isLatestPreviewAndroid(lld) || vndkVersionResult >= lld.android.stable.api)
-                    && !hasVndkLite
-            ) {
-                R.attr.colorNoProblem
+            vndkColor = if (lld != null) {
+                if (
+                    (isLatestPreviewAndroid(lld) || vndkVersionResult >= lld.android.stable.api)
+                        && !hasVndkLite
+                ) {
+                    R.attr.colorNoProblem
+                } else {
+                    R.attr.colorWaring
+                }
             } else {
-                R.attr.colorWaring
+                R.attr.colorCritical
             }
 
             isVndkBuiltInResult += MyApplication.getMyString(
@@ -798,7 +843,7 @@ class HomeRepository(
         )
     }
 
-    fun detectToybox(lld: Lld): MyModel {
+    fun detectToybox(lld: Lld?): MyModel {
         val toyboxVersionResult = getShellResult(AndroidDataSource.CMD_TOYBOX_VERSION, isAtLeastAndroid6())
         val hasToyboxVersion = toyboxVersionResult.isSuccess
 
@@ -809,32 +854,42 @@ class HomeRepository(
             toSupportOrNotString(false)
         }
 
-        val toybox = lld.toybox
-        val stable = toybox.stable
-        val support = toybox.support
-        val master = toybox.master
+        val toybox = lld?.toybox
+        val stableVersion = toybox?.stable?.version
+        val supportVersion = toybox?.support?.version
+        val masterVersion = toybox?.master?.version
 
         @AttrRes val toyboxColor = if (hasToyboxVersion) {
             val toyboxRealVersionString = toyboxVersion.replace("toybox ", "")
             val toyboxRealVersion = Version(toyboxRealVersionString)
             when {
-                toyboxRealVersion.isAtLeast(stable.version) -> R.attr.colorNoProblem
-                toyboxRealVersion.isAtLeast(support.version) -> R.attr.colorWaring
+                stableVersion != null && toyboxRealVersion.isAtLeast(stableVersion) -> R.attr.colorNoProblem
+                supportVersion != null && toyboxRealVersion.isAtLeast(supportVersion) -> R.attr.colorWaring
                 else -> R.attr.colorCritical
             }
         } else {
             R.attr.colorCritical
         }
 
+        val infoDetailArgs = arrayOf(
+            toyboxVersion,
+            stableVersion
+                ?: MyApplication.getMyString(androidR.string.unknownName),
+            supportVersion
+                ?: MyApplication.getMyString(androidR.string.unknownName),
+            masterVersion
+                ?: MyApplication.getMyString(androidR.string.unknownName)
+        )
+
         return toColoredMyModel(
             MyApplication.getMyString(R.string.toybox_built_in_title),
-            MyApplication.getMyString(R.string.toybox_built_in_detail, toyboxVersion, stable.version, support.version, master.version),
+            MyApplication.getMyString(R.string.toybox_built_in_detail, *infoDetailArgs),
             toyboxColor
         )
     }
 
     // region [WebView]
-    fun detectWebView(lld: Lld): MyModel {
+    fun detectWebView(lld: Lld?): MyModel {
         val type = if (isAtLeastAndroid10()) {
             val standalone = MyApplication.getMyString(R.string.webview_standalone)
             MyApplication.getMyString(R.string.webview_or, "Trichrome", standalone)
@@ -914,15 +969,20 @@ class HomeRepository(
                 |  $implementVersionName
                 """.trimMargin()
 
-        val webView = lld.webView
-        val lldWebViewStable = webView.stable.version
+        val webView = lld?.webView
+        val lldWebViewStable = webView?.stable?.version
+        val lldWebViewBeta = webView?.beta?.version
         val latestResult = MyApplication.getMyString(
-            R.string.webview_detail, lldWebViewStable, webView.beta.version
+            R.string.webview_detail,
+            lldWebViewStable
+                ?: MyApplication.getMyString(androidR.string.unknownName),
+            lldWebViewBeta
+                ?: MyApplication.getMyString(androidR.string.unknownName)
         )
 
         @AttrRes val webViewColor = when {
-            Version(builtInVersionName).isAtLeast(lldWebViewStable) -> R.attr.colorNoProblem
-            Version(implementVersionName).isAtLeast(lldWebViewStable) -> R.attr.colorWaring
+            lldWebViewStable != null && Version(builtInVersionName).isAtLeast(lldWebViewStable) -> R.attr.colorNoProblem
+            lldWebViewStable != null && Version(implementVersionName).isAtLeast(lldWebViewStable) -> R.attr.colorWaring
             else -> R.attr.colorCritical
         }
 
@@ -1028,7 +1088,7 @@ class HomeRepository(
     }
     // endregion [WebView]
 
-    fun getOutdatedTargetSdkVersionApkModel(lld: Lld): MyModel {
+    fun getOutdatedTargetSdkVersionApkModel(lld: Lld?): MyModel {
         val packageManager = MyApplication.instance.packageManager
         val installedApplications = if (isAtLeastAndroid13()) {
             val flags = PackageManager.ApplicationInfoFlags.of(0)
@@ -1049,10 +1109,14 @@ class HomeRepository(
         @AttrRes val targetSdkVersionColor = if (systemApkList.isEmpty()) {
             result += MyApplication.getMyString(R.string.outdated_target_version_sdk_version_apk_result_none)
 
-            if (isLatestStableAndroid(lld) || isLatestPreviewAndroid(lld)) {
-                R.attr.colorNoProblem
+            if (lld != null) {
+                if (isLatestStableAndroid(lld) || isLatestPreviewAndroid(lld)) {
+                    R.attr.colorNoProblem
+                } else {
+                    R.attr.colorWaring
+                }
             } else {
-                R.attr.colorWaring
+                R.attr.colorCritical
             }
         } else {
             val shouldOrderByPackageNameFirst = MyApplication.sharedPreferences.getBoolean(
@@ -1072,14 +1136,10 @@ class HomeRepository(
                 R.string.outdated_target_version_sdk_version_apk_result_format_target_sdk_version_first
             }
 
-            systemApkList.forEachIndexed { index, applicationInfo ->
-                result += "- " + MyApplication.getMyString(
+            result += systemApkList.joinToString("\n") { applicationInfo ->
+                "- " + MyApplication.getMyString(
                     format, applicationInfo.packageName, applicationInfo.targetSdkVersion
                 )
-
-                if (index != systemApkList.size - 1) {
-                    result += "\n"
-                }
             }
 
             R.attr.colorCritical

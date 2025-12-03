@@ -102,5 +102,5 @@ class LldDataSource {
         }
     }
 
-    fun fetchOfflineLldFileOrThrow() = LldManager.savedLldJsonFile
+    fun fetchOfflineLldFileOrThrow() = LldManager.savedLldJsonFileOrThrow
 }
