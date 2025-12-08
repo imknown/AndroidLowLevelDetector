@@ -1,1 +1,0 @@
-// See: https://github.com/imknown/AndroidLowLevelDetector/blob/master/gradle/toml
