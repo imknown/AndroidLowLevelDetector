@@ -24,9 +24,17 @@ firebase-crashlytics-ndk = { group = "com.google.firebase", name = "firebase-cra
 
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
+# region [For build-logic]
+firebase-crashlytics-gradlePlugin = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version.ref = "firebase-crashlytics-gradlePlugin" }
+# endregion [For build-logic]
+
 [bundles]
 firebase = ["firebase-analytics", "firebase-crashlytics-ndk"]
 
 [plugins]
 googleServices = { id = "com.google.gms.google-services", version.ref = "googleServices-gradlePlugin" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics-gradlePlugin" }
+
+# region [For build-logic]
+lowleveldetector-google-firebase = { id = "lowleveldetector.google.firebase" }
+# endregion [For build-logic]

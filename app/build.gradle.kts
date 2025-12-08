@@ -1,56 +1,18 @@
-import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
-import org.gradle.kotlin.dsl.support.uppercaseFirstChar
 import java.io.FileInputStream
 import java.util.Properties
-import kotlin.reflect.KFunction1
 
 plugins {
-    alias(libsAndroid.plugins.android.application)
+    alias(libsAndroid.plugins.lowleveldetector.android.application)
+    alias(libsAndroid.plugins.lowleveldetector.android.application.flavors)
+    alias(libsAndroid.plugins.lowleveldetector.android.application.ndk.version)
 
     alias(libsKotlin.plugins.kotlinx.serialization)
 
-    alias(libsGoogle.plugins.googleServices)
-    alias(libsGoogle.plugins.firebase.crashlytics)
+    alias(libsGoogle.plugins.lowleveldetector.google.firebase)
 }
-
-private val buildVersion = libsBuild.versions
 
 android {
     namespace = "net.imknown.android.forefrontinfo"
-
-    val isPreview = buildVersion.isPreview.get().toBoolean()
-    compileSdk {
-        version = if (isPreview) {
-            preview(buildVersion.compileSdkPreview.get())
-        } else {
-            release(buildVersion.compileSdk.get().toInt()) {
-                minorApiLevel = buildVersion.compileSdkMinor.get().toInt()
-                // sdkExtension = buildVersion.compileSdkExtension.get().toInt()
-            }
-        }
-    }
-    buildToolsVersion = (if (isPreview) buildVersion.buildToolsPreview else buildVersion.buildTools).get()
-
-    defaultConfig {
-        versionCode = buildVersion.versionCode.get().toInt()
-        versionName = buildVersion.versionName.get()
-
-        val currentDatetime = getCurrentDatetime()
-        val currentGitBranchName = providers.execute("git", "rev-parse", "--abbrev-ref", "HEAD")
-        base.archivesName.set("lld-$versionName-$versionCode-$currentDatetime-$currentGitBranchName")
-
-        minSdk = buildVersion.minSdk.get().toInt()
-        targetSdk = buildVersion.targetSdk.get().toInt()
-        if (isPreview) {
-            targetSdkPreview = buildVersion.targetSdkPreview.get()
-        }
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        buildConfigField("String", "GIT_BRANCH", "\"$currentGitBranchName\"")
-    }
-
-    ndkVersion = buildVersion.ndk.get()
 
     sourceSets {
         named("main") {
@@ -114,16 +76,6 @@ android {
         }
     }
 
-    flavorDimensions += IssueTracker::class.simpleName.toString()
-
-    productFlavors {
-        register(IssueTracker.Foss.name) {
-            isDefault = true
-            versionNameSuffix = "-$name"
-        }
-        register(IssueTracker.Firebase.name)
-    }
-
     buildTypes {
         release {
             isMinifyEnabled = true
@@ -134,12 +86,7 @@ android {
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
-                "proguard-firebase-rules.pro"
             )
-
-            configure<CrashlyticsExtension> {
-                nativeSymbolUploadEnabled = true
-            }
         }
 
         debug {
@@ -152,10 +99,6 @@ android {
         }
     }
 
-    compileOptions {
-        isCoreLibraryDesugaringEnabled = true
-    }
-
     buildFeatures {
         buildConfig = true
         viewBinding = true
@@ -166,49 +109,11 @@ android {
     }
 }
 
-// region [Toolchain]
-// https://developer.android.com/build/jdks
-// https://kotlinlang.org/docs/gradle-configure-project.html
-// https://docs.gradle.org/current/userguide/toolchains.html
-kotlin {
-    jvmToolchain(buildVersion.javaToolchain.get().toInt())
-}
-// endregion [Toolchain]
-
-fun Task.disable() {
-    println("Task $name disabled.")
-    enabled = false
-}
-
-// gradle.taskGraph.whenReady {
-//    tasks.forEach { task ->
-tasks.configureEach {
-    val task = this
-
-    val flavorFoss = IssueTracker.Foss.name
-
-    val isGoogleServices = task.name.startsWith("process$flavorFoss")
-            && task.name.endsWith("GoogleServices")
-    if (isGoogleServices) {
-        task.disable()
-        return@configureEach
-    }
-
-    val isFirebaseCrashlytics = task.name.contains("Crashlytics")
-            && task.name.contains(flavorFoss)
-    if (isFirebaseCrashlytics) {
-        task.disable()
-        return@configureEach
-    }
-}
-
 dependencies {
     implementation(fileTree("libs") { include("*.jar", "*.aar") })
 
     implementation(project(":binderDetector"))
     implementation(project(":base"))
-
-    coreLibraryDesugaring(libsAndroid.desugarJdkLibs)
 
     // region [AndroidX]
     implementation(libsAndroid.activity.ktx)
@@ -226,9 +131,6 @@ dependencies {
     implementation(libsAndroid.savedState.ktx)
     implementation(libsAndroid.swipeRefreshLayout)
     implementation(libsAndroid.webkit)
-
-    testImplementation(libsAndroid.bundles.test)
-    androidTestImplementation(libsAndroid.bundles.androidTest)
     // endregion [AndroidX]
 
     // region [Kotlin]
@@ -248,11 +150,5 @@ dependencies {
 
     // region [Google]
     implementation(libsGoogle.material)
-
-    val implementationRef: KFunction1<*, *> = ::implementation
-    val firebaseImplementation = IssueTracker.Firebase.name + implementationRef.name.uppercaseFirstChar()
-    // val firebaseImplementation by configurations
-    firebaseImplementation(platform(libsGoogle.firebase.bom))
-    firebaseImplementation(libsGoogle.bundles.firebase)
     // endregion [Google]
 }
