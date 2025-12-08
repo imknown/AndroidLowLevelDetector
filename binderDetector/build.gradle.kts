@@ -1,5 +1,6 @@
 plugins {
-    alias(libsAndroid.plugins.android.library)
+    alias(libsAndroid.plugins.lowleveldetector.android.library)
+    alias(libsAndroid.plugins.lowleveldetector.android.library.ndk.version)
 }
 
 private val buildVersion = libsBuild.versions
@@ -7,22 +8,7 @@ private val buildVersion = libsBuild.versions
 android {
     namespace = "net.imknown.android.forefrontinfo.binderDetector"
 
-    val isPreview = buildVersion.isPreview.get().toBoolean()
-    compileSdk {
-        version = if (isPreview) {
-            preview(buildVersion.compileSdkPreview.get())
-        } else {
-            release(buildVersion.compileSdk.get().toInt()) {
-                minorApiLevel = buildVersion.compileSdkMinor.get().toInt()
-                // sdkExtension = buildVersion.compileSdkExtension.get().toInt()
-            }
-        }
-    }
-    buildToolsVersion = (if (isPreview) buildVersion.buildToolsPreview else buildVersion.buildTools).get()
-
     defaultConfig {
-        minSdk = buildVersion.minSdk.get().toInt()
-
         externalNativeBuild {
             cmake {
                 arguments += listOf("-DANDROID_ARM_NEON=TRUE", "-DANDROID_TOOLCHAIN=clang")
@@ -34,8 +20,6 @@ android {
         }
     }
 
-    ndkVersion = buildVersion.ndk.get()
-
     externalNativeBuild {
         cmake {
             path("src/main/cpp/CMakeLists.txt")
@@ -43,12 +27,3 @@ android {
         }
     }
 }
-
-// region [Toolchain]
-// https://developer.android.com/build/jdks
-// https://kotlinlang.org/docs/gradle-configure-project.html
-// https://docs.gradle.org/current/userguide/toolchains.html
-kotlin {
-    jvmToolchain(buildVersion.javaToolchain.get().toInt())
-}
-// endregion [Toolchain]
