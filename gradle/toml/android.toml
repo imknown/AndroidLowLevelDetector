@@ -117,6 +117,10 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 test-core-ktx = { group = "androidx.test", name = "core-ktx", version.ref = "test-core" }
 test-ext-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "test-ext-junit" }
 
+# region [For build-logic]
+android-gradleApiPlugin = { group = "com.android.tools.build", name = "gradle-api", version.ref = "androidGradlePlugin" }
+# endregion [For build-logic]
+
 [bundles]
 annotation = ["annotation", "annotation-experimental"]
 appcompat = ["appcompat", "appcompat-resources"]
@@ -129,3 +133,11 @@ androidTest = ["test-core-ktx", "test-ext-junit-ktx"]
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
+
+# region [For build-logic]
+lowleveldetector-android-application = { id = "lowleveldetector.android.application" }
+lowleveldetector-android-application-flavors = { id = "lowleveldetector.android.application.flavors" }
+lowleveldetector-android-library = { id = "lowleveldetector.android.library" }
+lowleveldetector-android-application-ndk-version = { id = "lowleveldetector.android.application.ndk.version" }
+lowleveldetector-android-library-ndk-version = { id = "lowleveldetector.android.library.ndk.version" }
+# endregion [For build-logic]
