@@ -244,7 +244,7 @@ class HomeRepository(
 
         return toColoredMyModel(
             MyApplication.getMyString(R.string.android_build_id_title),
-            MyApplication.getMyString(R.string.android_build_id_detail, *infoDetailArgs),
+            MyApplication.getMyString(R.string.android_build_id_detail).format(*infoDetailArgs), // Fix weird NPE on Android 6
             buildIdColor
         )
     }
