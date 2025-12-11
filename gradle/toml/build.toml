@@ -10,13 +10,11 @@ minSdk = "23"
 compileSdk = "36"
 compileSdkMinor = "1"
 compileSdkPreview = "CANARY"
-# compileSdkPreview = "Baklava"
 
 compileSdkExtension = "20" # 36.1-ext20
 
 targetSdk = "36"
 targetSdkPreview = "CANARY"
-# targetSdkPreview = "Baklava"
 
 # https://github.com/android/ndk/releases
 ndk = "29.0.14206865"
