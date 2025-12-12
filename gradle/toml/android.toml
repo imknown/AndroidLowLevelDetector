@@ -4,7 +4,7 @@
 # https://developer.android.com/studio/releases
 # https://androidstudio.googleblog.com/
 # https://maven.google.com/web/index.html?q=com.android.tools.build
-androidGradlePlugin = "8.13.1"
+androidGradlePlugin = "8.13.2"
 androidGradlePlugin-beta = "9.0.0-beta03"
 androidGradlePlugin-canary = "9.0.0-beta03"
 
