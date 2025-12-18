@@ -130,7 +130,7 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
 
-            signingConfig = signingConfigs.getByName(name)
+            signingConfig = signingConfigs.named(name).get()
 
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -147,7 +147,7 @@ android {
             isDebuggable = true
             isJniDebuggable = true
 
-            signingConfig = signingConfigs.getByName(name)
+            signingConfig = signingConfigs.named(name).get()
 
             applicationIdSuffix = ".$name"
         }
