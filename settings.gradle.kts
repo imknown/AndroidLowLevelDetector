@@ -26,7 +26,7 @@ dependencyResolutionManagement {
         fun String.toToml() {
             val originalName = this
             val libName = "libs${originalName.uppercaseFirstChar()}"
-            create(libName) {
+            register(libName) {
                 from(files("gradle/toml/$originalName.toml"))
             }
         }
