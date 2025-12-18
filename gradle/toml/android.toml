@@ -15,7 +15,7 @@ desugarJdkLibs = "2.1.5"
 
 # region [AndroidX]
 # https://developer.android.com/jetpack/androidx/releases/activity
-activity = "1.12.1"
+activity = "1.12.2"
 
 # https://developer.android.com/jetpack/androidx/releases/annotation
 annotation = "1.9.1"
@@ -59,7 +59,7 @@ savedState = "1.4.0"
 swipeRefreshLayout = "1.2.0"
 
 # https://developer.android.com/jetpack/androidx/releases/webkit
-webkit = "1.15.0-rc01"
+webkit = "1.15.0"
 
 # https://developer.android.com/training/testing/local-tests#dependencies
 # region [Test]
