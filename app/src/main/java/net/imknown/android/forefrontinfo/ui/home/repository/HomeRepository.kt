@@ -1036,7 +1036,9 @@ class HomeRepository(
         fun Any?.getWebViewProviderInfoMemberOrThrow(name: String) =
             Class.forName("android.webkit.WebViewProviderInfo").getDeclaredField(name).get(this)
 
-        fun String.log(e: Exception) = Log.w(javaClass.simpleName, "WebViewProvider $this: ${e.fullMessage}")
+        fun String.log(e: Exception) {
+            Log.w(javaClass.simpleName, "WebViewProvider $this: ${e.fullMessage}")
+        }
 
         return allWebViewPackages.toList().map {
             with(it) {
