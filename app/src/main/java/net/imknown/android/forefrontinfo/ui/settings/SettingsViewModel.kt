@@ -60,8 +60,10 @@ class SettingsViewModel(
 
     fun setBuiltInDataVersion(
         packageManager: PackageManager, packageName: String
-    ) = viewModelScope.launch {
-        _version.value = State.Done(settingsRepository.getBuiltInDataVersion(packageManager, packageName))
+    ) {
+        viewModelScope.launch {
+            _version.value = State.Done(settingsRepository.getBuiltInDataVersion(packageManager, packageName))
+        }
     }
     // endregion [Version Info]
 
