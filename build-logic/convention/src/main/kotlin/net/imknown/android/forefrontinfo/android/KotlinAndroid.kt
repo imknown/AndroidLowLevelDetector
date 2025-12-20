@@ -13,7 +13,7 @@ import org.jetbrains.kotlin.gradle.dsl.HasConfigurableKotlinCompilerOptions
 import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinBaseExtension
 
-internal inline fun <reified T : CommonExtension<*, *, *, *, *, *>> Project.configureAndroid() {
+internal inline fun <reified T : CommonExtension> Project.configureAndroid() {
     configure<T> {
         configureAndroidSdk(this)
         configureAndroidDesugar(this)
@@ -22,9 +22,7 @@ internal inline fun <reified T : CommonExtension<*, *, *, *, *, *>> Project.conf
     }
 }
 
-internal fun Project.configureAndroidSdk(
-    commonExtension: CommonExtension<*, *, *, *, *, *>,
-) {
+internal fun Project.configureAndroidSdk(commonExtension: CommonExtension) {
     commonExtension.apply {
         val isPreview = buildVersion("isPreview").toBoolean()
 
@@ -45,7 +43,7 @@ internal fun Project.configureAndroidSdk(
             if (isPreview) "buildToolsPreview" else "buildTools"
         )
 
-        defaultConfig {
+        defaultConfig.apply {
             minSdk = buildVersion("minSdk").toInt()
 
             if (this is ApplicationBaseFlavor) {
@@ -58,17 +56,15 @@ internal fun Project.configureAndroidSdk(
     }
 }
 
-internal inline fun <reified T : CommonExtension<*, *, *, *, *, *>> Project.configureAndroidNdk() {
+internal inline fun <reified T : CommonExtension> Project.configureAndroidNdk() {
     configure<T> {
         ndkVersion = buildVersion("ndk")
     }
 }
 
-internal fun Project.configureTest(
-    commonExtension: CommonExtension<*, *, *, *, *, *>,
-) {
+internal fun Project.configureTest(commonExtension: CommonExtension) {
     commonExtension.apply {
-        defaultConfig {
+        defaultConfig.apply {
             testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         }
 
@@ -79,11 +75,9 @@ internal fun Project.configureTest(
     }
 }
 
-internal fun Project.configureAndroidDesugar(
-    commonExtension: CommonExtension<*, *, *, *, *, *>,
-) {
+internal fun Project.configureAndroidDesugar(commonExtension: CommonExtension) {
     commonExtension.apply {
-        compileOptions {
+        compileOptions.apply {
             isCoreLibraryDesugaringEnabled = true
         }
     }

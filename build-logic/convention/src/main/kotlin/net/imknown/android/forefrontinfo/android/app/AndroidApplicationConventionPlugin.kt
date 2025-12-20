@@ -16,7 +16,6 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             apply(plugin = "com.android.application")
-            apply(plugin = "org.jetbrains.kotlin.android")
 
             configureName()
             configureAndroid<ApplicationExtension>()
@@ -32,7 +31,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 val currentDatetime = getCurrentDatetime()
                 val currentGitBranchName =
                     providers.execute("git", "rev-parse", "--abbrev-ref", "HEAD")
-                configure<BasePluginExtension> {
+                this@configureName.configure<BasePluginExtension> {
                     archivesName.set("lld-$versionName-$versionCode-$currentDatetime-$currentGitBranchName")
                 }
 
