@@ -6,7 +6,7 @@ kotlin = "2.3.0"
 kotlinx-coroutines = "1.10.2"
 
 # https://github.com/Kotlin/kotlinx.serialization/releases
-kotlinx-serialization = "1.9.0"
+kotlinx-serialization = "1.10.0-RC"
 
 # https://github.com/ktorio/ktor/releases
 ktor = "3.3.3"

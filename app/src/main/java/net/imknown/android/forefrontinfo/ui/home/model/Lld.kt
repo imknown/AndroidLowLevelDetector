@@ -64,8 +64,8 @@ data class Lld(
             /** Dessert */
             val name: String,
             // https://android.googlesource.com/platform/build/release/+/refs/heads/main/flag_values/trunk_staging/RELEASE_PLATFORM_VERSION_KNOWN_CODENAMES.textproto
-            @EncodeDefault val codename: String = CODENAME_NONE,
-            @EncodeDefault val extension: Int = EXTENSION_NONE,
+            val codename: String = CODENAME_NONE,
+            val extension: Int = EXTENSION_NONE,
             /** Deprecated: "Preview" used to be: "$[version] $[phase]" */
             val phase: String? = null
         )
