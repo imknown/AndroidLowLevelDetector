@@ -1,11 +1,11 @@
 {
   "scheme": 1,
-  "version": "2025-12-20 18:00 +0800",
+  "version": "2025-12-24 08:50 +0800",
   "android": {
     "securityPatchLevel": "2025-12-05",
     "googlePlaySystemUpdates": "2025-10-01",
     "build": {
-      "version": "2025-12-02",
+      "version": "2025-12-19",
       "details": [
         { "id": "BP4A.251205.006", "revision": "1" },
         { "id": "BP4A.251205.006.A1", "revision": "2" },
@@ -21,7 +21,7 @@
       "api": "36", "apiFull": "36.1", "version": "16.1 (QPR2), Baklava.1", "name": "Baklava.1", "extension": 20
     },
     "stablePreview": {
-      "api": "36", "apiFull": "36.1", "version": "16.1 (QPR3) Beta 1, Baklava.1", "name": "Baklava.1"
+      "api": "36", "apiFull": "36.1", "version": "16.1 (QPR3) Beta 1.1, Baklava.1", "name": "Baklava.1"
     },
     "support": {
       "api": "33", "apiFull": "33", "version": "13, Tiramisu", "name": "Tiramisu"
