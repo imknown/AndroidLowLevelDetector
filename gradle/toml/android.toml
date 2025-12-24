@@ -6,7 +6,7 @@
 # https://maven.google.com/web/index.html?q=com.android.tools.build
 androidGradlePlugin = "9.0.0-rc01"
 androidGradlePlugin-beta = "9.0.0-rc01"
-androidGradlePlugin-canary = "9.1.0-alphaL01"
+androidGradlePlugin-canary = "9.1.0-alpha01"
 
 # https://developer.android.com/studio/write/java8-support#library-desugaring
 # https://maven.google.com/web/index.html?q=desugar_jdk_libs
