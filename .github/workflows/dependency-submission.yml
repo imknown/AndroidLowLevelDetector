@@ -19,7 +19,7 @@ jobs:
 
     steps:
       # https://github.com/actions/checkout
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       # https://github.com/gradle/actions
       - name: Set up Gradle
