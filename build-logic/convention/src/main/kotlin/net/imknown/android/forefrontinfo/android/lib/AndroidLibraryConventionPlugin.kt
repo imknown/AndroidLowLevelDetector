@@ -1,5 +1,6 @@
 package net.imknown.android.forefrontinfo.android.lib
-import com.android.build.api.dsl.LibraryExtension
+
+import com.android.build.api.dsl.CommonExtension
 import net.imknown.android.forefrontinfo.android.configureAndroid
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -10,7 +11,7 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
         with(target) {
             apply(plugin = "com.android.library")
 
-            configureAndroid<LibraryExtension>()
+            configureAndroid<CommonExtension>()
         }
     }
 }

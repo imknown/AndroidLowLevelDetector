@@ -1,5 +1,7 @@
 package net.imknown.android.forefrontinfo.android.app
+
 import com.android.build.api.dsl.ApplicationExtension
+import com.android.build.api.dsl.CommonExtension
 import net.imknown.android.forefrontinfo.android.configureAndroid
 import net.imknown.android.forefrontinfo.ext.buildVersion
 import org.gradle.api.Plugin
@@ -18,7 +20,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
             apply(plugin = "com.android.application")
 
             configureName()
-            configureAndroid<ApplicationExtension>()
+            configureAndroid<CommonExtension>()
         }
     }
 
