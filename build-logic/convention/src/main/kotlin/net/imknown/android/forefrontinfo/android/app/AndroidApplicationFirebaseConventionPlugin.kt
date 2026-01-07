@@ -1,6 +1,6 @@
 package net.imknown.android.forefrontinfo.android.app
 
-import com.android.build.api.dsl.ApplicationExtension
+import com.android.build.api.dsl.CommonExtension
 import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
 import net.imknown.android.forefrontinfo.android.Flavor
 import net.imknown.android.forefrontinfo.ext.implementation
@@ -30,7 +30,7 @@ class AndroidApplicationFirebaseConventionPlugin : Plugin<Project> {
                 firebaseImplementation(crashlytics)
             }
 
-            configure<ApplicationExtension> {
+            configure<CommonExtension> {
                 buildTypes.configureEach {
                     configure<CrashlyticsExtension> {
                         nativeSymbolUploadEnabled = true
