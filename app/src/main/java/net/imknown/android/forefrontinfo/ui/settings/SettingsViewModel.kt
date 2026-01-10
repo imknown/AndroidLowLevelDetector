@@ -11,8 +11,8 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.ui.base.BaseViewModel
@@ -35,34 +35,34 @@ class SettingsViewModel(
             }
         }
 
-        private val _scrollBarModeChangedSharedFlow = MutableSharedFlow<String?>()
-        val scrollBarModeChangedSharedFlow = _scrollBarModeChangedSharedFlow.asSharedFlow()
+        val scrollBarModeChangedSharedFlow: SharedFlow<String?>
+            field = MutableSharedFlow()
 
-        private val _outdatedOrderChangedSharedFlow = MutableSharedFlow<Unit>()
-        val outdatedOrderChangedSharedFlow = _outdatedOrderChangedSharedFlow.asSharedFlow()
+        val outdatedOrderChangedSharedFlow: SharedFlow<Unit>
+            field = MutableSharedFlow()
     }
 
     fun emitScrollBarModeChangedSharedFlow(scrollBarMode: String?) {
         viewModelScope.launch {
-            _scrollBarModeChangedSharedFlow.emit(scrollBarMode)
+            scrollBarModeChangedSharedFlow.emit(scrollBarMode)
         }
     }
 
     fun emitOutdatedOrderChangedSharedFlow() {
         viewModelScope.launch {
-            _outdatedOrderChangedSharedFlow.emit(Unit)
+            outdatedOrderChangedSharedFlow.emit(Unit)
         }
     }
 
     // region [Version Info]
-    private val _version by lazy { MutableStateFlow<State<SettingsRepository.Version>>(State.NotInitialized) }
-    val version by lazy { _version.asStateFlow() }
+    val version: StateFlow<State<SettingsRepository.Version>>
+        field = MutableStateFlow<State<SettingsRepository.Version>>(State.NotInitialized)
 
     fun setBuiltInDataVersion(
         packageManager: PackageManager, packageName: String
     ) {
         viewModelScope.launch {
-            _version.value = State.Done(settingsRepository.getBuiltInDataVersion(packageManager, packageName))
+            version.value = State.Done(settingsRepository.getBuiltInDataVersion(packageManager, packageName))
         }
     }
     // endregion [Version Info]
