@@ -1,27 +1,23 @@
 {
   "scheme": 1,
-  "version": "2026-01-08 19:45 +0800",
+  "version": "2026-01-15 08:30 +0800",
   "android": {
     "securityPatchLevel": "2026-01-05",
     "googlePlaySystemUpdates": "2025-10-01",
     "build": {
-      "version": "2025-12-19",
+      "version": "2026-01-13",
       "details": [
-        { "id": "BP4A.251205.006", "revision": "1" },
-        { "id": "BP4A.251205.006.A1", "revision": "2" },
-        { "id": "BP4A.251205.006.B1", "revision": "3" },
-        { "id": "BP4A.251205.006.C1", "revision": "4" },
-        { "id": "BP4A.251205.006.A4", "revision": "5" },
-        { "id": "BP4A.251205.006.C2", "revision": "6" },
-        { "id": "BP4A.251205.006.E1", "revision": "7" },
-        { "id": "BP4A.251205.006.B3", "revision": "8" }
+        { "id": "BP4A.260105.004.A2", "revision": "EMEA" },
+        { "id": "BP4A.260105.004.B2", "revision": "Verizon" },
+        { "id": "BP4A.260105.004.C2", "revision": "Japan" },
+        { "id": "BP4A.260105.004.E1", "revision": "-" }
       ]
     },
     "stable": {
       "api": "36", "apiFull": "36.1", "version": "16.1 (QPR2), Baklava 1", "name": "Baklava 1", "extension": 20
     },
     "stablePreview": {
-      "api": "36", "apiFull": "36.1", "version": "16.1 (QPR3) Beta 1.1, Baklava 1", "name": "Baklava 1"
+      "api": "36", "apiFull": "36.1", "version": "16.1 (QPR3) Beta 2, Baklava 1", "name": "Baklava 1"
     },
     "support": {
       "api": "33", "apiFull": "33", "version": "13, Tiramisu", "name": "Tiramisu"
@@ -54,8 +50,8 @@
     ]
   },
   "linux": {
-    "google": { "versions": [ "6.18.4", "6.12.64", "6.6.119", "6.1.159", "5.15.197", "5.10.247" ] },
-    "mainline": { "version": "6.19-rc4" }
+    "google": { "versions": [ "6.18.5", "6.12.65", "6.6.120", "6.1.160", "5.15.197", "5.10.247" ] },
+    "mainline": { "version": "6.19-rc5" }
   },
   "toybox": {
     "stable": { "version": "0.8.12" },
