@@ -43,7 +43,7 @@ kotlin {
 // endregion [Toolchain]
 
 dependencies {
-    api(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
+    api(fileTree("libs") { include("*.jar", "*.aar") })
 
     coreLibraryDesugaring(libsAndroid.desugarJdkLibs)
 

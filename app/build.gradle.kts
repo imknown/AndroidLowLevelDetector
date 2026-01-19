@@ -203,7 +203,7 @@ tasks.configureEach {
 }
 
 dependencies {
-    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
+    implementation(fileTree("libs") { include("*.jar", "*.aar") })
 
     implementation(project(":binderDetector"))
     implementation(project(":base"))
