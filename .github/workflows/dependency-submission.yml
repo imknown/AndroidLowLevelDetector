@@ -25,6 +25,16 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v5
 
+      # region [JDK]
+      # https://github.com/actions/setup-java
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: gradle
+      # endregion [JDK]
+
       # region [Android SDK]
       # https://github.com/android-actions/setup-android
       - name: Setup Android SDK
