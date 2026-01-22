@@ -580,9 +580,16 @@ class HomeRepository(
     fun detectDsu(): MyModel {
         val isDsuEnabled = getBooleanProperty(AndroidDataSource.PROP_PERSIST_DYNAMIC_SYSTEM_UPDATE, isAtLeastAndroid10())
                 || getBooleanProperty(AndroidDataSource.PROP_DYNAMIC_SYSTEM_UPDATE, isAtLeastAndroid10())
+        val result = MyApplication.getMyString(
+            if (isDsuEnabled) {
+                R.string.result_supported
+            } else {
+                androidR.string.unknownName
+            }
+        )
         return toColoredMyModel(
             MyApplication.getMyString(R.string.dsu_status_title),
-            toSupportOrNotString(isDsuEnabled),
+            result,
             isDsuEnabled
         )
     }
