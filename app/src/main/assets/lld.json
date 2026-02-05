@@ -1,16 +1,18 @@
 {
   "scheme": 1,
-  "version": "2026-02-03 09:15 +0800",
+  "version": "2026-02-05 21:35 +0800",
   "android": {
     "securityPatchLevel": "2026-02-05",
     "googlePlaySystemUpdates": "2025-10-01",
     "build": {
-      "version": "2026-01-13",
+      "version": "2026-02-03",
       "details": [
-        { "id": "BP4A.260105.004.A2", "revision": "EMEA" },
-        { "id": "BP4A.260105.004.B2", "revision": "Verizon" },
-        { "id": "BP4A.260105.004.C2", "revision": "Japan" },
-        { "id": "BP4A.260105.004.E1", "revision": "-" }
+        { "id": "BP4A.260205.001", "revision": "-" },
+        { "id": "BP4A.260205.001.A1", "revision": "EMEA" },
+        { "id": "BP4A.260205.001.B1", "revision": "VZW" },
+        { "id": "BP4A.260205.001.C1", "revision": "JP" },
+        { "id": "BP4A.260205.002", "revision": "-" },
+        { "id": "BP4A.260205.002.A1", "revision": "EMEA" }
       ]
     },
     "stable": {
@@ -60,7 +62,7 @@
     "master": { "version": "0.8.13" }
   },
   "webView": {
-    "stable": { "version": "145.0.7632.26" },
-    "beta": { "version": "145.0.7632.26" }
+    "stable": { "version": "145.0.7632.45" },
+    "beta": { "version": "145.0.7632.45" }
   }
 }
