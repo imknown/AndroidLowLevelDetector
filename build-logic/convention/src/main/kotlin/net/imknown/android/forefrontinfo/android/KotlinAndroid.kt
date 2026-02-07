@@ -105,8 +105,7 @@ inline fun <reified T : KotlinBaseExtension> Project.configureKotlin() = configu
             // endregion [Experimental in 2.2.0]
 
             // region [Experimental in 2.2.20]
-            "-Xallow-reified-type-in-catch",
-            "-Xallow-contracts-on-more-functions",
+            "-Xdata-flow-based-exhaustiveness",
             "-Xallow-reified-type-in-catch",
             "-Xallow-contracts-on-more-functions",
             "-Xallow-condition-implies-returns-contracts",
