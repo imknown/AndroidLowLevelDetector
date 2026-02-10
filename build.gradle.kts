@@ -8,3 +8,10 @@ plugins {
     alias(libsGoogle.plugins.googleServices) apply false
     alias(libsGoogle.plugins.firebase.crashlytics) apply false
 }
+
+// https://developer.android.com/build/releases/agp-9-0-0-release-notes#runtime-dependency-on-kotlin-gradle-plugin-upgrade
+buildscript {
+    dependencies {
+        classpath(libsKotlin.kotlin.gradlePlugin)
+    }
+}
