@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         // https://developer.android.com/develop/ui/compose/layouts/system-bars#create-transparent
         enableEdgeToEdge()
         if (isAtLeastAndroid10()) {
-            window.setNavigationBarContrastEnforced(false)
+            window.isNavigationBarContrastEnforced = false
         }
 
         super.onCreate(savedInstanceState)
