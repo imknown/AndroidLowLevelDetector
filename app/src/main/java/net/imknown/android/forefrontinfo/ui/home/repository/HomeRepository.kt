@@ -174,6 +174,7 @@ class HomeRepository(
 
     fun detectBuildId(lld: Lld?): MyModel {
         val buildIdResult = Build.ID
+            ?: "" // Fix weird R8 NPE on Android 6 only: Attempt to get length of null array
         val systemBuildIdResult = getStringProperty(AndroidDataSource.PROP_RO_SYSTEM_BUILD_ID, isAtLeastAndroid9())
         val vendorBuildIdResult = getStringProperty(AndroidDataSource.PROP_RO_VENDOR_BUILD_ID, isAtLeastAndroid9())
         val odmBuildIdResult = getStringProperty(AndroidDataSource.PROP_RO_ODM_BUILD_ID, isAtLeastAndroid9())
@@ -244,7 +245,7 @@ class HomeRepository(
 
         return toColoredMyModel(
             MyApplication.getMyString(R.string.android_build_id_title),
-            MyApplication.getMyString(R.string.android_build_id_detail).format(*infoDetailArgs), // Fix weird NPE on Android 6
+            MyApplication.getMyString(R.string.android_build_id_detail, *infoDetailArgs),
             buildIdColor
         )
     }
