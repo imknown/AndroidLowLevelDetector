@@ -23,8 +23,8 @@ ndk = "29.0.14206865"
 # https://cmake.org/cmake/help/latest/release/index.html
 cmake = "4.1.2"
 
-versionCode = "70"
-versionName = "1.18.5"#_unpublished"
+versionCode = "71"
+versionName = "1.18.6_unpublished"
 
 javaToolchain = "21"
 
