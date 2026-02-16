@@ -30,7 +30,7 @@ fun configureFlavors(
                     flavorConfigurationBlock(flavor)
                     if (this@apply is ApplicationExtension && this is ApplicationProductFlavor) {
                         if (flavor.hasVersionNameSuffix) {
-                            versionNameSuffix = flavor.name
+                            versionNameSuffix = "-${flavor.name}"
                         }
                         isDefault = flavor.isDefault
                     }
