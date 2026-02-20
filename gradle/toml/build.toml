@@ -26,7 +26,7 @@ cmake = "4.1.2"
 versionCode = "71"
 versionName = "1.18.6_unpublished"
 
-javaToolchain = "21"
+javaToolchain = "25"
 
 [libraries]
 
