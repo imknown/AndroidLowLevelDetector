@@ -15,7 +15,11 @@ import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.base.extension.isChinaMainlandTimezone
 import net.imknown.android.forefrontinfo.ui.common.LldManager
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid16
+import okhttp3.Call
+import okhttp3.EventListener
+import okhttp3.Protocol
 import java.io.IOException
+import java.net.InetSocketAddress
 import java.net.Proxy
 import java.net.ProxySelector
 import java.net.SocketAddress
@@ -45,22 +49,33 @@ class LldDataSource {
 
         val client = HttpClient(OkHttp) {
             engine {
-                addInterceptor { chain ->
-                    val thread = Thread.currentThread()
-                    val id = if (isAtLeastAndroid16()) {
-                        thread.threadId()
-                    } else {
-                        @Suppress("DEPRECATION")
-                        thread.id
-                    }.toInt()
-                    TrafficStats.setThreadStatsTag(id)
-
-                    val request = chain.request()
-                    val response = chain.proceed(request)
-                    response
-                }
-
                 config {
+                    // https://github.com/square/okhttp/issues/3537#issuecomment-3391015783
+                    val eventListener = object : EventListener() {
+                        override fun connectStart(
+                            call: Call, inetSocketAddress: InetSocketAddress, proxy: Proxy
+                        ) {
+                            val thread = Thread.currentThread()
+                            val id = if (isAtLeastAndroid16()) {
+                                thread.threadId()
+                            } else {
+                                @Suppress("DEPRECATION")
+                                thread.id
+                            }.toInt()
+                            TrafficStats.setThreadStatsTag(id)
+                        }
+
+                        override fun connectEnd(
+                            call: Call,
+                            inetSocketAddress: InetSocketAddress,
+                            proxy: Proxy,
+                            protocol: Protocol?
+                        ) {
+                            TrafficStats.clearThreadStatsTag()
+                        }
+                    }
+                    eventListener(eventListener)
+
                     // region [Proxy]
                     // Fix: java.lang.IllegalArgumentException: port out of range:-1
                     // Steps to reproduce (small probability): Change Wifi proxy from "Manual" to "PAC"
