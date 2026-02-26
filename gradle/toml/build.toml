@@ -27,9 +27,3 @@ versionCode = "71"
 versionName = "1.18.6_unpublished"
 
 javaToolchain = "25"
-
-[libraries]
-
-[bundles]
-
-[plugins]
