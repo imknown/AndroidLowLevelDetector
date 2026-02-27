@@ -3,7 +3,7 @@ isPreview = "false" # true
 
 # https://developer.android.com/studio/releases/build-tools.html#notes
 buildTools = "36.1.0"
-buildToolsPreview = "37.0.0-rc1"
+buildToolsPreview = "37.0.0-rc2"
 
 minSdk = "23"
 
