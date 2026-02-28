@@ -1,13 +1,14 @@
 [versions]
 # https://developers.google.com/android/guides/releases
-# https://firebase.google.com/support/release-notes/android
-# https://firebase.google.com/docs/android/setup#available-libraries
+# https://developers.google.com/android/guides/google-services-plugin
 # https://maven.google.com/web/index.html?q=google-services
 googleServices-gradlePlugin = "4.4.4"
 
+# https://firebase.google.com/support/release-notes/android
+# https://firebase.google.com/docs/android/setup#available-libraries
 # https://firebase.google.com/docs/android/learn-more#bom
 # https://maven.google.com/web/index.html?q=firebase-bom
-firebase-bom = "34.9.0"
+firebase-bom = "34.10.0"
 
 # https://firebase.google.com/docs/crashlytics/get-started?platform=android
 # https://firebase.google.com/docs/crashlytics/ndk-reports
