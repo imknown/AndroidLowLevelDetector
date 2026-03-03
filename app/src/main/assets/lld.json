@@ -1,9 +1,9 @@
 {
   "scheme": 1,
-  "version": "2026-02-28 18:35 +0800",
+  "version": "2026-03-03 09:10 +0800",
   "android": {
-    "securityPatchLevel": "2026-02-05",
-    "googlePlaySystemUpdates": "2026-02-01",
+    "securityPatchLevel": "2026-03-05",
+    "googlePlaySystemUpdates": "2026-03-01",
     "build": {
       "version": "2026-02-03",
       "details": [
@@ -19,7 +19,7 @@
       "api": "36", "apiFull": "36.1", "version": "16.1 (QPR2), Baklava 1", "name": "Baklava 1", "extension": 20
     },
     "support": {
-      "api": "33", "apiFull": "33", "version": "13, Tiramisu", "name": "Tiramisu"
+      "api": "34", "apiFull": "34", "version": "14, Upside Down Cake", "name": "Upside Down Cake"
     },
     "stablePreview": {
       "api": "37", "apiFull": "37.0", "version": "17 Beta 2, Cinnamon Bun", "name": "Cinnamon Bun"
@@ -53,11 +53,11 @@
   },
   "linux": {
     "google": { "versions": [ "6.18.15", "6.12.74", "6.6.127", "6.1.164", "5.15.201", "5.10.251" ] },
-    "mainline": { "version": "7.0-rc1" }
+    "mainline": { "version": "7.0-rc2" }
   },
   "toybox": {
     "stable": { "version": "0.8.12" },
-    "support": { "version": "0.8.6" },
+    "support": { "version": "0.8.9" },
     "mainline": { "version": "0.8.12" },
     "master": { "version": "0.8.13" }
   },
