@@ -1,7 +1,6 @@
 package net.imknown.android.forefrontinfo.ui.home.model
 
 import androidx.annotation.Keep
-import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 import net.imknown.android.forefrontinfo.ui.common.CODENAME_NONE
 
@@ -42,9 +41,7 @@ data class Lld(
         val stable: Android,
         // Beta
         // https://developer.android.com/preview/overview
-        // https://developer.android.com/about/versions/16/release-notes
-        // https://developer.android.com/about/versions/16/release-notes-qpr
-        // https://developer.android.com/about/versions/16/qpr2/release-notes
+        // https://developer.android.com/about/versions/17/release-notes
         val stablePreview: Android,
         // https://source.android.com/security/bulletin/
         val support: Android,
@@ -63,6 +60,7 @@ data class Lld(
             val version: String,
             /** Dessert */
             val name: String,
+            // https://cs.android.com/androidx/platform/frameworks/support/+/androidx-main:core/core/src/androidTest/java/androidx/core/os/BuildCompatTest.java
             // https://android.googlesource.com/platform/build/release/+/refs/heads/main/flag_values/trunk_staging/RELEASE_PLATFORM_VERSION_KNOWN_CODENAMES.textproto
             val codename: String = CODENAME_NONE,
             val extension: Int = EXTENSION_NONE,
@@ -74,7 +72,7 @@ data class Lld(
         // https://developers.google.com/android/images
         // https://developers.google.com/android/ota
         // https://android.googlesource.com/platform/build/+refs
-        // https://android.googlesource.com/platform/build/+/refs/tags/android-16.0.0_r2/core/build_id.mk
+        // https://android.googlesource.com/platform/build/+/refs/tags/android-16.0.0_r4/core/build_id.mk
         // https://android.googlesource.com/platform/build/+/master/core/build_id.mk
         @Keep
         @Serializable
@@ -118,10 +116,10 @@ data class Lld(
     data class Toyboxes(
         // https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-16.0.0_r1/toys.h
         val stable: BaseInfo,
-        // https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-security-13.0.0_r1/toys.h#137
+        // https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-security-14.0.0_r1/toys.h
         val support: BaseInfo,
-        // https://android.googlesource.com/platform/external/toybox/+/master/toys.h#144
-        // https://android.googlesource.com/platform/external/toybox/+/upstream-master/toys.h#144
+        // https://android.googlesource.com/platform/external/toybox/+/master/toys.h
+        // https://android.googlesource.com/platform/external/toybox/+/upstream-master/toys.h
         val master: BaseInfo
     )
 
