@@ -1,18 +1,13 @@
 {
   "scheme": 1,
-  "version": "2026-03-03 09:10 +0800",
+  "version": "2026-03-04 09:15 +0800",
   "android": {
     "securityPatchLevel": "2026-03-05",
     "googlePlaySystemUpdates": "2026-03-01",
     "build": {
-      "version": "2026-02-03",
+      "version": "2026-03-03",
       "details": [
-        { "id": "BP4A.260205.001", "revision": "-" },
-        { "id": "BP4A.260205.001.A1", "revision": "EMEA" },
-        { "id": "BP4A.260205.001.B1", "revision": "VZW" },
-        { "id": "BP4A.260205.001.C1", "revision": "JP" },
-        { "id": "BP4A.260205.002", "revision": "-" },
-        { "id": "BP4A.260205.002.A1", "revision": "EMEA" }
+        { "id": "CP1A.260305.018", "revision": "-" }
       ]
     },
     "stable": {
