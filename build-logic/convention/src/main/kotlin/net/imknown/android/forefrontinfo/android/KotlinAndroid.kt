@@ -7,6 +7,8 @@ import net.imknown.android.forefrontinfo.ext.buildVersion
 import net.imknown.android.forefrontinfo.ext.libsAndroid
 import net.imknown.android.forefrontinfo.ext.testImplementation
 import org.gradle.api.Project
+import org.gradle.jvm.toolchain.JavaLanguageVersion
+import org.gradle.jvm.toolchain.JvmVendorSpec
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 import org.jetbrains.kotlin.gradle.dsl.HasConfigurableKotlinCompilerOptions
@@ -91,7 +93,12 @@ inline fun <reified T : KotlinBaseExtension> Project.configureKotlin() = configu
     // https://developer.android.com/build/jdks
     // https://kotlinlang.org/docs/gradle-configure-project.html
     // https://docs.gradle.org/current/userguide/toolchains.html
-    jvmToolchain(buildVersion("javaToolchain").toInt())
+    jvmToolchain {
+        val version = buildVersion("javaToolchain").toInt()
+        languageVersion.set(JavaLanguageVersion.of(version))
+
+        vendor.set(JvmVendorSpec.ADOPTIUM)
+    }
 
     val compilerOptions = (this as HasConfigurableKotlinCompilerOptions<*>).compilerOptions
     compilerOptions.apply {

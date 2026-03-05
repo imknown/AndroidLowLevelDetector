@@ -16,16 +16,6 @@ jobs:
     # https://github.com/actions/checkout
     - uses: actions/checkout@v6
 
-    # region [JDK]
-    # https://github.com/actions/setup-java
-    - name: Set up JDK
-      uses: actions/setup-java@v5
-      with:
-        java-version: '25'
-        distribution: 'temurin'
-        cache: gradle
-    # endregion [JDK]
-
     # region [Android SDK]
     # https://github.com/android-actions/setup-android
     - name: Setup Android SDK
