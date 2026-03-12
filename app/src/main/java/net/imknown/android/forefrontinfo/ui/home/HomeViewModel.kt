@@ -96,9 +96,12 @@ class HomeViewModel(
                 LldManager.copyJsonIfNeededOrThrow()
             }
         } catch (e: Exception) {
+            val lld = withContext(Dispatchers.IO) {
+                LldManager.getAssetLld(MyApplication.instance.assets)
+            }
+
             val errorMessage = errorMessage(R.string.lld_json_save_failed, e)
 
-            val lld = LldManager.getAssetLld(MyApplication.instance.assets)
             return lld to errorMessage
         }
 
