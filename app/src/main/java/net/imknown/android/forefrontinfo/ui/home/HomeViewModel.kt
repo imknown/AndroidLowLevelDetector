@@ -21,7 +21,7 @@ import net.imknown.android.forefrontinfo.ui.common.toObjectOrThrow
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.home.repository.HomeRepository
 
-private typealias LldAndError = Pair<Lld?, String?>
+private data class LldAndError(val lld: Lld?, val message: String?)
 
 class HomeViewModel(
     private val homeRepository: HomeRepository,
@@ -86,8 +86,8 @@ class HomeViewModel(
 
     private suspend fun tryDetectOffline(errorMessage: String?): List<MyModel> {
         val lldAndError = fetchOfflineLldOrNull()
-        val errorMessages = listOf(errorMessage, lldAndError.second)
-        return detect(lldAndError.first, errorMessages, R.string.lld_json_offline)
+        val errorMessages = listOf(errorMessage, lldAndError.message)
+        return detect(lldAndError.lld, errorMessages, R.string.lld_json_offline)
     }
 
     private suspend fun fetchOfflineLldOrNull(): LldAndError {
@@ -102,13 +102,15 @@ class HomeViewModel(
 
             val errorMessage = errorMessage(R.string.lld_json_save_failed, e)
 
-            return lld to errorMessage
+            return LldAndError(lld, errorMessage)
         }
 
         val lldAndError = try {
-            withContext(Dispatchers.IO) {
+            val lld = withContext(Dispatchers.IO) {
                 homeRepository.fetchOfflineLldFileOrThrow().toObjectOrThrow<Lld>()
-            } to null
+            }
+
+            LldAndError(lld, null)
         } catch (e: Exception) {
             val lld = withContext(Dispatchers.IO) {
                 LldManager.getAssetLld(MyApplication.instance.assets)
@@ -116,7 +118,7 @@ class HomeViewModel(
 
             val errorMessage = errorMessage(R.string.lld_json_parse_failed, e)
 
-            lld to errorMessage
+            LldAndError(lld, errorMessage)
         }
 
         return lldAndError
@@ -173,7 +175,7 @@ class HomeViewModel(
             return
         }
 
-        val lld = fetchOfflineLldOrNull().first
+        val lld = fetchOfflineLldOrNull().lld
             ?: return
         myModels.last().detail = withContext(Dispatchers.Default) {
             homeRepository.getOutdatedTargetSdkVersionApkModel(lld).detail
