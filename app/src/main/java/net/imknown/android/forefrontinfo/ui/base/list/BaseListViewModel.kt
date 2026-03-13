@@ -1,6 +1,5 @@
 package net.imknown.android.forefrontinfo.ui.base.list
 
-import android.os.Bundle
 import androidx.annotation.MainThread
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,16 +12,12 @@ abstract class BaseListViewModel : BaseViewModel() {
 
     abstract suspend fun collectModels(): List<MyModel>
 
-    suspend fun init(savedInstanceState: Bundle?) {
-        // When activity is recreated, use StateFlow to restore the data
-        if (hasNoData(savedInstanceState)) {
-            val list = collectModels()
-            setModels(list)
-        }
+    suspend fun init() {
+        val list = collectModels()
+        setModels(list)
     }
 
-    fun hasNoData(savedInstanceState: Bundle?) =
-        savedInstanceState == null || modelsStateFlow.value == State.NotInitialized
+    fun hasNoData() = modelsStateFlow.value == State.NotInitialized
 
     @MainThread
     fun setModels(tempModels: List<MyModel>) {

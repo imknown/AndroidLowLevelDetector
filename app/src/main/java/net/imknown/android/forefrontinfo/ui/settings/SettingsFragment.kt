@@ -47,6 +47,32 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
     )
 
+    // region [onUserSeen]
+    private var isFirstResume = true
+
+    override fun onStart() {
+        super.onStart()
+
+        if (!isHidden) {
+            onUserSeen(isFirstResume)
+            isFirstResume = false
+        }
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+
+        if (!hidden && isResumed) {
+            onUserSeen(false)
+        }
+    }
+
+    private fun onUserSeen(isFirstVisible: Boolean) {
+        val context = MyApplication.instance
+        settingsViewModel.setBuiltInDataVersion(context.packageManager, context.packageName)
+    }
+    // endregion [onUserSeen]
+
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)
     }
@@ -146,9 +172,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 )
             }
         }
-
-        val context = MyApplication.instance
-        settingsViewModel.setBuiltInDataVersion(context.packageManager, context.packageName)
         // endregion [Version Info]
 
         // region [Version Click]
