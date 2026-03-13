@@ -36,7 +36,7 @@ abstract class BaseListFragment : BaseFragment<BaseListFragmentBinding>() {
 
         initWindowInsets()
 
-        initViews(savedInstanceState)
+        initViews()
 
         // region [ScrollBar Mode]
         val scrollBarModeKey = MyApplication.getMyString(R.string.interface_scroll_bar_key)
@@ -66,9 +66,15 @@ abstract class BaseListFragment : BaseFragment<BaseListFragmentBinding>() {
                 binding.swipeRefreshLayout.isRefreshing = false
             }
         }
+    }
+
+    override fun onUserSeen(isFirstVisible: Boolean) {
+        if (!listViewModel.hasNoData()) {
+            return
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            listViewModel.init(savedInstanceState)
+            listViewModel.init()
         }
     }
 
@@ -87,16 +93,14 @@ abstract class BaseListFragment : BaseFragment<BaseListFragmentBinding>() {
         }
     }
 
-    private fun initViews(savedInstanceState: Bundle?) {
+    private fun initViews() {
         val color = MaterialColors.getColor(binding.root, materialR.attr.colorOnPrimaryContainer)
         binding.swipeRefreshLayout.setColorSchemeColors(color)
         val backgroundColor =
             MaterialColors.getColor(binding.root, materialR.attr.colorPrimaryContainer)
         binding.swipeRefreshLayout.setProgressBackgroundColorSchemeColor(backgroundColor)
 
-        if (listViewModel.hasNoData(savedInstanceState)) {
-            // When activity is recreated, data is filled by memory.
-            // It is fast. No progress indicator needed indeed.
+        if (listViewModel.hasNoData()) {
             binding.swipeRefreshLayout.isRefreshing = true
         }
 
