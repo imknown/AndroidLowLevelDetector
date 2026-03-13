@@ -21,6 +21,29 @@ abstract class BaseFragment<T : ViewBinding> : Fragment() {
         return _binding?.root
     }
 
+    // region [onUserSeen]
+    private var isFirstResume = true
+
+    override fun onStart() {
+        super.onStart()
+
+        if (!isHidden) {
+            onUserSeen(isFirstResume)
+            isFirstResume = false
+        }
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+
+        if (!hidden && isResumed) {
+            onUserSeen(false)
+        }
+    }
+
+    abstract fun onUserSeen(isFirstVisible: Boolean)
+    // endregion [onUserSeen]
+
     override fun onDestroyView() {
         super.onDestroyView()
 
