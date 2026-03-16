@@ -120,6 +120,10 @@ inline fun <reified T : KotlinBaseExtension> Project.configureKotlin() = configu
             "-Xreturn-value-checker=full",
             "-Xexplicit-backing-fields",
             // endregion [Experimental in 2.3.0]
+
+            // region [Experimental in 2.3.20]
+            "-Xname-based-destructuring=only-syntax",
+            // endregion [Experimental in 2.3.20]
         )
     }
 }
