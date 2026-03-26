@@ -19,7 +19,7 @@ jobs:
     # region [Android SDK]
     # https://github.com/android-actions/setup-android
     - name: Setup Android SDK
-      uses: android-actions/setup-android@v3
+      uses: android-actions/setup-android@v4
       with:
         packages: ''
     # https://developer.android.com/tools/sdkmanager#install
