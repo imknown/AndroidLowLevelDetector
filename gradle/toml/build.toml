@@ -2,24 +2,22 @@
 isPreview = "false" # true
 
 # https://developer.android.com/studio/releases/build-tools.html#notes
-buildTools = "36.1.0"
-buildToolsPreview = "37.0.0-rc2"
+buildTools = "37.0.0"
+buildToolsPreview = "37.0.0"
 
 minSdk = "23"
 
-compileSdk = "36"
-compileSdkMinor = "1"
-compileSdkPreview = "CinnamonBun"
+compileSdk = "37"
+compileSdkMinor = "0"
 # compileSdkPreview = "CANARY"
 
-compileSdkExtension = "20" # 36.1-ext20
+compileSdkExtension = "22" # 37.0-ext22
 
-targetSdk = "36"
-targetSdkPreview = "CinnamonBun"
+targetSdk = "37"
 # targetSdkPreview = "CANARY"
 
 # https://github.com/android/ndk/releases
-ndk = "29.0.14206865"
+ndk = "30.0.14904198"
 # https://cmake.org/cmake/help/latest/release/index.html
 cmake = "4.1.2"
 
