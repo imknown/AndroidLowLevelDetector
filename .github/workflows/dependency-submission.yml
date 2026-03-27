@@ -21,6 +21,9 @@ jobs:
       # https://github.com/actions/checkout
       - uses: actions/checkout@v6
 
+      - name: Accept Android SDK licenses
+        run: yes | sdkmanager --licenses
+
       # https://github.com/gradle/actions/blob/main/docs/dependency-submission.md
       - name: Run dependency submission
         uses: gradle/actions/dependency-submission@v5
