@@ -1,6 +1,7 @@
 package net.imknown.android.forefrontinfo.ui.others.datasource
 
 import android.os.Build
+import net.imknown.android.forefrontinfo.base.extension.listOfSafety
 import net.imknown.android.forefrontinfo.ui.common.getStringProperty
 
 class FingerprintDataSource {
@@ -13,7 +14,7 @@ class FingerprintDataSource {
     fun getPreviewSdkFingerprint() = getStringProperty(PROP_PREVIEW_SDK_FINGERPRINT)
 
     /** [Build.getFingerprintedPartitions] */
-    fun getPartitions() = listOf(
+    fun getPartitions() = listOfSafety(
         "bootimage", "odm", "odm_dlkm", "oem", "product", "system", "system_dlkm", "system_ext", "vendor", "vendor_dlkm"
     )
 
