@@ -1,8 +1,8 @@
 {
   "scheme": 1,
-  "version": "2026-04-06 10:00 +0800",
+  "version": "2026-04-07 08:55 +0800",
   "android": {
-    "securityPatchLevel": "2026-03-05",
+    "securityPatchLevel": "2026-04-05",
     "googlePlaySystemUpdates": "2026-03-01",
     "build": {
       "version": "2026-03-03",
