@@ -53,9 +53,9 @@ class SettingsRepository(
             }
             val installerLabel = installerPackageName?.let {
                 try {
-                    appInfoDataSource.getApplicationLabelOrThrow(packageManager, packageName)
+                    appInfoDataSource.getApplicationLabelOrThrow(packageManager, it)
                 } catch (e: Exception) {
-                    Log.w(javaClass.simpleName, "$packageName not found. ${e.fullMessage}")
+                    Log.w(javaClass.simpleName, "$it not found. ${e.fullMessage}")
                     MyApplication.getMyString(androidR.string.unknownName)
                 }
             }
