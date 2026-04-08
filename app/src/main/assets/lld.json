@@ -1,14 +1,14 @@
 {
   "scheme": 1,
-  "version": "2026-04-07 19:45 +0800",
+  "version": "2026-04-08 12:45 +0800",
   "android": {
     "securityPatchLevel": "2026-04-05",
     "googlePlaySystemUpdates": "2026-03-01",
     "build": {
-      "version": "2026-03-03",
+      "version": "2026-04-07",
       "details": [
-        { "id": "CP1A.260305.018", "revision": "-" },
-        { "id": "CP1A.260305.018.A1", "revision": "Australia" }
+        { "id": "CP1A.260405.005", "revision": "-" },
+        { "id": "CP1A.260405.003.A1", "revision": "Australia" }
       ]
     },
     "stable": {
