@@ -6,7 +6,7 @@
 # https://maven.google.com/web/index.html?q=com.android.tools.build
 androidGradlePlugin = "9.1.0"
 androidGradlePlugin-beta = "9.1.0"
-androidGradlePlugin-canary = "9.2.0-alpha06"
+androidGradlePlugin-canary = "9.2.0-alpha08"
 
 # https://developer.android.com/studio/write/java8-support#library-desugaring
 # https://maven.google.com/web/index.html?q=desugar_jdk_libs
@@ -18,9 +18,9 @@ desugarJdkLibs = "2.1.5"
 activity = "1.13.0"
 
 # https://developer.android.com/jetpack/androidx/releases/annotation
-annotation = "1.10.0-rc01"
+annotation = "1.10.0"
 
-annotation-experimental = "1.6.0-rc01"
+annotation-experimental = "1.6.0"
 
 # https://developer.android.com/jetpack/androidx/releases/appcompat
 appcompat = "1.7.1"
