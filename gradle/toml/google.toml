@@ -8,12 +8,12 @@ googleServices-gradlePlugin = "4.4.4"
 # https://firebase.google.com/docs/android/setup#available-libraries
 # https://firebase.google.com/docs/android/learn-more#bom
 # https://maven.google.com/web/index.html?q=firebase-bom
-firebase-bom = "34.11.0"
+firebase-bom = "34.12.0"
 
 # https://firebase.google.com/docs/crashlytics/get-started?platform=android
 # https://firebase.google.com/docs/crashlytics/ndk-reports
 # https://maven.google.com/web/index.html?q=crashlytics
-firebase-crashlytics-gradlePlugin = "3.0.6"
+firebase-crashlytics-gradlePlugin = "3.0.7"
 
 # https://github.com/material-components/material-components-android/releases
 material = "1.13.0"
