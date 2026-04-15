@@ -1,5 +1,7 @@
 import org.gradle.kotlin.dsl.support.uppercaseFirstChar
 
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
 pluginManagement {
     includeBuild("build-logic")
 

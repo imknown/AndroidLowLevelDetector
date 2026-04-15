@@ -112,8 +112,8 @@ android {
 dependencies {
     implementation(fileTree("libs") { include("*.jar", "*.aar") })
 
-    implementation(project(":binderDetector"))
-    implementation(project(":base"))
+    implementation(projects.binderDetector)
+    implementation(projects.base)
 
     // region [AndroidX]
     implementation(libsAndroid.activity.ktx)
