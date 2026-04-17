@@ -3,7 +3,7 @@
 kotlin = "2.3.21-RC2"
 
 # https://github.com/Kotlin/kotlinx.coroutines/releases
-kotlinx-coroutines = "1.10.2"
+kotlinx-coroutines = "1.11.0-rc01"
 
 # https://github.com/Kotlin/kotlinx.serialization/releases
 kotlinx-serialization = "1.11.0"
