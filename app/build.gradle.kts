@@ -6,6 +6,9 @@ plugins {
     alias(libsAndroid.plugins.lowleveldetector.android.application.flavors)
     alias(libsAndroid.plugins.lowleveldetector.android.application.ndk.version)
 
+    alias(libsAndroid.plugins.lowleveldetector.android.application.compose)
+    // alias(libsKotlin.plugins.compose)
+
     alias(libsKotlin.plugins.kotlinx.serialization)
 
     alias(libsGoogle.plugins.lowleveldetector.google.firebase)
@@ -121,6 +124,7 @@ dependencies {
     implementation(libsAndroid.bundles.appcompat)
     implementation(libsAndroid.bundles.arch.core)
     implementation(libsAndroid.cardView)
+    implementation(libsAndroid.bundles.compose)
     implementation(libsAndroid.constraintLayout)
     implementation(libsAndroid.coordinatorLayout)
     implementation(libsAndroid.core)
@@ -134,6 +138,7 @@ dependencies {
     // endregion [AndroidX]
 
     // region [Kotlin]
+    implementation(libsKotlin.kotlinx.collections.immutable)
     implementation(libsKotlin.kotlinx.coroutines.android)
     implementation(libsKotlin.kotlinx.serialization.json)
 
