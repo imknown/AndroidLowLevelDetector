@@ -2,6 +2,9 @@
 # https://github.com/JetBrains/kotlin/releases
 kotlin = "2.4.10"
 
+# https://github.com/Kotlin/kotlinx.collections.immutable/releases
+kotlinx-collections-immutable = "0.5.1"
+
 # https://github.com/Kotlin/kotlinx.coroutines/releases
 kotlinx-coroutines = "1.11.0"
 
@@ -12,6 +15,7 @@ kotlinx-serialization = "1.11.0"
 ktor = "3.5.2"
 
 [libraries]
+kotlinx-collections-immutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "kotlinx-collections-immutable" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 
@@ -21,6 +25,7 @@ ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version
 
 # region [For build-logic]
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+compose-gradlePlugin = { group = "org.jetbrains.kotlin", name = "compose-compiler-gradle-plugin", version.ref = "kotlin" }
 # endregion [For build-logic]
 
 [bundles]
@@ -28,3 +33,4 @@ ktor-client = ["ktor-client-core", "ktor-client-okhttp", "ktor-client-logging"]
 
 [plugins]
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

@@ -20,7 +20,7 @@ object ProjectLibProvider {
 }
 val Project.libsBuild: VersionCatalog by ProjectLibProvider
 val Project.libsAndroid: VersionCatalog by ProjectLibProvider
-// val Project.libsKotlin: VersionCatalog by ProjectLibProvider
+val Project.libsKotlin: VersionCatalog by ProjectLibProvider
 val Project.libsGoogle: VersionCatalog by ProjectLibProvider
 // val Project.libsThirdParty: VersionCatalog by ProjectLibProvider
 
@@ -28,5 +28,6 @@ object NameProvider {
     operator fun getValue(thisRef: Nothing?, property: KProperty<*>): String = property.name
 }
 val implementation: String by NameProvider
+val debugImplementation: String by NameProvider
 val testImplementation: String by NameProvider
 val androidTestImplementation: String by NameProvider
