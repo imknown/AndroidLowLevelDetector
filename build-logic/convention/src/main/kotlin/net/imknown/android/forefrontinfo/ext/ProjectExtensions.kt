@@ -28,5 +28,6 @@ object NameProvider {
     operator fun getValue(thisRef: Any?, property: KProperty<*>) = property.name
 }
 val implementation by NameProvider
+val debugImplementation by NameProvider
 val testImplementation by NameProvider
 val androidTestImplementation by NameProvider

@@ -6,6 +6,9 @@ plugins {
     alias(libsAndroid.plugins.lowleveldetector.android.application.flavors)
     alias(libsAndroid.plugins.lowleveldetector.android.application.ndk.version)
 
+    alias(libsAndroid.plugins.lowleveldetector.android.application.compose)
+    // alias(libsKotlin.plugins.compose)
+
     alias(libsKotlin.plugins.kotlinx.serialization)
 
     alias(libsGoogle.plugins.lowleveldetector.google.firebase)
