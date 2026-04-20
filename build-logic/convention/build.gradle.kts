@@ -15,6 +15,7 @@ kotlin {
 dependencies {
     compileOnly(libsAndroid.android.gradleApiPlugin)
     compileOnly(libsKotlin.kotlin.gradlePlugin)
+    // compileOnly(libsKotlin.compose.gradlePlugin)
     compileOnly(libsGoogle.firebase.crashlytics.gradlePlugin)
 }
 
@@ -34,6 +35,10 @@ gradlePlugin {
         register("androidApplication") {
             id = libsAndroid.plugins.lowleveldetector.android.application.asProvider().get().pluginId
             implementationClass = androidApp("AndroidApplicationConventionPlugin")
+        }
+        register("androidApplicationCompose") {
+            id = libsAndroid.plugins.lowleveldetector.android.application.compose.get().pluginId
+            implementationClass = androidApp("AndroidApplicationComposeConventionPlugin")
         }
         register("androidFlavors") {
             id = libsAndroid.plugins.lowleveldetector.android.application.flavors.get().pluginId
