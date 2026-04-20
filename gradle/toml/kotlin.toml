@@ -21,6 +21,7 @@ ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version
 
 # region [For build-logic]
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+compose-gradlePlugin = { group = "org.jetbrains.kotlin", name = "compose-compiler-gradle-plugin", version.ref = "kotlin" }
 # endregion [For build-logic]
 
 [bundles]
@@ -28,3 +29,4 @@ ktor-client = ["ktor-client-core", "ktor-client-okhttp", "ktor-client-logging"]
 
 [plugins]
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
