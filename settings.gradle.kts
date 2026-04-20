@@ -60,7 +60,7 @@ include(":app")
 // https://docs.gradle.com/develocity/gradle-plugin/current/
 plugins {
     // https://plugins.gradle.org/plugin/com.gradle.develocity
-    id("com.gradle.develocity") version "4.4.0"
+    id("com.gradle.develocity") version "4.4.1"
 
     // https://docs.gradle.org/current/userguide/gradle_daemon.html#sec:configuring_daemon_jvm
     // ./gradlew -q javaToolchains
