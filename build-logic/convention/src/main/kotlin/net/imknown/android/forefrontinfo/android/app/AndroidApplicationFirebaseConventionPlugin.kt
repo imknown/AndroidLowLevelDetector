@@ -3,6 +3,7 @@ package net.imknown.android.forefrontinfo.android.app
 import com.android.build.api.dsl.CommonExtension
 import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
 import net.imknown.android.forefrontinfo.android.Flavor
+import net.imknown.android.forefrontinfo.ext.googlePlugin
 import net.imknown.android.forefrontinfo.ext.implementation
 import net.imknown.android.forefrontinfo.ext.libsGoogle
 import org.gradle.api.Plugin
@@ -16,8 +17,8 @@ import org.gradle.kotlin.dsl.support.uppercaseFirstChar
 class AndroidApplicationFirebaseConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
-            apply(plugin = "com.google.gms.google-services")
-            apply(plugin = "com.google.firebase.crashlytics")
+            apply(plugin = googlePlugin("googleServices"))
+            apply(plugin = googlePlugin("firebase-crashlytics"))
 
             dependencies {
                 val firebaseImplementation = Flavor.Firebase.name + implementation.uppercaseFirstChar()

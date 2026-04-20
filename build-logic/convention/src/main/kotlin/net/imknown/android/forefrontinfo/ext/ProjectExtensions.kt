@@ -10,6 +10,10 @@ fun VersionCatalog.findVersionString(alias: String) = findVersion(alias).get().t
 
 fun Project.buildVersion(alias: String) = libsBuild.findVersionString(alias)
 
+fun VersionCatalog.findPluginId(alias: String) = findPlugin(alias).get().get().pluginId
+fun Project.androidPlugin(alias: String) = libsAndroid.findPluginId(alias)
+fun Project.googlePlugin(alias: String) = libsGoogle.findPluginId(alias)
+
 fun Project.libs(suffix: String) =
     extensions.getByType<VersionCatalogsExtension>()
         .named("libs${suffix.uppercaseFirstChar()}")

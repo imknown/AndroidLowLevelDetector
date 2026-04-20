@@ -3,6 +3,7 @@ package net.imknown.android.forefrontinfo.android.app
 import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.api.dsl.CommonExtension
 import net.imknown.android.forefrontinfo.android.configureAndroid
+import net.imknown.android.forefrontinfo.ext.androidPlugin
 import net.imknown.android.forefrontinfo.ext.buildVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -17,7 +18,7 @@ import java.time.format.DateTimeFormatter
 class AndroidApplicationConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
-            apply(plugin = "com.android.application")
+            apply(plugin = androidPlugin("android-application"))
 
             configureName()
             configureAndroid<CommonExtension>()
