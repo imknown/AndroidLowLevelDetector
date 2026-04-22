@@ -5,6 +5,7 @@ import org.gradle.api.artifacts.VersionCatalog
 import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.support.uppercaseFirstChar
+import kotlin.reflect.KProperty
 
 fun VersionCatalog.findVersionString(alias: String) = findVersion(alias).get().toString()
 
@@ -23,6 +24,9 @@ val Project.libsKotlin get() = libs("kotlin")
 val Project.libsGoogle get() = libs("google")
 val Project.libsThirdParty get() = libs("thirdParty")
 
-const val implementation = "implementation"
-val testImplementation = "test" + implementation.uppercaseFirstChar()
-val androidTestImplementation = "android" + testImplementation.uppercaseFirstChar()
+object NameProvider {
+    operator fun getValue(thisRef: Any?, property: KProperty<*>) = property.name
+}
+val implementation by NameProvider
+val testImplementation by NameProvider
+val androidTestImplementation by NameProvider
