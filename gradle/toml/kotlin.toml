@@ -1,6 +1,6 @@
 [versions]
 # https://github.com/JetBrains/kotlin/releases
-kotlin = "2.3.21-RC2"
+kotlin = "2.3.21"
 
 # https://github.com/Kotlin/kotlinx.coroutines/releases
 kotlinx-coroutines = "1.11.0-rc01"
@@ -9,7 +9,7 @@ kotlinx-coroutines = "1.11.0-rc01"
 kotlinx-serialization = "1.11.0"
 
 # https://github.com/ktorio/ktor/releases
-ktor = "3.4.2"
+ktor = "3.4.3"
 
 [libraries]
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
