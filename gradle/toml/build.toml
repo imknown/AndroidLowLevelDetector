@@ -9,11 +9,13 @@ minSdk = "23"
 
 compileSdk = "37"
 compileSdkMinor = "0"
+compileSdkPreview = "CinnamonBun"
 # compileSdkPreview = "CANARY"
 
 compileSdkExtension = "22" # 37.0-ext22
 
 targetSdk = "37"
+targetSdkPreview = "CinnamonBun"
 # targetSdkPreview = "CANARY"
 
 # https://github.com/android/ndk/releases

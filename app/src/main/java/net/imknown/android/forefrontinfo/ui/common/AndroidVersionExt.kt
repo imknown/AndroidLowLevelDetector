@@ -64,6 +64,14 @@ val myAndroid = MyAndroid(
 )
 
 fun initMyAndroid() {
+    val kClass = if (isAtLeastAndroid16()) {
+        Build.VERSION_CODES_FULL::class
+    } else {
+        Build.VERSION_CODES::class
+    }
+    val versionCodes = getApiAndDesserts(kClass)
+    val versionCodeLast = versionCodes.lastOrNull()
+
     var api = Build.VERSION.SDK_INT
     var apiFull: String
     var version = Build.VERSION.RELEASE
@@ -79,39 +87,22 @@ fun initMyAndroid() {
             }
         }
     } else {
-        fun apiIncrease() {
-            api++
-        }
-
-        fun versionIncrease() {
-            version.toIntOrNull()?.let {
-                version = (it + 1).toString()
-            }
-        }
-
         if (!isAtLeastAndroid15()) { // Android 6 Preview ~ Android 15 Preview
-            apiIncrease() // 34 → 35
+            api++ // 34 → 35
             apiFull = api.toString() // "34" → "35"
-            versionIncrease() // "14" → "15"
+            version.toIntOrNull()?.let {
+                version = (it + 1).toString() // "14" → "15"
+            }
         } else {
-            if (api == Build.VERSION_CODES.VANILLA_ICE_CREAM) { // Android 16.0 Preview
-                apiIncrease() // 35 → 36
-                apiFull = "$api.0" // "35" → "36.0"
-                versionIncrease() // "15" → "16"
-            } else { // Android 16.1 Preview and above
-                if (minor != 0) {
-                    apiIncrease() // 36.1 → 37
-                }
+            val sdkIntFull = versionCodeLast?.api
+                ?: Build.VERSION.SDK_INT_FULL
+            api = Build.getMajorSdkVersion(sdkIntFull)
+            val minorFromRuntime = Build.getMinorSdkVersion(sdkIntFull)
 
-                val minorReal = if (minor != 0) 0 else 1
-
-                apiFull = "$api.$minorReal" // 36.0 → 36.1; 36.1 → 37.0
-
-                if (minor != 0) {
-                    versionIncrease() // "16.1" → "17"
-                } else {
-                    version += ".$minorReal" // "16" → "16.1"
-                }
+            val suffix = ".$minorFromRuntime" // ".1"
+            apiFull = "$api$suffix" // "36.1"
+            if (minorFromRuntime != 0) {
+                version += suffix // "16.1"
             }
         }
     }
@@ -120,13 +111,6 @@ fun initMyAndroid() {
     myAndroid.apiFull = apiFull
     myAndroid.version = version
 
-    val kClass = if (isAtLeastAndroid16()) {
-        Build.VERSION_CODES_FULL::class
-    } else {
-        Build.VERSION_CODES::class
-    }
-    val versionCodes = getApiAndDesserts(kClass)
-    val versionCodeLast = versionCodes.lastOrNull()
     val dessert = versionCodeLast?.dessert // Baklava 1
     myAndroid.dessert = dessert
 }
