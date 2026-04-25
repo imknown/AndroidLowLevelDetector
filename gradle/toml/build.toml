@@ -24,6 +24,6 @@ ndk = "30.0.14904198"
 cmake = "4.1.2"
 
 versionCode = "72"
-versionName = "1.18.7_unpublished"
+versionName = "1.18.7"#_unpublished"
 
 javaToolchain = "25"
