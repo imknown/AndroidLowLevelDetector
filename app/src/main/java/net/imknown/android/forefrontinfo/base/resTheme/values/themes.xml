@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="BaseAppTheme" parent="Theme.Material3.DynamicColors.DayNight.NoActionBar">
+    <style name="BaseAppTheme" parent="@style/Theme.Material3Expressive.DynamicColors.DayNight.NoActionBar">
         <!-- region [M3] -->
         <item name="colorPrimary">@color/md_theme_primary</item>
         <item name="colorOnPrimary">@color/md_theme_onPrimary</item>
