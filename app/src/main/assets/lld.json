@@ -1,14 +1,14 @@
 {
   "scheme": 1,
-  "version": "2026-05-05 09:45 +0800",
+  "version": "2026-05-07 12:55 +0800",
   "android": {
     "securityPatchLevel": "2026-05-05",
     "googlePlaySystemUpdates": "2026-05-01",
     "build": {
-      "version": "2026-04-07",
+      "version": "2026-05-06",
       "details": [
-        { "id": "CP1A.260405.005", "revision": "-" },
-        { "id": "CP1A.260405.003.A1", "revision": "Australia" }
+        { "id": "CP1A.260505.005", "revision": "-" },
+        { "id": "CP1A.260505.005.A1", "revision": "Telia" }
       ]
     },
     "stable": {
@@ -18,7 +18,7 @@
       "api": "34", "apiFull": "34", "version": "14, Upside Down Cake", "name": "Upside Down Cake"
     },
     "stablePreview": {
-      "api": "37", "apiFull": "37.0", "version": "17 QPR1 Beta 1, Cinnamon Bun", "name": "Cinnamon Bun"
+      "api": "37", "apiFull": "37.0", "version": "17 QPR1 Beta 2, Cinnamon Bun", "name": "Cinnamon Bun"
     },
     "preview": {
       "api": "37", "apiFull": "37.0", "version": "17 Canary 2604, Cinnamon Bun", "name": "Cinnamon Bun", "phase": ""
@@ -58,7 +58,7 @@
     "master": { "version": "0.8.13" }
   },
   "webView": {
-    "stable": { "version": "148.0.7778.96" },
-    "beta": { "version": "148.0.7778.96" }
+    "stable": { "version": "148.0.7778.120" },
+    "beta": { "version": "148.0.7778.120" }
   }
 }
