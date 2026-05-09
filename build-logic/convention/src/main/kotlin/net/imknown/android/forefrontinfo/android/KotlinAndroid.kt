@@ -49,9 +49,14 @@ internal fun Project.configureAndroidSdk(commonExtension: CommonExtension) {
             minSdk = buildVersion("minSdk").toInt()
 
             if (this is ApplicationBaseFlavor) {
-                targetSdk = buildVersion("targetSdk").toInt()
-                if (isPreview) {
-                    targetSdkPreview = buildVersion("targetSdkPreview")
+                targetSdk {
+                    version = if (isPreview) {
+                        val targetSdkPreview = buildVersion("targetSdkPreview")
+                        preview(targetSdkPreview)
+                    } else {
+                        val targetSdk = buildVersion("targetSdk").toInt()
+                        release(targetSdk)
+                    }
                 }
             }
         }
