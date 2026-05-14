@@ -109,26 +109,27 @@ inline fun <reified T : KotlinBaseExtension> Project.configureKotlin() = configu
     compilerOptions.apply {
         freeCompilerArgs.addAll(
             // region [Experimental in 2.2.0]
-            "-Xcontext-parameters",
             "-Xcontext-sensitive-resolution",
-            "-Xannotation-target-all",
-            "-Xannotation-default-target=param-property",
-            "-Xannotations-in-metadata",
             // endregion [Experimental in 2.2.0]
 
             // region [Experimental in 2.2.20]
-            "-Xallow-reified-type-in-catch",
             "-Xwhen-expressions=indy",
             // endregion [Experimental in 2.2.20]
 
             // region [Experimental in 2.3.0]
             "-Xreturn-value-checker=full",
-            "-Xexplicit-backing-fields",
             // endregion [Experimental in 2.3.0]
 
             // region [Experimental in 2.3.20]
             "-Xname-based-destructuring=only-syntax",
             // endregion [Experimental in 2.3.20]
+
+            // region [Experimental in 2.4.0]
+            "-Xexplicit-context-arguments",
+            "-Xcollection-literals",
+            "-XIntrinsic-const-evaluation",
+            "-Xklib-ir-inliner=disabled"
+            // endregion [Experimental in 2.4.0]
         )
     }
 }
