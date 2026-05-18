@@ -28,7 +28,6 @@ import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid10
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid11
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid12
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid13
-import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid7
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid8
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid9
 import net.imknown.android.forefrontinfo.ui.common.isGoEdition
@@ -172,8 +171,7 @@ class HomeRepository(
     }
 
     fun detectBuildId(lld: Lld?): MyModel {
-        val buildIdResult = Build.ID
-            ?: "" // Fix weird R8 NPE on Android 6 only: Attempt to get length of null array
+        val buildIdResult: String = Build.ID
         val systemBuildIdResult = getStringProperty(AndroidDataSource.PROP_RO_SYSTEM_BUILD_ID, isAtLeastAndroid9())
         val vendorBuildIdResult = getStringProperty(AndroidDataSource.PROP_RO_VENDOR_BUILD_ID, isAtLeastAndroid9())
         val odmBuildIdResult = getStringProperty(AndroidDataSource.PROP_RO_ODM_BUILD_ID, isAtLeastAndroid9())
@@ -352,8 +350,8 @@ class HomeRepository(
     }
 
     fun detectAb(): MyModel {
-        val isAbUpdateSupported = getBooleanProperty(AndroidDataSource.PROP_AB_UPDATE, isAtLeastAndroid7())
-        val slotSuffixResult = getStringProperty(AndroidDataSource.PROP_SLOT_SUFFIX, isAtLeastAndroid7())
+        val isAbUpdateSupported = getBooleanProperty(AndroidDataSource.PROP_AB_UPDATE)
+        val slotSuffixResult = getStringProperty(AndroidDataSource.PROP_SLOT_SUFFIX)
         val isVirtualAb = getBooleanProperty(AndroidDataSource.PROP_VIRTUAL_AB_ENABLED, isAtLeastAndroid11())
         val isAbEnable = isAbUpdateSupported || isPropertyValueNotEmpty(slotSuffixResult) || isVirtualAb
 
@@ -896,69 +894,55 @@ class HomeRepository(
         val type = if (isAtLeastAndroid10()) {
             val standalone = MyApplication.getMyString(R.string.webview_standalone)
             MyApplication.getMyString(R.string.webview_or, "Trichrome", standalone)
-        } else if (isAtLeastAndroid7()) {
-            "Monochrome"
         } else {
-            MyApplication.getMyString(R.string.webview_standalone)
+            "Monochrome"
         }
 
         val packageManager = MyApplication.instance.packageManager
 
         var builtInResult = ""
         var builtInVersionName = ""
-        if (isAtLeastAndroid7()) {
-            val webViewProviderInfoList = getBuildInWebViewProvidersAndroid7()
+        val webViewProviderInfoList = getBuildInWebViewProvidersAndroid7()
 
-            if (webViewProviderInfoList.isEmpty()) {
-                builtInResult = MyApplication.getMyString(R.string.build_not_filled)
-            } else {
-                val lastIndex = webViewProviderInfoList.size - 1
-                webViewProviderInfoList.forEachIndexed { index, webViewProviderInfo ->
-                    builtInResult += with(webViewProviderInfo) {
-                        val packageInfo = getPackageInfoOrNull(packageName)
-                        val isInstalled = if (packageInfo != null) {
-                            packageInfo.versionName?.also {
-                                if (Version(it).isHigherThan(builtInVersionName)) {
-                                    builtInVersionName = it
-                                }
-                            } ?: MyApplication.getMyString(androidR.string.unknownName)
-                        } else {
-                            MyApplication.getMyString(R.string.webview_built_in_not_installed)
-                        }
-
-                        fun subFormat(text: String) =
-                            MyApplication.getMyString(R.string.webview_sub_format, text)
-
-                        fun subFormat(@StringRes stringRes: Int) =
-                            subFormat(MyApplication.getMyString(stringRes))
-
-                        var tempResult = packageName + subFormat(description) + subFormat(isInstalled)
-                        if (!availableByDefault) {
-                            tempResult += subFormat(R.string.webview_must_be_chosen_by_user)
-                        }
-                        if (isFallback) {
-                            tempResult += subFormat(R.string.webview_fallback)
-                        }
-                        if (signatures.isNotEmpty()) {
-                            tempResult += subFormat(R.string.webview_signed)
-                        }
-                        if (index != lastIndex) {
-                            tempResult += MyApplication.getMyString(R.string.webview_ending)
-                        }
-                        tempResult
+        if (webViewProviderInfoList.isEmpty()) {
+            builtInResult = MyApplication.getMyString(R.string.build_not_filled)
+        } else {
+            val lastIndex = webViewProviderInfoList.size - 1
+            webViewProviderInfoList.forEachIndexed { index, webViewProviderInfo ->
+                builtInResult += with(webViewProviderInfo) {
+                    val packageInfo = getPackageInfoOrNull(packageName)
+                    val isInstalled = if (packageInfo != null) {
+                        packageInfo.versionName?.also {
+                            if (Version(it).isHigherThan(builtInVersionName)) {
+                                builtInVersionName = it
+                            }
+                        } ?: MyApplication.getMyString(androidR.string.unknownName)
+                    } else {
+                        MyApplication.getMyString(R.string.webview_built_in_not_installed)
                     }
+
+                    fun subFormat(text: String) =
+                        MyApplication.getMyString(R.string.webview_sub_format, text)
+
+                    fun subFormat(@StringRes stringRes: Int) =
+                        subFormat(MyApplication.getMyString(stringRes))
+
+                    var tempResult = packageName + subFormat(description) + subFormat(isInstalled)
+                    if (!availableByDefault) {
+                        tempResult += subFormat(R.string.webview_must_be_chosen_by_user)
+                    }
+                    if (isFallback) {
+                        tempResult += subFormat(R.string.webview_fallback)
+                    }
+                    if (signatures.isNotEmpty()) {
+                        tempResult += subFormat(R.string.webview_signed)
+                    }
+                    if (index != lastIndex) {
+                        tempResult += MyApplication.getMyString(R.string.webview_ending)
+                    }
+                    tempResult
                 }
             }
-        } else {
-            val buildInPackageName = getBuildInWebViewProviderAndroid5()
-            val buildInPackageInfo = getPackageInfoOrNull(buildInPackageName)
-            val buildInLabel = buildInPackageInfo?.applicationInfo?.loadLabel(packageManager)
-            val buildInVersionName = buildInPackageInfo?.versionName
-            builtInResult = """
-                |$buildInPackageName
-                |  $buildInLabel
-                |  $buildInVersionName
-                """.trimMargin()
         }
 
         val implementPackageInfo =
@@ -1003,17 +987,6 @@ class HomeRepository(
             """.trimMargin(),
             webViewColor
         )
-    }
-
-    private fun getBuildInWebViewProviderAndroid5(): String {
-        @SuppressLint("DiscouragedApi")
-        // frameworks/base/core/res/res/values/config.xml
-        //     com.android.internal.R.string.config_webViewPackageName
-        val idConfigWebViewPackageName = Resources.getSystem().getIdentifier(
-            "config_webViewPackageName", "string", "android"
-        )
-
-        return MyApplication.getMyString(idConfigWebViewPackageName)
     }
 
     private class WebViewProviderInfo(

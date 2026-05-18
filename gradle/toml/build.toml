@@ -5,7 +5,7 @@ isPreview = "false" # true
 buildTools = "37.0.0"
 buildToolsPreview = "37.0.0"
 
-minSdk = "23"
+minSdk = "24"
 
 compileSdk = "37"
 compileSdkMinor = "1"
