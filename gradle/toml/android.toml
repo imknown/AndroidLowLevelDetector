@@ -59,7 +59,7 @@ savedState = "1.4.0"
 swipeRefreshLayout = "1.2.0"
 
 # https://developer.android.com/jetpack/androidx/releases/webkit
-webkit = "1.15.0"
+webkit = "1.16.0"
 
 # https://developer.android.com/training/testing/local-tests#dependencies
 # region [Test]

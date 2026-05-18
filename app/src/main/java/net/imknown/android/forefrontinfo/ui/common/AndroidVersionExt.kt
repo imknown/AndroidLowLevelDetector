@@ -87,7 +87,7 @@ fun initMyAndroid() {
             }
         }
     } else {
-        if (!isAtLeastAndroid15()) { // Android 6 Preview ~ Android 15 Preview
+        if (!isAtLeastAndroid15()) { // MinSupport ~ Android 15 Preview
             api++ // 34 → 35
             apiFull = api.toString() // "34" → "35"
             version.toIntOrNull()?.let {
@@ -119,7 +119,6 @@ fun initMyAndroid() {
 // region [IsAtLeast]
 private val sdkInt get() = myAndroid.api
 
-fun isAtLeastAndroid7() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N || sdkInt >= Build.VERSION_CODES.N
 fun isAtLeastAndroid8() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O || sdkInt >= Build.VERSION_CODES.O
 fun isAtLeastAndroid8p1() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1 || sdkInt >= Build.VERSION_CODES.O_MR1
 fun isAtLeastAndroid9() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P || sdkInt >= Build.VERSION_CODES.P
