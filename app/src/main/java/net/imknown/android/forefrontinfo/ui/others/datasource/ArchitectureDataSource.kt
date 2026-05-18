@@ -1,10 +1,8 @@
 package net.imknown.android.forefrontinfo.ui.others.datasource
 
-import android.annotation.SuppressLint
 import android.os.Build
 import net.imknown.android.forefrontinfo.binderdetector.BinderDetector
 import net.imknown.android.forefrontinfo.ui.common.getStringProperty
-import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid6
 
 class ArchitectureDataSource {
     companion object {
@@ -31,21 +29,7 @@ class ArchitectureDataSource {
     // endregion [Binder]
 
     // region [Process]
-    fun isProcess64BitOrThrow() = if (isAtLeastAndroid6()) {
-        android.os.Process.is64Bit()
-    } else {
-        val vmRuntimePath = "dalvik.system.VMRuntime"
-
-        @SuppressLint("DiscouragedPrivateApi")
-        val vmRuntimeInstance = Class.forName(vmRuntimePath)
-            .getDeclaredMethod("getRuntime")
-            .invoke(null)
-
-        @SuppressLint("DiscouragedPrivateApi")
-        Class.forName(vmRuntimePath)
-            .getDeclaredMethod("is64Bit")
-            .invoke(vmRuntimeInstance) as Boolean
-    }
+    fun isProcess64BitOrThrow(): Boolean = android.os.Process.is64Bit()
 
     fun getArchitectureOrNullOrThrow(): String? = System.getProperty(SYSTEM_PROPERTY_ARCHITECTURE)
     // endregion [Process]

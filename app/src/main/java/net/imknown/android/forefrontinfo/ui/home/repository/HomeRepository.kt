@@ -28,7 +28,6 @@ import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid10
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid11
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid12
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid13
-import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid6
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid7
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid8
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid9
@@ -254,11 +253,7 @@ class HomeRepository(
     fun detectSecurityPatches(lld: Lld?): List<MyModel> {
         val tempModels = mutableListOf<MyModel>()
 
-        val mySecurityPatch = if (isAtLeastAndroid6()) {
-            Build.VERSION.SECURITY_PATCH
-        } else {
-            getStringProperty(AndroidDataSource.PROP_SECURITY_PATCH)
-        }
+        val mySecurityPatch: String = Build.VERSION.SECURITY_PATCH
         tempModels += detectSecurityPatch(lld, mySecurityPatch, R.string.security_patch_level_title)
 
         val mySecurityPatchVendor = getStringProperty(AndroidDataSource.PROP_VENDOR_SECURITY_PATCH, isAtLeastAndroid9())
@@ -852,7 +847,7 @@ class HomeRepository(
     }
 
     fun detectToybox(lld: Lld?): MyModel {
-        val toyboxVersionResult = getShellResult(AndroidDataSource.CMD_TOYBOX_VERSION, isAtLeastAndroid6())
+        val toyboxVersionResult = getShellResult(AndroidDataSource.CMD_TOYBOX_VERSION)
         val hasToyboxVersion = toyboxVersionResult.isSuccess
 
         val toyboxVersion = if (hasToyboxVersion) {

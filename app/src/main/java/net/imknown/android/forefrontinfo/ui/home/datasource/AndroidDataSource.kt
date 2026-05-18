@@ -11,8 +11,6 @@ class AndroidDataSource {
         // endregion [BuildId]
 
         // region [Security Patch]
-        const val PROP_SECURITY_PATCH = "ro.build.version.security_patch"
-
         const val PROP_VENDOR_SECURITY_PATCH = "ro.vendor.build.security_patch"
 
         const val SYSTEM_PROPERTY_LINUX_VERSION = "os.version"

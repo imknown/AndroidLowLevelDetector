@@ -120,7 +120,6 @@ class OthersRepository(
         val time = romDataSource.getTime().formatToLocalZonedDatetimeString()
         return toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_time), time)
     }
-    @RequiresApi(Build.VERSION_CODES.M)
     fun getBaseOs() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_base_os), romDataSource.getBaseOs())
 
     fun getId() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_id), romDataSource.getId())
@@ -138,7 +137,6 @@ class OthersRepository(
         }
         return toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_codename), detail)
     }
-    @RequiresApi(Build.VERSION_CODES.M)
     fun getPreviewSdkInt() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_preview_sdk_int), romDataSource.getPreviewSdkInt().toString())
 
     // region [Fingerprint]

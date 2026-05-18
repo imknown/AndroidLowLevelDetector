@@ -13,7 +13,6 @@ import net.imknown.android.forefrontinfo.ui.base.list.BaseListViewModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid10
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid12
-import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid6
 import net.imknown.android.forefrontinfo.ui.others.datasource.ArchitectureDataSource
 import net.imknown.android.forefrontinfo.ui.others.repository.OthersRepository
 
@@ -78,9 +77,7 @@ class OthersViewModel(
             tempModels += othersRepository.getUser()
             tempModels += othersRepository.getHost()
             tempModels += othersRepository.getTime()
-            if (isAtLeastAndroid6()) {
-                tempModels += othersRepository.getBaseOs()
-            }
+            tempModels += othersRepository.getBaseOs()
             // region [Fingerprints]
             tempModels += othersRepository.getFingerprint()
             if (isAtLeastAndroid10()) {
@@ -94,9 +91,7 @@ class OthersViewModel(
             tempModels += othersRepository.getTags()
             tempModels += othersRepository.getIncremental()
             tempModels += othersRepository.getCodename()
-            if (isAtLeastAndroid6()) {
-                tempModels += othersRepository.getPreviewSdkInt()
-            }
+            tempModels += othersRepository.getPreviewSdkInt()
             tempModels += othersRepository.getDefaultUserAgent(MyApplication.instance)
             tempModels += othersRepository.getKernelVersion()
             // endregion [ROM]

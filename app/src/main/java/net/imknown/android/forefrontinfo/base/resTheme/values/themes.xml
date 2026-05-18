@@ -59,7 +59,7 @@
     </style>
 
     <style name="AppTheme" parent="BaseAppTheme">
-        <item name="android:windowLightStatusBar" tools:targetApi="M">true</item>
+        <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="O_MR1">true</item>
     </style>
 
