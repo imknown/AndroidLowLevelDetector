@@ -14,7 +14,6 @@
     <string name="lld_json_fetch_failed">在线数据获取失败。\n使用离线数据代替。\n\n%s</string>
     <string name="lld_json_save_failed">数据保存失败。\n请检查你的存储。\n\n%s</string>
     <string name="lld_json_parse_failed">数据解析失败。\n请尝试升级本程序。\n\n%s</string>
-    <string name="lld_json_detect_failed">检测失败。\n请尝试升级本程序。\n\n%s</string>
 
     <string name="android_info_title">Android 版本</string>
     <string name="android_info">%1$s（API %2$s）</string>
