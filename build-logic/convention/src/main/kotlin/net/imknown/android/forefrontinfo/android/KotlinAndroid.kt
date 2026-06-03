@@ -128,7 +128,7 @@ inline fun <reified T : KotlinBaseExtension> Project.configureKotlin() = configu
             "-Xexplicit-context-arguments",
             "-Xcollection-literals",
             "-XIntrinsic-const-evaluation",
-            "-Xklib-ir-inliner=disabled"
+            "-Xallow-returns-result-of",
             // endregion [Experimental in 2.4.0]
         )
     }
