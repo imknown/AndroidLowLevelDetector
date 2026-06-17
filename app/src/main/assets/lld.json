@@ -1,30 +1,33 @@
 {
   "scheme": 1,
-  "version": "2026-06-16 08:35 +0800",
+  "version": "2026-06-17 09:05 +0800",
   "android": {
     "securityPatchLevel": "2026-06-05",
     "googlePlaySystemUpdates": "2026-06-01",
     "build": {
       "version": "2026-05-06",
       "details": [
-        { "id": "CP1A.260505.005", "revision": "-" },
-        { "id": "CP1A.260505.005.A1", "revision": "Telia" }
+        { "id": "CP2A.260605.016", "revision": "r1" },
+        { "id": "CP2A.260605.012", "revision": "Global" },
+        { "id": "CP2A.260605.012.A1", "revision": "ATT" },
+        { "id": "CP2A.260605.012.B1", "revision": "AU" },
+        { "id": "CP2A.260605.012.C1", "revision": "Rogers" }
       ]
     },
     "stable": {
-      "api": "36", "apiFull": "36.1", "version": "16.1 (QPR3), Baklava 1", "name": "Baklava 1", "extension": 20
+      "api": "37", "apiFull": "37.0", "version": "17, Cinnamon Bun", "name": "Cinnamon Bun", "extension": 22
     },
     "support": {
       "api": "34", "apiFull": "34", "version": "14, Upside Down Cake", "name": "Upside Down Cake"
     },
     "stablePreview": {
-      "api": "37", "apiFull": "37.0", "version": "17 QPR1 Beta 4, Cinnamon Bun", "name": "Cinnamon Bun"
+      "api": "37", "apiFull": "37.1", "version": "17 QPR1 Beta 4, Cinnamon Bun 1", "name": "Cinnamon Bun 1"
     },
     "preview": {
       "api": "37", "apiFull": "37.0", "version": "17 Canary 2606, Cinnamon Bun", "name": "Cinnamon Bun", "phase": ""
     },
     "internal": {
-      "api": "37", "apiFull": "37.0", "version": "17 Internal, Cinnamon Bun", "name": "Cinnamon Bun"
+      "api": "37", "apiFull": "37.1", "version": "17 Internal, Cinnamon Bun 1", "name": "Cinnamon Bun 1"
     },
     "known": [
       { "api": "21", "apiFull": "21", "version": "5.0", "name": "Lollipop", "codename": "L" },
@@ -44,7 +47,8 @@
       { "api": "35", "apiFull": "35", "version": "15", "name": "Vanilla Ice Cream", "codename": "VanillaIceCream" },
       { "api": "36", "apiFull": "36.0", "version": "16", "name": "Baklava", "codename": "Baklava" },
       { "api": "36", "apiFull": "36.1", "version": "16.1 (QPR2)", "name": "Baklava 1", "codename": "Baklava" },
-      { "api": "37", "apiFull": "37.0", "version": "17", "name": "Cinnamon Bun", "codename": "CinnamonBun" }
+      { "api": "37", "apiFull": "37.0", "version": "17", "name": "Cinnamon Bun", "codename": "CinnamonBun" },
+      { "api": "37", "apiFull": "37.1", "version": "17.1", "name": "Cinnamon Bun 1", "codename": "CinnamonBun" }
     ]
   },
   "linux": {
@@ -52,13 +56,13 @@
     "mainline": { "version": "7.1" }
   },
   "toybox": {
-    "stable": { "version": "0.8.12" },
+    "stable": { "version": "0.8.13" },
     "support": { "version": "0.8.9" },
-    "mainline": { "version": "0.8.12" },
+    "mainline": { "version": "0.8.13" },
     "master": { "version": "0.8.13" }
   },
   "webView": {
-    "stable": { "version": "149.0.7827.114" },
+    "stable": { "version": "149.0.7827.159" },
     "beta": { "version": "150.0.7871.13" }
   }
 }
