@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2026-06-17 09:15 +0800",
+  "version": "2026-06-18 08:40 +0800",
   "android": {
     "securityPatchLevel": "2026-06-05",
     "googlePlaySystemUpdates": "2026-06-01",
@@ -46,9 +46,9 @@
       { "api": "34", "apiFull": "34", "version": "14", "name": "Upside Down Cake", "codename": "UpsideDownCake" },
       { "api": "35", "apiFull": "35", "version": "15", "name": "Vanilla Ice Cream", "codename": "VanillaIceCream" },
       { "api": "36", "apiFull": "36.0", "version": "16", "name": "Baklava", "codename": "Baklava" },
-      { "api": "36", "apiFull": "36.1", "version": "16.1 (QPR2)", "name": "Baklava 1", "codename": "Baklava" },
+      { "api": "36", "apiFull": "36.1", "version": "16 QPR2", "name": "Baklava 1", "codename": "Baklava" },
       { "api": "37", "apiFull": "37.0", "version": "17", "name": "Cinnamon Bun", "codename": "CinnamonBun" },
-      { "api": "37", "apiFull": "37.1", "version": "17.1", "name": "Cinnamon Bun 1", "codename": "CinnamonBun" }
+      { "api": "37", "apiFull": "37.1", "version": "17 QPR1", "name": "Cinnamon Bun 1", "codename": "CinnamonBun" }
     ]
   },
   "linux": {
@@ -62,7 +62,7 @@
     "master": { "version": "0.8.13" }
   },
   "webView": {
-    "stable": { "version": "149.0.7827.159" },
-    "beta": { "version": "150.0.7871.13" }
+    "stable": { "version": "150.0.7871.28" },
+    "beta": { "version": "150.0.7871.28" }
   }
 }
