@@ -82,9 +82,6 @@ fun initMyAndroid() {
         if (isAtLeastAndroid16()) {
             val suffix = ".$minor" // ".1"
             apiFull += suffix // "36.1"
-            if (minor != 0) {
-                version += suffix // "16.1"
-            }
         }
     } else {
         if (!isAtLeastAndroid15()) { // Android 6 Preview ~ Android 15 Preview
@@ -101,9 +98,6 @@ fun initMyAndroid() {
 
             val suffix = ".$minorFromRuntime" // ".1"
             apiFull = "$api$suffix" // "36.1"
-            if (minorFromRuntime != 0) {
-                version += suffix // "16.1"
-            }
         }
     }
 
