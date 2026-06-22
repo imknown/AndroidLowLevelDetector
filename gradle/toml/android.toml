@@ -44,7 +44,7 @@ core = "1.19.0"
 fragment = "1.8.9"
 
 # https://developer.android.com/jetpack/androidx/releases/lifecycle
-lifecycle = "2.11.0-rc01"
+lifecycle = "2.11.0"
 
 # https://developer.android.com/jetpack/androidx/releases/preference
 preference = "1.2.1"
