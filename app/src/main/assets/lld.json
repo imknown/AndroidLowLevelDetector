@@ -1,11 +1,11 @@
 {
   "scheme": 1,
-  "version": "2026-06-29 10:50 +0800",
+  "version": "2026-06-30 08:45 +0800",
   "android": {
     "securityPatchLevel": "2026-06-05",
     "googlePlaySystemUpdates": "2026-06-01",
     "build": {
-      "version": "2026-05-06",
+      "version": "2026-06-17",
       "details": [
         { "id": "CP2A.260605.016", "revision": "r1" },
         { "id": "CP2A.260605.012", "revision": "Global" },
