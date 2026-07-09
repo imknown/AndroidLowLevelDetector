@@ -1,17 +1,14 @@
 {
   "scheme": 1,
-  "version": "2026-07-06 14:25 +0800",
+  "version": "2026-07-09 21:05 +0800",
   "android": {
-    "securityPatchLevel": "2026-06-05",
-    "googlePlaySystemUpdates": "2026-06-01",
+    "securityPatchLevel": "2026-07-05",
+    "googlePlaySystemUpdates": "2026-07-01",
     "build": {
-      "version": "2026-06-17",
+      "version": "2026-07-07",
       "details": [
-        { "id": "CP2A.260605.016", "revision": "r1" },
-        { "id": "CP2A.260605.012", "revision": "Global" },
-        { "id": "CP2A.260605.012.A1", "revision": "ATT" },
-        { "id": "CP2A.260605.012.B1", "revision": "AU" },
-        { "id": "CP2A.260605.012.C1", "revision": "Rogers" }
+        { "id": "260705.006", "revision": "-" },
+        { "id": "260705.006.A1", "revision": "Australia/Rogers" }
       ]
     },
     "stable": {
@@ -24,7 +21,7 @@
       "api": "37", "apiFull": "37.1", "version": "17 QPR1 Beta 6, Cinnamon Bun 1", "name": "Cinnamon Bun 1"
     },
     "preview": {
-      "api": "37", "apiFull": "37.1", "version": "17 Canary 2606, Cinnamon Bun 1", "name": "Cinnamon Bun 1", "phase": ""
+      "api": "37", "apiFull": "37.1", "version": "17 Canary 2607, Cinnamon Bun 1", "name": "Cinnamon Bun 1", "phase": ""
     },
     "internal": {
       "api": "37", "apiFull": "37.1", "version": "17 Internal, Cinnamon Bun 1", "name": "Cinnamon Bun 1"
@@ -62,7 +59,7 @@
     "master": { "version": "0.8.14" }
   },
   "webView": {
-    "stable": { "version": "150.0.7871.63" },
+    "stable": { "version": "150.0.7871.114" },
     "beta": { "version": "151.0.7922.6" }
   }
 }
