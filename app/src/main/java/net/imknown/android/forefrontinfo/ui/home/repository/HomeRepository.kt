@@ -141,7 +141,7 @@ class HomeRepository(
         @AttrRes val color = when {
             lld == null -> R.attr.colorCritical
             isLatestStableAndroid(lld) || isLatestPreviewAndroid(lld) -> R.attr.colorNoProblem
-            isSupportedByUpstreamAndroid(lld) -> R.attr.colorWaring
+            isSupportedByUpstreamAndroid(lld) -> R.attr.colorWarning
             else -> R.attr.colorCritical
         }
 
@@ -235,7 +235,7 @@ class HomeRepository(
         @AttrRes val buildIdColor = when {
             lld == null -> R.attr.colorCritical
             isDateHigherThanConfig() -> R.attr.colorNoProblem
-            isLatestStableAndroid(lld) || isLatestPreviewAndroid(lld) -> R.attr.colorWaring
+            isLatestStableAndroid(lld) || isLatestPreviewAndroid(lld) -> R.attr.colorWarning
             else -> R.attr.colorCritical
         }
         // endregion [Color]
@@ -268,7 +268,7 @@ class HomeRepository(
             lldSecurityPatch == null -> R.attr.colorCritical
             !isPropertyValueNotEmpty(mySecurityPatch) -> R.attr.colorCritical
             mySecurityPatch >= lldSecurityPatch -> R.attr.colorNoProblem
-            getSecurityPatchYearMonth(mySecurityPatch) >= getSecurityPatchYearMonth(lldSecurityPatch) -> R.attr.colorWaring
+            getSecurityPatchYearMonth(mySecurityPatch) >= getSecurityPatchYearMonth(lldSecurityPatch) -> R.attr.colorWarning
             else -> R.attr.colorCritical
         }
 
@@ -297,7 +297,7 @@ class HomeRepository(
             if (performanceClass == Build.VERSION.SDK_INT) {
                 performanceColorRes = R.attr.colorNoProblem
             } else if (performanceClass == Build.VERSION.SDK_INT - 1) {
-                performanceColorRes = R.attr.colorWaring
+                performanceColorRes = R.attr.colorWarning
             }
 
             if (performanceClass != 0) {
@@ -331,7 +331,7 @@ class HomeRepository(
                 linuxColor = if (linuxVersion.isAtLeast(it)) {
                     R.attr.colorNoProblem
                 } else {
-                    R.attr.colorWaring
+                    R.attr.colorWarning
                 }
 
                 return@forEach
@@ -430,7 +430,7 @@ class HomeRepository(
         if (isSar) {
             when {
                 isTheLegacySar -> {
-                    color = R.attr.colorWaring
+                    color = R.attr.colorWarning
                     sarTypeRes = R.string.sar_type_legacy
                 }
                 isThe2siSar -> {
@@ -438,7 +438,7 @@ class HomeRepository(
                     sarTypeRes = R.string.sar_type_2si
                 }
                 isRecoverySar -> {
-                    color = R.attr.colorWaring
+                    color = R.attr.colorWarning
                     sarTypeRes = R.string.sar_type_recovery
                 }
                 isSlashSar -> {
@@ -507,12 +507,12 @@ class HomeRepository(
                 File(AndroidDataSource.PATH_VENDOR_LEGACY_NO_FRAGMENTS).exists() -> {
                     trebleResult += MyApplication.getMyString(R.string.treble_legacy_no_fragments)
 
-                    R.attr.colorWaring
+                    R.attr.colorWarning
                 }
                 else -> {
                     trebleResult += MyApplication.getMyString(R.string.treble_other)
 
-                    R.attr.colorWaring
+                    R.attr.colorWarning
                 }
             }
         } else {
@@ -552,11 +552,11 @@ class HomeRepository(
             if (isCompatible) {
                 R.string.result_compliant to R.attr.colorNoProblem
             } else {
-                R.string.result_not_compliant to R.attr.colorWaring
+                R.string.result_not_compliant to R.attr.colorWarning
             }
         } else {
             if (isTrebleEnabled && isAtLeastAndroid9()) {
-                R.string.result_unidentified to R.attr.colorWaring
+                R.string.result_unidentified to R.attr.colorWarning
             } else {
                 R.string.result_not_supported to R.attr.colorCritical
             }
@@ -664,7 +664,7 @@ class HomeRepository(
                 ) {
                     R.attr.colorNoProblem
                 } else {
-                    R.attr.colorWaring
+                    R.attr.colorWarning
                 }
             } else {
                 R.attr.colorCritical
@@ -702,7 +702,7 @@ class HomeRepository(
 
         @AttrRes val apexColor = when {
             apexUpdatable -> R.attr.colorNoProblem
-            isLegacyFlattenedApex -> R.attr.colorWaring
+            isLegacyFlattenedApex -> R.attr.colorWarning
             else -> R.attr.colorCritical
         }
 
@@ -769,7 +769,7 @@ class HomeRepository(
             }
             DevicePolicyManager.ENCRYPTION_STATUS_ACTIVE_DEFAULT_KEY -> {
                 result = R.string.result_encrypted_no_key_set
-                color = R.attr.colorWaring
+                color = R.attr.colorWarning
             }
             DevicePolicyManager.ENCRYPTION_STATUS_INACTIVE -> {
                 result = R.string.result_not_encrypted
@@ -818,7 +818,7 @@ class HomeRepository(
                 AndroidDataSource.SELINUX_STATUS_PERMISSIVE -> {
                     // val seLinuxPolicyVersion = sh(CMD_SELINUX_POLICY_VERSION, isAtLeastAndroid8())
                     result = R.string.selinux_status_permissive_mode
-                    color = R.attr.colorWaring
+                    color = R.attr.colorWarning
                 }
                 AndroidDataSource.SELINUX_STATUS_DISABLED -> {
                     result = R.string.result_disabled
@@ -867,7 +867,7 @@ class HomeRepository(
             val toyboxRealVersion = Version(toyboxRealVersionString)
             when {
                 stableVersion != null && toyboxRealVersion.isAtLeast(stableVersion) -> R.attr.colorNoProblem
-                supportVersion != null && toyboxRealVersion.isAtLeast(supportVersion) -> R.attr.colorWaring
+                supportVersion != null && toyboxRealVersion.isAtLeast(supportVersion) -> R.attr.colorWarning
                 else -> R.attr.colorCritical
             }
         } else {
@@ -985,7 +985,7 @@ class HomeRepository(
 
         @AttrRes val webViewColor = when {
             lldWebViewStable != null && Version(builtInVersionName).isAtLeast(lldWebViewStable) -> R.attr.colorNoProblem
-            lldWebViewStable != null && Version(implementVersionName).isAtLeast(lldWebViewStable) -> R.attr.colorWaring
+            lldWebViewStable != null && Version(implementVersionName).isAtLeast(lldWebViewStable) -> R.attr.colorWarning
             else -> R.attr.colorCritical
         }
 
@@ -1118,7 +1118,7 @@ class HomeRepository(
                 if (isLatestStableAndroid(lld) || isLatestPreviewAndroid(lld)) {
                     R.attr.colorNoProblem
                 } else {
-                    R.attr.colorWaring
+                    R.attr.colorWarning
                 }
             } else {
                 R.attr.colorCritical
