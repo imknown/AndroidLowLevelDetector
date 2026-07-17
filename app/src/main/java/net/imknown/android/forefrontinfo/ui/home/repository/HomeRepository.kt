@@ -155,7 +155,7 @@ class HomeRepository(
     fun detectSdkExtension(lld: Lld?): MyModel {
         val lldStableExtension = lld?.android?.stable?.extension
 
-        val (myExtension, color) = if (isAtLeastAndroid11()) {
+        val [myExtension, color] = if (isAtLeastAndroid11()) {
             val myExtension = getSdkExtension(Build.VERSION.SDK_INT)
             val color = lldStableExtension != null && myExtension >= lldStableExtension
             myExtension to color
@@ -533,7 +533,7 @@ class HomeRepository(
     fun detectTrebleAndGsiCompatibility(): List<MyModel> {
         val tempModels = mutableListOf<MyModel>()
 
-        val (myModel, isTrebleEnabled) = detectTreble()
+        val [myModel, isTrebleEnabled] = detectTreble()
         tempModels += myModel
 
         val fileLdConfig = when {
@@ -543,7 +543,7 @@ class HomeRepository(
         }
         val cmd = AndroidDataSource.CMD_VENDOR_NAMESPACE_DEFAULT_ISOLATED.format(fileLdConfig)
         val gsiCompatibilityResult = getShellResult(cmd, isAtLeastAndroid9())
-        val (@StringRes result, @AttrRes color) = if (gsiCompatibilityResult.isSuccess) {
+        val [@StringRes result, @AttrRes color] = if (gsiCompatibilityResult.isSuccess) {
             val firstLine = gsiCompatibilityResult.output.getOrNull(0)
                 ?: MyApplication.getMyString(androidR.string.unknownName)
             val lineResult = firstLine.split('=')

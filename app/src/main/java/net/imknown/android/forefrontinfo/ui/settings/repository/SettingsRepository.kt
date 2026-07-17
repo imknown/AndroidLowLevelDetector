@@ -66,7 +66,7 @@ class SettingsRepository(
         // endregion [installer]
 
         // region [install time]
-        val (firstInstallTime, lastUpdateTime) = withContext(Dispatchers.Default) {
+        val [firstInstallTime, lastUpdateTime] = withContext(Dispatchers.Default) {
             val packageInfo = try {
                 appInfoDataSource.getPackageInfoOrThrow(packageManager, packageName)
             } catch (e: Exception) {
