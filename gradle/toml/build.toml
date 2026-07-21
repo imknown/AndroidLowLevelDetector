@@ -9,7 +9,7 @@ minSdk = "23"
 
 compileSdk = "37"
 compileSdkMinor = "1"
-compileSdkPreview = "CinnamonBun"
+compileSdkPreview = "37.2-beta1"
 # compileSdkPreview = "CANARY"
 
 compileSdkExtension = "23" # 37.1-ext23
