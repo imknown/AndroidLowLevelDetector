@@ -6,7 +6,7 @@
 # https://maven.google.com/web/index.html?q=com.android.tools.build
 androidGradlePlugin = "9.3.1"
 androidGradlePlugin-beta = "9.3.1"
-androidGradlePlugin-canary = "9.4.0-alpha06"
+androidGradlePlugin-canary = "9.4.0-alpha07"
 
 # https://developer.android.com/studio/write/java8-support#library-desugaring
 # https://maven.google.com/web/index.html?q=desugar_jdk_libs
@@ -23,7 +23,7 @@ annotation = "1.10.0"
 annotation-experimental = "1.6.0"
 
 # https://developer.android.com/jetpack/androidx/releases/appcompat
-appcompat = "1.7.1"
+appcompat = "1.8.0-rc01"
 
 # https://developer.android.com/jetpack/androidx/releases/arch-core
 arch-core = "2.2.0"
@@ -32,7 +32,7 @@ arch-core = "2.2.0"
 cardView = "1.0.0"
 
 # https://developer.android.com/jetpack/androidx/releases/constraintlayout
-constraintLayout = "2.2.1"
+constraintLayout = "2.2.2"
 
 # https://developer.android.com/jetpack/androidx/releases/coordinatorlayout
 coordinatorLayout = "1.3.0"
@@ -41,7 +41,7 @@ coordinatorLayout = "1.3.0"
 core = "1.19.0"
 
 # https://developer.android.com/jetpack/androidx/releases/fragment
-fragment = "1.8.9"
+fragment = "1.9.0-rc01"
 
 # https://developer.android.com/jetpack/androidx/releases/lifecycle
 lifecycle = "2.11.0"
