@@ -1,14 +1,14 @@
 {
   "scheme": 1,
-  "version": "2026-08-04 20:40 +0800",
+  "version": "2026-08-06 08:30 +0800",
   "android": {
     "securityPatchLevel": "2026-08-05",
     "googlePlaySystemUpdates": "2026-07-01",
     "build": {
-      "version": "2026-07-07",
+      "version": "2026-08-05",
       "details": [
-        { "id": "260705.006", "revision": "-" },
-        { "id": "260705.006.A1", "revision": "Australia/Rogers" }
+        { "id": "CP2A.260805.005", "revision": "Global" },
+        { "id": "CP2A.260805.005.A1", "revision": "Rogers" }
       ]
     },
     "stable": {
@@ -59,7 +59,7 @@
     "master": { "version": "0.8.14" }
   },
   "webView": {
-    "stable": { "version": "151.0.7922.71" },
-    "beta": { "version": "152.0.7977.8" }
+    "stable": { "version": "151.0.7922.83" },
+    "beta": { "version": "152.0.7977.30" }
   }
 }
