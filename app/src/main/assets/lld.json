@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2026-08-07 09:25 +0800",
+  "version": "2026-08-07 19:35 +0800",
   "android": {
     "securityPatchLevel": "2026-08-05",
     "googlePlaySystemUpdates": "2026-07-01",
@@ -21,7 +21,7 @@
       "api": "37", "apiFull": "37.1", "version": "17 QPR2 Beta 2, Cinnamon Bun 1", "name": "Cinnamon Bun 1"
     },
     "preview": {
-      "api": "37", "apiFull": "37.1", "version": "17 Canary 2607, Cinnamon Bun 1", "name": "Cinnamon Bun 1", "phase": ""
+      "api": "37", "apiFull": "37.1", "version": "17 Canary 2608, Cinnamon Bun 1", "name": "Cinnamon Bun 1", "phase": ""
     },
     "internal": {
       "api": "37", "apiFull": "37.1", "version": "17 Internal, Cinnamon Bun 1", "name": "Cinnamon Bun 1"
