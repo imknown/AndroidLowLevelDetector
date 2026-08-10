@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2026-08-06 08:30 +0800",
+  "version": "2026-08-09 09:55 +0800",
   "android": {
     "securityPatchLevel": "2026-08-05",
     "googlePlaySystemUpdates": "2026-07-01",
@@ -18,13 +18,13 @@
       "api": "34", "apiFull": "34", "version": "14, Upside Down Cake", "name": "Upside Down Cake"
     },
     "stablePreview": {
-      "api": "37", "apiFull": "37.1", "version": "17 QPR2 Beta 2, Cinnamon Bun 1", "name": "Cinnamon Bun 1"
+      "api": "37", "apiFull": "37.2", "version": "17 QPR2 Beta 2, Cinnamon Bun 2", "name": "Cinnamon Bun 2"
     },
     "preview": {
-      "api": "37", "apiFull": "37.1", "version": "17 Canary 2607, Cinnamon Bun 1", "name": "Cinnamon Bun 1", "phase": ""
+      "api": "37", "apiFull": "37.2", "version": "17 Canary 2608, Cinnamon Bun 2", "name": "Cinnamon Bun 2", "phase": ""
     },
     "internal": {
-      "api": "37", "apiFull": "37.1", "version": "17 Internal, Cinnamon Bun 1", "name": "Cinnamon Bun 1"
+      "api": "37", "apiFull": "37.2", "version": "17 Internal, Cinnamon Bun 2", "name": "Cinnamon Bun 2"
     },
     "known": [
       { "api": "21", "apiFull": "21", "version": "5.0", "name": "Lollipop", "codename": "L" },
@@ -45,11 +45,12 @@
       { "api": "36", "apiFull": "36.0", "version": "16", "name": "Baklava", "codename": "Baklava" },
       { "api": "36", "apiFull": "36.1", "version": "16", "name": "Baklava 1", "codename": "Baklava" },
       { "api": "37", "apiFull": "37.0", "version": "17", "name": "Cinnamon Bun", "codename": "CinnamonBun" },
-      { "api": "37", "apiFull": "37.1", "version": "17", "name": "Cinnamon Bun 1", "codename": "CinnamonBun" }
+      { "api": "37", "apiFull": "37.1", "version": "17", "name": "Cinnamon Bun 1", "codename": "CinnamonBun" },
+      { "api": "37", "apiFull": "37.2", "version": "17", "name": "Cinnamon Bun 2", "codename": "CinnamonBun" }
     ]
   },
   "linux": {
-    "google": { "versions": [ "6.18.42", "6.12.101", "6.6.148", "6.1.180", "5.15.213", "5.10.262" ] },
+    "google": { "versions": [ "6.18.43", "6.12.102", "6.6.150", "6.1.182", "5.15.215", "5.10.264" ] },
     "mainline": { "version": "7.2-rc6" }
   },
   "toybox": {
@@ -59,7 +60,7 @@
     "master": { "version": "0.8.14" }
   },
   "webView": {
-    "stable": { "version": "151.0.7922.83" },
+    "stable": { "version": "151.0.7922.108" },
     "beta": { "version": "152.0.7977.30" }
   }
 }
