@@ -24,7 +24,11 @@ fun toTranslatedDetailMyModel(title: String, detail: String?): MyModel {
 
 fun toPropMyModel(rawProp: String): MyModel {
     val result = rawProp.split(": ")
-    return toTranslatedDetailMyModel(removeSquareBrackets(result[0]), removeSquareBrackets(result[1]))
+    val title = removeSquareBrackets(result[0])
+    val detail = result.getOrNull(1)?.let {
+        removeSquareBrackets(it)
+    }
+    return toTranslatedDetailMyModel(title, detail)
 }
 
 private fun removeSquareBrackets(text: String): String =
