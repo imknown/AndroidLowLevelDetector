@@ -132,6 +132,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             ).collect { stateVersion ->
                 when (stateVersion) {
                     State.NotInitialized -> return@collect
+                    State.Loading -> return@collect
                     is State.Done -> {
                         val version = stateVersion.value
 

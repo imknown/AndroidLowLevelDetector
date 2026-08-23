@@ -19,19 +19,26 @@ abstract class BaseListViewModel : BaseViewModel() {
     suspend fun init(savedInstanceState: Bundle?) {
         // When activity is recreated, use StateFlow to restore the data
         if (hasNoData(savedInstanceState)) {
+            setLoading()
             val list = collectModels()
             setModels(list)
         }
     }
 
-    fun hasNoData(savedInstanceState: Bundle?) =
+    private fun hasNoData(savedInstanceState: Bundle?) =
         savedInstanceState == null || modelsStateFlow.value == State.NotInitialized
 
     fun refresh() {
         viewModelScope.launch {
+            setLoading()
             val list = collectModels()
             setModels(list)
         }
+    }
+
+    @MainThread
+    private fun setLoading() {
+        modelsStateFlow.value = State.Loading
     }
 
     @MainThread
