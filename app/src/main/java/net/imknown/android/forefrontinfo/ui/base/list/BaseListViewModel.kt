@@ -5,6 +5,7 @@ import androidx.annotation.MainThread
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.imknown.android.forefrontinfo.ui.base.BaseViewModel
 import net.imknown.android.forefrontinfo.ui.common.State
@@ -30,6 +31,24 @@ abstract class BaseListViewModel : BaseViewModel() {
         viewModelScope.launch {
             val list = collectModels()
             setModels(list)
+        }
+    }
+
+    @MainThread
+    fun updateModelDetail(targetIndex: Int, newDetail: String) {
+        modelsStateFlow.update { state ->
+            if (state !is State.Done) {
+                return@update state
+            }
+
+            val list = state.value
+            if (targetIndex !in list.indices) {
+                return@update state
+            }
+
+            val newList = list.toMutableList()
+            newList[targetIndex] = newList[targetIndex].copy(detail = newDetail)
+            State.Done(newList)
         }
     }
 

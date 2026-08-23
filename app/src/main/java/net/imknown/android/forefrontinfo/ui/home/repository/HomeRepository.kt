@@ -18,6 +18,7 @@ import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.extension.formatToLocalZonedDatetimeString
 import net.imknown.android.forefrontinfo.base.extension.fullMessage
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
+import net.imknown.android.forefrontinfo.ui.base.list.MyModelType
 import net.imknown.android.forefrontinfo.ui.base.list.toColoredMyModel
 import net.imknown.android.forefrontinfo.ui.common.CODENAME_CANARY
 import net.imknown.android.forefrontinfo.ui.common.getBooleanProperty
@@ -1153,7 +1154,8 @@ class HomeRepository(
         return MyModel(
             MyApplication.getMyString(R.string.outdated_target_version_sdk_version_apk_title),
             result,
-            targetSdkVersionColor
+            targetSdkVersionColor,
+            MyModelType.OutdatedTargetSdkApk
         )
     }
 

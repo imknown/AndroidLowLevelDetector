@@ -4,8 +4,14 @@ import androidx.annotation.AttrRes
 
 const val RES_ID_NONE = 0
 
-class MyModel(
+enum class MyModelType {
+    General,
+    OutdatedTargetSdkApk
+}
+
+data class MyModel(
     val title: String,
-    var detail: String,
-    @param:AttrRes val color: Int = RES_ID_NONE
+    val detail: String,
+    @param:AttrRes val color: Int = RES_ID_NONE,
+    val type: MyModelType = General
 )

@@ -17,6 +17,7 @@ import net.imknown.android.forefrontinfo.base.extension.fullMessage
 import net.imknown.android.forefrontinfo.ui.base.list.BaseListViewModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.common.LldManager
+import net.imknown.android.forefrontinfo.ui.common.State
 import net.imknown.android.forefrontinfo.ui.common.toObjectOrThrow
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.home.repository.HomeRepository
@@ -170,15 +171,27 @@ class HomeViewModel(
     }
 
     @MainThread
-    suspend fun payloadOutdatedTargetSdkVersionApk(myModels: List<MyModel>) {
-        if (myModels.isEmpty()) {
+    suspend fun payloadOutdatedTargetSdkVersionApk() {
+        val lld = fetchOfflineLldOrNull().lld
+            ?: return
+
+        val newDetail = withContext(Dispatchers.Default) {
+            homeRepository.getOutdatedTargetSdkVersionApkModel(lld).detail
+        }
+
+        val state = modelsStateFlow.value
+        if (state !is State.Done) {
             return
         }
 
-        val lld = fetchOfflineLldOrNull().lld
-            ?: return
-        myModels.last().detail = withContext(Dispatchers.Default) {
-            homeRepository.getOutdatedTargetSdkVersionApkModel(lld).detail
+        val list = state.value
+        val targetIndex = list.indexOfFirst {
+            it.type == OutdatedTargetSdkApk
         }
+        if (targetIndex == -1) {
+            return
+        }
+
+        updateModelDetail(targetIndex, newDetail)
     }
 }

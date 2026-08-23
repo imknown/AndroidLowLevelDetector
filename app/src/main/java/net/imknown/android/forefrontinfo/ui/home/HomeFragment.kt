@@ -8,7 +8,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import kotlinx.coroutines.launch
 import net.imknown.android.forefrontinfo.ui.base.list.BaseListFragment
-import net.imknown.android.forefrontinfo.ui.base.list.MyAdapter
 import net.imknown.android.forefrontinfo.ui.home.datasource.LldDataSource
 import net.imknown.android.forefrontinfo.ui.home.datasource.MountDataSource
 import net.imknown.android.forefrontinfo.ui.home.repository.HomeRepository
@@ -41,9 +40,7 @@ class HomeFragment : BaseListFragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             val flow = SettingsViewModel.outdatedOrderChangedSharedFlow
             flow.flowWithLifecycle(viewLifecycleOwner.lifecycle).collect {
-                val models = myAdapter.myModels
-                listViewModel.payloadOutdatedTargetSdkVersionApk(models)
-                myAdapter.notifyItemChanged(models.lastIndex, MyAdapter.PAYLOAD_DETAILS)
+                listViewModel.payloadOutdatedTargetSdkVersionApk()
             }
         }
     }
