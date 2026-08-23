@@ -1,4 +1,4 @@
-package net.imknown.android.forefrontinfo.ui.home.repository
+﻿package net.imknown.android.forefrontinfo.ui.home.repository
 
 import android.annotation.SuppressLint
 import android.app.admin.DevicePolicyManager
@@ -18,6 +18,7 @@ import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.extension.formatToLocalZonedDatetimeString
 import net.imknown.android.forefrontinfo.base.extension.fullMessage
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
+import net.imknown.android.forefrontinfo.ui.base.list.MyModelTitle
 import net.imknown.android.forefrontinfo.ui.base.list.MyModelType
 import net.imknown.android.forefrontinfo.ui.base.list.toColoredMyModel
 import net.imknown.android.forefrontinfo.ui.common.CODENAME_CANARY
@@ -76,7 +77,7 @@ class HomeRepository(
             .orEmpty()
 
         return toColoredMyModel(
-            MyApplication.getMyString(R.string.lld_json_mode_title),
+            R.string.lld_json_mode_title,
             MyApplication.getMyString(modeResId, datetimeFormatted) + result,
             color
         )
@@ -147,7 +148,7 @@ class HomeRepository(
         }
 
         return toColoredMyModel(
-            MyApplication.getMyString(R.string.android_info_title),
+            R.string.android_info_title,
             MyApplication.getMyString(R.string.android_info_detail, *infoDetailArgs),
             color
         )
@@ -166,7 +167,7 @@ class HomeRepository(
         val lldStableExtensionString = lldStableExtension?.toString()
             ?: MyApplication.getMyString(androidR.string.unknownName)
         return toColoredMyModel(
-            MyApplication.getMyString(R.string.android_sdk_extension_title),
+            R.string.android_sdk_extension_title,
             MyApplication.getMyString(R.string.android_sdk_extension_detail, myExtension, lldStableExtensionString),
             color
         )
@@ -244,7 +245,7 @@ class HomeRepository(
         val infoDetailArgs = arrayOf(buildIdResult, systemBuildIdResult, vendorBuildIdResult, odmBuildIdResult, version, builds)
 
         return toColoredMyModel(
-            MyApplication.getMyString(R.string.android_build_id_title),
+            R.string.android_build_id_title,
             MyApplication.getMyString(R.string.android_build_id_detail, *infoDetailArgs),
             buildIdColor
         )
@@ -280,7 +281,7 @@ class HomeRepository(
         )
 
         return toColoredMyModel(
-            MyApplication.getMyString(titleId),
+            titleId,
             MyApplication.getMyString(R.string.security_patch_level_detail, *infoDetailArgs),
             securityPatchColor
         )
@@ -311,7 +312,7 @@ class HomeRepository(
         }
 
         return toColoredMyModel(
-            MyApplication.getMyString(R.string.performance_class_title),
+            R.string.performance_class_title,
             result,
             performanceColorRes
         )
@@ -346,7 +347,7 @@ class HomeRepository(
             ?: MyApplication.getMyString(androidR.string.unknownName)
 
         return toColoredMyModel(
-            MyApplication.getMyString(R.string.linux_title),
+            R.string.linux_title,
             MyApplication.getMyString(R.string.linux_version_detail, linuxVersionString, support, mainline),
             linuxColor
         )
@@ -382,7 +383,7 @@ class HomeRepository(
         }
 
         return toColoredMyModel(
-            MyApplication.getMyString(R.string.ab_seamless_update_status_title),
+            R.string.ab_seamless_update_status_title,
             abResult,
             isAbEnable
         )
@@ -457,7 +458,7 @@ class HomeRepository(
         }
 
         return toColoredMyModel(
-            MyApplication.getMyString(R.string.sar_status_title),
+            R.string.sar_status_title,
             result,
             color
         )
@@ -482,7 +483,7 @@ class HomeRepository(
         }
 
         return toColoredMyModel(
-            MyApplication.getMyString(R.string.dynamic_partitions_status_title),
+            R.string.dynamic_partitions_status_title,
             detail,
             isDynamicPartitionsEnabled
         )
@@ -521,7 +522,7 @@ class HomeRepository(
         }
 
         val myModel = toColoredMyModel(
-            MyApplication.getMyString(R.string.treble_status_title),
+            R.string.treble_status_title,
             trebleResult,
             trebleColor
         )
@@ -564,7 +565,7 @@ class HomeRepository(
         }
 
         tempModels += toColoredMyModel(
-            MyApplication.getMyString(R.string.gsi_status_title),
+            R.string.gsi_status_title,
             MyApplication.getMyString(result),
             color
         )
@@ -585,7 +586,7 @@ class HomeRepository(
             }
         )
         return toColoredMyModel(
-            MyApplication.getMyString(R.string.dsu_status_title),
+            R.string.dsu_status_title,
             result,
             isDsuEnabled
         )
@@ -639,7 +640,7 @@ class HomeRepository(
         }
 
         return toColoredMyModel(
-            MyApplication.getMyString(R.string.mainline_title),
+            R.string.mainline_title,
             result,
             moduleColor
         )
@@ -680,7 +681,7 @@ class HomeRepository(
         }
 
         return toColoredMyModel(
-            MyApplication.getMyString(R.string.vndk_built_in_title),
+            R.string.vndk_built_in_title,
             isVndkBuiltInResult,
             vndkColor
         )
@@ -708,7 +709,7 @@ class HomeRepository(
         }
 
         return toColoredMyModel(
-            MyApplication.getMyString(R.string.apex_status_title),
+            R.string.apex_status_title,
             apexEnabledResult,
             apexColor
         )
@@ -722,7 +723,7 @@ class HomeRepository(
         ) == AndroidDataSource.SETTINGS_DISABLED
 
         return toColoredMyModel(
-            MyApplication.getMyString(R.string.developer_options_status_title),
+            R.string.developer_options_status_title,
             translateDisabled(isDeveloperOptionsDisabled),
             isDeveloperOptionsDisabled
         )
@@ -736,7 +737,7 @@ class HomeRepository(
         ) == AndroidDataSource.SETTINGS_DISABLED
 
         return toColoredMyModel(
-            MyApplication.getMyString(R.string.adb_debugging_status_title),
+            R.string.adb_debugging_status_title,
             translateDisabled(isAdbDebuggingDisabled),
             isAdbDebuggingDisabled
         )
@@ -747,7 +748,7 @@ class HomeRepository(
             getStringProperty(AndroidDataSource.PROP_ADB_SECURE) == AndroidDataSource.SETTINGS_ENABLED.toString()
 
         return toColoredMyModel(
-            MyApplication.getMyString(R.string.adb_authentication_status_title),
+            R.string.adb_authentication_status_title,
             translateEnabled(isAdbAuthenticationEnabled),
             isAdbAuthenticationEnabled
         )
@@ -787,7 +788,7 @@ class HomeRepository(
         }
 
         return toColoredMyModel(
-            MyApplication.getMyString(R.string.encryption_status_title),
+            R.string.encryption_status_title,
             MyApplication.getMyString(result),
             color
         )
@@ -841,7 +842,7 @@ class HomeRepository(
         }
 
         return toColoredMyModel(
-            MyApplication.getMyString(R.string.selinux_status),
+            R.string.selinux_status,
             MyApplication.getMyString(result),
             color
         )
@@ -886,7 +887,7 @@ class HomeRepository(
         )
 
         return toColoredMyModel(
-            MyApplication.getMyString(R.string.toybox_built_in_title),
+            R.string.toybox_built_in_title,
             MyApplication.getMyString(R.string.toybox_built_in_detail, *infoDetailArgs),
             toyboxColor
         )
@@ -991,7 +992,7 @@ class HomeRepository(
         }
 
         return toColoredMyModel(
-            MyApplication.getMyString(R.string.webview_title),
+            R.string.webview_title,
             """
             |${MyApplication.getMyString(R.string.webview_built_in_version)}: $type
             |
@@ -1152,10 +1153,10 @@ class HomeRepository(
         }
 
         return MyModel(
-            MyApplication.getMyString(R.string.outdated_target_version_sdk_version_apk_title),
-            result,
-            targetSdkVersionColor,
-            MyModelType.OutdatedTargetSdkApk
+            title = MyModelTitle.Res(R.string.outdated_target_version_sdk_version_apk_title),
+            detail = result,
+            color = targetSdkVersionColor,
+            type = MyModelType.OutdatedTargetSdkApk
         )
     }
 

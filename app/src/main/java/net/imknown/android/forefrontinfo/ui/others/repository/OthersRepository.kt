@@ -1,4 +1,4 @@
-package net.imknown.android.forefrontinfo.ui.others.repository
+﻿package net.imknown.android.forefrontinfo.ui.others.repository
 
 import android.content.Context
 import android.os.Build
@@ -28,23 +28,23 @@ class OthersRepository(
     private val othersDataSource: OthersDataSource
 ) {
     // region [Basic]
-    fun getBrand() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_brand), basicDataSource.getBrand())
-    fun getManufacturer() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_manufacturer), basicDataSource.getManufacturer())
-    fun getModel() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_model), basicDataSource.getModel())
-    fun getDevice() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_device), basicDataSource.getDevice())
-    fun getProduct() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_product), basicDataSource.getProduct())
-    fun getHardware() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_hardware), basicDataSource.getHardware())
-    fun getBoard() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_board), basicDataSource.getBoard())
+    fun getBrand() = toTranslatedDetailMyModel(R.string.build_brand, basicDataSource.getBrand())
+    fun getManufacturer() = toTranslatedDetailMyModel(R.string.build_manufacturer, basicDataSource.getManufacturer())
+    fun getModel() = toTranslatedDetailMyModel(R.string.build_model, basicDataSource.getModel())
+    fun getDevice() = toTranslatedDetailMyModel(R.string.build_device, basicDataSource.getDevice())
+    fun getProduct() = toTranslatedDetailMyModel(R.string.build_product, basicDataSource.getProduct())
+    fun getHardware() = toTranslatedDetailMyModel(R.string.build_hardware, basicDataSource.getHardware())
+    fun getBoard() = toTranslatedDetailMyModel(R.string.build_board, basicDataSource.getBoard())
 
     @RequiresApi(Build.VERSION_CODES.S)
-    fun getSocModel() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_soc_model), basicDataSource.getSocModel())
+    fun getSocModel() = toTranslatedDetailMyModel(R.string.build_soc_model, basicDataSource.getSocModel())
     @RequiresApi(Build.VERSION_CODES.S)
-    fun getSocManufacturer() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_soc_manufacturer), basicDataSource.getSocManufacturer())
+    fun getSocManufacturer() = toTranslatedDetailMyModel(R.string.build_soc_manufacturer, basicDataSource.getSocManufacturer())
     @RequiresApi(Build.VERSION_CODES.S)
-    fun getSku() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_hardware_sku), basicDataSource.getSku())
-    fun getVendorSku() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_vendor_sku),basicDataSource.getVendorSku())
+    fun getSku() = toTranslatedDetailMyModel(R.string.build_hardware_sku, basicDataSource.getSku())
+    fun getVendorSku() = toTranslatedDetailMyModel(R.string.build_vendor_sku,basicDataSource.getVendorSku())
     @RequiresApi(Build.VERSION_CODES.S)
-    fun getOdmSku() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_odm_hardware_sku), basicDataSource.getOdmSku())
+    fun getOdmSku() = toTranslatedDetailMyModel(R.string.build_odm_hardware_sku, basicDataSource.getOdmSku())
     // endregion [Basic]
 
     // region [Binder]
@@ -73,7 +73,7 @@ class OthersRepository(
             }
         }
 
-        return toTranslatedDetailMyModel(MyApplication.getMyString(R.string.binder_status), MyApplication.getMyString(binderStatusId))
+        return toTranslatedDetailMyModel(R.string.binder_status, MyApplication.getMyString(binderStatusId))
     }
     // endregion [Binder]
 
@@ -88,7 +88,7 @@ class OthersRepository(
 
         val bitId = if (isProcess64Bit) R.string.bit_64 else R.string.bit_32
 
-        return toTranslatedDetailMyModel(MyApplication.getMyString(R.string.current_process_bit), MyApplication.getMyString(bitId))
+        return toTranslatedDetailMyModel(R.string.current_process_bit, MyApplication.getMyString(bitId))
     }
 
     fun getArchitecture(): MyModel {
@@ -98,35 +98,35 @@ class OthersRepository(
             e.printStackTrace()
             null
         } ?: MyApplication.getMyString(androidR.string.unknownName)
-        return toTranslatedDetailMyModel(MyApplication.getMyString(R.string.os_arch), a)
+        return toTranslatedDetailMyModel(R.string.os_arch, a)
     }
     // endregion [Process]
 
     // region [ABI]
-    fun getCpuAbi() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_cpu_abi), architectureDataSource.getCpuAbi())
-    fun getPropertyCpuAbi() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.current_system_abi), architectureDataSource.getPropertyCpuAbi())
-    fun getSupported32BitAbis() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_supported_32_bit_abis), architectureDataSource.getSupported32BitAbis().joinToString())
+    fun getCpuAbi() = toTranslatedDetailMyModel(R.string.build_cpu_abi, architectureDataSource.getCpuAbi())
+    fun getPropertyCpuAbi() = toTranslatedDetailMyModel(R.string.current_system_abi, architectureDataSource.getPropertyCpuAbi())
+    fun getSupported32BitAbis() = toTranslatedDetailMyModel(R.string.build_supported_32_bit_abis, architectureDataSource.getSupported32BitAbis().joinToString())
     fun getSupported64BitAbis(): MyModel {
         val supported64BitAbis = architectureDataSource.getSupported64BitAbis().joinToString().takeIf { it.isNotEmpty() }
             ?: MyApplication.getMyString(R.string.result_not_supported)
-        return toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_supported_64_bit_abis), supported64BitAbis)
+        return toTranslatedDetailMyModel(R.string.build_supported_64_bit_abis, supported64BitAbis)
     }
     // endregion [ABI]
 
     // region [ROM]
-    fun getUser() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_user), romDataSource.getUser())
-    fun getHost() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_host), romDataSource.getHost())
+    fun getUser() = toTranslatedDetailMyModel(R.string.build_user, romDataSource.getUser())
+    fun getHost() = toTranslatedDetailMyModel(R.string.build_host, romDataSource.getHost())
     fun getTime(): MyModel {
         val time = romDataSource.getTime().formatToLocalZonedDatetimeString()
-        return toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_time), time)
+        return toTranslatedDetailMyModel(R.string.build_time, time)
     }
-    fun getBaseOs() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_base_os), romDataSource.getBaseOs())
+    fun getBaseOs() = toTranslatedDetailMyModel(R.string.build_base_os, romDataSource.getBaseOs())
 
-    fun getId() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_id), romDataSource.getId())
-    fun getDisplay() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_display), romDataSource.getDisplay())
-    fun getType() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_type), romDataSource.getType())
-    fun getTags() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_tags), romDataSource.getTags())
-    fun getIncremental() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_incremental), romDataSource.getIncremental())
+    fun getId() = toTranslatedDetailMyModel(R.string.build_id, romDataSource.getId())
+    fun getDisplay() = toTranslatedDetailMyModel(R.string.build_display, romDataSource.getDisplay())
+    fun getType() = toTranslatedDetailMyModel(R.string.build_type, romDataSource.getType())
+    fun getTags() = toTranslatedDetailMyModel(R.string.build_tags, romDataSource.getTags())
+    fun getIncremental() = toTranslatedDetailMyModel(R.string.build_incremental, romDataSource.getIncremental())
     fun getCodename(): MyModel {
         var detail = romDataSource.getCodename()
         if (isPreviewAndroid() && isAtLeastAndroid13()) {
@@ -135,13 +135,13 @@ class OthersRepository(
                 detail += " ($previewDisplay)"
             }
         }
-        return toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_codename), detail)
+        return toTranslatedDetailMyModel(R.string.build_codename, detail)
     }
-    fun getPreviewSdkInt() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_preview_sdk_int), romDataSource.getPreviewSdkInt().toString())
+    fun getPreviewSdkInt() = toTranslatedDetailMyModel(R.string.build_preview_sdk_int, romDataSource.getPreviewSdkInt().toString())
 
     // region [Fingerprint]
-    fun getFingerprint() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_stock_fingerprint), fingerprintDataSource.getFingerprint())
-    fun getPreviewSdkFingerprint() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_stock_preview_fingerprint), fingerprintDataSource.getPreviewSdkFingerprint())
+    fun getFingerprint() = toTranslatedDetailMyModel(R.string.build_stock_fingerprint, fingerprintDataSource.getFingerprint())
+    fun getPreviewSdkFingerprint() = toTranslatedDetailMyModel(R.string.build_stock_preview_fingerprint, fingerprintDataSource.getPreviewSdkFingerprint())
     fun getPartitionFingerprints(): List<MyModel> {
         val partitions = fingerprintDataSource.getPartitions()
         return partitions.mapNotNull {
@@ -166,7 +166,7 @@ class OthersRepository(
             e.printStackTrace()
             MyApplication.getMyString(androidR.string.unknownName)
         }
-        return toTranslatedDetailMyModel(MyApplication.getMyString(R.string.webview_user_agent), userAgent)
+        return toTranslatedDetailMyModel(R.string.webview_user_agent, userAgent)
     }
 
     fun getKernelVersion(): MyModel {
@@ -181,12 +181,12 @@ class OthersRepository(
             }
         }
 
-        return toTranslatedDetailMyModel(MyApplication.getMyString(R.string.linux), kernelFinal)
+        return toTranslatedDetailMyModel(R.string.linux, kernelFinal)
     }
     // endregion [ROM]
 
     // region [Others]
-    fun getBootloader() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_bootloader), othersDataSource.getBootloader())
-    fun getRadioVersionOrNull() = toTranslatedDetailMyModel(MyApplication.getMyString(R.string.build_radio), othersDataSource.getRadioVersionOrNull())
+    fun getBootloader() = toTranslatedDetailMyModel(R.string.build_bootloader, othersDataSource.getBootloader())
+    fun getRadioVersionOrNull() = toTranslatedDetailMyModel(R.string.build_radio, othersDataSource.getRadioVersionOrNull())
     // endregion [Others]
 }

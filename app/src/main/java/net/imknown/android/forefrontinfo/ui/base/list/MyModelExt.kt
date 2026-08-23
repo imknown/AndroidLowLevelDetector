@@ -1,25 +1,43 @@
 package net.imknown.android.forefrontinfo.ui.base.list
 
 import androidx.annotation.AttrRes
+import androidx.annotation.StringRes
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
 
-fun toColoredMyModel(title: String, detail: String?, condition: Boolean): MyModel {
+fun toColoredMyModel(@StringRes titleRes: Int, detail: String?, condition: Boolean): MyModel {
     @AttrRes val color = if (condition) R.attr.colorNoProblem else R.attr.colorCritical
-    return MyModel(title, detail.toString(), color)
+    return MyModel(
+        title = MyModelTitle.Res(titleRes),
+        detail = detail.toString(),
+        color = color
+    )
 }
 
-fun toColoredMyModel(title: String, detail: String?, @AttrRes color: Int): MyModel {
-    return MyModel(title, detail.toString(), color)
+fun toColoredMyModel(@StringRes titleRes: Int, detail: String?, @AttrRes color: Int): MyModel {
+    return MyModel(
+        title = MyModelTitle.Res(titleRes),
+        detail = detail.toString(),
+        color = color
+    )
 }
 
-fun toTranslatedDetailMyModel(title: String, detail: String?): MyModel {
-    val translatedDetail = if (detail.isNullOrEmpty()) {
-        MyApplication.getMyString(R.string.build_not_filled)
-    } else {
-        detail
-    }
-    return MyModel(title, translatedDetail)
+fun toTranslatedDetailMyModel(@StringRes titleRes: Int, detail: String?): MyModel =
+    MyModel(
+        title = MyModelTitle.Res(titleRes),
+        detail = toTranslatedDetail(detail)
+    )
+
+fun toTranslatedDetailMyModel(title: String, detail: String?): MyModel =
+    MyModel(
+        title = MyModelTitle.Raw(title),
+        detail = toTranslatedDetail(detail)
+    )
+
+private fun toTranslatedDetail(detail: String?): String = if (detail.isNullOrEmpty()) {
+    MyApplication.getMyString(R.string.build_not_filled)
+} else {
+    detail
 }
 
 fun toPropMyModel(rawProp: String): MyModel {

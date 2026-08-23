@@ -58,12 +58,7 @@ abstract class BaseListFragment : BaseFragment<BaseListFragmentBinding>() {
                     State.NotInitialized -> return@collect
                     State.Loading -> binding.swipeRefreshLayout.isRefreshing = true
                     is State.Done -> {
-                        val myModels = myAdapter.myModels
-                        val newModels = stateMyModels.value
-                        myModels.clear()
-                        myModels.addAll(newModels)
-
-                        myAdapter.notifyDataSetChanged()
+                        myAdapter.submitList(stateMyModels.value)
 
                         binding.swipeRefreshLayout.isRefreshing = false
                     }
