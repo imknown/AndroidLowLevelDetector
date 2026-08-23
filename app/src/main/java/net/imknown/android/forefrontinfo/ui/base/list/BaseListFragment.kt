@@ -104,10 +104,7 @@ abstract class BaseListFragment : BaseFragment<BaseListFragmentBinding>() {
         }
 
         binding.swipeRefreshLayout.setOnRefreshListener {
-            viewLifecycleOwner.lifecycleScope.launch {
-                val list = listViewModel.collectModels()
-                listViewModel.setModels(list)
-            }
+            listViewModel.refresh()
         }
 
         binding.recyclerView.apply {
