@@ -51,19 +51,22 @@ abstract class BaseListFragment : BaseFragment<BaseListFragmentBinding>() {
         // endregion [ScrollBar Mode]
 
         viewLifecycleOwner.lifecycleScope.launch {
-            listViewModel.modelsStateFlow.flowWithLifecycle(viewLifecycleOwner.lifecycle).collect { stateMyModels ->
-                if (stateMyModels == State.NotInitialized) {
-                    return@collect
+            listViewModel.modelsStateFlow.flowWithLifecycle(
+                viewLifecycleOwner.lifecycle
+            ).collect { stateMyModels ->
+                when (stateMyModels) {
+                    State.NotInitialized -> return@collect
+                    is State.Done -> {
+                        val myModels = myAdapter.myModels
+                        val newModels = stateMyModels.value
+                        myModels.clear()
+                        myModels.addAll(newModels)
+
+                        myAdapter.notifyDataSetChanged()
+
+                        binding.swipeRefreshLayout.isRefreshing = false
+                    }
                 }
-
-                val myModels = myAdapter.myModels
-                val newModels = stateMyModels.toValue()
-                myModels.clear()
-                myModels.addAll(newModels)
-
-                myAdapter.notifyDataSetChanged()
-
-                binding.swipeRefreshLayout.isRefreshing = false
             }
         }
 

@@ -127,23 +127,26 @@ class SettingsFragment : PreferenceFragmentCompat() {
         // region [Version Info]
         val versionPref = findPreferenceOrNull(R.string.about_version_key)
         viewLifecycleOwner.lifecycleScope.launch {
-            settingsViewModel.version.flowWithLifecycle(viewLifecycleOwner.lifecycle).collect { stateVersion ->
-                if (stateVersion is State.NotInitialized) {
-                    return@collect
+            settingsViewModel.version.flowWithLifecycle(
+                viewLifecycleOwner.lifecycle
+            ).collect { stateVersion ->
+                when (stateVersion) {
+                    State.NotInitialized -> return@collect
+                    is State.Done -> {
+                        val version = stateVersion.value
+
+                        versionPref?.summary = MyApplication.getMyString(
+                            version.id,
+                            version.versionName,
+                            version.versionCode,
+                            version.assetLldVersion,
+                            version.distributor,
+                            version.installer,
+                            version.firstInstallTime,
+                            version.lastUpdateTime
+                        )
+                    }
                 }
-
-                val version = stateVersion.toValue()
-
-                versionPref?.summary = MyApplication.getMyString(
-                    version.id,
-                    version.versionName,
-                    version.versionCode,
-                    version.assetLldVersion,
-                    version.distributor,
-                    version.installer,
-                    version.firstInstallTime,
-                    version.lastUpdateTime
-                )
             }
         }
 
