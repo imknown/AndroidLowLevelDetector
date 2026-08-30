@@ -8,12 +8,12 @@ buildToolsPreview = "37.0.0"
 minSdk = "23"
 
 compileSdk = "37"
-compileSdkMinor = "1"
+compileSdkMinor = "2"
 compileSdkPreview = "37.2-beta3"
 # compileSdkPreview = "CinnamonBun"
 # compileSdkPreview = "CANARY"
 
-compileSdkExtension = "23" # 37.1-ext23
+compileSdkExtension = "24" # 37.2-ext24
 
 targetSdk = "37"
 targetSdkPreview = "DEV"
@@ -21,7 +21,7 @@ targetSdkPreview = "DEV"
 # targetSdkPreview = "CANARY"
 
 # https://github.com/android/ndk/releases
-ndk = "30.0.15729638"
+ndk = "30.0.16138531"
 # https://cmake.org/cmake/help/latest/release/index.html
 cmake = "4.1.2"
 
