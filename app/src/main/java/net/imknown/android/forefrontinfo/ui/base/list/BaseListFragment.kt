@@ -66,9 +66,7 @@ abstract class BaseListFragment : BaseFragment<BaseListFragmentBinding>() {
             }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            listViewModel.init(savedInstanceState)
-        }
+        listViewModel.init(savedInstanceState)
     }
 
     private fun initWindowInsets() {

@@ -3,6 +3,7 @@ package net.imknown.android.forefrontinfo.ui.base.list
 import android.os.Bundle
 import androidx.annotation.MainThread
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -16,12 +17,12 @@ abstract class BaseListViewModel : BaseViewModel() {
 
     abstract suspend fun collectModels(): List<MyModel>
 
-    suspend fun init(savedInstanceState: Bundle?) {
+    private var loadJob: Job? = null
+
+    fun init(savedInstanceState: Bundle?) {
         // When activity is recreated, use StateFlow to restore the data
         if (hasNoData(savedInstanceState)) {
-            setLoading()
-            val list = collectModels()
-            setModels(list)
+            startLoad()
         }
     }
 
@@ -29,7 +30,15 @@ abstract class BaseListViewModel : BaseViewModel() {
         savedInstanceState == null || modelsStateFlow.value == State.NotInitialized
 
     fun refresh() {
-        viewModelScope.launch {
+        startLoad()
+    }
+
+    private fun startLoad() {
+        if (loadJob?.isActive == true) {
+            return
+        }
+
+        loadJob = viewModelScope.launch {
             setLoading()
             val list = collectModels()
             setModels(list)
