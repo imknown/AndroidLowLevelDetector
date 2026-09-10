@@ -200,7 +200,7 @@ private fun getSavedStateLastId() = savedStateHandle[SAVED_STATE_HANDLE_KEY_LAST
 ```
 
 **Problem:** the two copies can diverge; `MainActivity.switch()` reads the in-memory copy
-([MainActivity.kt:92](../app/src/main/java/net/imknown/android/forefrontinfo/ui/MainActivity.kt#L92)).
+([MainActivity.kt:92](../../app/src/main/java/net/imknown/android/forefrontinfo/ui/MainActivity.kt#L92)).
 
 **Refactoring plan:**
 
@@ -253,7 +253,7 @@ fun isAtLeastAndroid12() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S || sdk
 **Consequence:** "what Android version this device runs" depends on whether the Home page has run
 detect yet. Concrete touchpoint: the outdated-APK filter threshold
 `it.targetSdkVersion < myAndroid.api`
-([HomeRepository.kt:1108](../app/src/main/java/net/imknown/android/forefrontinfo/ui/home/repository/HomeRepository.kt#L1108))
+([HomeRepository.kt:1108](../../app/src/main/java/net/imknown/android/forefrontinfo/ui/home/repository/HomeRepository.kt#L1108))
 — reordering the calls to `detectAndroid` and `getOutdatedTargetSdkVersionApkModel` inside
 `detect()` (line 139 vs line 160) changes the filter result, with no mechanism guaranteeing
 consistency.
