@@ -66,7 +66,7 @@ abstract class BaseListFragment : BaseFragment<BaseListFragmentBinding>() {
             }
         }
 
-        listViewModel.init(savedInstanceState)
+        listViewModel.init()
     }
 
     private fun initWindowInsets() {

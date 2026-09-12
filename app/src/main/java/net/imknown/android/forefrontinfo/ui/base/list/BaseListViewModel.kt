@@ -1,6 +1,5 @@
 package net.imknown.android.forefrontinfo.ui.base.list
 
-import android.os.Bundle
 import androidx.annotation.MainThread
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
@@ -19,15 +18,15 @@ abstract class BaseListViewModel : BaseViewModel() {
 
     private var loadJob: Job? = null
 
-    fun init(savedInstanceState: Bundle?) {
-        // When activity is recreated, use StateFlow to restore the data
-        if (hasNoData(savedInstanceState)) {
+    fun init() {
+        // 1) In-memory cache present (config-change recreation)
+        //    -> show it directly, never reload;
+        // 2) Cold start / process death (app recycled in background, then resumed)
+        //    -> no in-memory cache by definition (state == NotInitialized)
+        if (modelsStateFlow.value == State.NotInitialized) {
             startLoad()
         }
     }
-
-    private fun hasNoData(savedInstanceState: Bundle?) =
-        savedInstanceState == null || modelsStateFlow.value == State.NotInitialized
 
     fun refresh() {
         startLoad()
