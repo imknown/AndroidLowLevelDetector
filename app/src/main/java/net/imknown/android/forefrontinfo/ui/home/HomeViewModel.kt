@@ -8,6 +8,7 @@ import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.BuildConfig
@@ -59,6 +60,8 @@ class HomeViewModel(
             withContext(Dispatchers.IO) {
                 homeRepository.fetchOnlineLldJsonStringOrThrow()
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             val errorMessage = errorMessage(R.string.lld_json_fetch_failed, e)
             return tryDetectOffline(errorMessage)
@@ -68,6 +71,8 @@ class HomeViewModel(
             withContext(Dispatchers.IO) {
                 lldString.toObjectOrThrow<Lld>()
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             val errorMessage = errorMessage(R.string.lld_json_parse_failed, e)
             return tryDetectOffline(errorMessage)
@@ -78,6 +83,8 @@ class HomeViewModel(
                 LldManager.saveLldJsonFileOrThrow(lldString)
             }
             null
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             errorMessage(R.string.lld_json_save_failed, e)
         }
@@ -96,6 +103,8 @@ class HomeViewModel(
             withContext(Dispatchers.IO) {
                 LldManager.copyJsonIfNeededOrThrow()
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             val lld = withContext(Dispatchers.IO) {
                 LldManager.getAssetLld(MyApplication.instance.assets)
@@ -112,6 +121,8 @@ class HomeViewModel(
             }
 
             LldAndError(lld, null)
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             val lld = withContext(Dispatchers.IO) {
                 LldManager.getAssetLld(MyApplication.instance.assets)
