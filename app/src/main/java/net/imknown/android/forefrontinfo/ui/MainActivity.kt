@@ -89,7 +89,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun FragmentManager.switch(@IdRes selectedId: Int, isFirstTime: Boolean) {
-        val lastId = mainViewModel.lastId
+        val lastId = mainViewModel.lastId.value
         if (selectedId == lastId && !isFirstTime) {
             return
         }
