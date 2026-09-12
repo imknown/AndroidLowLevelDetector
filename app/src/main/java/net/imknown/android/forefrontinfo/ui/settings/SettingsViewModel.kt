@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -58,10 +59,18 @@ class SettingsViewModel(
     val version: StateFlow<State<SettingsRepository.Version>>
         field = MutableStateFlow<State<SettingsRepository.Version>>(State.NotInitialized)
 
+    private var initBuiltInDataVersionJob: Job? = null
+
     fun setBuiltInDataVersion(
         packageManager: PackageManager, packageName: String
     ) {
-        viewModelScope.launch {
+        if (version.value != State.NotInitialized
+            || initBuiltInDataVersionJob?.isActive == true
+        ) {
+            return
+        }
+
+        initBuiltInDataVersionJob = viewModelScope.launch {
             version.value = State.Done(settingsRepository.getBuiltInDataVersion(packageManager, packageName))
         }
     }
