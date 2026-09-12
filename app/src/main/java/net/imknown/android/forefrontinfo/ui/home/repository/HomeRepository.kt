@@ -389,9 +389,9 @@ class HomeRepository(
         )
     }
 
-    private val mounts by lazy { mountDataSource.getMounts() }
+    fun getMounts() = mountDataSource.getMounts()
 
-    fun detectSar(): MyModel {
+    fun detectSar(mounts: List<MountDataSource.Mount>): MyModel {
         var isTheLegacySar = false
         var isThe2siSar = false
         var isRecoverySar = false
@@ -687,7 +687,7 @@ class HomeRepository(
         )
     }
 
-    fun detectApex(): MyModel {
+    fun detectApex(mounts: List<MountDataSource.Mount>): MyModel {
         val apexUpdatable = getBooleanProperty(AndroidDataSource.PROP_APEX_UPDATABLE, isAtLeastAndroid10())
 
         val isFlattenedApexMounted = isAtLeastAndroid10() && mounts.any {
