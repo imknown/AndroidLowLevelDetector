@@ -19,7 +19,6 @@ import androidx.preference.SwitchPreferenceCompat
 import kotlinx.coroutines.launch
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
-import net.imknown.android.forefrontinfo.base.extension.isChinaMainlandTimezone
 import net.imknown.android.forefrontinfo.ui.MainActivity
 import net.imknown.android.forefrontinfo.ui.base.ext.toast
 import net.imknown.android.forefrontinfo.ui.base.ext.windowInsetsCompatTypes
@@ -104,13 +103,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
 
         val aboutShopPref = findPreferenceOrNull(R.string.about_shop_key)
-        setOnOpenInExternalListener(
-            aboutShopPref, if (isChinaMainlandTimezone()) {
-                R.string.about_shop_china_mainland_uri
-            } else {
-                R.string.about_shop_uri
-            }
-        )
+        setOnOpenInExternalListener(aboutShopPref, R.string.about_shop_uri)
 
         val aboutSourcePref = findPreferenceOrNull(R.string.about_source_key)
         setOnOpenInExternalListener(aboutSourcePref, R.string.about_source_uri)
