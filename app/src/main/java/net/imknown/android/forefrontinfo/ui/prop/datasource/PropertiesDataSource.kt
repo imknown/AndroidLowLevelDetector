@@ -12,12 +12,23 @@ class PropertiesDataSource {
 
     fun getSystemPropOrThrow(): List<Pair<Any?, Any?>> {
         val systemProperties = System.getProperties()
-        val defaultsProperties = Properties::class.java
-            .getDeclaredField("defaults")
-            .also { it.isAccessible = true }
-            .get(systemProperties) as Properties
+        val defaultsProperties = try {
+            Properties::class.java
+                .getDeclaredField("defaults")
+                .also { it.isAccessible = true }
+                .get(systemProperties) as? Properties
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
 
-        return (defaultsProperties + systemProperties)
+        val merged = if (defaultsProperties != null) {
+            defaultsProperties + systemProperties
+        } else {
+            systemProperties
+        }
+
+        return merged
             .toList()
             .sortedBy { it.first.toString() }
     }
