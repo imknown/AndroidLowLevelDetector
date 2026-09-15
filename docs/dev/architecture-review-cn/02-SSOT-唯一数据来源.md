@@ -56,7 +56,7 @@ SettingsViewModel.outdatedOrderChangedSharedFlow.flowWithLifecycle(...).collect 
 
 ### 直接原因
 
-- 读取方绕过一切抽象直接摸 `MyApplication.sharedPreferences`（这是 [AR-04](architecture.md#AR-04) 服务定位器的一个实例）。
+- 读取方绕过一切抽象直接摸 `MyApplication.sharedPreferences`（这是 [AR-04](01-架构.md#AR-04) 服务定位器的一个实例）。
 - 依赖方向也颠倒了：`ui.base.list`（框架层）import `ui.settings`（功能层）——框架不应该认识任何具体功能。
 - 通知方没有「可观察的数据源」，只能把「值变了」做成事件广播；而 `MutableSharedFlow()` 没有重放（replay），**收集方不在场时事件直接丢失**，而且丢了连条日志都没有。
 - 主题的副作用（`AppCompatDelegate.setDefaultNightMode`）散在 `MyApplication.setMyTheme`（启动）和 `SettingsFragment`（改设置时）两处。

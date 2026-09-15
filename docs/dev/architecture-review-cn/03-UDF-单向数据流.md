@@ -93,7 +93,7 @@ fun updateModelDetail(type: MyModelType, newDetail: String) {
 updateModelDetail(MyModelType.OutdatedTargetSdkApk, newDetail)
 ```
 
-`LldSource` 枚举见 [AR-11](anti-patterns.md#AR-11)（顺带消掉 `modeResId` 的资源 ID 判别）。[AR-01](architecture.md#AR-01) 全部做完之后还可以更进一步：把每个检测项做成独立的 `Detector`，顺序由一个列表持有——增删条目只改列表一处。
+`LldSource` 枚举见 [AR-11](04-反模式与隐患.md#AR-11)（顺带消掉 `modeResId` 的资源 ID 判别）。[AR-01](01-架构.md#AR-01) 全部做完之后还可以更进一步：把每个检测项做成独立的 `Detector`，顺序由一个列表持有——增删条目只改列表一处。
 
 ---
 
@@ -105,7 +105,7 @@ updateModelDetail(MyModelType.OutdatedTargetSdkApk, newDetail)
 
 **严重程度:P1(🟡) ｜ 处置:实现推迟到 Compose 迁移之后(2026-09-12 负责人定;行为要求不变,见规格 FR-17)**
 
-`HomeFragment.kt:40-45` 在 `viewLifecycleOwner` 作用域内收集 **replay=0** 的伴生对象 SharedFlow(即 [AR-02](ssot.md#AR-02) 的静态总线),并做一次性重算:事件丢失(重建窗口)与计算中途取消都会让「过期 targetSdk 应用」行停留在旧顺序。违反 FR-17「选项立即生效」的精神。
+`HomeFragment.kt:40-45` 在 `viewLifecycleOwner` 作用域内收集 **replay=0** 的伴生对象 SharedFlow(即 [AR-02](02-SSOT-唯一数据来源.md#AR-02) 的静态总线),并做一次性重算:事件丢失(重建窗口)与计算中途取消都会让「过期 targetSdk 应用」行停留在旧顺序。违反 FR-17「选项立即生效」的精神。
 
 **处置(2026-09-12 负责人定)**:三条行为要求维持不变(列表空或首次加载中 → 界面不动,数据来了按开关排;列表非空 → 立即只重排「过期 targetSdk 应用」一行;下拉刷新中 → 也立即重排旧行,刷新成功新数据按开关排,失败相当于什么都没发生)——已写入规格 FR-17。但实现**推迟到 Compose 迁移之后**:当时的 View 版实现(收集器搬 `HomeViewModel`、刷新期间状态保留旧数据、转圈指示单独驱动、`loadJob` join 纠偏,约 4 文件 200 行,已经 10 轮 AI 复查)太复杂、不好 review,已本地存档仅作参考、不提交;Compose 后预计有更简单的做法。另:负责人曾提的备选交互「点击该条目切换排序」记此备查——需先想清与 BL-1(点击行展开详情)的冲突。
 
