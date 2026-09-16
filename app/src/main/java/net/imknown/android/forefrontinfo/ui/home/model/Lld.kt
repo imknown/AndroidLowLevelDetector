@@ -41,13 +41,15 @@ data class Lld(
         val stable: Android,
         // Beta
         // https://developer.android.com/preview/overview
-        // https://developer.android.com/about/versions/17/release-notes
+        // https://developer.android.com/about/versions/17/qpr2/release-notes
+        // https://www.reddit.com/r/android_beta
         val stablePreview: Android,
         // https://source.android.com/security/bulletin/
         val support: Android,
         // Canary
         // https://ci.android.com
         // https://developer.android.com/about/canary
+        // https://www.reddit.com/r/android_canary
         val preview: Android,
         val internal: Android,
         val known: List<Android>
@@ -72,7 +74,7 @@ data class Lld(
         // https://developers.google.com/android/images
         // https://developers.google.com/android/ota
         // https://android.googlesource.com/platform/build/+refs
-        // https://android.googlesource.com/platform/build/+/refs/tags/android-16.0.0_r4/core/build_id.mk
+        // https://android.googlesource.com/platform/build/+/refs/tags/android-17.0.0_r1/core/build_id.mk
         // https://android.googlesource.com/platform/build/+/master/core/build_id.mk
         @Keep
         @Serializable
@@ -114,7 +116,7 @@ data class Lld(
     @Keep
     @Serializable
     data class Toyboxes(
-        // https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-16.0.0_r1/toys.h
+        // https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-17.0.0_r1/toys.h
         val stable: BaseInfo,
         // https://android.googlesource.com/platform/external/toybox/+/refs/tags/android-security-14.0.0_r1/toys.h
         val support: BaseInfo,
