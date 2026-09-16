@@ -1,17 +1,18 @@
 {
   "scheme": 1,
-  "version": "2026-09-15 09:20 +0800",
+  "version": "2026-09-16 09:00 +0800",
   "android": {
     "securityPatchLevel": "2026-09-05",
     "googlePlaySystemUpdates": "2026-09-01",
     "build": {
-      "version": "2026-09-08",
+      "version": "2026-09-15",
       "details": [
-        { "id": "CD1A.260905.001.B1", "revision": "-" }
+        { "id": "CD1A.260905.001.B1", "revision": "-" },
+        { "id": "CP3A.260905.009", "revision": "-" }
       ]
     },
     "stable": {
-      "api": "37", "apiFull": "37.0", "version": "17, Cinnamon Bun", "name": "Cinnamon Bun", "extension": 22
+      "api": "37", "apiFull": "37.1", "version": "17, Cinnamon Bun 1", "name": "Cinnamon Bun 1", "extension": 23
     },
     "support": {
       "api": "34", "apiFull": "34", "version": "14, Upside Down Cake", "name": "Upside Down Cake"
