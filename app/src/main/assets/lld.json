@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2026-09-16 09:00 +0800",
+  "version": "2026-09-17 08:35 +0800",
   "android": {
     "securityPatchLevel": "2026-09-05",
     "googlePlaySystemUpdates": "2026-09-01",
@@ -18,7 +18,7 @@
       "api": "34", "apiFull": "34", "version": "14, Upside Down Cake", "name": "Upside Down Cake"
     },
     "stablePreview": {
-      "api": "37", "apiFull": "37.2", "version": "17 QPR2 Beta 4, Cinnamon Bun 2", "name": "Cinnamon Bun 2"
+      "api": "37", "apiFull": "37.2", "version": "17 QPR2 Beta 5, Cinnamon Bun 2", "name": "Cinnamon Bun 2"
     },
     "preview": {
       "api": "37", "apiFull": "37.2", "version": "17 Canary 2608, Cinnamon Bun 2", "name": "Cinnamon Bun 2", "phase": ""
@@ -60,7 +60,7 @@
     "master": { "version": "0.8.14" }
   },
   "webView": {
-    "stable": { "version": "154.0.8037.21" },
-    "beta": { "version": "154.0.8037.21" }
+    "stable": { "version": "154.0.8037.49" },
+    "beta": { "version": "155.0.8059.4" }
   }
 }
