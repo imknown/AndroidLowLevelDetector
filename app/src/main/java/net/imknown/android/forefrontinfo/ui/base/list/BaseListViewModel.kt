@@ -1,6 +1,7 @@
 package net.imknown.android.forefrontinfo.ui.base.list
 
 import androidx.annotation.MainThread
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,6 +11,9 @@ import kotlinx.coroutines.launch
 import net.imknown.android.forefrontinfo.ui.base.BaseViewModel
 import net.imknown.android.forefrontinfo.ui.common.State
 
+// Stable (not Immutable): the ViewModel instance identity never changes and all UI-visible
+// state lives in the observed StateFlow, so composition can safely skip when it is unchanged.
+@Stable
 abstract class BaseListViewModel : BaseViewModel() {
     val modelsStateFlow: StateFlow<State<List<MyModel>>>
         field = MutableStateFlow<State<List<MyModel>>>(State.NotInitialized)
