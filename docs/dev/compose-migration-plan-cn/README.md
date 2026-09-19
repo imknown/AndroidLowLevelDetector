@@ -42,7 +42,7 @@
 | 3 | 设置页**手写重建**（`LazyColumn` + M3 组件） | 官方至今无 Compose 版 Preference 库（androidx.preference 停在 2023）；官方参考应用 Now in Android 即手写 | 过渡期 `AndroidFragment` 包着旧页（多养一层壳，收益低） |
 | 4 | 导航用 **Navigation 3**（1.2.0-rc01） | 官方已把 Nav3 定为 Compose-only 架构推荐；依赖已在版本目录备好；RC 通道符合你的成熟度政策 | Navigation Compose（Nav2，功能全但非最新）；继续 Fragment 手动管理（违背迁移目标） |
 | 5 | 底栏用 `NavigationBar`（stable） | 与现状 BottomNavigationView 视觉延续；不引 alpha 依赖 | `ShortNavigationBar`（1.4.0 已 stable 的 Expressive 版）；`NavigationSuiteScaffold`（自适应，需 1.5.0-alpha，列为遗留优化） |
-| 6 | 滚动条**自绘**（基于 stable 的 `ScrollIndicatorState`） | 官方滚动条 UI 在 material3 1.5.0-alpha（不在 BOM）；stable 状态 API + 约 30 行自绘即可保留设置项 | 暂时砍掉设置项（用户可见的功能回退，不选）；显式引入 1.5.0-alpha 覆盖 BOM（拖整库进 alpha，不选） |
+| 6 | 滚动条**自绘**（基于 stable 的 `ScrollIndicatorState`）**→ 2026-09-19 实现期改为推迟**：自绘版已按计划做完并通过评审（含估算漂移钳制），但用户拍板不落地——等 material3 1.5.0 的 `nonInteractiveScrollbar`（自带淡出）转正后一行替换，自绘实现保留在计划文档 06 章 6.2 作参考 | 官方滚动条 UI 在 material3 1.5.0-alpha（不在 BOM）；stable 状态 API + 约 30 行自绘即可保留设置项 | 暂时砍掉设置项（用户可见的功能回退，不选）；显式引入 1.5.0-alpha 覆盖 BOM（拖整库进 alpha，不选）→ 实际：砍掉设置项（接受回退，见更正） |
 | 7 | **Style API 单文件试水**（第 1 步 4.4 节）**→ 2026-09-19 实现期改为推迟**：文档形态 DSL 只在 foundation alpha 线（文档示例 1.12.0-alpha03），1.12.1 stable 反编译实证无此签名，无法编译 | 你点名要学的新范式；但 foundation 1.13.0-alpha03 已宣布重构（旧实现将废弃移除），且 stable 线连试水形态都不可用 | 全面采用（1.13 迁移成本高，不选）；完全不用（错过学习目标，不选）→ 实际：BOM 升 1.13 后在第 7 步收尾立项 |
 | 8 | 主题沿用现有 `AppTheme`（标准 M3 + 动态取色） | Expressive 主题 API（`MaterialExpressiveTheme`/`expressiveLightColorScheme`）已从 material3 1.4.0 stable 线移除，仅在 1.5.0-alpha | BOM 升 1.5 后切 Expressive（列为遗留优化） |
 | 9 | MainActivity **暂留 AppCompatActivity** | 主题模式四档靠 `AppCompatDelegate.setDefaultNightMode`（只对 AppCompat 生效）；保留 = 该机制零改动 | 换 ComponentActivity + Compose 侧自管 darkTheme（更纯粹但需重构主题链路，列为遗留优化） |
