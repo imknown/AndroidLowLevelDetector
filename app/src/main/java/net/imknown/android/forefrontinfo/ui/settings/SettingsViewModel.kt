@@ -2,6 +2,7 @@ package net.imknown.android.forefrontinfo.ui.settings
 
 import android.content.pm.PackageManager
 import androidx.annotation.StringRes
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
@@ -20,6 +21,9 @@ import net.imknown.android.forefrontinfo.ui.base.BaseViewModel
 import net.imknown.android.forefrontinfo.ui.common.State
 import net.imknown.android.forefrontinfo.ui.settings.repository.SettingsRepository
 
+// Stable (not Immutable): instance identity never changes and UI-visible state lives in the observed StateFlow;
+// the two vars (load job, easter-egg counter) are never read for composition, so promising stability is safe (same as BaseListViewModel/HomeViewModel).
+@Stable
 class SettingsViewModel(
     private val settingsRepository: SettingsRepository,
     private val savedStateHandle: SavedStateHandle
