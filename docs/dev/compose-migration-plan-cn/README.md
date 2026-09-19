@@ -29,6 +29,7 @@
 | [速查表](A-API速查表.md) | 附录 | API 速查表 | 查阅 | 本计划全部 API 的签名/版本/稳定性/官方链接，含 1.5.0-alpha 展望 |
 | [速记手册](A-API速记手册.md) | 附录 | API 速记手册 | 复习 | 命名规律、API 家族树、易混对照口诀、坑清单、自测十二题 |
 | [术语表](A-术语表.md) | 附录 | 术语表 | 查阅 | 英文原词的字面义 + 语境义 |
+| [观察记录](A-迁移期观察记录.md) | 附录 | 迁移期观察记录 | 查阅 | 与迁移无关的旧代码发现、有意接受的行为差异 |
 
 阅读路线（以**学会**为目的）：**01 → 02 精读**（概念 + 白话 + 正反例，全书的"教材"）→ **03~10 按步骤跟着做**，每步做完对照该章"验证清单"、回顾该章 ✅/❌；每完成两三步，回[速记手册](A-API速记手册.md)过一遍口诀；全部做完挑战自测十二题。遇到陌生词查[术语表](A-术语表.md)，API 版本与签名查[速查表](A-API速查表.md)。
 
@@ -42,7 +43,7 @@
 | 4 | 导航用 **Navigation 3**（1.2.0-rc01） | 官方已把 Nav3 定为 Compose-only 架构推荐；依赖已在版本目录备好；RC 通道符合你的成熟度政策 | Navigation Compose（Nav2，功能全但非最新）；继续 Fragment 手动管理（违背迁移目标） |
 | 5 | 底栏用 `NavigationBar`（stable） | 与现状 BottomNavigationView 视觉延续；不引 alpha 依赖 | `ShortNavigationBar`（1.4.0 已 stable 的 Expressive 版）；`NavigationSuiteScaffold`（自适应，需 1.5.0-alpha，列为遗留优化） |
 | 6 | 滚动条**自绘**（基于 stable 的 `ScrollIndicatorState`） | 官方滚动条 UI 在 material3 1.5.0-alpha（不在 BOM）；stable 状态 API + 约 30 行自绘即可保留设置项 | 暂时砍掉设置项（用户可见的功能回退，不选）；显式引入 1.5.0-alpha 覆盖 BOM（拖整库进 alpha，不选） |
-| 7 | **Style API 单文件试水**（第 1 步 4.4 节） | 你点名要学的新范式；但 foundation 1.13.0-alpha03 已宣布重构（旧实现将废弃移除），故只在一个文件建立手感，改动面可锁死 | 全面采用（1.13 迁移成本高，不选）；完全不用（错过学习目标，不选） |
+| 7 | **Style API 单文件试水**（第 1 步 4.4 节）**→ 2026-09-19 实现期改为推迟**：文档形态 DSL 只在 foundation alpha 线（文档示例 1.12.0-alpha03），1.12.1 stable 反编译实证无此签名，无法编译 | 你点名要学的新范式；但 foundation 1.13.0-alpha03 已宣布重构（旧实现将废弃移除），且 stable 线连试水形态都不可用 | 全面采用（1.13 迁移成本高，不选）；完全不用（错过学习目标，不选）→ 实际：BOM 升 1.13 后在第 7 步收尾立项 |
 | 8 | 主题沿用现有 `AppTheme`（标准 M3 + 动态取色） | Expressive 主题 API（`MaterialExpressiveTheme`/`expressiveLightColorScheme`）已从 material3 1.4.0 stable 线移除，仅在 1.5.0-alpha | BOM 升 1.5 后切 Expressive（列为遗留优化） |
 | 9 | MainActivity **暂留 AppCompatActivity** | 主题模式四档靠 `AppCompatDelegate.setDefaultNightMode`（只对 AppCompat 生效）；保留 = 该机制零改动 | 换 ComponentActivity + Compose 侧自管 darkTheme（更纯粹但需重构主题链路，列为遗留优化） |
 | 10 | 返回键保持现状（任何标签直接退出） | 与现有行为一致 | 官方 Nav3 推荐"先回首页再退出"（exit through home），一行可切换 |
