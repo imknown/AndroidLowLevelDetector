@@ -1,5 +1,7 @@
 # 09 第 6 步 · Navigation 3 与 MainActivity 整体切换
 
+> **⚠️ 2026-09-19 实现期更正**：①**4 个 VM 的 `savedStateHandle` 参数整体删除**（4 个 VM 均未实际使用该参数，9.3 备注允许；连带消除 Nav3 条目作用域下 `createSavedStateHandle()` 缺 extras 的风险点），工厂改为"仓库在 initializer 内构造"；②**`main_activity.xml`/`bottom_nav_menu.xml` 推迟到第 7 步删除**（对计划删除清单的有意偏差：`BaseListFragment` 仍引用 `MainActivity.binding`，现在删 XML 会编译失败；MainActivity 重写后仍保留 `internal val binding` 惰性属性，未访问不会 inflate）；③`TopAppBar` 在 m3 1.4.0 仍需 `@OptIn(ExperimentalMaterial3Api)`；④`entryDecorators` 需显式声明为 `List<NavEntryDecorator<NavKey>>`（Kotlin 泛型推断失败）；⑤完整 M3E 逐条目圆角卡布局已实验并按用户决定回滚，等 material3 1.5.0 转正（同决策 6/8 批次）。
+
 > 所属迁移计划：[README](README.md) · 上一章：[08 第 5 步 Settings 页面重建](08-第5步-Settings页面重建.md) · 下一章：[10 第 7 步 清理收尾](10-第7步-清理收尾.md)
 
 **改动量：新增 2 个文件、重写 1 个文件（MainActivity）、修改 6 处（4 个 VM 的 Factory + 两个屏幕组件的内边距退役）、删除 8 个文件。**
