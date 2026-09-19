@@ -4,17 +4,8 @@ import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
-import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
@@ -24,24 +15,16 @@ import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.produceState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
-import androidx.core.view.doOnLayout
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import net.imknown.android.forefrontinfo.R
-import net.imknown.android.forefrontinfo.ui.MainActivity
 import net.imknown.android.forefrontinfo.ui.common.State
 import net.imknown.android.forefrontinfo.ui.theme.AppTheme
 
@@ -108,30 +91,14 @@ private fun MyModelListContent(
             )
         },
     ) {
-        // Transitional insets handling (replaced by Scaffold in step 6), placed in the composition
-        // scope of its only consumer (LazyColumn contentPadding): an insets change recomposes only
-        // the Box content, not the outer scope. horizontal = systemBars + displayCutout (mirrors
-        // legacy windowInsetsCompatTypes); bottom = bottom bar height, measured off the host
-        // Activity as the legacy code did
-        val horizontal = WindowInsets.systemBars
-            .union(WindowInsets.displayCutout)
-            .only(WindowInsetsSides.Horizontal) // sides only: the top is already covered by the app bar
-            .asPaddingValues() // insets -> PaddingValues usable as contentPadding
-        val bottomBarHeight = rememberBottomBarHeight()
-
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 // Legacy base_list_fragment.xml: android:background="?attr/colorSurfaceContainer"
                 .background(MaterialTheme.colorScheme.surfaceContainer),
-            // Mirrors MyItemDecoration (12dp around, 12dp above the first item) + clipToPadding=false:
-            // contentPadding scrolls with the content (legacy clipToPadding=false), it does not shrink the viewport
-            contentPadding = PaddingValues(
-                start = horizontal.calculateStartPadding(LocalLayoutDirection.current),
-                top = dimensionResource(R.dimen.item_divider_space_vertical),
-                end = horizontal.calculateEndPadding(LocalLayoutDirection.current),
-                bottom = bottomBarHeight + dimensionResource(R.dimen.item_divider_space_vertical),
-            ),
+            // Top/bottom 12dp is content design (not insets compensation);
+            // top bar / bottom bar / system bars are handled by Scaffold innerPadding
+            contentPadding = PaddingValues(vertical = dimensionResource(R.dimen.item_divider_space_vertical)),
             // Fixed spacing between items (legacy ItemDecoration bottom = spaceV)
             verticalArrangement = Arrangement.spacedBy(
                 dimensionResource(R.dimen.item_divider_space_vertical)
@@ -154,26 +121,6 @@ private fun MyModelListContent(
             }
         }
     }
-}
-
-/**
- * Transitional bridge: the bottom bar is still a View BottomNavigationView, invisible to
- * Compose, so measure it off the host Activity, same trick as the legacy code.
- */
-@Composable
-internal fun rememberBottomBarHeight(): Dp {
-    val density = LocalDensity.current
-    val bottomBar = (LocalView.current.context as? MainActivity)?.binding?.bottomNavigationView
-    val heightPx = remember { mutableIntStateOf(0) }
-
-    if (bottomBar != null) {
-        // doOnLayout: the height is only valid after the first layout pass
-        LaunchedEffect(bottomBar) {
-            bottomBar.doOnLayout { heightPx.intValue = it.height }
-        }
-    }
-
-    return with(density) { heightPx.intValue.toDp() }
 }
 
 // The screen function takes a ViewModel and cannot be previewed directly;
