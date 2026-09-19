@@ -161,7 +161,7 @@ private fun MyModelListContent(
  * Compose, so measure it off the host Activity, same trick as the legacy code.
  */
 @Composable
-private fun rememberBottomBarHeight(): Dp {
+internal fun rememberBottomBarHeight(): Dp {
     val density = LocalDensity.current
     val bottomBar = (LocalView.current.context as? MainActivity)?.binding?.bottomNavigationView
     val heightPx = remember { mutableIntStateOf(0) }
