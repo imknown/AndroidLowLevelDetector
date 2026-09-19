@@ -18,12 +18,16 @@ import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -68,56 +72,86 @@ fun MyModelListScreen(
         (state as? State.Done<List<MyModel>>)?.let { value = it.value.toPersistentList() }
     }
 
-    MyModelListContent(models, modifier) // state ready, hand over to the pure presentation part
+    MyModelListContent(
+        models = models,
+        isRefreshing = state is State.Loading, // state down: Loading spins (first load included, same as legacy)
+        onRefresh = viewModel::refresh, // event up: gesture -> VM refresh (a method reference is just a lambda)
+        modifier = modifier,
+    )
 }
 
 @Composable
 private fun MyModelListContent(
     models: PersistentList<MyModel>, // data only (no ViewModel) -> previewable and reusable
+    isRefreshing: Boolean, // whether the spinner spins (external state; this composable decides nothing)
+    onRefresh: () -> Unit, // refresh callback (event goes up)
     modifier: Modifier = Modifier,
 ) {
-    // Transitional insets handling (replaced by Scaffold in step 6):
-    // horizontal = system bars (legacy updatePadding(left/right = insets));
-    // bottom = bottom navigation bar height, measured off the host Activity as the legacy code did.
-    // displayCutout is unioned to mirror the legacy windowInsetsCompatTypes (systemBars or displayCutout)
-    val horizontal = WindowInsets.systemBars
-        .union(WindowInsets.displayCutout)
-        .only(WindowInsetsSides.Horizontal) // sides only: the top is already covered by the app bar
-        .asPaddingValues() // insets -> PaddingValues usable as contentPadding
-    val bottomBarHeight = rememberBottomBarHeight()
+    // Dashboard of the pull gesture: pull distance progress etc. A custom indicator requires
+    // owning the state and passing it to both PullToRefreshBox and Indicator
+    val pullToRefreshState = rememberPullToRefreshState()
 
-    LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            // Legacy base_list_fragment.xml: android:background="?attr/colorSurfaceContainer"
-            .background(MaterialTheme.colorScheme.surfaceContainer),
-        // Mirrors MyItemDecoration (12dp around, 12dp above the first item) + clipToPadding=false:
-        // contentPadding scrolls with the content (legacy clipToPadding=false), it does not shrink the viewport
-        contentPadding = PaddingValues(
-            start = horizontal.calculateStartPadding(LocalLayoutDirection.current),
-            top = dimensionResource(R.dimen.item_divider_space_vertical),
-            end = horizontal.calculateEndPadding(LocalLayoutDirection.current),
-            bottom = bottomBarHeight + dimensionResource(R.dimen.item_divider_space_vertical),
-        ),
-        // Fixed spacing between items (legacy ItemDecoration bottom = spaceV)
-        verticalArrangement = Arrangement.spacedBy(
-            dimensionResource(R.dimen.item_divider_space_vertical)
-        ),
-    ) {
-        items(
-            items = models,
-            // Same key as legacy DiffUtil.areItemsTheSame; without it animations and scroll state break
-            key = { it.key },
-            // Same hint as legacy RecyclerView viewType
-            contentType = { it.type },
-        ) { model ->
-            MyModelCard(
-                model,
-                // Legacy MyItemDecoration left/right = spaceH
-                modifier = Modifier.padding(
-                    horizontal = dimensionResource(R.dimen.item_divider_space_horizontal)
-                ),
+    PullToRefreshBox(
+        isRefreshing = isRefreshing, // state in: whether it spins is decided by the parameter, not by us
+        onRefresh = onRefresh, // event out: user pulled past the threshold -> notify upstream
+        state = pullToRefreshState, // gesture state (must be passed explicitly when the indicator is customized)
+        modifier = modifier.fillMaxSize(),
+        indicator = { // Indicator slot: defaults to the M3 spinner; customized here to match the legacy colors
+            // (legacy: primaryContainer background + onPrimaryContainer spinner).
+            // Removing the whole indicator parameter falls back to the M3 default colors
+            PullToRefreshDefaults.Indicator(
+                modifier = Modifier.align(Alignment.TopCenter), // top-center inside the PullToRefreshBox
+                isRefreshing = isRefreshing,
+                state = pullToRefreshState,
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
             )
+        },
+    ) {
+        // Transitional insets handling (replaced by Scaffold in step 6), placed in the composition
+        // scope of its only consumer (LazyColumn contentPadding): an insets change recomposes only
+        // the Box content, not the outer scope. horizontal = systemBars + displayCutout (mirrors
+        // legacy windowInsetsCompatTypes); bottom = bottom bar height, measured off the host
+        // Activity as the legacy code did
+        val horizontal = WindowInsets.systemBars
+            .union(WindowInsets.displayCutout)
+            .only(WindowInsetsSides.Horizontal) // sides only: the top is already covered by the app bar
+            .asPaddingValues() // insets -> PaddingValues usable as contentPadding
+        val bottomBarHeight = rememberBottomBarHeight()
+
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                // Legacy base_list_fragment.xml: android:background="?attr/colorSurfaceContainer"
+                .background(MaterialTheme.colorScheme.surfaceContainer),
+            // Mirrors MyItemDecoration (12dp around, 12dp above the first item) + clipToPadding=false:
+            // contentPadding scrolls with the content (legacy clipToPadding=false), it does not shrink the viewport
+            contentPadding = PaddingValues(
+                start = horizontal.calculateStartPadding(LocalLayoutDirection.current),
+                top = dimensionResource(R.dimen.item_divider_space_vertical),
+                end = horizontal.calculateEndPadding(LocalLayoutDirection.current),
+                bottom = bottomBarHeight + dimensionResource(R.dimen.item_divider_space_vertical),
+            ),
+            // Fixed spacing between items (legacy ItemDecoration bottom = spaceV)
+            verticalArrangement = Arrangement.spacedBy(
+                dimensionResource(R.dimen.item_divider_space_vertical)
+            ),
+        ) {
+            items(
+                items = models,
+                // Same key as legacy DiffUtil.areItemsTheSame; without it animations and scroll state break
+                key = { it.key },
+                // Same hint as legacy RecyclerView viewType
+                contentType = { it.type },
+            ) { model ->
+                MyModelCard(
+                    model,
+                    // Legacy MyItemDecoration left/right = spaceH
+                    modifier = Modifier.padding(
+                        horizontal = dimensionResource(R.dimen.item_divider_space_horizontal)
+                    ),
+                )
+            }
         }
     }
 }
@@ -149,6 +183,10 @@ private fun rememberBottomBarHeight(): Dp {
 @Composable
 private fun MyModelListContentPreview() {
     AppTheme {
-        MyModelListContent(previewModels)
+        MyModelListContent(
+            models = previewModels,
+            isRefreshing = false,
+            onRefresh = {},
+        )
     }
 }
