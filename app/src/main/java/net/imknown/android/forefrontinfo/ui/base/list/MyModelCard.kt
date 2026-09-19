@@ -87,7 +87,9 @@ fun MyModelTitle.asText(): String = when (this) {
     is MyModelTitle.Raw -> text
 }
 
-private val previewModels = persistentListOf(
+// Sample data shared by the @Previews in this package (internal: visible module-wide,
+// also used by the MyModelListScreen preview)
+internal val previewModels = persistentListOf(
     MyModel(MyModelTitle.Raw("SELinux"), "Enforcing", color = R.attr.colorNoProblem),
     MyModel(MyModelTitle.Raw("A/B partitions"), "A only", color = R.attr.colorCritical),
     MyModel(MyModelTitle.Raw("General entry"), "No status color dot"),
