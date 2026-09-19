@@ -1,34 +1,40 @@
 package net.imknown.android.forefrontinfo.ui.others
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.createSavedStateHandle
-import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.base.MyApplication
+import net.imknown.android.forefrontinfo.ui.others.datasource.ArchitectureDataSource
+import net.imknown.android.forefrontinfo.ui.others.datasource.BasicDataSource
+import net.imknown.android.forefrontinfo.ui.others.datasource.FingerprintDataSource
+import net.imknown.android.forefrontinfo.ui.others.datasource.KernelDataSource
+import net.imknown.android.forefrontinfo.ui.others.datasource.OthersDataSource
+import net.imknown.android.forefrontinfo.ui.others.datasource.RomDataSource
 import net.imknown.android.forefrontinfo.ui.base.list.BaseListViewModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid10
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid12
-import net.imknown.android.forefrontinfo.ui.others.datasource.ArchitectureDataSource
 import net.imknown.android.forefrontinfo.ui.others.repository.OthersRepository
 
 class OthersViewModel(
-    private val othersRepository: OthersRepository,
-    private val savedStateHandle: SavedStateHandle
+    private val othersRepository: OthersRepository
 ) : BaseListViewModel() {
 
     companion object {
-        val MY_REPOSITORY_KEY = object : CreationExtras.Key<OthersRepository> {}
-
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                val repository = this[MY_REPOSITORY_KEY] as OthersRepository
-                val savedStateHandle = createSavedStateHandle()
-                OthersViewModel(repository, savedStateHandle)
+                OthersViewModel(
+                    OthersRepository(
+                        BasicDataSource(),
+                        ArchitectureDataSource(),
+                        RomDataSource(),
+                        FingerprintDataSource(),
+                        KernelDataSource(),
+                        OthersDataSource()
+                    )
+                )
             }
         }
     }
