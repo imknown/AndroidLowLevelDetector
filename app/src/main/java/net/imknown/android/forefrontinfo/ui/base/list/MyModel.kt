@@ -2,6 +2,7 @@ package net.imknown.android.forefrontinfo.ui.base.list
 
 import androidx.annotation.AttrRes
 import androidx.annotation.StringRes
+import androidx.compose.runtime.Immutable
 
 const val RES_ID_NONE = 0
 
@@ -15,6 +16,7 @@ sealed interface MyModelTitle {
     data class Raw(val text: String) : MyModelTitle
 }
 
+@Immutable
 data class MyModel(
     val title: MyModelTitle,
     val detail: String,
