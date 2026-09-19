@@ -10,18 +10,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
-import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.HorizontalDivider
@@ -44,7 +36,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
@@ -59,7 +50,6 @@ import kotlinx.collections.immutable.toPersistentList
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.ui.base.ext.toast
-import net.imknown.android.forefrontinfo.ui.base.list.rememberBottomBarHeight
 import net.imknown.android.forefrontinfo.ui.common.State
 import net.imknown.android.forefrontinfo.ui.settings.repository.SettingsRepository
 import net.imknown.android.forefrontinfo.ui.theme.AppTheme
@@ -163,11 +153,6 @@ private fun SettingsContent(
     var showThemeDialog by rememberSaveable { mutableStateOf(false) }
     var showScrollBarDialog by rememberSaveable { mutableStateOf(false) }
 
-    val horizontal = WindowInsets.systemBars
-        .union(WindowInsets.displayCutout)
-        .only(WindowInsetsSides.Horizontal)
-        .asPaddingValues()
-    val bottomBarHeight = rememberBottomBarHeight()
     val groupSpacing = dimensionResource(R.dimen.item_divider_space_vertical)
     val groupHorizontalPadding = dimensionResource(R.dimen.item_divider_space_horizontal)
     // Divider = page background color (surfaceContainer): reads as a groove on the surfaceBright
@@ -179,10 +164,11 @@ private fun SettingsContent(
         modifier = modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.surfaceContainer), // page background = same as the first three list pages
+        // horizontal 12dp is part of the content design (not insets compensation); top bar / bottom bar / system bars are handled by Scaffold innerPadding
         contentPadding = PaddingValues(
-            start = horizontal.calculateStartPadding(LocalLayoutDirection.current) + groupHorizontalPadding,
-            end = horizontal.calculateEndPadding(LocalLayoutDirection.current) + groupHorizontalPadding,
-            bottom = bottomBarHeight + groupSpacing,
+            start = groupHorizontalPadding,
+            end = groupHorizontalPadding,
+            bottom = groupSpacing,
         ),
     ) {
         item { SettingsCategoryHeader(R.string.interface_title) }
