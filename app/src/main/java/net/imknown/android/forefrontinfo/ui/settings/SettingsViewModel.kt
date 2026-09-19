@@ -3,11 +3,8 @@ package net.imknown.android.forefrontinfo.ui.settings
 import android.content.pm.PackageManager
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Stable
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.Job
@@ -19,24 +16,21 @@ import kotlinx.coroutines.launch
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.ui.base.BaseViewModel
 import net.imknown.android.forefrontinfo.ui.common.State
+import net.imknown.android.forefrontinfo.ui.settings.datasource.AppInfoDataSource
+import net.imknown.android.forefrontinfo.ui.settings.datasource.FingerprintDataSource
 import net.imknown.android.forefrontinfo.ui.settings.repository.SettingsRepository
 
 // Stable (not Immutable): instance identity never changes and UI-visible state lives in the observed StateFlow;
 // the two vars (load job, easter-egg counter) are never read for composition, so promising stability is safe (same as BaseListViewModel/HomeViewModel).
 @Stable
 class SettingsViewModel(
-    private val settingsRepository: SettingsRepository,
-    private val savedStateHandle: SavedStateHandle
+    private val settingsRepository: SettingsRepository
 ) : BaseViewModel() {
 
     companion object {
-        val MY_REPOSITORY_KEY = object : CreationExtras.Key<SettingsRepository> {}
-
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                val repository = this[MY_REPOSITORY_KEY] as SettingsRepository
-                val savedStateHandle = createSavedStateHandle()
-                SettingsViewModel(repository, savedStateHandle)
+                SettingsViewModel(SettingsRepository(AppInfoDataSource(), FingerprintDataSource()))
             }
         }
 

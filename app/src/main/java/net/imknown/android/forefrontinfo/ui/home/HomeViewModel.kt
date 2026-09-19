@@ -3,10 +3,7 @@ package net.imknown.android.forefrontinfo.ui.home
 import androidx.annotation.MainThread
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Stable
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.createSavedStateHandle
-import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.CancellationException
@@ -17,6 +14,9 @@ import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.extension.fullMessage
 import net.imknown.android.forefrontinfo.ui.base.list.BaseListViewModel
+import net.imknown.android.forefrontinfo.ui.home.datasource.LldDataSource
+import net.imknown.android.forefrontinfo.ui.home.datasource.MountDataSource
+import net.imknown.android.forefrontinfo.ui.settings.datasource.AppInfoDataSource
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.common.LldManager
 import net.imknown.android.forefrontinfo.ui.common.State
@@ -31,18 +31,15 @@ private data class LldAndError(val lld: Lld?, val message: String?)
 // so promising stability is safe (same as BaseListViewModel).
 @Stable
 class HomeViewModel(
-    private val homeRepository: HomeRepository,
-    private val savedStateHandle: SavedStateHandle
+    private val homeRepository: HomeRepository
 ) : BaseListViewModel() {
 
     companion object {
-        val MY_REPOSITORY_KEY = object : CreationExtras.Key<HomeRepository> {}
-
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                val repository = this[MY_REPOSITORY_KEY] as HomeRepository
-                val savedStateHandle = createSavedStateHandle()
-                HomeViewModel(repository, savedStateHandle)
+                HomeViewModel(
+                    HomeRepository(LldDataSource(), MountDataSource(), AppInfoDataSource())
+                )
             }
         }
     }
