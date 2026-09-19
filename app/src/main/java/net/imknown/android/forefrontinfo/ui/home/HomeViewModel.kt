@@ -2,6 +2,7 @@ package net.imknown.android.forefrontinfo.ui.home
 
 import androidx.annotation.MainThread
 import androidx.annotation.StringRes
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
@@ -25,6 +26,10 @@ import net.imknown.android.forefrontinfo.ui.home.repository.HomeRepository
 
 private data class LldAndError(val lld: Lld?, val message: String?)
 
+// Stable (not Immutable): instance identity never changes and UI-visible state lives in the
+// observed StateFlow; SavedStateHandle is restore-only storage, never read for composition,
+// so promising stability is safe (same as BaseListViewModel).
+@Stable
 class HomeViewModel(
     private val homeRepository: HomeRepository,
     private val savedStateHandle: SavedStateHandle
