@@ -1,5 +1,15 @@
 package net.imknown.android.forefrontinfo.ui.theme
 
+/*
+ * [Cheat sheet: the four side-effect siblings] which to use when in Compose:
+ *  remember          caches a "value" across recompositions (computed once, recomputed when the key changes) — not an Effect, but usually discussed together
+ *  LaunchedEffect    runs suspend work (coroutines); a key change cancels the old one and restarts the new
+ *  DisposableEffect  subscribe/unsubscribe side effects (listeners/broadcasts); must provide onDispose for cleanup
+ *  SideEffect        after each successful recomposition, syncs the computed state to the world outside Compose (e.g. system bars)
+ * Rule of thumb: need a coroutine -> Launched; need cleanup -> Disposable; only push outward -> Side; only cache a value -> remember.
+ * This file's AppTheme actually uses remember (collect + cache) and SideEffect (see the system-bar correction in a later commit).
+ */
+
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -10,8 +20,12 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import net.imknown.android.forefrontinfo.base.AppThemeMode
+import net.imknown.android.forefrontinfo.base.MyApplication
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
@@ -255,11 +269,20 @@ val unspecified_scheme = ColorFamily(
 
 @Composable
 fun AppTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable() () -> Unit
 ) {
+    // Source 1: theme mode (single source of truth, non-null enum) — recomposes on Settings writes, no Activity recreate
+    val themeMode by MyApplication.themeMode.collectAsStateWithLifecycle()
+    // Source 2: system dark — isSystemInDarkTheme() reads LocalConfiguration and recomposes automatically when the system toggles
+    // Three-way mapping: always light=false, always dark=true, follow system delegates to the system
+    val darkTheme = when (themeMode) {
+        AppThemeMode.AlwaysLight -> false
+        AppThemeMode.AlwaysDark -> true
+        AppThemeMode.FollowSystem -> isSystemInDarkTheme()
+    }
+
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current

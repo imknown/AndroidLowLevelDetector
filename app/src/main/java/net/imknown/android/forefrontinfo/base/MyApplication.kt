@@ -5,9 +5,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Environment
 import androidx.annotation.StringRes
-import androidx.appcompat.app.AppCompatDelegate
-import com.google.android.material.color.DynamicColors
 import com.topjohnwu.superuser.Shell
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.property.PropertyManager
@@ -16,6 +16,14 @@ import net.imknown.android.forefrontinfo.base.shell.ShellManager
 import net.imknown.android.forefrontinfo.ui.common.ShellLibSu
 import net.imknown.android.forefrontinfo.ui.common.initMyAndroid
 import java.io.File
+
+// Theme mode: follow system / always light / always dark (the former 4th "power saver" option was dropped with the de-AppCompat change)
+// An enum rather than a resource string: the default value needs no SharedPreferences/resources, so it can be non-null
+enum class AppThemeMode {
+    FollowSystem,
+    AlwaysLight,
+    AlwaysDark
+}
 
 open class MyApplication : Application() {
 
@@ -45,26 +53,21 @@ open class MyApplication : Application() {
         fun getMyString(@StringRes resId: Int, vararg formatArgs: Any?) =
             instance.getString(resId, *formatArgs)
 
-        fun setMyTheme(themesValue: String?) {
-            @AppCompatDelegate.NightMode val mode = when (themesValue) {
-                getMyString(R.string.interface_themes_follow_system_value) -> {
-                    AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-                }
-                getMyString(R.string.interface_themes_power_saver_value) -> {
-                    AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY
-                }
-                getMyString(R.string.interface_themes_always_light_value) -> {
-                    AppCompatDelegate.MODE_NIGHT_NO
-                }
-                getMyString(R.string.interface_themes_always_dark_value) -> {
-                    AppCompatDelegate.MODE_NIGHT_YES
-                }
-                else -> {
-                    AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-                }
-            }
+        // Single source of truth for the theme mode: non-null, defaults to follow system;
+        // overwritten from the persisted value by initTheme on startup, and written via setMyTheme when Settings changes it—
+        // AppTheme collects it, so subscribers recompose automatically (replacing the old AppCompatDelegate Activity recreate).
+        // Uses the project's explicit backing-field convention: exposes StateFlow, writable as .value inside the class
+        val themeMode: StateFlow<AppThemeMode>
+            field = MutableStateFlow<AppThemeMode>(AppThemeMode.FollowSystem)
 
-            AppCompatDelegate.setDefaultNightMode(mode)
+        fun setMyTheme(themesValue: String?) {
+            // Translate the persisted mode string into the enum (the single write entry); unrecognized values (including the legacy "power saver" and null) fall back to follow system
+            val mode = when (themesValue) {
+                getMyString(R.string.interface_themes_always_light_value) -> AppThemeMode.AlwaysLight
+                getMyString(R.string.interface_themes_always_dark_value) -> AppThemeMode.AlwaysDark
+                else -> AppThemeMode.FollowSystem
+            }
+            themeMode.value = mode
         }
     }
 
@@ -81,11 +84,13 @@ open class MyApplication : Application() {
     }
 
     private fun initTheme() {
-        DynamicColors.applyToActivitiesIfAvailable(this)
+        // DynamicColors.applyToActivitiesIfAvailable (View-side dynamic color) is retired along with the View system:
+        // dynamic color is now owned solely by Compose's AppTheme(dynamicColor = true), avoiding two sources of truth.
 
-        val themesValue = sharedPreferences.getString(
-            getMyString(R.string.interface_themes_key), null
-        ) ?: getMyString(R.string.interface_themes_follow_system_value)
+        // On startup, seed the mode stored in SharedPreferences into the stream (getString supplies the default when absent, so no trailing ?: fallback is needed)
+        val themeKey = getMyString(R.string.interface_themes_key)
+        val defaultTheme = getMyString(R.string.interface_themes_follow_system_value)
+        val themesValue = sharedPreferences.getString(themeKey, defaultTheme)
         setMyTheme(themesValue)
     }
 
