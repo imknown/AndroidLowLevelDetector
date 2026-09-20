@@ -29,9 +29,6 @@ annotation = "1.11.0-rc01"
 
 annotation-experimental = "1.6.0"
 
-# https://developer.android.com/jetpack/androidx/releases/appcompat
-appcompat = "1.8.0"
-
 # https://developer.android.com/jetpack/androidx/releases/core
 core = "1.19.0"
 
@@ -65,9 +62,6 @@ activity = { group = "androidx.activity", name = "activity", version.ref = "acti
 
 annotation = { group = "androidx.annotation", name = "annotation", version.ref = "annotation" }
 annotation-experimental = { group = "androidx.annotation", name = "annotation-experimental", version.ref = "annotation-experimental" }
-
-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
-appcompat-resources = { group = "androidx.appcompat", name = "appcompat-resources", version.ref = "appcompat" }
 
 core = { group = "androidx.core", name = "core", version.ref = "core" }
 
@@ -104,7 +98,6 @@ android-gradleApiPlugin = { group = "com.android.tools.build", name = "gradle-ap
 
 [bundles]
 annotation = ["annotation", "annotation-experimental"]
-appcompat = ["appcompat", "appcompat-resources"]
 lifecycle = ["lifecycle-runtime", "lifecycle-viewmodel", "lifecycle-viewmodel-savedstate"]
 compose = ["compose-ui", "compose-ui-graphics", "compose-ui-tooling-preview", "compose-material3", "activity-compose", "lifecycle-runtime-compose", "lifecycle-viewmodel-compose", "navigation3-runtime", "navigation3-ui", "lifecycle-viewmodel-navigation3"]
 
