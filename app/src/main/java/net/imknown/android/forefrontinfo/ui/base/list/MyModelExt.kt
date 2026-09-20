@@ -1,12 +1,12 @@
 package net.imknown.android.forefrontinfo.ui.base.list
 
-import androidx.annotation.AttrRes
 import androidx.annotation.StringRes
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
+import net.imknown.android.forefrontinfo.ui.theme.StatusColor
 
 fun toColoredMyModel(@StringRes titleRes: Int, detail: String?, condition: Boolean): MyModel {
-    @AttrRes val color = if (condition) R.attr.colorNoProblem else R.attr.colorCritical
+    val color = if (condition) StatusColor.NO_PROBLEM else StatusColor.CRITICAL
     return MyModel(
         title = MyModelTitle.Res(titleRes),
         detail = detail.toString(),
@@ -14,7 +14,7 @@ fun toColoredMyModel(@StringRes titleRes: Int, detail: String?, condition: Boole
     )
 }
 
-fun toColoredMyModel(@StringRes titleRes: Int, detail: String?, @AttrRes color: Int): MyModel {
+fun toColoredMyModel(@StringRes titleRes: Int, detail: String?, color: StatusColor): MyModel {
     return MyModel(
         title = MyModelTitle.Res(titleRes),
         detail = detail.toString(),
