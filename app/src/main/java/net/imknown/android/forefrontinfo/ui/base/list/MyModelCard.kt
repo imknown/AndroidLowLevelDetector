@@ -27,6 +27,7 @@ import kotlinx.collections.immutable.persistentListOf
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.ui.theme.AppTheme
 import net.imknown.android.forefrontinfo.ui.theme.LocalExtendedColors
+import net.imknown.android.forefrontinfo.ui.theme.StatusColor
 import net.imknown.android.forefrontinfo.ui.theme.of
 
 /** Size of the status color dot. Legacy XML used 16sp so it scales with font size; Compose sizes only accept dp, hence the runtime conversion. */
@@ -58,7 +59,7 @@ fun MyModelCard(
                 )
 
                 // Conditional composition: with no color the dot is simply not composed (vs. composing-then-hiding)
-                if (model.color != RES_ID_NONE) {
+                if (model.color != StatusColor.NONE) {
                     Box(
                         modifier = Modifier
                             .align(Alignment.TopEnd)
@@ -90,8 +91,8 @@ fun MyModelTitle.asText(): String = when (this) {
 // Sample data shared by the @Previews in this package (internal: visible module-wide,
 // also used by the MyModelListScreen preview)
 internal val previewModels = persistentListOf(
-    MyModel(MyModelTitle.Raw("SELinux"), "Enforcing", color = R.attr.colorNoProblem),
-    MyModel(MyModelTitle.Raw("A/B partitions"), "A only", color = R.attr.colorCritical),
+    MyModel(MyModelTitle.Raw("SELinux"), "Enforcing", color = StatusColor.NO_PROBLEM),
+    MyModel(MyModelTitle.Raw("A/B partitions"), "A only", color = StatusColor.CRITICAL),
     MyModel(MyModelTitle.Raw("General entry"), "No status color dot"),
 )
 
