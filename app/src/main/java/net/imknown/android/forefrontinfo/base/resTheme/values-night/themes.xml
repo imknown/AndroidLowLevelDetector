@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="AppTheme" parent="BaseAppTheme">
+    <!-- Dark-window-background counterpart of the values/ shell; see values/themes.xml for why a platform parent + light/dark split. -->
+    <style name="AppTheme" parent="@android:style/Theme.Material.NoActionBar">
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="O_MR1">false</item>
     </style>
