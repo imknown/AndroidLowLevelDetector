@@ -104,7 +104,6 @@ android {
 
     buildFeatures {
         buildConfig = true
-        viewBinding = true
     }
 
     packaging {
@@ -122,18 +121,10 @@ dependencies {
     implementation(libsAndroid.activity)
     implementation(libsAndroid.bundles.annotation)
     implementation(libsAndroid.bundles.appcompat)
-    implementation(libsAndroid.bundles.arch.core)
-    implementation(libsAndroid.cardView)
     implementation(libsAndroid.bundles.compose)
-    implementation(libsAndroid.constraintLayout)
-    implementation(libsAndroid.coordinatorLayout)
     implementation(libsAndroid.core)
-    implementation(libsAndroid.fragment)
     implementation(libsAndroid.bundles.lifecycle)
-    implementation(libsAndroid.preference)
-    implementation(libsAndroid.recyclerView)
     implementation(libsAndroid.savedState)
-    implementation(libsAndroid.swipeRefreshLayout)
     implementation(libsAndroid.webkit)
     // endregion [AndroidX]
 
