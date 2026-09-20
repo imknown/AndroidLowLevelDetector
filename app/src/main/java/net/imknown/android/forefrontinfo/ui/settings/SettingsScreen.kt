@@ -69,9 +69,13 @@ fun SettingsScreen(viewModel: SettingsViewModel, modifier: Modifier = Modifier) 
     // truth afterwards, write through to SP on change. stringResource must be evaluated outside remember:
     val themeKey = stringResource(R.string.interface_themes_key)
     val themeDefaultValue = stringResource(R.string.interface_themes_follow_system_value)
+    // The retired "power saver" mode value (1): kept only as a reserved tombstone, no longer shown; a legacy stored value normalizes to follow system
+    val powerSaverValue = stringResource(R.string.interface_themes_power_saver_value)
     var themeValue by remember {
+        val stored = MyApplication.sharedPreferences.getString(themeKey, null)
+            ?: themeDefaultValue
         mutableStateOf(
-            MyApplication.sharedPreferences.getString(themeKey, null)
+            stored.takeUnless { it == powerSaverValue }
                 ?: themeDefaultValue
         )
     }
@@ -111,7 +115,7 @@ fun SettingsScreen(viewModel: SettingsViewModel, modifier: Modifier = Modifier) 
         onThemeSelect = { value ->
             themeValue = value
             MyApplication.sharedPreferences.edit { putString(themeKey, value) }
-            MyApplication.setMyTheme(value) // side effect: switch light/dark immediately (AppCompatDelegate)
+            MyApplication.setMyTheme(value) // writes the preference stream (single source of truth); AppTheme collects it and recomposes to switch light/dark, no Activity recreate
         },
         onScrollBarSelect = { value ->
             scrollBarValue = value
