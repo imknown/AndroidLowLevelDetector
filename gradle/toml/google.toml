@@ -15,15 +15,10 @@ firebase-bom = "34.19.0"
 # https://maven.google.com/web/index.html?q=crashlytics
 firebase-crashlytics-gradlePlugin = "3.0.8"
 
-# https://github.com/material-components/material-components-android/releases
-material = "1.14.0"
-
 [libraries]
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 firebase-crashlytics-ndk = { group = "com.google.firebase", name = "firebase-crashlytics-ndk" }
-
-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 # region [For build-logic]
 firebase-crashlytics-gradlePlugin = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version.ref = "firebase-crashlytics-gradlePlugin" }

@@ -120,7 +120,6 @@ dependencies {
     // region [AndroidX]
     implementation(libsAndroid.activity)
     implementation(libsAndroid.bundles.annotation)
-    implementation(libsAndroid.bundles.appcompat)
     implementation(libsAndroid.bundles.compose)
     implementation(libsAndroid.core)
     implementation(libsAndroid.bundles.lifecycle)
@@ -143,8 +142,4 @@ dependencies {
 
     implementation(libsThirdParty.libsu)
     // endregion [3rd Parties]
-
-    // region [Google]
-    implementation(libsGoogle.material)
-    // endregion [Google]
 }
