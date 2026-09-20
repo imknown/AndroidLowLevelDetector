@@ -1,11 +1,11 @@
 package net.imknown.android.forefrontinfo.base
 
 import android.app.Application
+import android.content.Context
 import android.content.SharedPreferences
 import android.os.Environment
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.preference.PreferenceManager
 import com.google.android.material.color.DynamicColors
 import com.topjohnwu.superuser.Shell
 import net.imknown.android.forefrontinfo.BuildConfig
@@ -23,7 +23,7 @@ open class MyApplication : Application() {
         lateinit var instance: MyApplication
 
         val sharedPreferences: SharedPreferences by lazy {
-            PreferenceManager.getDefaultSharedPreferences(instance)
+            instance.getSharedPreferences("${instance.packageName}_preferences", Context.MODE_PRIVATE)
         }
 
         fun getDownloadDir() = getFileDir(Environment.DIRECTORY_DOWNLOADS)
