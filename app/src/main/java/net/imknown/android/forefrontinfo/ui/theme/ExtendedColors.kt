@@ -1,15 +1,22 @@
 package net.imknown.android.forefrontinfo.ui.theme
 
-import androidx.annotation.AttrRes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
-import net.imknown.android.forefrontinfo.R
+
+// Semantic key for a list row's status dot. Replaces the old @AttrRes Int handles (R.attr.color*),
+// so the color token no longer depends on any XML resource / R.attr.
+enum class StatusColor {
+    NONE,
+    NO_PROBLEM,
+    WARNING,
+    CRITICAL
+}
 
 /**
  * Project-specific status colors outside the Material 3 palette.
- * Values mirror the six ARGB literals in values/ and values-night/colors.xml.
+ * The six ARGB literals (light + dark) are defined here in Kotlin; the old XML color resources are retired.
  */
 @Immutable
 data class ExtendedColors(
@@ -32,11 +39,11 @@ internal val ExtendedDarkColors = ExtendedColors(
 
 val LocalExtendedColors = staticCompositionLocalOf { ExtendedLightColors }
 
-/** Maps legacy ?attr references onto the extended palette; RES_ID_NONE must be filtered by callers. */
+/** Maps a [StatusColor] onto the extended palette; NONE yields Color.Unspecified (caller may also filter it out). */
 @Composable
-fun ExtendedColors.of(@AttrRes attr: Int): Color = when (attr) {
-    R.attr.colorNoProblem -> noProblem
-    R.attr.colorWarning -> warning
-    R.attr.colorCritical -> critical
-    else -> Color.Unspecified
+fun ExtendedColors.of(status: StatusColor): Color = when (status) {
+    StatusColor.NO_PROBLEM -> noProblem
+    StatusColor.WARNING -> warning
+    StatusColor.CRITICAL -> critical
+    StatusColor.NONE -> Color.Unspecified
 }

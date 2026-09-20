@@ -1,10 +1,8 @@
 package net.imknown.android.forefrontinfo.ui.base.list
 
-import androidx.annotation.AttrRes
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Immutable
-
-const val RES_ID_NONE = 0
+import net.imknown.android.forefrontinfo.ui.theme.StatusColor
 
 enum class MyModelType {
     General,
@@ -20,7 +18,7 @@ sealed interface MyModelTitle {
 data class MyModel(
     val title: MyModelTitle,
     val detail: String,
-    @param:AttrRes val color: Int = RES_ID_NONE,
+    val color: StatusColor = StatusColor.NONE,
     val type: MyModelType = General
 ) {
     val key: String
