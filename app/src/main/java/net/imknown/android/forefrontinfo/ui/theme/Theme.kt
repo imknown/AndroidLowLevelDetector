@@ -7,10 +7,11 @@ package net.imknown.android.forefrontinfo.ui.theme
  *  DisposableEffect  subscribe/unsubscribe side effects (listeners/broadcasts); must provide onDispose for cleanup
  *  SideEffect        after each successful recomposition, syncs the computed state to the world outside Compose (e.g. system bars)
  * Rule of thumb: need a coroutine -> Launched; need cleanup -> Disposable; only push outward -> Side; only cache a value -> remember.
- * This file's AppTheme actually uses remember (collect + cache) and SideEffect (see the system-bar correction in a later commit).
+ * This file's AppTheme actually uses remember (collect + cache) and SideEffect (see the system-bar correction in AppTheme below).
  */
 
 import android.os.Build
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -20,10 +21,12 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.view.WindowCompat
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import net.imknown.android.forefrontinfo.base.AppThemeMode
 import net.imknown.android.forefrontinfo.base.MyApplication
 
@@ -281,6 +284,16 @@ fun AppTheme(
         AppThemeMode.AlwaysLight -> false
         AppThemeMode.AlwaysDark -> true
         AppThemeMode.FollowSystem -> isSystemInDarkTheme()
+    }
+
+    // System-bar icon appearance is not drawn by Compose: a SideEffect syncs the computed darkTheme to the window after each successful recomposition
+    val activity = LocalActivity.current // CompositionLocal can only be read during composition, so read it outside SideEffect
+    SideEffect {
+        if (activity != null) { // previews have no Activity, skip
+            val controller = WindowCompat.getInsetsController(activity.window, activity.window.decorView)
+            controller.isAppearanceLightStatusBars = !darkTheme // light theme -> dark icons
+            controller.isAppearanceLightNavigationBars = !darkTheme
+        }
     }
 
     val colorScheme = when {
