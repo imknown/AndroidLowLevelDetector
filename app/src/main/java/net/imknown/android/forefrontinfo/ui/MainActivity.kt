@@ -4,15 +4,10 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import net.imknown.android.forefrontinfo.databinding.MainActivityBinding
-import net.imknown.android.forefrontinfo.ui.base.ext.viewBinding
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid10
 import net.imknown.android.forefrontinfo.ui.theme.AppTheme
 
 class MainActivity : AppCompatActivity() { // kept on purpose: the four theme modes rely on AppCompatDelegate (legacy optimization, chapter 10)
-
-    // BaseListFragment (deleted in step 7) still references this binding; remove it together with main_activity.xml then
-    internal val binding by viewBinding(MainActivityBinding::inflate)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // https://developer.android.com/design/ui/mobile/guides/foundations/system-bars#button_modes
