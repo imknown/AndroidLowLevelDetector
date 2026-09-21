@@ -63,8 +63,10 @@ fun MyModelListScreen(
     )
 }
 
+// internal (visible module-wide): besides this screen, the AppRoot shell preview reuses it as its
+// stand-in page content (AppRoot itself wires real ViewModels and cannot run in a preview)
 @Composable
-private fun MyModelListContent(
+internal fun MyModelListContent(
     models: PersistentList<MyModel>, // data only (no ViewModel) -> previewable and reusable
     isRefreshing: Boolean, // whether the spinner spins (external state; this composable decides nothing)
     onRefresh: () -> Unit, // refresh callback (event goes up)
