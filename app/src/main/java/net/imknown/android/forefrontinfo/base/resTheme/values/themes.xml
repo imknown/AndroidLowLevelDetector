@@ -3,11 +3,28 @@
 
     <!-- Window-level theme shell only: all in-app colors are owned by Compose (ui/theme/).
          Platform parent (decoupled from the MDC dependency); minSdk24 has no Theme.*.DayNight (29+),
-         so light/dark window background for the cold-start first frame is split via the values vs values-night parents.
+         so the light/dark window background split is done via style pairs instead of a DayNight parent.
          The windowLight* here is only the pre-first-frame value; enableEdgeToEdge overrides it from the effective theme. -->
+
+    <!-- Manifest theme (values vs values-night pair): follows the *system* configuration, because the
+         system-drawn starting window (cold-start splash on 12+) is resolved from it before any code runs. -->
     <style name="AppTheme" parent="@android:style/Theme.Material.Light.NoActionBar">
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="O_MR1">true</item>
+    </style>
+
+    <!-- Enforced variants, defined only here (no values-night copy) so they are NOT re-resolved by the
+         system configuration: MainActivity.onCreate switches the activity window to the one matching
+         the in-app theme, otherwise "always dark on a light system" cold-starts with a light window
+         background and light status bar icons until Compose's first frame catches up (a visible flash). -->
+    <style name="AppTheme.Light" parent="@android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="O_MR1">true</item>
+    </style>
+
+    <style name="AppTheme.Dark" parent="@android:style/Theme.Material.NoActionBar">
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="O_MR1">false</item>
     </style>
 
 </resources>
