@@ -49,6 +49,9 @@ class HomeViewModel(
     }
 
     override suspend fun collectModels(): List<MyModel> {
+        // Stamp this load with the current preference generation (compared in onModelsLoaded)
+        loadStartGeneration = outdatedOrderChanges.value
+
         val allowNetwork = MyApplication.sharedPreferences.getBoolean(
             MyApplication.getMyString(R.string.function_allow_network_data_key), false
         )
@@ -77,11 +80,15 @@ class HomeViewModel(
             }
         }
 
+    // The preference generation a load started building its list with; compared when that
+    // list lands (onModelsLoaded).
+    private var loadStartGeneration = 0
+
     init {
         MyApplication.sharedPreferences
             .registerOnSharedPreferenceChangeListener(outdatedOrderChangeListener)
 
-        // Live update: a toggle while any list is on screen (the initial data, or the
+        // Rule 1 — live update: a toggle while any list is on screen (the initial data, or the
         // still-visible previous data during a pull-to-refresh) re-syncs that entry at once.
         // Before the first load lands there is nothing to patch, and the load itself reads the
         // current preference anyway.
@@ -229,6 +236,18 @@ class HomeViewModel(
             cause.printStackTrace()
         }
         return MyApplication.getMyString(messageId, cause.fullMessage)
+    }
+
+    // Rule 2 — load landing: a toggle while the list was being built (initial load or
+    // pull-to-refresh) is not covered by Rule 1's patch of the old list — the builder read the
+    // preference at some point mid-build, so the freshly landed entry can lag one toggle
+    // behind. Re-sync it with the current stored value in that case.
+    override fun onModelsLoaded() {
+        if (outdatedOrderChanges.value != loadStartGeneration) {
+            viewModelScope.launch {
+                payloadOutdatedTargetSdkVersionApk()
+            }
+        }
     }
 
     @MainThread
