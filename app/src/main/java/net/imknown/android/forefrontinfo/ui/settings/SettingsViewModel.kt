@@ -36,20 +36,11 @@ class SettingsViewModel(
 
         val scrollBarModeChangedSharedFlow: SharedFlow<String?>
             field = MutableSharedFlow()
-
-        val outdatedOrderChangedSharedFlow: SharedFlow<Unit>
-            field = MutableSharedFlow()
     }
 
     fun emitScrollBarModeChangedSharedFlow(scrollBarMode: String?) {
         viewModelScope.launch {
             scrollBarModeChangedSharedFlow.emit(scrollBarMode)
-        }
-    }
-
-    fun emitOutdatedOrderChangedSharedFlow() {
-        viewModelScope.launch {
-            outdatedOrderChangedSharedFlow.emit(Unit)
         }
     }
 
