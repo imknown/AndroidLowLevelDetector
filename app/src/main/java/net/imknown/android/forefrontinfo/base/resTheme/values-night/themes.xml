@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Dark-window-background counterpart of the values/ shell; see values/themes.xml for why a platform parent + light/dark split. -->
+    <!-- Dark-window-background counterpart of the values/ AppTheme; see values/themes.xml for why a platform parent + light/dark split.
+         Only feeds the system-drawn starting window: MainActivity.onCreate switches the activity window
+         itself to the enforced AppTheme.Light/AppTheme.Dark variant matching the in-app theme. -->
     <style name="AppTheme" parent="@android:style/Theme.Material.NoActionBar">
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="O_MR1">false</item>
