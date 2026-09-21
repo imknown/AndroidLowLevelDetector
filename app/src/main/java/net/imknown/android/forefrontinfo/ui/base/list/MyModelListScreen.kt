@@ -15,7 +15,6 @@ import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.produceState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -25,7 +24,6 @@ import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import net.imknown.android.forefrontinfo.R
-import net.imknown.android.forefrontinfo.ui.common.State
 import net.imknown.android.forefrontinfo.ui.theme.AppTheme
 
 /**
@@ -37,27 +35,23 @@ fun MyModelListScreen(
     viewModel: BaseListViewModel, // screen-level composable taking a ViewModel is the officially endorsed layer
     modifier: Modifier = Modifier,
 ) {
-    // 1) Subscribe: Flow -> Compose state; collection pauses automatically while STOPPED
-    val state by viewModel.modelsStateFlow.collectAsStateWithLifecycle()
+    // 1) Subscribe: Flow -> Compose state; collection pauses automatically while STOPPED.
+    //    Data and spinner are separate flows: a refresh keeps the previous list on screen.
+    val models by viewModel.modelsStateFlow.collectAsStateWithLifecycle()
+    val isLoading by viewModel.isLoadingStateFlow.collectAsStateWithLifecycle()
 
     // 2) Side effect: mirrors the listViewModel.init() call at the end of legacy BaseListFragment.
     //    Never call it directly in the composable body (recomposition would re-trigger it);
     //    init() is idempotent, so re-running it on view recreation is harmless.
     LaunchedEffect(viewModel) { viewModel.init() }
 
-    // 3) Derived state: on refresh, state flips back to Loading. Keep the most recent Done data so
-    //    the list stays on screen while the spinner spins (legacy behavior: no flash of empty list).
-    val models by produceState(
-        initialValue = persistentListOf(), // empty at first (the list is empty during the very first load anyway)
-        key1 = state, // the block below re-runs every time state changes
-    ) {
-        // Only Done writes; Loading/NotInitialized do nothing -> the previous value is preserved
-        (state as? State.Done<List<MyModel>>)?.let { value = it.value.toPersistentList() }
-    }
-
     MyModelListContent(
-        models = models,
-        isRefreshing = state is State.Loading, // state down: Loading spins (first load included, same as legacy)
+        // null only before the very first load lands (empty list while the spinner spins);
+        // afterwards the VM keeps the previous list during refreshes — no flash of empty list,
+        // and mid-refresh patches from the VM reach the UI (legacy behavior needed a
+        // produceState workaround for this; the VM now guarantees it directly)
+        models = models?.toPersistentList() ?: persistentListOf(),
+        isRefreshing = isLoading, // first load and pull-to-refresh both spin (same as legacy)
         onRefresh = viewModel::refresh, // event up: gesture -> VM refresh (a method reference is just a lambda)
         modifier = modifier,
     )

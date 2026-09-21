@@ -9,16 +9,32 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.imknown.android.forefrontinfo.ui.base.BaseViewModel
-import net.imknown.android.forefrontinfo.ui.common.State
 
 // Stable (not Immutable): the ViewModel instance identity never changes and all UI-visible
-// state lives in the observed StateFlow, so composition can safely skip when it is unchanged.
+// state lives in the observed StateFlows, so composition can safely skip when they are unchanged.
 @Stable
 abstract class BaseListViewModel : BaseViewModel() {
-    val modelsStateFlow: StateFlow<State<List<MyModel>>>
-        field = MutableStateFlow<State<List<MyModel>>>(State.NotInitialized)
+
+    // null = nothing loaded yet (cold start). A refresh deliberately keeps the previous list:
+    // the UI never flashes empty mid-refresh, and in-place patches (updateModelDetail) stay
+    // possible while the reload is still running.
+    val modelsStateFlow: StateFlow<List<MyModel>?>
+        field = MutableStateFlow<List<MyModel>?>(null)
+
+    // Spinner flag, split from the data so loading no longer has to erase the list (the two
+    // concerns replaced the former single State.Loading which carried no data).
+    val isLoadingStateFlow: StateFlow<Boolean>
+        field = MutableStateFlow(false)
 
     abstract suspend fun collectModels(): List<MyModel>
+
+    /**
+     * Runs on the main thread right after each load's data lands. Override to reconcile state
+     * that may have changed in the world while the list was being built — the freshly built
+     * list can only embed the world as it was at some point mid-build (e.g. a Settings
+     * switch toggled during a pull-to-refresh).
+     */
+    protected open fun onModelsLoaded() {}
 
     private var loadJob: Job? = null
 
@@ -26,8 +42,8 @@ abstract class BaseListViewModel : BaseViewModel() {
         // 1) In-memory cache present (config-change recreation)
         //    -> show it directly, never reload;
         // 2) Cold start / process death (app recycled in background, then resumed)
-        //    -> no in-memory cache by definition (state == NotInitialized)
-        if (modelsStateFlow.value == State.NotInitialized) {
+        //    -> no in-memory cache by definition (models == null)
+        if (modelsStateFlow.value == null) {
             startLoad()
         }
     }
@@ -42,37 +58,34 @@ abstract class BaseListViewModel : BaseViewModel() {
         }
 
         loadJob = viewModelScope.launch {
-            setLoading()
+            setLoading(true)
             val list = collectModels()
             setModels(list)
+            onModelsLoaded()
         }
     }
 
     @MainThread
-    private fun setLoading() {
-        modelsStateFlow.value = State.Loading
+    private fun setLoading(loading: Boolean) {
+        isLoadingStateFlow.value = loading
     }
 
     @MainThread
     fun updateModelDetail(targetIndex: Int, newDetail: String) {
-        modelsStateFlow.update { state ->
-            if (state !is State.Done) {
-                return@update state
-            }
-
-            val list = state.value
-            if (targetIndex !in list.indices) {
-                return@update state
+        modelsStateFlow.update { list ->
+            if (list == null || targetIndex !in list.indices) {
+                return@update list
             }
 
             val newList = list.toMutableList()
             newList[targetIndex] = newList[targetIndex].copy(detail = newDetail)
-            State.Done(newList)
+            newList
         }
     }
 
     @MainThread
     private fun setModels(tempModels: List<MyModel>) {
-        modelsStateFlow.value = State.Done(tempModels)
+        modelsStateFlow.value = tempModels
+        setLoading(false)
     }
 }
