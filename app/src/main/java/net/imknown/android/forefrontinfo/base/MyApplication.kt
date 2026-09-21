@@ -23,7 +23,16 @@ import java.io.File
 enum class AppThemeMode {
     FollowSystem,
     AlwaysLight,
-    AlwaysDark
+    AlwaysDark;
+
+    // The single three-way "is the app dark" mapping: always light = false, always dark = true,
+    // follow system defers to the caller-provided system value. Shared by MainActivity (window shell +
+    // edge-to-edge) and AppTheme (colors), so the two can never drift apart.
+    fun isDark(systemDark: Boolean): Boolean = when (this) {
+        FollowSystem -> systemDark
+        AlwaysLight -> false
+        AlwaysDark -> true
+    }
 }
 
 open class MyApplication : Application() {
