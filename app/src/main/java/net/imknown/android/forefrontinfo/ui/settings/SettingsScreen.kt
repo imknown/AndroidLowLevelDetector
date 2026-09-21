@@ -50,7 +50,6 @@ import kotlinx.collections.immutable.toPersistentList
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.ui.base.ext.toast
-import net.imknown.android.forefrontinfo.ui.common.State
 import net.imknown.android.forefrontinfo.ui.settings.repository.SettingsRepository
 import net.imknown.android.forefrontinfo.ui.theme.AppTheme
 
@@ -99,7 +98,7 @@ fun SettingsScreen(viewModel: SettingsViewModel, modifier: Modifier = Modifier) 
     }
 
     // ---- Version info: mirrors the legacy Fragment ("subscribe + init once"; the VM guards re-entry) ----
-    val versionState by viewModel.version.collectAsStateWithLifecycle()
+    val version by viewModel.version.collectAsStateWithLifecycle()
     LaunchedEffect(viewModel) {
         viewModel.setBuiltInDataVersion(context.packageManager, context.packageName)
     }
@@ -109,7 +108,7 @@ fun SettingsScreen(viewModel: SettingsViewModel, modifier: Modifier = Modifier) 
         scrollBarValue = scrollBarValue,
         allowNetwork = allowNetwork,
         outdatedOrderFirst = outdatedOrderFirst,
-        versionState = versionState,
+        version = version,
         onThemeSelect = { value ->
             themeValue = value
             MyApplication.sharedPreferences.edit { putString(themeKey, value) }
@@ -127,7 +126,7 @@ fun SettingsScreen(viewModel: SettingsViewModel, modifier: Modifier = Modifier) 
         onOutdatedOrderChange = { value ->
             outdatedOrderFirst = value
             MyApplication.sharedPreferences.edit { putBoolean(outdatedOrderKey, value) }
-            // no broadcast needed: Home observes this preference key itself and reorders
+            // no broadcast needed: Home observes this preference key itself and reconciles
         },
         onVersionClick = {
             viewModel.getVersionClickedMessage()?.let { context.toast(it) } // the 7-tap easter-egg logic lives in the VM, reused as-is
@@ -142,7 +141,7 @@ private fun SettingsContent(
     scrollBarValue: String, // current scroll bar stored value
     allowNetwork: Boolean, // allow-network-data switch
     outdatedOrderFirst: Boolean, // outdated-order-by-package-name switch
-    versionState: State<SettingsRepository.Version>, // version info (VM subscription result)
+    version: SettingsRepository.Version?, // version info, null until the VM loads it once
     onThemeSelect: (String) -> Unit, // all events go up (dumb component, keeps no state)
     onScrollBarSelect: (String) -> Unit,
     onAllowNetworkChange: (Boolean) -> Unit,
@@ -227,7 +226,6 @@ private fun SettingsContent(
                     )
                 }
                 HorizontalDivider(color = dividerColor, thickness = dividerThickness)
-                val version = (versionState as? State.Done<SettingsRepository.Version>)?.value
                 ListItem(
                     headlineContent = { Text(stringResource(R.string.about_version_title)) },
                     supportingContent = {
@@ -412,17 +410,15 @@ private fun SettingsContentPreview() {
             scrollBarValue = "1",
             allowNetwork = false,
             outdatedOrderFirst = true,
-            versionState = State.Done(
-                SettingsRepository.Version(
-                    id = R.string.about_version_summary,
-                    versionName = "1.18.8",
-                    versionCode = 73,
-                    assetLldVersion = "2026.09.00",
-                    distributor = "Google Play",
-                    installer = "com.android.vending",
-                    firstInstallTime = "2026-01-01 00:00",
-                    lastUpdateTime = "2026-09-19 00:00",
-                )
+            version = SettingsRepository.Version(
+                id = R.string.about_version_summary,
+                versionName = "1.18.8",
+                versionCode = 73,
+                assetLldVersion = "2026.09.00",
+                distributor = "Google Play",
+                installer = "com.android.vending",
+                firstInstallTime = "2026-01-01 00:00",
+                lastUpdateTime = "2026-09-19 00:00",
             ),
             onThemeSelect = {},
             onScrollBarSelect = {},

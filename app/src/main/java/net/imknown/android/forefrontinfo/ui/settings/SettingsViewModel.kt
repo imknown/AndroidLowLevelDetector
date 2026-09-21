@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.ui.base.BaseViewModel
-import net.imknown.android.forefrontinfo.ui.common.State
 import net.imknown.android.forefrontinfo.ui.settings.datasource.AppInfoDataSource
 import net.imknown.android.forefrontinfo.ui.settings.datasource.FingerprintDataSource
 import net.imknown.android.forefrontinfo.ui.settings.repository.SettingsRepository
@@ -45,22 +44,24 @@ class SettingsViewModel(
     }
 
     // region [Version Info]
-    val version: StateFlow<State<SettingsRepository.Version>>
-        field = MutableStateFlow<State<SettingsRepository.Version>>(State.NotInitialized)
+    // null = not loaded yet (the built-in data version loads once; there is no reload, so no
+    // State wrapper is needed — the former State.Loading branch was never used here)
+    val version: StateFlow<SettingsRepository.Version?>
+        field = MutableStateFlow<SettingsRepository.Version?>(null)
 
     private var initBuiltInDataVersionJob: Job? = null
 
     fun setBuiltInDataVersion(
         packageManager: PackageManager, packageName: String
     ) {
-        if (version.value != State.NotInitialized
+        if (version.value != null
             || initBuiltInDataVersionJob?.isActive == true
         ) {
             return
         }
 
         initBuiltInDataVersionJob = viewModelScope.launch {
-            version.value = State.Done(settingsRepository.getBuiltInDataVersion(packageManager, packageName))
+            version.value = settingsRepository.getBuiltInDataVersion(packageManager, packageName)
         }
     }
     // endregion [Version Info]
