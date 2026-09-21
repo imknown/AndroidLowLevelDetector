@@ -1,5 +1,6 @@
 package net.imknown.android.forefrontinfo.ui
 
+import android.content.res.Configuration
 import androidx.activity.compose.LocalActivity
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -21,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavEntryDecorator
@@ -32,7 +34,9 @@ import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import kotlinx.collections.immutable.persistentListOf
 import net.imknown.android.forefrontinfo.R
+import net.imknown.android.forefrontinfo.ui.base.list.MyModelListContent
 import net.imknown.android.forefrontinfo.ui.base.list.MyModelListScreen
+import net.imknown.android.forefrontinfo.ui.base.list.previewModels
 import net.imknown.android.forefrontinfo.ui.home.HomeScreen
 import net.imknown.android.forefrontinfo.ui.home.HomeViewModel
 import net.imknown.android.forefrontinfo.ui.navigation.HomeKey
@@ -43,6 +47,7 @@ import net.imknown.android.forefrontinfo.ui.others.OthersViewModel
 import net.imknown.android.forefrontinfo.ui.prop.PropViewModel
 import net.imknown.android.forefrontinfo.ui.settings.SettingsScreen
 import net.imknown.android.forefrontinfo.ui.settings.SettingsViewModel
+import net.imknown.android.forefrontinfo.ui.theme.AppTheme
 
 private data class TopLevelTab(
     val key: NavKey, // navigation key (unique identity)
@@ -64,7 +69,6 @@ private val topLevelTabs = persistentListOf(
  * rendered stack). Unrendered stacks keep their UI state and ViewModels alive — the same
  * behavior as the legacy Fragment show/hide.
  */
-@OptIn(ExperimentalMaterial3Api::class) // TopAppBar is still an experimental API in m3 1.4.0
 @Composable
 fun AppRoot() {
     // Grab the Activity in composition: the onBack lambda is not a composable context and
@@ -101,6 +105,30 @@ fun AppRoot() {
         )
     }
 
+    AppRootShell(
+        currentTabIndex = currentTabIndex, // state down: which tab is selected/rendered
+        onTabSelect = { currentTabIndex = it }, // event up: click only changes state, rendering follows
+    ) { contentModifier -> // the modifier carries the Scaffold insets so content consumes them in one line
+        NavDisplay(
+            entries = decoratedEntries[currentTabIndex], // render only the entries of the currently selected tab stack
+            onBack = { activity?.finish() }, // keep legacy behavior: back from any tab exits directly
+            modifier = contentModifier,
+        )
+    }
+}
+
+/**
+ * Data-only page skeleton (Scaffold + top/bottom bars + tab state hoisted in): AppRoot itself
+ * wires navigation3 and real ViewModels (shell commands, SP reads) so it cannot run in a
+ * preview — this shell is the previewable part, same split as SettingsScreen/SettingsContent.
+ */
+@OptIn(ExperimentalMaterial3Api::class) // TopAppBar is still an experimental API in m3 1.4.0
+@Composable
+private fun AppRootShell(
+    currentTabIndex: Int,
+    onTabSelect: (Int) -> Unit,
+    content: @Composable (Modifier) -> Unit, // the current page; receives the modifier pre-loaded with innerPadding
+) {
     Scaffold( // page scaffold: top bar / bottom bar / content three sections
         topBar = {
             // mirrors the default title bar after the legacy setSupportActionBar(toolbar) (Activity label)
@@ -117,7 +145,7 @@ fun AppRoot() {
                 topLevelTabs.forEachIndexed { index, tab ->
                     NavigationBarItem(
                         selected = index == currentTabIndex, // selected state is driven by state
-                        onClick = { currentTabIndex = index }, // click only changes state, rendering follows
+                        onClick = { onTabSelect(index) }, // click only reports up, rendering follows
                         icon = { Icon(painterResource(tab.iconRes), contentDescription = null) },
                         label = { Text(stringResource(tab.labelRes)) },
                     )
@@ -125,10 +153,27 @@ fun AppRoot() {
             }
         },
     ) { innerPadding -> // avoidance amounts computed by Scaffold (top + bottom bars + system bars) — end of the manual insets era
-        NavDisplay(
-            entries = decoratedEntries[currentTabIndex], // render only the entries of the currently selected tab stack
-            onBack = { activity?.finish() }, // keep legacy behavior: back from any tab exits directly
-            modifier = Modifier.padding(innerPadding), // consume the scaffold-provided insets in one line
-        )
+        content(Modifier.padding(innerPadding))
+    }
+}
+
+// The preview feeds the shell the sample list page (previewModels, the same data the other list
+// previews use) instead of a NavDisplay: enough to see the bars + tab selection + insets wiring
+@Preview(showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@Composable
+private fun AppRootShellPreview() {
+    AppTheme {
+        AppRootShell(
+            currentTabIndex = 0,
+            onTabSelect = {},
+        ) { modifier ->
+            MyModelListContent(
+                models = previewModels,
+                isRefreshing = false,
+                onRefresh = {},
+                modifier = modifier,
+            )
+        }
     }
 }
