@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Environment
 import androidx.annotation.StringRes
+import androidx.core.content.edit
 import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -91,6 +92,15 @@ open class MyApplication : Application() {
         val themeKey = getMyString(R.string.interface_themes_key)
         val defaultTheme = getMyString(R.string.interface_themes_follow_system_value)
         val themesValue = sharedPreferences.getString(themeKey, defaultTheme)
+
+        // One-time migration for the retired "power saver" mode (its tombstone value "1" is kept in
+        // strings.xml so the number is never recycled): normalize the stored preference back to follow
+        // system AND write it through, so every later read (e.g. SettingsScreen) sees a clean value
+        // instead of relying on setMyTheme's fallback on every launch.
+        if (themesValue == getMyString(R.string.interface_themes_power_saver_value)) {
+            sharedPreferences.edit { putString(themeKey, defaultTheme) }
+        }
+
         setMyTheme(themesValue)
     }
 
