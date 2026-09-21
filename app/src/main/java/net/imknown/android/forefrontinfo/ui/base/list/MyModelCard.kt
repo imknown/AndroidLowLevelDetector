@@ -1,6 +1,7 @@
 package net.imknown.android.forefrontinfo.ui.base.list
 
 import android.content.res.Configuration
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -39,9 +40,16 @@ fun MyModelCard(
     modifier: Modifier = Modifier,
 ) {
     Card(
-        modifier = modifier.fillMaxWidth(),
+        // Legacy MaterialCardView was clickable + focusable with no click listener = ripple-only
+        // feedback; the onClick overload is the Compose way to get that ripple back.
+        onClick = {},
+        modifier = modifier
+            .fillMaxWidth()
+            // Animates the card's own height when its content changes (e.g. detail text gains a
+            // line). Legacy RecyclerView's DefaultItemAnimator animated these changes; LazyColumn
+            // animates only item placement, so the size change must be animated here.
+            .animateContentSize(),
         // Legacy Widget.Material3.CardView.Filled has no shadow; Compose Card defaults to 1dp, so zero it out.
-        // No-click overload: legacy XML had clickable but no listener; switch to the onClick overload when wiring up interactions (step 2).
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceBright,
