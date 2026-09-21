@@ -69,13 +69,11 @@ fun SettingsScreen(viewModel: SettingsViewModel, modifier: Modifier = Modifier) 
     // truth afterwards, write through to SP on change. stringResource must be evaluated outside remember:
     val themeKey = stringResource(R.string.interface_themes_key)
     val themeDefaultValue = stringResource(R.string.interface_themes_follow_system_value)
-    // The retired "power saver" mode value (1): kept only as a reserved tombstone, no longer shown; a legacy stored value normalizes to follow system
-    val powerSaverValue = stringResource(R.string.interface_themes_power_saver_value)
+    // No tombstone handling needed here: MyApplication.initTheme migrates a legacy stored
+    // "power saver" value (its "1" tombstone is kept in strings.xml) back to follow system at startup
     var themeValue by remember {
-        val stored = MyApplication.sharedPreferences.getString(themeKey, null)
-            ?: themeDefaultValue
         mutableStateOf(
-            stored.takeUnless { it == powerSaverValue }
+            MyApplication.sharedPreferences.getString(themeKey, null)
                 ?: themeDefaultValue
         )
     }
