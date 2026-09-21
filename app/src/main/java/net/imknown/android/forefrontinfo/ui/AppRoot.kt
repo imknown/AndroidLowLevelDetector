@@ -37,7 +37,6 @@ import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.ui.base.list.MyModelListContent
 import net.imknown.android.forefrontinfo.ui.base.list.MyModelListScreen
 import net.imknown.android.forefrontinfo.ui.base.list.previewModels
-import net.imknown.android.forefrontinfo.ui.home.HomeScreen
 import net.imknown.android.forefrontinfo.ui.home.HomeViewModel
 import net.imknown.android.forefrontinfo.ui.navigation.HomeKey
 import net.imknown.android.forefrontinfo.ui.navigation.OthersKey
@@ -97,7 +96,7 @@ fun AppRoot() {
             backStack = backStacks.getValue(tab.key), // this tab's own stack
             entryDecorators = entryDecorators, // decorator list
             entryProvider = entryProvider { // key -> UI mapping DSL
-                entry<HomeKey> { HomeScreen(viewModel(factory = HomeViewModel.Factory)) }
+                entry<HomeKey> { MyModelListScreen(viewModel<HomeViewModel>(factory = HomeViewModel.Factory)) } // explicit type, same as the other list entries
                 entry<OthersKey> { MyModelListScreen(viewModel<OthersViewModel>(factory = OthersViewModel.Factory)) } // explicit type: the factory only registers the concrete class (asking for the abstract BaseListViewModel crashes)
                 entry<PropKey> { MyModelListScreen(viewModel<PropViewModel>(factory = PropViewModel.Factory)) } // explicit type, same as above
                 entry<SettingsKey> { SettingsScreen(viewModel(factory = SettingsViewModel.Factory)) }
