@@ -24,7 +24,6 @@ import net.imknown.android.forefrontinfo.ui.home.datasource.MountDataSource
 import net.imknown.android.forefrontinfo.ui.settings.datasource.AppInfoDataSource
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.common.LldManager
-import net.imknown.android.forefrontinfo.ui.common.State
 import net.imknown.android.forefrontinfo.ui.common.toObjectOrThrow
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.home.repository.HomeRepository
@@ -82,12 +81,13 @@ class HomeViewModel(
         MyApplication.sharedPreferences
             .registerOnSharedPreferenceChangeListener(outdatedOrderChangeListener)
 
-        // Live update: a toggle while data is displayed re-syncs that entry at once. Before the
-        // first load lands there is nothing to patch, and the load itself reads the current
-        // preference anyway.
+        // Live update: a toggle while any list is on screen (the initial data, or the
+        // still-visible previous data during a pull-to-refresh) re-syncs that entry at once.
+        // Before the first load lands there is nothing to patch, and the load itself reads the
+        // current preference anyway.
         viewModelScope.launch {
             outdatedOrderChanges.collect {
-                if (modelsStateFlow.value is State.Done) {
+                if (modelsStateFlow.value != null) {
                     payloadOutdatedTargetSdkVersionApk()
                 }
             }
@@ -240,12 +240,7 @@ class HomeViewModel(
             homeRepository.getOutdatedTargetSdkVersionApkModel(lld).detail
         }
 
-        val state = modelsStateFlow.value
-        if (state !is State.Done) {
-            return
-        }
-
-        val list = state.value
+        val list = modelsStateFlow.value ?: return
         val targetIndex = list.indexOfFirst {
             it.type == OutdatedTargetSdkApk
         }
