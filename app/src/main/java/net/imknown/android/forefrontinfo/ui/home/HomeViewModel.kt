@@ -1,5 +1,6 @@
 package net.imknown.android.forefrontinfo.ui.home
 
+import android.content.SharedPreferences
 import androidx.annotation.MainThread
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Stable
@@ -9,6 +10,8 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.BuildConfig
@@ -25,7 +28,6 @@ import net.imknown.android.forefrontinfo.ui.common.State
 import net.imknown.android.forefrontinfo.ui.common.toObjectOrThrow
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.home.repository.HomeRepository
-import net.imknown.android.forefrontinfo.ui.settings.SettingsViewModel
 
 private data class LldAndError(val lld: Lld?, val message: String?)
 
@@ -59,19 +61,45 @@ class HomeViewModel(
         }
     }
 
+    // region [Outdated order switch]
+    // SharedPreferences is the single source of truth (Settings only writes it); Home observes
+    // its own key — no static event bus a writer could forget to fire. The counter only means
+    // "the key changed"; StateFlow conflation is exactly right here: rapid toggles collapse
+    // into one recompute, which reads the latest stored value anyway.
+    private val outdatedOrderChanges = MutableStateFlow(0)
+
+    private val outdatedOrderChangeListener =
+        SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+            if (key == MyApplication.getMyString(
+                    R.string.function_outdated_target_order_by_package_name_first_key
+                )
+            ) {
+                outdatedOrderChanges.update { it + 1 }
+            }
+        }
+
     init {
-        // The legacy HomeFragment collected this "broadcast" on its view lifecycle, which stayed
-        // alive under the Fragment show/hide navigation. Navigation 3 composes only the visible
-        // tab, so a composable-scoped collector is cancelled on the Settings tab and the
-        // no-replay SharedFlow drops the event. Collect from the ViewModel instead: it stays
-        // alive across tab switches (entry-scoped ViewModelStore), so the list is already
-        // reordered when the user returns to the Home tab.
+        MyApplication.sharedPreferences
+            .registerOnSharedPreferenceChangeListener(outdatedOrderChangeListener)
+
+        // Live update: a toggle while data is displayed re-syncs that entry at once. Before the
+        // first load lands there is nothing to patch, and the load itself reads the current
+        // preference anyway.
         viewModelScope.launch {
-            SettingsViewModel.outdatedOrderChangedSharedFlow.collect {
-                payloadOutdatedTargetSdkVersionApk()
+            outdatedOrderChanges.collect {
+                if (modelsStateFlow.value is State.Done) {
+                    payloadOutdatedTargetSdkVersionApk()
+                }
             }
         }
     }
+
+    override fun onCleared() {
+        MyApplication.sharedPreferences
+            .unregisterOnSharedPreferenceChangeListener(outdatedOrderChangeListener)
+        super.onCleared()
+    }
+    // endregion [Outdated order switch]
 
     // region [Lld]
     private suspend fun tryDetectOnline(): List<MyModel> {

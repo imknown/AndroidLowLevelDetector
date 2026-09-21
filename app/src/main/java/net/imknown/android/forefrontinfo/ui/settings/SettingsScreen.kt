@@ -127,7 +127,7 @@ fun SettingsScreen(viewModel: SettingsViewModel, modifier: Modifier = Modifier) 
         onOutdatedOrderChange = { value ->
             outdatedOrderFirst = value
             MyApplication.sharedPreferences.edit { putBoolean(outdatedOrderKey, value) }
-            viewModel.emitOutdatedOrderChangedSharedFlow() // Home reorders the matching entry immediately
+            // no broadcast needed: Home observes this preference key itself and reorders
         },
         onVersionClick = {
             viewModel.getVersionClickedMessage()?.let { context.toast(it) } // the 7-tap easter-egg logic lives in the VM, reused as-is
