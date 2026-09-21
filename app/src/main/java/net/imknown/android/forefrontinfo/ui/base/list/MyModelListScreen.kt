@@ -109,10 +109,16 @@ internal fun MyModelListContent(
             ) { model ->
                 MyModelCard(
                     model,
-                    // Legacy MyItemDecoration left/right = spaceH
-                    modifier = Modifier.padding(
-                        horizontal = dimensionResource(R.dimen.item_divider_space_horizontal)
-                    ),
+                    modifier = Modifier
+                        // LazyColumn counterpart of the legacy RecyclerView item animations
+                        // (DiffUtil + DefaultItemAnimator): items below glide when something
+                        // above moves, appears or changes height. The item's own height
+                        // change is animated separately by animateContentSize in MyModelCard.
+                        .animateItem()
+                        // Legacy MyItemDecoration left/right = spaceH
+                        .padding(
+                            horizontal = dimensionResource(R.dimen.item_divider_space_horizontal)
+                        ),
                 )
             }
         }
