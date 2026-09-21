@@ -41,7 +41,7 @@ Conventions that deliberately diverge from the mainstream template are called ou
 ## Git and CI
 
 - PRs target `develop` (the default branch). Commit messages follow Conventional Commits with **lowercase type + scope**: `fix(home): ...`.
-- End every commit message with a trailer naming the agent, the model, and the reasoning effort level (`off` / `low` / `medium` / `high` / `xhigh` / `max`, ...) that produced it, e.g. `Generated with ZCode (GLM-5.3, reasoning: high)`. Use `unknown` for any part you cannot determine — never guess.
+- End every commit message with a trailer naming the agent, the model, and the reasoning effort level (`off` / `low` / `medium` / `high` / `xhigh` / `max`, ...) that produced it, e.g. `Generated with ZCode (GLM-5.3, reasoning: high)`. Never guess a value; when the agent, model, or effort cannot be determined, ask the user what to record rather than silently writing `unknown`.
 - CI builds `assembleFossDebug` only. `master` carries `lld.json` data updates — don't open PRs against it.
 
 ## Never commit
