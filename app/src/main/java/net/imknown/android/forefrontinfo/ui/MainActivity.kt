@@ -8,7 +8,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import net.imknown.android.forefrontinfo.base.AppThemeMode
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid10
 import net.imknown.android.forefrontinfo.ui.theme.AppTheme
@@ -46,12 +45,10 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    // Single source of truth for "is the app dark", shared by edge-to-edge and AppTheme's system-bar SideEffect; aligned with themeMode
-    private fun isAppDark(resources: Resources): Boolean = when (MyApplication.themeMode.value) {
-        AppThemeMode.AlwaysLight -> false
-        AppThemeMode.AlwaysDark -> true
-        AppThemeMode.FollowSystem -> (
-                resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-                ) == Configuration.UI_MODE_NIGHT_YES
-    }
+    // Single source of truth for "is the app dark", shared by edge-to-edge and AppTheme's system-bar SideEffect;
+    // the three-way mapping lives on AppThemeMode.isDark so every caller stays aligned
+    private fun isAppDark(resources: Resources): Boolean = MyApplication.themeMode.value.isDark(
+        (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK)
+                == Configuration.UI_MODE_NIGHT_YES
+    )
 }

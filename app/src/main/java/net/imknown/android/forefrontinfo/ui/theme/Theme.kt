@@ -27,7 +27,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import net.imknown.android.forefrontinfo.base.AppThemeMode
 import net.imknown.android.forefrontinfo.base.MyApplication
 
 private val lightScheme = lightColorScheme(
@@ -278,13 +277,9 @@ fun AppTheme(
 ) {
     // Source 1: theme mode (single source of truth, non-null enum) — recomposes on Settings writes, no Activity recreate
     val themeMode by MyApplication.themeMode.collectAsStateWithLifecycle()
-    // Source 2: system dark — isSystemInDarkTheme() reads LocalConfiguration and recomposes automatically when the system toggles
-    // Three-way mapping: always light=false, always dark=true, follow system delegates to the system
-    val darkTheme = when (themeMode) {
-        AppThemeMode.AlwaysLight -> false
-        AppThemeMode.AlwaysDark -> true
-        AppThemeMode.FollowSystem -> isSystemInDarkTheme()
-    }
+    // Source 2: system dark — isSystemInDarkTheme() reads LocalConfiguration and recomposes automatically when the system toggles.
+    // The three-way mapping lives on AppThemeMode.isDark (shared with MainActivity), so the two can never drift apart
+    val darkTheme = themeMode.isDark(isSystemInDarkTheme())
 
     // System-bar icon appearance is not drawn by Compose: a SideEffect syncs the computed darkTheme to the window after each successful recomposition
     val activity = LocalActivity.current // CompositionLocal can only be read during composition, so read it outside SideEffect
