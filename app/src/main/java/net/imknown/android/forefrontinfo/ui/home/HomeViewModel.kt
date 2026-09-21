@@ -4,10 +4,12 @@ import androidx.annotation.MainThread
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.R
@@ -23,6 +25,7 @@ import net.imknown.android.forefrontinfo.ui.common.State
 import net.imknown.android.forefrontinfo.ui.common.toObjectOrThrow
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.home.repository.HomeRepository
+import net.imknown.android.forefrontinfo.ui.settings.SettingsViewModel
 
 private data class LldAndError(val lld: Lld?, val message: String?)
 
@@ -53,6 +56,20 @@ class HomeViewModel(
             tryDetectOnline()
         } else {
             tryDetectOffline(null)
+        }
+    }
+
+    init {
+        // The legacy HomeFragment collected this "broadcast" on its view lifecycle, which stayed
+        // alive under the Fragment show/hide navigation. Navigation 3 composes only the visible
+        // tab, so a composable-scoped collector is cancelled on the Settings tab and the
+        // no-replay SharedFlow drops the event. Collect from the ViewModel instead: it stays
+        // alive across tab switches (entry-scoped ViewModelStore), so the list is already
+        // reordered when the user returns to the Home tab.
+        viewModelScope.launch {
+            SettingsViewModel.outdatedOrderChangedSharedFlow.collect {
+                payloadOutdatedTargetSdkVersionApk()
+            }
         }
     }
 
