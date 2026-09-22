@@ -1,7 +1,8 @@
 # View → Jetpack Compose 迁移计划
 
 > 分支 `jetpack-compose-new` · 基线 Kotlin 2.4.20 / Compose BOM 2026.09.00 / AGP 9.4.0
-> 调研日期 2026-09-16，所有 API 结论均核对过 developer.android.com 当日最新文档与 androidx 官方仓库>
+> 调研日期 2026-09-16，所有 API 结论均核对过 developer.android.com 当日最新文档与 androidx 官方仓库
+>
 > **状态（2026-09-22）**：第 0~7 步**已全部落地**，View 层清空（无 Fragment / layout XML / AppCompat / androidx.preference）。本目录（含本页决策表与各章步骤正文）是**迁移当时的调查与计划**，按原样保留、不回写；与终态的偏离写在每章章首的「章首更正」块，本页则在决策表后附一份汇总。
 
 把本项目（单 Activity + 4 Fragment + RecyclerView/Preference 的 View 界面层）**整体**迁到 Jetpack Compose 的渐进式计划。**迁移是载体，学会 Compose 是目的**——整套文档按教材体例编写。设计目标有四：
