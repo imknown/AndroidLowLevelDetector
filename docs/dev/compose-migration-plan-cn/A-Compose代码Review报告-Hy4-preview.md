@@ -24,7 +24,7 @@
 | F2 | 漏改（继承自旧代码） | P0 | `BaseListViewModel.kt:55-66` | 加载抛异常时 `isLoading` 永久停在 `true`，下拉刷新转圈再也停不下来 |
 | F3 | 不合理 / 更好的改法 | P1 | `SettingsScreen.kt:69-130` | Composable 里直接读写 `SharedPreferences` 并调 `MyApplication.setMyTheme`，绕过 ViewModel |
 | F4 | 改多 | P1 | `Theme.kt:108-270` | 4 套对比度配色 + `ColorFamily`/`unspecified_scheme` 全部无人使用，且在 `ThemeKt` 静态初始化里被一并构造 |
-| F5 | 改错（a11y） | P1 | `MyModelCard.kt:42-56`（`cb4104aa` 引入） | `Card(onClick = {})` 空点击：TalkBack 报"可双击激活"却无反应 |
+| F5 | 改错（a11y） | P1 | `MyModelCard.kt:42-56`（`cb4104aa` 引入） | `Card(onClick = {})` 空点击：TalkBack 报"可双击激活"却无反应 ——**2026-09-22 裁定：保留水波纹，问题记为已知接受项，见 F5 处置** |
 | F6 | 不合理 | P2 | `AppRoot.kt:111-116` | `onBack = { activity?.finish() }` 与"每标签一条返回栈"自相矛盾 |
 | F7 | ~~改多~~ **已撤回** | — | `MyModelExt.kt:8-15` | ~~`toColoredMyModel(..., Boolean)` 重载零调用~~ 2026-09-22 复验：断言不成立，该重载有 6 处调用 |
 | F8 | 改多 | P2 | `ExtendedColors.kt:43-49` | `of()` 不需要 `@Composable`，白白限制调用场景 |
@@ -63,7 +63,7 @@ fun emitScrollBarModeChangedSharedFlow(scrollBarMode: String?) {
 ```
 
 ```kotlin
-// SettingsScreen.kt:117-121
+// SettingsScreen.kt:117-121（复查当时的原文；那行注释已于 09d30573 改为实话）
 onScrollBarSelect = { value ->
     scrollBarValue = value
     MyApplication.sharedPreferences.edit { putString(scrollBarKey, value) }
@@ -262,6 +262,8 @@ Card(
 
   > 另注：`animateItem()` + `animateContentSize()` 同时用是官方推荐组合（前者管位移、后者管自身高度），这部分没问题；`Card(onClick)` 带来的 `minimumInteractiveComponentSize`（48dp）当前也不影响布局（卡片实际高度约 67dp > 48dp）。
 
+> **处置（2026-09-22 负责人定）**：A、B 都不采纳——**保留现在的水波纹**，`Card(onClick = {})` 不动；a11y 语义问题按「已知接受项」就地标记（`MyModelCard.kt:43-48` 的注释已写明本条、影响面与出路）；点击行展开详情（BL-1）**明确暂不做**，所以也就没有「给 `onClick` 一个真动作」的需求，B 方案作为将来真要修 a11y 时的参考保留在上面。
+
 ---
 
 ### F6 · `onBack` 与多返回栈自相矛盾（P2，不合理）
@@ -454,7 +456,7 @@ entryProvider 的冗余可以不改（改动反而会破坏 `remember` 的稳定
 ## 四、建议处理顺序
 
 1. **先修 P0**：F2（`try/finally`，改动 6 行，直接消除"卡死转圈"）、F1（删死链路 + 修正误导注释）。
-2. **再修 P1**：F5（去掉空 `onClick`，提交 `cb4104aa` 刚引入，最好就地回改）、F4（删死代码）、F3（Settings 状态收进 VM，量最大，可单独一个 PR）。
+2. **再修 P1**：F5（去掉空 `onClick`，提交 `cb4104aa` 刚引入，最好就地回改。—— **2026-09-22 已被推翻：保留水波纹，见 F5 处置**）、F4（删死代码）、F3（Settings 状态收进 VM，量最大，可单独一个 PR）。
 3. **随后 P2/P3**：F6、F8、F9、F11 都是十行以内的小改，可以攒一个"收尾 PR"。（F7 已撤回，不在内。）
 4. **文档**：F13 三处订正 + 在 [A·迁移期观察记录](A-迁移期观察记录.md) 里补记 F1/F2 两条"迁移期发现"。
 
