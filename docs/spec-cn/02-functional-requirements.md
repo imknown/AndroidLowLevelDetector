@@ -30,7 +30,7 @@
 
 ### FR-1 特性支持检测(P0)
 
-应用在手机本地就能完成检测:按一份 **Android 系统特性检测目录**(特性族如 Treble/VINTF 支持、A/B 无缝更新、动态分区 / system-as-root、AVB / dm-verity;条目级的正式清单见《[检测条目目录](05-detection-item-catalog.md)》,目前是 **TBD**,等产品负责人整理)逐条评估当前系统。
+应用在手机本地就能完成检测:按一份 **Android 系统特性检测目录**(特性族如 Treble/VINTF 支持、A/B 无缝更新、动态分区 / system-as-root、AVB / dm-verity;条目级的正式清单见《[检测条目目录](05-detection-item-catalog.md)》,已定稿 —— 2026-09-22,Q1)逐条评估当前系统。
 
 **验收标准**
 
@@ -40,7 +40,7 @@
 
 ### FR-2 系统参数展示(P1)
 
-应用把常见的**系统参数**作为辅助信息展示(候选的参数族:构建信息,如品牌/型号/Android 版本/安全补丁级别/指纹;SoC/CPU/ABI;内存;屏幕;电池;系统属性 —— 条目级清单 TBD,见《[检测条目目录](05-detection-item-catalog.md)》)。
+应用把常见的**系统参数**作为辅助信息展示(候选的参数族:构建信息,如品牌/型号/Android 版本/安全补丁级别/指纹;SoC/CPU/ABI;内存;屏幕;电池;系统属性 —— 条目级清单见《[检测条目目录](05-detection-item-catalog.md)》,已定稿)。
 
 **验收标准**
 

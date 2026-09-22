@@ -5,20 +5,20 @@
 | | |
 |---|---|
 | **文档** | 条目级的正式检测清单 |
-| **状态** | **TBD —— 已预填。** 带顺序的候选条目,照着负责人评审过的 `HomeViewModel.detect()` / `OthersViewModel.collectModels()` / `PropViewModel.collectModels()` 调用顺序抄录(2026-09-05)。id 和用户可见的措辞仍待整理。 |
-| **日期** | 2026-09-05 |
+| **状态** | **已定稿(2026-09-22;Q1 解决)。** 带顺序的正式条目清单,照着负责人评审过的 `HomeViewModel.detect()` / `OthersViewModel.collectModels()` / `PropViewModel.collectModels()` 调用顺序抄录(2026-09-05)。检测项本身没有问题、逻辑稳定,**Compose 改版不会动检测项相关逻辑**。 |
+| **日期** | 2026-09-22 |
 
 ## 范围说明(干系人澄清,2026-09-06)
 
 三态判定(FR-3)和判定圆点(FR-15)只适用于 **Home** 条目;**Others 和 Prop 是纯展示** —— 没有分级判定的信息行。
 
-## 有序候选条目
+## 有序条目(正式清单)
 
 ### Home(23 项)
 
 顺序照着评审过的 `HomeViewModel.detect()` 抄;没经负责人评审不得重排。第 1 项是排在最前面的在线 / 离线模式行。
 
-| # | 候选条目 | 来源调用 / 备注 |
+| # | 条目 | 来源调用 / 备注 |
 |---|---|---|
 | 1 | 检测模式(在线 / 离线) | `detectMode`;反映设置开关和数据源(FR-16) |
 | 2 | Android 版本 | `detectAndroid` |
@@ -48,7 +48,7 @@
 
 顺序照着评审过的 `OthersViewModel.collectModels()` 抄;受 API 级别限制的条目标在备注里。
 
-| # | 候选条目 | 来源调用 / 备注 |
+| # | 条目 | 来源调用 / 备注 |
 |---|---|---|
 | 1 | 品牌 | `getBrand` |
 | 2 | 制造商 | `getManufacturer` |
@@ -92,7 +92,7 @@
 
 顺序照着评审过的 `PropViewModel.collectModels()` 抄。
 
-| # | 候选条目 | 来源调用 / 备注 |
+| # | 条目 | 来源调用 / 备注 |
 |---|---|---|
 | 1 | 系统属性(`getprop`) | `getSystemProp` |
 | 2 | Settings.System 表 | `getSettings(Settings.System)` |
@@ -100,7 +100,7 @@
 | 4 | Settings.Global 表 | `getSettings(Settings.Global)` |
 | 5 | build.prop | `getBuildProp` |
 
-## 条目模板(整理时使用)
+## 条目模板(新增 / 调整条目时使用)
 
 | 字段 | 含义 |
 |---|---|
@@ -111,4 +111,4 @@
 | **techniques** | 允许的检测层级(FR-9:公开 API / 反射 / shell / root-Shizuku) |
 | **三态语义** | 什么算支持 / 不支持 / 未知,以及对应的圆点颜色 —— 按本条目自身语义规定(见 FR-3、FR-15、NFR-7;Q9 已解决) |
 
-整理好的条目和检测引擎注册表**一一对应** —— 见《[04 — 架构与决策](04-architecture-and-decisions.md)》的检测引擎一节。
+条目和检测引擎注册表**一一对应** —— 见《[04 — 架构与决策](04-architecture-and-decisions.md)》的检测引擎一节。
