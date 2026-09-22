@@ -117,7 +117,8 @@ fun SettingsScreen(viewModel: SettingsViewModel, modifier: Modifier = Modifier) 
         onScrollBarSelect = { value ->
             scrollBarValue = value
             MyApplication.sharedPreferences.edit { putString(scrollBarKey, value) }
-            viewModel.emitScrollBarModeChangedSharedFlow(value) // list pages pick it up immediately
+            // inert for now: nothing subscribes until Material3 ships a scrollbar — the preference is persisted either way
+            viewModel.emitScrollBarModeChangedSharedFlow(value)
         },
         onAllowNetworkChange = { value ->
             allowNetwork = value
