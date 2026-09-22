@@ -55,7 +55,7 @@ Rules for new code — they encode settled decisions; don't make existing debt w
 - The global `myAndroid` (`AndroidVersionExt`) has exactly two writers: `initMyAndroid()` at startup (`MyApplication.onCreate`, from the runtime `Build.VERSION`) and the known-values override in `HomeRepository.detectAndroid()`. Never assign to it anywhere else — the `isAtLeast…()` helpers read it from everywhere.
 - minSdk is 24: gate newer APIs with the `isAtLeastAndroidX()` helpers or `@RequiresApi`.
 - Blocking work (shell, system properties, files, network) runs on `Dispatchers.IO`, not `Dispatchers.Default`.
-- `ShellDefault` is dead code — don't enable it. The shell implementation is `ShellLibSu` (libsu).
+- `ShellDefault` has no callers on purpose: it is the kept-in-reserve native shell implementation that does not depend on libsu (the live one is `ShellLibSu`). Don't delete it as dead code; if it is ever enabled, fix its read-after-`waitFor()` pipe deadlock first (架构体检 [AR-18.1](../architecture-review-cn/04-反模式与隐患.md#AR-18)).
 
 ## Localization
 
