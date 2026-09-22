@@ -86,7 +86,7 @@
 
 项目表面上分了四层(Fragment → ViewModel → Repository → DataSource),但**层和层之间传的东西类型不对**:从 DataSource 一路到 RecyclerView,传的都是 `MyModel`——一个已经拼好翻译文案、带好主题色资源 ID 的**界面模型**。于是:
 
-1. 仓库(本该只管取数和判断)必须拿着 Context 才能干活,`MyApplication.getMyString` 全项目被调了 **100 次**(AR-01、AR-04)。
+1. 仓库(本该只管取数和判断)必须拿着 Context 才能干活,`MyApplication.getMyString` 全项目被调了 **91 次**(只数限定调用;AR-01、AR-04)。
 2. 因为没有可观察的领域数据,跨页面同步只能靠 ViewModel 伴生对象里的静态 SharedFlow 当全局广播站(AR-02)。
 3. 因为没有注入的渠道,全局可变单例成了默认选项:`myAndroid`、`PropertyManager.instance`、`ShellManager.instance`、`LldManager`(AR-03、AR-04)。
 
@@ -162,7 +162,7 @@
 | R8 | 已裁定:拉取主机按时区选、URL 写死构建时的分支——已写进 FR-16,过期的风险进了规格风险表,不用改代码。 |
 | R9 | **已修复**(2026-09-12,`ed8c161f`+`30e00f08`):商店页 URI 改编译期变体资源覆盖(foss → GitHub,firebase → Play);时区分支按负责人新需求删除;条目已删。 |
 | R15 | Q10 已用此证据关闭(2026-09-12):「优先包名排序」开关只重排 Home 的过期 targetSdk 应用列表(`HomeRepository.kt:1128-1144`)。 |
-| D1~D5 | 都是原英文规格文档自己的毛病(编号错乱、死链、✅ 语义、目录计数不符)。英文 spec 已删除、中文重排版([docs/spec-cn](../../spec-cn/README.md))已修好编号和死链;目录计数不符(Home 23 个调用 → 实际 25 行:安全补丁和 Treble 兼容各产 2 行;Others 是 36 固定 + API 条件项 + N 个分区指纹动态行;Prop 5 个检测器各产动态行)由注册表落地时的目录核对一并解决。 |
+| D1~D5 | 都是原英文规格文档自己的毛病(编号错乱、死链、✅ 语义、目录计数不符)。英文 spec 已删除、中文重排版([docs/spec-cn](../../spec-cn/README.md))已修好编号和死链;目录计数不符(Home 23 个调用 → 实际 25 行:安全补丁和 Treble 兼容各产 2 行;Others 是 31 固定 + 6 个 API 条件项（`isAtLeastAndroid12()` 五连 + `isAtLeastAndroid10()` 一档）+ N 个分区指纹动态行;Prop 5 个检测器各产动态行)由注册表落地时的目录核对一并解决。 |
 
 **SSOT/UDF 报告(S/U/O 编号)到 AR 的映射**:
 
