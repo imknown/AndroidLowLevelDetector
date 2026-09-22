@@ -11,7 +11,7 @@
 
 ### 问题核心代码
 
-首页条目的**顺序**这份「数据知识」硬编码在 ViewModel 里（`HomeViewModel.kt:129`）：
+首页条目的**顺序**这份「数据知识」硬编码在 ViewModel 里（`HomeViewModel.kt:199-229`）：
 
 ```kotlin
 private suspend fun detect(lld: Lld?, errorMessage: List<String?>, modeResId: Int): List<MyModel> {
@@ -29,7 +29,7 @@ private suspend fun detect(lld: Lld?, errorMessage: List<String?>, modeResId: In
 }
 ```
 
-同时数据更新走**下标寻址**：`BaseListViewModel.updateModelDetail(targetIndex: Int, …)`（`BaseListViewModel.kt:54`）是公开 API，调用方要先自己算下标（`HomeViewModel.kt:188`）：
+同时数据更新走**下标寻址**：`BaseListViewModel.updateModelDetail(targetIndex: Int, …)`（`BaseListViewModel.kt:74`）是公开 API，调用方要先自己算下标（`HomeViewModel.kt:262-270`）：
 
 ```kotlin
 val targetIndex = list.indexOfFirst { it.type == OutdatedTargetSdkApk }
