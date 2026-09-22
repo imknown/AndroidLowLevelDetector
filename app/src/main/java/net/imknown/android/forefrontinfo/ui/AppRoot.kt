@@ -140,7 +140,8 @@ private fun AppRootShell(
 ) {
     Scaffold( // page scaffold: top bar / bottom bar / content three sections
         topBar = {
-            // mirrors the default title bar after the legacy setSupportActionBar(toolbar) (Activity label)
+            // the app name, as the legacy default title bar showed it; the debug variant renames the
+            // app through its own source set, so no build-variant branching is needed here
             // legacy AppBarLayout: android:background="?attr/colorSurfaceContainer" — same slot
             TopAppBar(
                 title = { Text(stringResource(R.string.app_name)) },
