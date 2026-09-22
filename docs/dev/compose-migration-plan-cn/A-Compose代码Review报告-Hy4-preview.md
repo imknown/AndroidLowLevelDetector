@@ -72,12 +72,16 @@ onScrollBarSelect = { value ->
 ```
 
 > 精确结论（已核对 `kotlinx-coroutines-core` 1.8.0 `SharedFlowImpl.tryEmitLocked`）：`nCollectors == 0` 且 `replay == 0` 时走 `tryEmitNoCollectorsLocked` 直接 `return true`——**事件被丢弃、不会挂起、也不泄漏协程**。所以它不是内存泄漏，但确实是一段"看起来在干活、实际什么也没做"的死链路，且每次切换都会白起一个协程。
+>
+> 2026-09-22 补：本项目实际解析到的是 `kotlinx-coroutines` **1.11.0**（`gradle/toml/kotlin.toml:9`），上面引用的 1.8.0 是复查当时翻的版本；"零订阅者即丢弃"的结论由本条现象自证（切换开关后界面毫无反应），但若要再引源码，请按 1.11.0 复核。
 
 **修改方案**（三选一，推荐 A）：
 
 - **A（最小改动，与 outdated-order 对齐）**：滚动条落地前先删掉 `scrollBarModeChangedSharedFlow` 与 `emitScrollBarModeChangedSharedFlow`，`onScrollBarSelect` 只写 SP，并把那条误导注释改成"滚动条实现推迟，此开关暂不生效"。将来落地滚动条时，让列表页自己观察该偏好键（照抄 `HomeViewModel` 的 `outdatedOrderChangeListener`）。
 - **B（保留事件总线）**：至少要有人订阅，且改成 `MutableSharedFlow(replay = 1)`，否则切完再进列表页照样收不到。
 - **C（顺手把坑填了）**：当前 BOM 已是 `2026.09.00`，建议先核一下 material3 是否已经转正 `Modifier.nonInteractiveScrollbar`；若已转正，直接用它把滚动条补上，F1 一并消失。
+
+> **处置（2026-09-22 负责人定）**：A/B/C 都不采纳——保持代码现状，等 material3 官方滚动条转正后再接，不引 alpha、不自绘（背景与裁定见 [R10](../architecture-review-cn/05-已裁定事项.md#R10)）。A 里那条注释订正已单独落地（`SettingsScreen.kt:117-121` 现在说实话），死链路与设置项照原样保留。
 
 ---
 
