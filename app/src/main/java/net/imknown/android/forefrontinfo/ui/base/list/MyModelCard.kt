@@ -42,6 +42,10 @@ fun MyModelCard(
     Card(
         // Legacy MaterialCardView was clickable + focusable with no click listener = ripple-only
         // feedback; the onClick overload is the Compose way to get that ripple back.
+        // Known accepted caveat (review F5, owner call 2026-09-22): the empty onClick also makes
+        // TalkBack announce "double-tap to activate" while nothing happens. Ripple is kept on
+        // purpose; row expansion stays out of scope, and clickable=false / clearAndSetSemantics {}
+        // is the way to drop the semantics later if the trade-off is revisited.
         onClick = {},
         modifier = modifier
             .fillMaxWidth()
