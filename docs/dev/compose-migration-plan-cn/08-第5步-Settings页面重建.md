@@ -1,5 +1,11 @@
 # 08 第 5 步 · Settings 页面重建
 
+> **章首更正（2026-09-22 复验）** —— 设置页已按本章重建，但快照里三处与现状不符：
+>
+> - `(versionState as? State.Done)`（8.1 / 8.3）：`State` 包装已删，`SettingsViewModel.version` 就是 `StateFlow<Version?>`（`SettingsViewModel.kt:47-50`）。
+> - 开关回调里的 `viewModel.emitOutdatedOrderChangedSharedFlow()`：该流与方法均已删除，写 prefs 即可，Home 自行观察（`SettingsScreen.kt:126-129`）。
+> - 更正④/⑤ 之后页面又演化过一轮：分隔线取色与粗细（`SettingsScreen.kt:161-162`）、`SettingsGroup` 圆角分组卡（`:283-298`）以代码为准；主题终态三档（"跟随省电模式"随去 AppCompat 化退役）。
+
 > **⚠️ 2026-09-19 实现期更正（用户提供旧版截图比对）**：①8.2 的"summary = 当前选中项标签"改为**静态文案**（与旧 XML 的 `app:summary` 逐字一致，如"点击以显示主题选择器"）——当前选中项只在对话框里体现，随之 `getOrNull` 标签查找与 fast scroll "2" 兜底整段删除；②**补 `HorizontalDivider`**：两个 `PreferenceCategory` 之间的分隔线是旧观感的一部分，8.3 的 `SettingsCategoryHeader` 前各加一条；③滚动条接线按第 3 步决策推迟（正文 8.1 末段作废）。Preview：`SettingsScreen` 状态提升拆出纯数据 `SettingsContent` 并配双主题 `@Preview`。
 >
 > **二轮更正（反编译 androidx.preference 1.2.1 取基准）**：④分隔线色 = 库常量 **`#1f000000`（12% 黑）1dp**（`preference_list_divider_material`，不随主题）——Compose 默认 `outlineVariant` 深色下偏亮，改用常量色；⑤`SettingsContent` 背景统一为 **`surfaceContainer`**（用户拍板：旧 preference 窗口底色偏黑与旧列表页不一致，属无意差异，四页统一）；⑥列表上下内边距 = **0**（`PreferenceFragmentList.Material` 覆盖为 0dp），首分类间距全靠其自带 16dp margin + 8dp padding（=`SettingsCategoryHeader` top 24dp），去掉 contentPadding top 的 12dp；⑦分类标题色**保持 primary**——app 未覆盖 `preferenceCategoryTitleTextColor`，库在 AppCompat 主题下解析为 colorAccent（M3 = colorPrimary），两边同色，观感差异来自背景；字重 Body2 = titleSmall 等价。⑧外链行 title 资源应为 `*_title` 而非 `*_key`（原计划 8.3 表格把 key 当 title 用，真机截图抓出）。

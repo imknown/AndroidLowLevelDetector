@@ -1,5 +1,12 @@
 # 09 第 6 步 · Navigation 3 与 MainActivity 整体切换
 
+> **章首更正（2026-09-22 复验）** —— Navigation 3 骨架已按本章落地，以下四点是本章之后发生的：
+>
+> - `MainActivity : AppCompatActivity` 已过期：现为 `ComponentActivity`（`733c6941`），`appcompat` 与 `material`(MDC) 依赖删除（`f66562d4`），窗口主题改为平台父级（`e51260e6`），主题由 `themeMode: StateFlow<AppThemeMode>` 驱动（`26b9094f`）。
+> - `LocalContext.current as? Activity` 已换成 `LocalActivity.current`（`AppRoot.kt:78`）。
+> - 计划外新增 `AppRootShell` 拆分，让外壳可预览（`26ee0f9d`）。
+> - 验证清单的「四档主题模式」为三档；切标签的转场在 `a5d3a28a` 显式改成两端 `None`（决策点 3 就地更新）。
+
 > **⚠️ 2026-09-19 实现期更正**：①**4 个 VM 的 `savedStateHandle` 参数整体删除**（4 个 VM 均未实际使用该参数，9.3 备注允许；连带消除 Nav3 条目作用域下 `createSavedStateHandle()` 缺 extras 的风险点），工厂改为"仓库在 initializer 内构造"；②**`main_activity.xml`/`bottom_nav_menu.xml` 推迟到第 7 步删除**（对计划删除清单的有意偏差：`BaseListFragment` 仍引用 `MainActivity.binding`，现在删 XML 会编译失败；MainActivity 重写后仍保留 `internal val binding` 惰性属性，未访问不会 inflate）；③`TopAppBar` 在 m3 1.4.0 仍需 `@OptIn(ExperimentalMaterial3Api)`；④`entryDecorators` 需显式声明为 `List<NavEntryDecorator<NavKey>>`（Kotlin 泛型推断失败）；⑤完整 M3E 逐条目圆角卡布局已实验并按用户决定回滚，等 material3 1.5.0 转正（同决策 6/8 批次）。
 
 > 所属迁移计划：[README](README.md) · 上一章：[08 第 5 步 Settings 页面重建](08-第5步-Settings页面重建.md) · 下一章：[10 第 7 步 清理收尾](10-第7步-清理收尾.md)
