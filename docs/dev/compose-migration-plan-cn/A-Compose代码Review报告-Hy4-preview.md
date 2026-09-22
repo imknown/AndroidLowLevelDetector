@@ -26,7 +26,7 @@
 | F4 | 改多 | P1 | `Theme.kt:108-270` | 4 套对比度配色 + `ColorFamily`/`unspecified_scheme` 全部无人使用，且在 `ThemeKt` 静态初始化里被一并构造 |
 | F5 | 改错（a11y） | P1 | `MyModelCard.kt:42-56`（`cb4104aa` 引入） | `Card(onClick = {})` 空点击：TalkBack 报"可双击激活"却无反应 |
 | F6 | 不合理 | P2 | `AppRoot.kt:111-116` | `onBack = { activity?.finish() }` 与"每标签一条返回栈"自相矛盾 |
-| F7 | 改多 | P2 | `MyModelExt.kt:8-15` | `toColoredMyModel(..., Boolean)` 重载零调用 |
+| F7 | ~~改多~~ **已撤回** | — | `MyModelExt.kt:8-15` | ~~`toColoredMyModel(..., Boolean)` 重载零调用~~ 2026-09-22 复验：断言不成立，该重载有 6 处调用 |
 | F8 | 改多 | P2 | `ExtendedColors.kt:43-49` | `of()` 不需要 `@Composable`，白白限制调用场景 |
 | F9 | 隐患 | P2 | `MyModel.kt:24-28` + `MyModelListScreen.kt:106` | `key` 用标题文本，`Raw` 标题一旦重复 LazyColumn 直接抛异常（旧 DiffUtil 不崩） |
 | F10 | 改多 / 契约风险 | P3 | `HomeViewModel.kt:36` 等 | `@Stable` 标在子类上是冗余的，且 `@Stable` 是一份"永不失效"的承诺 |
@@ -293,25 +293,22 @@ onBack = {
 
 ---
 
-### F7 · `toColoredMyModel(..., Boolean)` 重载零调用（P2，改多）
+### F7 · ~~`toColoredMyModel(..., Boolean)` 重载零调用~~ **已撤回（2026-09-22 复验）**
 
-**现象**：`MyModelExt.kt` 里两个同名重载，带 `Boolean` 的那个没有任何调用点（`grep` 只命中定义处）。
+**撤回原因**：本条的事实前提「`grep` 只命中定义处」在复查当天就不成立。`MyModelExt.kt:8-15` 的 Boolean 重载有 **6 处调用点**，全在 `HomeRepository`：
 
-**直接原因**：旧代码用 `R.attr` 颜色句柄时，这个布尔版是"合格/不合格"的快捷写法；迁移到 `StatusColor` 枚举后，所有调用点都改成了显式传 `StatusColor`，布尔版被架空。
+| 调用点 | 传入的布尔实参 |
+|---|---|
+| `HomeRepository.kt:386` | `isAbEnable` |
+| `HomeRepository.kt:486` | `isDynamicPartitionsEnabled` |
+| `HomeRepository.kt:589` | `isDsuEnabled` |
+| `HomeRepository.kt:726` | `isDeveloperOptionsDisabled` |
+| `HomeRepository.kt:740` | `isAdbDebuggingDisabled` |
+| `HomeRepository.kt:751` | `isAdbAuthenticationEnabled` |
 
-**根本原因**：迁移按"最小改动"逐个替换调用点，没有回头清理被替换掉的旧入口。
+其余 16 处调用传的是 `StatusColor`（`color` / `*Color` 变量），走另一个重载。**按本条原方案「直接删除」会让这 6 处编译失败**，故整条撤回。
 
-**问题代码**：
-
-```kotlin
-// MyModelExt.kt:8-15
-fun toColoredMyModel(@StringRes titleRes: Int, detail: String?, condition: Boolean): MyModel {
-    val color = if (condition) StatusColor.NO_PROBLEM else StatusColor.CRITICAL
-    return MyModel(title = MyModelTitle.Res(titleRes), detail = detail.toString(), color = color)
-}
-```
-
-**修改方案**：直接删除。若将来确实需要"合格/不合格"语义，补一个显式命名的 `toPassFailMyModel(...)`，不要让 `Boolean` 与 `StatusColor` 两个重载并存制造歧义。
+**仍然成立的判断**：两个同名重载靠 `Boolean` / `StatusColor` 区分，读调用点时看不出语义。若要收敛，正确顺序是先把上面 6 处改成显式 `StatusColor`（或改名 `toPassFailMyModel`），再删重载——不是当死代码删。
 
 ---
 
@@ -454,7 +451,7 @@ entryProvider 的冗余可以不改（改动反而会破坏 `remember` 的稳定
 
 1. **先修 P0**：F2（`try/finally`，改动 6 行，直接消除"卡死转圈"）、F1（删死链路 + 修正误导注释）。
 2. **再修 P1**：F5（去掉空 `onClick`，提交 `cb4104aa` 刚引入，最好就地回改）、F4（删死代码）、F3（Settings 状态收进 VM，量最大，可单独一个 PR）。
-3. **随后 P2/P3**：F6、F7、F8、F9、F11 都是十行以内的小改，可以攒一个"收尾 PR"。
+3. **随后 P2/P3**：F6、F8、F9、F11 都是十行以内的小改，可以攒一个"收尾 PR"。（F7 已撤回，不在内。）
 4. **文档**：F13 三处订正 + 在 [A·迁移期观察记录](A-迁移期观察记录.md) 里补记 F1/F2 两条"迁移期发现"。
 
 > 建议每个修复都跑一次 `./gradlew assembleFossDebug` + 过一遍 [10 章](10-第7步-清理收尾.md) 的回归清单 10.3（尤其是第 3 条滚动条、第 5 条主题、第 6 条导航）。
