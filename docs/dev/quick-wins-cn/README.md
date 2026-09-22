@@ -23,11 +23,10 @@
 | [QW-3](01-单文件快赢.md#qw-3) | 每次联网新建 HttpClient;不检查 HTTP 状态码 | AR-12② 每次请求新建 HttpClient / AR-18.3 Ktor 不校验 HTTP 状态码 | 1 | ~18 行 | P2 |
 | [QW-5](01-单文件快赢.md#qw-5) | 异常摘要只留一层 cause、无因时输出 "Caused by: null." | AR-18.2 fullMessage 错误信息丢栈 | 1 + 1 测试 | ~10 行 | P2 |
 | [QW-6](02-跨文件快赢.md#qw-6) | 阻塞调用跑在 CPU 线程池 | AR-12① 阻塞调用跑在 CPU 线程池 | 4 | 8 处一词 | P2 |
-| [QW-7](02-跨文件快赢.md#qw-7) | 基类强转 MainActivity 做底部避让,两处逐字重复 | AR-06 基类反向依赖具体 Activity,insets 逻辑两处重复 | 3 | ~25 行(净删) | P1 |
 | [QW-8a](02-跨文件快赢.md#qw-8a) | 用文案的资源 ID 判断业务分支 | AR-11 资源 ID 当「逻辑值」和「数据」用 | 2 | ~15 行 | P2 |
 | [QW-8b](02-跨文件快赢.md#qw-8b) | 数据类 Version 携带文案 ID | AR-11 资源 ID 当「逻辑值」和「数据」用 | 2 | ~10 行 | P2 |
 
-> 编号有跳号:QW-4(暗色主题用了已弃用的常量)已作废——`26b9094f` 之后 `setMyTheme` 改为映射到 `AppThemeMode` 枚举,不再引用 `AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY`,已无代码可改。编号保留原样,记录见 git 历史。
+> 编号有跳号:QW-4(暗色主题用了已弃用的常量)已作废——`26b9094f` 之后 `setMyTheme` 改为映射到 `AppThemeMode` 枚举,不再引用 `AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY`,已无代码可改;QW-7(基类强转 MainActivity 做底部避让)随 View 层删除而失去对象——`BaseListFragment` / `SettingsFragment` / `main_activity.xml` 已不存在,避让由 `AppRoot.kt:164` 的 `Scaffold` `innerPadding` 一处完成(对应的 AR-06 条目同样已删)。编号保留原样,记录见 git 历史。
 
 次选(QW-9 冻结全局可变单例)与「现在别动」的条目见[第三册](03-次选与暂不动.md)。
 
