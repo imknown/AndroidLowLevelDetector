@@ -250,7 +250,7 @@ class MainActivity : AppCompatActivity() {   // 暂留 AppCompatActivity（原�
 
 1. **返回键**：现状任何标签按返回直接退出；官方 Nav3 迁移指南假设"从非首页标签按返回先回首页"（exit through home）。本方案保持现状（`onBack = { activity?.finish() }`，`activity` 见 9.2 开头）；想跟官方对齐改成 `if (currentTabIndex != 0) currentTabIndex = 0 else activity?.finish()` 即可。
 2. **底栏不再随滚动隐藏**：现状 `hide_bottom_view_on_scroll_behavior` 让底栏滚动时下潜；`Scaffold.bottomBar` 默认常显。要复刻需自写 NestedScrollConnection（约 30 行），收益有限，建议接受常显（这也是 M3 应用的主流形态）。
-3. **标签切换动画**：现状 `drop_scale`（1.025 → 1.0 缩放 100ms）。NavDisplay 默认有自己的转场；要复刻可用每条目元数据定制：
+3. **标签切换动画**：现状 `drop_scale`（1.025 → 1.0 缩放 100ms）。**已定方案：不复刻缩放，切换瞬时完成、不做任何转场。** 标签切换是整栈替换，NavDisplay 视作前进导航，会走它自己的默认转场（fadeIn + fadeOut，各 700ms，该常量在库内为 internal），所以"不要动画"必须在 `AppRoot` 里显式设 `transitionSpec = { EnterTransition.None togetherWith ExitTransition.None }`。设备实测（1x 动画速率、约 0.6s 一帧连续抓帧）：切换是干净的一步，无中间帧、无空白帧。另附实测到的库行为：退出侧只给 `ExitTransition.None` 时旧页面不会淡出，而是保持不透明绘制到转场结束。若要改成按标签复刻缩放，可用每条目元数据定制：
 
 ```kotlin
 entry<PropKey>(
