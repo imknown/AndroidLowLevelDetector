@@ -50,7 +50,7 @@
 | --- | --- | --- |
 | `Card` / `CardDefaults.cardColors(containerColor=)` | 列表卡片（第 1 步） | stable |
 | `Scaffold(topBar, bottomBar) { innerPadding -> }` | 页面骨架 + 自动 insets（第 6 步） | stable |
-| `TopAppBar(title)` | 顶栏 | stable。注意 `TopAppBarScrollBehavior` 在 1.4.0 仍需 `@OptIn(ExperimentalMaterial3Api::class)`（1.5.0-alpha20 起 stable）；本计划不用滚动行为 |
+| `TopAppBar(title)` | 顶栏 | **仍需 `@OptIn(ExperimentalMaterial3Api::class)`**（2026-09-22 实测：摘掉后 `AppRoot.kt` 的 `TopAppBar` 调用点报 `OPT_IN_USAGE_ERROR`，编译失败 —— 本表原记的「stable」不成立）。`TopAppBarScrollBehavior` 同样在 1.4.0 仍需 opt-in（1.5.0-alpha20 起 stable）；本计划不用滚动行为。注：`TopAppBarDefaults.topAppBarColors` 是否单独也触发未分离验证 |
 | `NavigationBar` / `NavigationBarBarItem(selected, onClick, icon, label)` | 底部导航 | stable。1.4.0 起选中标签色由 onSurface 改为 secondary |
 | `ShortNavigationBar` / `ShortNavigationBarItem` | NavigationBar 的 Expressive 版 | stable（1.4.0-alpha18 毕业），本计划选 NavigationBar 保持视觉延续 |
 | `PullToRefreshBox(isRefreshing, onRefresh) { content }` | 下拉刷新（第 3 步） | **stable（1.4.0 起）**；`enabled`/`threshold` 参数仅 1.5.0-alpha15+ |
