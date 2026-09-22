@@ -4,6 +4,9 @@ import android.content.res.Configuration
 import androidx.activity.compose.LocalActivity
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -112,6 +115,13 @@ fun AppRoot() {
             entries = decoratedEntries[currentTabIndex], // render only the entries of the currently selected tab stack
             onBack = { activity?.finish() }, // keep legacy behavior: back from any tab exits directly
             modifier = contentModifier,
+            // Tab switch replaces the whole stack, so NavDisplay treats it as forward navigation and
+            // uses its own default transition — fadeIn + fadeOut, 700ms each (that constant is
+            // internal to the library). The switch is meant to be instant, which therefore has to be
+            // spelled out: both halves None.
+            transitionSpec = {
+                EnterTransition.None togetherWith ExitTransition.None
+            },
         )
     }
 }
