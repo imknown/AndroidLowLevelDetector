@@ -151,7 +151,7 @@
 
 **验收标准**
 
-- AC1(修订,负责人裁定 2026-09-06):正常启动路径(桌面、最近任务、外部应用)都复用已有的那个 `MainActivity` —— `launchMode="singleTop"`,重复发来的 intent 走 `onNewIntent`。遗留问题:特殊的标志组合(`FLAG_ACTIVITY_NEW_TASK | FLAG_ACTIVITY_MULTIPLE_TASK`、`… | FLAG_ACTIVITY_CLEAR_TASK`)还是可能创建新任务 / 新实例并把内存状态清掉;先接受这个隐患 —— 要不要加任务栈方面的防护记在 **BL-8**(可能没必要)。
+- AC1(修订,负责人裁定 2026-09-06):正常启动路径(桌面、最近任务、外部应用)都复用已有的那个 `MainActivity` —— `launchMode="singleTop"`,重复发来的 intent 走 `onNewIntent`。遗留问题:特殊的标志组合(`FLAG_ACTIVITY_NEW_TASK | FLAG_ACTIVITY_MULTIPLE_TASK`、`… | FLAG_ACTIVITY_CLEAR_TASK`)还是可能创建新任务 / 新实例并把内存状态清掉;先接受这个隐患 —— 任务栈方面的防护记在 **BL-8**;2026-09-22 负责人裁定:**推迟到有用户反馈再处理**。
 - AC2:被外部重新拉起后,已有实例的状态完整保留(不重置、不产生重复的返回栈)。
 
 ### FR-12 外壳布局与滚动行为(P0)
