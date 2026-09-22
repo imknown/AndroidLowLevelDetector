@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_debug_name" translatable="false">LLD Debug</string>
+    <!-- Overlay of base/res app_name for the whole debug variant (translatable=false on purpose:
+         the debug build is never localized, and both the launcher label and the top bar read it) -->
+    <string name="app_name" translatable="false">LLD Debug</string>
     <string name="leak_canary_display_activity_label" translatable="false">LLD Leaks</string>
 </resources>
