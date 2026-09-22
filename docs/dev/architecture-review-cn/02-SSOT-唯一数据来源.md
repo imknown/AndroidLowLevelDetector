@@ -16,21 +16,21 @@
 写入（唯一的正路，`PreferenceFragmentCompat` 自动写 SharedPreferences）；然后四层各自直接偷读：
 
 ```kotlin
-// ① 启动时读主题 —— MyApplication.kt:86
+// ① 启动时读主题 —— MyApplication.kt:103
 val themesValue = sharedPreferences.getString(getMyString(R.string.interface_themes_key), null)
 
 // ② 界面基类读滚动条 —— BaseListFragment.kt:43
 val scrollBarMode = MyApplication.sharedPreferences.getString(scrollBarModeKey, null)
 
-// ③ ViewModel 读联网开关 —— HomeViewModel.kt:45
+// ③ ViewModel 读联网开关 —— HomeViewModel.kt:55
 val allowNetwork = MyApplication.sharedPreferences.getBoolean(
     MyApplication.getMyString(R.string.function_allow_network_data_key), false)
 
-// ④ 仓库读排序开关 —— HomeRepository.kt:1129
+// ④ 仓库读排序开关 —— HomeRepository.kt:1102
 val shouldOrderByPackageNameFirst = MyApplication.sharedPreferences.getBoolean(...)
 ```
 
-变化通知不走数据，走 **ViewModel 伴生对象里的静态 SharedFlow**（`SettingsViewModel.kt:38`）——本质是全局事件总线（event bus，一根谁都能喊话的大喇叭）：
+变化通知不走数据，走 **ViewModel 伴生对象里的静态 SharedFlow**（`SettingsViewModel.kt:36-37`）——本质是全局事件总线（event bus，一根谁都能喊话的大喇叭）：
 
 ```kotlin
 companion object {
