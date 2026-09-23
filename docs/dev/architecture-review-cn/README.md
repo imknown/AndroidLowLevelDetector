@@ -159,7 +159,7 @@
 | R6 | 已裁定:内置 json 是普通 asset,「使用」=复制进应用私有目录;规格已修订,不用改代码。 |
 | R8 | 已裁定:拉取主机按时区选、URL 写死构建时的分支——已写进 FR-16,过期的风险进了规格风险表,不用改代码。 |
 | R9 | **已修复**(2026-09-12,`ed8c161f`+`30e00f08`):商店页 URI 改编译期变体资源覆盖(foss → GitHub,firebase → Play);时区分支按负责人新需求删除;条目已删。 |
-| R15 | Q10 已用此证据关闭(2026-09-12):「优先包名排序」开关只重排 Home 的过期 targetSdk 应用列表(`HomeRepository.kt:1128-1144`)。 |
+| R15 | Q10 已用此证据关闭(2026-09-12):「优先包名排序」开关只重排 Home 的过期 targetSdk 应用列表(`HomeRepository.getOutdatedTargetSdkVersionApkModel()`)。 |
 | D1~D5 | 都是原英文规格文档自己的毛病(编号错乱、死链、✅ 语义、目录计数不符)。英文 spec 已删除、中文重排版([docs/spec-cn](../../spec-cn/README.md))已修好编号和死链;目录计数不符(Home 23 个调用 → 实际 25 行:安全补丁和 Treble 兼容各产 2 行;Others 是 31 固定 + 6 个 API 条件项（`isAtLeastAndroid12()` 五连 + `isAtLeastAndroid10()` 一档）+ N 个分区指纹动态行;Prop 5 个检测器各产动态行)**已于 2026-09-22 随 Q1 定稿核对完成**：正式清单按检测器方法计数(65 = 23 + 37 + 5)，屏幕行数的差异写在 [05 的「计数口径」](../../spec-cn/05-检测条目目录.md)一行里；注册表落地时只需继续按该口径维护。 |
 
 **SSOT/UDF 报告(S/U/O 编号)到 AR 的映射**:
@@ -176,7 +176,7 @@
 | U2 / U8 | [AR-08](03-UDF-单向数据流.md#AR-08) | 按下标寻址的状态补丁 |
 | U4 | — | 已修复(早期批次),条目已删 |
 | U5 | [AR-13.10](04-反模式与隐患.md#AR-13) | 版本行点击事件 |
-| U6 | ~~AR-06~~ | insets 避让;**已消解**(Compose 迁移由 `Scaffold` 的 innerPadding 一处包办,`AppRoot.kt:165`),条目已删 |
+| U6 | ~~AR-06~~ | insets 避让;**已消解**(Compose 迁移由 `Scaffold` 的 innerPadding 一处包办,`AppRootShell() 的 innerPadding`),条目已删 |
 | U7 | ~~AR-13.14~~ | version 加载幂等护栏;**已修复**(`c9017cea`),条目已删 |
 | O1 | [AR-13.9](04-反模式与隐患.md#AR-13) | 绑定期解析 / 冻结文案(归 Compose 迁移) |
 | O2 | [AR-04](01-架构.md#AR-04) | `MyApplication.instance` 全局入口 |

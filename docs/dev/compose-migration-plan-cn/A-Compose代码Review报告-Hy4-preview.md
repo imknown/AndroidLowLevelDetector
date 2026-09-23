@@ -20,17 +20,17 @@
 
 | # | 类别 | 严重度 | 位置 | 一句话 |
 | --- | --- | --- | --- | --- |
-| F1 | 改错 / 漏改 | P0 | `SettingsViewModel.kt:36-44`、`SettingsScreen.kt:117-121` | 滚动条事件总线**零订阅者**，`emit` 是静默空转；注释还写着"列表页立即生效" |
-| F2 | 漏改（继承自旧代码） | P0 | `BaseListViewModel.kt:55-66` | 加载抛异常时 `isLoading` 永久停在 `true`，下拉刷新转圈再也停不下来 |
-| F3 | 不合理 / 更好的改法 | P1 | `SettingsScreen.kt:69-130` | Composable 里直接读写 `SharedPreferences` 并调 `MyApplication.setMyTheme`，绕过 ViewModel |
-| F4 | 改多 | P1 | `Theme.kt:108-270` | 4 套对比度配色 + `ColorFamily`/`unspecified_scheme` 全部无人使用，且在 `ThemeKt` 静态初始化里被一并构造 |
-| F5 | 改错（a11y） | P1 | `MyModelCard.kt:42-60`（`cb4104aa` 引入；行号已按 2026-09-22 的代码校准） | `Card(onClick = {})` 空点击：TalkBack 报"可双击激活"却无反应 ——**2026-09-22 裁定：保留水波纹，问题记为已知接受项，见 F5 处置** |
-| F6 | 不合理 | P2 | `AppRoot.kt:111-116` | `onBack = { activity?.finish() }` 与"每标签一条返回栈"自相矛盾 |
-| F7 | ~~改多~~ **已撤回** | — | `MyModelExt.kt:8-15` | ~~`toColoredMyModel(..., Boolean)` 重载零调用~~ 2026-09-22 复验：断言不成立，该重载有 6 处调用 |
-| F8 | 改多 | P2 | `ExtendedColors.kt:43-49` | `of()` 不需要 `@Composable`，白白限制调用场景 |
-| F9 | 隐患 | P2 | `MyModel.kt:24-28` + `MyModelListScreen.kt:106` | `key` 用标题文本，`Raw` 标题一旦重复 LazyColumn 直接抛异常（旧 DiffUtil 不崩） |
-| F10 | 改多 / 契约风险 | P3 | `HomeViewModel.kt:36` 等 | `@Stable` 标在子类上是冗余的，且 `@Stable` 是一份"永不失效"的承诺 |
-| F11 | 隐患 | P3 | `AppRoot.kt:94-115` | 每个标签的 provider 都注册了全部 4 个 entry；`decoratedEntries[currentTabIndex]` 无越界保护 |
+| F1 | 改错 / 漏改 | P0 | `SettingsViewModel.scrollBarModeChangedSharedFlow 与 emitScrollBarModeChangedSharedFlow()`、`SettingsScreen() 的 onScrollBarSelect` | 滚动条事件总线**零订阅者**，`emit` 是静默空转；注释还写着"列表页立即生效" |
+| F2 | 漏改（继承自旧代码） | P0 | `BaseListViewModel.startLoad()` | 加载抛异常时 `isLoading` 永久停在 `true`，下拉刷新转圈再也停不下来 |
+| F3 | 不合理 / 更好的改法 | P1 | `SettingsScreen() 的状态与回调整块` | Composable 里直接读写 `SharedPreferences` 并调 `MyApplication.setMyTheme`，绕过 ViewModel |
+| F4 | 改多 | P1 | `Theme.kt 里四套对比度 colorScheme` | 4 套对比度配色 + `ColorFamily`/`unspecified_scheme` 全部无人使用，且在 `ThemeKt` 静态初始化里被一并构造 |
+| F5 | 改错（a11y） | P1 | `MyModelCard() 的 Card(onClick = {})`（`cb4104aa` 引入；行号已按 2026-09-22 的代码校准） | `Card(onClick = {})` 空点击：TalkBack 报"可双击激活"却无反应 ——**2026-09-22 裁定：保留水波纹，问题记为已知接受项，见 F5 处置** |
+| F6 | 不合理 | P2 | `AppRoot() 调 AppRootShell 的那段` | `onBack = { activity?.finish() }` 与"每标签一条返回栈"自相矛盾 |
+| F7 | ~~改多~~ **已撤回** | — | `toColoredMyModel(condition: Boolean) 重载` | ~~`toColoredMyModel(..., Boolean)` 重载零调用~~ 2026-09-22 复验：断言不成立，该重载有 6 处调用 |
+| F8 | 改多 | P2 | `ExtendedColors.of()` | `of()` 不需要 `@Composable`，白白限制调用场景 |
+| F9 | 隐患 | P2 | `MyModel.key` + `MyModelListContent() 的 items(key = { it.key })` | `key` 用标题文本，`Raw` 标题一旦重复 LazyColumn 直接抛异常（旧 DiffUtil 不崩） |
+| F10 | 改多 / 契约风险 | P3 | `HomeViewModel` 等 | `@Stable` 标在子类上是冗余的，且 `@Stable` 是一份"永不失效"的承诺 |
+| F11 | 隐患 | P3 | `AppRoot() 的 decoratedEntries` | 每个标签的 provider 都注册了全部 4 个 entry；`decoratedEntries[currentTabIndex]` 无越界保护 |
 | F12 | 隐性依赖 | P3 | `ic_*_24dp.xml`（4 个） | 图标 `fillColor` 硬编码 `#FF000000`，正确性完全依赖 `Icon` 的默认 tint |
 | F13 | 文档欠账 | P3 | 本目录 README / 10 章 | 决策 9（暂留 AppCompatActivity）、10.4-2（去 AppCompat 化）**早已做完**，文档未同步 |
 
@@ -46,12 +46,12 @@
 
 **直接原因**：第 3 步把滚动条推迟到 material3 1.5 的官方组件（[A·迁移期观察记录](A-迁移期观察记录.md) / [10 章](10-第7步-清理收尾.md) 已记录为已知欠账），自绘滚动条与 `ViewExt.setScrollBarMode` 都已删除，但**发送端没有同步删掉**，也没有订阅端。
 
-**根本原因**：把"偏好值"当成"一次性事件"来做同步——`SharedFlow` 事件总线必须"有人订阅才成立"，而订阅方（列表页）根本不存在。同一个仓库后面已经给出了正确范式：**过期排序开关**用的是 `OnSharedPreferenceChangeListener` 直接观察偏好键（`HomeViewModel.kt:66-108`），滚动条没有跟着改，成了两套并存的机制。
+**根本原因**：把"偏好值"当成"一次性事件"来做同步——`SharedFlow` 事件总线必须"有人订阅才成立"，而订阅方（列表页）根本不存在。同一个仓库后面已经给出了正确范式：**过期排序开关**用的是 `OnSharedPreferenceChangeListener` 直接观察偏好键（`HomeViewModel.outdatedOrderChangeListener`），滚动条没有跟着改，成了两套并存的机制。
 
 **问题代码**：
 
 ```kotlin
-// SettingsViewModel.kt:36-44
+// SettingsViewModel.kt → SettingsViewModel.scrollBarModeChangedSharedFlow 与 emitScrollBarModeChangedSharedFlow()
 val scrollBarModeChangedSharedFlow: SharedFlow<String?>
     field = MutableSharedFlow()          // replay = 0，无缓冲
 
@@ -63,7 +63,7 @@ fun emitScrollBarModeChangedSharedFlow(scrollBarMode: String?) {
 ```
 
 ```kotlin
-// SettingsScreen.kt:117-121（复查当时的原文；那行注释已于 09d30573 改为实话）
+// SettingsScreen.kt → SettingsScreen() 的 onScrollBarSelect（复查当时的原文；那行注释已于 09d30573 改为实话）
 onScrollBarSelect = { value ->
     scrollBarValue = value
     MyApplication.sharedPreferences.edit { putString(scrollBarKey, value) }
@@ -73,7 +73,7 @@ onScrollBarSelect = { value ->
 
 > 精确结论（已核对 `kotlinx-coroutines-core` 1.8.0 `SharedFlowImpl.tryEmitLocked`）：`nCollectors == 0` 且 `replay == 0` 时走 `tryEmitNoCollectorsLocked` 直接 `return true`——**事件被丢弃、不会挂起、也不泄漏协程**。所以它不是内存泄漏，但确实是一段"看起来在干活、实际什么也没做"的死链路，且每次切换都会白起一个协程。
 >
-> 2026-09-22 补：本项目实际解析到的是 `kotlinx-coroutines` **1.11.0**（`gradle/toml/kotlin.toml:9`），上面引用的 1.8.0 是复查当时翻的版本；"零订阅者即丢弃"的结论由本条现象自证（切换开关后界面毫无反应），但若要再引源码，请按 1.11.0 复核。
+> 2026-09-22 补：本项目实际解析到的是 `kotlinx-coroutines` **1.11.0**（`gradle/toml/kotlin.toml → kotlinx-coroutines`），上面引用的 1.8.0 是复查当时翻的版本；"零订阅者即丢弃"的结论由本条现象自证（切换开关后界面毫无反应），但若要再引源码，请按 1.11.0 复核。
 
 **修改方案**（三选一，推荐 A）：
 
@@ -81,7 +81,7 @@ onScrollBarSelect = { value ->
 - **B（保留事件总线）**：至少要有人订阅，且改成 `MutableSharedFlow(replay = 1)`，否则切完再进列表页照样收不到。
 - **C（顺手把坑填了）**：当前 BOM 已是 `2026.09.00`，建议先核一下 material3 是否已经转正 `Modifier.nonInteractiveScrollbar`；若已转正，直接用它把滚动条补上，F1 一并消失。
 
-> **处置（2026-09-22 负责人定）**：A/B/C 都不采纳——保持代码现状，等 material3 官方滚动条转正后再接，不引 alpha、不自绘（背景与裁定见 [R10](../architecture-review-cn/05-已裁定事项.md#R10)）。A 里那条注释订正已单独落地（`SettingsScreen.kt:117-121` 现在说实话），死链路与设置项照原样保留。
+> **处置（2026-09-22 负责人定）**：A/B/C 都不采纳——保持代码现状，等 material3 官方滚动条转正后再接，不引 alpha、不自绘（背景与裁定见 [R10](../architecture-review-cn/05-已裁定事项.md#R10)）。A 里那条注释订正已单独落地（`SettingsScreen() 的 onScrollBarSelect` 现在说实话），死链路与设置项照原样保留。
 
 ---
 
@@ -96,7 +96,7 @@ onScrollBarSelect = { value ->
 **问题代码**：
 
 ```kotlin
-// BaseListViewModel.kt:55-66
+// BaseListViewModel.kt → BaseListViewModel.startLoad()
 private fun startLoad() {
     if (loadJob?.isActive == true) return
 
@@ -144,7 +144,7 @@ loadJob = viewModelScope.launch {
 **问题代码**：
 
 ```kotlin
-// SettingsScreen.kt:112-130
+// SettingsScreen.kt → SettingsScreen() 的各 onXxxSelect 回调
 onThemeSelect = { value ->
     themeValue = value
     MyApplication.sharedPreferences.edit { putString(themeKey, value) }   // UI 直接写存储
@@ -199,13 +199,13 @@ fun SettingsScreen(viewModel: SettingsViewModel, ...) {
 **问题代码**：
 
 ```kotlin
-// Theme.kt:108-258  4 套，全部零引用
+// Theme.kt → Theme.kt 里四套对比度 colorScheme  4 套，全部零引用
 private val mediumContrastLightColorScheme = lightColorScheme(...)
 private val highContrastLightColorScheme   = lightColorScheme(...)
 private val mediumContrastDarkColorScheme  = darkColorScheme(...)
 private val highContrastDarkColorScheme    = darkColorScheme(...)
 
-// Theme.kt:260-270  零引用 + public + snake_case
+// Theme.kt → Theme.kt 里的 ColorFamily / unspecified_scheme  零引用 + public + snake_case
 @Immutable data class ColorFamily(...)
 val unspecified_scheme = ColorFamily(Color.Unspecified, ...)
 ```
@@ -227,7 +227,7 @@ val unspecified_scheme = ColorFamily(Color.Unspecified, ...)
 **问题代码**：
 
 ```kotlin
-// MyModelCard.kt:42-56  (cb4104aa 当时行号；加了处置注释后是 42-60)
+// MyModelCard.kt → MyModelCard() 的 Card(onClick = {})  (cb4104aa 当时行号；加了处置注释后是 42-60)
 Card(
     // Legacy MaterialCardView was clickable + focusable with no click listener = ripple-only feedback
     onClick = {},                       // ← 空点击
@@ -262,7 +262,7 @@ Card(
 
   > 另注：`animateItem()` + `animateContentSize()` 同时用是官方推荐组合（前者管位移、后者管自身高度），这部分没问题；`Card(onClick)` 带来的 `minimumInteractiveComponentSize`（48dp）当前也不影响布局（卡片实际高度约 67dp > 48dp）。
 
-> **处置（2026-09-22 负责人定）**：A、B 都不采纳——**保留现在的水波纹**，`Card(onClick = {})` 不动；a11y 语义问题按「已知接受项」就地标记（`MyModelCard.kt:43-48` 的注释已写明本条、影响面与出路）；点击行展开详情（BL-1）**明确暂不做**，所以也就没有「给 `onClick` 一个真动作」的需求，B 方案作为将来真要修 a11y 时的参考保留在上面。
+> **处置（2026-09-22 负责人定）**：A、B 都不采纳——**保留现在的水波纹**，`Card(onClick = {})` 不动；a11y 语义问题按「已知接受项」就地标记（`MyModelCard() 里那段 onClick 注释` 的注释已写明本条、影响面与出路）；点击行展开详情（BL-1）**明确暂不做**，所以也就没有「给 `onClick` 一个真动作」的需求，B 方案作为将来真要修 a11y 时的参考保留在上面。
 
 ---
 
@@ -277,7 +277,7 @@ Card(
 **问题代码**：
 
 ```kotlin
-// AppRoot.kt:111-116
+// AppRoot.kt → AppRoot() 调 AppRootShell 的那段
 NavDisplay(
     entries = decoratedEntries[currentTabIndex],
     onBack = { activity?.finish() },   // 永远退出，从不 pop
@@ -301,16 +301,16 @@ onBack = {
 
 ### F7 · ~~`toColoredMyModel(..., Boolean)` 重载零调用~~ **已撤回（2026-09-22 复验）**
 
-**撤回原因**：本条的事实前提「`grep` 只命中定义处」在复查当天就不成立。`MyModelExt.kt:8-15` 的 Boolean 重载有 **6 处调用点**，全在 `HomeRepository`：
+**撤回原因**：本条的事实前提「`grep` 只命中定义处」在复查当天就不成立。`toColoredMyModel(condition: Boolean) 重载` 的 Boolean 重载有 **6 处调用点**，全在 `HomeRepository`：
 
 | 调用点 | 传入的布尔实参 |
 |---|---|
-| `HomeRepository.kt:386` | `isAbEnable` |
-| `HomeRepository.kt:486` | `isDynamicPartitionsEnabled` |
-| `HomeRepository.kt:589` | `isDsuEnabled` |
-| `HomeRepository.kt:726` | `isDeveloperOptionsDisabled` |
-| `HomeRepository.kt:740` | `isAdbDebuggingDisabled` |
-| `HomeRepository.kt:751` | `isAdbAuthenticationEnabled` |
+| `HomeRepository.detectAb()` | `isAbEnable` |
+| `HomeRepository.detectDynamicPartitions()` | `isDynamicPartitionsEnabled` |
+| `HomeRepository.detectDsu()` | `isDsuEnabled` |
+| `HomeRepository.detectDeveloperOptions()` | `isDeveloperOptionsDisabled` |
+| `HomeRepository.detectAdb()` | `isAdbDebuggingDisabled` |
+| `HomeRepository.detectAdbAuthentication()` | `isAdbAuthenticationEnabled` |
 
 其余 16 处调用传的是 `StatusColor`（`color` / `*Color` 变量），走另一个重载。**按本条原方案「直接删除」会让这 6 处编译失败**，故整条撤回。
 
@@ -329,12 +329,12 @@ onBack = {
 **问题代码**：
 
 ```kotlin
-// ExtendedColors.kt:43-49
+// ExtendedColors.kt → ExtendedColors.of()
 @Composable
 fun ExtendedColors.of(status: StatusColor): Color = when (status) { ... }
 ```
 
-**修改方案**：去掉 `@Composable` 即可（`MyModelCard.kt:82` 调用处无需改动）。
+**修改方案**：去掉 `@Composable` 即可（`MyModelCard() 里的 LocalExtendedColors.current.of(model.color)` 调用处无需改动）。
 
 ---
 
@@ -349,7 +349,7 @@ fun ExtendedColors.of(status: StatusColor): Color = when (status) { ... }
 **问题代码**：
 
 ```kotlin
-// MyModel.kt:24-28
+// MyModel.kt → MyModel.key
 val key: String
     get() = when (title) {
         is MyModelTitle.Res -> title.id.toString()
@@ -358,7 +358,7 @@ val key: String
 ```
 
 ```kotlin
-// MyModelListScreen.kt:106
+// MyModelListScreen.kt → MyModelListContent() 的 items(key = { it.key })
 key = { it.key },
 ```
 

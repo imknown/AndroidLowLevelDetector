@@ -2,9 +2,9 @@
 
 > **章首更正（2026-09-22 复验）** —— 设置页已按本章重建，但快照里三处与现状不符：
 >
-> - `(versionState as? State.Done)`（8.1 / 8.3）：`State` 包装已删，`SettingsViewModel.version` 就是 `StateFlow<Version?>`（`SettingsViewModel.kt:47-50`）。
-> - 开关回调里的 `viewModel.emitOutdatedOrderChangedSharedFlow()`：该流与方法均已删除，写 prefs 即可，Home 自行观察（`SettingsScreen.kt:126-129`）。
-> - 更正④/⑤ 之后页面又演化过一轮：分隔线取色与粗细（`SettingsScreen.kt:161-162`）、`SettingsGroup` 圆角分组卡（`:283-298`）以代码为准；主题终态三档（"跟随省电模式"随去 AppCompat 化退役）。
+> - `(versionState as? State.Done)`（8.1 / 8.3）：`State` 包装已删，`SettingsViewModel.version` 就是 `StateFlow<Version?>`（`SettingsViewModel.version`）。
+> - 开关回调里的 `viewModel.emitOutdatedOrderChangedSharedFlow()`：该流与方法均已删除，写 prefs 即可，Home 自行观察（`SettingsScreen() 的 onOutdatedOrderChange`）。
+> - 更正④/⑤ 之后页面又演化过一轮：分隔线取色与粗细（`SettingsContent() 的 dividerColor / dividerThickness`）、`SettingsGroup` 圆角分组卡（`SettingsGroup 那段`）以代码为准；主题终态三档（"跟随省电模式"随去 AppCompat 化退役）。
 
 > **⚠️ 2026-09-19 实现期更正（用户提供旧版截图比对）**：①8.2 的"summary = 当前选中项标签"改为**静态文案**（与旧 XML 的 `app:summary` 逐字一致，如"点击以显示主题选择器"）——当前选中项只在对话框里体现，随之 `getOrNull` 标签查找与 fast scroll "2" 兜底整段删除；②**补 `HorizontalDivider`**：两个 `PreferenceCategory` 之间的分隔线是旧观感的一部分，8.3 的 `SettingsCategoryHeader` 前各加一条；③滚动条接线按第 3 步决策推迟（正文 8.1 末段作废）。Preview：`SettingsScreen` 状态提升拆出纯数据 `SettingsContent` 并配双主题 `@Preview`。
 >
