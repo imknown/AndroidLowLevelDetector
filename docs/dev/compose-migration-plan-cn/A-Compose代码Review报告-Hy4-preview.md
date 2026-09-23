@@ -24,7 +24,7 @@
 | F2 | 漏改（继承自旧代码） | P0 | `BaseListViewModel.kt:55-66` | 加载抛异常时 `isLoading` 永久停在 `true`，下拉刷新转圈再也停不下来 |
 | F3 | 不合理 / 更好的改法 | P1 | `SettingsScreen.kt:69-130` | Composable 里直接读写 `SharedPreferences` 并调 `MyApplication.setMyTheme`，绕过 ViewModel |
 | F4 | 改多 | P1 | `Theme.kt:108-270` | 4 套对比度配色 + `ColorFamily`/`unspecified_scheme` 全部无人使用，且在 `ThemeKt` 静态初始化里被一并构造 |
-| F5 | 改错（a11y） | P1 | `MyModelCard.kt:42-56`（`cb4104aa` 引入） | `Card(onClick = {})` 空点击：TalkBack 报"可双击激活"却无反应 ——**2026-09-22 裁定：保留水波纹，问题记为已知接受项，见 F5 处置** |
+| F5 | 改错（a11y） | P1 | `MyModelCard.kt:42-60`（`cb4104aa` 引入；行号已按 2026-09-22 的代码校准） | `Card(onClick = {})` 空点击：TalkBack 报"可双击激活"却无反应 ——**2026-09-22 裁定：保留水波纹，问题记为已知接受项，见 F5 处置** |
 | F6 | 不合理 | P2 | `AppRoot.kt:111-116` | `onBack = { activity?.finish() }` 与"每标签一条返回栈"自相矛盾 |
 | F7 | ~~改多~~ **已撤回** | — | `MyModelExt.kt:8-15` | ~~`toColoredMyModel(..., Boolean)` 重载零调用~~ 2026-09-22 复验：断言不成立，该重载有 6 处调用 |
 | F8 | 改多 | P2 | `ExtendedColors.kt:43-49` | `of()` 不需要 `@Composable`，白白限制调用场景 |
@@ -227,7 +227,7 @@ val unspecified_scheme = ColorFamily(Color.Unspecified, ...)
 **问题代码**：
 
 ```kotlin
-// MyModelCard.kt:42-56  (cb4104aa)
+// MyModelCard.kt:42-56  (cb4104aa 当时行号；加了处置注释后是 42-60)
 Card(
     // Legacy MaterialCardView was clickable + focusable with no click listener = ripple-only feedback
     onClick = {},                       // ← 空点击
@@ -334,7 +334,7 @@ onBack = {
 fun ExtendedColors.of(status: StatusColor): Color = when (status) { ... }
 ```
 
-**修改方案**：去掉 `@Composable` 即可（`MyModelCard.kt:78` 调用处无需改动）。
+**修改方案**：去掉 `@Composable` 即可（`MyModelCard.kt:82` 调用处无需改动）。
 
 ---
 
