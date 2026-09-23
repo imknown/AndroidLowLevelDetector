@@ -13,26 +13,26 @@
 
 「设置」这份本该只有一处权威的数据，现状是**写一处、抄四路、广播一条（而且没人收）**：
 
-写入只有一处（`SettingsScreen.kt:112-128`，每个选项的回调里直接 `edit { put… }`）；然后四处各自偷读：
+写入只有一处（`SettingsScreen() 的各 onXxxSelect 回调`，每个选项的回调里直接 `edit { put… }`）；然后四处各自偷读：
 
 ```kotlin
-// ① 启动时读主题 —— MyApplication.kt:103
+// ① 启动时读主题 —— MyApplication.initTheme()
 val themesValue = sharedPreferences.getString(themeKey, defaultTheme)
 
-// ② 设置页读自己那四档 —— SettingsScreen.kt:74-98（每档一个 remember，读进 Compose 状态）
+// ② 设置页读自己那四档 —— SettingsScreen() 里四组 remember 直读 prefs
 var allowNetwork by remember {
     mutableStateOf(MyApplication.sharedPreferences.getBoolean(allowNetworkKey, false))
 }
 
-// ③ ViewModel 读联网开关 —— HomeViewModel.kt:55
+// ③ ViewModel 读联网开关 —— HomeViewModel.collectModels()
 val allowNetwork = MyApplication.sharedPreferences.getBoolean(
     MyApplication.getMyString(R.string.function_allow_network_data_key), false)
 
-// ④ 仓库读排序开关 —— HomeRepository.kt:1102
+// ④ 仓库读排序开关 —— HomeRepository.getOutdatedTargetSdkVersionApkModel()
 val shouldOrderByPackageNameFirst = MyApplication.sharedPreferences.getBoolean(...)
 ```
 
-变化通知不走数据，走 **ViewModel 伴生对象里的静态 SharedFlow**（`SettingsViewModel.kt:36-37`）——本质是全局事件总线（event bus，一根谁都能喊话的大喇叭）。原本两条流里的一条（`outdatedOrderChangedSharedFlow`）已经在 2026-09-21 的排序重构中删除，剩下这条滚动条的还在：
+变化通知不走数据，走 **ViewModel 伴生对象里的静态 SharedFlow**（`SettingsViewModel.scrollBarModeChangedSharedFlow`）——本质是全局事件总线（event bus，一根谁都能喊话的大喇叭）。原本两条流里的一条（`outdatedOrderChangedSharedFlow`）已经在 2026-09-21 的排序重构中删除，剩下这条滚动条的还在：
 
 ```kotlin
 companion object {
@@ -47,7 +47,7 @@ fun emitScrollBarModeChangedSharedFlow(scrollBarMode: String?) {   // 实例方�
 
 收集方：**一个都没有**（全仓 `grep` 只命中定义与 emit）。列表页的旧收集者 `BaseListFragment` / `HomeFragment` 已随 View 层删除，所以这条流现在是纯粹的空放炮——设置项改了值，只有 SharedPreferences 变，界面无反应（现状与裁定见 [R10](05-已裁定事项.md#R10)）。
 
-排序开关则已经换成了正确的形态——由消费者自己观察数据源，不再有广播（`HomeViewModel.kt:66-102`）：
+排序开关则已经换成了正确的形态——由消费者自己观察数据源，不再有广播（`HomeViewModel.outdatedOrderChangeListener`）：
 
 ```kotlin
 // HomeViewModel —— 观察自己的 key，replay 问题不复存在
@@ -64,7 +64,7 @@ private val outdatedOrderChangeListener =
 - 读取方绕过一切抽象直接摸 `MyApplication.sharedPreferences`（这是 [AR-04](01-架构.md#AR-04) 服务定位器的一个实例）。
 - View 时代那条「框架层 import 功能层」的跨包依赖（`BaseListFragment` / `HomeFragment` import `ui.settings`）已随迁移消失；但**没有唯一数据源**这件事一点没变：上面四处照样各自摸 `MyApplication.sharedPreferences`。
 - 通知方没有「可观察的数据源」，只能把「值变了」做成事件广播；而 `MutableSharedFlow()` 没有重放（replay），**收集方不在场时事件直接丢失**，而且丢了连条日志都没有——现在连收集方都没有了。
-- 主题的副作用已经收拢了一半：`AppCompatDelegate.setDefaultNightMode` 随 `26b9094f` 移除，`MyApplication.themeMode` 是一条 `StateFlow<AppThemeMode>`（`MyApplication.kt:70-81`），由 `AppTheme` 收集（`Theme.kt:279`）。剩下一半没动：写入仍由 `SettingsScreen.kt:114-115` 直接落 prefs 再调 `setMyTheme`，仍属「写路径没有归属」。
+- 主题的副作用已经收拢了一半：`AppCompatDelegate.setDefaultNightMode` 随 `26b9094f` 移除，`MyApplication.themeMode` 是一条 `StateFlow<AppThemeMode>`（`MyApplication.themeMode`），由 `AppTheme` 收集（`AppTheme() 收集 themeMode 那行`）。剩下一半没动：写入仍由 `SettingsScreen() 的 onThemeSelect` 直接落 prefs 再调 `setMyTheme`，仍属「写路径没有归属」。
 
 ### 根本原因
 
@@ -116,7 +116,7 @@ class SettingsStore(private val prefs: SharedPreferences) {   // 项目用的是
 }
 ```
 
-第三步，删掉静态总线，消费方改为观察自己的数据流（UDF 恢复为：数据向下流、事件向上交）。排序开关已经是这个形状的现成实例——`HomeViewModel.kt:66-102` 自己注册 `OnSharedPreferenceChangeListener`、把「键变了」折进一条 `StateFlow`，没有任何广播。照同样的方向收：
+第三步，删掉静态总线，消费方改为观察自己的数据流（UDF 恢复为：数据向下流、事件向上交）。排序开关已经是这个形状的现成实例——`HomeViewModel.outdatedOrderChangeListener` 自己注册 `OnSharedPreferenceChangeListener`、把「键变了」折进一条 `StateFlow`，没有任何广播。照同样的方向收：
 
 ```kotlin
 // SettingsScreen —— 只交意图给 ViewModel，不再自己碰 prefs
@@ -138,7 +138,7 @@ override suspend fun collectModels(): List<MyModel> {
 }
 ```
 
-主题一项**已经按这个方向落地了一半**：`AppCompatDelegate.setDefaultNightMode` 随 `26b9094f` 退役，`MyApplication.themeMode` 是唯一的 `StateFlow<AppThemeMode>`，由 `AppTheme` 收集（`Theme.kt:279`），`MainActivity.kt:63-66` 只读它来设窗口明暗。原方案里「MainActivity 收集 themeMode」这一步不必再做，剩下的只是把 `SettingsScreen.kt:114-115` 那对「直接写 prefs + 直接调 `setMyTheme`」并进 `SettingsStore` 的写入口。
+主题一项**已经按这个方向落地了一半**：`AppCompatDelegate.setDefaultNightMode` 随 `26b9094f` 退役，`MyApplication.themeMode` 是唯一的 `StateFlow<AppThemeMode>`，由 `AppTheme` 收集（`AppTheme() 收集 themeMode 那行`），`MainActivity.isAppDark()` 只读它来设窗口明暗。原方案里「MainActivity 收集 themeMode」这一步不必再做，剩下的只是把 `SettingsScreen() 的 onThemeSelect` 那对「直接写 prefs + 直接调 `setMyTheme`」并进 `SettingsStore` 的写入口。
 
 改造后：`SettingsViewModel` 伴生对象只剩 Factory，那条无人订阅的 `scrollBarModeChangedSharedFlow` 一并删除；四处偷读 prefs 改成观察 `SettingsStore`；设置项加一个，只动 `ui/settings/res/values/strings.xml`（键与文案，四语）+ `SettingsStore`（加一行 Flow）+ 消费方（收集它）。
 
@@ -153,7 +153,7 @@ override suspend fun collectModels(): List<MyModel> {
 
 ### 问题核心代码
 
-全局可变对象（`AndroidVersionExt.kt:53`）：
+全局可变对象（`MyAndroid`）：
 
 ```kotlin
 class MyAndroid(
@@ -168,9 +168,9 @@ val myAndroid = MyAndroid(   // 顶层 val，全项目共享的单身实例
 )
 ```
 
-写入方一：App 启动（`MyApplication.onCreate` → `initMyAndroid()`，`AndroidVersionExt.kt:104`）。
+写入方一：App 启动（`MyApplication.onCreate` → `initMyAndroid()`，`initMyAndroid()`）。
 
-写入方二：**首页数据仓库**（`HomeRepository.detectAndroid()`，`HomeRepository.kt:107`）——一个「取数方法」顺手改了全局状态：
+写入方二：**首页数据仓库**（`HomeRepository.detectAndroid()`，`HomeRepository.detectAndroid()`）——一个「取数方法」顺手改了全局状态：
 
 ```kotlin
 if (android != null) {
@@ -183,7 +183,7 @@ if (android != null) {
 }
 ```
 
-而全项目的系统版本判断都读它（`AndroidVersionExt.kt:114`）：
+而全项目的系统版本判断都读它（`sdkInt`）：
 
 ```kotlin
 private val sdkInt get() = myAndroid.api
@@ -192,7 +192,7 @@ fun isAtLeastAndroid12() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S || sdk
 
 ### 直接原因
 
-「这台设备的 Android 版本信息」有两个「事实版本」：`Build.VERSION.*` 推导出的初始值，和 LLD 数据库 JSON 修正后的值。两处写入、多处读取，没有任何机制保证先后一致——`isAtLeast*`、`isLatestPreviewAndroid` 等函数在首页加载前后的返回值**理论上可能不同**（大多数设备上两次写入恰好相同，所以问题平时不发作）。具体触点：过时应用过滤阈值 `it.targetSdkVersion < myAndroid.api`（`HomeRepository.kt:1081`）读的正是这个全局——把 `detect()` 里 `detectAndroid` 与 `getOutdatedTargetSdkVersionApkModel` 的调用顺序对调，过滤结果就会变，一致性全靠手写顺序维持。
+「这台设备的 Android 版本信息」有两个「事实版本」：`Build.VERSION.*` 推导出的初始值，和 LLD 数据库 JSON 修正后的值。两处写入、多处读取，没有任何机制保证先后一致——`isAtLeast*`、`isLatestPreviewAndroid` 等函数在首页加载前后的返回值**理论上可能不同**（大多数设备上两次写入恰好相同，所以问题平时不发作）。具体触点：过时应用过滤阈值 `it.targetSdkVersion < myAndroid.api`（`HomeRepository.getOutdatedTargetSdkVersionApkModel() 里的 it.targetSdkVersion < myAndroid.api`）读的正是这个全局——把 `detect()` 里 `detectAndroid` 与 `getOutdatedTargetSdkVersionApkModel` 的调用顺序对调，过滤结果就会变，一致性全靠手写顺序维持。
 
 ### 根本原因
 

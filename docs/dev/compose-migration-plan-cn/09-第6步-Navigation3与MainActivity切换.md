@@ -3,7 +3,7 @@
 > **章首更正（2026-09-22 复验）** —— Navigation 3 骨架已按本章落地，以下四点是本章之后发生的：
 >
 > - `MainActivity : AppCompatActivity` 已过期：现为 `ComponentActivity`（`733c6941`），`appcompat` 与 `material`(MDC) 依赖删除（`f66562d4`），窗口主题改为平台父级（`e51260e6`），主题由 `themeMode: StateFlow<AppThemeMode>` 驱动（`26b9094f`）。
-> - `LocalContext.current as? Activity` 已换成 `LocalActivity.current`（`AppRoot.kt:78`）。
+> - `LocalContext.current as? Activity` 已换成 `LocalActivity.current`（`AppRoot() 里的 LocalActivity.current`）。
 > - 计划外新增 `AppRootShell` 拆分，让外壳可预览（`26ee0f9d`）。
 > - 验证清单的「四档主题模式」为三档；切标签的转场在 `a5d3a28a` 显式改成两端 `None`（决策点 3 就地更新）。
 
