@@ -3,7 +3,7 @@
 > **章首更正（2026-09-22 复验）** —— 本章快照保留作「互操作两座桥」的教学记录，以下已不成立：
 >
 > - 宿主 `PropFragment` 已在第 6 步随 View 层删除（`aec789e5`），`ComposeView` 嵌 Fragment 这座桥在代码里已不存在。
-> - 本章核心知识点 `produceState`「记住最近一次 Done 以防闪空」被换掉：状态拆成 `modelsStateFlow` + `isLoadingStateFlow` 两条流（`002f25b3`；`BaseListViewModel.kt:18-27`），刷新期间保留旧列表由数据流本身保证（`MyModelListScreen.kt:46-56`），不再需要 `produceState`。
+> - 本章核心知识点 `produceState`「记住最近一次 Done 以防闪空」被换掉：状态拆成 `modelsStateFlow` + `isLoadingStateFlow` 两条流（`002f25b3`；`BaseListViewModel.modelsStateFlow / isLoadingStateFlow`），刷新期间保留旧列表由数据流本身保证（`MyModelListScreen() 的 LaunchedEffect { viewModel.init() }`），不再需要 `produceState`。
 > - 连带删除了 `ui/common/StateExt.kt`（`State` 密封接口）；`ToastExt.kt` 仍在。
 
 > 所属迁移计划：[README](README.md) · 上一章：[04 第 1 步 列表卡片组件](04-第1步-列表卡片组件.md) · 下一章：[06 第 3 步 交互补齐](06-第3步-交互补齐.md)

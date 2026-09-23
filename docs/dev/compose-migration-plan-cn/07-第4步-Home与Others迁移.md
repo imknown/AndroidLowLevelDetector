@@ -2,8 +2,8 @@
 
 > **章首更正（2026-09-22 复验）** —— 本章两项核心做法后来都被推翻，快照保留：
 >
-> - `ui/home/HomeScreen.kt`（"包一层"共用列表的 Home 专属屏幕）**已撤销**：Home 没有页面特有逻辑，`AppRoot.kt:102` 直接使用共用的 `MyModelListScreen`。
-> - 本章教的「`LaunchedEffect` 收集 `SettingsViewModel.outdatedOrderChangedSharedFlow`」链路已整体删除：排序开关改由 `HomeViewModel` 自己注册 `OnSharedPreferenceChangeListener` 观察偏好键（`38492b82`；`HomeViewModel.kt:66-102`），落地时再做一次校正（`45f5f047`）。对应的架构体检条目 C5 已判定解决并删除。
+> - `ui/home/HomeScreen.kt`（"包一层"共用列表的 Home 专属屏幕）**已撤销**：Home 没有页面特有逻辑，`AppRoot() 的 entryProvider(Home entry)` 直接使用共用的 `MyModelListScreen`。
+> - 本章教的「`LaunchedEffect` 收集 `SettingsViewModel.outdatedOrderChangedSharedFlow`」链路已整体删除：排序开关改由 `HomeViewModel` 自己注册 `OnSharedPreferenceChangeListener` 观察偏好键（`38492b82`；`HomeViewModel.outdatedOrderChangeListener`），落地时再做一次校正（`45f5f047`）。对应的架构体检条目 C5 已判定解决并删除。
 > - Others 页与本章描述一致。
 
 > 所属迁移计划：[README](README.md) · 上一章：[06 第 3 步 交互补齐](06-第3步-交互补齐.md) · 下一章：[08 第 5 步 Settings 页面重建](08-第5步-Settings页面重建.md)
