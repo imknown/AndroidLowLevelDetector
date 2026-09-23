@@ -51,7 +51,7 @@
 **问题代码**：
 
 ```kotlin
-// SettingsViewModel.kt → SettingsViewModel.scrollBarModeChangedSharedFlow 与 emitScrollBarModeChangedSharedFlow()
+// SettingsViewModel.scrollBarModeChangedSharedFlow 与 emitScrollBarModeChangedSharedFlow()
 val scrollBarModeChangedSharedFlow: SharedFlow<String?>
     field = MutableSharedFlow()          // replay = 0，无缓冲
 
@@ -96,7 +96,7 @@ onScrollBarSelect = { value ->
 **问题代码**：
 
 ```kotlin
-// BaseListViewModel.kt → BaseListViewModel.startLoad()
+// BaseListViewModel.startLoad()
 private fun startLoad() {
     if (loadJob?.isActive == true) return
 
@@ -199,13 +199,13 @@ fun SettingsScreen(viewModel: SettingsViewModel, ...) {
 **问题代码**：
 
 ```kotlin
-// Theme.kt → Theme.kt 里四套对比度 colorScheme  4 套，全部零引用
+// Theme.kt 里四套对比度 colorScheme  4 套，全部零引用
 private val mediumContrastLightColorScheme = lightColorScheme(...)
 private val highContrastLightColorScheme   = lightColorScheme(...)
 private val mediumContrastDarkColorScheme  = darkColorScheme(...)
 private val highContrastDarkColorScheme    = darkColorScheme(...)
 
-// Theme.kt → Theme.kt 里的 ColorFamily / unspecified_scheme  零引用 + public + snake_case
+// Theme.kt 里的 ColorFamily / unspecified_scheme  零引用 + public + snake_case
 @Immutable data class ColorFamily(...)
 val unspecified_scheme = ColorFamily(Color.Unspecified, ...)
 ```
@@ -329,7 +329,7 @@ onBack = {
 **问题代码**：
 
 ```kotlin
-// ExtendedColors.kt → ExtendedColors.of()
+// ExtendedColors.of()
 @Composable
 fun ExtendedColors.of(status: StatusColor): Color = when (status) { ... }
 ```
@@ -349,7 +349,7 @@ fun ExtendedColors.of(status: StatusColor): Color = when (status) { ... }
 **问题代码**：
 
 ```kotlin
-// MyModel.kt → MyModel.key
+// MyModel.key
 val key: String
     get() = when (title) {
         is MyModelTitle.Res -> title.id.toString()
