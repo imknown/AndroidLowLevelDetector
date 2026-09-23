@@ -41,7 +41,8 @@ Conventions that deliberately diverge from the mainstream template are called ou
 ## Git and CI
 
 - PRs target `develop` (the default branch). Commit messages follow Conventional Commits with **lowercase type + scope**: `fix(home): ...`.
-- End every commit message with a trailer naming the agent, the model, and the reasoning effort level (`off` / `low` / `medium` / `high` / `xhigh` / `max`, ...) that produced it, e.g. `Generated with ZCode (GLM-5.3, reasoning: high)`. Never guess a value; when the agent, model, or effort cannot be determined, ask the user what to record rather than silently writing `unknown`.
+- End every commit message with a trailer naming the agent, the model, and the reasoning effort level (`off` / `low` / `medium` / `high` / `xhigh` / `max`, ...) that produced it, e.g. `Generated with ZCode (GLM-5.3, effort: xhigh)`. Name the level `effort:` — it is the reasoning-effort knob itself, not a verdict on the reasoning; commits from 2026-09-22 and earlier spell it `reasoning:`, leave those as they are. Never guess a value; when the agent, model, or effort cannot be determined, ask the user what to record rather than silently writing `unknown`.
+- Name the agent from evidence, not from habit: how to find it is up to you, but show what it rests on and get the user's agreement before writing it. Edition-level names differ (`Qoder CN` and `Qoder`, `Trae CN` and `Trae` are different ADEs); do not invent host-form suffixes such as `IDE` / `CLI` unless the user asks for them.
 - CI builds `assembleFossDebug` only. `master` carries `lld.json` data updates — don't open PRs against it.
 
 ## Never commit
