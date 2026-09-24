@@ -30,7 +30,7 @@
 
 ### FR-1 特性支持检测(P0)
 
-应用在手机本地就能完成检测:按一份 **Android 系统特性检测目录**(特性族如 Treble/VINTF 支持、A/B 无缝更新、动态分区 / system-as-root、AVB / dm-verity;条目级的正式清单见《[检测条目目录](05-detection-item-catalog.md)》,已定稿 —— 2026-09-22,Q1)逐条评估当前系统。
+应用在手机本地就能完成检测:按一份 **Android 系统特性检测目录**(特性族如 Treble/VINTF 支持、A/B 无缝更新、动态分区 / system-as-root;条目级的正式清单见《[检测条目目录](05-detection-item-catalog.md)》,已定稿 —— 2026-09-22,Q1)逐条评估当前系统。
 
 **验收标准**
 
