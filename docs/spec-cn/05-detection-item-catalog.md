@@ -1,6 +1,6 @@
 # 05 — 检测条目目录 (附录 A)
 
-属于 "[LowLevelDetector 规格文档](README.md)" (中文整理版).
+属于 "[LowLevelDetector 规格文档](README.md)".
 
 | | |
 |---|---|
