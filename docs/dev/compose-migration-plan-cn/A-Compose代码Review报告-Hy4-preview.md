@@ -1,6 +1,6 @@
 # B·迁移后代码复查报告
 
-> 所属迁移计划：[README](README.md) · A 系列附录（Appendix = 附录，与 `01~10` 正文章节区分）
+> 所属迁移计划：[README](README.md) · A 系列附录（Appendix = 附录，与 `01~09` 正文章节区分）
 >
 > 本报告由 **Hy4-preview** 产出，与 [A·Compose 代码 Review 报告（Qwen3.8-Flash）](A-Compose代码Review报告-Qwen3.8-Flash.md) 是同题的两份独立复查，互为补充：
 > 重叠条目为 F1 ≈ 对方 2（滚动条事件总线死链路）、F4 ≈ 对方 3（主题死代码）、F5 ≈ 对方 5（`Card(onClick = {})`）；
@@ -32,7 +32,7 @@
 | F10 | 改多 / 契约风险 | P3 | `HomeViewModel` 等 | `@Stable` 标在子类上是冗余的，且 `@Stable` 是一份"永不失效"的承诺 |
 | F11 | 隐患 | P3 | `AppRoot() 的 decoratedEntries` | 每个标签的 provider 都注册了全部 4 个 entry；`decoratedEntries[currentTabIndex]` 无越界保护 |
 | F12 | 隐性依赖 | P3 | `ic_*_24dp.xml`（4 个） | 图标 `fillColor` 硬编码 `#FF000000`，正确性完全依赖 `Icon` 的默认 tint |
-| F13 | 文档欠账 | P3 | 本目录 README / 10 章 | 决策 9（暂留 AppCompatActivity）、10.4-2（去 AppCompat 化）**早已做完**，文档未同步 |
+| F13 | 文档欠账 | P3 | 本目录 README / 09 章 | 决策 9（暂留 AppCompatActivity）、9.4-2（去 AppCompat 化）**早已做完**，文档未同步 |
 
 路径速查（相对仓库根）：`app/src/main/java/net/imknown/android/forefrontinfo/ui/…`。
 
@@ -44,7 +44,7 @@
 
 **现象**：设置页切换"滚动条模式"→ 值写进了 SharedPreferences，但列表页毫无反应；代码里那句 `viewModel.emitScrollBarModeChangedSharedFlow(value)` 看起来在"通知列表页"，实际上没有任何地方订阅。
 
-**直接原因**：第 3 步把滚动条推迟到 material3 1.5 的官方组件（[A·迁移期观察记录](A-迁移期观察记录.md) / [10 章](10-第7步-清理收尾.md) 已记录为已知欠账），自绘滚动条与 `ViewExt.setScrollBarMode` 都已删除，但**发送端没有同步删掉**，也没有订阅端。
+**直接原因**：第 3 步把滚动条推迟到 material3 1.5 的官方组件（[A·迁移期观察记录](A-迁移期观察记录.md) / [09 章](09-第7步-清理收尾.md) 已记录为已知欠账），自绘滚动条与 `ViewExt.setScrollBarMode` 都已删除，但**发送端没有同步删掉**，也没有订阅端。
 
 **根本原因**：把"偏好值"当成"一次性事件"来做同步——`SharedFlow` 事件总线必须"有人订阅才成立"，而订阅方（列表页）根本不存在。同一个仓库后面已经给出了正确范式：**过期排序开关**用的是 `OnSharedPreferenceChangeListener` 直接观察偏好键（`HomeViewModel.outdatedOrderChangeListener`），滚动条没有跟着改，成了两套并存的机制。
 
@@ -184,7 +184,7 @@ fun SettingsScreen(viewModel: SettingsViewModel, ...) {
 }
 ```
 
-好处：Screen 变成纯"collect + 转发事件"；`MyApplication.sharedPreferences` 这个全局单例从 UI 层消失；"设置项继承"（回归清单 10.3-4）也变成可测的纯数据映射。
+好处：Screen 变成纯"collect + 转发事件"；`MyApplication.sharedPreferences` 这个全局单例从 UI 层消失；"设置项继承"（回归清单 9.3-4）也变成可测的纯数据映射。
 
 ---
 
@@ -430,8 +430,8 @@ entryProvider 的冗余可以不改（改动反而会破坏 `remember` 的稳定
 | 文档 | 现状 |
 | --- | --- |
 | README 决策 9："MainActivity **暂留** AppCompatActivity" | 早已是 `ComponentActivity`（`733c6941`、`26b9094f`） |
-| 10.2："`appcompat` 与 `material`（MDC）**都暂留**" | 均已删除（`f66562d4`），`AppCompatDelegate`/`DynamicColors` 已从代码里消失 |
-| 10.4 遗留优化 2："主题模式去 AppCompat 化" | 已完成，应从"遗留优化"移到"已完成" |
+| 9.2："`appcompat` 与 `material`（MDC）**都暂留**" | 均已删除（`f66562d4`），`AppCompatDelegate`/`DynamicColors` 已从代码里消失 |
+| 9.4 遗留优化 2："主题模式去 AppCompat 化" | 已完成，应从"遗留优化"移到"已完成" |
 
 另外 README 决策 6 写的是"实际：砍掉设置项"，但设置项**仍在 UI 里**（只是失效）——文档与代码各说各话，正好是 F1 的成因，建议一并订正。
 
@@ -460,4 +460,4 @@ entryProvider 的冗余可以不改（改动反而会破坏 `remember` 的稳定
 3. **随后 P2/P3**：F6、F8、F9、F11 都是十行以内的小改，可以攒一个"收尾 PR"。（F7 已撤回，不在内。）
 4. **文档**：F13 三处订正 + 在 [A·迁移期观察记录](A-迁移期观察记录.md) 里补记 F1/F2 两条"迁移期发现"。
 
-> 建议每个修复都跑一次 `./gradlew assembleFossDebug` + 过一遍 [10 章](10-第7步-清理收尾.md) 的回归清单 10.3（尤其是第 3 条滚动条、第 5 条主题、第 6 条导航）。
+> 建议每个修复都跑一次 `./gradlew assembleFossDebug` + 过一遍 [09 章](09-第7步-清理收尾.md) 的回归清单 9.3（尤其是第 3 条滚动条、第 5 条主题、第 6 条导航）。

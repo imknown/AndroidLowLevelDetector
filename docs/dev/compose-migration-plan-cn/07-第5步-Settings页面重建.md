@@ -2,22 +2,22 @@
 
 > **章首更正（2026-09-22 复验）** —— 设置页已按本章重建，但快照里三处与现状不符：
 >
-> - `(versionState as? State.Done)`（8.1 / 8.3）：`State` 包装已删，`SettingsViewModel.version` 就是 `StateFlow<Version?>`（`SettingsViewModel.version`）。
+> - `(versionState as? State.Done)`（7.1 / 7.3）：`State` 包装已删，`SettingsViewModel.version` 就是 `StateFlow<Version?>`（`SettingsViewModel.version`）。
 > - 开关回调里的 `viewModel.emitOutdatedOrderChangedSharedFlow()`：该流与方法均已删除，写 prefs 即可，Home 自行观察（`SettingsScreen() 的 onOutdatedOrderChange`）。
 > - 更正④/⑤ 之后页面又演化过一轮：分隔线取色与粗细（`SettingsContent() 的 dividerColor / dividerThickness`）、`SettingsGroup` 圆角分组卡（`SettingsGroup 那段`）以代码为准；主题终态三档（"跟随省电模式"随去 AppCompat 化退役）。
 
-> **⚠️ 2026-09-19 实现期更正（用户提供旧版截图比对）**：①8.2 的"summary = 当前选中项标签"改为**静态文案**（与旧 XML 的 `app:summary` 逐字一致，如"点击以显示主题选择器"）——当前选中项只在对话框里体现，随之 `getOrNull` 标签查找与 fast scroll "2" 兜底整段删除；②**补 `HorizontalDivider`**：两个 `PreferenceCategory` 之间的分隔线是旧观感的一部分，8.3 的 `SettingsCategoryHeader` 前各加一条；③滚动条接线按第 3 步决策推迟（正文 8.1 末段作废）。Preview：`SettingsScreen` 状态提升拆出纯数据 `SettingsContent` 并配双主题 `@Preview`。
+> **⚠️ 2026-09-19 实现期更正（用户提供旧版截图比对）**：①7.2 的"summary = 当前选中项标签"改为**静态文案**（与旧 XML 的 `app:summary` 逐字一致，如"点击以显示主题选择器"）——当前选中项只在对话框里体现，随之 `getOrNull` 标签查找与 fast scroll "2" 兜底整段删除；②**补 `HorizontalDivider`**：两个 `PreferenceCategory` 之间的分隔线是旧观感的一部分，7.3 的 `SettingsCategoryHeader` 前各加一条；③滚动条接线按第 3 步决策推迟（正文 7.1 末段作废）。Preview：`SettingsScreen` 状态提升拆出纯数据 `SettingsContent` 并配双主题 `@Preview`。
 >
-> **二轮更正（反编译 androidx.preference 1.2.1 取基准）**：④分隔线色 = 库常量 **`#1f000000`（12% 黑）1dp**（`preference_list_divider_material`，不随主题）——Compose 默认 `outlineVariant` 深色下偏亮，改用常量色；⑤`SettingsContent` 背景统一为 **`surfaceContainer`**（用户拍板：旧 preference 窗口底色偏黑与旧列表页不一致，属无意差异，四页统一）；⑥列表上下内边距 = **0**（`PreferenceFragmentList.Material` 覆盖为 0dp），首分类间距全靠其自带 16dp margin + 8dp padding（=`SettingsCategoryHeader` top 24dp），去掉 contentPadding top 的 12dp；⑦分类标题色**保持 primary**——app 未覆盖 `preferenceCategoryTitleTextColor`，库在 AppCompat 主题下解析为 colorAccent（M3 = colorPrimary），两边同色，观感差异来自背景；字重 Body2 = titleSmall 等价。⑧外链行 title 资源应为 `*_title` 而非 `*_key`（原计划 8.3 表格把 key 当 title 用，真机截图抓出）。
+> **二轮更正（反编译 androidx.preference 1.2.1 取基准）**：④分隔线色 = 库常量 **`#1f000000`（12% 黑）1dp**（`preference_list_divider_material`，不随主题）——Compose 默认 `outlineVariant` 深色下偏亮，改用常量色；⑤`SettingsContent` 背景统一为 **`surfaceContainer`**（用户拍板：旧 preference 窗口底色偏黑与旧列表页不一致，属无意差异，四页统一）；⑥列表上下内边距 = **0**（`PreferenceFragmentList.Material` 覆盖为 0dp），首分类间距全靠其自带 16dp margin + 8dp padding（=`SettingsCategoryHeader` top 24dp），去掉 contentPadding top 的 12dp；⑦分类标题色**保持 primary**——app 未覆盖 `preferenceCategoryTitleTextColor`，库在 AppCompat 主题下解析为 colorAccent（M3 = colorPrimary），两边同色，观感差异来自背景；字重 Body2 = titleSmall 等价。⑧外链行 title 资源应为 `*_title` 而非 `*_key`（原计划 7.3 表格把 key 当 title 用，真机截图抓出）。
 >
 > **三轮澄清（app 主题实为 `Theme.Material3Expressive.DynamicColors.DayNight.NoActionBar`）**：反编译 material 1.14.0 证实 Expressive 相对 Material3 基线的 23 项覆盖**全是焦点环**，不碰分隔线/偏好标题色/内边距——上述基准值不受影响。`DynamicColors` 说明 View 侧同样取壁纸动态色，与 Compose `AppTheme(dynamicColor=true)` 同源，**不存在双真源色差**。真正的 Expressive 差异（焦点环/形状语言/动效）在 Compose 侧需 material3 1.5.0-alpha，维持决策 8：BOM 升 1.5 后与滚动条、Style API 一并处理。
 
-> 所属迁移计划：[README](README.md) · 上一章：[07 第 4 步 Home 与 Others 迁移](07-第4步-Home与Others迁移.md) · 下一章：[09 第 6 步 Navigation 3 与 MainActivity 切换](09-第6步-Navigation3与MainActivity切换.md)
+> 所属迁移计划：[README](README.md) · 上一章：[06 第 4 步 Home 与 Others 迁移](06-第4步-Home与Others迁移.md) · 下一章：[08 第 6 步 Navigation 3 与 MainActivity 切换](08-第6步-Navigation3与MainActivity切换.md)
 
 **改动量：重写 1 个文件（约 30 行）、新增 1 个文件（约 200 行）、1 个单词级修改。**
 这是唯一"重写"而非"翻译"的一步：**官方至今没有 Compose 版 Preference 库**（androidx.preference 停在 2023 年的 1.2.1，无 Compose 支持），官方参考应用 Now in Android 的设置页就是用普通 Material 3 组件手写的。本步照此办理，用 `LazyColumn` + `ListItem` + `Switch` + `AlertDialog` 重建设置页。
 
-好消息是**存储完全不动**：仍读写同一份 `SharedPreferences`（键是 `translatable="false"` 的字符串资源值），老用户的设置原样继承，DataStore 迁移等现代化留作后续独立需求（见第 10 章遗留优化）。
+好消息是**存储完全不动**：仍读写同一份 `SharedPreferences`（键是 `translatable="false"` 的字符串资源值），老用户的设置原样继承，DataStore 迁移等现代化留作后续独立需求（见 09 章遗留优化）。
 
 | 文件 | 操作 | 内容 |
 | --- | --- | --- |
@@ -25,7 +25,7 @@
 | `ui/settings/SettingsFragment.kt` | 重写 | 换成 ComposeView 壳（与列表页同构） |
 | `ui/base/list/MyModelListScreen.kt` | 1 词修改 | 过渡期辅助函数 `rememberBottomBarHeight` 由 `private` 改 `internal`，设置页复用 |
 
-## 8.1 子步 a：Fragment 壳 + 页面骨架 + 偏好读取模式
+## 7.1 子步 a：Fragment 壳 + 页面骨架 + 偏好读取模式
 
 `SettingsFragment` 与列表页完全同构（换成 `SettingsViewModel` 接线），此处从略。 `SettingsScreen.kt` 先立骨架——重点是**偏好的读取模式**：
 
@@ -109,7 +109,7 @@ Text(MyApplication.sharedPreferences.getString(key, null) ?: "")
 // ✅ 正解：读一次进状态，渲染只看状态（写穿模式见上面三段式）
 ```
 
-## 8.2 子步 b：两个"下拉选择" → 选择对话框
+## 7.2 子步 b：两个"下拉选择" → 选择对话框
 
 ### before（XML + 回调）
 
@@ -222,7 +222,7 @@ onSelect = { value ->
 - **`showXxxDialog` 用 `rememberSaveable`**（子步 a 已声明）：旋转屏幕时对话框保持打开，对应系统对话框的默认行为。
 - **`RadioButton(onClick = null)`**：把点击交给整行的 `clickable`，单选框只做展示——"行可点、控件随行"是 M3 的惯用搭配。
 
-## 8.3 子步 c：开关、外链、版本信息
+## 7.3 子步 c：开关、外链、版本信息
 
 开关行（整行可点 + 尾部 `Switch`）：
 
@@ -353,11 +353,11 @@ private fun SettingsCategoryHeader(@StringRes titleRes: Int) {
 **讲解**：
 
 - **`ListItem`**：M3 标准行组件，三个具名槽（`headlineContent`/`supportingContent`/`trailingContent`）正好对应 Preference 的 title/summary/widgetLayout——`preference_widget_material_switch.xml` 这个自定义开关布局文件从此无用（第 7 步删）。
-- **`Switch` 的状态由外部传入**（`checked` + `onCheckedChange` 都在外）——它自己不存状态，这正是"状态提升"（02 章第 3 节）：开关是哑组件，真源在 `SettingsScreen` 的本地状态里。
+- **`Switch` 的状态由外部传入**（`checked` + `onCheckedChange` 都在外）——它自己不存状态，这正是"状态提升"：开关是哑组件，真源在 `SettingsScreen` 的本地状态里。
 - **`Intent`/`Toast` 这类 Android 交互照旧**：`LocalContext.current` 拿 Context，点击回调里随便用——Compose 替换的是"画界面"，不是平台 API。
 - **shop 链接的双 flavor 逻辑零改动**：`stringResource(R.string.about_shop_uri)` 读的是当前 flavor 的资源，构建期决定 URI 的机制与 View 时代完全一致。
 
-## 8.4 验证清单
+## 7.4 验证清单
 
 1. **设置继承**：从旧版本升级上来的设备，主题/滚动条/两个开关的旧值全部正确显示（SharedPreferences 未动）；
 2. 主题切换：选"总是深色" → 整个 app（包括 Compose 页和 View 骨架）立刻变深色（`AppCompatDelegate` 仍在工作，MainActivity 还是 AppCompatActivity）；
@@ -373,4 +373,4 @@ private fun SettingsCategoryHeader(@StringRes titleRes: Int) {
 - 槽位式组件（`AlertDialog`）与哑组件 + 状态提升（`Switch`）两个 M3 惯用法；
 - `LazyColumn` + `ListItem` 取代 `PreferenceScreen` 的完整对应关系。
 
-最后一搏：把导航骨架也换成 Compose——[09 第 6 步 Navigation 3 与 MainActivity 切换](09-第6步-Navigation3与MainActivity切换.md)。
+最后一搏：把导航骨架也换成 Compose——[08 第 6 步 Navigation 3 与 MainActivity 切换](08-第6步-Navigation3与MainActivity切换.md)。
