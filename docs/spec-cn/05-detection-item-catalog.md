@@ -9,7 +9,7 @@
 | **日期** | 2026-09-22 |
 | **计数口径** | 按**检测器方法**计数：Home 23 + Others 37 + Prop 5 = **65 项**，这是评审与排期用的单位，**不等于屏幕行数**。`HomeRepository.detectSecurityPatches()` 与 `HomeRepository.detectTrebleAndGsiCompatibility()` 各产 2 行(所以 Home 屏上是 25 行)；Others 的分区指纹与 Prop 的逐属性表按设备状态产动态多行。 |
 
-## 范围说明(干系人澄清,2026-09-06)
+## 范围说明
 
 三态判定(FR-3)和判定圆点(FR-15)只适用于 **Home** 条目;**Others 和 Prop 是纯展示** —— 没有分级判定的信息行。
 
@@ -112,4 +112,4 @@
 | **techniques** | 允许的检测层级(FR-9:公开 API / 反射 / shell / root-Shizuku) |
 | **三态语义** | 什么算支持 / 不支持 / 未知,以及对应的圆点颜色 —— 按本条目自身语义规定(见 FR-3、FR-15、NFR-7;Q9 已解决) |
 
-条目和检测引擎注册表**一一对应** —— 见《[04 — 架构与决策](04-架构与决策.md)》的检测引擎一节。
+条目和检测引擎注册表**一一对应** —— 见《[04 — 架构与决策](04-architecture-and-decisions.md)》的检测引擎一节。
