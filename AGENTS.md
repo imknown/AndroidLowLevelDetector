@@ -1,6 +1,8 @@
 # AGENTS.md
 
-Guidance for coding agents working in this repository. Read this before making changes; if any doc disagrees with the code, trust the code and update the doc.
+Guidance for coding agents working in this repository. Read this before making changes.
+
+Neither side is authoritative by default: **code and docs can both be wrong**. Code settles what the app does *today* — a verifiable fact. What the app *should* do belongs to the owner, and a doc's statement of intent can itself be a mistake (written too far, or invented). So classify a doc-vs-code disagreement before editing — stale doc, code bug, unimplemented requirement, or a doc that overstated the requirement — and when the evidence won't classify it, or the question is whether stated intent really is the owner's, ask.
 
 Working principles:
 
