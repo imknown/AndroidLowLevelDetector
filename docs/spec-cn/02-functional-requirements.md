@@ -1,6 +1,6 @@
 # 02 — 功能需求
 
-属于 "[LowLevelDetector 规格文档](README.md)" (中文整理版).
+属于 "[LowLevelDetector 规格文档](README.md)".
 
 优先级定义: **P0** = 当前版本必须有 · **P1** = 应该有 · **P2** = 锦上添花 · **BL** = 待办 (确定要做, 先放一放) · **RM** = 路线图. 待办和路线图清单 (BL-x / RM-x 及状态) 只维护一份, 见 "[03 — 非功能需求, 发布与开放问题](03-nfr-release-and-open-questions.md)".
 
