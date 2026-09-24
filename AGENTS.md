@@ -5,7 +5,7 @@ Guidance for coding agents working in this repository. Read this before making c
 Working principles:
 
 - **Memory**: this file is an index, kept short. Record durable findings (settled decisions, conventions, gotchas, doc corrections) in the docs under `docs/` — engineering conventions go in [docs/dev/conventions/](docs/dev/conventions/README.md), everything else in the relevant doc — so the next session starts from them instead of rediscovering. When unsure what or where to record, discuss with the user.
-- **Never guess**: investigate the codebase and docs first; base every change on evidence you can point to (file, line, doc section). When something cannot be determined or multiple valid approaches exist, present findings and ask the user; write `unknown` rather than inventing a value.
+- **Never guess**: investigate the codebase and docs first; base every change on evidence you can point to (file, line, doc section). When something cannot be determined or multiple valid approaches exist, present findings and ask the user; write `unknown` rather than inventing a value. A conflict is a stop sign, not a licence to pick: when the evidence does not settle which side is wrong (doc vs doc, doc vs code), show both sides and ask. Scope an instruction to what was named — a second sentence that looks like the same problem goes on a list you ask about, not into the same edit.
 - **English by default**: anything you generate — docs, comments, commit messages — is in English unless the user specifies otherwise.
 - **No sensitive information** in any document, memory included: no privacy data, passwords, keys, certificates, or signing material.
 
