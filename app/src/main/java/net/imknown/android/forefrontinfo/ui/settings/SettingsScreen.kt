@@ -97,7 +97,7 @@ fun SettingsScreen(viewModel: SettingsViewModel, modifier: Modifier = Modifier) 
         mutableStateOf(MyApplication.sharedPreferences.getBoolean(outdatedOrderKey, false))
     }
 
-    // ---- Version info: mirrors the legacy Fragment ("subscribe + init once"; the VM guards re-entry) ----
+    // ---- Version info: mirrors the legacy Fragment ("subscribe + init once"; the ViewModel guards re-entry) ----
     val version by viewModel.version.collectAsStateWithLifecycle()
     LaunchedEffect(viewModel) {
         viewModel.setBuiltInDataVersion(context.packageManager, context.packageName)
@@ -130,7 +130,7 @@ fun SettingsScreen(viewModel: SettingsViewModel, modifier: Modifier = Modifier) 
             // no broadcast needed: Home observes this preference key itself and reconciles
         },
         onVersionClick = {
-            viewModel.getVersionClickedMessage()?.let { context.toast(it) } // the 7-tap easter-egg logic lives in the VM, reused as-is
+            viewModel.getVersionClickedMessage()?.let { context.toast(it) } // the 7-tap easter-egg logic lives in the ViewModel, reused as-is
         },
         modifier = modifier,
     )
@@ -142,7 +142,7 @@ private fun SettingsContent(
     scrollBarValue: String, // current scroll bar stored value
     allowNetwork: Boolean, // allow-network-data switch
     outdatedOrderFirst: Boolean, // outdated-order-by-package-name switch
-    version: SettingsRepository.Version?, // version info, null until the VM loads it once
+    version: SettingsRepository.Version?, // version info, null until the ViewModel loads it once
     onThemeSelect: (String) -> Unit, // all events go up (dumb component, keeps no state)
     onScrollBarSelect: (String) -> Unit,
     onAllowNetworkChange: (Boolean) -> Unit,
