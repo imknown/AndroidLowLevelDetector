@@ -103,7 +103,7 @@ fun AppRoot() {
                 entry<OthersKey> { MyModelListScreen(viewModel<OthersViewModel>(factory = OthersViewModel.Factory)) } // explicit type: the factory only registers the concrete class (asking for the abstract BaseListViewModel crashes)
                 entry<PropKey> { MyModelListScreen(viewModel<PropViewModel>(factory = PropViewModel.Factory)) } // explicit type, same as above
                 entry<SettingsKey> { SettingsScreen(viewModel(factory = SettingsViewModel.Factory)) }
-            }, // viewModel() called inside the entry content -> automatically scoped to that entry (the VM decorator)
+            }, // viewModel() called inside the entry content -> automatically scoped to that entry (the ViewModelStore decorator)
         )
     }
 
