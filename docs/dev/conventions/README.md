@@ -17,7 +17,7 @@ Detailed memory of how this project is built and the rules for changing it. `AGE
 
 ## Module details
 
-- `:app` — the application; the namespace is also the applicationId. Its `sourceSets` register the package-adjacent res directories: resources live under `java/<package>/…/res` paths (for example `app/src/main/java/net/imknown/android/forefrontinfo/ui/home/res`), there is no `app/src/main/res`, and new res directories must be registered in `app/build.gradle.kts` sourceSets.
+- `:app` — the application; the namespace is also the applicationId. Its `sourceSets` register the package-adjacent res directories: resources live under `java/<package>/.../res` paths (for example `app/src/main/java/net/imknown/android/forefrontinfo/ui/home/res`), there is no `app/src/main/res`, and new res directories must be registered in `app/build.gradle.kts` sourceSets.
 - `build-logic` — included build holding the convention plugins; the single source of SDK and build values for all modules. Shared configuration (SDK, desugaring, Java toolchain, Kotlin compiler args, test dependencies) lives in `build-logic/convention/src/main/kotlin/.../android/`; modules only apply plugins. Adding a convention plugin: implement it under `build-logic/convention`, then register an alias in the `[plugins]` section of `gradle/toml/android.toml`.
 
 ## Architecture
@@ -41,7 +41,7 @@ Screen (Compose) → ViewModel (StateFlow) → Repository → DataSource
 Current workflow (list order = call order):
 
 1. Add property keys / shell commands to the feature `DataSource`.
-2. Add a `detect…()` method to the feature `Repository` returning `MyModel`.
+2. Add a `detect...()` method to the feature `Repository` returning `MyModel`.
 3. Call it from the feature `ViewModel.collectModels()` — the call order defines the list order.
 4. Add the strings to the feature package's `strings.xml` (default English) plus the three translation files.
 5. If the item needs a new package with resources, register its res directory in `app/build.gradle.kts` sourceSets.
@@ -53,7 +53,7 @@ Rules for new code — they encode settled decisions; don't make existing debt w
 
 - Spell `ViewModel` out in full — never abbreviate it to `VM`, in identifiers, comments, commit messages, or docs. `VM` is already the abbreviation of *virtual machine*, which this app detects as a subject in its own right (process/VM architecture, `getArchitecture`), so the short form is ambiguous even where the meaning is obvious from context. `UseCase` and `DataSource` are spelled out the same way — no `UC` / `DS`.
 - No static event buses: never put `SharedFlow`/`StateFlow` in a ViewModel companion object. Cross-feature data goes through a repository.
-- The global `myAndroid` (`AndroidVersionExt`) has exactly two writers: `initMyAndroid()` at startup (`MyApplication.onCreate`, from the runtime `Build.VERSION`) and the known-values override in `HomeRepository.detectAndroid()`. Never assign to it anywhere else — the `isAtLeast…()` helpers read it from everywhere.
+- The global `myAndroid` (`AndroidVersionExt`) has exactly two writers: `initMyAndroid()` at startup (`MyApplication.onCreate`, from the runtime `Build.VERSION`) and the known-values override in `HomeRepository.detectAndroid()`. Never assign to it anywhere else — the `isAtLeast...()` helpers read it from everywhere.
 - minSdk is 24: gate newer APIs with the `isAtLeastAndroidX()` helpers or `@RequiresApi`.
 - Blocking work (shell, system properties, files, network) runs on `Dispatchers.IO`, not `Dispatchers.Default`.
 - `ShellDefault` has no callers on purpose: it is the kept-in-reserve native shell implementation that does not depend on libsu (the live one is `ShellLibSu`). Don't delete it as dead code; if it is ever enabled, fix its read-after-`waitFor()` pipe deadlock first (架构体检 [AR-18.1](../architecture-review-cn/04-反模式与隐患.md#AR-18)).
