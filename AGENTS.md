@@ -28,13 +28,7 @@ Flavors, signing, toolchains, version catalogs, and all build conventions: see [
 
 ## Where to look
 
-| Topic | Doc |
-|---|---|
-| Build / architecture / code rules / localization / workflow details | [docs/dev/conventions/](docs/dev/conventions/README.md) |
-| Docs index & reading order | [docs/README.md](docs/README.md) |
-| Product spec — deliberately written without reading the code; when code and spec disagree, verify which is right, then fix the wrong one | [docs/spec-cn/](docs/spec-cn/README.md) |
-| View→Compose migration plan behind this branch — read its "key decisions" before touching UI | [docs/dev/compose-migration-plan-cn/](docs/dev/compose-migration-plan-cn/README.md) |
-| View-era architecture review and quick wins — re-verify findings against current code before acting | [docs/dev/architecture-review-cn/](docs/dev/architecture-review-cn/README.md) |
+[docs/README.md](docs/README.md) is the index: what each doc is, the reading order, and the doc-writing rules (fix a wrong statement in place; leave frozen records such as the migration plan as they were written). [docs/dev/README.md](docs/dev/README.md) does the same for the developer docs and marks which are living.
 
 Conventions that deliberately diverge from the mainstream template are called out inline in the conventions doc — don't "normalize" them in passing.
 
