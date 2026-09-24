@@ -26,7 +26,7 @@ LowLevelDetector 是一个**独立的 Android 应用**:查它所装的那台设�
 | **VINTF** | Treble 用的一套兼容性清单/框架,用来检查供应商接口匹不匹配。 |
 | **A/B(无缝)更新** | 双槽位分区方案:更新在后台下载安装,重启一下就切到新系统。 |
 | **动态分区 / SAR** | 较新的分区方案(super 分区;system-as-root)。 |
-| **GSI / GKI** | 通用系统镜像 / 通用内核镜像。 |
+| **GSI** | 通用系统镜像(Generic System Image)。 |
 | **三态结果** | 每个条目的结论模型:**支持 / 不支持 / 未知**。 |
 | **SSOT** | Single Source of Truth,唯一数据来源 —— 一份状态只有一个地方说了算。 |
 | **UDF** | Unidirectional Data Flow,单向数据流 —— 操作从界面往数据层传,数据再流回界面,不存在两头互相改。 |
