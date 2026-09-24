@@ -45,15 +45,15 @@
 ```mermaid
 flowchart TD
     subgraph Replaceable["可替换层(只有这层会变)"]
-        UI["UI —— 今天 View+XML → 明天 Compose → 将来 CMP<br/>显示状态、收集用户操作"]
+        Ui["UI —— 今天 View+XML → 明天 Compose → 将来 CMP<br/>显示状态、收集用户操作"]
     end
     subgraph Reusable["跨界面迁移可复用(P5)"]
-        VM["表现层 —— ViewModel<br/>持有 UiState(屏幕的唯一数据来源)、编排单向数据流"]
-        UC["领域层 —— UseCase<br/>薄、单一职责的业务操作"]
-        REPO["数据层 —— Repository<br/>把设备本地结果与缓存的参考数据合并"]
-        DS["DataSource<br/>设备探针:公开 API / 反射 / shell / root-Shizuku<br/>远端参考数据源 + 私有目录缓存"]
+        ViewModel["表现层 —— ViewModel<br/>持有 UiState(屏幕的唯一数据来源)、编排单向数据流"]
+        UseCase["领域层 —— UseCase<br/>薄、单一职责的业务操作"]
+        Repository["数据层 —— Repository<br/>把设备本地结果与缓存的参考数据合并"]
+        DataSource["DataSource<br/>设备探针:公开 API / 反射 / shell / root-Shizuku<br/>远端参考数据源 + 私有目录缓存"]
     end
-    UI --> VM --> UC --> REPO --> DS
+    Ui --> ViewModel --> UseCase --> Repository --> DataSource
 ```
 
 这些层的边界存在于**每个特性自己的目录树里**(P4):不存在全局的「所有 ViewModel 都放这儿」这种包。跨特性共用的东西(三态模型、检测器抽象、缓存格式)放在共享的稳定包里。
@@ -65,23 +65,23 @@ flowchart TD
 ```mermaid
 flowchart LR
     subgraph Screen["结果屏幕"]
-        UI["UI<br/>(今天 View / 将来 Compose)"]
+        Ui["UI<br/>(今天 View / 将来 Compose)"]
     end
     subgraph Logic["可复用逻辑(界面迁移后依然在用)"]
-        VM["ViewModel<br/>UiState = 唯一数据来源"]
-        REPO["Repository"]
-        ENGINE["检测引擎<br/>(检测器注册表)"]
-        CACHE[("私有目录缓存<br/>参考数据")]
-        REMOTE["远端参考数据源"]
-        PROBES["设备数据源<br/>公开 API / 反射 /<br/>shell / root-Shizuku"]
+        ViewModel["ViewModel<br/>UiState = 唯一数据来源"]
+        Repository["Repository"]
+        Engine["检测引擎<br/>(检测器注册表)"]
+        Cache[("私有目录缓存<br/>参考数据")]
+        Remote["远端参考数据源"]
+        Probes["设备数据源<br/>公开 API / 反射 /<br/>shell / root-Shizuku"]
     end
-    UI -- "事件: Entry, PullToRefresh, (未来: RowRefresh)" --> VM
-    VM -- "单一编排任务(去重)" --> ENGINE
-    ENGINE --> PROBES
-    REPO --> CACHE
-    REPO --> REMOTE
-    CACHE -. "离线优先读取" .-> REPO
-    VM -- "StateFlow<UiState>" --> UI
+    Ui -- "事件: Entry, PullToRefresh, (未来: RowRefresh)" --> ViewModel
+    ViewModel -- "单一编排任务(去重)" --> Engine
+    Engine --> Probes
+    Repository --> Cache
+    Repository --> Remote
+    Cache -. "离线优先读取" .-> Repository
+    ViewModel -- "StateFlow<UiState>" --> Ui
 ```
 
 规则:
