@@ -51,6 +51,7 @@ Current workflow (list order = call order):
 
 Rules for new code — they encode settled decisions; don't make existing debt worse:
 
+- Spell `ViewModel` out in full — never abbreviate it to `VM`, in identifiers, comments, commit messages, or docs. `VM` is already the abbreviation of *virtual machine*, which this app detects as a subject in its own right (process/VM architecture, `getArchitecture`), so the short form is ambiguous even where the meaning is obvious from context. `UseCase` and `DataSource` are spelled out the same way — no `UC` / `DS`.
 - No static event buses: never put `SharedFlow`/`StateFlow` in a ViewModel companion object. Cross-feature data goes through a repository.
 - The global `myAndroid` (`AndroidVersionExt`) has exactly two writers: `initMyAndroid()` at startup (`MyApplication.onCreate`, from the runtime `Build.VERSION`) and the known-values override in `HomeRepository.detectAndroid()`. Never assign to it anywhere else — the `isAtLeast…()` helpers read it from everywhere.
 - minSdk is 24: gate newer APIs with the `isAtLeastAndroidX()` helpers or `@RequiresApi`.
