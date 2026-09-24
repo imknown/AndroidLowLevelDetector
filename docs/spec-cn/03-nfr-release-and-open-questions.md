@@ -1,6 +1,6 @@
 # 03 — 非功能需求, 发布与开放问题
 
-属于 "[LowLevelDetector 规格文档](README.md)" (中文整理版).
+属于 "[LowLevelDetector 规格文档](README.md)".
 
 ## 1. 非功能需求
 
