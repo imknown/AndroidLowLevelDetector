@@ -6,7 +6,7 @@
 > - 本章核心知识点 `produceState`「记住最近一次 Done 以防闪空」被换掉：状态拆成 `modelsStateFlow` + `isLoadingStateFlow` 两条流（`002f25b3`；`BaseListViewModel.modelsStateFlow / isLoadingStateFlow`），刷新期间保留旧列表由数据流本身保证（`MyModelListScreen() 的 LaunchedEffect { viewModel.init() }`），不再需要 `produceState`。
 > - 连带删除了 `ui/common/StateExt.kt`（`State` 密封接口）；`ToastExt.kt` 仍在。
 
-> 所属迁移计划：[README](README.md) · 上一章：[04 第 1 步 列表卡片组件](04-第1步-列表卡片组件.md) · 下一章：[06 第 3 步 交互补齐](06-第3步-交互补齐.md)
+> 所属迁移计划：[README](README.md) · 上一章：[03 第 1 步 列表卡片组件](03-第1步-列表卡片组件.md) · 下一章：[05 第 3 步 交互补齐](05-第3步-交互补齐.md)
 
 **改动量：重写 1 个文件（约 40 行）、新增 1 个文件（约 70 行）。**
 这是第一个"真的跑起来"的 Compose 界面：Prop（属性）页整页换成 Compose，ViewModel 与数据层一行不动。
@@ -19,7 +19,7 @@
 **本步完成后的已知缺口**（下一步补回）：下拉刷新、滚动条设置项暂不生效。
 选 Prop 页打头是因为它最简单（纯列表、无事件监听）；官方迁移策略页也建议从"数据显示相对静态的简单屏幕"起步。
 
-## 5.1 before：PropFragment（现状）
+## 4.1 before：PropFragment（现状）
 
 ```kotlin
 class PropFragment : BaseListFragment() {   // ← 列表基建全靠继承
@@ -39,7 +39,7 @@ class PropFragment : BaseListFragment() {   // ← 列表基建全靠继承
 
 继承链 `BaseListFragment` 替我们做了：insets 监听、滚动条模式、SwipeRefreshLayout 配色与刷新回调、RecyclerView 四件套装配、订阅 `modelsStateFlow` 并 `submitList`。换成 Compose 后这些全部由一个可组合函数承担。
 
-## 5.2 after：新 PropFragment + 共用列表屏幕
+## 4.2 after：新 PropFragment + 共用列表屏幕
 
 **`ui/prop/PropFragment.kt`（重写）**——ViewModel 接线原封不动，界面部分只剩官方互操作样板：
 
@@ -67,7 +67,7 @@ class PropFragment : Fragment() {   // ← 不再继承 BaseListFragment：列�
         // 官方推荐策略：视图树生命周期销毁时一并销毁组合（防止 Fragment 视图重建时泄漏旧组合）
         setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
         setContent {                                 // Compose 版 "setContentView"
-            AppTheme {                               // 必须显式包主题（原因见 5.3 讲解）
+            AppTheme {                               // 必须显式包主题（原因见 4.3 讲解）
                 MyModelListScreen(listViewModel)     // 交接给屏幕组件，Fragment 的活到此为止
             }
         }
@@ -199,7 +199,7 @@ private fun rememberBottomBarHeight(): Dp {
 
 （`State`、`MyModel` 等本包内引用与少量导入从略。）
 
-## 5.3 逐点讲解
+## 4.3 逐点讲解
 
 ### ComposeView 互操作（官方"Compose 进 View 世界"的标准姿势）
 
@@ -212,7 +212,7 @@ private fun rememberBottomBarHeight(): Dp {
 ### 状态订阅三件套
 
 - **`collectAsStateWithLifecycle()`**：`StateFlow` → Compose `State`，且跟随**生命周期**（STOPPED 时暂停收集，比 `collectAsState()` 省电、也避免后台页白白重组）。这是官方推荐的默认选择，来自第 0 步加的 `lifecycle-runtime-compose`。
-- **`produceState`**：把"非状态的东西"（这里是'最近一次成功的数据'）变成状态。它的 lambda 是协程，`key` 变化时重跑、不满足条件时**保留旧值**——正好实现"刷新时列表不闪空"。02 章第 3 节的落地。
+- **`produceState`**：把"非状态的东西"（这里是'最近一次成功的数据'）变成状态。它的 lambda 是协程，`key` 变化时重跑、不满足条件时**保留旧值**——正好实现"刷新时列表不闪空"。单向数据流「状态提升」的落地。
 - **`LaunchedEffect(viewModel) { viewModel.init() }`**：任何"进组合时启动、离组合即取消"的副作用都走这里；直接在函数体里调 `init()` 会在每次重组重复触发。
 
 **白话（三件套各一句）**：`collectAsStateWithLifecycle` 是**收快递**——家里有人（界面可见）才收；`produceState` 是**腌罐头**——把外面的食材加工成"冰箱里随取随用的存货（状态）"；`LaunchedEffect` 是**值日生**——进门干活、出门走人。
@@ -229,7 +229,7 @@ val models = (state as? State.Done)?.value.orEmpty()
 // ❌ 坑三：produceState 忘了传 key——块只在首次组合跑一次，之后 state 怎么变都不更新
 val models by produceState(persistentListOf<MyModel>()) { /* 永远只有初值 */ }
 
-// ✅ 正例：见上面 5.2 的 ①③——带生命周期收集 + 带 key 的 produceState
+// ✅ 正例：见上面 4.2 的 ①③——带生命周期收集 + 带 key 的 produceState
 ```
 
 ### LazyColumn 的 key 与 contentType
@@ -241,7 +241,7 @@ val models by produceState(persistentListOf<MyModel>()) { /* 永远只有初值 
 
 `MyModelListScreen` 收的是 `BaseListViewModel`（屏幕级组件拿 ViewModel 是官方允许且推荐的形态），但它**不向下传递** ViewModel——卡片只收 `MyModel` 数据。第 4 步加 Home 页事件时，会看到"屏幕组件包一层、事件用 LaunchedEffect 收"的扩展方式。
 
-## 5.4 验证清单
+## 4.4 验证清单
 
 1. `./gradlew :app:assembleFossDebug` 编译通过；
 2. 运行 → Prop 页：卡片样式与迁移前一致（圆角、底色 surfaceBright、字号、色点位置）、上下左右留白一致、深色/动态取色正常；
@@ -255,4 +255,4 @@ val models by produceState(persistentListOf<MyModel>()) { /* 永远只有初值 
 - `collectAsStateWithLifecycle` / `produceState` / `LaunchedEffect` 三个状态侧 API 的分工；
 - LazyColumn 的 `contentPadding` / `spacedBy` / `key` / `contentType` 与旧 RV 体系的逐项对应。
 
-下一章补齐交互：[06 第 3 步 交互补齐](06-第3步-交互补齐.md)。
+下一章补齐交互：[05 第 3 步 交互补齐](05-第3步-交互补齐.md)。

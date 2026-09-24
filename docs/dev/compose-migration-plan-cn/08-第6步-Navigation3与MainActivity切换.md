@@ -7,9 +7,9 @@
 > - 计划外新增 `AppRootShell` 拆分，让外壳可预览（`26ee0f9d`）。
 > - 验证清单的「四档主题模式」为三档；切标签的转场在 `a5d3a28a` 显式改成两端 `None`（决策点 3 就地更新）。
 
-> **⚠️ 2026-09-19 实现期更正**：①**4 个 VM 的 `savedStateHandle` 参数整体删除**（4 个 VM 均未实际使用该参数，9.3 备注允许；连带消除 Nav3 条目作用域下 `createSavedStateHandle()` 缺 extras 的风险点），工厂改为"仓库在 initializer 内构造"；②**`main_activity.xml`/`bottom_nav_menu.xml` 推迟到第 7 步删除**（对计划删除清单的有意偏差：`BaseListFragment` 仍引用 `MainActivity.binding`，现在删 XML 会编译失败；MainActivity 重写后仍保留 `internal val binding` 惰性属性，未访问不会 inflate）；③`TopAppBar` 在 m3 1.4.0 仍需 `@OptIn(ExperimentalMaterial3Api)`；④`entryDecorators` 需显式声明为 `List<NavEntryDecorator<NavKey>>`（Kotlin 泛型推断失败）；⑤完整 M3E 逐条目圆角卡布局已实验并按用户决定回滚，等 material3 1.5.0 转正（同决策 6/8 批次）。
+> **⚠️ 2026-09-19 实现期更正**：①**4 个 VM 的 `savedStateHandle` 参数整体删除**（4 个 VM 均未实际使用该参数，8.3 备注允许；连带消除 Nav3 条目作用域下 `createSavedStateHandle()` 缺 extras 的风险点），工厂改为"仓库在 initializer 内构造"；②**`main_activity.xml`/`bottom_nav_menu.xml` 推迟到第 7 步删除**（对计划删除清单的有意偏差：`BaseListFragment` 仍引用 `MainActivity.binding`，现在删 XML 会编译失败；MainActivity 重写后仍保留 `internal val binding` 惰性属性，未访问不会 inflate）；③`TopAppBar` 在 m3 1.4.0 仍需 `@OptIn(ExperimentalMaterial3Api)`；④`entryDecorators` 需显式声明为 `List<NavEntryDecorator<NavKey>>`（Kotlin 泛型推断失败）；⑤完整 M3E 逐条目圆角卡布局已实验并按用户决定回滚，等 material3 1.5.0 转正（同决策 6/8 批次）。
 
-> 所属迁移计划：[README](README.md) · 上一章：[08 第 5 步 Settings 页面重建](08-第5步-Settings页面重建.md) · 下一章：[10 第 7 步 清理收尾](10-第7步-清理收尾.md)
+> 所属迁移计划：[README](README.md) · 上一章：[07 第 5 步 Settings 页面重建](07-第5步-Settings页面重建.md) · 下一章：[09 第 7 步 清理收尾](09-第7步-清理收尾.md)
 
 **改动量：新增 2 个文件、重写 1 个文件（MainActivity）、修改 6 处（4 个 VM 的 Factory + 两个屏幕组件的内边距退役）、删除 8 个文件。**
 这是最大的一步，也是最后一步"动骨架"：四个页面已经全部 Compose 化，现在把 Fragment 体系、CoordinatorLayout、BottomNavigationView 一起收掉，换成官方 Compose-only 架构（单 Activity + Navigation 3）。官方迁移指南的顺序要求正是"**所有目的地都变成 composable 之后**才整体切换导航"——此刻条件刚好凑齐。
@@ -19,11 +19,11 @@
 | `ui/navigation/NavKeys.kt` | 新增 | 四个导航目的地（`@Serializable` + `NavKey`） |
 | `ui/AppRoot.kt` | 新增 | Scaffold + NavigationBar + NavDisplay 多返回栈骨架 |
 | `ui/MainActivity.kt` | 重写 | 只剩 `enableEdgeToEdge` + `setContent` |
-| `HomeViewModel` 等 4 个 VM 的 `Factory` | 修改 | 仓库改在 initializer 内构造（详见 9.3） |
-| `MyModelListScreen.kt` / `SettingsScreen.kt` | 修改 | 过渡期内边距代码退役（详见 9.5） |
+| `HomeViewModel` 等 4 个 VM 的 `Factory` | 修改 | 仓库改在 initializer 内构造（详见 8.3） |
+| `MyModelListScreen.kt` / `SettingsScreen.kt` | 修改 | 过渡期内边距代码退役（详见 8.5） |
 | `PropFragment` / `OthersFragment` / `HomeFragment` / `SettingsFragment`、`MainViewModel.kt`、`main_activity.xml`、`bottom_nav_menu.xml`、`drop_scale.xml` | 删除 | 全部职责被上表取代 |
 
-## 9.1 导航目的地：NavKey
+## 8.1 导航目的地：NavKey
 
 ```kotlin
 // ui/navigation/NavKeys.kt
@@ -42,7 +42,7 @@ data object SettingsKey : NavKey
 
 **讲解**：Navigation 3 的目的地是一个"键"而不是页面——`NavKey` 只是标记接口，必须配 `@Serializable`（返回栈要靠序列化在进程重建后恢复，kotlinx.serialization 插件项目已启用）。四个键都是 `data object`：无参数目的地用最省的写法。
 
-## 9.2 AppRoot：多返回栈骨架
+## 8.2 AppRoot：多返回栈骨架
 
 现状的"记住上个标签 + 手动 show/hide Fragment"在 Navigation 3 里有官方等价配方（[Nav3 迁移指南](https://developer.android.com/guide/navigation/navigation-3/migration-guide) 与官方 nav3-recipes 的 MultipleStacks 示例）：**每个顶层标签一条独立返回栈**，切换标签 = 换渲染的栈；未渲染的栈连同其界面状态、ViewModel 一起保留——与现在 Fragment show/hide 的行为一致。
 
@@ -118,7 +118,7 @@ fun AppRoot() {
     ) { innerPadding ->   // Scaffold 算好的避让量（顶栏 + 底栏 + 系统栏）——insets 时代结束
         NavDisplay(
             entries = decoratedEntries[currentTabIndex],   // 只渲染当前标签那条栈的条目
-            onBack = { activity?.finish() },   // 见 9.6 行为说明；Context 已在组合里取好（见函数开头）
+            onBack = { activity?.finish() },   // 见 8.6 行为说明；Context 已在组合里取好（见函数开头）
             modifier = Modifier.padding(innerPadding),     // 用脚手架给的避让量，一行搞定
         )
     }
@@ -149,7 +149,7 @@ val entryDecorators = listOf(rememberViewModelStoreNavEntryDecorator())   // 只
 
 // ✅ 正例：两个装饰器都上（官方指南的标准组合），状态与 VM 各有人管
 ```
-- **`Scaffold`**：M3 的页面脚手架。给它 `topBar` / `bottomBar`，它通过 `innerPadding` 告诉内容区"避开这些栏和系统 insets"——第 2 步那些手算 insets、去 Activity 量底栏高度的过渡代码，到这一步**全部退役**（9.5）。这就是 01 章"痛点表"里第一行的兑现。
+- **`Scaffold`**：M3 的页面脚手架。给它 `topBar` / `bottomBar`，它通过 `innerPadding` 告诉内容区"避开这些栏和系统 insets"——第 2 步那些手算 insets、去 Activity 量底栏高度的过渡代码，到这一步**全部退役**（8.5）。这就是 01 章"痛点表"里第一行的兑现。
 - **`NavigationBar` / `NavigationBarItem`**：`BottomNavigationView` 的 M3 对应物（stable），selected/onClick/icon/label 四个参数对号入座，菜单 XML 换成了普通数据列表。
 - **`rememberNavBackStack(key)`**：可保存的返回栈。四个栈各自独立，换标签不销毁——对应"四个 Fragment 只建一次、此后 show/hide"。
 - **`rememberDecoratedNavEntries(backStack, entryDecorators, entryProvider)`**：把"栈里的键"加工成"可渲染的条目"。装饰器是 Nav3 的扩展点：
@@ -158,7 +158,7 @@ val entryDecorators = listOf(rememberViewModelStoreNavEntryDecorator())   // 只
 - **`entryProvider { entry<HomeKey> { ... } }`**：键 → 界面的映射 DSL，类型参数就是 NavKey 类型，编译器保证穷尽。这是官方现行命名（2025 年早期预览的 `rememberNavEntryProvider` / `NavEntryProviderCreator` 等名字均已废弃，勿用旧资料）。
 - **`NavDisplay(entries, onBack)`**：只渲染传入的条目列表并接好系统返回（含预测性返回手势的动画）。
 
-## 9.3 ViewModel 接线：Fragment 时代 → 条目时代
+## 8.3 ViewModel 接线：Fragment 时代 → 条目时代
 
 Fragment 删除后，`viewModels(extrasProducer = ...)` 的接线随之消失。4 个 ViewModel 的 `Factory` 做一处小简化——仓库从 `CreationExtras` 注入改为在 initializer 内直接构造（它们都是无状态轻对象）：
 
@@ -183,11 +183,11 @@ val Factory: ViewModelProvider.Factory = viewModelFactory {
 }
 ```
 
-条目内一行取用（9.2 的 `entryProvider` 里）：`viewModel(factory = PropViewModel.Factory)`——作用域是该 NavKey 的条目，等价于原来的 Fragment 作用域。`MY_REPOSITORY_KEY` 常量与四个 Fragment 里的 extrasProducer 样板一并删除。
+条目内一行取用（8.2 的 `entryProvider` 里）：`viewModel(factory = PropViewModel.Factory)`——作用域是该 NavKey 的条目，等价于原来的 Fragment 作用域。`MY_REPOSITORY_KEY` 常量与四个 Fragment 里的 extrasProducer 样板一并删除。
 
 > 实现验证点：`createSavedStateHandle()` 需要宿主提供 SavedStateHandle 相关 extras。当前 4 个 ViewModel 都**收了但没实际使用**这个参数，若条目作用域下初始化报缺 extras，可改传空的 `SavedStateHandle()` 或顺势删掉该参数，不影响任何功能。
 
-## 9.4 MainActivity：从 120 行到 25 行
+## 8.4 MainActivity：从 120 行到 25 行
 
 ### before（节选）
 
@@ -210,7 +210,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
 ### after
 
 ```kotlin
-class MainActivity : AppCompatActivity() {   // 暂留 AppCompatActivity（原因见下方讲解与 9.6 决策点）
+class MainActivity : AppCompatActivity() {   // 暂留 AppCompatActivity（原因见下方讲解与 8.6 决策点）
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()                   // 边到边：内容铺到系统栏后面（避让交给 Scaffold）
@@ -231,9 +231,9 @@ class MainActivity : AppCompatActivity() {   // 暂留 AppCompatActivity（原�
 **讲解**：
 
 - **`setContent { }`**：`ComponentActivity` 系的扩展（`activity-compose`），Activity 内容整棵树变成 Compose。窗口主题仍来自 manifest 的 `@style/AppTheme`（XML 主题继续负责窗口背景/启动外观，只是不再提供控件样式）。
-- **保留 `AppCompatActivity`** 是刻意的最小改动：主题模式的"跟随省电模式/总是深色"目前靠 `AppCompatDelegate.setDefaultNightMode`（`MyApplication` 里），它只对 AppCompat Activity 生效；AppCompatDelegate 换夜间模式会重建 Activity，Compose 状态经 `rememberSaveable`/ViewModelStore 自动存活。迁到 `ComponentActivity` + Compose 侧自管 darkTheme 的方案见第 10 章"遗留优化"。
+- **保留 `AppCompatActivity`** 是刻意的最小改动：主题模式的"跟随省电模式/总是深色"目前靠 `AppCompatDelegate.setDefaultNightMode`（`MyApplication` 里），它只对 AppCompat Activity 生效；AppCompatDelegate 换夜间模式会重建 Activity，Compose 状态经 `rememberSaveable`/ViewModelStore 自动存活。迁到 `ComponentActivity` + Compose 侧自管 darkTheme 的方案见 09 章"遗留优化"。
 
-## 9.5 过渡期内边距退役
+## 8.5 过渡期内边距退役
 
 `Scaffold(innerPadding)` 接管 insets 后，两处屏幕组件做减法：
 
@@ -251,11 +251,11 @@ class MainActivity : AppCompatActivity() {   // 暂留 AppCompatActivity（原�
 
 `SettingsScreen` 的 LazyColumn 同样处理；`rememberBottomBarHeight` 函数删除。列表项的 12dp 横向留白保留（那是内容设计的一部分，不是 insets 补偿）。
 
-## 9.6 行为变化说明与决策点
+## 8.6 行为变化说明与决策点
 
 诚实起见，本步有四处行为差异，除特别标注外建议接受；不接受按括号内方案改：
 
-1. **返回键**：现状任何标签按返回直接退出；官方 Nav3 迁移指南假设"从非首页标签按返回先回首页"（exit through home）。本方案保持现状（`onBack = { activity?.finish() }`，`activity` 见 9.2 开头）；想跟官方对齐改成 `if (currentTabIndex != 0) currentTabIndex = 0 else activity?.finish()` 即可。
+1. **返回键**：现状任何标签按返回直接退出；官方 Nav3 迁移指南假设"从非首页标签按返回先回首页"（exit through home）。本方案保持现状（`onBack = { activity?.finish() }`，`activity` 见 8.2 开头）；想跟官方对齐改成 `if (currentTabIndex != 0) currentTabIndex = 0 else activity?.finish()` 即可。
 2. **底栏不再随滚动隐藏**：现状 `hide_bottom_view_on_scroll_behavior` 让底栏滚动时下潜；`Scaffold.bottomBar` 默认常显。要复刻需自写 NestedScrollConnection（约 30 行），收益有限，建议接受常显（这也是 M3 应用的主流形态）。
 3. **标签切换动画**：现状 `drop_scale`（1.025 → 1.0 缩放 100ms）。**已定方案：不复刻缩放，切换瞬时完成、不做任何转场。** 标签切换是整栈替换，NavDisplay 视作前进导航，会走它自己的默认转场（fadeIn + fadeOut，各 700ms，该常量在库内为 internal），所以"不要动画"必须在 `AppRoot` 里显式设 `transitionSpec = { EnterTransition.None togetherWith ExitTransition.None }`。设备实测（1x 动画速率、约 0.6s 一帧连续抓帧）：切换是干净的一步，无中间帧、无空白帧。另附实测到的库行为：退出侧只给 `ExitTransition.None` 时旧页面不会淡出，而是保持不透明绘制到转场结束。若要改成按标签复刻缩放，可用每条目元数据定制：
 
@@ -272,7 +272,7 @@ entry<PropKey>(
 
 4. **底栏选中标签颜色**：material3 1.4.0 起选中态标签色从 `onSurface` 改为 `secondary`（官方为对比度与系统一致性所做的全局调整）。与旧版 BottomNavigationView 存在轻微视觉差，如需复刻旧色可用 `NavigationBarItemDefaults.colors()` 覆盖，建议接受官方新默认。
 
-## 9.7 验证清单
+## 8.7 验证清单
 
 1. 四个标签切换：数据/滚动位置各自保留；切走再切回不重新加载（对应 Fragment show/hide）；
 2. 杀进程重启：回到退出前所在标签（rememberSaveable + NavBackStack 序列化恢复）；
@@ -288,4 +288,4 @@ entry<PropKey>(
 - 多返回栈配方与装饰器体系（SaveableState + ViewModelStore 两个装饰器的分工）；
 - `Scaffold` + `innerPadding` 如何一次性吃掉整个 insets 问题域。
 
-最后一章把屋子扫干净：[10 第 7 步 清理收尾](10-第7步-清理收尾.md)。
+最后一章把屋子扫干净：[09 第 7 步 清理收尾](09-第7步-清理收尾.md)。
