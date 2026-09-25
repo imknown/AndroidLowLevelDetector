@@ -5,6 +5,7 @@
 > **2026-09-13 三次改版**:①原第四分册 "实施路线图 (批次 0-7+)" 退役 (负责人定: 业务逻辑修复暂缓, 集中攻架构, 改动一步到位), 仍有行动价值的内容已并入各条目与[修复路线](#修复路线-2026-09-13-改版-架构优先);②全部分册**按问题类型重排**(架构 / SSOT / UDF / 反模式 / 已裁定), 不再按 P0/P1/P2 优先级分册; 已经修好的条目 (AR-10, AR-13 的 1/2/4/11/14 号子项, AR-17 的 VIEW 残留部分, R9, C2) 直接删除, 记录留在 git 历史里; ③当日把独立的 "清单对照检查" 文档吸收为[规范基线对照](#规范基线对照-android项目规范清单)一节 (与 AR 条目重叠的不再重复), 通用基线单独成文 [A-Android项目规范清单.md](A-Android项目规范清单.md).
 > **2026-09-22 复验 (minSdk 24)**:`20f4fe08` 把 minSdk 从 23 升到 24 后, 依赖 API 23 的内容按上面的惯例清理 — AR-13.12(`< Android 7` 分支的显示 bug) 随该分支删除而消解, 条目已删; AR-18.4 / [快赢 QW-4](06-快赢清单.md)(暗色主题弃用常量) 早在本分支 Compose 迁移中作废 (`26b9094f`), 条目与索引行已删. 文中 SDK 数字已与代码同步.
 > **2026-09-25**:独立的 quick-wins-cn/ 快赢清单目录并入为本目录第六分册 [快赢清单](06-快赢清单.md), 正文原样保留 (跨目录链接改为本目录内链接); 清单整体暂缓, 状态见其章首.
+> **2026-09-25 复验 (Compose 迁移后)**:View 层已清空 (单 Activity + Navigation 3 + M3, 无 Fragment / XML / AppCompat). 全部条目对照 jetpack-compose-new 分支 `a87f80e1` 逐一复核 — 迁移 "数据层一行不动" 的设计使所有 AR / C / R / A 发现**仍然成立, 无条目因此删除**; 本轮改写的是过时的载体描述 (总体诊断的分层链与 "加一个设置项" 清单, [已经做对的地方](#已经做对的地方), [规范基线对照](#规范基线对照-android项目规范清单)的 UI 行, [附录 A](#appendix-a) 的 S7), 另有 [R2](05-已裁定事项.md#R2) 追加复验, [R10](05-已裁定事项.md#R10) 修正一句与代码不符的转述.
 
 一句话总结: 项目的分层骨架 (UI → ViewModel → Repository → DataSource) 方向是对的, 但**每一层都干了不该自己干的事** — 数据层直接生产界面内容, 全局单例随处可改, 设置项没有唯一的数据来源. 单个问题都不致命, 合在一起会让 "加一个设置项 / 加一个检测条目" 要动的文件越来越多. 此外, 规格对照审计确认了**逐条错误隔离 (FR-6) 没实现是发布阻塞**(C1: 检测没做保护, 一抛异常整个应用就崩; 原判发布阻塞, 2026-09-13 负责人定暂缓, 不作为当前发布门槛, 见条目).
 
@@ -87,13 +88,13 @@
 
 ## 总体诊断
 
-项目表面上分了四层 (Fragment → ViewModel → Repository → DataSource), 但**层和层之间传的东西类型不对**: 从 DataSource 一路到 RecyclerView, 传的都是 `MyModel` — 一个已经拼好翻译文案, 带好主题色资源 ID 的**界面模型**. 于是:
+项目表面上分了四层 (Composable → ViewModel → Repository → DataSource; View 时代的第一环是 Fragment), 但**层和层之间传的东西类型不对**: 从 DataSource 一路到 Compose 的 `MyModelCard`, 传的都是 `MyModel` — 一个已经拼好翻译文案, 带好状态色 (`StatusColor` 枚举) 的**界面模型**. 于是:
 
 1. 仓库 (本该只管取数和判断) 必须拿着 Context 才能干活, `MyApplication.getMyString` 全项目被调了 **91 次**(只数限定调用; AR-01, AR-04).
 2. 因为没有可观察的领域数据, 跨页面同步只能靠 ViewModel 伴生对象里的静态 SharedFlow 当全局广播站 (AR-02).
 3. 因为没有注入的渠道, 全局可变单例成了默认选项: `myAndroid`, `PropertyManager.instance`, `ShellManager.instance`, `LldManager`(AR-03, AR-04).
 
-"高内聚低耦合" 的判断标准是: **改一处, 只动一个文件**. 现在这个项目里, 加一个设置项要动 5 个文件 (preferences.xml, SettingsFragment, SettingsViewModel 伴生对象, BaseListFragment 或目标 Fragment, 目标 ViewModel/Repository), 加一个首页检测条目要动 2~3 个文件 (HomeViewModel, HomeRepository, 还得小心列表下标). 上面这些架构问题大多不会让 App 直接崩, 但会让每次改动的心理负担越来越重. 除了架构和 SSOT/UDF 的视角, 这次检测还确认了三处会直接伤到用户的风险: 网络数据 lld.json 的日期格式没有边界校验, 上游一改格式, 联网用户就崩 (AR-15);Prop 页一次加载要做几百次串行的跨进程查询 (AR-14); 没有任何真实测试, CI 只编译不测试 (AR-16). 这三项跟分层无关, 但跟架构问题同级.
+"高内聚低耦合" 的判断标准是: **改一处, 只动一个文件**. 现在这个项目里, 加一个设置项要动 3~4 个文件 (strings.xml 的键与文案, 选项类再加 arrays.xml, SettingsScreen 的状态/行/回调, 消费方的 ViewModel 或仓库), 加一个首页检测条目要动 2~3 个文件 (HomeViewModel, HomeRepository, 还得小心列表下标). 上面这些架构问题大多不会让 App 直接崩, 但会让每次改动的心理负担越来越重. 除了架构和 SSOT/UDF 的视角, 这次检测还确认了三处会直接伤到用户的风险: 网络数据 lld.json 的日期格式没有边界校验, 上游一改格式, 联网用户就崩 (AR-15);Prop 页一次加载要做几百次串行的跨进程查询 (AR-14); 没有任何真实测试, CI 只编译不测试 (AR-16). 这三项跟分层无关, 但跟架构问题同级.
 
 规格对照审计 (2026-09-06, 并入时逐条重新核对过) 补上了最重要的正确性缺口: **逐条错误隔离 (FR-6) 没实现是发布阻塞**(C1, 暂缓中) — Others/Prop 的 `collectModels` 完全没有 try/catch, 任何检测抛异常就崩, 而且初始加载随启动自动运行, 受影响的设备会陷入启动就崩的循环; Home 圆点的 Unknown 常显示成红色, 误导非专家用户 (C6); 不存在三态结果类型和检测器注册表, 目录硬编码在 ViewModel 的函数体里 (R5) — 这是 Compose 迁移前必须补上的主要结构缺口. 其余发现见[总览表](#问题总览表)的 C/R/A 行和[附录 A](#appendix-a).
 
@@ -101,19 +102,19 @@
 
 修复时请保留这些, 不要顺手重构掉:
 
-- `BaseListViewModel` 的状态持有与 `loadJob` 去重 (提交 `4d570cdb`), 用 `StateFlow` + `flowWithLifecycle` 收集, 配置变更后不重复加载 — 这是标准的 UDF 写法.
+- `BaseListViewModel` 的状态持有与 `loadJob` 去重 (提交 `4d570cdb`); 原单一的 `State` 密封类已在 Compose 迁移中拆成 `modelsStateFlow` / `isLoadingStateFlow` 两条流 (`002f25b3`, 加载不再擦掉旧列表), Compose 侧用 `collectAsStateWithLifecycle` 收集, 配置变更后不重复加载 — 这是标准的 UDF 写法.
 - `IShell` / `IProperty` 接口抽象 + 委托 (`class ShellManager(shell: IShell) : IShell by shell`) — 接口有了, 坏的只是接线方式 (见 AR-04).
 - 按功能分包 (`ui.home` / `ui.others` / `ui.prop` / `ui.settings`), 资源跟包走 (`app/build.gradle.kts` 的 sourceSets 配置).
-- `MainActivity` 用 `MainViewModel` + `SavedStateHandle` 记住上次选中的 Tab.
-- `MyModelTitle` 用密封接口区分 "资源标题" 和 "原始标题",`MyAdapter` 的 DiffUtil 按 `key` 判断是不是同一条.
+- `AppRoot()` 用 `rememberSaveable` 记住上次选中的 Tab; Navigation 3 给每个 Tab 一条独立返回栈, 未渲染的栈连 ViewModel 一起保活 — 与旧 Fragment show/hide 的行为对齐 (原 `MainViewModel` + `SavedStateHandle` 方案随 Nav3 迁移退役).
+- `MyModelTitle` 用密封接口区分 "资源标题" 和 "原始标题"; DiffUtil 已随 View 层退役, `MyModelListScreen` 的 `LazyColumn` 用 `MyModel.key` 作 items key, 身份判定沿用同一套.
 
 ## 规范基线对照 (Android项目规范清单)
 
-对照 [A-Android项目规范清单.md](A-Android项目规范清单.md) 的达标情况. 检查于 2026-09-13, 代码基线 `692cee82`(晚于本报告原始基线 `4d570cdb`). 与 AR 条目重叠的偏差只保留结论并链接到对应条目, 这里记的是问题导向评审没有覆盖的达标资产与剩余缺口 — ✅ 是重构时不要顺手扔掉的东西, ❌ 尽量标了去向.
+对照 [A-Android项目规范清单.md](A-Android项目规范清单.md) 的达标情况. 检查于 2026-09-13, 代码基线 `692cee82`(晚于本报告原始基线 `4d570cdb`);2026-09-25 复核 (Compose 迁移后):UI 行按迁移终态改写, 其余各行逐项复核后原样成立. 与 AR 条目重叠的偏差只保留结论并链接到对应条目, 这里记的是问题导向评审没有覆盖的达标资产与剩余缺口 — ✅ 是重构时不要顺手扔掉的东西, ❌ 尽量标了去向.
 
 - ✅ **构建与依赖管理**: 版本目录拆五份 `.toml` 按来源分组, `build-logic` 约定插件, AGP 9.4 / Kotlin 2.4.20 / JDK 25, SDK 策略明确 (`minSdk 24` / `targetSdk 37` / `compileSdk 37.2`, 后者是 AGP 的 minor API level), 签名 V1-V4 + R8, debug 共存后缀, configuration cache. `isPreview` 开关的脚枪属性已裁定零改动, 见 [A7](05-已裁定事项.md#A7).
-- ✅ **UI(View 体系资产)**: 动态取色, 多语言 (`localeFilters` + `generateLocaleConfig` 按应用语言), RTL, edge-to-edge + 预测性返回, 深色主题; 项目无图片加载需求, Coil 不适用. ❌ Compose 基线未达 (`jetpack-compose-new` 分支进行中);❌ 自适应布局缺失 (见 [R2](05-已裁定事项.md#R2), 归 Compose 迁移); 旋转/折叠屏其余项与无障碍未逐项验证.
-- ✅ **数据与基础设施**:Ktor + kotlinx.serialization, 显式备份规则, `gwpAsanMode`. ❌ 未用 DataStore(即 [AR-02](02-SSOT-唯一数据来源.md#AR-02) 的根因); 平台抽象接缝半途 — DataSource 接口已备好, Repository 却绕行 `MyApplication.instance`(见 [AR-04](01-架构.md#AR-04)).
+- ✅ **UI (2026-09-25 复核 = Compose 终态)**: 单 Activity + Navigation 3, M3 组件 + 动态取色 (Compose 的 `AppTheme` 独家持有, View 时代的 `DynamicColors` 已随之退役), 深色主题 (三档; "跟随省电模式" 一档随 AppCompat 退役), 多语言 (`localeFilters` + `generateLocaleConfig` 按应用语言), edge-to-edge + 预测性返回 manifest 标志 (insets 由 `Scaffold` 的 innerPadding 一处消化); 项目无图片加载需求, Coil 不适用. ❌ 自适应布局仍缺 (见 [R2](05-已裁定事项.md#R2), 迁移未含, 列为遗留优化); 旋转/折叠屏其余项与无障碍未逐项验证.
+- ✅ **数据与基础设施**:Ktor + kotlinx.serialization, 显式备份规则, `gwpAsanMode`; androidx.preference 已随 View 层退役 (设置页为手写 M3 重建, 存储仍是同一个 SharedPreferences, 老设置全量继承). ❌ 未用 DataStore(即 [AR-02](02-SSOT-唯一数据来源.md#AR-02) 的根因); 平台抽象接缝半途 — DataSource 接口已备好, Repository 却绕行 `MyApplication.instance`(见 [AR-04](01-架构.md#AR-04)).
 - ✅ **质量保障 (监控侧)**:Crashlytics(含 NDK 上报, ANR 上报其自带, 开关未逐项验证), debug 包 StrictMode + LeakCanary. ❌ 测试 / 静态检查 / CI 验证三缺, 同 [AR-16](01-架构.md#AR-16);❌ Baseline Profile / Macrobenchmark 未做 (性能项).
 - ✅ **协作与工程化**:README / LICENSE / CHANGELOG / SECURITY.md / Play 隐私政策 / 商店 metadata, Dependabot, `.gitignore`, 语义化提交 (大小写不强制); 代码风格设了 `kotlin.code.style=official` 但无强制格式化工具, ADR 暂由本目录文档承载. ❌ CI 触发范围只有 `develop`, 未达清单 "每次提交都跑" 的要求.
 - **DI 选型已定**: 编译期 DI — Metro(KMP 优先) 或 Hilt(纯 Android);Koin 本质是运行时服务定位器, 不选. 落地承接[修复路线](#修复路线-2026-09-13-改版-架构优先)里 AR-05 + AR-04 的穿插件, 完整框架仍是 Phase 2.
@@ -177,7 +178,7 @@
 | S4 | [AR-04](01-架构.md#AR-04) / [AR-07](01-架构.md#AR-07) | `LldManager` 单一入口化, 搬出 `ui/common` |
 | S5 | ~~AR-10~~ | `mounts` 惰性缓存; **已修复**(`9c47f422`), 条目已删 |
 | S6 | ~~AR-13.12~~ | `detectWebView` 变量拼写 (真机显示 bug);**已消解**(2026-09-22 随 `20f4fe08` 的 minSdk 24 删掉 `< Android 7` 分支), 条目已删 |
-| S7 | [AR-13.13](04-反模式与隐患.md#AR-13) | 四个没用上的 SavedStateHandle; 已裁定保留 |
+| S7 | ~~AR-13.13~~ | 四个没用上的 SavedStateHandle; 曾裁定保留, 后随 Navigation 3 迁移整体撤除 (`createSavedStateHandle` 全仓 0 命中), 问题不再有对象, 条目已删 |
 | U2 / U8 | [AR-08](03-UDF-单向数据流.md#AR-08) | 按下标寻址的状态补丁 |
 | U4 | — | 已修复 (早期批次), 条目已删 |
 | U5 | [AR-13.10](04-反模式与隐患.md#AR-13) | 版本行点击事件 |
