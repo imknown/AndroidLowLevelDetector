@@ -34,7 +34,7 @@ Screen (Compose) → ViewModel (StateFlow) → Repository → DataSource
 - `BaseListViewModel` 用两条 `StateFlow` 驱动所有列表页 — `modelsStateFlow: StateFlow<List<MyModel>?>` (null = 冷启动; 刷新刻意保留上一份列表, 让 UI 永不闪空) 和 `isLoadingStateFlow` — 外加 `loadJob` 去重: 不要在重建时重新引入冗余加载. 每次加载落地之后运行 `onModelsLoaded()`, 用于调和构建期间发生变化的状态.
 - Compose 稳定性注解 (`@Immutable` / `@Stable`) 是刻意的; 状态类一变就重新评估 (照 `HomeViewModel` / `BaseListViewModel` 顶部注释里的模式, 它解释了 *为什么* 该注解是安全的).
 - 内置的 `lld.json` 数据被复制到外部 files 目录 (`LldManager`), 用户允许联网时经由 Ktor 在线刷新; 用 GitHub 还是 Gitee 的 URL 按时区选择.
-- 命令执行用 libsu 的 **非 root** 模式 (`ui/common/ShellLibSu.kt`, 带 `Shell.FLAG_NON_ROOT_SHELL`): 还没有 root 层, 见问题汇总 [A4](../architecture-review-cn/05-已裁定事项.md#A4).
+- 命令执行用 libsu 的 **非 root** 模式 (`ui/common/ShellLibSu.kt`, 带 `Shell.FLAG_NON_ROOT_SHELL`): 还没有 root 层, 见问题汇总 [A4](../issues-cn/05-已裁定事项.md#A4).
 
 ## 新增检测条目
 
@@ -56,7 +56,7 @@ Screen (Compose) → ViewModel (StateFlow) → Repository → DataSource
 - 全局的 `myAndroid` (`AndroidVersionExt`) 只有两个写入方: 启动时的 `initMyAndroid()` (`MyApplication.onCreate`, 来自运行时的 `Build.VERSION`), 以及 `HomeRepository.detectAndroid()` 里的已知值覆写. 绝不在别处赋值 — `isAtLeast...()` 辅助函数到处都在读它.
 - minSdk 是 24: 更新的 API 用 `isAtLeastAndroidX()` 辅助函数或 `@RequiresApi` 把关.
 - 阻塞工作 (shell, 系统属性, 文件, 网络) 跑在 `Dispatchers.IO`, 不是 `Dispatchers.Default`.
-- `ShellDefault` 故意没有调用方: 它是保留备用的原生 shell 实现, 不依赖 libsu (在用的是 `ShellLibSu`). 别把它当死代码删; 如果将来启用它, 先修掉 `waitFor()` 之后读管道的死锁 (问题汇总 [AR-18.1](../architecture-review-cn/04-反模式与隐患.md#AR-18)).
+- `ShellDefault` 故意没有调用方: 它是保留备用的原生 shell 实现, 不依赖 libsu (在用的是 `ShellLibSu`). 别把它当死代码删; 如果将来启用它, 先修掉 `waitFor()` 之后读管道的死锁 (问题汇总 [AR-18.1](../issues-cn/04-反模式与隐患.md#AR-18)).
 
 ## 本地化
 
