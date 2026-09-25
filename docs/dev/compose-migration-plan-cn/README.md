@@ -4,6 +4,7 @@
 > 调研日期 2026-09-16, 所有 API 结论均核对过 developer.android.com 当日最新文档与 androidx 官方仓库
 >
 > **状态 (2026-09-22)**: 第 0~7 步**已全部落地**, View 层清空 (无 Fragment / layout XML / AppCompat / androidx.preference). 本目录 (含本页决策表与各章步骤正文) 是**迁移当时的调查与计划**, 按原样保留, 不回写; 与终态的偏离写在每章章首的 "章首更正" 块, 本页则在决策表后附一份汇总.
+> **2026-09-25**: 迁移后的 Compose 代码 Review 报告并入 [docs/dev/architecture-review-cn/](../architecture-review-cn/README.md) (项目问题汇总) — Hy4-preview / Qwen3.8-Flash 两份与新增的 GLM-5.3-Flash 轮合并为一份 [A-Compose代码Review报告.md](../architecture-review-cn/A-Compose代码Review报告.md) (编号 F1~F16, 问题发现纳入该目录的统一跟踪: F7 撤回, F13 已修, 其余开放条目见其总览表); 下表的链接指向新位置.
 
 把本项目 (单 Activity + 4 Fragment + RecyclerView/Preference 的 View 界面层)**整体**迁到 Jetpack Compose 的渐进式计划.**迁移是载体, 学会 Compose 是目的** — 整套文档按教材体例编写. 设计目标有三:
 
@@ -27,8 +28,7 @@
 | [08](08-第6步-Navigation3与MainActivity切换.md) | 第 6 步 | Navigation 3 + MainActivity 切换 | 新增 2 + 重写 1 + 改 6 + 删 8 | Nav3 全家 (NavKey/返回栈/entryProvider/装饰器), `Scaffold` 一次性解决 insets |
 | [09](09-第7步-清理收尾.md) | 第 7 步 | 清理收尾 | 纯删除 | 删除清单, 依赖瘦身, 回归验证, 遗留优化立项 |
 | [观察记录](A-迁移期观察记录.md) | 附录 | 迁移期观察记录 | 查阅 | 与迁移无关的旧代码发现, 有意接受的行为差异 |
-| [Compose 代码 Review 报告 (Hy4-preview) ](A-Compose代码Review报告-Hy4-preview.md) | 附录 | 迁移后代码复查 | 查阅 | 全部步骤落地后的整体复查: 改错 / 改多 / 漏改 / 不合理, 含直接原因与修改方案; 与下行 Qwen 版互为补充 |
-| [Compose代码Review报告](A-Compose代码Review报告-Qwen3.8-Flash.md) | 附录 | Compose 代码 Review 报告 | 查阅 | 迁移完成后的整体 Review: 改错/改多/漏改/更好改法, 含直接原因与修改方案 |
+| [Compose 代码 Review 报告 (三份合并) ](../architecture-review-cn/A-Compose代码Review报告.md) | 附录 (已迁出) | 迁移后代码复查 | 查阅 | 全部步骤落地后的整体复查: 改错 / 改多 / 漏改 / 不合理, 含直接原因与修改方案. Hy4-preview / Qwen3.8-Flash 两份 2026-09-25 并入 [architecture-review-cn/](../architecture-review-cn/README.md), 与 GLM-5.3-Flash 轮合并为一份 (编号 F1~F16) |
 
 阅读路线 (以**学会**为目的):**01 先读**(迁什么, 不迁什么, 顺序为什么这样排) → **02~09 按步骤跟着做**, 每步做完对照该章"验证清单", 回顾该章 ✅/❌. 章号与文件同名, `01~09` 连续 (`01` 盘点, `02`~`09` 即第 0~7 步); 原有第 02 章 "Compose 核心概念速成" 讲通用概念, 不属本项目改动, 已删除, 需要时从 git 历史取回.
 
