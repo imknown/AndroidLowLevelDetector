@@ -49,7 +49,7 @@
 
 **现象**: 设置页切换 "滚动条模式" → 值写进了 SharedPreferences, 但列表页毫无反应; 代码里那句 `viewModel.emitScrollBarModeChangedSharedFlow(value)` 看起来在 "通知列表页", 实际上没有任何地方订阅.
 
-**直接原因**: 第 3 步把滚动条推迟到 material3 1.5 的官方组件 ([A·迁移期观察记录](../compose-migration-plan-cn/A-迁移期观察记录.md) / [09 章](../compose-migration-plan-cn/09-第7步-清理收尾.md) 已记录为已知欠账), 自绘滚动条与 `ViewExt.setScrollBarMode` 都已删除, 但**发送端没有同步删掉**, 也没有订阅端.
+**直接原因**: 第 3 步把滚动条推迟到 material3 1.5 的官方组件 ([A·迁移期观察记录](A-迁移期观察记录.md) / [遗留优化与回归清单](A-Compose遗留优化与回归清单.md) 已记录为已知欠账), 自绘滚动条与 `ViewExt.setScrollBarMode` 都已删除, 但**发送端没有同步删掉**, 也没有订阅端.
 
 **根本原因**: 把 "偏好值" 当成 "一次性事件" 来做同步 — `SharedFlow` 事件总线必须 "有人订阅才成立", 而订阅方 (列表页) 根本不存在. 同一个仓库后面已经给出了正确范式: **过期排序开关**用的是 `OnSharedPreferenceChangeListener` 直接观察偏好键 (`HomeViewModel.outdatedOrderChangeListener`), 滚动条没有跟着改, 成了两套并存的机制 (Qwen #6).
 
@@ -383,7 +383,7 @@ fun ExtendedColors.of(status: StatusColor): Color = when (status) { ... }
 
 **现象**: `LazyColumn` 的 `key` 取自 `MyModel.key`; `Raw` 标题的 key 就是标题文本本身. 一旦同页出现两个相同标题, `LazyColumn` 会直接抛 `IllegalArgumentException: Key was already used` — 而旧版 `DiffUtil.areItemsTheSame` 只会表现怪异, 不会崩.
 
-**直接原因**: Compose 的 key 契约比 DiffUtil 严格 ([A·迁移期观察记录](../compose-migration-plan-cn/A-迁移期观察记录.md) 已记录了这点和 "当前三页无碰撞" 的结论).
+**直接原因**: Compose 的 key 契约比 DiffUtil 严格 ([A·迁移期观察记录](A-迁移期观察记录.md) 已记录了这点和 "当前三页无碰撞" 的结论).
 
 **根本原因**: key 承担了两个职责 (列表项身份 + 动画/滚动状态锚点), 却复用了 "业务标题" 这个天然可能重复的值, 且代码里没有任何兜底.
 
@@ -638,4 +638,4 @@ GLM-5.3-Flash 轮对全部开放发现逐条重新取证, 结论: **证据全部
 5. **F16** — 圆点语义; 与 C6 的三态 Unknown 映射同批最划算, 状态词资源一次加齐.
 6. **F6 / F8 / F9 / F10 / F11 / F12** — 各十行以内, 可攒一个收尾提交.
 
-每个修复照旧跑 `./gradlew assembleFossDebug` + 过一遍迁移计划 [09 章](../compose-migration-plan-cn/09-第7步-清理收尾.md) 的回归清单 9.3.
+每个修复照旧跑 `./gradlew assembleFossDebug` + 过一遍 [回归验证清单](A-Compose遗留优化与回归清单.md).
