@@ -5,8 +5,8 @@
 # https://androidstudio.googleblog.com/
 # https://maven.google.com/web/index.html?q=com.android.tools.build
 androidGradlePlugin = "9.4.1"
-androidGradlePlugin-beta = "9.4.0"
-androidGradlePlugin-canary = "9.5.0-alpha06"
+androidGradlePlugin-beta = "9.4.1"
+androidGradlePlugin-canary = "9.5.0-alpha07"
 
 # https://developer.android.com/studio/write/java8-support#library-desugaring
 # https://maven.google.com/web/index.html?q=desugar_jdk_libs
@@ -18,7 +18,7 @@ desugarJdkLibs = "2.1.5"
 activity = "1.13.0"
 
 # https://developer.android.com/jetpack/androidx/releases/annotation
-annotation = "1.11.0-rc01"
+annotation = "1.11.0"
 
 annotation-experimental = "1.6.0"
 
@@ -38,10 +38,10 @@ constraintLayout = "2.2.2"
 coordinatorLayout = "1.3.0"
 
 # https://developer.android.com/jetpack/androidx/releases/core
-core = "1.19.0"
+core = "1.19.1"
 
 # https://developer.android.com/jetpack/androidx/releases/fragment
-fragment = "1.9.0"
+fragment = "1.9.1"
 
 # https://developer.android.com/jetpack/androidx/releases/lifecycle
 lifecycle = "2.11.0"
