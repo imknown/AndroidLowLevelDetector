@@ -9,7 +9,7 @@
 
 > **Single-document principle**: requirements and architecture are written in the same specification. Split into two documents, both have to be maintained at once, and after a long time the two accounts no longer agree. Requirements are tagged `FR-x` / `AC`; architecture is tagged `§` / `ADR`.
 >
-> This specification consolidates the 19 original English booklets into six parts (the booklets were deprecated on 2026-09-11; everything useful was carried over). For the gap analysis between code and specification and the implementation plan, see [../dev/architecture-review-cn/](../dev/architecture-review-cn/README.md).
+> This specification consolidates the 19 original English booklets into six parts (the booklets were deprecated on 2026-09-11; everything useful was carried over). For the gap analysis between code and specification and the implementation plan, see [../dev/issues-cn/](../dev/issues-cn/README.md).
 
 ## Contents
 

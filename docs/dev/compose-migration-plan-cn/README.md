@@ -4,7 +4,7 @@
 > 调研日期 2026-09-16, 所有 API 结论均核对过 developer.android.com 当日最新文档与 androidx 官方仓库
 >
 > **状态 (2026-09-22)**: 第 0~7 步**已全部落地**, View 层清空 (无 Fragment / layout XML / AppCompat / androidx.preference). 本目录 (含本页决策表与各章步骤正文) 是**迁移当时的调查与计划**, 按原样保留, 不回写; 与终态的偏离写在每章章首的 "章首更正" 块, 本页则在决策表后附一份汇总.
-> **2026-09-25**: 迁移后的 Compose 代码 Review 报告并入 [docs/dev/architecture-review-cn/](../architecture-review-cn/README.md) (项目问题汇总) — Hy4-preview / Qwen3.8-Flash 两份与新增的 GLM-5.3-Flash 轮合并为一份 [A-Compose代码Review报告.md](../architecture-review-cn/A-Compose代码Review报告.md) (编号 F1~F16, 问题发现纳入该目录的统一跟踪: F7 撤回, F13 已修, 其余开放条目见其总览表); 下表的链接指向新位置.
+> **2026-09-25**: 迁移后的 Compose 代码 Review 报告并入 [docs/dev/issues-cn/](../issues-cn/README.md) (项目问题汇总) — Hy4-preview / Qwen3.8-Flash 两份与新增的 GLM-5.3-Flash 轮合并为一份 [A-Compose代码Review报告.md](../issues-cn/A-Compose代码Review报告.md) (编号 F1~F16, 问题发现纳入该目录的统一跟踪: F7 撤回, F13 已修, 其余开放条目见其总览表); 下表的链接指向新位置.
 
 把本项目 (单 Activity + 4 Fragment + RecyclerView/Preference 的 View 界面层)**整体**迁到 Jetpack Compose 的渐进式计划.**迁移是载体, 学会 Compose 是目的** — 整套文档按教材体例编写. 设计目标有三:
 
@@ -28,7 +28,7 @@
 | [08](08-第6步-Navigation3与MainActivity切换.md) | 第 6 步 | Navigation 3 + MainActivity 切换 | 新增 2 + 重写 1 + 改 6 + 删 8 | Nav3 全家 (NavKey/返回栈/entryProvider/装饰器), `Scaffold` 一次性解决 insets |
 | [09](09-第7步-清理收尾.md) | 第 7 步 | 清理收尾 | 纯删除 | 删除清单, 依赖瘦身, 回归验证, 遗留优化立项 |
 | [观察记录](A-迁移期观察记录.md) | 附录 | 迁移期观察记录 | 查阅 | 与迁移无关的旧代码发现, 有意接受的行为差异 |
-| [Compose 代码 Review 报告 (三份合并) ](../architecture-review-cn/A-Compose代码Review报告.md) | 附录 (已迁出) | 迁移后代码复查 | 查阅 | 全部步骤落地后的整体复查: 改错 / 改多 / 漏改 / 不合理, 含直接原因与修改方案. Hy4-preview / Qwen3.8-Flash 两份 2026-09-25 并入 [architecture-review-cn/](../architecture-review-cn/README.md), 与 GLM-5.3-Flash 轮合并为一份 (编号 F1~F16) |
+| [Compose 代码 Review 报告 (三份合并) ](../issues-cn/A-Compose代码Review报告.md) | 附录 (已迁出) | 迁移后代码复查 | 查阅 | 全部步骤落地后的整体复查: 改错 / 改多 / 漏改 / 不合理, 含直接原因与修改方案. Hy4-preview / Qwen3.8-Flash 两份 2026-09-25 并入 [issues-cn/](../issues-cn/README.md), 与 GLM-5.3-Flash 轮合并为一份 (编号 F1~F16) |
 
 阅读路线 (以**学会**为目的):**01 先读**(迁什么, 不迁什么, 顺序为什么这样排) → **02~09 按步骤跟着做**, 每步做完对照该章"验证清单", 回顾该章 ✅/❌. 章号与文件同名, `01~09` 连续 (`01` 盘点, `02`~`09` 即第 0~7 步); 原有第 02 章 "Compose 核心概念速成" 讲通用概念, 不属本项目改动, 已删除, 需要时从 git 历史取回.
 
@@ -41,7 +41,7 @@
 | 3 | 设置页**手写重建**(`LazyColumn` + M3 组件) | 官方至今无 Compose 版 Preference 库 (androidx.preference 停在 2023); 官方参考应用 Now in Android 即手写 | 过渡期 `AndroidFragment` 包着旧页 (多养一层壳, 收益低) |
 | 4 | 导航用 **Navigation 3**(1.2.0-rc01) | 官方已把 Nav3 定为 Compose-only 架构推荐; 依赖已在版本目录备好; RC 通道符合你的成熟度政策 | Navigation Compose(Nav2, 功能全但非最新); 继续 Fragment 手动管理 (违背迁移目标) |
 | 5 | 底栏用 `NavigationBar` (stable) | 与现状 BottomNavigationView 视觉延续; 不引 alpha 依赖 | `ShortNavigationBar` (1.4.0 已 stable 的 Expressive 版); `NavigationSuiteScaffold` (自适应, 需 1.5.0-alpha, 列为遗留优化) |
-| 6 | 滚动条**自绘**(基于 stable 的 `ScrollIndicatorState`)**→ 2026-09-19 实现期改为推迟**: 自绘版已按计划做完并通过评审 (含估算漂移钳制), 但用户拍板不落地 — 等 material3 1.5.0 的 `nonInteractiveScrollbar` (自带淡出) 转正后一行替换, 自绘实现保留在计划文档 05 章 5.2 作参考 | 官方滚动条 UI 在 material3 1.5.0-alpha(不在 BOM); stable 状态 API + 约 30 行自绘即可保留设置项 | 暂时砍掉设置项 (用户可见的功能回退, 不选); 显式引入 1.5.0-alpha 覆盖 BOM(拖整库进 alpha, 不选) → 实际: **设置项保留**, 三档 (无 / 通常 / 可拖拽) 当前全不生效 — 自绘实现未落地, `scrollBarModeChangedSharedFlow` 零订阅者, 等 material3 官方滚动条转正后再接 (负责人 2026-09-22 定, 详见 [R10](../architecture-review-cn/05-已裁定事项.md#R10)) |
+| 6 | 滚动条**自绘**(基于 stable 的 `ScrollIndicatorState`)**→ 2026-09-19 实现期改为推迟**: 自绘版已按计划做完并通过评审 (含估算漂移钳制), 但用户拍板不落地 — 等 material3 1.5.0 的 `nonInteractiveScrollbar` (自带淡出) 转正后一行替换, 自绘实现保留在计划文档 05 章 5.2 作参考 | 官方滚动条 UI 在 material3 1.5.0-alpha(不在 BOM); stable 状态 API + 约 30 行自绘即可保留设置项 | 暂时砍掉设置项 (用户可见的功能回退, 不选); 显式引入 1.5.0-alpha 覆盖 BOM(拖整库进 alpha, 不选) → 实际: **设置项保留**, 三档 (无 / 通常 / 可拖拽) 当前全不生效 — 自绘实现未落地, `scrollBarModeChangedSharedFlow` 零订阅者, 等 material3 官方滚动条转正后再接 (负责人 2026-09-22 定, 详见 [R10](../issues-cn/05-已裁定事项.md#R10)) |
 | 7 | **Style API 单文件试水**(第 1 步 3.4 节)**→ 2026-09-19 实现期改为推迟**: 文档形态 DSL 只在 foundation alpha 线 (文档示例 1.12.0-alpha03), 1.12.1 stable 反编译实证无此签名, 无法编译 | 你点名要学的新范式; 但 foundation 1.13.0-alpha03 已宣布重构 (旧实现将废弃移除), 且 stable 线连试水形态都不可用 | 全面采用 (1.13 迁移成本高, 不选); 完全不用 (错过学习目标, 不选) → 实际: BOM 升 1.13 后在第 7 步收尾立项 |
 | 8 | 主题沿用现有 `AppTheme` (标准 M3 + 动态取色) | Expressive 主题 API(`MaterialExpressiveTheme`/`expressiveLightColorScheme`) 已从 material3 1.4.0 stable 线移除, 仅在 1.5.0-alpha | BOM 升 1.5 后切 Expressive(列为遗留优化) |
 | 9 | MainActivity **暂留 AppCompatActivity** | 主题模式四档靠 `AppCompatDelegate.setDefaultNightMode` (只对 AppCompat 生效); 保留 = 该机制零改动 | 换 ComponentActivity + Compose 侧自管 darkTheme(更纯粹但需重构主题链路, 列为遗留优化) |
@@ -50,7 +50,7 @@
 
 > **决策落地差异 (2026-09-22 汇总)** — 上面的决策表是当时的取舍记录, 原样保留; 以下几条后来变了形:
 >
-> - **决策 6(滚动条自绘)**: 最终**设置项保留, 三档 (无 / 通常 / 可拖拽) 全不生效** — 自绘实现未落地, `scrollBarModeChangedSharedFlow` 零订阅者. 负责人 2026-09-22 定: 保持代码现状, 等 material3 官方滚动条, 不引 alpha, 不自绘 (详见 [R10](../architecture-review-cn/05-已裁定事项.md#R10)).
+> - **决策 6(滚动条自绘)**: 最终**设置项保留, 三档 (无 / 通常 / 可拖拽) 全不生效** — 自绘实现未落地, `scrollBarModeChangedSharedFlow` 零订阅者. 负责人 2026-09-22 定: 保持代码现状, 等 material3 官方滚动条, 不引 alpha, 不自绘 (详见 [R10](../issues-cn/05-已裁定事项.md#R10)).
 > - **决策 7(Style API 试水)**: 试水代码从未落地 (1.12.1 stable 无该签名), 改到 1.13 之后从零立项.
 > - **决策 9(暂留 AppCompatActivity)**: 已被推翻 — `MainActivity` 现为 `ComponentActivity`, 主题由 `StateFlow` 驱动, `appcompat` / MDC 依赖删除,"跟随省电模式"一档随之退役 (终态三档).
 > - **步骤总览 03 / 04 / 05 / 06 的 "你会学到"**: Style API 试水, `produceState` 防闪空, 自绘滚动条, `SharedFlow` 事件收集, 四项均属**当时的教学设想**, 最终没有进入代码.
