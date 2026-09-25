@@ -1,7 +1,5 @@
 # AndroidLowLevelDetector
 
-> 本文件是 [README.md](README.md) 的中文翻译.
-
 [![Android CI](https://github.com/imknown/AndroidLowLevelDetector/actions/workflows/android-ci.yml/badge.svg)](https://github.com/imknown/AndroidLowLevelDetector/actions/workflows/android-ci.yml)
 [![Dependabot Updates](https://github.com/imknown/AndroidLowLevelDetector/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/imknown/AndroidLowLevelDetector/actions/workflows/dependabot/dependabot-updates)
 [![Dependency Submission](https://github.com/imknown/AndroidLowLevelDetector/actions/workflows/dependency-submission.yml/badge.svg)](https://github.com/imknown/AndroidLowLevelDetector/actions/workflows/dependency-submission.yml)
