@@ -5,7 +5,7 @@
 > 返回 [README 索引](../README.md) · [组1 · 随时可做 — 独立小修](../README.md#组1--随时可做--独立小修).
 
 
-> 发现: Hy4-preview (F11). 2026-09-25 复核: **仍开放** (`decoratedEntries[currentTabIndex]` 仍无 `coerceIn`).
+> 发现: Hy4-preview (F11). 2026-09-25 复核: **仍开放** (`decoratedEntries[currentTabIndex]` 仍无 `coerceIn`) — 证据: `decoratedEntries[currentTabIndex]` 仍无 `coerceIn`
 
 **现象**: `topLevelTabs.map { rememberDecoratedNavEntries(...) }` 里, 4 个标签各自的 `entryProvider` 都包含全部 4 个 entry (实际只会用到 1 个); `decoratedEntries[currentTabIndex]` 直接下标取值.
 

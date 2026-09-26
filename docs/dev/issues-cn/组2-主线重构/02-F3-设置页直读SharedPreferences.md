@@ -5,7 +5,7 @@
 > 返回 [README 索引](../README.md) · [组2 · 主线重构 — 架构优先](../README.md#组2--主线重构--架构优先).
 
 
-> 发现: Hy4-preview (F3). 2026-09-25 复核: **仍开放**; 与 [AR-02](01-AR-02-设置SSOT与死总线.md) 同根, 与其 `SettingsStore` 方案合流实施最省.
+> 发现: Hy4-preview (F3). 2026-09-25 复核: **仍开放**; 与 [AR-02](01-AR-02-设置SSOT与死总线.md) 同根, 与其 `SettingsStore` 方案合流实施最省 — 证据: `SettingsScreen()` 仍是四组 `remember { ... MyApplication.sharedPreferences... }` 初读 + 回调里直写 SP 并直调 `setMyTheme`
 
 **现象**: `SettingsScreen` 一次性做了三件事 — 读 SP, 持有本地 `mutableStateOf`, 在点击回调里写 SP 并调 `MyApplication.setMyTheme()`; 而 `SettingsViewModel` 只负责版本信息.
 

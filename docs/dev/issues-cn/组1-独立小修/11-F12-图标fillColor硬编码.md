@@ -5,7 +5,7 @@
 > 返回 [README 索引](../README.md) · [组1 · 随时可做 — 独立小修](../README.md#组1--随时可做--独立小修).
 
 
-> 发现: Hy4-preview (F12). 2026-09-25 复核: **仍开放** (建议补的 tint 依赖注释尚未加).
+> 发现: Hy4-preview (F12). 2026-09-25 复核: **仍开放** (建议补的 tint 依赖注释尚未加) — 证据: 4 个 `ic_*_24dp.xml` 的 `fillColor` 仍是 `#FF000000`, 且 `AppRoot.kt` 的 `Icon(...)` 处仍无 tint 依赖说明注释
 
 **现象**: 4 个导航图标把 `?attr/colorOnSurface` 改成了 `#FF000000`.
 
