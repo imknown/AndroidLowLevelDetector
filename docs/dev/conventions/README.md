@@ -35,7 +35,7 @@ Screen (Compose) → ViewModel (StateFlow) → Repository → DataSource
 - `BaseListViewModel` drives every list page with two `StateFlow`s — `modelsStateFlow: StateFlow<List<MyModel>?>` (null = cold start; a refresh deliberately keeps the previous list so the UI never flashes empty) and `isLoadingStateFlow` — plus `loadJob` dedup: don't reintroduce redundant loads on recreation. `onModelsLoaded()` runs after each load lands, for reconciling state that changed mid-build.
 - Compose stability annotations (`@Immutable` / `@Stable`) are deliberate; re-evaluate them whenever a state class changes (follow the pattern in the comment atop `HomeViewModel` / `BaseListViewModel`, which explains *why* the annotation is safe).
 - The bundled `lld.json` data is copied to the external files dir (`LldManager`) and refreshed online via Ktor when the user allows network; the GitHub or Gitee URL is chosen by timezone.
-- Command execution uses libsu in **non-root** mode (`ui/common/ShellLibSu.kt`, with `Shell.FLAG_NON_ROOT_SHELL`): there is no root layer yet, see 架构体检 [A4](../issues-cn/05-已裁定事项.md#A4).
+- Command execution uses libsu in **non-root** mode (`ui/common/ShellLibSu.kt`, with `Shell.FLAG_NON_ROOT_SHELL`): there is no root layer yet, see 架构体检 [A4](../issues-cn/组4-已裁定/09-A4-无root层.md).
 
 ## Adding a detection item
 
@@ -59,7 +59,7 @@ Rules for new code — they encode settled decisions; don't make existing debt w
 - New code uses the newest syntax and standard-library APIs the pinned versions allow: the newest Kotlin syntax and std-lib APIs the current Kotlin version supports, the newest platform APIs the current compileSdk offers, and the newest APIs the current dependency versions offer — never write to an older idiom than the toolchain allows.
 - When the newest usable syntax or API is itself Beta / experimental, don't adopt it unilaterally — present it and ask the owner how to handle it. The experimental compiler flags already enabled in `build-logic` are the settled set; this rule covers new opt-ins.
 - Blocking work (shell, system properties, files, network) runs on `Dispatchers.IO`, not `Dispatchers.Default`.
-- `ShellDefault` has no callers on purpose: it is the kept-in-reserve native shell implementation that does not depend on libsu (the live one is `ShellLibSu`). Don't delete it as dead code; if it is ever enabled, fix its read-after-`waitFor()` pipe deadlock first (问题汇总 [AR-18.1](../issues-cn/04-反模式与隐患.md#AR-18)).
+- `ShellDefault` has no callers on purpose: it is the kept-in-reserve native shell implementation that does not depend on libsu (the live one is `ShellLibSu`). Don't delete it as dead code; if it is ever enabled, fix its read-after-`waitFor()` pipe deadlock first (问题汇总 [AR-18.1](../issues-cn/组3-暂缓/17-AR-18-杂项隐患.md)).
 
 ## Localization
 
