@@ -9,6 +9,7 @@
 - JDK 25 (Adoptium) 走两条独立的轨道: 代码编译经由 `jvmToolchain`, Gradle Daemon 经由 `gradle/gradle-daemon-jvm.properties` (由 `updateDaemonJvm` 生成). 不要混淆二者. 用 `./gradlew -q javaToolchains` 查看.
 - `:binderDetector` 原生代码需要把 NDK 和 CMake 版本钉在 `gradle/toml/build.toml` (当前 NDK 30.0.16248370, CMake 4.1.2) — 与 CI 安装的版本完全一致, 改它们就要连同 CI 一起改.
 - 版本目录拆成五个文件 (`gradle/toml/`: `build` / `android` / `kotlin` / `google` / `thirdParty`): 用 `libsAndroid`, `libsBuild`, `libsKotlin`, `libsGoogle`, `libsThirdParty`. 没有默认的 `libs` 访问器. 依赖和版本只存在于这些目录里; 绝不在模块的 `build.gradle.kts` 里写裸坐标, 引用之前先决定依赖属于哪一类.
+- 版本号档位: RC / Stable 的依赖或工具链版本可直接用于生产. Beta / Alpha / Canary 也可以, 但前提是研究透彻, 已知问题能被修复或规避, 且经过评估.
 - SDK, build-tools 和 NDK 版本只放在 `gradle/toml/build.toml` (带 `isPreview` 开关), 经由 `build-logic` 约定插件到达模块. 绝不在模块脚本里硬编码 SDK 级别.
 - Kotlin 2.4 带一组在 `build-logic` 声明的实验性编译器 flag, 按引入它们的 Kotlin 版本分组 — 这些 flag 是有意为之, 不要删; 每次升级 Kotlin 都重新审一遍各组, 去掉已稳定的. 代码风格是 `official`.
 - 仓库带内容过滤 (`google()` 被 `includeGroupByRegex` 收窄) 并启用 `FAIL_ON_PROJECT_REPOS`; `jitpack.io` 只存在于主构建的依赖仓库里.
@@ -55,6 +56,8 @@ Screen (Compose) → ViewModel (StateFlow) → Repository → DataSource
 - 没有静态事件总线: 绝不把 `SharedFlow`/`StateFlow` 放进 ViewModel 的伴生对象. 跨功能数据走仓库.
 - 全局的 `myAndroid` (`AndroidVersionExt`) 只有两个写入方: 启动时的 `initMyAndroid()` (`MyApplication.onCreate`, 来自运行时的 `Build.VERSION`), 以及 `HomeRepository.detectAndroid()` 里的已知值覆写. 绝不在别处赋值 — `isAtLeast...()` 辅助函数到处都在读它.
 - minSdk 是 24: 更新的 API 用 `isAtLeastAndroidX()` 辅助函数或 `@RequiresApi` 把关.
+- 新代码使用钉住的版本所允许的最新语法和标准库 API: 当前 Kotlin 版本支持的最新 Kotlin 语法与标准库 API, 当前 compileSdk 提供的最新平台 API, 以及当前依赖版本提供的最新 API — 绝不写比工具链允许的更旧的写法.
+- 当最新可用的语法或 API 本身是 Beta / 实验性时, 不要擅自采用 — 先摆出来, 询问 owner 如何处理. `build-logic` 里已启用的实验性编译器 flag 是已裁定的集合; 这条规则针对的是新的 opt-in.
 - 阻塞工作 (shell, 系统属性, 文件, 网络) 跑在 `Dispatchers.IO`, 不是 `Dispatchers.Default`.
 - `ShellDefault` 故意没有调用方: 它是保留备用的原生 shell 实现, 不依赖 libsu (在用的是 `ShellLibSu`). 别把它当死代码删; 如果将来启用它, 先修掉 `waitFor()` 之后读管道的死锁 (问题汇总 [AR-18.1](../issues-cn/04-反模式与隐患.md#AR-18)).
 
