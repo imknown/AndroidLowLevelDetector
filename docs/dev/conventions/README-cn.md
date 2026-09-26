@@ -35,7 +35,7 @@ Screen (Compose) → ViewModel (StateFlow) → Repository → DataSource
 - `BaseListViewModel` 用两条 `StateFlow` 驱动所有列表页 — `modelsStateFlow: StateFlow<List<MyModel>?>` (null = 冷启动; 刷新刻意保留上一份列表, 让 UI 永不闪空) 和 `isLoadingStateFlow` — 外加 `loadJob` 去重: 不要在重建时重新引入冗余加载. 每次加载落地之后运行 `onModelsLoaded()`, 用于调和构建期间发生变化的状态.
 - Compose 稳定性注解 (`@Immutable` / `@Stable`) 是刻意的; 状态类一变就重新评估 (照 `HomeViewModel` / `BaseListViewModel` 顶部注释里的模式, 它解释了 *为什么* 该注解是安全的).
 - 内置的 `lld.json` 数据被复制到外部 files 目录 (`LldManager`), 用户允许联网时经由 Ktor 在线刷新; 用 GitHub 还是 Gitee 的 URL 按时区选择.
-- 命令执行用 libsu 的 **非 root** 模式 (`ui/common/ShellLibSu.kt`, 带 `Shell.FLAG_NON_ROOT_SHELL`): 还没有 root 层, 见问题汇总 [A4](../issues-cn/05-已裁定事项.md#A4).
+- 命令执行用 libsu 的 **非 root** 模式 (`ui/common/ShellLibSu.kt`, 带 `Shell.FLAG_NON_ROOT_SHELL`): 还没有 root 层, 见问题汇总 [A4](../issues-cn/组4-已裁定/09-A4-无root层.md).
 
 ## 新增检测条目
 
@@ -59,7 +59,7 @@ Screen (Compose) → ViewModel (StateFlow) → Repository → DataSource
 - 新代码使用钉住的版本所允许的最新语法和标准库 API: 当前 Kotlin 版本支持的最新 Kotlin 语法与标准库 API, 当前 compileSdk 提供的最新平台 API, 以及当前依赖版本提供的最新 API — 绝不写比工具链允许的更旧的写法.
 - 当最新可用的语法或 API 本身是 Beta / 实验性时, 不要擅自采用 — 先摆出来, 询问 owner 如何处理. `build-logic` 里已启用的实验性编译器 flag 是已裁定的集合; 这条规则针对的是新的 opt-in.
 - 阻塞工作 (shell, 系统属性, 文件, 网络) 跑在 `Dispatchers.IO`, 不是 `Dispatchers.Default`.
-- `ShellDefault` 故意没有调用方: 它是保留备用的原生 shell 实现, 不依赖 libsu (在用的是 `ShellLibSu`). 别把它当死代码删; 如果将来启用它, 先修掉 `waitFor()` 之后读管道的死锁 (问题汇总 [AR-18.1](../issues-cn/04-反模式与隐患.md#AR-18)).
+- `ShellDefault` 故意没有调用方: 它是保留备用的原生 shell 实现, 不依赖 libsu (在用的是 `ShellLibSu`). 别把它当死代码删; 如果将来启用它, 先修掉 `waitFor()` 之后读管道的死锁 (问题汇总 [AR-18.1](../issues-cn/组3-暂缓/17-AR-18-杂项隐患.md)).
 
 ## 本地化
 

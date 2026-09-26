@@ -1,15 +1,14 @@
-# UDF · 单向数据流 (Unidirectional Data Flow)
-
-> 返回 [README](README.md). 数据从数据层单向流向界面, 用户的操作从界面交回数据层处理; 界面不自己改数据.
-
 <a id="AR-08"></a>
 
-## AR-08 HomeViewModel 手工编排 20+ 个仓库方法
+# AR-08 HomeViewModel 手工编排 20+ 个仓库方法
+
+> 返回 [README 索引](../README.md) · [组2 · 主线重构 — 架构优先](../README.md#组2--主线重构--架构优先).
+
 
 **严重程度: P1 | 修复难度: 中**
 **影响文件: `HomeViewModel.kt`, `HomeRepository.kt`, `BaseListViewModel.kt`**
 
-### 问题核心代码
+## 问题核心代码
 
 首页条目的**顺序**这份 "数据知识" 硬编码在 ViewModel 里 (`HomeViewModel.collectModels()`):
 
@@ -37,15 +36,15 @@ if (targetIndex == -1) { return }
 updateModelDetail(targetIndex, newDetail)   // ← VM 翻自己的状态找位置, 再交给基类按下标改
 ```
 
-### 直接原因
+## 直接原因
 
 "首页有哪些条目, 什么顺序" 是仓库 (数据) 的知识, 却由 ViewModel 逐行手抄; `updateModelDetail` 暴露下标参数, 把 "如何定位一个条目" 的内部表示 (List 下标) 泄漏给了子类, 条目顺序一变, 并发一插队, 下标就对不上了. 更深一层: 条目身份同时存在三套标识 — DiffUtil 用 `MyModel.key` (标题资源 ID/文案), 补丁用 `type` 枚举, 定位用列表下标, 同一个东西有三套不同的标识.
 
-### 根本原因
+## 根本原因
 
 基类 API 按实现细节 (下标) 而非语义 (哪个条目) 设计; 编排逻辑没有归位到拥有列表知识的一侧. 两处合起来, 加一个首页条目要同时改 ViewModel(加一行编排) 和 Repository(加一个方法), 且顺序知识从此有两份可能的真相 (仓库方法注释顺序 vs VM 编排顺序).
 
-### 修复方案
+## 修复方案
 
 编排收回仓库, 更新按类型寻址:
 
@@ -93,8 +92,6 @@ fun updateModelDetail(type: MyModelType, newDetail: String) {
 updateModelDetail(MyModelType.OutdatedTargetSdkApk, newDetail)
 ```
 
-`LldSource` 枚举见 [AR-11](04-反模式与隐患.md#AR-11) (顺带消掉 `modeResId` 的资源 ID 判别).[AR-01](01-架构.md#AR-01) 全部做完之后还可以更进一步: 把每个检测项做成独立的 `Detector`, 顺序由一个列表持有 — 增删条目只改列表一处.
+`LldSource` 枚举见 [AR-11](../组3-暂缓/15-AR-11-资源ID当逻辑值.md) (顺带消掉 `modeResId` 的资源 ID 判别).[AR-01](14-AR-01-无领域模型.md) 全部做完之后还可以更进一步: 把每个检测项做成独立的 `Detector`, 顺序由一个列表持有 — 增删条目只改列表一处.
 
----
 
-返回 [README](README.md)
