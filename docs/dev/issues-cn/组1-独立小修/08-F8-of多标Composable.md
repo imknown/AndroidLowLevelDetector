@@ -5,7 +5,7 @@
 > 返回 [README 索引](../README.md) · [组1 · 随时可做 — 独立小修](../README.md#组1--随时可做--独立小修).
 
 
-> 发现: Hy4-preview (F8). 2026-09-25 复核: **仍开放**.
+> 发现: Hy4-preview (F8). 2026-09-25 复核: **仍开放** — 证据: `ExtendedColors.of()` 仍标着 `@Composable`
 
 **现象**: 一个纯映射函数被声明成 `@Composable`.
 

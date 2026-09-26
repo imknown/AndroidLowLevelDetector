@@ -5,7 +5,7 @@
 > 返回 [README 索引](../README.md) · [组1 · 随时可做 — 独立小修](../README.md#组1--随时可做--独立小修).
 
 
-> 发现: Qwen3.8-Flash (#4, 独有条目, 并入时补编 F15). 2026-09-25 复核: **仍开放**.
+> 发现: Qwen3.8-Flash (#4, 独有条目, 并入时补编 F15). 2026-09-25 复核: **仍开放** — 证据: `models?.toPersistentList() ?: persistentListOf()` 仍无 `remember(models)` 包裹
 
 **直接原因**: `models` 来自 VM 的 `StateFlow<List<MyModel>?>`, 在 composable 体内每次重组都调用 `models?.toPersistentList()`. 即使 `models` 未变, 只是 `isLoading` 翻动 (下拉刷新起止各一次), 也会 `O(n)` 复制出一个**新的** `PersistentList` 实例传给 `MyModelListContent`.
 

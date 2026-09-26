@@ -5,7 +5,7 @@
 > 返回 [README 索引](../README.md) · [组1 · 随时可做 — 独立小修](../README.md#组1--随时可做--独立小修).
 
 
-> 发现: Hy4-preview (F10). 2026-09-25 复核: **仍开放** (冗余结论在本轮得到再次确认: 组合里 `HomeViewModel` 的声明类型始终是基类).
+> 发现: Hy4-preview (F10). 2026-09-25 复核: **仍开放** (冗余结论在本轮得到再次确认: 组合里 `HomeViewModel` 的声明类型始终是基类) — 证据: `HomeViewModel` 仍标 `@Stable` — 组合里它的声明类型是 `BaseListViewModel` (`AppRoot` 的两条 entry 都把实例传给 `viewModel: BaseListViewModel` 参数), 注解冗余如故; `SettingsViewModel` 那份仍有效 (`SettingsScreen` 的参数声明类型就是它)
 
 **现象**: `BaseListViewModel` / `HomeViewModel` / `SettingsViewModel` 都标了 `@Stable`, `OthersViewModel` / `PropViewModel` 没标.
 

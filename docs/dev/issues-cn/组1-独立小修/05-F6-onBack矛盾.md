@@ -5,7 +5,7 @@
 > 返回 [README 索引](../README.md) · [组1 · 随时可做 — 独立小修](../README.md#组1--随时可做--独立小修).
 
 
-> 发现: Hy4-preview (F6). 2026-09-25 复核: **仍开放**.
+> 发现: Hy4-preview (F6). 2026-09-25 复核: **仍开放** — 证据: `AppRoot()` 的 `onBack` 仍是 `activity?.finish()`
 
 **现象**: 每个标签各自持有一条 `NavBackStack`, 但返回键一律 `activity?.finish()`.
 
