@@ -6,7 +6,6 @@
 2. [AR-14 · Prop 页设置项逐 key 查询](02-AR-14-Prop页逐key查询.md) — 暂缓 2026-09-13
 3. [F6 · onBack 与多返回栈自相矛盾](03-F6-onBack矛盾.md)
 4. [F15 · toPersistentList() 每次重组重新分配](04-F15-toPersistentList重组分配.md)
-5. [AR-17 · QUERY_ALL_PACKAGES 用途申报缺档](05-AR-17-QUERY_ALL_PACKAGES申报缺档.md)
 6. [N10 · Settings 行缺 a11y 语义](06-N10-设置行缺a11y语义.md) — 暂缓 2026-09-26
 7. [F8 · ExtendedColors.of() 多标 @Composable](07-F8-of多标Composable.md)
 8. [AR-13 · 零散小问题 (可修 6 项)](08-AR-13-零散小问题.md)
