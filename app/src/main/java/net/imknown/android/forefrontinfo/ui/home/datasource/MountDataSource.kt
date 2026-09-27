@@ -13,8 +13,10 @@ class MountDataSource {
         val mountPoint: String,
         val type: String,
         val mountOptions: String,
-        val dummy0: Int,
-        val dummy1: Int
+        // Kept as the raw text from /proc/mounts: nothing consumes them, and parsing them as
+        // numbers used to be a throw path on malformed lines.
+        val dummy0: String,
+        val dummy1: String
     )
 
     fun getMounts(): List<Mount> {
@@ -23,7 +25,7 @@ class MountDataSource {
         getShellResult(CMD_MOUNT).output.forEach {
             val columns = it.split(" ")
             if (columns.size == 6) {
-                val mount = Mount(columns[0], columns[1], columns[2], columns[3], columns[4].toInt(), columns[5].toInt())
+                val mount = Mount(columns[0], columns[1], columns[2], columns[3], columns[4], columns[5])
                 mounts.add(mount)
             }
         }

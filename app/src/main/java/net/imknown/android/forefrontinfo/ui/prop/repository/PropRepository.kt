@@ -2,9 +2,11 @@ package net.imknown.android.forefrontinfo.ui.prop.repository
 
 import android.provider.Settings
 import android.util.Log
+import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.extension.fullMessage
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
+import net.imknown.android.forefrontinfo.ui.base.list.guardedMyModels
 import net.imknown.android.forefrontinfo.ui.base.list.toPropMyModel
 import net.imknown.android.forefrontinfo.ui.base.list.toTranslatedDetailMyModel
 import net.imknown.android.forefrontinfo.ui.prop.datasource.PropertiesDataSource
@@ -16,15 +18,12 @@ class PropRepository(
     private val propertiesDataSource: PropertiesDataSource,
     private val settingsDataSource: SettingsDataSource,
 ) {
-    fun getSystemProp(): List<MyModel> {
+    // The Prop tables are not catalog items, so a failed source degrades into a single
+    // error row carrying the source title instead of silently disappearing.
+    fun getSystemProp(): List<MyModel> = guardedMyModels(R.string.title_prop) {
         val tempModels = mutableListOf<MyModel>()
 
-        val pairs = try {
-            propertiesDataSource.getSystemPropOrThrow()
-        } catch (e: Exception) {
-            e.printStackTrace()
-            return tempModels
-        }
+        val pairs = propertiesDataSource.getSystemProp()
 
         pairs.forEach { (titleOrNull, detailOrNull) ->
             val title = titleOrNull.toString()
@@ -36,18 +35,13 @@ class PropRepository(
             tempModels += toTranslatedDetailMyModel(title, detail)
         }
 
-        return tempModels
+        tempModels
     }
 
-    fun <T : Settings.NameValueTable> getSettings(subSettingsKClass: KClass<T>): List<MyModel> {
+    fun <T : Settings.NameValueTable> getSettings(subSettingsKClass: KClass<T>): List<MyModel> = guardedMyModels(R.string.title_prop) {
         val tempModels = mutableListOf<MyModel>()
 
-        val list = try {
-            settingsDataSource.getSettingsOrThrow(subSettingsKClass)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            return tempModels
-        }
+        val list = settingsDataSource.getSettingsOrThrow(subSettingsKClass)
 
         list.forEach {
             val key = "${subSettingsKClass.qualifiedName}.$it"
@@ -62,10 +56,10 @@ class PropRepository(
             tempModels.add(toTranslatedDetailMyModel(key, value))
         }
 
-        return tempModels
+        tempModels
     }
 
-    fun getBuildProp(): List<MyModel> {
+    fun getBuildProp(): List<MyModel> = guardedMyModels(R.string.title_prop) {
         val tempModels = mutableListOf<MyModel>()
 
         var temp = ""
@@ -83,6 +77,6 @@ class PropRepository(
             }
         }
 
-        return tempModels
+        tempModels
     }
 }

@@ -2,6 +2,8 @@
 <resources>
     <string name="title_others">Others</string>
 
+    <string name="result_detect_failed">Detection failed: %s</string>
+
     <string name="build_brand">Brand</string>
     <string name="build_manufacturer">Manufacturer</string>
     <string name="build_model">Model name for sales</string>

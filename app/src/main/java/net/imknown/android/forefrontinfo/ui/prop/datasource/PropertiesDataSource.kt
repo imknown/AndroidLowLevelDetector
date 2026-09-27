@@ -10,7 +10,7 @@ class PropertiesDataSource {
         const val UNIX_LIKE_NEWLINE_ORIGIN = "\\n"
     }
 
-    fun getSystemPropOrThrow(): List<Pair<Any?, Any?>> {
+    fun getSystemProp(): List<Pair<Any?, Any?>> {
         val systemProperties = System.getProperties()
         val defaultsProperties = try {
             Properties::class.java
