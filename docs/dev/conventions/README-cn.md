@@ -65,3 +65,4 @@ Screen (Compose) → ViewModel (StateFlow) → Repository → DataSource
 
 - 字符串按功能包拆分. 支持的 locale: 默认 (英语), `zh-rCN`, `zh-rTW`, `fr-rFR` (`localeFilters` + `generateLocaleConfig`); 新增语言时把它加进 `localeFilters`.
 - 新的面向用户字符串必须有默认英语条目; 能同步时保持三份翻译文件同步.
+- 按各语言排版惯例用标点 (中文全角冒号, 法语冒号前留空格等) 的只有面向用户的本地化文案; AGENTS.md 的 ASCII 标点规则仍然约束文档, 代码注释, 以及非文案类字符串资源 (存储键, URI, 技术值等).
