@@ -40,7 +40,7 @@ return detect(lld, listOf(errorMessage), R.string.lld_json_online)   // ← 无�
 
 ## 直接原因
 
-网络拉取的 lld.json 不受本应用控制. 只要上游把 `"version"` 改成 `"2026-09-02 20:55 +08:00"` (冒号) 或 `"+8"` 之类任何与本 pattern 不符的写法, `ZonedDateTime.parse` 抛出 `DateTimeParseException`, 沿 `detect()` → `collectModels()` 一路上抛; `BaseListViewModel.startLoad` 的 `viewModelScope.launch` 没有 catch([AR-09](06-AR-09-State无错误态.md)), 未捕获异常传给线程处理器 — **应用崩溃**. 所有开启联网检测的用户同时中招.
+网络拉取的 lld.json 不受本应用控制. 只要上游把 `"version"` 改成 `"2026-09-02 20:55 +08:00"` (冒号) 或 `"+8"` 之类任何与本 pattern 不符的写法, `ZonedDateTime.parse` 抛出 `DateTimeParseException`, 沿 `detect()` → `collectModels()` 一路上抛; `BaseListViewModel.startLoad` 的 `viewModelScope.launch` 没有 catch (AR-09, 已随 2026-09-27 的逐条隔离收口), 未捕获异常传给线程处理器 — **应用崩溃**. 所有开启联网检测的用户同时中招.
 
 ## 根本原因
 
@@ -72,7 +72,7 @@ if (!lld.version.isLldDatetime()) {
 }
 ```
 
-第二道防线是 [AR-09](06-AR-09-State无错误态.md) 的 `runCatching { collectModels() }` 整体兜底 — 即使未来再出现类似漏洞, 也只是错误态而非崩溃. `SettingsRepository` 读取资产内 lld 版本处 (同一契约, 随包分发风险低) 顺手加同样的校验.
+当年的第二道防线设想 (AR-09 的 `runCatching { collectModels() }` 整体兜底) 已被负责人裁定不做 (2026-09-27): 逐条隔离落地后探针不再逃逸 — 即使未来再出现类似漏洞, 也只是错误态而非崩溃. `SettingsRepository` 读取资产内 lld 版本处 (同一契约, 随包分发风险低) 顺手加同样的校验.
 
 ---
 
