@@ -65,3 +65,4 @@ Rules for new code — they encode settled decisions; don't make existing debt w
 
 - Strings are split per feature package. Supported locales: default (English), `zh-rCN`, `zh-rTW`, `fr-rFR` (`localeFilters` + `generateLocaleConfig`); add the locale to `localeFilters` when introducing a new language.
 - New user-facing strings always need the default English entry; keep the three translation files in sync when you can.
+- Per-language typographic punctuation (a full-width colon in Chinese, the French pre-colon space, ...) applies to user-facing localized copy only. The ASCII-punctuation rule in AGENTS.md still governs docs, code comments, and non-copy string resources (storage keys, URIs, technical values).
