@@ -4,18 +4,29 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import java.util.Locale
+
+private const val LLD_DATETIME_PATTERN = "yyyy-MM-dd HH:mm Z"
+
+/**
+ * The machine-checked contract for lld.json's `version` field. The data producer and this
+ * formatter are two codebases; without a shared constant the format is only a magic string.
+ * US locale keeps parsing independent of the device's format locale (native-digit locales
+ * like ar/fa would otherwise fail to parse ASCII input).
+ */
+val LLD_DATETIME_FORMATTER: DateTimeFormatter = DateTimeFormatter.ofPattern(LLD_DATETIME_PATTERN, Locale.US)
+
+fun String.isLldDatetime(): Boolean =
+    runCatching { ZonedDateTime.parse(this, LLD_DATETIME_FORMATTER) }.isSuccess
 
 fun String.formatToLocalZonedDatetimeString(): String {
-    val pattern = "yyyy-MM-dd HH:mm Z"
-    val formatter = DateTimeFormatter.ofPattern(pattern)
-    val instant = ZonedDateTime.parse(this, formatter).toInstant()
+    val instant = ZonedDateTime.parse(this, LLD_DATETIME_FORMATTER).toInstant()
     val datetime = instant.atZone(ZoneId.systemDefault())
-    return formatter.format(datetime)
+    return LLD_DATETIME_FORMATTER.format(datetime)
 }
 
 fun Long.formatToLocalZonedDatetimeString(): String {
-    val pattern = "yyyy-MM-dd HH:mm:ss Z"
-    val formatter = DateTimeFormatter.ofPattern(pattern)
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss Z", Locale.US)
     val instant = Instant.ofEpochMilli(this)
     val datetime = instant.atZone(ZoneId.systemDefault())
     return formatter.format(datetime)

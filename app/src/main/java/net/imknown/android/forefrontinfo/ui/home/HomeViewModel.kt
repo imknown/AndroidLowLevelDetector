@@ -14,10 +14,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.IOException
 import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.extension.fullMessage
+import net.imknown.android.forefrontinfo.base.extension.isLldDatetime
 import net.imknown.android.forefrontinfo.ui.base.list.BaseListViewModel
 import net.imknown.android.forefrontinfo.ui.home.datasource.LldDataSource
 import net.imknown.android.forefrontinfo.ui.home.datasource.MountDataSource
@@ -129,6 +131,18 @@ class HomeViewModel(
             throw e
         } catch (e: Exception) {
             val errorMessage = errorMessage(R.string.lld_json_parse_failed, e)
+            return tryDetectOffline(errorMessage)
+        }
+
+        // The upstream `version` string is outside this app's control; the format contract is
+        // machine-checked (LLD_DATETIME_FORMATTER). An unexpected format means the payload
+        // cannot be trusted — degrade to the built-in offline data instead of blowing up in
+        // the middle of detect().
+        if (!lld.version.isLldDatetime()) {
+            val errorMessage = errorMessage(
+                R.string.lld_json_parse_failed,
+                IOException("Unsupported lld.version format: ${lld.version}")
+            )
             return tryDetectOffline(errorMessage)
         }
 
