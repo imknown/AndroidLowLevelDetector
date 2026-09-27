@@ -160,9 +160,7 @@ class HomeViewModel(
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
-            val lld = withContext(Dispatchers.IO) {
-                LldManager.getAssetLld(MyApplication.instance.assets)
-            }
+            val lld = getAssetLldOrNull()
 
             val errorMessage = errorMessage(R.string.lld_json_save_failed, e)
 
@@ -178,9 +176,7 @@ class HomeViewModel(
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
-            val lld = withContext(Dispatchers.IO) {
-                LldManager.getAssetLld(MyApplication.instance.assets)
-            }
+            val lld = getAssetLldOrNull()
 
             val errorMessage = errorMessage(R.string.lld_json_parse_failed, e)
 
@@ -188,6 +184,21 @@ class HomeViewModel(
         }
 
         return lldAndError
+    }
+
+    // Last link of the offline fallback chain: even the built-in asset read failing must not
+    // escape — a null lld renders as the "unknown" row, not a crash.
+    private suspend fun getAssetLldOrNull(): Lld? = try {
+        withContext(Dispatchers.IO) {
+            LldManager.getAssetLld(MyApplication.instance.assets)
+        }
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        if (BuildConfig.DEBUG) {
+            e.printStackTrace()
+        }
+        null
     }
     // endregion [Lld]
 

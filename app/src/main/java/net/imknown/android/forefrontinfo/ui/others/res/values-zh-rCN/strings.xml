@@ -2,6 +2,8 @@
 <resources>
     <string name="title_others">其他</string>
 
+    <string name="result_detect_failed">检测失败：%s</string>
+
     <string name="build_brand">品牌</string>
     <string name="build_manufacturer">制造商</string>
     <string name="build_model">销售型号</string>

@@ -7,8 +7,12 @@ import androidx.annotation.StringRes
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.extension.formatToLocalZonedDatetimeString
+import net.imknown.android.forefrontinfo.base.extension.fullMessage
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
+import net.imknown.android.forefrontinfo.ui.base.list.guardedMyModel
 import net.imknown.android.forefrontinfo.ui.base.list.toTranslatedDetailMyModel
+import kotlinx.coroutines.CancellationException
+import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid13
 import net.imknown.android.forefrontinfo.ui.common.isPreviewAndroid
 import net.imknown.android.forefrontinfo.ui.others.datasource.ArchitectureDataSource
@@ -28,165 +32,235 @@ class OthersRepository(
     private val othersDataSource: OthersDataSource
 ) {
     // region [Basic]
-    fun getBrand() = toTranslatedDetailMyModel(R.string.build_brand, basicDataSource.getBrand())
-    fun getManufacturer() = toTranslatedDetailMyModel(R.string.build_manufacturer, basicDataSource.getManufacturer())
-    fun getModel() = toTranslatedDetailMyModel(R.string.build_model, basicDataSource.getModel())
-    fun getDevice() = toTranslatedDetailMyModel(R.string.build_device, basicDataSource.getDevice())
-    fun getProduct() = toTranslatedDetailMyModel(R.string.build_product, basicDataSource.getProduct())
-    fun getHardware() = toTranslatedDetailMyModel(R.string.build_hardware, basicDataSource.getHardware())
-    fun getBoard() = toTranslatedDetailMyModel(R.string.build_board, basicDataSource.getBoard())
+    fun getBrand() = guardedMyModel(R.string.build_brand) {
+        toTranslatedDetailMyModel(R.string.build_brand, basicDataSource.getBrand())
+    }
+    fun getManufacturer() = guardedMyModel(R.string.build_manufacturer) {
+        toTranslatedDetailMyModel(R.string.build_manufacturer, basicDataSource.getManufacturer())
+    }
+    fun getModel() = guardedMyModel(R.string.build_model) {
+        toTranslatedDetailMyModel(R.string.build_model, basicDataSource.getModel())
+    }
+    fun getDevice() = guardedMyModel(R.string.build_device) {
+        toTranslatedDetailMyModel(R.string.build_device, basicDataSource.getDevice())
+    }
+    fun getProduct() = guardedMyModel(R.string.build_product) {
+        toTranslatedDetailMyModel(R.string.build_product, basicDataSource.getProduct())
+    }
+    fun getHardware() = guardedMyModel(R.string.build_hardware) {
+        toTranslatedDetailMyModel(R.string.build_hardware, basicDataSource.getHardware())
+    }
+    fun getBoard() = guardedMyModel(R.string.build_board) {
+        toTranslatedDetailMyModel(R.string.build_board, basicDataSource.getBoard())
+    }
 
     @RequiresApi(Build.VERSION_CODES.S)
-    fun getSocModel() = toTranslatedDetailMyModel(R.string.build_soc_model, basicDataSource.getSocModel())
+    fun getSocModel() = guardedMyModel(R.string.build_soc_model) {
+        toTranslatedDetailMyModel(R.string.build_soc_model, basicDataSource.getSocModel())
+    }
     @RequiresApi(Build.VERSION_CODES.S)
-    fun getSocManufacturer() = toTranslatedDetailMyModel(R.string.build_soc_manufacturer, basicDataSource.getSocManufacturer())
+    fun getSocManufacturer() = guardedMyModel(R.string.build_soc_manufacturer) {
+        toTranslatedDetailMyModel(R.string.build_soc_manufacturer, basicDataSource.getSocManufacturer())
+    }
     @RequiresApi(Build.VERSION_CODES.S)
-    fun getSku() = toTranslatedDetailMyModel(R.string.build_hardware_sku, basicDataSource.getSku())
-    fun getVendorSku() = toTranslatedDetailMyModel(R.string.build_vendor_sku,basicDataSource.getVendorSku())
+    fun getSku() = guardedMyModel(R.string.build_hardware_sku) {
+        toTranslatedDetailMyModel(R.string.build_hardware_sku, basicDataSource.getSku())
+    }
+    fun getVendorSku() = guardedMyModel(R.string.build_vendor_sku) {
+        toTranslatedDetailMyModel(R.string.build_vendor_sku,basicDataSource.getVendorSku())
+    }
     @RequiresApi(Build.VERSION_CODES.S)
-    fun getOdmSku() = toTranslatedDetailMyModel(R.string.build_odm_hardware_sku, basicDataSource.getOdmSku())
+    fun getOdmSku() = guardedMyModel(R.string.build_odm_hardware_sku) {
+        toTranslatedDetailMyModel(R.string.build_odm_hardware_sku, basicDataSource.getOdmSku())
+    }
     // endregion [Basic]
 
     // region [Binder]
-    fun getBinderStatus(driver: String): MyModel {
-        val binderVersion = try {
-            architectureDataSource.getBinderVersionOrThrow(driver)
-        } catch (e: UnsatisfiedLinkError) {
-            e.printStackTrace()
-        }
+    fun getBinderStatus(driver: String): MyModel = guardedMyModel(R.string.binder_status) {
+            val binderVersion = try {
+                architectureDataSource.getBinderVersionOrThrow(driver)
+            } catch (e: UnsatisfiedLinkError) {
+                e.printStackTrace()
+            }
 
-        @StringRes val binderStatusId = when (binderVersion) {
-            -ArchitectureDataSource.ERRNO_NO_SUCH_FILE_OR_DIRECTORY -> {
-                R.string.result_not_supported
+            @StringRes val binderStatusId = when (binderVersion) {
+                -ArchitectureDataSource.ERRNO_NO_SUCH_FILE_OR_DIRECTORY -> {
+                    R.string.result_not_supported
+                }
+                -ArchitectureDataSource.ERRNO_PERMISSION_DENIED -> {
+                    androidR.string.unknownName
+                }
+                ArchitectureDataSource.BINDER64_PROTOCOL_VERSION -> {
+                    R.string.bit_64
+                }
+                ArchitectureDataSource.BINDER32_PROTOCOL_VERSION -> {
+                    R.string.bit_32
+                }
+                else -> {
+                    androidR.string.unknownName
+                }
             }
-            -ArchitectureDataSource.ERRNO_PERMISSION_DENIED -> {
-                androidR.string.unknownName
-            }
-            ArchitectureDataSource.BINDER64_PROTOCOL_VERSION -> {
-                R.string.bit_64
-            }
-            ArchitectureDataSource.BINDER32_PROTOCOL_VERSION -> {
-                R.string.bit_32
-            }
-            else -> {
-                androidR.string.unknownName
-            }
-        }
 
-        return toTranslatedDetailMyModel(R.string.binder_status, MyApplication.getMyString(binderStatusId))
+            return toTranslatedDetailMyModel(R.string.binder_status, MyApplication.getMyString(binderStatusId))
     }
     // endregion [Binder]
 
     // region [Process]
-    fun getProcessBit(): MyModel {
-        val isProcess64Bit = try {
-            architectureDataSource.isProcess64BitOrThrow()
-        } catch (e: Exception) {
-            e.printStackTrace()
-            false
-        }
+    fun getProcessBit(): MyModel = guardedMyModel(R.string.current_process_bit) {
+            val isProcess64Bit = try {
+                architectureDataSource.isProcess64BitOrThrow()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                false
+            }
 
-        val bitId = if (isProcess64Bit) R.string.bit_64 else R.string.bit_32
+            val bitId = if (isProcess64Bit) R.string.bit_64 else R.string.bit_32
 
-        return toTranslatedDetailMyModel(R.string.current_process_bit, MyApplication.getMyString(bitId))
+            return toTranslatedDetailMyModel(R.string.current_process_bit, MyApplication.getMyString(bitId))
     }
 
-    fun getArchitecture(): MyModel {
-        val a = try {
-            architectureDataSource.getArchitectureOrNullOrThrow()
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        } ?: MyApplication.getMyString(androidR.string.unknownName)
-        return toTranslatedDetailMyModel(R.string.os_arch, a)
+    fun getArchitecture(): MyModel = guardedMyModel(R.string.os_arch) {
+            val a = try {
+                architectureDataSource.getArchitectureOrNullOrThrow()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            } ?: MyApplication.getMyString(androidR.string.unknownName)
+            return toTranslatedDetailMyModel(R.string.os_arch, a)
     }
     // endregion [Process]
 
     // region [ABI]
-    fun getCpuAbi() = toTranslatedDetailMyModel(R.string.build_cpu_abi, architectureDataSource.getCpuAbi())
-    fun getPropertyCpuAbi() = toTranslatedDetailMyModel(R.string.current_system_abi, architectureDataSource.getPropertyCpuAbi())
-    fun getSupported32BitAbis() = toTranslatedDetailMyModel(R.string.build_supported_32_bit_abis, architectureDataSource.getSupported32BitAbis().joinToString())
-    fun getSupported64BitAbis(): MyModel {
-        val supported64BitAbis = architectureDataSource.getSupported64BitAbis().joinToString().takeIf { it.isNotEmpty() }
-            ?: MyApplication.getMyString(R.string.result_not_supported)
-        return toTranslatedDetailMyModel(R.string.build_supported_64_bit_abis, supported64BitAbis)
+    fun getCpuAbi() = guardedMyModel(R.string.build_cpu_abi) {
+        toTranslatedDetailMyModel(R.string.build_cpu_abi, architectureDataSource.getCpuAbi())
+    }
+    fun getPropertyCpuAbi() = guardedMyModel(R.string.current_system_abi) {
+        toTranslatedDetailMyModel(R.string.current_system_abi, architectureDataSource.getPropertyCpuAbi())
+    }
+    fun getSupported32BitAbis() = guardedMyModel(R.string.build_supported_32_bit_abis) {
+        toTranslatedDetailMyModel(R.string.build_supported_32_bit_abis, architectureDataSource.getSupported32BitAbis().joinToString())
+    }
+    fun getSupported64BitAbis(): MyModel = guardedMyModel(R.string.build_supported_64_bit_abis) {
+            val supported64BitAbis = architectureDataSource.getSupported64BitAbis().joinToString().takeIf { it.isNotEmpty() }
+                ?: MyApplication.getMyString(R.string.result_not_supported)
+            return toTranslatedDetailMyModel(R.string.build_supported_64_bit_abis, supported64BitAbis)
     }
     // endregion [ABI]
 
     // region [ROM]
-    fun getUser() = toTranslatedDetailMyModel(R.string.build_user, romDataSource.getUser())
-    fun getHost() = toTranslatedDetailMyModel(R.string.build_host, romDataSource.getHost())
-    fun getTime(): MyModel {
-        val time = romDataSource.getTime().formatToLocalZonedDatetimeString()
-        return toTranslatedDetailMyModel(R.string.build_time, time)
+    fun getUser() = guardedMyModel(R.string.build_user) {
+        toTranslatedDetailMyModel(R.string.build_user, romDataSource.getUser())
     }
-    fun getBaseOs() = toTranslatedDetailMyModel(R.string.build_base_os, romDataSource.getBaseOs())
+    fun getHost() = guardedMyModel(R.string.build_host) {
+        toTranslatedDetailMyModel(R.string.build_host, romDataSource.getHost())
+    }
+    fun getTime(): MyModel = guardedMyModel(R.string.build_time) {
+            val time = romDataSource.getTime().formatToLocalZonedDatetimeString()
+            return toTranslatedDetailMyModel(R.string.build_time, time)
+    }
+    fun getBaseOs() = guardedMyModel(R.string.build_base_os) {
+        toTranslatedDetailMyModel(R.string.build_base_os, romDataSource.getBaseOs())
+    }
 
-    fun getId() = toTranslatedDetailMyModel(R.string.build_id, romDataSource.getId())
-    fun getDisplay() = toTranslatedDetailMyModel(R.string.build_display, romDataSource.getDisplay())
-    fun getType() = toTranslatedDetailMyModel(R.string.build_type, romDataSource.getType())
-    fun getTags() = toTranslatedDetailMyModel(R.string.build_tags, romDataSource.getTags())
-    fun getIncremental() = toTranslatedDetailMyModel(R.string.build_incremental, romDataSource.getIncremental())
-    fun getCodename(): MyModel {
-        var detail = romDataSource.getCodename()
-        if (isPreviewAndroid() && isAtLeastAndroid13()) {
-            val previewDisplay = romDataSource.getReleaseOrPreviewDisplay()
-            if (detail != previewDisplay) {
-                detail += " ($previewDisplay)"
-            }
-        }
-        return toTranslatedDetailMyModel(R.string.build_codename, detail)
+    fun getId() = guardedMyModel(R.string.build_id) {
+        toTranslatedDetailMyModel(R.string.build_id, romDataSource.getId())
     }
-    fun getPreviewSdkInt() = toTranslatedDetailMyModel(R.string.build_preview_sdk_int, romDataSource.getPreviewSdkInt().toString())
+    fun getDisplay() = guardedMyModel(R.string.build_display) {
+        toTranslatedDetailMyModel(R.string.build_display, romDataSource.getDisplay())
+    }
+    fun getType() = guardedMyModel(R.string.build_type) {
+        toTranslatedDetailMyModel(R.string.build_type, romDataSource.getType())
+    }
+    fun getTags() = guardedMyModel(R.string.build_tags) {
+        toTranslatedDetailMyModel(R.string.build_tags, romDataSource.getTags())
+    }
+    fun getIncremental() = guardedMyModel(R.string.build_incremental) {
+        toTranslatedDetailMyModel(R.string.build_incremental, romDataSource.getIncremental())
+    }
+    fun getCodename(): MyModel = guardedMyModel(R.string.build_codename) {
+            var detail = romDataSource.getCodename()
+            if (isPreviewAndroid() && isAtLeastAndroid13()) {
+                val previewDisplay = romDataSource.getReleaseOrPreviewDisplay()
+                if (detail != previewDisplay) {
+                    detail += " ($previewDisplay)"
+                }
+            }
+            return toTranslatedDetailMyModel(R.string.build_codename, detail)
+    }
+    fun getPreviewSdkInt() = guardedMyModel(R.string.build_preview_sdk_int) {
+        toTranslatedDetailMyModel(R.string.build_preview_sdk_int, romDataSource.getPreviewSdkInt().toString())
+    }
 
     // region [Fingerprint]
-    fun getFingerprint() = toTranslatedDetailMyModel(R.string.build_stock_fingerprint, fingerprintDataSource.getFingerprint())
-    fun getPreviewSdkFingerprint() = toTranslatedDetailMyModel(R.string.build_stock_preview_fingerprint, fingerprintDataSource.getPreviewSdkFingerprint())
+    fun getFingerprint() = guardedMyModel(R.string.build_stock_fingerprint) {
+        toTranslatedDetailMyModel(R.string.build_stock_fingerprint, fingerprintDataSource.getFingerprint())
+    }
+    fun getPreviewSdkFingerprint() = guardedMyModel(R.string.build_stock_preview_fingerprint) {
+        toTranslatedDetailMyModel(R.string.build_stock_preview_fingerprint, fingerprintDataSource.getPreviewSdkFingerprint())
+    }
     fun getPartitionFingerprints(): List<MyModel> {
         val partitions = fingerprintDataSource.getPartitions()
-        return partitions.mapNotNull {
-            val partitionFingerprintProperty = fingerprintDataSource.getPartitionFingerprint(it)
-            val fingerprint = fingerprintDataSource.getPartitionFingerprintProperty(partitionFingerprintProperty)
-            if (fingerprint != MyApplication.getMyString(R.string.build_not_filled)
-                && fingerprint != MyApplication.getMyString(R.string.result_not_supported)
-            ) {
-                val title = MyApplication.getMyString(R.string.build_certain_fingerprint, it)
-                toTranslatedDetailMyModel(title, fingerprint)
-            } else {
-                null
+        // Per-partition isolation: the partition name is the row title, so a failing read
+        // degrades into that partition's own error row and the others still render.
+        return partitions.mapNotNull { partition ->
+            try {
+                val partitionFingerprintProperty = fingerprintDataSource.getPartitionFingerprint(partition)
+                val fingerprint = fingerprintDataSource.getPartitionFingerprintProperty(partitionFingerprintProperty)
+                if (fingerprint != MyApplication.getMyString(R.string.build_not_filled)
+                    && fingerprint != MyApplication.getMyString(R.string.result_not_supported)
+                ) {
+                    val title = MyApplication.getMyString(R.string.build_certain_fingerprint, partition)
+                    toTranslatedDetailMyModel(title, fingerprint)
+                } else {
+                    null
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                if (BuildConfig.DEBUG) {
+                    e.printStackTrace()
+                }
+                toTranslatedDetailMyModel(
+                    partition,
+                    MyApplication.getMyString(R.string.result_detect_failed, e.fullMessage)
+                )
             }
         }
     }
     // endregion [Fingerprint]
 
-    fun getDefaultUserAgent(context: Context): MyModel {
-        val userAgent = try {
-            romDataSource.getDefaultUserAgentOrThrow(context)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            MyApplication.getMyString(androidR.string.unknownName)
-        }
-        return toTranslatedDetailMyModel(R.string.webview_user_agent, userAgent)
+    fun getDefaultUserAgent(context: Context): MyModel = guardedMyModel(R.string.webview_user_agent) {
+            val userAgent = try {
+                romDataSource.getDefaultUserAgentOrThrow(context)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                MyApplication.getMyString(androidR.string.unknownName)
+            }
+            return toTranslatedDetailMyModel(R.string.webview_user_agent, userAgent)
     }
 
-    fun getKernelVersion(): MyModel {
-        var kernelFinal: String? = null
-        val kernelVerbose = kernelDataSource.getKernelVersion()
-        if (kernelVerbose.isSuccess) {
-            kernelFinal = kernelVerbose.output.getOrNull(0)
-        } else {
-            val kernelAll = kernelDataSource.getKernelAll()
-            if (kernelAll.isSuccess) {
-                kernelFinal = kernelAll.output.getOrNull(0)
+    fun getKernelVersion(): MyModel = guardedMyModel(R.string.linux) {
+            var kernelFinal: String? = null
+            val kernelVerbose = kernelDataSource.getKernelVersion()
+            if (kernelVerbose.isSuccess) {
+                kernelFinal = kernelVerbose.output.getOrNull(0)
+            } else {
+                val kernelAll = kernelDataSource.getKernelAll()
+                if (kernelAll.isSuccess) {
+                    kernelFinal = kernelAll.output.getOrNull(0)
+                }
             }
-        }
 
-        return toTranslatedDetailMyModel(R.string.linux, kernelFinal)
+            return toTranslatedDetailMyModel(R.string.linux, kernelFinal)
     }
     // endregion [ROM]
 
     // region [Others]
-    fun getBootloader() = toTranslatedDetailMyModel(R.string.build_bootloader, othersDataSource.getBootloader())
-    fun getRadioVersionOrNull() = toTranslatedDetailMyModel(R.string.build_radio, othersDataSource.getRadioVersionOrNull())
+    fun getBootloader() = guardedMyModel(R.string.build_bootloader) {
+        toTranslatedDetailMyModel(R.string.build_bootloader, othersDataSource.getBootloader())
+    }
+    fun getRadioVersionOrNull() = guardedMyModel(R.string.build_radio) {
+        toTranslatedDetailMyModel(R.string.build_radio, othersDataSource.getRadioVersionOrNull())
+    }
     // endregion [Others]
 }
