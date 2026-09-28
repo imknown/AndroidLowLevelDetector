@@ -5,13 +5,11 @@
 | 路径 | 是什么 | 状态 |
 |---|---|---|
 | [conventions/](conventions/README-cn.md) | 工程约定与事实 — `AGENTS.md` 背后的详细 memory: flavor, 签名, 工具链, 架构, 代码规则, 本地化, 工作流 | **living** — 描述现状; 漂移是要就地修的 bug |
-| [issues-cn/](issues-cn/README.md) | 项目问题汇总: View 时代架构体检的发现 (`AR-xx`, `C`/`R`/`A`), 从中切出的快赢修复 (`QW-x`), 以及 Compose 迁移后的代码复查 (`F-x`) 都在这里喂 backlog | **record + backlog** — 依条目行动前先对当前代码复核; View 时代的描述是历史, 不要把今天的代码回填进去 |
 | [JOTTINGS.md](JOTTINGS.md) | 未整理的个人随笔 | 草稿 |
 
-**frozen** 文档在自己的 README 里保留自己的声明; 代码和 [conventions/](conventions/README-cn.md) 是关于现状的真相. 要在这里加目录, 加一行并说明它属于三种状态中的哪一种.
+**frozen** 文档在自己的 README 里保留自己的声明; 代码和 [conventions/](conventions/README-cn.md) 是关于现状的真相. 要在这里加目录, 加一行并写明它的状态 — **living**, **frozen / record** 或 **草稿**.
 
 ## 阅读顺序
 
 1. [conventions/](conventions/README-cn.md) — 这个仓库怎么构建, 怎么改动
-2. [issues-cn/](issues-cn/README.md) — 代码与目标之间的差距: 架构发现, 快赢修复 (现暂缓), 以及 Compose 迁移复查
-3. [JOTTINGS.md](JOTTINGS.md) — 未整理的材料
+2. [JOTTINGS.md](JOTTINGS.md) — 未整理的材料
