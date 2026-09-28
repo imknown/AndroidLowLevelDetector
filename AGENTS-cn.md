@@ -6,10 +6,12 @@
 
 工作原则:
 
-- **Memory**: 本文件只是索引, 保持简短. 把持久的发现 (已裁定的决定, 约定, 坑, 文档更正) 记进 `docs/` 下的文档 — 工程约定进 [docs/dev/conventions/](docs/dev/conventions/README-cn.md), 其余进相关文档 — 让下一个 session 站在它们之上, 而不是重新发现一遍. 不确定该记什么或该记在哪, 和用户讨论.
+- **Memory**: 本文件就是持久的 memory — 已裁定的决定, 约定, 坑, 文档更正都记在这里, 让下一个 session 站在它们之上, 而不是重新发现一遍. 未整理的个人材料进 [docs/dev/JOTTINGS.md](docs/dev/JOTTINGS.md). 不确定该记什么或该记在哪, 和用户讨论.
 - **Never guess**: 先查代码库和文档; 每次改动都要建立在你能指出来的证据上 (文件, 行号, 文档小节). 无法确定, 或存在多种合理做法时, 摆出发现并问用户; 写 `unknown`, 不要编造取值. 冲突是停止信号, 不是择一的许可: 证据不能判定哪边错 (文档 vs 文档, 文档 vs 代码) 时, 把两边摆出来问. 指令的范围只到被点名的对象 — 第二句看起来像同一个问题的, 进入待问的清单, 不并进同一次修改.
-- **English by default**: 你生成的一切 — 文档, 注释, 提交信息 — 除非用户另作说明, 一律用英语. 不管文档用什么语言写, 标点都是 ASCII, 间距按英语来 (不用 `，。、：（）「」`): 见 [docs/README-cn.md](docs/README-cn.md#约定).
+- **English by default**: 你生成的一切 — 文档, 注释, 提交信息 — 除非用户另作说明, 一律用英语. 不管文档用什么语言写, 标点都是 ASCII, 间距按英语来 (不用 `，。、：（）「」`): 见 [文档规则](#文档规则).
 - **No sensitive information**: 任何文档, memory 文档在内, 都不得含敏感信息: 隐私数据, 密码, 密钥, 证书或签名材料.
+
+刻意偏离主流 / 官方模板的约定在下文就地标出 — 它们不是要修的坏味道, 别顺手把它们 "规范化" 掉. 这里的陈述和代码不一致时, 以代码为准, 并改本文件.
 
 ## 项目概览
 
@@ -17,6 +19,7 @@ Android 应用, 展示底层系统特征: Treble 与 GSI 兼容性, Mainline/APE
 
 - 应用 id `net.imknown.android.forefrontinfo`; 版本信息在 `gradle/toml/build.toml`.
 - 模块: `:app` (Compose UI, 功能在 `ui` 下) · `:base` (`IProperty`/`IShell` 抽象) · `:binderDetector` (经 JNI 的 C++) · `build-logic` (约定插件).
+- 产品介绍与下载链接在 [根 README](README-cn.md), 英文版是 [README.md](README.md).
 
 ## 构建与验证
 
@@ -26,13 +29,70 @@ Android 应用, 展示底层系统特征: Treble 与 GSI 兼容性, Mainline/APE
 ./gradlew lintFossDebug          # Android lint
 ```
 
-Flavor, 签名, 工具链, 版本目录以及所有构建约定: 见 [docs/dev/conventions/](docs/dev/conventions/README-cn.md).
+## 构建约定
 
-## 该看哪里
+- Flavor (维度名 `IssueTracker` — 不是常见的 `mode` / `store`): `Foss` 是默认 (无跟踪, 版本名带 `-Foss` 后缀); `Firebase` 是 Play 变体, 需要 `google-services.json`, 该文件已被 gitignore. `AndroidApplicationFirebaseConventionPlugin` 以 `firebaseImplementation` 附加 Firebase 依赖, 并为 Foss 禁用 GoogleServices / Crashlytics 任务, 所以 Foss 构建永远不需要那个文件.
+- Debug 构建开箱即用; debug 加了 `applicationIdSuffix = ".debug"`, 于是能和 release 并存安装 — 处理应用身份 (权限, adb) 时记得这个后缀. 发布签名配置放在仓库之外, 在 gitignored 的 `local.properties` 里 (见 README).
+- JDK 25 (Adoptium) 走在两条互不相干的轨道上: 代码编译靠 `jvmToolchain`, Gradle Daemon 靠 `gradle/gradle-daemon-jvm.properties` (由 `updateDaemonJvm` 生成). 别把两者混为一谈. 用 `./gradlew -q javaToolchains` 查看.
+- `:binderDetector` 原生代码需要把 NDK 和 CMake 版本钉在 `gradle/toml/build.toml` (当前 NDK 30.0.16248370, CMake 4.1.2) — 与 CI 安装的版本完全一致, 改它们就要连同 CI 一起改.
+- 版本目录拆成五个文件 (`gradle/toml/`: `build` / `android` / `kotlin` / `google` / `thirdParty`): 用 `libsAndroid`, `libsBuild`, `libsKotlin`, `libsGoogle`, `libsThirdParty`. 没有默认的 `libs` 访问器. 依赖和版本只存在于这些目录里; 绝不在模块的 `build.gradle.kts` 里写裸坐标, 引用之前先决定依赖属于哪一类.
+- 版本号档位: RC / Stable 的依赖或工具链版本可直接用于生产. Beta / Alpha / Canary 也可以, 但前提是研究透彻, 已知问题能被修复或规避, 且经过评估.
+- SDK, build-tools 和 NDK 版本只放在 `gradle/toml/build.toml` (带 `isPreview` 开关), 经由 `build-logic` 约定插件到达模块. 绝不在模块脚本里硬编码 SDK 级别.
+- Kotlin 2.4 带一组在 `build-logic` 声明的实验性编译器 flag, 按引入它们的 Kotlin 版本分组 — 这些 flag 是有意为之, 不要删; 每次升级 Kotlin 都重新审一遍各组, 去掉已稳定的. 代码风格是 `official`.
+- 仓库都做了内容过滤 (`google()` 用 `includeGroupByRegex` 收窄), 且 `FAIL_ON_PROJECT_REPOS`; `jitpack.io` 只存在于主构建的依赖仓库里.
+- 配置缓存 (带并行与完整性检查) 和并行构建已启用; 自定义任务要保持配置缓存兼容.
+- Build scan 用 Develocity 插件但从不发布 (`publishing.onlyIf { false }`) — 只用于本地 scan.
 
-[docs/README-cn.md](docs/README-cn.md) 是索引: 每份文档是什么, 阅读顺序, 以及文档写作规则 (错的陈述就地修正; 声明为 **frozen** 的文档保持写作时的原样). [docs/dev/README-cn.md](docs/dev/README-cn.md) 对开发者文档做同样的事, 并标明哪些还在持续维护.
+## 模块细节
 
-刻意偏离主流模板的约定在约定文档里就地标出 — 别顺手把它们 "规范化" 掉.
+- `:app` — 应用本身; namespace 也就是 applicationId. 它的 `sourceSets` 注册了贴着包的 res 目录: 资源住在 `java/<package>/.../res` 路径下 (例如 `app/src/main/java/net/imknown/android/forefrontinfo/ui/home/res`), 没有 `app/src/main/res`, 新增的 res 目录必须在 `app/build.gradle.kts` 的 sourceSets 里注册.
+- `build-logic` — 装着约定插件的 included build; 是所有模块 SDK 与构建取值的唯一来源. 共享配置 (SDK, desugaring, Java toolchain, Kotlin 编译器参数, 测试依赖) 位于 `build-logic/convention/src/main/kotlin/.../android/`; 模块只负责 apply 插件. 新增约定插件: 在 `build-logic/convention` 里实现, 然后在 `gradle/toml/android.toml` 的 `[plugins]` 段注册一个 alias.
+
+## 架构
+
+每个功能住在 `ui` 下自己的包里 (`ui.home`, `ui.others`, `ui.prop`, `ui.settings`), 分层相同:
+
+```
+Screen (Compose) → ViewModel (StateFlow) → Repository → DataSource
+```
+
+- 导航是 **Navigation 3** (`androidx.navigation3`), 不是主流的 Navigation 2: API 形状是 `NavKey` + 返回栈 + entryProvider (`ui/navigation/NavKeys.kt`). 别按 Nav2 的词去想 (`NavHost(route = ...)`).
+- **没有 DI 框架** — 这是有意偏离 Hilt / Koin 主流. 每个 ViewModel 通过伴生 `Factory` 手工接线 (`viewModelFactory { initializer { ... } }`), Screen 用 `viewModel(factory = ...)` 拿到它. 新增 ViewModel 时照抄 `HomeViewModel.Factory` 的写法.
+- 可测试性来自 **接口优先的设计**, 不是 mock 框架: `:base` 定义 `IProperty` / `IShell` 及其默认实现 (`PropertyDefault` / `ShellDefault`), 由 `PropertyManager` 通过 `by` 委托聚合.
+- `BaseListViewModel` 用两个 `StateFlow` 驱动每个列表页 — `modelsStateFlow: StateFlow<List<MyModel>?>` (null 表示冷启动; 刷新时刻意保留上一个列表, 让界面绝不闪空) 和 `isLoadingStateFlow` — 外加 `loadJob` 去重: 别在重建时重新引入多余的加载. `onModelsLoaded()` 在每次加载落地后运行, 用来对账构建过程中改变了的状态.
+- Compose 的稳定性注解 (`@Immutable` / `@Stable`) 是有意加的; 状态类一改就要重新评估 (照 `HomeViewModel` / `BaseListViewModel` 顶部注释的写法走, 它解释了注解*为什么*安全).
+- 内置的 `lld.json` 数据会被复制到外部 files 目录 (`LldManager`), 用户允许联网时经 Ktor 在线刷新; 用 GitHub 还是 Gitee 的 URL 按时区选.
+- 命令执行用 libsu 的 **非 root** 模式 (`ui/common/ShellLibSu.kt`, 带 `Shell.FLAG_NON_ROOT_SHELL`): 没有 root 层.
+
+## 新增一个检测条目
+
+当前流程 (列表顺序 = 调用顺序):
+
+1. 把参数 key / shell 命令加进该功能的 `DataSource`.
+2. 给该功能的 `Repository` 加一个返回 `MyModel` 的 `detect...()` 方法.
+3. 在该功能 `ViewModel.collectModels()` 里调用它 — 调用顺序就是列表顺序.
+4. 字符串加进该功能包的 `strings.xml` (默认英语) 以及三个翻译文件.
+5. 若该条目需要带资源的新包, 在 `app/build.gradle.kts` 的 sourceSets 里注册它的 res 目录.
+6. 用 `./gradlew assembleFossDebug` 验证.
+
+## 代码规则
+
+给新代码的规则 — 它们编码的是已裁定的决定; 别让已有的债更糟:
+
+- `ViewModel` 一律拼全 — 绝不缩写成 `VM`, 标识符, 注释, 提交信息和文档里都不. `VM` 已经是 *virtual machine* 的缩写, 而这应用把虚拟机当作自己的一个检测主题 (进程/VM 架构, `getArchitecture`), 所以即便上下文足以看懂, 这个短写也是有歧义的. `UseCase` 和 `DataSource` 同样拼全 — 不写 `UC` / `DS`.
+- 不用静态事件总线: 绝不把 `SharedFlow`/`StateFlow` 放进 ViewModel 的伴生对象. 跨功能的数据经 repository 传递.
+- 全局的 `myAndroid` (`AndroidVersionExt`) 只有两个写入方: 启动时的 `initMyAndroid()` (`MyApplication.onCreate`, 来自运行时的 `Build.VERSION`), 以及 `HomeRepository.detectAndroid()` 里的已知值覆写. 绝不在别处赋值 — `isAtLeast...()` 辅助函数到处都在读它.
+- minSdk 是 24: 更新的 API 要用 `isAtLeastAndroidX()` 辅助函数或 `@RequiresApi` 兜住.
+- 新代码用钉住的版本所允许的最新语法和标准库 API: 当前 Kotlin 版本支持的最新语法与 std-lib API, 当前 compileSdk 提供的最新平台 API, 当前依赖版本提供的最新 API — 绝不必就比工具链允许的更老的写法.
+- 当能用的最新语法或 API 本身处于 Beta / experimental, 不要单方面采用 — 摆出来问负责人怎么处理. `build-logic` 里已启用的实验性编译器 flag 是定下来的一组; 这条管的是新的 opt-in.
+- 阻塞性工作 (shell, 系统属性, 文件, 网络) 跑在 `Dispatchers.IO`, 不是 `Dispatchers.Default`.
+- `ShellDefault` 故意没有调用方: 它是保留备用的原生 shell 实现, 不依赖 libsu (在用的是 `ShellLibSu`). 别把它当死代码删; 如果将来启用它, 先修掉 `waitFor()` 之后读管道的死锁.
+
+## 本地化
+
+- 字符串按功能包拆分. 支持的 locale: 默认 (英语), `zh-rCN`, `zh-rTW`, `fr-rFR` (`localeFilters` + `generateLocaleConfig`); 引入新语言时把 locale 加进 `localeFilters`.
+- 新的面向用户字符串一律先有默认英语条目; 能做到的时候把三个翻译文件同步更新.
+- 按语言的排版标点 (中文的全角冒号, 法语冒号前的空格, ...) 只适用于面向用户的本地化文案. [文档规则](#文档规则) 里的 ASCII 标点规则照常管文档, 代码注释, 以及非文案的字符串资源 (存储 key, URI, 技术取值).
 
 ## Git 与 CI
 
@@ -45,3 +105,20 @@ Flavor, 签名, 工具链, 版本目录以及所有构建约定: 见 [docs/dev/c
 
 - 绝不提交或强制加入 (force-add) 凭据, 签名材料或本地配置 (`local.properties`, `keys/release.jks`, `google-services.json`) — 根 `.gitignore` 已经排除了它们.
 - 如果某个改动看起来需要提交这类文件, 先停下来问.
+
+## 文档规则
+
+在这里以及 `docs/` 下写东西的规则. 每份文档自己声明自己的状态; 本文件和它承载的约定是 **living** — 描述现状, 漂移是要就地修的 bug. [docs/dev/JOTTINGS.md](docs/dev/JOTTINGS.md) 是 **scratch** (草稿). 一份文档可以声明自己 **frozen** 或 **record**: 它保留写作时的文本, 包括其中的更正与后续发现, 所以引用它做历史, 但绝不把今天的代码回填进去. 没有任何文档默认被冻结; 新文档在它另行说明之前都是 living. 要在 `docs/` 下加文档, 说明它是哪种状态 — **living**, **frozen / record** 或 **scratch**.
+
+- 文档追踪的东西都有 ID, ID 在所有文档间通用 — 引用时用 ID.
+- **就地修正**文档: 一句话被证明是错的, 就改写它以及所有依赖它的下游内容, 让文档单独读来就是当前事实. 不要让被推翻的句子原样留着, 后面再挂一个括号或引块更正; 也不要给改过的句子标注它是哪次核对改的 — 事实属于句子本身, 不属于谁在何时核对过的说明.
+- 有冲突先问再裁: 两份文档不一致, 或文档与代码不一致且证据不能判定谁错时, 把两边摆出来让负责人裁定 — 然后只改被裁定的那句. 更正不外溢: 另一句看起来像同样问题的话, 记到待问清单里, 不并进同一次修改.
+- 文档只陈述负责人说过的话或代码展示的事实. 不为了让一行或一句话看起来完整而添术语, 检测条目或限定词; 术语表的一行只覆盖本文档自己用到的词汇, 最后一处引用已消失的行要先问, 而不是因为该术语广为人知就留着.
+- 留在正文里的: 实质与导航 — 句子所划的范围或例外, 按 ID 的交叉引用, 代码符号. **谁在何时裁定了什么, 不是正文**: 带日期的裁定属于 `git log`, 不是每句话上的 "负责人裁定, <日期>" 标签. 带版本行的文档只写版本并指向 `git log`; 它不积累修订日志.
+- 文档默认用英语; 非英语的文件和目录带语言后缀 (中文: `-cn`). 永远以英文版为生效版本: 英文的 `README.md` / `AGENTS.md` 保住规范文件名, 旁边配一份中文翻译 (`README-cn.md`, `AGENTS-cn.md`). 链接跟随链接方文档的语言 — 中文文档指向中文版 (`README-cn.md`), 英文文档指向英文版 — 没有对应版本时, 指向存在的那份. 纯翻译不提它的孪生版, 也不自称中文版或翻译版 — 不加翻译注记, 不加回指; `-cn` 后缀本身已经说明了关系. 文件名默认用英语; 沿用各目录现有的命名. 有理由时, 文档内部仍可使用任何语言.
+- **任何语言都用 ASCII 标点**: 中文 (或日文) 文档用英文标点, 不用 CJK 标点 — `,` `.` `;` `:` `!` `?` `(...)` `"..."`, 而不是 `，。；：！（）「」《》`. 一一对应: `，、` → `,` · `。` → `.` · `；` → `;` · `：` → `:` · `（）` → `()` · `「」『』《》` → `"` (嵌套时用 `'`) · `……`/`…` → `...` · `——` → ` — `. 非标点字形保持原样: `—` `·` `→` `←`, 图中的表格线符号, 以及状态 emoji.
+  间距跟英语走, 不论两侧是什么文字: 标点后若还接文字, 后面空一格 (`每个条目, 每次检测`), `,` `.;:!?)` 前不空格, `(` `"` 内不空格. 另外两种情况: `(` 紧跟标识符表示调用, 中间不空格 (`collectModels()`); 数字之间的 `:` 不加空格 (`16:9`, `12:30`).
+  这条对每份文档都成立, 包括 **frozen**, **record** 和 **scratch** 的那些 — 标点属于排版, 不是那些状态所保留的实质. 写新文字或重写一段时, 顺手把改动触及的部分一并转换; 在语言之间翻译时也要核一遍标点.
+  标题的标点和间距决定目录所指向的 GitHub 锚点, 所以重排一个标题的间距时, 要在同一次修改里改写所有解析到它的 `](#...)`. 显式 `<a id="...">` 锚点是稳定文本, 永不移动.
+- 任何文档 (memory 文档在内) 都不得含敏感信息: 隐私数据, 密码, 密钥, 证书.
+- `docs/` 下的文档保持简短; 一份长得太长时, 沿自然缝隙拆开, 保留一个 README 做索引页.
