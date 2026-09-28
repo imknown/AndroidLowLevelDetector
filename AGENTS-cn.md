@@ -30,7 +30,7 @@ Flavor, 签名, 工具链, 版本目录以及所有构建约定: 见 [docs/dev/c
 
 ## 该看哪里
 
-[docs/README-cn.md](docs/README-cn.md) 是索引: 每份文档是什么, 阅读顺序, 以及文档写作规则 (错的陈述就地修正; 像迁移计划这样的 frozen 记录保持写作时的原样). [docs/dev/README-cn.md](docs/dev/README-cn.md) 对开发者文档做同样的事, 并标明哪些还在持续维护.
+[docs/README-cn.md](docs/README-cn.md) 是索引: 每份文档是什么, 阅读顺序, 以及文档写作规则 (错的陈述就地修正; 声明为 **frozen** 的文档保持写作时的原样). [docs/dev/README-cn.md](docs/dev/README-cn.md) 对开发者文档做同样的事, 并标明哪些还在持续维护.
 
 刻意偏离主流模板的约定在约定文档里就地标出 — 别顺手把它们 "规范化" 掉.
 
