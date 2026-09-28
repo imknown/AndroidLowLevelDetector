@@ -10,12 +10,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ListItem
@@ -40,6 +43,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.edit
@@ -366,13 +371,36 @@ private fun SettingsSwitchRow(
     onCheckedChange: (Boolean) -> Unit, // switch event goes up
     modifier: Modifier = Modifier, // conventional parameter: caller constraints
 ) {
-    ListItem(
-        headlineContent = { Text(stringResource(title)) }, // headline (= Preference title)
-        supportingContent = { Text(stringResource(summary)) }, // supporting (= Preference summary)
-        trailingContent = { Switch(checked = checked, onCheckedChange = onCheckedChange) }, // trailing
-        colors = ListItemDefaults.colors(containerColor = Color.Transparent), // follows the row card background
-        modifier = modifier.clickable { onCheckedChange(!checked) }, // the whole row is also clickable (UX detail)
-    )
+    // Hand-rolled instead of a ListItem: ListItem reads a wrapping summary as a three-line item and
+    // pins its trailing slot to the top, which left both switches off-center. Metrics below are
+    // ListItem's three-line ones (88dp min height, 16dp / 12dp padding, bodyLarge + bodyMedium, 16dp
+    // gap), so only the trailing alignment differs from a ListItem row.
+    // The row is the single tap target, so the ripple starts under the finger even on the switch; a
+    // switch handling its own taps would swallow them and ripple inside its own small bounds.
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .semantics(mergeDescendants = true) {} // title, summary and switch state announce as one row, as ListItem does
+            .toggleable(value = checked, role = Role.Switch) { onCheckedChange(it) } // toggleable, not clickable: it carries the checked state for TalkBack
+            .defaultMinSize(minHeight = 88.dp)
+            .padding(horizontal = 16.dp, vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically, // the reason this row is not a ListItem
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                stringResource(title), // = Preference title
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            Text(
+                stringResource(summary), // = Preference summary
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+        Spacer(modifier = Modifier.width(16.dp))
+        Switch(checked = checked, onCheckedChange = null) // display-only: the row's toggleable is the tap target
+    }
 }
 
 private data class SettingsLink(
