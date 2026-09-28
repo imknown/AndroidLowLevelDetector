@@ -8,9 +8,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import net.imknown.android.forefrontinfo.R
@@ -31,15 +29,6 @@ class SettingsViewModel(
             initializer {
                 SettingsViewModel(SettingsRepository(AppInfoDataSource(), FingerprintDataSource()))
             }
-        }
-
-        val scrollBarModeChangedSharedFlow: SharedFlow<String?>
-            field = MutableSharedFlow()
-    }
-
-    fun emitScrollBarModeChangedSharedFlow(scrollBarMode: String?) {
-        viewModelScope.launch {
-            scrollBarModeChangedSharedFlow.emit(scrollBarMode)
         }
     }
 

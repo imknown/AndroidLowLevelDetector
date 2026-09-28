@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ListItem
@@ -49,7 +50,9 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
+import net.imknown.android.forefrontinfo.base.ScrollBarMode
 import net.imknown.android.forefrontinfo.ui.base.ext.toast
+import net.imknown.android.forefrontinfo.ui.common.nonInteractiveScrollbar
 import net.imknown.android.forefrontinfo.ui.settings.repository.SettingsRepository
 import net.imknown.android.forefrontinfo.ui.theme.AppTheme
 
@@ -103,9 +106,13 @@ fun SettingsScreen(viewModel: SettingsViewModel, modifier: Modifier = Modifier) 
         viewModel.setBuiltInDataVersion(context.packageManager, context.packageName)
     }
 
+    // App-wide preference, not page data: MyApplication owns it (as themeMode) and the content stays pure-data
+    val scrollBarMode by MyApplication.scrollBarMode.collectAsStateWithLifecycle()
+
     SettingsContent(
         themeValue = themeValue,
         scrollBarValue = scrollBarValue,
+        scrollBarMode = scrollBarMode,
         allowNetwork = allowNetwork,
         outdatedOrderFirst = outdatedOrderFirst,
         version = version,
@@ -117,8 +124,7 @@ fun SettingsScreen(viewModel: SettingsViewModel, modifier: Modifier = Modifier) 
         onScrollBarSelect = { value ->
             scrollBarValue = value
             MyApplication.sharedPreferences.edit { putString(scrollBarKey, value) }
-            // inert for now: nothing subscribes until Material3 ships a scrollbar — the preference is persisted either way
-            viewModel.emitScrollBarModeChangedSharedFlow(value)
+            MyApplication.setMyScrollBar(value) // writes the preference stream; this page and every list page collect it and show or drop the indicator right away
         },
         onAllowNetworkChange = { value ->
             allowNetwork = value
@@ -140,6 +146,7 @@ fun SettingsScreen(viewModel: SettingsViewModel, modifier: Modifier = Modifier) 
 private fun SettingsContent(
     themeValue: String, // current theme stored value
     scrollBarValue: String, // current scroll bar stored value
+    scrollBarMode: ScrollBarMode, // the app-wide preference; decides whether this page draws the indicator
     allowNetwork: Boolean, // allow-network-data switch
     outdatedOrderFirst: Boolean, // outdated-order-by-package-name switch
     version: SettingsRepository.Version?, // version info, null until the ViewModel loads it once
@@ -162,10 +169,14 @@ private fun SettingsContent(
     val dividerColor = MaterialTheme.colorScheme.surfaceContainer
     val dividerThickness = 1.5.dp
 
+    val listState = rememberLazyListState()
+
     LazyColumn(
+        state = listState,
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surfaceContainer), // page background = same as the first three list pages
+            .background(MaterialTheme.colorScheme.surfaceContainer) // page background = same as the first three list pages
+            .nonInteractiveScrollbar(listState, enabled = scrollBarMode.drawsScrollBar),
         // horizontal 12dp is part of the content design (not insets compensation); top bar / bottom bar / system bars are handled by Scaffold innerPadding
         contentPadding = PaddingValues(
             start = groupHorizontalPadding,
@@ -409,6 +420,7 @@ private fun SettingsContentPreview() {
         SettingsContent(
             themeValue = "-1",
             scrollBarValue = "1",
+            scrollBarMode = ScrollBarMode.Normal, // mirrors scrollBarValue "1"
             allowNetwork = false,
             outdatedOrderFirst = true,
             version = SettingsRepository.Version(
