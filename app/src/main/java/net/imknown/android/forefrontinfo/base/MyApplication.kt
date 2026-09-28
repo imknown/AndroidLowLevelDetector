@@ -35,6 +35,22 @@ enum class AppThemeMode {
     }
 }
 
+// Scroll bar mode: none / normal / draggable (the third one is the View-era fast scroll, whose option
+// key is commented out in arrays.xml and whose RecyclerView FastScroller was dropped as buggy in 2019)
+// The mode is kept as three cases rather than collapsed to a flag: a stored "2" stays itself, so the
+// setting row and the UI can disagree about what is on screen without one of them losing the value
+enum class ScrollBarMode {
+    None,
+    Normal,
+    Draggable;
+
+    // What the pages ask: is a scroll indicator drawn. Only Normal is, today -- Draggable has no
+    // implementation yet, which is the same outcome the legacy setScrollBarMode reached (its when()
+    // matched only the normal value)
+    val drawsScrollBar: Boolean
+        get() = this == Normal
+}
+
 open class MyApplication : Application() {
 
     companion object {
@@ -79,6 +95,24 @@ open class MyApplication : Application() {
             }
             themeMode.value = mode
         }
+
+        // Single source of truth for the scroll bar preference, same shape as themeMode: seeded from the
+        // persisted value by initScrollBar at startup, written via setMyScrollBar when Settings changes it,
+        // and collected by the pages that draw a scroll indicator (no page reads SharedPreferences itself)
+        val scrollBarMode: StateFlow<ScrollBarMode>
+            field = MutableStateFlow(ScrollBarMode.None)
+
+        fun setMyScrollBar(scrollBarValue: String?) {
+            // Translate the persisted mode string into the enum (the single write entry); the stored
+            // default, null and any unrecognized value all read as none
+            val mode = when (scrollBarValue) {
+                getMyString(R.string.interface_normal_scroll_bar_value) -> ScrollBarMode.Normal
+                // The retired draggable value stays readable as itself rather than collapsing into none
+                getMyString(R.string.interface_fast_scroll_bar_value) -> ScrollBarMode.Draggable
+                else -> ScrollBarMode.None
+            }
+            scrollBarMode.value = mode
+        }
     }
 
     override fun onCreate() {
@@ -89,6 +123,8 @@ open class MyApplication : Application() {
         initMyAndroid()
 
         initTheme()
+
+        initScrollBar()
 
         initShellAndProperty()
     }
@@ -111,6 +147,16 @@ open class MyApplication : Application() {
         }
 
         setMyTheme(themesValue)
+    }
+
+    private fun initScrollBar() {
+        // On startup, seed the mode stored in SharedPreferences into the stream (same as initTheme).
+        // The stored default is "none", so a first run shows no indicator
+        val scrollBarValue = sharedPreferences.getString(
+            getMyString(R.string.interface_scroll_bar_key),
+            getMyString(R.string.interface_no_scroll_bar_value),
+        )
+        setMyScrollBar(scrollBarValue)
     }
 
     private fun initShellAndProperty() {

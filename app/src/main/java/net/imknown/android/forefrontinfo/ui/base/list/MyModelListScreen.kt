@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
@@ -24,6 +25,9 @@ import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import net.imknown.android.forefrontinfo.R
+import net.imknown.android.forefrontinfo.base.MyApplication
+import net.imknown.android.forefrontinfo.base.ScrollBarMode
+import net.imknown.android.forefrontinfo.ui.common.nonInteractiveScrollbar
 import net.imknown.android.forefrontinfo.ui.theme.AppTheme
 
 /**
@@ -45,6 +49,10 @@ fun MyModelListScreen(
     //    init() is idempotent, so re-running it on view recreation is harmless.
     LaunchedEffect(viewModel) { viewModel.init() }
 
+    // The scroll bar mode is an app-wide preference (MyApplication owns it, as themeMode), so the
+    // screen reads it here and the content composable stays a pure-data component
+    val scrollBarMode by MyApplication.scrollBarMode.collectAsStateWithLifecycle()
+
     MyModelListContent(
         // null only before the very first load lands (empty list while the spinner spins);
         // afterwards the ViewModel keeps the previous list during refreshes — no flash of empty list,
@@ -53,6 +61,7 @@ fun MyModelListScreen(
         models = models?.toPersistentList() ?: persistentListOf(),
         isRefreshing = isLoading, // first load and pull-to-refresh both spin (same as legacy)
         onRefresh = viewModel::refresh, // event up: gesture -> ViewModel refresh (a method reference is just a lambda)
+        scrollBarMode = scrollBarMode,
         modifier = modifier,
     )
 }
@@ -64,11 +73,14 @@ internal fun MyModelListContent(
     models: PersistentList<MyModel>, // data only (no ViewModel) -> previewable and reusable
     isRefreshing: Boolean, // whether the spinner spins (external state; this composable decides nothing)
     onRefresh: () -> Unit, // refresh callback (event goes up)
+    scrollBarMode: ScrollBarMode, // the app-wide preference; decides whether the scroll indicator is drawn
     modifier: Modifier = Modifier,
 ) {
     // Dashboard of the pull gesture: pull distance progress etc. A custom indicator requires
     // owning the state and passing it to both PullToRefreshBox and Indicator
     val pullToRefreshState = rememberPullToRefreshState()
+
+    val listState = rememberLazyListState()
 
     PullToRefreshBox(
         isRefreshing = isRefreshing, // state in: whether it spins is decided by the parameter, not by us
@@ -88,10 +100,12 @@ internal fun MyModelListContent(
         },
     ) {
         LazyColumn(
+            state = listState,
             modifier = Modifier
                 .fillMaxSize()
                 // Legacy base_list_fragment.xml: android:background="?attr/colorSurfaceContainer"
-                .background(MaterialTheme.colorScheme.surfaceContainer),
+                .background(MaterialTheme.colorScheme.surfaceContainer)
+                .nonInteractiveScrollbar(listState, enabled = scrollBarMode.drawsScrollBar),
             // Top/bottom 12dp is content design (not insets compensation);
             // top bar / bottom bar / system bars are handled by Scaffold innerPadding
             contentPadding = PaddingValues(vertical = dimensionResource(R.dimen.item_divider_space_vertical)),
@@ -136,6 +150,7 @@ private fun MyModelListContentPreview() {
             models = previewModels,
             isRefreshing = false,
             onRefresh = {},
+            scrollBarMode = ScrollBarMode.None,
         )
     }
 }

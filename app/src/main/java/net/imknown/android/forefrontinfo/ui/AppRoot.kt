@@ -37,6 +37,7 @@ import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import kotlinx.collections.immutable.persistentListOf
 import net.imknown.android.forefrontinfo.R
+import net.imknown.android.forefrontinfo.base.ScrollBarMode
 import net.imknown.android.forefrontinfo.ui.base.list.MyModelListContent
 import net.imknown.android.forefrontinfo.ui.base.list.MyModelListScreen
 import net.imknown.android.forefrontinfo.ui.base.list.previewModels
@@ -182,6 +183,7 @@ private fun AppRootShellPreview() {
                 models = previewModels,
                 isRefreshing = false,
                 onRefresh = {},
+                scrollBarMode = ScrollBarMode.None,
                 modifier = modifier,
             )
         }
