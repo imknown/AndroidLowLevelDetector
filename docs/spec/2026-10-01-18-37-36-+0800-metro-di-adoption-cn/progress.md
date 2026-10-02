@@ -4,7 +4,7 @@
 
 ## 当前位置
 
-ST-07 (shell 绑定) 已提交 (见子任务状态表): ShellLibSu object 挂 @ContributesBinding; Mount/Kernel/Properties DataSource 与 HomeRepository 构造注入 IShell; 删 ShellManager (:base) 与顶层 getShellResult (ShellExt); 全部 condition 分支语义原样. 提交闸门: 注释已译回英语, 构建重验 EXIT=0, 零残留复核通过. 剩余 ST-08~11, 下一子任务 ST-08 (property 绑定, 报告自评低风险: 机械替换 + 引入 graph factory 这一唯一结构性变化).
+ST-08 (property 绑定) 已提交 (见子任务状态表): 图工厂引入 (`AppGraph.Factory`, `@Provides app: MyApplication`); `IProperty` → `PropertyDefault` 绑定 + 新 `PropertyReader` 回退门面; 33 调用点机械替换; 删 `PropertyManager` (:base) / `PropertyExt`; `initShellAndProperty` → `initShell`. 实施偏差 (binding container 替代 companion @Provides, Metro 1.4.5 限制) 与 v1 的 4 条 LOW findings 裁定 (①④ 改, ② 归 ST-11, ③ 备记) 均已落账; AGENTS.md 的 DI 陈述 (overview + Architecture 条目) 已随裁定改写. 提交闸门: 注释译英 (CJK 复查净), 构建重验 EXIT=0. 剩余 ST-09~11, 下一子任务 ST-09 (lld 文件库, **高风险**: 核心文件编排搬移 + 消除 LldManager ↔ LldDataSource 引用环).
 
 ## 子任务状态
 
@@ -17,7 +17,8 @@ ST-07 (shell 绑定) 已提交 (见子任务状态表): ShellLibSu object 挂 @C
 | ST-05 | 已提交 (`refactor(settings)` 7db453d2) | 全部 ✓ (第一段完成; 真机 smoke: 双冷启动 / 四 tab 全渲染 / 刷新不闪空 / logcat 零异常) |
 | ST-06 | 已提交 (`refactor(di)`) | 目标句 ✓ 实施 ✓ 构建 ✓ 联网 smoke (Gitee 302→200 两轮) ✓ process death 模拟 (am kill 后重启恢复) ✓ v1 review (1 建议已修: 头注释) → 方案 B 裁定 (Provider 惰性单例) + 实施 + 真机复验 ✓ v2 review (限定范围深查: 头注释与 Provider 字节码级核实无误; 1 建议: 报告随裁定修订, 已改) ✓ 放行 ("继续", 见偏差记录) ✓ 提交 ✓ 注释已译回英语 ✓ |
 | ST-07 | 已提交 (`refactor(di)`) | 目标句 ✓ 实施 ✓ 构建 ✓ 零残留 ✓ 报告已修订 (DataSource 图构造后无需经 Repository 传参) ✓ 真机 smoke (Others 的 kernel 行吃到真实数据 = IShell 链路通; Home 整页加载无错误行; 零 FATAL; SELinux/GSI 行未滚到, 语义由评审覆盖) ✓ v1 review (1 建议: MyApplication 残留 ShellLibSu 冗余 import → 已删; 负责人确认不另开 v2) ✓ 放行 ✓ 提交 ✓ 注释已译回英语 + 构建重验 EXIT=0 + 零残留复核 ✓ |
-| ST-08~11 | 未开始 | 报告已预生成, 批次 review v1~v3 已过 (14 条发现已修); ST-06/11 报告已随裁定显式修订 |
+| ST-08 | 已提交 (`refactor(di)`) | 报告预生成 + 批次 review ✓, 动工时修订 (factory 实施路径: binding container) ✓ step0 ("开始" 放行, 目标句代记 "按报告范围") ✓ 实施 ✓ 构建 ✓ 零残留 ✓ 行为等价抽查 ✓ v1 review ✓ (4 LOW, 无阻塞) findings 裁定 ✓ (① 改 ② 归 ST-11 ③ 备记: 显式暂存勿 add -A ④ 改) ①④ 已修 + AGENTS.md DI 条目改写 ✓ 放行 ✓ 提交 ✓ 注释译英 ✓ (CJK 复查净 + 构建重验 EXIT=0) |
+| ST-09~11 | 未开始 | 报告已预生成, 批次 review 已过; ST-11 报告已随裁定显式修订 |
 
 ### ST-06 smoke 残留项
 
@@ -26,6 +27,7 @@ ST-07 (shell 绑定) 已提交 (见子任务状态表): ShellLibSu object 挂 @C
 
 ## 挂起物
 
+- issues-cn 5 处 "当前实现" 陈述指向已删代码 (v1 finding ② 裁定归 ST-11): README.md:159, 04-base一词三义.md:8/26, 32-启动性能杂项.md:14, 45-零散小问题.md:13, 42-字符串当哨兵值.md:20 — ST-11 关闭 #02 时一并改写
 - HomeRepository.kt:346 全角 `｜` 分隔符 (既有代码, 与 Metro 接入无关) — 负责人裁定暂不处理 (2026-10-02; v1 评审复核时行号漂移至 349, 非本次引入)
 - 模块化结构改造 (2026-10-02 讨论存档): 负责人意向 = KMP 默认结构 / Kotlin Toolchain 方向; AI 建议草案 (目标结构 / 映射 / 现实检验) 与 5 个待决问题已存档至 [docs/dev/module-structure-cn.md](../../dev/module-structure-cn.md) (living, **待负责人逐项裁定**, 不依赖本会话上下文); ShellDefault 澄清同记其"关联裁定"节, ST-11 纳入 AGENTS.md; 顺序结论 = 先收完 ST-07~11 再动模块
 
@@ -41,9 +43,11 @@ ST-07 (shell 绑定) 已提交 (见子任务状态表): ShellLibSu object 挂 @C
 - ST-07 / step0 / 负责人未单独给出目标句, 以一句"开始"放行 — 按预告所述报告范围执行; 台账代记目标句为"按报告范围".
 - 台账维护 / ST-05 提交起文件尾部残留 ST-04 时代的重复段落 (AI 组稿失误: 一次整体 Write 未覆盖旧尾部), 后续闸门更新只动前半未被及时发现, 且已随 ST-05 提交入库; ST-06 提交时整体重写清理, 以本版为唯一有效台账.
 - ST-07 / 放行 / 负责人在 v1 结果汇报后以一句"继续"放行 (沿用 ST-06 起的既立模式, 未另写理由句).
+- ST-08 / step0 / 负责人未单独给出目标句, 以一句"开始"放行 — 按报告范围执行; 台账代记目标句为"按报告范围".
+- ST-08 / 放行 / 负责人在 v1 修复汇报后以一句"继续"放行 — 合并 v2 闸门 (低风险, 修复均为单句注释/文档级), 沿用 ST-06 起的既立模式.
 
 ## 下一步
 
 1. 负责人点头
-2. ST-08 概念导读 (5-10 行) → 负责人给目标句 + 问题清单 (可空)
-3. 负责人说"开始" → 实施 → 构建 → v1 后台 review (低风险, 可合并闸门或负责人亲自读 diff)
+2. ST-09 概念导读 (5-10 行) → 负责人给目标句 + 问题清单 (可空)
+3. 负责人说"开始" → 实施 → 构建 → v1 后台 review (**高风险**, 不合并闸门)

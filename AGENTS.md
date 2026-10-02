@@ -15,7 +15,7 @@ Conventions that deliberately diverge from the mainstream / official template ar
 
 ## Project overview
 
-Android app that surfaces low-level system characteristics: Treble and GSI compatibility, Mainline/APEX modules, system-as-root, A/B partitions, Binder bitness, security patch levels. Stack: Kotlin, Jetpack Compose (single Activity, Navigation 3), MVVM + StateFlow unidirectional data flow, kotlinx.serialization, Ktor, libsu, JNI/NDK. No DI framework.
+Android app that surfaces low-level system characteristics: Treble and GSI compatibility, Mainline/APEX modules, system-as-root, A/B partitions, Binder bitness, security patch levels. Stack: Kotlin, Jetpack Compose (single Activity, Navigation 3), MVVM + StateFlow unidirectional data flow, kotlinx.serialization, Ktor, libsu, JNI/NDK. DI by Metro (compile-time, no reflection).
 
 - Application id `net.imknown.android.forefrontinfo`; version info in `gradle/toml/build.toml`.
 - Modules: `:app` (Compose UI, features under `ui`) · `:base` (`IProperty`/`IShell` abstractions) · `:binderDetector` (C++ via JNI) · `build-logic` (convention plugins).
@@ -57,8 +57,8 @@ Screen (Compose) → ViewModel (StateFlow) → Repository → DataSource
 ```
 
 - Navigation is **Navigation 3** (`androidx.navigation3`), not the mainstream Navigation 2: the API shape is `NavKey` + back stack + entryProvider (`ui/navigation/NavKeys.kt`). Don't think in Nav2 terms (`NavHost(route = ...)`).
-- **No DI framework** — a deliberate deviation from the Hilt / Koin mainstream. Each ViewModel wires its dependencies manually via a companion `Factory` (`viewModelFactory { initializer { ... } }`), and Screens obtain it with `viewModel(factory = ...)`. Copy the `HomeViewModel.Factory` pattern when adding a ViewModel.
-- Testability comes from **interface-first design**, not a mocking framework: `:base` defines `IProperty` / `IShell` with default implementations (`PropertyDefault` / `ShellDefault`), aggregated by `PropertyManager` via `by` delegation.
+- **DI by Metro** — compile-time DI, a deliberate deviation from the Hilt / Koin mainstream (the hand-written companion `Factory` / `viewModel(factory = ...)` era is retired). ViewModels are `@Inject` + `@ViewModelKey` + `@ContributesIntoMap(AppScope::class, binding<ViewModel>())` and resolve at the Navigation 3 entry via `metroViewModel<...>()`; Repositories and DataSources are plain `@Inject` constructor injection; leaf bindings live in the binding containers in `di/AppGraph.kt`, and the graph factory binds `MyApplication`.
+- Testability comes from **interface-first design**, not a mocking framework: `:base` defines `IProperty` / `IShell` with default implementations (`PropertyDefault` / `ShellDefault`) and has no aggregation classes — the graph binds both (`ShellLibSu` contributes `IShell` via `@ContributesBinding`, `PropertyDefault` is `@Provides`-bound by `PropertyContainer`), and `PropertyReader` (`ui/common`) wraps `IProperty` with the shared placeholder fallback.
 - `BaseListViewModel` drives every list page with two `StateFlow`s — `modelsStateFlow: StateFlow<List<MyModel>?>` (null = cold start; a refresh deliberately keeps the previous list so the UI never flashes empty) and `isLoadingStateFlow` — plus `loadJob` dedup: don't reintroduce redundant loads on recreation. `onModelsLoaded()` runs after each load lands, for reconciling state that changed mid-build.
 - Compose stability annotations (`@Immutable` / `@Stable`) are deliberate; re-evaluate them whenever a state class changes (follow the pattern in the comment atop `HomeViewModel` / `BaseListViewModel`, which explains *why* the annotation is safe).
 - The bundled `lld.json` data is copied to the external files dir (`LldManager`) and refreshed online via Ktor when the user allows network; the GitHub or Gitee URL is chosen by timezone.

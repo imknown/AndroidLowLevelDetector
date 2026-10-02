@@ -3,10 +3,10 @@ package net.imknown.android.forefrontinfo.ui.others.datasource
 import android.os.Build
 import dev.zacsweers.metro.Inject
 import net.imknown.android.forefrontinfo.binderdetector.BinderDetector
-import net.imknown.android.forefrontinfo.ui.common.getStringProperty
+import net.imknown.android.forefrontinfo.ui.common.PropertyReader
 
 @Inject
-class ArchitectureDataSource {
+class ArchitectureDataSource(private val propertyReader: PropertyReader) {
     companion object {
         // region [Binder]
         // const val CPU_ARCHITECTURE = "grep 'CPU architecture' /proc/cpuinfo"
@@ -39,7 +39,7 @@ class ArchitectureDataSource {
     // region [ABI]
     @Suppress("Deprecation")
     fun getCpuAbi(): String = Build.CPU_ABI
-    fun getPropertyCpuAbi(): String = getStringProperty(PROP_RO_PRODUCT_CPU_ABI)
+    fun getPropertyCpuAbi(): String = propertyReader.getString(PROP_RO_PRODUCT_CPU_ABI)
     fun getSupported32BitAbis(): Array<out String> = Build.SUPPORTED_32_BIT_ABIS
     fun getSupported64BitAbis(): Array<out String> = Build.SUPPORTED_64_BIT_ABIS
     // endregion [ABI]

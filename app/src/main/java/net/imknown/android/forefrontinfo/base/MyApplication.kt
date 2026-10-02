@@ -7,13 +7,11 @@ import android.os.Environment
 import androidx.annotation.StringRes
 import androidx.core.content.edit
 import com.topjohnwu.superuser.Shell
-import dev.zacsweers.metro.createGraph
+import dev.zacsweers.metro.createGraphFactory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.R
-import net.imknown.android.forefrontinfo.base.property.PropertyManager
-import net.imknown.android.forefrontinfo.base.property.impl.PropertyDefault
 import net.imknown.android.forefrontinfo.di.AppGraph
 import net.imknown.android.forefrontinfo.ui.common.initMyAndroid
 import java.io.File
@@ -55,11 +53,12 @@ open class MyApplication : Application() {
 
     // The single DI graph instance (composition root, issues-cn #02/#05). Metro
     // resolves the whole object chain at compile time; this only instantiates
-    // the generated graph class, and creating it needs no Android context.
-    // Deliberately eager rather than lazy: MainActivity.setContent reads
-    // appGraph.metroViewModelFactory, and Application is always constructed
-    // before any of its Activities.
-    val appGraph: AppGraph = createGraph<AppGraph>()
+    // the generated graph class through its factory, handing it `this` as the
+    // Application binding (the entry point the Context-derived bindings build
+    // on, e.g. ST-10's SharedPreferences). Deliberately eager rather than lazy:
+    // MainActivity.setContent reads appGraph.metroViewModelFactory, and
+    // Application is always constructed before any of its Activities.
+    val appGraph: AppGraph = createGraphFactory<AppGraph.Factory>().create(this)
 
     companion object {
         lateinit var instance: MyApplication
@@ -134,7 +133,7 @@ open class MyApplication : Application() {
 
         initScrollBar()
 
-        initShellAndProperty()
+        initShell()
     }
 
     private fun initTheme() {
@@ -167,7 +166,7 @@ open class MyApplication : Application() {
         setMyScrollBar(scrollBarValue)
     }
 
-    private fun initShellAndProperty() {
+    private fun initShell() {
         Shell.enableVerboseLogging = BuildConfig.DEBUG
         Shell.enableLegacyStderrRedirection = true
         Shell.setDefaultBuilder(
@@ -175,7 +174,5 @@ open class MyApplication : Application() {
                 .setFlags(Shell.FLAG_NON_ROOT_SHELL)
 //                .setInitializers(Shell.Initializer::class.java)
         )
-
-        PropertyManager.instance = PropertyManager(PropertyDefault)
     }
 }
