@@ -11,7 +11,7 @@ import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.extension.formatToLocalZonedDatetimeString
 import net.imknown.android.forefrontinfo.base.extension.fullMessage
-import net.imknown.android.forefrontinfo.ui.common.LldManager
+import net.imknown.android.forefrontinfo.ui.home.datasource.LldFileStore
 import net.imknown.android.forefrontinfo.ui.settings.datasource.AppInfoDataSource
 import net.imknown.android.forefrontinfo.ui.settings.datasource.FingerprintDataSource
 import android.R as androidR
@@ -21,14 +21,15 @@ import android.R as androidR
 @Inject
 class SettingsRepository(
     private val appInfoDataSource: AppInfoDataSource,
-    private val fingerprintDataSource: FingerprintDataSource
+    private val fingerprintDataSource: FingerprintDataSource,
+    private val lldFileStore: LldFileStore
 ) {
     suspend fun getBuiltInDataVersion(
         packageManager: PackageManager, packageName: String
     ): Version {
         // region [lld]
         val assetLldVersion = withContext(Dispatchers.IO) {
-            LldManager.getAssetLldVersion(MyApplication.instance.assets)
+            lldFileStore.getAssetLldVersion(MyApplication.instance.assets)
                 ?.formatToLocalZonedDatetimeString()
                 ?: MyApplication.getMyString(androidR.string.unknownName)
         }

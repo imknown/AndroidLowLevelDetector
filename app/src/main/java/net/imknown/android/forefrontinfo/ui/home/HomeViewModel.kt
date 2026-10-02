@@ -24,11 +24,9 @@ import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.extension.fullMessage
 import net.imknown.android.forefrontinfo.base.extension.isLldDatetime
 import net.imknown.android.forefrontinfo.ui.base.list.BaseListViewModel
-import net.imknown.android.forefrontinfo.ui.home.datasource.LldDataSource
 import net.imknown.android.forefrontinfo.ui.home.datasource.MountDataSource
 import net.imknown.android.forefrontinfo.ui.settings.datasource.AppInfoDataSource
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
-import net.imknown.android.forefrontinfo.ui.common.LldManager
 import net.imknown.android.forefrontinfo.ui.common.toObjectOrThrow
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.home.repository.HomeRepository
@@ -149,7 +147,7 @@ class HomeViewModel(
 
         val errorMessage = try {
             withContext(Dispatchers.IO) {
-                LldManager.saveLldJsonFileOrThrow(lldString)
+                homeRepository.saveLldJsonFileOrThrow(lldString)
             }
             null
         } catch (e: CancellationException) {
@@ -170,7 +168,7 @@ class HomeViewModel(
     private suspend fun fetchOfflineLldOrNull(): LldAndError {
         try {
             withContext(Dispatchers.IO) {
-                LldManager.copyJsonIfNeededOrThrow()
+                homeRepository.copyJsonIfNeededOrThrow()
             }
         } catch (e: CancellationException) {
             throw e
@@ -205,7 +203,7 @@ class HomeViewModel(
     // escape — a null lld renders as the "unknown" row, not a crash.
     private suspend fun getAssetLldOrNull(): Lld? = try {
         withContext(Dispatchers.IO) {
-            LldManager.getAssetLld(MyApplication.instance.assets)
+            homeRepository.getAssetLld(MyApplication.instance.assets)
         }
     } catch (e: CancellationException) {
         throw e

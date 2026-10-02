@@ -9,7 +9,6 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.http.headers
 import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.base.extension.isChinaMainlandTimezone
-import net.imknown.android.forefrontinfo.ui.common.LldManager
 
 // HttpClient is injected from the graph (the AppGraph httpClient binding):
 // Provider defers resolution -- constructed on the first real request, zero
@@ -17,10 +16,11 @@ import net.imknown.android.forefrontinfo.ui.common.LldManager
 // with the graph and the connection pool is reused across refreshes
 // (issues-cn #16 second half).
 @Inject
-class LldDataSource(private val httpClient: Provider<HttpClient>) {
+class LldDataSource(
+    private val httpClient: Provider<HttpClient>,
+    private val lldFileStore: LldFileStore
+) {
     companion object {
-        const val LLD_JSON_NAME = "lld.json"
-
         // region [Online]
         private const val HEADER_REFERER_KEY = "Referer"
         private const val HEADER_REFERER_VALUE = BuildConfig.APPLICATION_ID
@@ -39,7 +39,7 @@ class LldDataSource(private val httpClient: Provider<HttpClient>) {
             URL_PREFIX_LLD_JSON_GITHUB
         }
 
-        val url = "https://$urlPrefixLldJson/${BuildConfig.GIT_BRANCH}/app/src/main/assets/$LLD_JSON_NAME"
+        val url = "https://$urlPrefixLldJson/${BuildConfig.GIT_BRANCH}/app/src/main/assets/${LldFileStore.LLD_JSON_NAME}"
         val response: HttpResponse = httpClient().get(url) {
             headers {
                 append(HEADER_REFERER_KEY, HEADER_REFERER_VALUE)
@@ -48,5 +48,5 @@ class LldDataSource(private val httpClient: Provider<HttpClient>) {
         return response.body()
     }
 
-    fun fetchOfflineLldFileOrThrow() = LldManager.savedLldJsonFileOrThrow
+    fun fetchOfflineLldFileOrThrow() = lldFileStore.savedLldJsonFileOrThrow
 }
