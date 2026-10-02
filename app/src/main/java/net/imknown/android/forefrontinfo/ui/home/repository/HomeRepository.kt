@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.admin.DevicePolicyManager
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
+import android.content.res.AssetManager
 import android.content.res.Resources
 import android.os.Build
 import android.provider.Settings
@@ -42,6 +43,7 @@ import net.imknown.android.forefrontinfo.ui.common.myAndroid
 import net.imknown.android.forefrontinfo.ui.common.toPascalCase
 import net.imknown.android.forefrontinfo.ui.home.datasource.AndroidDataSource
 import net.imknown.android.forefrontinfo.ui.home.datasource.LldDataSource
+import net.imknown.android.forefrontinfo.ui.home.datasource.LldFileStore
 import net.imknown.android.forefrontinfo.ui.home.datasource.MountDataSource
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.settings.datasource.AppInfoDataSource
@@ -58,11 +60,16 @@ class HomeRepository(
     private val shell: IShell,
     private val propertyReader: PropertyReader,
     private val lldDataSource: LldDataSource,
+    private val lldFileStore: LldFileStore,
     private val mountDataSource: MountDataSource,
     private val appInfoDataSource: AppInfoDataSource
 ) {
     fun fetchOfflineLldFileOrThrow() = lldDataSource.fetchOfflineLldFileOrThrow()
     suspend fun fetchOnlineLldJsonStringOrThrow() = lldDataSource.fetchOnlineLldJsonStringOrThrow()
+
+    fun saveLldJsonFileOrThrow(lldString: String) = lldFileStore.saveLldJsonFileOrThrow(lldString)
+    fun copyJsonIfNeededOrThrow() = lldFileStore.copyJsonIfNeededOrThrow()
+    fun getAssetLld(assets: AssetManager): Lld? = lldFileStore.getAssetLld(assets)
 
     fun detectMode(lld: Lld?, errors: List<String?>, modeResId: Int): MyModel = guardedMyModel(R.string.lld_json_mode_title) {
             val color: StatusColor

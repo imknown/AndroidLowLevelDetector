@@ -60,24 +60,24 @@ open class MyApplication : Application() {
     // Application is always constructed before any of its Activities.
     val appGraph: AppGraph = createGraphFactory<AppGraph.Factory>().create(this)
 
+    fun getDownloadDir() = getFileDir(Environment.DIRECTORY_DOWNLOADS)
+
+    private fun getFileDir(type: String): File {
+        val externalFilesDir = getExternalFilesDir(type)
+        return if (externalFilesDir != null && externalFilesDir.exists()) {
+            externalFilesDir
+        } else {
+            filesDir.resolve(type)
+        }.apply {
+            mkdirs()
+        }
+    }
+
     companion object {
         lateinit var instance: MyApplication
 
         val sharedPreferences: SharedPreferences by lazy {
             instance.getSharedPreferences("${instance.packageName}_preferences", Context.MODE_PRIVATE)
-        }
-
-        fun getDownloadDir() = getFileDir(Environment.DIRECTORY_DOWNLOADS)
-
-        private fun getFileDir(type: String): File {
-            val externalFilesDir = instance.getExternalFilesDir(type)
-            return if (externalFilesDir != null && externalFilesDir.exists()) {
-                externalFilesDir
-            } else {
-                instance.filesDir.resolve(type)
-            }.apply {
-                mkdirs()
-            }
         }
 
         fun getMyString(@StringRes resId: Int) =

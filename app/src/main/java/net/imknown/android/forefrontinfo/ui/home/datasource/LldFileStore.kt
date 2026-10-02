@@ -1,20 +1,35 @@
-package net.imknown.android.forefrontinfo.ui.common
+package net.imknown.android.forefrontinfo.ui.home.datasource
 
 import android.content.res.AssetManager
 import android.util.Log
+import dev.zacsweers.metro.Inject
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.extension.fullMessage
-import net.imknown.android.forefrontinfo.ui.home.datasource.LldDataSource
+import net.imknown.android.forefrontinfo.ui.common.toObjectOrThrow
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileWriter
 
-object LldManager {
-    val savedLldJsonFileOrThrow by lazy {
-        File(MyApplication.getDownloadDir(), LldDataSource.LLD_JSON_NAME)
+// File orchestration for the bundled lld.json (copy / save / asset read):
+// replaces the deleted static object singleton as an @Inject graph-constructed
+// class. The savedLldJsonFileOrThrow path keeps the original by lazy timing
+// (resolved on first use, keeping disk work off the main thread) and reads
+// through the Application bound by ST-08's graph factory instead of a static
+// slot (the companion action of issues-cn #02). LLD_JSON_NAME moved here from
+// LldDataSource, making LldDataSource -> LldFileStore a one-way dependency --
+// the reference cycle is gone. Methods are line-identical to the original
+// (move only, no semantic change); the internal MyApplication.instance.assets
+// / getMyString statics stay as is (deeper orchestration refactoring belongs
+// to issues-cn #11, getMyString to #01).
+@Inject
+class LldFileStore(private val application: MyApplication) {
+    companion object {
+        const val LLD_JSON_NAME = "lld.json"
     }
+
+    val savedLldJsonFileOrThrow: File by lazy { File(application.getDownloadDir(), LLD_JSON_NAME) }
 
     private fun deleteDirtyDirectoryOrThrow() {
         if (!savedLldJsonFileOrThrow.deleteRecursively()) {
@@ -60,7 +75,7 @@ object LldManager {
         copyAssetsFileToContextFilesDirOrThrow(
             MyApplication.instance.assets,
             savedLldJsonFileOrThrow,
-            LldDataSource.LLD_JSON_NAME
+            LLD_JSON_NAME
         )
     }
 
@@ -95,7 +110,7 @@ object LldManager {
 
     fun getAssetLld(assets: AssetManager): Lld? =
         try {
-            assets.open(LldDataSource.LLD_JSON_NAME)
+            assets.open(LLD_JSON_NAME)
                 .bufferedReader()
                 .use(BufferedReader::readText)
                 .toObjectOrThrow()
