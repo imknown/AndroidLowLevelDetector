@@ -102,7 +102,7 @@ fun AppRoot() {
             entryDecorators = entryDecorators, // decorator list
             entryProvider = entryProvider { // key -> UI mapping DSL
                 entry<HomeKey> { MyModelListScreen(metroViewModel<HomeViewModel>()) } // explicit type (reified generic): MyModelListScreen takes the abstract BaseListViewModel
-                entry<OthersKey> { MyModelListScreen(viewModel<OthersViewModel>(factory = OthersViewModel.Factory)) } // explicit type: the factory only registers the concrete class (asking for the abstract BaseListViewModel crashes)
+                entry<OthersKey> { MyModelListScreen(metroViewModel<OthersViewModel>()) } // explicit type (reified generic): the factory map only registers the concrete class (asking for the abstract BaseListViewModel crashes)
                 entry<PropKey> { MyModelListScreen(viewModel<PropViewModel>(factory = PropViewModel.Factory)) } // explicit type, same as above
                 entry<SettingsKey> { SettingsScreen(viewModel(factory = SettingsViewModel.Factory)) }
             }, // the ViewModel composable is called inside the entry content -> automatically scoped to that entry (the ViewModelStore decorator)

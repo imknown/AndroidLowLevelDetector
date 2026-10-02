@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
+import dev.zacsweers.metro.Inject
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.extension.formatToLocalZonedDatetimeString
@@ -23,6 +24,9 @@ import net.imknown.android.forefrontinfo.ui.others.datasource.OthersDataSource
 import net.imknown.android.forefrontinfo.ui.others.datasource.RomDataSource
 import android.R as androidR
 
+// Constructor injection puts the dependency chain on the signature and lets Metro build it
+// (issues-cn #02); every param is a concrete @Inject type, so no @Provides is needed.
+@Inject
 class OthersRepository(
     private val basicDataSource: BasicDataSource,
     private val architectureDataSource: ArchitectureDataSource,

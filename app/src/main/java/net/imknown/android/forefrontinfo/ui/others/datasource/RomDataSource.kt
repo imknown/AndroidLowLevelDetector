@@ -4,7 +4,9 @@ import android.content.Context
 import android.os.Build
 import android.webkit.WebSettings
 import androidx.annotation.RequiresApi
+import dev.zacsweers.metro.Inject
 
+@Inject
 class RomDataSource {
     fun getUser(): String = Build.USER
     fun getHost(): String = Build.HOST
