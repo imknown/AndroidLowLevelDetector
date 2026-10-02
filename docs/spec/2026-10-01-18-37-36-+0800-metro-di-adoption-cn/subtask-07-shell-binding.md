@@ -1,6 +1,7 @@
 # ST-07 shell-binding — 修改计划报告
 
 > 状态: living (预生成; 动工时与负责人预期对比, 必要时显式修订). 计划: [plan.md](plan.md) 子任务 07. 风险: 低 (调用点少; base 模块去壳第一步).
+> 修订 (2026-10-02): "后两者的 IShell 经 PropRepository / OthersRepository 构造传入" 已过时 — ST-03/04 落地后全部 DataSource 均为 @Inject 图构造, IShell 由图直接解析进各自构造函数, 无需经 Repository 传参. ShellDefault 按 AGENTS.md 保留不动 (负责人同日澄清: 无调用者不等于不可修改, 其改造留待确实需要时).
 
 ## 要改什么
 

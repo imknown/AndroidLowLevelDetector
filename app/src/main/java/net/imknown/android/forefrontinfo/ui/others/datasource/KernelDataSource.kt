@@ -1,16 +1,16 @@
 package net.imknown.android.forefrontinfo.ui.others.datasource
 
 import dev.zacsweers.metro.Inject
-import net.imknown.android.forefrontinfo.ui.common.getShellResult
+import net.imknown.android.forefrontinfo.base.shell.IShell
 
 @Inject
-class KernelDataSource {
+class KernelDataSource(private val shell: IShell) {
     companion object {
         private const val CMD_KERNEL_VERBOSE = "cat /proc/version"
         private const val CMD_KERNEL_ALL = "uname -a"
     }
 
-    fun getKernelVersion() = getShellResult(CMD_KERNEL_VERBOSE)
+    fun getKernelVersion() = shell.execute(CMD_KERNEL_VERBOSE)
 
-    fun getKernelAll() = getShellResult(CMD_KERNEL_ALL)
+    fun getKernelAll() = shell.execute(CMD_KERNEL_ALL)
 }

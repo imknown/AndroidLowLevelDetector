@@ -1,10 +1,10 @@
 package net.imknown.android.forefrontinfo.ui.home.datasource
 
 import dev.zacsweers.metro.Inject
-import net.imknown.android.forefrontinfo.ui.common.getShellResult
+import net.imknown.android.forefrontinfo.base.shell.IShell
 
 @Inject
-class MountDataSource {
+class MountDataSource(private val shell: IShell) {
     companion object {
         private const val CMD_MOUNT = "cat /proc/mounts"
     }
@@ -24,7 +24,7 @@ class MountDataSource {
     fun getMounts(): List<Mount> {
         val mounts = mutableListOf<Mount>()
 
-        getShellResult(CMD_MOUNT).output.forEach {
+        shell.execute(CMD_MOUNT).output.forEach {
             val columns = it.split(" ")
             if (columns.size == 6) {
                 val mount = Mount(columns[0], columns[1], columns[2], columns[3], columns[4], columns[5])
