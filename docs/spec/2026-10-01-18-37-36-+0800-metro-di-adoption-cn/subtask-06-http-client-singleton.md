@@ -1,11 +1,12 @@
 # ST-06 http-client-singleton — 修改计划报告
 
 > 状态: living (预生成; 动工时与负责人预期对比, 必要时显式修订). 计划: [plan.md](plan.md) 子任务 06. 风险: 高 (生疏领域 — 首个 `@Provides`; 网络客户端生命周期语义变化).
+> 修订 (2026-10-02): 注入形式改为 `Provider<HttpClient>` 惰性单例 — 实施后负责人提出生命周期问题并裁定方案 B (首次 fetch 才构造, 网络开关未开过则客户端零占用), 与台账 progress.md 同记.
 
 ## 要改什么
 
 - `AppGraph.kt`: 增 companion `@Provides @SingleIn(AppScope::class) fun httpClient(): HttpClient` — OkHttp 引擎配置从 `LldDataSource.fetchOnlineLldJsonStringOrThrow()` **原样上移** (TrafficStats `eventListener` + 自定义 `proxySelector` + debug `Logging`), 一行不改逻辑
-- `LldDataSource.kt`: 构造注入 `HttpClient`, 删除每次请求的 `HttpClient(OkHttp) {...}` 与 `client.use {}`
+- `LldDataSource.kt`: 构造注入 `Provider<HttpClient>` (惰性解析, 首次 fetch 调 `httpClient()` 才构造), 删除每次请求的 `HttpClient(OkHttp) {...}` 与 `client.use {}`
 
 ## 为什么
 

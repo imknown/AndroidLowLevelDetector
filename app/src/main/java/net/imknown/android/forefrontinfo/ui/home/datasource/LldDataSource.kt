@@ -1,33 +1,23 @@
 package net.imknown.android.forefrontinfo.ui.home.datasource
 
-import android.net.TrafficStats
 import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.engine.okhttp.OkHttp
-import io.ktor.client.plugins.logging.ANDROID
-import io.ktor.client.plugins.logging.LogLevel
-import io.ktor.client.plugins.logging.Logger
-import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.get
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.headers
 import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.base.extension.isChinaMainlandTimezone
 import net.imknown.android.forefrontinfo.ui.common.LldManager
-import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid16
-import okhttp3.Call
-import okhttp3.EventListener
-import okhttp3.Protocol
-import java.io.IOException
-import java.net.InetSocketAddress
-import java.net.Proxy
-import java.net.ProxySelector
-import java.net.SocketAddress
-import java.net.URI
 
+// HttpClient is injected from the graph (the AppGraph httpClient binding):
+// Provider defers resolution -- constructed on the first real request, zero
+// footprint if the network toggle is never enabled; once built it is cached
+// with the graph and the connection pool is reused across refreshes
+// (issues-cn #16 second half).
 @Inject
-class LldDataSource {
+class LldDataSource(private val httpClient: Provider<HttpClient>) {
     companion object {
         const val LLD_JSON_NAME = "lld.json"
 
@@ -49,74 +39,13 @@ class LldDataSource {
             URL_PREFIX_LLD_JSON_GITHUB
         }
 
-        val client = HttpClient(OkHttp) {
-            engine {
-                config {
-                    // https://github.com/square/okhttp/issues/3537#issuecomment-3391015783
-                    val eventListener = object : EventListener() {
-                        override fun connectStart(
-                            call: Call, inetSocketAddress: InetSocketAddress, proxy: Proxy
-                        ) {
-                            val thread = Thread.currentThread()
-                            val id = if (isAtLeastAndroid16()) {
-                                thread.threadId()
-                            } else {
-                                @Suppress("DEPRECATION")
-                                thread.id
-                            }.toInt()
-                            TrafficStats.setThreadStatsTag(id)
-                        }
-
-                        override fun connectEnd(
-                            call: Call,
-                            inetSocketAddress: InetSocketAddress,
-                            proxy: Proxy,
-                            protocol: Protocol?
-                        ) {
-                            TrafficStats.clearThreadStatsTag()
-                        }
-                    }
-                    eventListener(eventListener)
-
-                    // region [Proxy]
-                    // Fix: java.lang.IllegalArgumentException: port out of range:-1
-                    // Steps to reproduce (small probability): Change Wifi proxy from "Manual" to "PAC"
-                    // https://github.com/square/okhttp/issues/6877#issuecomment-1438554879
-                    val proxySelector = object : ProxySelector() {
-                        override fun select(uri: URI?): List<Proxy> = try {
-                            getDefault().select(uri)
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                            listOf(Proxy.NO_PROXY)
-                        }
-
-                        override fun connectFailed(uri: URI?, sa: SocketAddress?, ioe: IOException?) {
-                            ioe?.printStackTrace()
-                            getDefault().connectFailed(uri, sa, ioe)
-                        }
-                    }
-                    proxySelector(proxySelector)
-                    // endregion [Proxy]
-                }
-            }
-
-            if (BuildConfig.DEBUG) {
-                install(Logging) {
-                    logger = Logger.ANDROID
-                    level = LogLevel.ALL
-                }
-            }
-        }
-
         val url = "https://$urlPrefixLldJson/${BuildConfig.GIT_BRANCH}/app/src/main/assets/$LLD_JSON_NAME"
-        val response: HttpResponse = client.get(url) {
+        val response: HttpResponse = httpClient().get(url) {
             headers {
                 append(HEADER_REFERER_KEY, HEADER_REFERER_VALUE)
             }
         }
-        return client.use {
-            response.body()
-        }
+        return response.body()
     }
 
     fun fetchOfflineLldFileOrThrow() = LldManager.savedLldJsonFileOrThrow
