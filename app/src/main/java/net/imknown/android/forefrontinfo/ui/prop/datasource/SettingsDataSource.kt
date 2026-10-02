@@ -2,9 +2,11 @@ package net.imknown.android.forefrontinfo.ui.prop.datasource
 
 import android.content.ContentResolver
 import android.provider.Settings
+import dev.zacsweers.metro.Inject
 import java.util.Locale
 import kotlin.reflect.KClass
 
+@Inject
 class SettingsDataSource {
     fun <T : Settings.NameValueTable> getSettingsOrThrow(subSettingsKClass: KClass<T>): List<String> {
         return subSettingsKClass.java.declaredFields

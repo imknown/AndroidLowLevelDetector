@@ -1,8 +1,10 @@
 package net.imknown.android.forefrontinfo.ui.prop.datasource
 
+import dev.zacsweers.metro.Inject
 import net.imknown.android.forefrontinfo.ui.common.getShellResult
 import java.util.Properties
 
+@Inject
 class PropertiesDataSource {
     companion object {
         private const val CMD_GETPROP = "getprop"

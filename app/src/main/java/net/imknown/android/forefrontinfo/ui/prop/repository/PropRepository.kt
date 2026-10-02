@@ -2,6 +2,7 @@ package net.imknown.android.forefrontinfo.ui.prop.repository
 
 import android.provider.Settings
 import android.util.Log
+import dev.zacsweers.metro.Inject
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.extension.fullMessage
@@ -14,6 +15,9 @@ import net.imknown.android.forefrontinfo.ui.prop.datasource.SettingsDataSource
 import kotlin.reflect.KClass
 import android.R as androidR
 
+// Constructor injection puts the dependency chain on the signature and lets Metro build it
+// (issues-cn #02); every param is a concrete @Inject type, so no @Provides is needed.
+@Inject
 class PropRepository(
     private val propertiesDataSource: PropertiesDataSource,
     private val settingsDataSource: SettingsDataSource,
