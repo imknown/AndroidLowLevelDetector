@@ -8,6 +8,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.CompositionLocalProvider
+import dev.zacsweers.metrox.viewmodel.LocalMetroViewModelFactory
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid10
@@ -52,8 +54,20 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent { // Compose-flavored setContentView: this tree becomes the whole UI
-            AppTheme { // wrap the theme at the root: dark/light and dynamic color flow down the tree
-                AppRoot() // skeleton (Scaffold + navigation) + four pages, all grown from this one function
+            // Provide the Metro factory once at the Compose root: every
+            // metroViewModel() in the pages reads this CompositionLocal, whose
+            // default is error(...), so forgetting to provide fails fast on
+            // the first frame instead of blowing up mid-navigation.
+            // The metrox-android AppComponentFactory route (the framework
+            // constructor-injecting the Activity) needs API 28; minSdk is 24,
+            // so the Activity keeps fetching the graph by hand — the only
+            // hand-written seam phase one deliberately keeps (issues-cn #02).
+            CompositionLocalProvider(
+                LocalMetroViewModelFactory provides (application as MyApplication).appGraph.metroViewModelFactory
+            ) {
+                AppTheme { // wrap the theme at the root: dark/light and dynamic color flow down the tree
+                    AppRoot() // skeleton (Scaffold + navigation) + four pages, all grown from this one function
+                }
             }
         }
     }

@@ -7,6 +7,7 @@ import android.os.Environment
 import androidx.annotation.StringRes
 import androidx.core.content.edit
 import com.topjohnwu.superuser.Shell
+import dev.zacsweers.metro.createGraph
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import net.imknown.android.forefrontinfo.BuildConfig
@@ -14,6 +15,7 @@ import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.property.PropertyManager
 import net.imknown.android.forefrontinfo.base.property.impl.PropertyDefault
 import net.imknown.android.forefrontinfo.base.shell.ShellManager
+import net.imknown.android.forefrontinfo.di.AppGraph
 import net.imknown.android.forefrontinfo.ui.common.ShellLibSu
 import net.imknown.android.forefrontinfo.ui.common.initMyAndroid
 import java.io.File
@@ -52,6 +54,14 @@ enum class ScrollBarMode {
 }
 
 open class MyApplication : Application() {
+
+    // The single DI graph instance (composition root, issues-cn #02/#05). Metro
+    // resolves the whole object chain at compile time; this only instantiates
+    // the generated graph class, and creating it needs no Android context.
+    // Deliberately eager rather than lazy: MainActivity.setContent reads
+    // appGraph.metroViewModelFactory, and Application is always constructed
+    // before any of its Activities.
+    val appGraph: AppGraph = createGraph<AppGraph>()
 
     companion object {
         lateinit var instance: MyApplication
