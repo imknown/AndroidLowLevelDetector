@@ -1,7 +1,9 @@
 package net.imknown.android.forefrontinfo.ui.home.datasource
 
+import dev.zacsweers.metro.Inject
 import net.imknown.android.forefrontinfo.ui.common.getShellResult
 
+@Inject
 class MountDataSource {
     companion object {
         private const val CMD_MOUNT = "cat /proc/mounts"

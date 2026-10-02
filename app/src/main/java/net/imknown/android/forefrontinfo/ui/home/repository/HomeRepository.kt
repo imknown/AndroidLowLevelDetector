@@ -11,6 +11,7 @@ import android.util.Log
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.webkit.WebViewCompat
+import dev.zacsweers.metro.Inject
 import io.github.g00fy2.versioncompare.Version
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
@@ -48,6 +49,9 @@ import net.imknown.android.forefrontinfo.ui.theme.StatusColor
 import java.io.File
 import android.R as androidR
 
+// Constructor injection puts the dependency chain on the signature and lets Metro build it
+// (issues-cn #02); every param is a concrete @Inject type, so no @Provides is needed.
+@Inject
 class HomeRepository(
     private val lldDataSource: LldDataSource,
     private val mountDataSource: MountDataSource,

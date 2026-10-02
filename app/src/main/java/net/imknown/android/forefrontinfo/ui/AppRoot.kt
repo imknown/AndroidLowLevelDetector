@@ -35,6 +35,7 @@ import androidx.navigation3.runtime.rememberDecoratedNavEntries
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 import kotlinx.collections.immutable.persistentListOf
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.ScrollBarMode
@@ -100,11 +101,11 @@ fun AppRoot() {
             backStack = backStacks.getValue(tab.key), // this tab's own stack
             entryDecorators = entryDecorators, // decorator list
             entryProvider = entryProvider { // key -> UI mapping DSL
-                entry<HomeKey> { MyModelListScreen(viewModel<HomeViewModel>(factory = HomeViewModel.Factory)) } // explicit type, same as the other list entries
+                entry<HomeKey> { MyModelListScreen(metroViewModel<HomeViewModel>()) } // explicit type (reified generic): MyModelListScreen takes the abstract BaseListViewModel
                 entry<OthersKey> { MyModelListScreen(viewModel<OthersViewModel>(factory = OthersViewModel.Factory)) } // explicit type: the factory only registers the concrete class (asking for the abstract BaseListViewModel crashes)
                 entry<PropKey> { MyModelListScreen(viewModel<PropViewModel>(factory = PropViewModel.Factory)) } // explicit type, same as above
                 entry<SettingsKey> { SettingsScreen(viewModel(factory = SettingsViewModel.Factory)) }
-            }, // viewModel() called inside the entry content -> automatically scoped to that entry (the ViewModelStore decorator)
+            }, // the ViewModel composable is called inside the entry content -> automatically scoped to that entry (the ViewModelStore decorator)
         )
     }
 

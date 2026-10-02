@@ -4,10 +4,13 @@ import android.content.SharedPreferences
 import androidx.annotation.MainThread
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Stable
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,20 +38,18 @@ private data class LldAndError(val lld: Lld?, val message: String?)
 // Stable (not Immutable): instance identity never changes and UI-visible state lives in the
 // observed StateFlow; SavedStateHandle is restore-only storage, never read for composition,
 // so promising stability is safe (same as BaseListViewModel).
+// Metro wiring (issues-cn #05): the three annotations replace the former companion Factory.
+// @ViewModelKey + @ContributesIntoMap land this class in the ViewModel multibinding map that
+// AppViewModelFactory consults; binding<ViewModel>() is REQUIRED because Metro binds to the
+// direct supertype by default (BaseListViewModel here) and a wrong map key only surfaces at
+// runtime. Deliberately not @SingleIn: the lifetime belongs to the Nav3 entry's ViewModelStore.
 @Stable
+@Inject
+@ViewModelKey
+@ContributesIntoMap(AppScope::class, binding<ViewModel>())
 class HomeViewModel(
     private val homeRepository: HomeRepository
 ) : BaseListViewModel() {
-
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                HomeViewModel(
-                    HomeRepository(LldDataSource(), MountDataSource(), AppInfoDataSource())
-                )
-            }
-        }
-    }
 
     override suspend fun collectModels(): List<MyModel> {
         // Stamp this load with the current preference generation (compared in onModelsLoaded)
