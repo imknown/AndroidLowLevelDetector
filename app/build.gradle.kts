@@ -10,6 +10,10 @@ plugins {
     // alias(libsKotlin.plugins.compose)
 
     alias(libsKotlin.plugins.kotlinx.serialization)
+    // Metro DI (compiler plugin, no KSP): only :app compiles Metro-annotated
+    // code, so alias it directly here instead of wrapping it in a convention
+    // plugin (same precedent as kotlinx.serialization above).
+    alias(libsThirdParty.plugins.metro)
 
     alias(libsGoogle.plugins.lowleveldetector.google.firebase)
 }
@@ -141,5 +145,10 @@ dependencies {
     implementation(libsThirdParty.versionCompare)
 
     implementation(libsThirdParty.libsu)
+
+    // MetroX ViewModel artifacts: ViewModelGraph/MetroViewModelFactory plus the
+    // Compose side (LocalMetroViewModelFactory, metroViewModel()). The metro
+    // runtime itself (annotations) comes in transitively via the Gradle plugin.
+    implementation(libsThirdParty.bundles.metrox.viewmodel)
     // endregion [3rd Parties]
 }
