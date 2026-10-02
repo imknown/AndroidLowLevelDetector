@@ -3,11 +3,11 @@ package net.imknown.android.forefrontinfo.ui.others.datasource
 import android.os.Build
 import androidx.annotation.RequiresApi
 import dev.zacsweers.metro.Inject
-import net.imknown.android.forefrontinfo.ui.common.getStringProperty
+import net.imknown.android.forefrontinfo.ui.common.PropertyReader
 import net.imknown.android.forefrontinfo.ui.home.datasource.AndroidDataSource
 
 @Inject
-class BasicDataSource {
+class BasicDataSource(private val propertyReader: PropertyReader) {
     fun getBrand(): String = Build.BRAND
     fun getManufacturer(): String = Build.MANUFACTURER
     fun getModel(): String = Build.MODEL
@@ -22,7 +22,7 @@ class BasicDataSource {
     fun getSocManufacturer(): String = Build.SOC_MANUFACTURER
     @RequiresApi(Build.VERSION_CODES.S)
     fun getSku(): String = Build.SKU
-    fun getVendorSku() = getStringProperty(AndroidDataSource.PROP_VENDOR_SKU)
+    fun getVendorSku() = propertyReader.getString(AndroidDataSource.PROP_VENDOR_SKU)
     @RequiresApi(Build.VERSION_CODES.S)
     fun getOdmSku(): String = Build.ODM_SKU
 }

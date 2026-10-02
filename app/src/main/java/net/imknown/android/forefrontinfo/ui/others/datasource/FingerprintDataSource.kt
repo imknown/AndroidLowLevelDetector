@@ -2,17 +2,17 @@ package net.imknown.android.forefrontinfo.ui.others.datasource
 
 import android.os.Build
 import dev.zacsweers.metro.Inject
-import net.imknown.android.forefrontinfo.ui.common.getStringProperty
+import net.imknown.android.forefrontinfo.ui.common.PropertyReader
 
 @Inject
-class FingerprintDataSource {
+class FingerprintDataSource(private val propertyReader: PropertyReader) {
     companion object {
         private const val PROP_PREVIEW_SDK_FINGERPRINT = "ro.build.version.preview_sdk_fingerprint" // Build.VERSION.PREVIEW_SDK_FINGERPRINT
     }
 
     fun getFingerprint(): String = Build.FINGERPRINT
 
-    fun getPreviewSdkFingerprint() = getStringProperty(PROP_PREVIEW_SDK_FINGERPRINT)
+    fun getPreviewSdkFingerprint() = propertyReader.getString(PROP_PREVIEW_SDK_FINGERPRINT)
 
     /** [Build.getFingerprintedPartitions] */
     fun getPartitions() = listOf(
@@ -22,5 +22,5 @@ class FingerprintDataSource {
     fun getPartitionFingerprint(name: String) = "ro.$name.build.fingerprint"
 
     fun getPartitionFingerprintProperty(partitionFingerprintProperty: String) =
-        getStringProperty(partitionFingerprintProperty)
+        propertyReader.getString(partitionFingerprintProperty)
 }
