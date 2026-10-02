@@ -26,7 +26,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavEntryDecorator
 import androidx.navigation3.runtime.NavKey
@@ -104,7 +103,7 @@ fun AppRoot() {
                 entry<HomeKey> { MyModelListScreen(metroViewModel<HomeViewModel>()) } // explicit type (reified generic): MyModelListScreen takes the abstract BaseListViewModel
                 entry<OthersKey> { MyModelListScreen(metroViewModel<OthersViewModel>()) } // explicit type (reified generic): the factory map only registers the concrete class (asking for the abstract BaseListViewModel crashes)
                 entry<PropKey> { MyModelListScreen(metroViewModel<PropViewModel>()) } // explicit type (reified generic): the factory map only registers the concrete class (asking for the abstract BaseListViewModel crashes)
-                entry<SettingsKey> { SettingsScreen(viewModel(factory = SettingsViewModel.Factory)) }
+                entry<SettingsKey> { SettingsScreen(metroViewModel<SettingsViewModel>()) } // explicit type (reified generic): the factory map is looked up by KClass (SettingsScreen takes the concrete type)
             }, // the ViewModel composable is called inside the entry content -> automatically scoped to that entry (the ViewModelStore decorator)
         )
     }
