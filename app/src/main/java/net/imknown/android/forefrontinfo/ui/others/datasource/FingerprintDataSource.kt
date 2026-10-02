@@ -1,8 +1,10 @@
 package net.imknown.android.forefrontinfo.ui.others.datasource
 
 import android.os.Build
+import dev.zacsweers.metro.Inject
 import net.imknown.android.forefrontinfo.ui.common.getStringProperty
 
+@Inject
 class FingerprintDataSource {
     companion object {
         private const val PROP_PREVIEW_SDK_FINGERPRINT = "ro.build.version.preview_sdk_fingerprint" // Build.VERSION.PREVIEW_SDK_FINGERPRINT

@@ -1,9 +1,11 @@
 package net.imknown.android.forefrontinfo.ui.others.datasource
 
 import android.os.Build
+import dev.zacsweers.metro.Inject
 import net.imknown.android.forefrontinfo.binderdetector.BinderDetector
 import net.imknown.android.forefrontinfo.ui.common.getStringProperty
 
+@Inject
 class ArchitectureDataSource {
     companion object {
         // region [Binder]
