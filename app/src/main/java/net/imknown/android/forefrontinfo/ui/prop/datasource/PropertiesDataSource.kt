@@ -1,11 +1,11 @@
 package net.imknown.android.forefrontinfo.ui.prop.datasource
 
 import dev.zacsweers.metro.Inject
-import net.imknown.android.forefrontinfo.ui.common.getShellResult
+import net.imknown.android.forefrontinfo.base.shell.IShell
 import java.util.Properties
 
 @Inject
-class PropertiesDataSource {
+class PropertiesDataSource(private val shell: IShell) {
     companion object {
         private const val CMD_GETPROP = "getprop"
 
@@ -35,5 +35,5 @@ class PropertiesDataSource {
             .sortedBy { it.first.toString() }
     }
 
-    fun getBuildProp() = getShellResult(CMD_GETPROP)
+    fun getBuildProp() = shell.execute(CMD_GETPROP)
 }

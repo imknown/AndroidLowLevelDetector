@@ -17,6 +17,8 @@ import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.extension.formatToLocalZonedDatetimeString
 import net.imknown.android.forefrontinfo.base.extension.fullMessage
+import net.imknown.android.forefrontinfo.base.shell.IShell
+import net.imknown.android.forefrontinfo.base.shell.ShellResult
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModelTitle
 import net.imknown.android.forefrontinfo.ui.base.list.MyModelType
@@ -25,7 +27,6 @@ import net.imknown.android.forefrontinfo.ui.base.list.toColoredMyModel
 import net.imknown.android.forefrontinfo.ui.common.CODENAME_CANARY
 import net.imknown.android.forefrontinfo.ui.common.getBooleanProperty
 import net.imknown.android.forefrontinfo.ui.common.getSdkExtension
-import net.imknown.android.forefrontinfo.ui.common.getShellResult
 import net.imknown.android.forefrontinfo.ui.common.getStringProperty
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid10
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid11
@@ -50,9 +51,11 @@ import java.io.File
 import android.R as androidR
 
 // Constructor injection puts the dependency chain on the signature and lets Metro build it
-// (issues-cn #02); every param is a concrete @Inject type, so no @Provides is needed.
+// (issues-cn #02); the DataSource params are concrete @Inject types, and IShell is an
+// interface bound by ShellLibSu's @ContributesBinding -- no @Provides needed anywhere.
 @Inject
 class HomeRepository(
+    private val shell: IShell,
     private val lldDataSource: LldDataSource,
     private val mountDataSource: MountDataSource,
     private val appInfoDataSource: AppInfoDataSource
@@ -552,7 +555,7 @@ class HomeRepository(
             else -> "NOT_EXIST"
         }
         val cmd = AndroidDataSource.CMD_VENDOR_NAMESPACE_DEFAULT_ISOLATED.format(fileLdConfig)
-        val gsiCompatibilityResult = getShellResult(cmd, isAtLeastAndroid9())
+        val gsiCompatibilityResult = if (isAtLeastAndroid9()) shell.execute(cmd) else ShellResult()
         val [@StringRes result, color] = if (gsiCompatibilityResult.isSuccess) {
             val firstLine = gsiCompatibilityResult.output.getOrNull(0)
                 ?: MyApplication.getMyString(androidR.string.unknownName)
@@ -814,7 +817,7 @@ class HomeRepository(
             @StringRes val result: Int
             val color: StatusColor
 
-            val seLinuxStatus = getShellResult(AndroidDataSource.CMD_GETENFORCE)
+            val seLinuxStatus = shell.execute(AndroidDataSource.CMD_GETENFORCE)
             val seLinuxStatusResult = seLinuxStatus.output.getOrNull(0)
 
             if (seLinuxStatus.isSuccess) {
@@ -855,7 +858,7 @@ class HomeRepository(
     }
 
     fun detectToybox(lld: Lld?): MyModel = guardedMyModel(R.string.toybox_built_in_title) {
-            val toyboxVersionResult = getShellResult(AndroidDataSource.CMD_TOYBOX_VERSION)
+            val toyboxVersionResult = shell.execute(AndroidDataSource.CMD_TOYBOX_VERSION)
             val hasToyboxVersion = toyboxVersionResult.isSuccess
 
             val toyboxVersion = if (hasToyboxVersion) {
