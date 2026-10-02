@@ -3,9 +3,11 @@ package net.imknown.android.forefrontinfo.ui.settings.datasource
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import dev.zacsweers.metro.Inject
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid11
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid13
 
+@Inject
 class AppInfoDataSource {
     fun getPackageInfoOrThrow(
         packageManager: PackageManager, packageName: String

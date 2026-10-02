@@ -1,6 +1,7 @@
 package net.imknown.android.forefrontinfo.ui.home.datasource
 
 import android.net.TrafficStats
+import dev.zacsweers.metro.Inject
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.okhttp.OkHttp
@@ -25,6 +26,7 @@ import java.net.ProxySelector
 import java.net.SocketAddress
 import java.net.URI
 
+@Inject
 class LldDataSource {
     companion object {
         const val LLD_JSON_NAME = "lld.json"
