@@ -1,6 +1,7 @@
 package net.imknown.android.forefrontinfo.ui.settings.datasource
 
 import android.content.pm.PackageManager
+import dev.zacsweers.metro.Inject
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid13
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid9
@@ -8,6 +9,7 @@ import java.security.MessageDigest
 import java.util.Locale
 import android.R as androidR
 
+@Inject
 class FingerprintDataSource {
     companion object {
         private const val ALGORITHM_SHA256 = "SHA-256"

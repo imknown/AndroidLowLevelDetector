@@ -3,34 +3,35 @@ package net.imknown.android.forefrontinfo.ui.settings
 import android.content.pm.PackageManager
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Stable
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.binding
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.ui.base.BaseViewModel
-import net.imknown.android.forefrontinfo.ui.settings.datasource.AppInfoDataSource
-import net.imknown.android.forefrontinfo.ui.settings.datasource.FingerprintDataSource
 import net.imknown.android.forefrontinfo.ui.settings.repository.SettingsRepository
 
 // Stable (not Immutable): instance identity never changes and UI-visible state lives in the observed StateFlow;
 // the two vars (load job, easter-egg counter) are never read for composition, so promising stability is safe (same as BaseListViewModel/HomeViewModel).
 @Stable
+// Metro wiring (issues-cn #05): the three annotations replace the former companion Factory.
+// @ViewModelKey + @ContributesIntoMap land this class in the ViewModel multibinding map that
+// AppViewModelFactory consults; binding<ViewModel>() is REQUIRED because Metro binds to the
+// direct supertype by default (BaseViewModel here) and a wrong map key only surfaces at
+// runtime. Deliberately not @SingleIn: the lifetime belongs to the Nav3 entry's ViewModelStore.
+@Inject
+@ViewModelKey
+@ContributesIntoMap(AppScope::class, binding<ViewModel>())
 class SettingsViewModel(
     private val settingsRepository: SettingsRepository
 ) : BaseViewModel() {
-
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                SettingsViewModel(SettingsRepository(AppInfoDataSource(), FingerprintDataSource()))
-            }
-        }
-    }
 
     // region [Version Info]
     // null = not loaded yet (the built-in data version loads once; there is no reload, so no

@@ -3,6 +3,7 @@ package net.imknown.android.forefrontinfo.ui.settings.repository
 import android.content.pm.PackageManager
 import android.util.Log
 import androidx.annotation.StringRes
+import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.BuildConfig
@@ -15,6 +16,9 @@ import net.imknown.android.forefrontinfo.ui.settings.datasource.AppInfoDataSourc
 import net.imknown.android.forefrontinfo.ui.settings.datasource.FingerprintDataSource
 import android.R as androidR
 
+// Constructor injection puts the dependency chain on the signature and lets Metro build it
+// (issues-cn #02); every param is a concrete @Inject type, so no @Provides is needed.
+@Inject
 class SettingsRepository(
     private val appInfoDataSource: AppInfoDataSource,
     private val fingerprintDataSource: FingerprintDataSource
