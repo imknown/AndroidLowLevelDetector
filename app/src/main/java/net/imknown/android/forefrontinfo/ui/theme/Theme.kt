@@ -20,14 +20,18 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import net.imknown.android.forefrontinfo.base.MyApplication
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import net.imknown.android.forefrontinfo.base.AppThemeMode
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
@@ -269,14 +273,29 @@ val unspecified_scheme = ColorFamily(
     Color.Unspecified, Color.Unspecified, Color.Unspecified, Color.Unspecified
 )
 
+// Theme mode reaches AppTheme as a per-flow CompositionLocal rather than a whole-store one: a
+// store-typed local's default would have to be a store instance, whose construction needs
+// SharedPreferences -- impossible in previews. The default here is a constant follow-system
+// flow, which is exactly right for previews: they derive dark/light from uiMode +
+// isSystemInDarkTheme(), and FollowSystem defers to that. MainActivity provides the store's
+// flow once at the setContent root; staticCompositionLocalOf because the provided reference
+// never changes for the process lifetime.
+// ProvidableCompositionLocal (not the CompositionLocal supertype): provides {} is an infix on
+// the Providable subtype, so annotating the supertype would erase it and break the provide site.
+val LocalThemeMode: ProvidableCompositionLocal<StateFlow<AppThemeMode>> =
+    staticCompositionLocalOf { MutableStateFlow(AppThemeMode.FollowSystem) }
+
+// DynamicColors.applyToActivitiesIfAvailable (the View-side dynamic color) is retired along with
+// the View system: dynamic color is owned solely by AppTheme(dynamicColor = true) below, avoiding
+// two sources of truth. (Note moved here from MyApplication.initTheme, which it used to live in.)
 @Composable
 fun AppTheme(
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable() () -> Unit
 ) {
-    // Source 1: theme mode (single source of truth, non-null enum) — recomposes on Settings writes, no Activity recreate
-    val themeMode by MyApplication.themeMode.collectAsStateWithLifecycle()
+    // Source 1: theme mode (the store's non-null enum flow, provided at the setContent root) -- recomposes on Settings writes, no Activity recreate
+    val themeMode by LocalThemeMode.current.collectAsStateWithLifecycle()
     // Source 2: system dark — isSystemInDarkTheme() reads LocalConfiguration and recomposes automatically when the system toggles.
     // The three-way mapping lives on AppThemeMode.isDark (shared with MainActivity), so the two can never drift apart
     val darkTheme = themeMode.isDark(isSystemInDarkTheme())

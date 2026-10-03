@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.ui.base.BaseViewModel
 import net.imknown.android.forefrontinfo.ui.settings.repository.SettingsRepository
+import net.imknown.android.forefrontinfo.ui.settings.repository.SettingsStore
 
 // Stable (not Immutable): instance identity never changes and UI-visible state lives in the observed StateFlow;
 // the two vars (load job, easter-egg counter) are never read for composition, so promising stability is safe (same as BaseListViewModel/HomeViewModel).
@@ -30,8 +31,22 @@ import net.imknown.android.forefrontinfo.ui.settings.repository.SettingsReposito
 @ViewModelKey
 @ContributesIntoMap(AppScope::class, binding<ViewModel>())
 class SettingsViewModel(
-    private val settingsRepository: SettingsRepository
+    private val settingsRepository: SettingsRepository,
+    private val settingsStore: SettingsStore
 ) : BaseViewModel() {
+
+    // region [Theme]
+    // The stored value straight from the store's hot StateFlow (seeded synchronously at store
+    // construction): the dialog's selected item is the persisted value on the first frame --
+    // no WhileSubscribed + default flash (the first-frame-stored-value constraint the plan pins)
+    val themeValue: StateFlow<String> = settingsStore.themeValue
+
+    // Write path: the event goes up to the store, which touches SP once; the same-frame
+    // listener callback pushes the value back into the flow this page collects
+    fun setTheme(value: String) {
+        settingsStore.setTheme(value)
+    }
+    // endregion [Theme]
 
     // region [Version Info]
     // null = not loaded yet (the built-in data version loads once; there is no reload, so no

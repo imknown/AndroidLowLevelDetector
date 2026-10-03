@@ -72,18 +72,11 @@ import net.imknown.android.forefrontinfo.ui.theme.AppTheme
 fun SettingsScreen(viewModel: SettingsViewModel, modifier: Modifier = Modifier) {
     val context = LocalContext.current
 
-    // ---- Current preference values (three stages): read SP once on entry, local state is the source of
-    // truth afterwards, write through to SP on change. stringResource must be evaluated outside remember:
-    val themeKey = stringResource(R.string.interface_themes_key)
-    val themeDefaultValue = stringResource(R.string.interface_themes_follow_system_value)
-    // No tombstone handling needed here: MyApplication.initTheme migrates a legacy stored
-    // "power saver" value (its "1" tombstone is kept in strings.xml) back to follow system at startup
-    var themeValue by remember {
-        mutableStateOf(
-            MyApplication.sharedPreferences.getString(themeKey, null)
-                ?: themeDefaultValue
-        )
-    }
+    // ---- Current preference values. The theme row already reads the store via the ViewModel's
+    // hot flow (the dialog's selected item is the persisted value on the first frame); the
+    // scroll bar and the two switches keep the read-SP-once pattern until their subtasks switch
+    // them over. stringResource must be evaluated outside remember:
+    val themeValue by viewModel.themeValue.collectAsStateWithLifecycle()
 
     val scrollBarKey = stringResource(R.string.interface_scroll_bar_key)
     val scrollBarDefaultValue = stringResource(R.string.interface_no_scroll_bar_value)
@@ -111,7 +104,8 @@ fun SettingsScreen(viewModel: SettingsViewModel, modifier: Modifier = Modifier) 
         viewModel.setBuiltInDataVersion(context.packageManager, context.packageName)
     }
 
-    // App-wide preference, not page data: MyApplication owns it (as themeMode) and the content stays pure-data
+    // App-wide preference, not page data: still owned by MyApplication's companion (moves to
+    // SettingsStore in the next subtask) and the content stays pure-data
     val scrollBarMode by MyApplication.scrollBarMode.collectAsStateWithLifecycle()
 
     SettingsContent(
@@ -122,9 +116,7 @@ fun SettingsScreen(viewModel: SettingsViewModel, modifier: Modifier = Modifier) 
         outdatedOrderFirst = outdatedOrderFirst,
         version = version,
         onThemeSelect = { value ->
-            themeValue = value
-            MyApplication.sharedPreferences.edit { putString(themeKey, value) }
-            MyApplication.setMyTheme(value) // writes the preference stream (single source of truth); AppTheme collects it and recomposes to switch light/dark, no Activity recreate
+            viewModel.setTheme(value) // event up to the store: SP written once, the same-frame callback refreshes the flow -- this row and AppTheme recompose, no Activity recreate
         },
         onScrollBarSelect = { value ->
             scrollBarValue = value

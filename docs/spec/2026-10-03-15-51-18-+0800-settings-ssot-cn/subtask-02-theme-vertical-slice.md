@@ -2,6 +2,12 @@
 
 > 状态: living (动工时如有修订在此显式记录). 计划依据: 本目录 plan.md + issues-cn #08 / #10. 风险: 高 (启动时序 + Activity 重建 — 负责人预注册风险的主战场).
 
+## 动工记录 (2026-10-03)
+
+- 按本报告实施, 形态与钉死裁定一致: `LocalThemeMode` 为 per-flow `ProvidableCompositionLocal<StateFlow<AppThemeMode>>` (staticCompositionLocalOf + 常量 FollowSystem preview 默认), `MainActivity` 根部 provide + `settingsStore` lazy 字段, `MyApplication` 删主题三件并在 initTheme 原位 eager 解析 store (`initScrollBar` 过渡保留), `SettingsViewModel` 注入 store (`themeValue` 直通热流 + `setTheme` 委托), `SettingsScreen` 主题行换源. `AppGraph` / `SettingsStore` 头注释的现在时陈述 ("initTheme sits today") 归真为过去时; `initTheme` 的 DynamicColors 说明迁往 Theme.kt.
+- 构建波折两处 (已修并落注释): ① `provides` infix 只定义在 `ProvidableCompositionLocal` 子类型上, 显式标注父类型 `CompositionLocal` 会把它抹掉 — 声明改标子类型; ② `onCreate` 裸首解析表达式触发 `RETURN_VALUE_NOT_USED`, `@Suppress` 压制 (reviewer 实证: 该诊断为 IDE 侧, 项目 CLI 2.4.20 不发, 压制对未来升级免疫).
+- 验证: `assembleFossDebug` 绿 (EXIT=0, 唯一警告为 `LldDataSource` 既有); v1 review "pass" (承重论断全核实, 3 条低: ① 滚动条注释措辞微调已落 ② `LocalThemeMode` 静默默认留档 ③ 提交范围提醒); 负责人真机冒烟全过 (冷启不闪 / 切换即时 / recreate 保持 / `am kill` 恢复 / 设置页首帧即存值); 注释经中文中间态在提交闸门译回英语.
+
 ## 目标句 (占位, 动工对照时由负责人确认或改写)
 
 主题设置项整链搬进 `SettingsStore`: `AppTheme` / `MainActivity` / 设置页主题行全部改观察或写 store, `MyApplication` 伴生对象上的 `themeMode` / `setMyTheme` / `initTheme` 删除, 组合前现值时序逐点保持.

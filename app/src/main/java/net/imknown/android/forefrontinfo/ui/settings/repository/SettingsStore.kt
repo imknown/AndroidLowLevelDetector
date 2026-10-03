@@ -19,10 +19,9 @@ import net.imknown.android.forefrontinfo.base.ScrollBarMode
 // Flow-vs-storage consistency runs on listener callback: a write touches SP exactly once, and
 // OnSharedPreferenceChangeListener's same-process synchronous callback pushes the new value into
 // the flows -- one update path, no two-step "wrote SP, forgot to refresh the flow" shape.
-// First resolution is construction, and seeding happens synchronously there; pinning that point
-// is the consumer's contract (ST-02 resolves the store once in MyApplication.onCreate, where
-// initTheme sits today) -- nothing before that point may read the flows. Pure addition for now:
-// no consumer resolves this class yet, so behavior is unchanged.
+// First resolution is construction, and seeding happens synchronously there; MyApplication
+// (the graph's owner) pins that point eagerly in onCreate, where initTheme used to sit --
+// nothing before that point may read the flows.
 @SingleIn(AppScope::class)
 @Inject
 class SettingsStore(private val prefs: SharedPreferences) {

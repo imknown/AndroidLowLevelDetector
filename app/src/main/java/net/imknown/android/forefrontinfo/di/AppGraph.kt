@@ -65,9 +65,8 @@ interface AppGraph : ViewModelGraph {
     // The settings store accessor (issues-cn #08, ST-01): non-ViewModel types reach the store
     // through the graph -- the same precedent as metroViewModelFactory. @SingleIn(AppScope)
     // makes the accessor resolve the same instance the ViewModels inject, so seeding runs
-    // exactly once with the first construction; the consumer contract (ST-02) pins first
-    // resolution in MyApplication.onCreate, where initTheme sits today, so pre-composition
-    // reads see seeded flows.
+    // exactly once with the first construction; MyApplication.onCreate resolves it eagerly
+    // where initTheme used to sit, so pre-composition reads see seeded flows.
     val settingsStore: SettingsStore
 
     // The graph's second external entry point: MyApplication cannot be graph-

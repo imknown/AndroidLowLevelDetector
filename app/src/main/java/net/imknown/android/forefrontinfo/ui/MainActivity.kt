@@ -13,9 +13,18 @@ import dev.zacsweers.metrox.viewmodel.LocalMetroViewModelFactory
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid10
+import net.imknown.android.forefrontinfo.ui.settings.repository.SettingsStore
 import net.imknown.android.forefrontinfo.ui.theme.AppTheme
+import net.imknown.android.forefrontinfo.ui.theme.LocalThemeMode
 
 class MainActivity : ComponentActivity() {
+
+    // The settings store, resolved through the app graph exactly once (lazy: application is only
+    // touchable after the Activity attaches). isAppDark reads its seeded current value before
+    // composition; setContent provides its theme flow to the tree below.
+    private val settingsStore: SettingsStore by lazy {
+        (application as MyApplication).appGraph.settingsStore
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // The manifest theme (values/values-night AppTheme pair) follows the *system* configuration, which
@@ -63,7 +72,8 @@ class MainActivity : ComponentActivity() {
             // so the Activity keeps fetching the graph by hand — the only
             // hand-written seam phase one deliberately keeps (issues-cn #02).
             CompositionLocalProvider(
-                LocalMetroViewModelFactory provides (application as MyApplication).appGraph.metroViewModelFactory
+                LocalMetroViewModelFactory provides (application as MyApplication).appGraph.metroViewModelFactory,
+                LocalThemeMode provides settingsStore.themeMode
             ) {
                 AppTheme { // wrap the theme at the root: dark/light and dynamic color flow down the tree
                     AppRoot() // skeleton (Scaffold + navigation) + four pages, all grown from this one function
@@ -74,7 +84,7 @@ class MainActivity : ComponentActivity() {
 
     // Single source of truth for "is the app dark", shared by edge-to-edge and AppTheme's system-bar SideEffect;
     // the three-way mapping lives on AppThemeMode.isDark so every caller stays aligned
-    private fun isAppDark(resources: Resources): Boolean = MyApplication.themeMode.value.isDark(
+    private fun isAppDark(resources: Resources): Boolean = settingsStore.themeMode.value.isDark(
         (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK)
                 == Configuration.UI_MODE_NIGHT_YES
     )
