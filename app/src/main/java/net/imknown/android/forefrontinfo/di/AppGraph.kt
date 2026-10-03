@@ -1,5 +1,6 @@
 package net.imknown.android.forefrontinfo.di
 
+import android.content.SharedPreferences
 import android.net.TrafficStats
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
@@ -35,8 +36,9 @@ import java.net.URI
 // @Provides at all. Leaf bindings whose types cannot carry an @Inject
 // constructor live in the binding containers below (attached via
 // @DependencyGraph's bindingContainers parameter): the HttpClient singleton is
-// the first, the IProperty binding (PropertyDefault lives in :base) the second;
-// SharedPreferences and the lld file store follow in the later subtasks.
+// the first, the IProperty binding (PropertyDefault lives in :base) the second,
+// the SharedPreferences binding the third (ST-10); the lld file store turned
+// out to need no container -- it is a plain @Inject class (ST-09).
 //
 // Extending ViewModelGraph brings in MetroX's three ViewModel multibindings
 // plus the metroViewModelFactory accessor that MainActivity provides down to
@@ -51,7 +53,11 @@ import java.net.URI
 // fresh instance on every create call.
 @DependencyGraph(
     AppScope::class,
-    bindingContainers = [HttpClientContainer::class, PropertyContainer::class]
+    bindingContainers = [
+        HttpClientContainer::class,
+        PropertyContainer::class,
+        SharedPreferencesContainer::class
+    ]
 )
 interface AppGraph : ViewModelGraph {
 
@@ -156,4 +162,18 @@ object PropertyContainer {
     // so no @SingleIn is needed.
     @Provides
     fun property(): IProperty = PropertyDefault
+}
+
+@BindingContainer
+object SharedPreferencesContainer {
+    // The SharedPreferences binding: the default preferences file -- a natural
+    // singleton through SharedPreferences' own per-file caching, so no
+    // @SingleIn. The provider's app parameter declares the dependency edge on
+    // the Application (bound by ST-08's graph factory); the body reads the
+    // companion val rather than going through the instance because Kotlin
+    // forbids instance->companion member calls, and converting the val to an
+    // instance member would touch static call sites that are deliberately out
+    // of scope (SettingsScreen / HomeRepository, issues-cn #10/#08).
+    @Provides
+    fun sharedPreferences(app: MyApplication): SharedPreferences = MyApplication.sharedPreferences
 }
