@@ -2,6 +2,12 @@
 
 > 状态: living (动工时如有修订在此显式记录). 计划依据: 本目录 plan.md + issues-cn #08 / #10. 风险: 高 (生疏领域: Flow 桥; 虽纯新增零行为变化可单独 revert, 但桥的语义是全部后续子任务的地基).
 
+## 动工记录 (2026-10-03)
+
+- 按本报告钉死的 (a) listener 回灌形态实施, 无修订: `SettingsStore` 六条公开流 (两条非空枚举流 + 两条原始存值流 + 两条布尔流) + 四个写入口 + `AppGraph.settingsStore` accessor. 播种段含 power-saver 归一, 写在 listener 注册之前 (不触发自身回灌); listener 由类字段强引用持有 (SP 弱引用陷阱落字); 解析 when 与被替代的 `setMyTheme` / `setMyScrollBar` 逐字一致. 零消费方接入, 与计划一致.
+- 验证: `./gradlew assembleFossDebug` 绿 (EXIT=0; 输出中唯一警告 `DESUGARED_PROVIDER_WARNING` 为 `LldDataSource.kt:20` 既有警告, 与本子任务无关). 真机冒烟项 (行为与基线无差) 由负责人随手执行 — 本子任务无行为可变.
+- v1 review (结论 "通过", 11 项承重论断全核实) 两条低发现按负责人裁定已修: ① `parseScrollBarMode` 参数改名 `scrollBarStored` (消除与属性 `scrollBarValue` 的遮蔽); ② 三处 `themesValue` 局部/参数统一改 `themeStored` (方案 A, 与 ① 对称 — 文件命名规则归一: `xxxValue` = 公开持久流, `xxxStored` = SP 瞬时快照). 构建重验 EXIT=0.
+
 ## 目标句 (占位, 动工对照时由负责人确认或改写)
 
 新增可注入的设置唯一归属 `SettingsStore` 与 SP→Flow 桥, 挂上图 accessor; 不切任何消费方, 应用行为零变化.

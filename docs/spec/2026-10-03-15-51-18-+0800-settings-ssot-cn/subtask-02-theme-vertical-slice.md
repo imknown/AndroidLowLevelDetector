@@ -22,6 +22,10 @@
 5. `ui/settings/SettingsScreen.kt`: 主题行读写换源 — `themeValue` 的 `remember { ... getString(...) }` (`:81-86`) 改收集 ViewModel 状态; `onThemeSelect` 回调 (`:124-128`) 改 `viewModel.setTheme(value)`; 删 `themeKey` / `themeDefaultValue` 的 `stringResource` 直读; 相邻注释 (`:79-80` initTheme 迁移注) 归真.
 6. preview (`SettingsContentPreview`): `themeValue` 照旧传常量, 不受影响.
 
+## 有意不做 (documented non-goal)
+
+- 对话框枚举化 (`SettingsChoiceDialog` 泛型化收枚举, enum 带 `labelRes` 与可选子集, store 的原始存值流随之退役) 是合理的后续演进, 但属设置 UI 的类型安全改造, 不混入本次存储层 SSOT 迁移: 文案搬家 ×4 locale, 且退役编码要重表达 (滚动条 Draggable 档今日以 "注释掉数组项" 的方式退役). 主线走完后再择机立项; 本任务两个对话框维持数组元数据形态 — 本条裁定与 ST-03 的滚动条对话框共用.
+
 ## 时序论证 (报告必须写清的三段)
 
 1. `MyApplication.onCreate`: `instance` 赋值 → store 首解析 (SP 此时可用, 播种 + power-saver 归一) — 与今天 `initTheme()` 完全同位.

@@ -12,7 +12,7 @@
 
 | 子任务 | 状态 | 闸门进度 |
 |---|---|---|
-| ST-01 settings-store-skeleton | 未开始 | — |
+| ST-01 settings-store-skeleton | 已提交 (`feat(settings)` f54e54d0) | 全部 ✓ (目标句代记 "按报告范围" / 报告无修订 / 实施 / 构建绿 / v1 review "通过" + 2 条低发现按裁定修复 (xxxStored 命名归一) / 对照问答四问 (StateFlow 必要性, keys 不 lazy, 双流不合并, 对话框枚举化立案为 documented non-goal 记入 ST-02 报告) / 放行 / 注释译英 + 标点零违规 + 构建重验 EXIT=0 / 提交) |
 | ST-02 theme-vertical-slice | 未开始 | — |
 | ST-03 scrollbar-vertical-slice | 未开始 | — |
 | ST-04 home-and-remaining-switches | 未开始 | — |
@@ -25,7 +25,8 @@
 
 ## 偏差记录
 
-(无)
+- ST-01 / step0 / 负责人未单独给出目标句与问题单, 以一句 "开始" 放行 — 按 subtask-01 报告范围执行; 台账代记目标句为 "按报告范围".
+- ST-01 / 提交 / 5 份子任务报告按负责人指示提前入库 (3f5efa8f), 原计划随 ST-01 提交 — 后续子任务提交不再携带报告.
 
 ## 下一步
 
