@@ -19,6 +19,7 @@ import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.property.IProperty
 import net.imknown.android.forefrontinfo.base.property.impl.PropertyDefault
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid16
+import net.imknown.android.forefrontinfo.ui.settings.repository.SettingsStore
 import okhttp3.Call
 import okhttp3.EventListener
 import okhttp3.Protocol
@@ -60,6 +61,14 @@ import java.net.URI
     ]
 )
 interface AppGraph : ViewModelGraph {
+
+    // The settings store accessor (issues-cn #08, ST-01): non-ViewModel types reach the store
+    // through the graph -- the same precedent as metroViewModelFactory. @SingleIn(AppScope)
+    // makes the accessor resolve the same instance the ViewModels inject, so seeding runs
+    // exactly once with the first construction; the consumer contract (ST-02) pins first
+    // resolution in MyApplication.onCreate, where initTheme sits today, so pre-composition
+    // reads see seeded flows.
+    val settingsStore: SettingsStore
 
     // The graph's second external entry point: MyApplication cannot be graph-
     // constructed (the graph itself is created in its constructor), so the
