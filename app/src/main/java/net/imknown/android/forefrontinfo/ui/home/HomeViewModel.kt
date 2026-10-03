@@ -46,14 +46,15 @@ private data class LldAndError(val lld: Lld?, val message: String?)
 @ViewModelKey
 @ContributesIntoMap(AppScope::class, binding<ViewModel>())
 class HomeViewModel(
-    private val homeRepository: HomeRepository
+    private val homeRepository: HomeRepository,
+    private val sharedPreferences: SharedPreferences
 ) : BaseListViewModel() {
 
     override suspend fun collectModels(): List<MyModel> {
         // Stamp this load with the current preference generation (compared in onModelsLoaded)
         loadStartGeneration = outdatedOrderChanges.value
 
-        val allowNetwork = MyApplication.sharedPreferences.getBoolean(
+        val allowNetwork = sharedPreferences.getBoolean(
             MyApplication.getMyString(R.string.function_allow_network_data_key), false
         )
 
@@ -86,7 +87,7 @@ class HomeViewModel(
     private var loadStartGeneration = 0
 
     init {
-        MyApplication.sharedPreferences
+        sharedPreferences
             .registerOnSharedPreferenceChangeListener(outdatedOrderChangeListener)
 
         // Rule 1 — live update: a toggle while any list is on screen (the initial data, or the
@@ -103,7 +104,7 @@ class HomeViewModel(
     }
 
     override fun onCleared() {
-        MyApplication.sharedPreferences
+        sharedPreferences
             .unregisterOnSharedPreferenceChangeListener(outdatedOrderChangeListener)
         super.onCleared()
     }

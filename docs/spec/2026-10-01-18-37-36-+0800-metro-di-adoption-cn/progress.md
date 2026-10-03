@@ -4,7 +4,7 @@
 
 ## 当前位置
 
-ST-09 (lld 文件库) 已提交 (见子任务状态表). 静态单例迁移进度: HttpClient (ST-06) ✓ IShell (ST-07) ✓ IProperty (ST-08) ✓ lld 文件库 (ST-09) ✓; 剩 ST-10 (SharedPreferences 绑定, 复用 ST-08 的 Application 图绑定) 与 ST-11 (文档收尾). 下一步见"下一步".
+ST-10 (SharedPreferences 绑定) 已提交 (见子任务状态表). 静态单例迁移全部完成: HttpClient (ST-06) ✓ IShell (ST-07) ✓ IProperty (ST-08) ✓ lld 文件库 (ST-09) ✓ SharedPreferences (ST-10) ✓. 剩最后一个子任务 ST-11 (文档收尾: issues-cn 5 处改写 + AGENTS.md 补 @Inject 工作流说明 + 复盘清单清账). 下一步见"下一步".
 
 ## 子任务状态
 
@@ -19,7 +19,8 @@ ST-09 (lld 文件库) 已提交 (见子任务状态表). 静态单例迁移进�
 | ST-07 | 已提交 (`refactor(di)`) | 目标句 ✓ 实施 ✓ 构建 ✓ 零残留 ✓ 报告已修订 (DataSource 图构造后无需经 Repository 传参) ✓ 真机 smoke (Others 的 kernel 行吃到真实数据 = IShell 链路通; Home 整页加载无错误行; 零 FATAL; SELinux/GSI 行未滚到, 语义由评审覆盖) ✓ v1 review (1 建议: MyApplication 残留 ShellLibSu 冗余 import → 已删; 负责人确认不另开 v2) ✓ 放行 ✓ 提交 ✓ 注释已译回英语 + 构建重验 EXIT=0 + 零残留复核 ✓ |
 | ST-08 | 已提交 (`refactor(di)`) | 报告预生成 + 批次 review ✓, 动工时修订 (factory 实施路径: binding container) ✓ step0 ("开始" 放行, 目标句代记 "按报告范围") ✓ 实施 ✓ 构建 ✓ 零残留 ✓ 行为等价抽查 ✓ v1 review ✓ (4 LOW, 无阻塞) findings 裁定 ✓ (① 改 ② 归 ST-11 ③ 备记: 显式暂存勿 add -A ④ 改) ①④ 已修 + AGENTS.md DI 条目改写 ✓ 放行 ✓ 提交 ✓ 注释译英 ✓ (CJK 复查净 + 构建重验 EXIT=0) |
 | ST-09 | 已提交 (`refactor(di)`) | 报告预生成 + 批次 review ✓, 动工时修订 ×3 ✓ step0 ✓ 实施 ✓ 构建 ✓ 零残留 ✓ v1 review ✓ (4 findings 裁定全落) v2 review ✓ (2 LOW 台账措辞已修, 零代码发现) 运行时 smoke ✓ (清数据冷启复制 lld.json 落盘 + 零 FATAL/MissingBinding/StrictMode; 本地刷新链无多余写盘; 联网保存 mtime/内容变化 + Gitee 302→拉取) 放行 ✓ 提交 ✓ 注释译英 ✓ |
-| ST-10~11 | 未开始 | 报告已预生成, 批次 review 已过; ST-11 报告已随裁定显式修订 |
+| ST-10 | 已提交 (`refactor(di)`) | 报告预生成 + 批次 review ✓, 动工时修订 ×1 ✓ step0 ✓ 实施 ✓ 构建 ✓ 残留符合预期 ✓ v1 review ✓ (重发后完成; 1 LOW informational) 行号裁定 ✓ (1106→1121 就地修正) 设备 smoke ✓ (双向: ON→Ktor 在线链; OFF→零请求离线链; 零 FATAL/MissingBinding) 放行 ✓ 提交 ✓ 注释译英 ✓ (CJK 复查净 + 构建重验 EXIT=0) |
+| ST-11 | 未开始 | 报告已预生成, 批次 review 已过, 已随裁定显式修订 |
 
 ### ST-06 smoke 残留项
 
@@ -49,9 +50,11 @@ ST-09 (lld 文件库) 已提交 (见子任务状态表). 静态单例迁移进�
 - ST-08 / 放行 / 负责人在 v1 修复汇报后以一句"继续"放行 — 合并 v2 闸门 (低风险, 修复均为单句注释/文档级), 沿用 ST-06 起的既立模式.
 - ST-09 / step0 / 负责人以一句"继续"放行 (先看效果后说"继续") — 按报告范围执行; 台账代记目标句为"按报告范围".
 - ST-09 / smoke+放行+提交 / 联网保存路径的 adb 取证命令第一次被取消; 负责人现场观察后以一句"提交"合并放行 — 复跑取证 (mtime/内容变化 + Ktor Gitee 302→拉取) 后三条路径全闭环; 注释译英照常在提交闸门完成.
+- ST-10 / v1 review / 后台 review subagent 因配额耗尽未跑完 — AI 曾按低风险替代路径附 diff 请负责人亲自读; 次日额度恢复, 负责人裁定仍走 subagent 复审 (重发同一 v1 prompt).
+- ST-10 / 放行+提交 / 负责人在 smoke 汇报后以一句"提交"合并放行 (沿用 ST-06 起的既立模式).
 
 ## 下一步
 
 1. 负责人点头
-2. ST-10 概念导读 (5-10 行) → 负责人给目标句 + 问题清单 (可空)
-3. 负责人说"开始" → 实施 → 构建 → v1 后台 review (风险见报告)
+2. ST-11 概念导读 (5-10 行) → 负责人给目标句 + 问题清单 (可空)
+3. 负责人说"开始" → 实施 → 验证 → review (文档收尾子任务)
