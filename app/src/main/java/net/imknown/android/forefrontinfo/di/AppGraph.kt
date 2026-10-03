@@ -30,7 +30,7 @@ import java.net.SocketAddress
 import java.net.URI
 
 // Composition root: the only place in the whole project that knows "who needs
-// whom" (issues-cn #02/#05). Metro resolves the entire graph at compile time
+// whom" (issues-cn #02). Metro resolves the entire graph at compile time
 // from @Inject constructors, and a constructor-injected class is bound to its
 // concrete type automatically, so the all-concrete ViewModel chains need no
 // @Provides at all. Leaf bindings whose types cannot carry an @Inject

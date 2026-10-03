@@ -36,7 +36,7 @@ private data class LldAndError(val lld: Lld?, val message: String?)
 // Stable (not Immutable): instance identity never changes and UI-visible state lives in the
 // observed StateFlow; SavedStateHandle is restore-only storage, never read for composition,
 // so promising stability is safe (same as BaseListViewModel).
-// Metro wiring (issues-cn #05): the three annotations replace the former companion Factory.
+// Metro wiring: the three annotations replace the former companion Factory.
 // @ViewModelKey + @ContributesIntoMap land this class in the ViewModel multibinding map that
 // AppViewModelFactory consults; binding<ViewModel>() is REQUIRED because Metro binds to the
 // direct supertype by default (BaseListViewModel here) and a wrong map key only surfaces at

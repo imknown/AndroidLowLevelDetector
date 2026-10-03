@@ -57,7 +57,7 @@ Screen (Compose) → ViewModel (StateFlow) → Repository → DataSource
 ```
 
 - Navigation is **Navigation 3** (`androidx.navigation3`), not the mainstream Navigation 2: the API shape is `NavKey` + back stack + entryProvider (`ui/navigation/NavKeys.kt`). Don't think in Nav2 terms (`NavHost(route = ...)`).
-- **DI by Metro** — compile-time DI, a deliberate deviation from the Hilt / Koin mainstream (the hand-written companion `Factory` / `viewModel(factory = ...)` era is retired). ViewModels are `@Inject` + `@ViewModelKey` + `@ContributesIntoMap(AppScope::class, binding<ViewModel>())` and resolve at the Navigation 3 entry via `metroViewModel<...>()`; Repositories and DataSources are plain `@Inject` constructor injection; leaf bindings live in the binding containers in `di/AppGraph.kt`, and the graph factory binds `MyApplication`.
+- **DI by Metro** — compile-time DI, a deliberate deviation from the Hilt / Koin mainstream (the hand-written companion `Factory` / `viewModel(factory = ...)` era is retired). ViewModels are `@Inject` + `@ViewModelKey` + `@ContributesIntoMap(AppScope::class, binding<ViewModel>())` and resolve at the Navigation 3 entry via `metroViewModel<...>()`; Repositories and DataSources are plain `@Inject` constructor injection; leaf bindings live in the binding containers in `di/AppGraph.kt`, and the graph factory binds `MyApplication`. The Gradle plugin, runtime, and MetroX artifacts are version-locked to one `version.ref` in `gradle/toml/thirdParty.toml`; a Kotlin upgrade requires a matching Metro upgrade — check the official compatibility matrix first.
 - Testability comes from **interface-first design**, not a mocking framework: `:base` defines `IProperty` / `IShell` with default implementations (`PropertyDefault` / `ShellDefault`) and has no aggregation classes — the graph binds both (`ShellLibSu` contributes `IShell` via `@ContributesBinding`, `PropertyDefault` is `@Provides`-bound by `PropertyContainer`), and `PropertyReader` (`ui/common`) wraps `IProperty` with the shared placeholder fallback.
 - `BaseListViewModel` drives every list page with two `StateFlow`s — `modelsStateFlow: StateFlow<List<MyModel>?>` (null = cold start; a refresh deliberately keeps the previous list so the UI never flashes empty) and `isLoadingStateFlow` — plus `loadJob` dedup: don't reintroduce redundant loads on recreation. `onModelsLoaded()` runs after each load lands, for reconciling state that changed mid-build.
 - Compose stability annotations (`@Immutable` / `@Stable`) are deliberate; re-evaluate them whenever a state class changes (follow the pattern in the comment atop `HomeViewModel` / `BaseListViewModel`, which explains *why* the annotation is safe).
@@ -69,7 +69,7 @@ Screen (Compose) → ViewModel (StateFlow) → Repository → DataSource
 Current workflow (list order = call order):
 
 1. Add property keys / shell commands to the feature `DataSource`.
-2. Add a `detect...()` method to the feature `Repository` returning `MyModel`.
+2. Add a `detect...()` method to the feature `Repository` returning `MyModel` (new Repository / DataSource classes join the graph via `@Inject` constructor injection; a missing annotation fails the build with `[Metro/MissingBinding]`).
 3. Call it from the feature `ViewModel.collectModels()` — the call order defines the list order.
 4. Add the strings to the feature package's `strings.xml` (default English) plus the three translation files.
 5. If the item needs a new package with resources, register its res directory in `app/build.gradle.kts` sourceSets.
