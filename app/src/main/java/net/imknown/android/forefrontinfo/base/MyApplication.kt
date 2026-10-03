@@ -51,7 +51,7 @@ enum class ScrollBarMode {
 
 open class MyApplication : Application() {
 
-    // The single DI graph instance (composition root, issues-cn #02/#05). Metro
+    // The single DI graph instance (composition root, issues-cn #02). Metro
     // resolves the whole object chain at compile time; this only instantiates
     // the generated graph class through its factory, handing it `this` as the
     // Application binding (the entry point the Context-derived bindings build

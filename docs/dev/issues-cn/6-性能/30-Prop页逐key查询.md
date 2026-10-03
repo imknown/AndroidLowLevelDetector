@@ -39,7 +39,7 @@ list.forEach {
 
 ## 直接原因
 
-`Settings` 三张表的 String 常量加起来是**几百个量级** (key 列表取自设备上框架类的 `declaredFields`, 数量随 Android 版本与 ROM 增减). Prop 页一次加载 = 与常量数等量的**串行跨进程 binder 查询**, 外加两轮反射. 具体次数要在真机上量才知道 ("几百" 是按 SDK 常量数给出的量级, 不是实测值); 串行次数直接乘在加载时间上, 低端机上最吃紧. 整段跑在 `PropViewModel.collectModels()` 的 `withContext(Dispatchers.Default)` 里, 于是还与 [#16](../4-并发与调度/16-阻塞调用与HttpClient.md) / [#14](../4-并发与调度/14-检测链用CPU线程池.md) 的 "阻塞调用占用 CPU 池" 叠加.
+`Settings` 三张表的 String 常量加起来是**几百个量级** (key 列表取自设备上框架类的 `declaredFields`, 数量随 Android 版本与 ROM 增减). Prop 页一次加载 = 与常量数等量的**串行跨进程 binder 查询**, 外加两轮反射. 具体次数要在真机上量才知道 ("几百" 是按 SDK 常量数给出的量级, 不是实测值); 串行次数直接乘在加载时间上, 低端机上最吃紧. 整段跑在 `PropViewModel.collectModels()` 的 `withContext(Dispatchers.Default)` 里, 于是还与 [#16](../4-并发与调度/16-阻塞调用跑在CPU线程池.md) / [#14](../4-并发与调度/14-检测链用CPU线程池.md) 的 "阻塞调用占用 CPU 池" 叠加.
 
 ## 根本原因
 

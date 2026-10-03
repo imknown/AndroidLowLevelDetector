@@ -15,7 +15,7 @@
 
 ## 项目概览
 
-Android 应用, 展示底层系统特征: Treble 与 GSI 兼容性, Mainline/APEX 模块, system-as-root, A/B 分区, Binder 位数, 安全补丁级别. 技术栈: Kotlin, Jetpack Compose (单 Activity, Navigation 3), MVVM + StateFlow 单向数据流, kotlinx.serialization, Ktor, libsu, JNI/NDK. 没有 DI 框架.
+Android 应用, 展示底层系统特征: Treble 与 GSI 兼容性, Mainline/APEX 模块, system-as-root, A/B 分区, Binder 位数, 安全补丁级别. 技术栈: Kotlin, Jetpack Compose (单 Activity, Navigation 3), MVVM + StateFlow 单向数据流, kotlinx.serialization, Ktor, libsu, JNI/NDK. DI 用 Metro (编译期, 无反射).
 
 - 应用 id `net.imknown.android.forefrontinfo`; 版本信息在 `gradle/toml/build.toml`.
 - 模块: `:app` (Compose UI, 功能在 `ui` 下) · `:base` (`IProperty`/`IShell` 抽象) · `:binderDetector` (经 JNI 的 C++) · `build-logic` (约定插件).
@@ -57,11 +57,11 @@ Screen (Compose) → ViewModel (StateFlow) → Repository → DataSource
 ```
 
 - 导航是 **Navigation 3** (`androidx.navigation3`), 不是主流的 Navigation 2: API 形状是 `NavKey` + 返回栈 + entryProvider (`ui/navigation/NavKeys.kt`). 别按 Nav2 的词去想 (`NavHost(route = ...)`).
-- **没有 DI 框架** — 这是有意偏离 Hilt / Koin 主流. 每个 ViewModel 通过伴生 `Factory` 手工接线 (`viewModelFactory { initializer { ... } }`), Screen 用 `viewModel(factory = ...)` 拿到它. 新增 ViewModel 时照抄 `HomeViewModel.Factory` 的写法.
-- 可测试性来自 **接口优先的设计**, 不是 mock 框架: `:base` 定义 `IProperty` / `IShell` 及其默认实现 (`PropertyDefault` / `ShellDefault`), 由 `PropertyManager` 通过 `by` 委托聚合.
+- **DI 用 Metro** — 编译期 DI, 有意偏离 Hilt / Koin 主流 (手写伴生 `Factory` / `viewModel(factory = ...)` 的时代已退役). ViewModel 用 `@Inject` + `@ViewModelKey` + `@ContributesIntoMap(AppScope::class, binding<ViewModel>())`, 在 Navigation 3 的 entry 经 `metroViewModel<...>()` 解析; Repository 与 DataSource 是普通 `@Inject` 构造注入; 承载不了 `@Inject` 构造函数的叶子绑定住在 `di/AppGraph.kt` 的 binding container 里, 图工厂绑定 `MyApplication`. Gradle 插件 / 运行时 / MetroX 构件在 `gradle/toml/thirdParty.toml` 里同 `version.ref` 锁升; 升 Kotlin 必须同步升 Metro — 先查官方兼容矩阵.
+- 可测试性来自 **接口优先的设计**, 不是 mock 框架: `:base` 只定义 `IProperty` / `IShell` 及其默认实现 (`PropertyDefault` / `ShellDefault`), 没有聚合类 — 图绑定两者 (`ShellLibSu` 经 `@ContributesBinding` 贡献 `IShell`, `PropertyDefault` 由 `PropertyContainer` 的 `@Provides` 绑定), `PropertyReader` (`ui/common`) 包住 `IProperty` 提供共享回退.
 - `BaseListViewModel` 用两个 `StateFlow` 驱动每个列表页 — `modelsStateFlow: StateFlow<List<MyModel>?>` (null 表示冷启动; 刷新时刻意保留上一个列表, 让界面绝不闪空) 和 `isLoadingStateFlow` — 外加 `loadJob` 去重: 别在重建时重新引入多余的加载. `onModelsLoaded()` 在每次加载落地后运行, 用来对账构建过程中改变了的状态.
 - Compose 的稳定性注解 (`@Immutable` / `@Stable`) 是有意加的; 状态类一改就要重新评估 (照 `HomeViewModel` / `BaseListViewModel` 顶部注释的写法走, 它解释了注解*为什么*安全).
-- 内置的 `lld.json` 数据会被复制到外部 files 目录 (`LldManager`), 用户允许联网时经 Ktor 在线刷新; 用 GitHub 还是 Gitee 的 URL 按时区选.
+- 内置的 `lld.json` 数据会被复制到外部 files 目录 (`LldFileStore`), 用户允许联网时经 Ktor 在线刷新; 用 GitHub 还是 Gitee 的 URL 按时区选.
 - 命令执行用 libsu 的 **非 root** 模式 (`ui/common/ShellLibSu.kt`, 带 `Shell.FLAG_NON_ROOT_SHELL`): 没有 root 层.
 
 ## 新增一个检测条目
@@ -69,7 +69,7 @@ Screen (Compose) → ViewModel (StateFlow) → Repository → DataSource
 当前流程 (列表顺序 = 调用顺序):
 
 1. 把参数 key / shell 命令加进该功能的 `DataSource`.
-2. 给该功能的 `Repository` 加一个返回 `MyModel` 的 `detect...()` 方法.
+2. 给该功能的 `Repository` 加一个返回 `MyModel` 的 `detect...()` 方法 (新的 Repository / DataSource 类经 `@Inject` 构造注入进图; 漏注解会在构建时报 `[Metro/MissingBinding]`).
 3. 在该功能 `ViewModel.collectModels()` 里调用它 — 调用顺序就是列表顺序.
 4. 字符串加进该功能包的 `strings.xml` (默认英语) 以及三个翻译文件.
 5. 若该条目需要带资源的新包, 在 `app/build.gradle.kts` 的 sourceSets 里注册它的 res 目录.

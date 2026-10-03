@@ -56,6 +56,4 @@
 
 ## 待学习清单
 
-- Metro 插件 / 运行时 / MetroX 与 Kotlin 版本的锁升级关系 (兼容矩阵怎么读)
-- multibinding map key 绑定直接父类型的陷阱 (`binding<ViewModel>()` 为什么必须显式给出)
-- 编译器插件直接生成 IR 与 KSP 生成源码两种代码生成路线的差异 (对增量构建意味着什么)
+(收尾时清空 — 三项均在任务中落地掌握: 版本锁升纪律已写入 AGENTS.md 的 DI 条目与 toml 注释; `binding<ViewModel>()` 陷阱已在 ST-02 实证并钉进 HomeViewModel 注释; 编译器插件直生 IR 的路径经 ST-01~10 的增量构建观察确认. 横切复盘已完成并经负责人审阅, 按其裁定未入库.)
