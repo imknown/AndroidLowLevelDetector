@@ -48,6 +48,18 @@ class SettingsViewModel(
     }
     // endregion [Theme]
 
+    // region [Scroll bar]
+    // The stored value straight from the store's hot StateFlow (the persisted value on the first
+    // frame, same constraint as the Theme region)
+    val scrollBarValue: StateFlow<String> = settingsStore.scrollBarValue
+
+    // Write path: the event goes up to the store, which touches SP once; the same-frame
+    // callback pushes it back (this row and every list page's indicator update at once)
+    fun setScrollBarMode(value: String) {
+        settingsStore.setScrollBarMode(value)
+    }
+    // endregion [Scroll bar]
+
     // region [Version Info]
     // null = not loaded yet (the built-in data version loads once; there is no reload, so no
     // State wrapper is needed — the former State.Loading branch was never used here)

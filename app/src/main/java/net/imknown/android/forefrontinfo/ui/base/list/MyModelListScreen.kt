@@ -15,7 +15,9 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -24,11 +26,19 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import net.imknown.android.forefrontinfo.R
-import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.ScrollBarMode
 import net.imknown.android.forefrontinfo.ui.common.nonInteractiveScrollbar
 import net.imknown.android.forefrontinfo.ui.theme.AppTheme
+
+// The scroll bar mode reaches this screen as a per-flow CompositionLocal (same form as
+// Theme.kt's LocalThemeMode, and the reason for the subtype annotation lives there too): the
+// default is a constant None flow, matching the constant the existing previews pass;
+// MainActivity provides the store's flow once at the setContent root.
+val LocalScrollBarMode: ProvidableCompositionLocal<StateFlow<ScrollBarMode>> =
+    staticCompositionLocalOf { MutableStateFlow(ScrollBarMode.None) }
 
 /**
  * Shared screen for the three list pages (Home/Others/Prop).
@@ -49,9 +59,10 @@ fun MyModelListScreen(
     //    init() is idempotent, so re-running it on view recreation is harmless.
     LaunchedEffect(viewModel) { viewModel.init() }
 
-    // The scroll bar mode is an app-wide preference (MyApplication owns it, as themeMode), so the
-    // screen reads it here and the content composable stays a pure-data component
-    val scrollBarMode by MyApplication.scrollBarMode.collectAsStateWithLifecycle()
+    // The scroll bar mode is an app-wide preference (owned by the store, provided via
+    // LocalScrollBarMode at the root); the screen collects it here and the content composable
+    // stays a pure-data component
+    val scrollBarMode by LocalScrollBarMode.current.collectAsStateWithLifecycle()
 
     MyModelListContent(
         // null only before the very first load lands (empty list while the spinner spins);

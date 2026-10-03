@@ -12,6 +12,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import dev.zacsweers.metrox.viewmodel.LocalMetroViewModelFactory
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
+import net.imknown.android.forefrontinfo.ui.base.list.LocalScrollBarMode
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid10
 import net.imknown.android.forefrontinfo.ui.settings.repository.SettingsStore
 import net.imknown.android.forefrontinfo.ui.theme.AppTheme
@@ -21,7 +22,7 @@ class MainActivity : ComponentActivity() {
 
     // The settings store, resolved through the app graph exactly once (lazy: application is only
     // touchable after the Activity attaches). isAppDark reads its seeded current value before
-    // composition; setContent provides its theme flow to the tree below.
+    // composition; setContent provides its theme and scroll-bar flows to the tree below.
     private val settingsStore: SettingsStore by lazy {
         (application as MyApplication).appGraph.settingsStore
     }
@@ -73,7 +74,8 @@ class MainActivity : ComponentActivity() {
             // hand-written seam phase one deliberately keeps (issues-cn #02).
             CompositionLocalProvider(
                 LocalMetroViewModelFactory provides (application as MyApplication).appGraph.metroViewModelFactory,
-                LocalThemeMode provides settingsStore.themeMode
+                LocalThemeMode provides settingsStore.themeMode,
+                LocalScrollBarMode provides settingsStore.scrollBarMode
             ) {
                 AppTheme { // wrap the theme at the root: dark/light and dynamic color flow down the tree
                     AppRoot() // skeleton (Scaffold + navigation) + four pages, all grown from this one function

@@ -57,6 +57,7 @@ import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.ScrollBarMode
 import net.imknown.android.forefrontinfo.ui.base.ext.toast
+import net.imknown.android.forefrontinfo.ui.base.list.LocalScrollBarMode
 import net.imknown.android.forefrontinfo.ui.common.nonInteractiveScrollbar
 import net.imknown.android.forefrontinfo.ui.settings.repository.SettingsRepository
 import net.imknown.android.forefrontinfo.ui.theme.AppTheme
@@ -72,20 +73,12 @@ import net.imknown.android.forefrontinfo.ui.theme.AppTheme
 fun SettingsScreen(viewModel: SettingsViewModel, modifier: Modifier = Modifier) {
     val context = LocalContext.current
 
-    // ---- Current preference values. The theme row already reads the store via the ViewModel's
-    // hot flow (the dialog's selected item is the persisted value on the first frame); the
-    // scroll bar and the two switches keep the read-SP-once pattern until their subtasks switch
-    // them over. stringResource must be evaluated outside remember:
+    // ---- Current preference values. The theme and scroll-bar rows read the store (via the
+    // ViewModel's hot flow: the dialog's selected item is the persisted value on the first
+    // frame); the two switches keep the read-SP-once pattern until ST-04 switches them.
+    // stringResource must be evaluated outside remember:
     val themeValue by viewModel.themeValue.collectAsStateWithLifecycle()
-
-    val scrollBarKey = stringResource(R.string.interface_scroll_bar_key)
-    val scrollBarDefaultValue = stringResource(R.string.interface_no_scroll_bar_value)
-    var scrollBarValue by remember {
-        mutableStateOf(
-            MyApplication.sharedPreferences.getString(scrollBarKey, null)
-                ?: scrollBarDefaultValue
-        )
-    }
+    val scrollBarValue by viewModel.scrollBarValue.collectAsStateWithLifecycle()
 
     val allowNetworkKey = stringResource(R.string.function_allow_network_data_key)
     var allowNetwork by remember {
@@ -104,9 +97,9 @@ fun SettingsScreen(viewModel: SettingsViewModel, modifier: Modifier = Modifier) 
         viewModel.setBuiltInDataVersion(context.packageManager, context.packageName)
     }
 
-    // App-wide preference, not page data: still owned by MyApplication's companion (moves to
-    // SettingsStore in the next subtask) and the content stays pure-data
-    val scrollBarMode by MyApplication.scrollBarMode.collectAsStateWithLifecycle()
+    // App-wide preference, not page data: owned by the store (provided via LocalScrollBarMode at
+    // the root) and the content stays pure-data
+    val scrollBarMode by LocalScrollBarMode.current.collectAsStateWithLifecycle()
 
     SettingsContent(
         themeValue = themeValue,
@@ -119,9 +112,7 @@ fun SettingsScreen(viewModel: SettingsViewModel, modifier: Modifier = Modifier) 
             viewModel.setTheme(value) // event up to the store: SP written once, the same-frame callback refreshes the flow -- this row and AppTheme recompose, no Activity recreate
         },
         onScrollBarSelect = { value ->
-            scrollBarValue = value
-            MyApplication.sharedPreferences.edit { putString(scrollBarKey, value) }
-            MyApplication.setMyScrollBar(value) // writes the preference stream; this page and every list page collect it and show or drop the indicator right away
+            viewModel.setScrollBarMode(value) // event up to the store: SP written once, the same-frame callback refreshes the flow -- this row and every list page's indicator update at once
         },
         onAllowNetworkChange = { value ->
             allowNetwork = value

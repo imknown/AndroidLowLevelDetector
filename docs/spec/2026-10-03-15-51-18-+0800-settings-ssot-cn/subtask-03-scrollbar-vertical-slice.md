@@ -2,6 +2,11 @@
 
 > 状态: living (动工时如有修订在此显式记录). 计划依据: 本目录 plan.md + issues-cn #08 / #10. 风险: 低 (机械同型, ST-02 模式已立).
 
+## 动工记录 (2026-10-03)
+
+- 按本报告实施: `LocalScrollBarMode` 定义在 `MyModelListScreen.kt` (形态与 `LocalThemeMode` 同构: `ProvidableCompositionLocal<StateFlow<ScrollBarMode>>` + staticCompositionLocalOf + 常量 None preview 默认; 定义落点 = 首要消费方同文件, 对齐 LocalThemeMode-in-Theme.kt 先例), `MainActivity` 根部 provide 第二行 + 字段注释更新, `MyModelListScreen` 收集换源 + 注释归真, `MyApplication` 删滚动条三件 (伴生对象只剩 `instance` / `sharedPreferences` / `getMyString`, 留给 #02 收口; 未用 import 清理), `SettingsScreen` 滚动条行换源 + 注释归真, `SettingsViewModel` 加 [Scroll bar] 区. 三态语义逐字保留 (存值 "2" 仍解析为 Draggable, `drawsScrollBar` 只认 Normal).
+- 验证: `assembleFossDebug` 绿 (EXIT=0, 唯一警告为 `LldDataSource` 既有); 零残留 (三个已删符号全仓零现在时引用, SettingsStore 的过去时溯源注释除外); 标点零违规.
+
 ## 目标句 (占位, 动工对照时由负责人确认或改写)
 
 滚动条设置项整链搬进 `SettingsStore`: `MyModelListScreen` (三个列表页共用件) 与设置页滚动条行改观察 store, `MyApplication` 伴生对象上的 `scrollBarMode` / `setMyScrollBar` / `initScrollBar` 删除.

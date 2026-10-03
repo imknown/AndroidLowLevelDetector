@@ -7,10 +7,7 @@ import android.os.Environment
 import androidx.annotation.StringRes
 import com.topjohnwu.superuser.Shell
 import dev.zacsweers.metro.createGraphFactory
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import net.imknown.android.forefrontinfo.BuildConfig
-import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.di.AppGraph
 import net.imknown.android.forefrontinfo.ui.common.initMyAndroid
 import java.io.File
@@ -84,26 +81,6 @@ open class MyApplication : Application() {
 
         fun getMyString(@StringRes resId: Int, vararg formatArgs: Any?) =
             instance.getString(resId, *formatArgs)
-
-        // Single source of truth for the scroll bar preference (transitional: moves to
-        // SettingsStore with its consumers in the next subtask), same shape the theme mode had:
-        // seeded from the persisted value by initScrollBar at startup, written via setMyScrollBar
-        // when Settings changes it, and collected by the pages that draw a scroll indicator
-        // (no page reads the mode itself from SharedPreferences)
-        val scrollBarMode: StateFlow<ScrollBarMode>
-            field = MutableStateFlow(ScrollBarMode.None)
-
-        fun setMyScrollBar(scrollBarValue: String?) {
-            // Translate the persisted mode string into the enum (the single write entry); the stored
-            // default, null and any unrecognized value all read as none
-            val mode = when (scrollBarValue) {
-                getMyString(R.string.interface_normal_scroll_bar_value) -> ScrollBarMode.Normal
-                // The retired draggable value stays readable as itself rather than collapsing into none
-                getMyString(R.string.interface_fast_scroll_bar_value) -> ScrollBarMode.Draggable
-                else -> ScrollBarMode.None
-            }
-            scrollBarMode.value = mode
-        }
     }
 
     override fun onCreate() {
@@ -116,25 +93,14 @@ open class MyApplication : Application() {
         // First resolution of the settings store = construction = synchronous seeding of both
         // mode flows from SP, pinned here where initTheme sat: instance and SP exist from this
         // point, so MainActivity's pre-composition reads and every collect downstream see the
-        // persisted values. The access itself is the point (the seed); its consumers switch
-        // over in the following subtasks. The unused-result warning is inherent to a
+        // persisted values. The access itself is the point (the seed); both mode flows'
+        // consumers have switched to the store (ST-02/03), the boolean switches' consumers
+        // switch in ST-04. The unused-result warning is inherent to a
         // resolve-for-side-effect statement and is suppressed deliberately.
         @Suppress("RETURN_VALUE_NOT_USED")
         appGraph.settingsStore
 
-        initScrollBar()
-
         initShell()
-    }
-
-    private fun initScrollBar() {
-        // On startup, seed the mode stored in SharedPreferences into the companion stream;
-        // the stored default is "none", so a first run shows no indicator
-        val scrollBarValue = sharedPreferences.getString(
-            getMyString(R.string.interface_scroll_bar_key),
-            getMyString(R.string.interface_no_scroll_bar_value),
-        )
-        setMyScrollBar(scrollBarValue)
     }
 
     private fun initShell() {
