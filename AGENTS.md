@@ -114,6 +114,7 @@ The owner = the developer. AI handles research/analysis/coding/testing/review; t
 - Convergence guard: review rounds chase substance — subjective style preferences and premature-optimization suggestions do not force another round; if rounds keep churning without new findings, surface that to the owner instead of looping forever.
 - Deviation ledger: skipping a step is allowed, but log one line (task / which step / why) into the spec dir's progress ledger. (Behavioral economics: allowed-but-logged beats forbidden; prevents both silent process decay and wholesale abandonment of the workflow.)
 - Close-out: clear the to-learn list; one cross-cutting retrospective (which classes of problems the AI gets wrong repeatedly -> distilled into a review checklist). (Spacing effect + metacognitive calibration — the long-term counter to the fluency illusion.)
+- Archiving: when a task is fully closed out (the ledger's next action is none), its whole spec dir moves under `docs/spec/archived/` unchanged and is never edited again — archived specs are closed records. The resume scan (`docs/spec/*/progress.md`) does not reach one level deeper, so archived tasks never resurface as unfinished.
 
 ## Git and CI
 
