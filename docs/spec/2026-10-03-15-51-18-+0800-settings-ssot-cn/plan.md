@@ -1,6 +1,6 @@
 # 设置 SSOT (#08 + #10, 方案 A) — 修改计划
 
-> 状态: living. 决策依据: `docs/dev/issues-cn` 的 [#08](../../../docs/dev/issues-cn/2-SSOT-唯一数据来源/08-设置无唯一数据来源.md) 与 [#10](../../../docs/dev/issues-cn/2-SSOT-唯一数据来源/10-设置页直读SharedPreferences.md) (合流实施), 加开工前两项负责人裁定: 报告语言 = 中文 (-cn); #08 条目预留的前置问题 ("`MyApplication` 伴生流路线是否就是可接受的终态") 的答案 = **否, 方案 A 整段实施** (themeMode / scrollBarMode 迁进 SettingsStore). 本页是任务级拆分与执行约定; 全部子任务的修改计划报告 (`subtask-NN-*.md`) 在本页过 plan gate 后一次性预生成.
+> 状态: living. 决策依据: `docs/dev/issues-cn` 的 #08 与 #10 (合流实施; 两条目已随本任务落地删除, 见 git log), 加开工前两项负责人裁定: 报告语言 = 中文 (-cn); #08 条目预留的前置问题 ("`MyApplication` 伴生流路线是否就是可接受的终态") 的答案 = **否, 方案 A 整段实施** (themeMode / scrollBarMode 迁进 SettingsStore). 本页是任务级拆分与执行约定; 全部子任务的修改计划报告 (`subtask-NN-*.md`) 在本页过 plan gate 后一次性预生成.
 
 ## 负责人预写 (任务完成前不改, 收尾对照)
 
@@ -60,9 +60,9 @@
 - ST-02..04 真机共用项: 进入设置页首帧各控件即为存值 (无默认值闪烁 / 选中项错位).
 - ST-05: 零残留 grep (`themeMode` / `scrollBarMode` / `setMyTheme` / `setMyScrollBar` / `initTheme` / `initScrollBar` 在 `MyApplication` 上零现在时引用; `SettingsScreen` / `HomeRepository` 零 `MyApplication.sharedPreferences`; 注释层旧归属语句如 "MyApplication owns it" 零残留).
 
-## 待学清单
+## 待学清单 (任务收尾已清空 — 各项落地结果)
 
-- `callbackFlow` / `awaitClose` 与 `SharedPreferences` listener 的生命周期 (listener 注册表的引用语义), 取消时序.
-- `stateIn(WhileSubscribed)` / `SharingStarted` 与 `collectAsStateWithLifecycle` 的组合语义 (重放与丢弃条件).
-- 组合前取现值的时序面: `Activity.onCreate` 早期 (`setTheme` / `enableEdgeToEdge`) 与 Compose 首帧之间的窗口.
-- Metro 图 accessor (非 ViewModel 类型直接从图取) 的惯用法.
+- ~~`callbackFlow` / `awaitClose` 与 SP listener 的生命周期~~ → 已学: 最终未用 callbackFlow, 换成 "构造期同步播种 + listener 回灌" (与现值语义同构); 关键事实 = SP 注册表持**弱引用**, store 必须字段强持有 listener; 同进程写是同步回调 (AOSP 7.0/8.0 `SharedPreferencesImpl` 实证, ST-03 review).
+- ~~`stateIn` / `SharingStarted` 与 `collectAsStateWithLifecycle` 的组合语义~~ → 已学: store 暴露的热 StateFlow 直通 ViewModel 再直通 collect 即满足 "首帧即存值"; `WhileSubscribed + 默认值` 形态被设计约定 #1 显式排除.
+- ~~组合前取现值的时序面~~ → 已学: 播种钉在 `MyApplication.onCreate` (store 首解析 = 构造, `instance` / SP 就绪之后); 组合前读 `.value`, 界面内 collect; Activity 重建靠 app 作用域单例 + StateFlow 重放, `am kill` 靠重新播种 — 均真机验证.
+- ~~Metro 图 accessor 惯用法~~ → 已学: 图接口声明 `val settingsStore: SettingsStore` 即可, `@Inject` 类 + `@SingleIn(AppScope)` 自动绑定; 相关的坑在 CompositionLocal 一侧 — `provides` infix 定义在 `ProvidableCompositionLocal` 子类型上, 显式标注父类型会抹掉它.

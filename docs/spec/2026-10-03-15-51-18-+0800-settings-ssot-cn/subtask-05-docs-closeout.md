@@ -2,6 +2,16 @@
 
 > 状态: living (动工时如有修订在此显式记录). 计划依据: 本目录 plan.md + issues-cn #08 / #10. 风险: 低 (纯文档).
 
+## 动工记录 (2026-10-03)
+
+- 全部条目按报告与两次补充裁定实施:
+  - issues-cn: 删除 `08-设置无唯一数据来源.md` 与 `10-设置页直读SharedPreferences.md`; `README.md` 四处同步 (目录行 / 总览表两行 / 总体诊断第 2 条删除并重排 / 修复路线第 1 步删除并重排, 第 1 步的落地事实并入新的第 1 条); 三份关联文件归真 — `02-服务定位器上帝对象.md` (伴生样例删除已迁成员, sharedPreferences 消费者改述, "主题与滚动条两组" 段落删除, 伸手点表述改字符串, 修复方案两条已落地 bullet 删除), `32-启动性能杂项.md` (SP 读 bullet 改写为 "有意接受的取舍" 现状 + StrictMode bullet 的已删函数名更新), `11-HomeViewModel手工编排.md` (注释性提及改为已落地口径).
+  - AGENTS.md / AGENTS-cn.md: Architecture 节 `DI by Metro` bullet 之后各新增一条 SettingsStore 表述 (双语同步).
+  - 代码注释: `AppGraph.kt` SharedPreferencesContainer 的 "deliberately out of scope" 段改写为 "消费者是 SettingsStore"; `MyApplication.kt` 两个枚举上方补一行留置裁定 (settings SSOT ST-05: 应用级模型类型, 迁移是纯机械).
+  - `module-structure-cn.md` 待决问题 4 行改写为已落地现状 — **按负责人裁定: 可以改, 不入库** (该文件保持未跟踪).
+- 验证: issues-cn 全目录对两条目的引用零悬空; 六个已删符号零现在时引用 (Theme.kt 的过去时溯源注释除外); `MyApplication.sharedPreferences` 仅剩图绑定; 注释层残留模式 ("MyApplication owns it" / "read SP once" / "only reads preferences" 等) 零命中; `assembleFossDebug` 绿 (EXIT=0).
+- 偏差: 负责人开工时未附 module-structure 裁定, AI 按报告回退预案先行执行其余条目, 裁定 ("可改不提交") 到达后补齐第 5 条 — 未阻塞.
+
 ## 目标句 (占位, 动工对照时由负责人确认或改写)
 
 文档与代码真值同步: issues-cn 两条目关闭, AGENTS 双语为 SettingsStore 补一句, 残留头注释归真, 枚举去留落一句裁定.
