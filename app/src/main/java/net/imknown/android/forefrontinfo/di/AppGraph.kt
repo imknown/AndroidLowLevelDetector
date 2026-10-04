@@ -178,10 +178,11 @@ object SharedPreferencesContainer {
     // singleton through SharedPreferences' own per-file caching, so no
     // @SingleIn. The provider's app parameter declares the dependency edge on
     // the Application (bound by ST-08's graph factory); the body reads the
-    // companion val rather than going through the instance because Kotlin
-    // forbids instance->companion member calls, and converting the val to an
-    // instance member would touch static call sites that are deliberately out
-    // of scope (SettingsScreen / HomeRepository, issues-cn #10/#08).
+    // companion val -- the canonical accessor the whole codebase has always
+    // used -- rather than building a parallel path via the app parameter.
+    // Its consumer is SettingsStore (issues-cn #08) -- the former static
+    // direct readers (SettingsScreen / HomeRepository) were migrated onto
+    // the store.
     @Provides
     fun sharedPreferences(app: MyApplication): SharedPreferences = MyApplication.sharedPreferences
 }

@@ -14,8 +14,8 @@ import net.imknown.android.forefrontinfo.base.ScrollBarMode
 
 // The single observable owner of the settings (issues-cn #08): keys defined in one place, one
 // entry point each for reads and writes. SharedPreferences stays the persisted truth on disk;
-// this class is the single in-memory read/write front -- the five read points that each reach
-// into SharedPreferences directly (ST-02..04) will switch to observing these flows one by one.
+// this class is the single in-memory read/write front -- the five read points that each reached
+// into SharedPreferences directly switched to observing these flows in ST-02..04.
 // Flow-vs-storage consistency runs on listener callback: a write touches SP exactly once, and
 // OnSharedPreferenceChangeListener's same-process synchronous callback pushes the new value into
 // the flows -- one update path, no two-step "wrote SP, forgot to refresh the flow" shape.

@@ -12,6 +12,8 @@ import net.imknown.android.forefrontinfo.di.AppGraph
 import net.imknown.android.forefrontinfo.ui.common.initMyAndroid
 import java.io.File
 
+// Both enums below live in this file on purpose (settings SSOT ST-05): they are app-wide model
+// types consumed across the ui packages, and moving them is mechanical churn with no benefit.
 // Theme mode: follow system / always light / always dark (the former 4th "power saver" option was dropped with the de-AppCompat change)
 // An enum rather than a resource string: the default value needs no SharedPreferences/resources, so it can be non-null
 enum class AppThemeMode {
@@ -95,7 +97,7 @@ open class MyApplication : Application() {
         // point, so MainActivity's pre-composition reads and every collect downstream see the
         // persisted values. The access itself is the point (the seed); both mode flows'
         // consumers have switched to the store (ST-02/03), the boolean switches' consumers
-        // switch in ST-04. The unused-result warning is inherent to a
+        // switched in ST-04. The unused-result warning is inherent to a
         // resolve-for-side-effect statement and is suppressed deliberately.
         @Suppress("RETURN_VALUE_NOT_USED")
         appGraph.settingsStore
