@@ -2,6 +2,11 @@
 
 > 状态: living (动工时如有修订在此显式记录). 计划依据: 本目录 plan.md + issues-cn #08 / #10. 风险: 高 (Home 检测链核心 + 行为等价).
 
+## 动工记录 (2026-10-03)
+
+- 按本报告实施: `HomeViewModel` 构造参数 `SharedPreferences` → `SettingsStore`; `collectModels()` 经 `first()` 一次性取联网开关; 排序监听的手写 `OnSharedPreferenceChangeListener` (注册/注销/`onCleared` 清理) 整体删除, 世代计数改为收集 `settingsStore.outdatedOrderFirst` — 每次发射 (含订阅重放) 计数 +1; Rule 1 (列表已落地才补) 与 Rule 2 (`onModelsLoaded` 世代比较) 机制本体逐行保持; 两个调用方传 `settingsStore.outdatedOrderFirst.value`. `HomeRepository.getOutdatedTargetSdkVersionApkModel` 加参数并删 SP 直读 (仓库退化为纯函数). `SettingsViewModel` 加 [Function switches] 区; `SettingsScreen` 两开关换源, KDoc "Storage untouched / only reads preferences" 陈述归真, 未用 import (MyApplication / remember / edit) 清理.
+- 验证: `assembleFossDebug` 绿 (EXIT=0, 唯一警告为 `LldDataSource` 既有); 零残留 (`MyApplication.sharedPreferences` 仅剩图绑定这一合法居所); 标点零违规.
+
 ## 目标句 (占位, 动工对照时由负责人确认或改写)
 
 联网与排序两个开关收编进 `SettingsStore`: `HomeViewModel` 换源并删 SharedPreferences 注入, `HomeRepository` 排序参数化, 设置页余下两行走 ViewModel; Rule 1 / Rule 2 语义逐点等价.

@@ -1,6 +1,5 @@
 package net.imknown.android.forefrontinfo.ui.home
 
-import android.content.SharedPreferences
 import androidx.annotation.MainThread
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Stable
@@ -14,6 +13,7 @@ import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -30,6 +30,7 @@ import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.common.toObjectOrThrow
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.home.repository.HomeRepository
+import net.imknown.android.forefrontinfo.ui.settings.repository.SettingsStore
 
 private data class LldAndError(val lld: Lld?, val message: String?)
 
@@ -47,16 +48,16 @@ private data class LldAndError(val lld: Lld?, val message: String?)
 @ContributesIntoMap(AppScope::class, binding<ViewModel>())
 class HomeViewModel(
     private val homeRepository: HomeRepository,
-    private val sharedPreferences: SharedPreferences
+    private val settingsStore: SettingsStore
 ) : BaseListViewModel() {
 
     override suspend fun collectModels(): List<MyModel> {
         // Stamp this load with the current preference generation (compared in onModelsLoaded)
         loadStartGeneration = outdatedOrderChanges.value
 
-        val allowNetwork = sharedPreferences.getBoolean(
-            MyApplication.getMyString(R.string.function_allow_network_data_key), false
-        )
+        // One-shot read of the hot flow's current value: seeded synchronously at store
+        // construction, so first() returns immediately without suspending
+        val allowNetwork = settingsStore.allowNetworkData.first()
 
         return if (allowNetwork) {
             tryDetectOnline()
@@ -66,47 +67,35 @@ class HomeViewModel(
     }
 
     // region [Outdated order switch]
-    // SharedPreferences is the single source of truth (Settings only writes it); Home observes
-    // its own key — no static event bus a writer could forget to fire. The counter only means
-    // "the key changed"; StateFlow conflation is exactly right here: rapid toggles collapse
-    // into one recompute, which reads the latest stored value anyway.
+    // The order switch's single source of truth is the store (SP is the persisted truth,
+    // Settings writes through it); this ViewModel folds the store's flow into a generation
+    // counter -- it only counts "how many times it changed", and StateFlow's equality
+    // conflation collapses rapid toggles into one recompute (which reads the latest stored
+    // value anyway). The hand-written OnSharedPreferenceChangeListener -- its registration,
+    // unregistration and the onCleared cleanup -- disappears entirely. The two source-swap
+    // behavior deltas are argued in the subtask-04 report: same-value writes are folded twice
+    // over (SP skips unchanged keys, StateFlow equality-folds), and the one initial emission
+    // a subscription gets is absorbed by Rule 1's short-circuit / at most one invisible
+    // redundant recompute in Rule 2.
     private val outdatedOrderChanges = MutableStateFlow(0)
-
-    private val outdatedOrderChangeListener =
-        SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-            if (key == MyApplication.getMyString(
-                    R.string.function_outdated_target_order_by_package_name_first_key
-                )
-            ) {
-                outdatedOrderChanges.update { it + 1 }
-            }
-        }
 
     // The preference generation a load started building its list with; compared when that
     // list lands (onModelsLoaded).
     private var loadStartGeneration = 0
 
     init {
-        sharedPreferences
-            .registerOnSharedPreferenceChangeListener(outdatedOrderChangeListener)
-
         // Rule 1 — live update: a toggle while any list is on screen (the initial data, or the
         // still-visible previous data during a pull-to-refresh) re-syncs that entry at once.
         // Before the first load lands there is nothing to patch, and the load itself reads the
         // current preference anyway.
         viewModelScope.launch {
-            outdatedOrderChanges.collect {
+            settingsStore.outdatedOrderFirst.collect {
+                outdatedOrderChanges.update { it + 1 }
                 if (modelsStateFlow.value != null) {
                     payloadOutdatedTargetSdkVersionApk()
                 }
             }
         }
-    }
-
-    override fun onCleared() {
-        sharedPreferences
-            .unregisterOnSharedPreferenceChangeListener(outdatedOrderChangeListener)
-        super.onCleared()
     }
     // endregion [Outdated order switch]
 
@@ -250,7 +239,9 @@ class HomeViewModel(
             tempModels += homeRepository.detectSELinux()
             tempModels += homeRepository.detectToybox(lld)
             tempModels += homeRepository.detectWebView(lld)
-            tempModels += homeRepository.getOutdatedTargetSdkVersionApkModel(lld)
+            tempModels += homeRepository.getOutdatedTargetSdkVersionApkModel(
+                lld, settingsStore.outdatedOrderFirst.value
+            )
         }
 
         return tempModels
@@ -281,7 +272,9 @@ class HomeViewModel(
             ?: return
 
         val newDetail = withContext(Dispatchers.Default) {
-            homeRepository.getOutdatedTargetSdkVersionApkModel(lld).detail
+            homeRepository.getOutdatedTargetSdkVersionApkModel(
+                lld, settingsStore.outdatedOrderFirst.value
+            ).detail
         }
 
         val list = modelsStateFlow.value ?: return

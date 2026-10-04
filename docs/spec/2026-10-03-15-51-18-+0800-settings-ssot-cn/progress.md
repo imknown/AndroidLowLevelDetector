@@ -14,8 +14,8 @@
 |---|---|---|
 | ST-01 settings-store-skeleton | 已提交 (`feat(settings)` f54e54d0) | 全部 ✓ (目标句代记 "按报告范围" / 报告无修订 / 实施 / 构建绿 / v1 review "通过" + 2 条低发现按裁定修复 (xxxStored 命名归一) / 对照问答四问 (StateFlow 必要性, keys 不 lazy, 双流不合并, 对话框枚举化立案为 documented non-goal 记入 ST-02 报告) / 放行 / 注释译英 + 标点零违规 + 构建重验 EXIT=0 / 提交) |
 | ST-02 theme-vertical-slice | 已提交 (`refactor(settings)` c6a05302) | 全部 ✓ (对照: primer + 对照问答 / 实施: 七文件, 两处编译波折已修 / 构建绿 / v1 review "pass" + 3 条低按裁定处置 / 负责人真机冒烟全过 / 放行 / 注释译英回填 + 标点零违规 + 构建重验 EXIT=0 / 提交) |
-| ST-03 scrollbar-vertical-slice | 进行中 | 对照 ✓ (primer 已发, 负责人一句 "继续" 动工, 目标句代记 "按报告范围", 问题单空, 见偏差记录) ✓ 实施 ✓ (五文件: MyModelListScreen 定义 LocalScrollBarMode + 收集换源 / MainActivity provide 第二行 / MyApplication 删滚动条三件 (伴生只剩 instance / sharedPreferences / getMyString) / SettingsScreen 滚动条行换源 / SettingsViewModel 加 [Scroll bar] 区) ✓ 零残留 ✓ 标点零违规 ✓ 构建绿 ✓ (EXIT=0, 唯一警告为 LldDataSource 既有) ✓ v1 review ✓ (结论 "pass"; 承重论断全核实 — 含对照 AOSP 7.0/8.0 SharedPreferencesImpl 实证 apply() 主线程同步回调, 同帧生效跨 minSdk 24 成立; 3 条低均无需改码: ① SettingsScreen KDoc 半过时 = 计划既定的 ST-04 归真范围, 确认延后即可 ② 提交防误扫提醒 ③ LocalScrollBarMode 定义落点备选 = 非强制主观项, 维持现选择) → 负责人真机冒烟通过 ✓ → 放行 ✓ → 提交闸门 (注释译英回填 + 标点零违规 + 构建重验 + 提交) |
-| ST-04 home-and-remaining-switches | 未开始 | — |
+| ST-03 scrollbar-vertical-slice | 已提交 (`refactor(settings)` 07870cce) | 全部 ✓ (对照: primer + "继续" 动工 / 实施: 五文件, LocalScrollBarMode 同构定义 + 滚动条三件删除 / 零残留 / 构建绿 / v1 review "pass" — 含 AOSP 7.0/8.0 SharedPreferencesImpl 实证同帧回调跨 minSdk 24 成立 / 3 条低均无需改码 (① KDoc 归真按计划归 ST-04 ② 提交防误扫 ③ 定义落点主观项维持) / 负责人真机冒烟通过 / 放行 / 注释译英回填 + 标点零违规 + 构建重验 EXIT=0 / 提交) |
+| ST-04 home-and-remaining-switches | 进行中 | 对照 ✓ (primer 已发, 负责人一句 "继续" 动工, 目标句代记 "按报告范围", 问题单空, 见偏差记录) ✓ 实施 ✓ (四文件: HomeViewModel 换源 — 构造参数 SP→SettingsStore / allowNetwork 走 first() / 世代计数信号改收集 store 流 / 删监听器与 onCleared / 两调用方传参; HomeRepository 排序参数化; SettingsViewModel 加 [Function switches] 区; SettingsScreen 两开关换源 + KDoc 归真 + import 清理) ✓ 零残留 ✓ (MyApplication.sharedPreferences 仅剩图绑定) 标点零违规 ✓ 构建绿 ✓ (EXIT=0, 唯一警告为 LldDataSource 既有) ✓ v1 review ✓ (结论 "pass"; Rule 1/Rule 2 三时序等价走查通过 — 另证 Main.immediate 下重放 +1 构造期即落地, 最坏分支实际不可达; 4 条低均无需改码: ① first() vs .value 主观备案 ② 提交闸门译英须含重写 KDoc 与全部新注释 ③ 提交防误扫 ④ 报告计划期行号漂移不回填) → 负责人真机冒烟通过 ✓ ("ST-04 测完了 没问题"; AI 的 adb 自动化辅助测试因 uiautomator 陈旧 dump 未完成, 冒烟以负责人手工为准) → 放行 ✓ → 提交闸门 (注释译英回填 + 标点零违规 + 构建重验 + 提交) |
 | ST-05 docs-closeout | 未开始 | — |
 
 ## 挂起物
@@ -28,6 +28,7 @@
 - ST-02 / step0 / AI 把负责人一句 "ST-02 开始" 误解为动工放行, 未发 primer 即改了五个源文件 (构建一度红) — 负责人纠正 "开始 = 开始给我概念 primer"; 已 `git restore` 回退全部未提交改动到 ST-01 基线 (9cedd99f), 改为按流程发 primer 等对照. 检查清单新增: 闸门语义以负责人的实际意图为准, "开始" 在未发 primer 前一律理解为 "开始对照", 不理解成 "开始实施".
 - ST-02 / step0 / primer 发出后负责人一句 "开始" 动工, 未另给目标句与问题单 — 按 subtask-02 报告范围执行; 台账代记目标句为 "按报告范围".
 - ST-03 / step0 / primer 发出后负责人一句 "继续" 动工, 未另给目标句与问题单 — 按 subtask-03 报告范围执行; 台账代记目标句为 "按报告范围".
+- ST-04 / step0 / primer 发出后负责人一句 "继续" 动工, 未另给目标句与问题单 — 按 subtask-04 报告范围执行; 台账代记目标句为 "按报告范围".
 - ST-02 / 实施期 / AI 重做时把新增注释直接写成了英语, 跳过 "实现期中文" 中间态 — 负责人指出后已按工作流改回中文注释, 提交闸门整体译英. 检查清单新增: 实施期新注释一律先写中文, 译英只发生在提交闸门.
 - ST-01 / step0 / 负责人未单独给出目标句与问题单, 以一句 "开始" 放行 — 按 subtask-01 报告范围执行; 台账代记目标句为 "按报告范围".
 - ST-01 / 提交 / 5 份子任务报告按负责人指示提前入库 (3f5efa8f), 原计划随 ST-01 提交 — 后续子任务提交不再携带报告.

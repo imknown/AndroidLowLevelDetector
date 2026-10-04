@@ -60,6 +60,24 @@ class SettingsViewModel(
     }
     // endregion [Scroll bar]
 
+    // region [Function switches]
+    // Both switches' stored values likewise re-expose the store's hot StateFlow (the persisted
+    // value on the first frame, same constraint as the two regions above)
+    val allowNetwork: StateFlow<Boolean> = settingsStore.allowNetworkData
+    val outdatedOrderFirst: StateFlow<Boolean> = settingsStore.outdatedOrderFirst
+
+    // Write path: the event goes up to the store, which touches SP once; the same-frame
+    // callback pushes it back (HomeViewModel, the order switch's consumer, observes the
+    // store's flow -- no broadcast of any kind)
+    fun setAllowNetworkData(value: Boolean) {
+        settingsStore.setAllowNetworkData(value)
+    }
+
+    fun setOutdatedOrderFirst(value: Boolean) {
+        settingsStore.setOutdatedOrderFirst(value)
+    }
+    // endregion [Function switches]
+
     // region [Version Info]
     // null = not loaded yet (the built-in data version loads once; there is no reload, so no
     // State wrapper is needed — the former State.Loading branch was never used here)

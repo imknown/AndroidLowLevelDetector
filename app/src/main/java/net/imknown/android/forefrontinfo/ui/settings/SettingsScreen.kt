@@ -32,7 +32,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -47,14 +46,12 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.edit
 import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import net.imknown.android.forefrontinfo.R
-import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.ScrollBarMode
 import net.imknown.android.forefrontinfo.ui.base.ext.toast
 import net.imknown.android.forefrontinfo.ui.base.list.LocalScrollBarMode
@@ -65,31 +62,23 @@ import net.imknown.android.forefrontinfo.ui.theme.AppTheme
 /**
  * Settings page: there is no official Compose Preference library yet (androidx.preference stopped at 1.2.1),
  * so the UI is hand-written from plain M3 components, mirroring how Now in Android builds its settings screen.
- * Storage untouched: the same SharedPreferences is read/written, so existing user preferences carry over as-is.
- * State hoisting: this function only reads preferences, subscribes to the version flow and wires callbacks;
- * all UI lives in [SettingsContent] (pure data, previewable).
+ * Storage untouched: the same SharedPreferences stays the persisted layer, so existing user
+ * preferences carry over as-is.
+ * State hoisting: all four preference rows read the store through the ViewModel's flows, and
+ * this function only collects state and wires callbacks; all UI lives in [SettingsContent]
+ * (pure data, previewable).
  */
 @Composable
 fun SettingsScreen(viewModel: SettingsViewModel, modifier: Modifier = Modifier) {
     val context = LocalContext.current
 
-    // ---- Current preference values. The theme and scroll-bar rows read the store (via the
-    // ViewModel's hot flow: the dialog's selected item is the persisted value on the first
-    // frame); the two switches keep the read-SP-once pattern until ST-04 switches them.
-    // stringResource must be evaluated outside remember:
+    // ---- Current preference values: all four rows read the store (via the ViewModel's hot
+    // flow, the persisted value on the first frame), and this function only collects state
+    // and forwards events
     val themeValue by viewModel.themeValue.collectAsStateWithLifecycle()
     val scrollBarValue by viewModel.scrollBarValue.collectAsStateWithLifecycle()
-
-    val allowNetworkKey = stringResource(R.string.function_allow_network_data_key)
-    var allowNetwork by remember {
-        mutableStateOf(MyApplication.sharedPreferences.getBoolean(allowNetworkKey, false))
-    }
-
-    val outdatedOrderKey =
-        stringResource(R.string.function_outdated_target_order_by_package_name_first_key)
-    var outdatedOrderFirst by remember {
-        mutableStateOf(MyApplication.sharedPreferences.getBoolean(outdatedOrderKey, false))
-    }
+    val allowNetwork by viewModel.allowNetwork.collectAsStateWithLifecycle()
+    val outdatedOrderFirst by viewModel.outdatedOrderFirst.collectAsStateWithLifecycle()
 
     // ---- Version info: mirrors the legacy Fragment ("subscribe + init once"; the ViewModel guards re-entry) ----
     val version by viewModel.version.collectAsStateWithLifecycle()
@@ -115,13 +104,10 @@ fun SettingsScreen(viewModel: SettingsViewModel, modifier: Modifier = Modifier) 
             viewModel.setScrollBarMode(value) // event up to the store: SP written once, the same-frame callback refreshes the flow -- this row and every list page's indicator update at once
         },
         onAllowNetworkChange = { value ->
-            allowNetwork = value
-            MyApplication.sharedPreferences.edit { putBoolean(allowNetworkKey, value) }
+            viewModel.setAllowNetworkData(value) // event up: SP written once, same-frame callback pushes it back
         },
         onOutdatedOrderChange = { value ->
-            outdatedOrderFirst = value
-            MyApplication.sharedPreferences.edit { putBoolean(outdatedOrderKey, value) }
-            // no broadcast needed: Home observes this preference key itself and reconciles
+            viewModel.setOutdatedOrderFirst(value) // event up: SP written once, same-frame callback pushes it back -- Home observes the store's flow, no broadcast
         },
         onVersionClick = {
             viewModel.getVersionClickedMessage()?.let { context.toast(it) } // the 7-tap easter-egg logic lives in the ViewModel, reused as-is

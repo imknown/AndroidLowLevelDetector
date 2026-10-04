@@ -1087,7 +1087,12 @@ class HomeRepository(
     }
     // endregion [WebView]
 
-    fun getOutdatedTargetSdkVersionApkModel(lld: Lld?): MyModel = guardedMyModel(R.string.outdated_target_version_sdk_version_apk_title) {
+    // The order switch arrives as a parameter: the decision is made by the ViewModel that
+    // observes SettingsStore, the repository degrades to a pure function (UDF; the landing
+    // spot of issues-cn #08's fifth read path)
+    fun getOutdatedTargetSdkVersionApkModel(
+        lld: Lld?, orderByPackageNameFirst: Boolean
+    ): MyModel = guardedMyModel(R.string.outdated_target_version_sdk_version_apk_title) {
             val packageManager = MyApplication.instance.packageManager
             val installedApplications = if (isAtLeastAndroid13()) {
                 val flags = PackageManager.ApplicationInfoFlags.of(0)
@@ -1118,12 +1123,7 @@ class HomeRepository(
                     StatusColor.CRITICAL
                 }
             } else {
-                val shouldOrderByPackageNameFirst = MyApplication.sharedPreferences.getBoolean(
-                    MyApplication.getMyString(R.string.function_outdated_target_order_by_package_name_first_key),
-                    false
-                )
-
-                @StringRes val format = if (shouldOrderByPackageNameFirst) {
+                @StringRes val format = if (orderByPackageNameFirst) {
                     systemApkList = systemApkList.sortedBy(ApplicationInfo::packageName)
 
                     R.string.outdated_target_version_sdk_version_apk_result_format_package_first
