@@ -82,7 +82,7 @@ suspend fun collectHomeModels(
 ```kotlin
 // HomeViewModel — 只剩一句话
 override suspend fun collectModels(): List<MyModel> {
-    // ... 联网/离线探测逻辑不变 (#08 改造后设置从注入的仓库读)
+    // ... 联网/离线探测逻辑不变 (设置经注入的 SettingsStore 读取, 已随 issues-cn #08 落地)
     return homeRepository.collectHomeModels(lld, errorMessages, modeResId)
 }
 ```
