@@ -5,7 +5,7 @@
 
 ## 当前位置
 
-**任务全部完成, 已收口.** View 层清零 (无 Fragment / layout XML / AppCompat / androidx.preference), 单 Activity + Navigation 3 + Compose 骨架运行至今; 数据层迁移期内一行未动, 迁移后的状态重构 (双 `StateFlow` / ViewModel 收集事件) 成为现行架构; 老用户设置零迁移继承 (键与存值原样, 经 settings-ssot 任务延续). 11 个子任务全部落地 (ST-00..07 = 计划第 0~7 步, ST-08..10 = 迁移后修正 / 文档收口 / 延期项落地); 三份事后 review 合并为 F1~F16, 开放条目入 issues-cn 跟踪; 迁移计划教学目录按负责人裁定裁撤 (内容 git 可取回); 遗留优化 8 项处置完毕 (3 活 / 1 完 / 4 吸收). 本 spec 目录为 2026-10-04 补录; 补录稿落库前经同模型新上下文 subagent review 三轮收敛 (v1: 4 blocking + 1 should-fix + 3 nit 全修; v2: 1 should-fix + 1 nit 全修; v3: pass), 同模型盲区风险已知, 由逐条 file:line 证据要求对冲.
+**任务全部完成, 已收口.** View 层清零 (无 Fragment / layout XML / AppCompat / androidx.preference), 单 Activity + Navigation 3 + Compose 骨架运行至今; 数据层迁移期内一行未动, 迁移后的状态重构 (双 `StateFlow` / ViewModel 收集事件) 成为现行架构; 老用户设置零迁移继承 (键与存值原样, 经 settings-ssot 任务延续). 11 个子任务全部落地 (ST-00..07 = 计划第 0~7 步, ST-08..10 = 迁移后修正 / 文档收口 / 延期项落地); 三份事后 review 合并为 F1~F16, 开放条目入 issues-cn 跟踪; 迁移计划教学目录按负责人裁定裁撤 (内容 git 可取回); 遗留优化 8 项处置完毕 (3 活 / 1 完 / 4 吸收). 本 spec 目录为 2026-10-04 补录; 补录稿落库前经同模型 subagent review 三轮收敛 (v1 新上下文; v2/v3 续用同一 reviewer 做 delta 复核; v1: 4 blocking + 1 should-fix + 3 nit 全修; v2: 1 should-fix + 1 nit 全修; v3: pass), 同模型盲区与续用的自证倾向已知, 由逐条 file:line 证据要求对冲 (v2 照抓修复轮引入的枚举错为证).
 
 ## 子任务状态 (终表)
 
