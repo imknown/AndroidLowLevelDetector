@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2026-10-02 10:05 +0800",
+  "version": "2026-10-05 07:55 +0800",
   "android": {
     "securityPatchLevel": "2026-09-05",
     "googlePlaySystemUpdates": "2026-09-01",
@@ -50,8 +50,8 @@
     ]
   },
   "linux": {
-    "google": { "versions": [ "6.18.54", "6.12.111", "6.6.157", "6.1.188", "5.15.221", "5.10.270" ] },
-    "mainline": { "version": "7.3-rc5" }
+    "google": { "versions": [ "6.18.55", "6.12.112", "6.6.158", "6.1.189", "5.15.222", "5.10.271" ] },
+    "mainline": { "version": "7.3-rc6" }
   },
   "toybox": {
     "stable": { "version": "0.8.13" },
