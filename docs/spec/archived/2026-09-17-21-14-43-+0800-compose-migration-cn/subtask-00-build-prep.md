@@ -1,6 +1,6 @@
 # ST-00 — build-prep 修改计划 (补录)
 
-> 状态: record (由目录位置声明). 计划依据: 计划 03 章 "第 0 步 构建准备" (已删, `git show 9c91c8cc^:docs/dev/compose-migration-plan-cn/03-第0步-构建准备.md`). 风险: 低.
+> 状态: record (由目录位置声明). 计划依据: 计划 03 章 "第 0 步 构建准备" (已删; 58e469b7 收缩章号后改名 02-第0步-构建准备.md, 取回用 `git show 9c91c8cc^:docs/dev/compose-migration-plan-cn/02-第0步-构建准备.md`). 风险: 低.
 
 ## 计划 (当时的拆分)
 

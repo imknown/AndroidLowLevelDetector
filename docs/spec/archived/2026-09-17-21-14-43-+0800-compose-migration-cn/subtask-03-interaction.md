@@ -1,6 +1,6 @@
 # ST-03 — interaction 修改计划 (补录)
 
-> 状态: record (由目录位置声明). 计划依据: 计划 06 章 "第 3 步 交互补齐" (幸存版: `git show 9c91c8cc^:docs/dev/compose-migration-plan-cn/05-第3步-交互补齐.md` — 教学章节裁撤后编号收缩, 该章是幸存四文件之一). 风险: 低.
+> 状态: record (由目录位置声明). 计划依据: 计划 06 章 "第 3 步 交互补齐" (幸存版: `git show 9c91c8cc^:docs/dev/compose-migration-plan-cn/05-第3步-交互补齐.md` — 教学章节裁撤后编号收缩, 该章是删除前幸存 11 份文件之一). 风险: 低.
 
 ## 计划 (当时的拆分)
 

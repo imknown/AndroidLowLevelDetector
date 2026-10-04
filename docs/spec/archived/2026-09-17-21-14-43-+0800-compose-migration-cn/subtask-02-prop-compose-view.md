@@ -28,7 +28,7 @@ dfe23c62 (step-2 等价性说明 + 数据初始加载时机 follow-up).
 
 ## 遗留
 
-数据初始加载时机: `BaseListViewModel` 是 UI 触发型 (`LaunchedEffect` → `init()`, 幂等 + loadJob 去重), 属 Ian Lake 文章定义的两种反模式之一; 观察记录裁定 "现在不动" (本地 prop 毫秒级, 惰性化收益趋零), **接网络/数据库时按 `WhileSubscribed(5_000)` 模式重造**. 当前 issues-cn 无编号居所 (2026-10-04 grep 零命中).
+数据初始加载时机: `BaseListViewModel` 是 UI 触发型 (`LaunchedEffect` → `init()`, 幂等 + loadJob 去重), 属 Ian Lake 文章定义的两种反模式之一; 观察记录裁定 "现在不动" (本地 prop 毫秒级, 惰性化收益趋零), **接网络/数据库时按 `WhileSubscribed(5_000)` 模式重造**. 现登记为 [issues-cn #61](../../../dev/issues-cn/3-UDF-单向数据流/61-数据加载惰性化.md).
 
 ## 证据
 

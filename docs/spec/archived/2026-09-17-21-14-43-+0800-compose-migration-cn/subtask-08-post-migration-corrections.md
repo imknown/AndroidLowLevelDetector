@@ -18,7 +18,7 @@
 - 03f6c78e: 深色映射归 `AppThemeMode.isDark`.
 - 499468ad: 冷启动修正 — `setContent` 之前窗口就切到应用内主题 (这条时序此后成为反复守护的约束, settings-ssot 的 "首帧即存值" 是它的延续).
 - 2aa6f52c: `appcompat` + MDC 依赖删除.
-- 3d1066b8: 状态色句柄从 `R.attr` 换 `StatusColor` 枚举 (`ui/theme/StatusColor.kt`, 目标树外多出的件).
+- 3d1066b8: 状态色句柄从 `R.attr` 换 `StatusColor` 枚举 — 定义在 `ui/theme/ExtendedColors.kt` (现存代码; 计划文档章首更正写作独立文件 `StatusColor.kt`, 与代码不符, 此处按现状归真).
 - 4ecc412f: `AppRootShell` 从 `AppRoot` 拆出 + preview (目标树外多出的件).
 
 ### 列表状态重构 (计划 README 落地差异所记 "迁移完成后另有一轮重构")
