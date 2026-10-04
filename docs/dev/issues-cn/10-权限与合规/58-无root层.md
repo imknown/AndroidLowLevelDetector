@@ -19,4 +19,4 @@
 - 非 root shell: `getprop` (`ui/prop/datasource/PropertiesDataSource`), `getenforce` 与 `toybox --version` (`AndroidDataSource`), `cat /proc/mounts` (`MountDataSource`), `cat /proc/version` (`ui/others/datasource/KernelDataSource`);
 - NDK / JNI: `binderDetector` 模块的 `BinderDetector.getBinderVersion(driver)`, 由 `ui/others/datasource/ArchitectureDataSource` `System.loadLibrary(...)` 后接进 Others 页.
 
-提权是待想的功能而不是缺失的实现: `docs/dev/JOTTINGS.md` 的 features todo 在 `settings` 下记着 `root mode`. 所以本条目没有待办. 各检测条目实际够得着哪一层, 等 [#03](../1-架构与分层/03-无三态模型与注册表.md) 的检测条目目录真落地时随目录一并记录, 目录里不要承诺基于 root 的检测.
+提权是待想的功能而不是缺失的实现: `docs/dev/JOTTINGS.md` 的 features todo 在 `settings` 下记着 `root mode`. 所以本条目没有待办. 各检测条目实际够得着哪一层, 等 [#03](../01-架构与分层/03-无三态模型与注册表.md) 的检测条目目录真落地时随目录一并记录, 目录里不要承诺基于 root 的检测.
