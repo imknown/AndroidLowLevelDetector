@@ -63,6 +63,8 @@ updateModelDetail(targetIndex, newDetail)   // ViewModel 翻自己的状态找�
 
 **动手前先与负责人确认约定**: 把编排整体移进 `HomeRepository.collectHomeModels()` 与 AGENTS.md 相反 — 该文件 "Adding a detection item" 一节写明检测项由 `ViewModel.collectModels()` 调用, **调用顺序就是列表顺序**. 下面的仓库化仍是目标形态, 但采纳它等于同时改这条约定, 不是可以直接自行落地的事.
 
+**与修复路线的关系**: [README 修复路线](../README.md#修复路线) 把本条目拆成两半排期 — "更新按类型寻址" 一半 (`updateModelDetail` 改按类型 + 补偿路径归位) 不碰该约定, 列入独立小件先行; "编排收回仓库" 一半在走完整条主线时并入注册表引擎那一步 ([#03](../01-架构与分层/03-无三态模型与注册表.md)), 不单独建 `collectHomeModels()` 过渡形态, 下面的落点仅在注册表长期搁置时作为独立路径使用.
+
 编排收回仓库, 更新按类型寻址:
 
 ```kotlin
