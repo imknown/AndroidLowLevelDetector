@@ -42,7 +42,9 @@ class PropRepository(
         tempModels
     }
 
-    fun <T : Settings.NameValueTable> getSettings(subSettingsKClass: KClass<T>): List<MyModel> = guardedMyModels(R.string.title_prop) {
+    fun <T : Settings.NameValueTable> getSettings(
+        subSettingsKClass: KClass<T>
+    ): List<MyModel> = guardedMyModels(R.string.title_prop) {
         val tempModels = mutableListOf<MyModel>()
 
         val list = settingsDataSource.getSettingsOrThrow(subSettingsKClass)

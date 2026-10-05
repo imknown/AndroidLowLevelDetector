@@ -71,7 +71,8 @@ class HomeRepository(
     fun copyJsonIfNeededOrThrow() = lldFileStore.copyJsonIfNeededOrThrow()
     fun getAssetLld(assets: AssetManager): Lld? = lldFileStore.getAssetLld(assets)
 
-    fun detectMode(lld: Lld?, errors: List<String?>, modeResId: Int): MyModel = guardedMyModel(R.string.lld_json_mode_title) {
+    fun detectMode(lld: Lld?, errors: List<String?>, modeResId: Int): MyModel =
+        guardedMyModel(R.string.lld_json_mode_title) {
             val color: StatusColor
             val datetimeFormatted: String
             if (lld != null) {
@@ -96,9 +97,10 @@ class HomeRepository(
                 MyApplication.getMyString(modeResId, datetimeFormatted) + result,
                 color
             )
-    }
+        }
 
-    fun detectAndroid(lld: Lld?): MyModel = guardedMyModel(R.string.android_info_title) {
+    fun detectAndroid(lld: Lld?): MyModel =
+        guardedMyModel(R.string.android_info_title) {
             val lldAndroid = lld?.android
 
             // region [Mine]
@@ -167,9 +169,10 @@ class HomeRepository(
                 MyApplication.getMyString(R.string.android_info_detail, *infoDetailArgs),
                 color
             )
-    }
+        }
 
-    fun detectSdkExtension(lld: Lld?): MyModel = guardedMyModel(R.string.android_sdk_extension_title) {
+    fun detectSdkExtension(lld: Lld?): MyModel =
+        guardedMyModel(R.string.android_sdk_extension_title) {
             val lldStableExtension = lld?.android?.stable?.extension
 
             val [myExtension, color] = if (isAtLeastAndroid11()) {
@@ -186,9 +189,10 @@ class HomeRepository(
                 MyApplication.getMyString(R.string.android_sdk_extension_detail, myExtension, lldStableExtensionString),
                 color
             )
-    }
+        }
 
-    fun detectBuildId(lld: Lld?): MyModel = guardedMyModel(R.string.android_build_id_title) {
+    fun detectBuildId(lld: Lld?): MyModel =
+        guardedMyModel(R.string.android_build_id_title) {
             val buildIdResult: String = Build.ID
             val systemBuildIdResult = propertyReader.getString(AndroidDataSource.PROP_RO_SYSTEM_BUILD_ID, isAtLeastAndroid9())
             val vendorBuildIdResult = propertyReader.getString(AndroidDataSource.PROP_RO_VENDOR_BUILD_ID, isAtLeastAndroid9())
@@ -263,7 +267,7 @@ class HomeRepository(
                 MyApplication.getMyString(R.string.android_build_id_detail, *infoDetailArgs),
                 buildIdColor
             )
-    }
+        }
 
     // region [SecurityPatch]
     fun detectSecurityPatches(lld: Lld?): List<MyModel> {
@@ -278,7 +282,9 @@ class HomeRepository(
         return tempModels
     }
 
-    private fun detectSecurityPatch(lld: Lld?, mySecurityPatch: String, @StringRes titleId: Int): MyModel = guardedMyModel(titleId) {
+    private fun detectSecurityPatch(
+        lld: Lld?, mySecurityPatch: String, @StringRes titleId: Int
+    ): MyModel = guardedMyModel(titleId) {
         val lldSecurityPatch = lld?.android?.securityPatchLevel
         val securityPatchColor = when {
             lldSecurityPatch == null -> StatusColor.CRITICAL
@@ -305,7 +311,8 @@ class HomeRepository(
         securityPatch.substringBeforeLast('-')
     // endregion [SecurityPatch]
 
-    fun detectPerformanceClass(): MyModel = guardedMyModel(R.string.performance_class_title) {
+    fun detectPerformanceClass(): MyModel =
+        guardedMyModel(R.string.performance_class_title) {
             var performanceColorRes = StatusColor.CRITICAL
 
             val result = if (isAtLeastAndroid12()) {
@@ -330,9 +337,10 @@ class HomeRepository(
                 result,
                 performanceColorRes
             )
-    }
+        }
 
-    fun detectKernel(lld: Lld?): MyModel = guardedMyModel(R.string.linux_title) {
+    fun detectKernel(lld: Lld?): MyModel =
+        guardedMyModel(R.string.linux_title) {
             val linuxVersionString = System.getProperty(AndroidDataSource.SYSTEM_PROPERTY_LINUX_VERSION)
             val linuxVersion = Version(linuxVersionString)
 
@@ -365,9 +373,10 @@ class HomeRepository(
                 MyApplication.getMyString(R.string.linux_version_detail, linuxVersionString, support, mainline),
                 linuxColor
             )
-    }
+        }
 
-    fun detectAb(): MyModel = guardedMyModel(R.string.ab_seamless_update_status_title) {
+    fun detectAb(): MyModel =
+        guardedMyModel(R.string.ab_seamless_update_status_title) {
             val isAbUpdateSupported = propertyReader.getBoolean(AndroidDataSource.PROP_AB_UPDATE)
             val slotSuffixResult = propertyReader.getString(AndroidDataSource.PROP_SLOT_SUFFIX)
             val isVirtualAb = propertyReader.getBoolean(AndroidDataSource.PROP_VIRTUAL_AB_ENABLED, isAtLeastAndroid11())
@@ -401,11 +410,12 @@ class HomeRepository(
                 abResult,
                 isAbEnable
             )
-    }
+        }
 
     fun getMounts() = mountDataSource.getMounts()
 
-    fun detectSar(mounts: List<MountDataSource.Mount>): MyModel = guardedMyModel(R.string.sar_status_title) {
+    fun detectSar(mounts: List<MountDataSource.Mount>): MyModel =
+        guardedMyModel(R.string.sar_status_title) {
             var isTheLegacySar = false
             var isThe2siSar = false
             var isRecoverySar = false
@@ -476,16 +486,17 @@ class HomeRepository(
                 result,
                 color
             )
-    }
+        }
 
-    fun detectDynamicPartitions(): MyModel = guardedMyModel(R.string.dynamic_partitions_status_title) {
+    fun detectDynamicPartitions(): MyModel =
+        guardedMyModel(R.string.dynamic_partitions_status_title) {
             val isDynamicPartitions =
                 propertyReader.getBoolean(AndroidDataSource.PROP_DYNAMIC_PARTITIONS, isAtLeastAndroid10())
             val isDynamicPartitionsRetrofit =
                 propertyReader.getBoolean(AndroidDataSource.PROP_DYNAMIC_PARTITIONS_RETROFIT, isAtLeastAndroid10())
 
-    //        val superPartitionResult = sh(CMD_LL_DEV_BLOCK_SUPER, isAtLeastStableAndroid10())
-    //        val hasSuperPartition =  superPartitionResult.isSuccess
+            // val superPartitionResult = sh(CMD_LL_DEV_BLOCK_SUPER, isAtLeastStableAndroid10())
+            // val hasSuperPartition =  superPartitionResult.isSuccess
 
             val isDynamicPartitionsEnabled = isDynamicPartitions || isDynamicPartitionsRetrofit // || hasSuperPartition
 
@@ -501,7 +512,7 @@ class HomeRepository(
                 detail,
                 isDynamicPartitionsEnabled
             )
-    }
+        }
 
     // region [Treble & GSI]
     private fun detectTreble(): MyModel = guardedMyModel(R.string.treble_status_title) {
@@ -556,7 +567,9 @@ class HomeRepository(
         return tempModels
     }
 
-    private fun detectGsi(isTrebleEnabled: Boolean): MyModel = guardedMyModel(R.string.gsi_status_title) {
+    private fun detectGsi(
+        isTrebleEnabled: Boolean
+    ): MyModel = guardedMyModel(R.string.gsi_status_title) {
         val fileLdConfig = when {
             isAtLeastAndroid11() -> AndroidDataSource.LD_CONFIG_FILE_ANDROID_11
             isAtLeastAndroid9() -> AndroidDataSource.LD_CONFIG_FILE_ANDROID_9
@@ -592,7 +605,8 @@ class HomeRepository(
     // endregion [Treble & GSI]
 
     /** {@link android.util.FeatureFlagUtils} */
-    fun detectDsu(): MyModel = guardedMyModel(R.string.dsu_status_title) {
+    fun detectDsu(): MyModel =
+        guardedMyModel(R.string.dsu_status_title) {
             val isDsuEnabled = propertyReader.getBoolean(AndroidDataSource.PROP_PERSIST_DYNAMIC_SYSTEM_UPDATE, isAtLeastAndroid10())
                     || propertyReader.getBoolean(AndroidDataSource.PROP_DYNAMIC_SYSTEM_UPDATE, isAtLeastAndroid10())
             val result = MyApplication.getMyString(
@@ -607,10 +621,11 @@ class HomeRepository(
                 result,
                 isDsuEnabled
             )
-    }
+        }
 
     /** {@link com.android.settings.deviceinfo.firmwareversion.MainlineModuleVersionPreferenceController} */
-    fun detectMainline(lld: Lld?): MyModel = guardedMyModel(R.string.mainline_title) {
+    fun detectMainline(lld: Lld?): MyModel =
+        guardedMyModel(R.string.mainline_title) {
             var versionName = MyApplication.getMyString(R.string.result_not_supported)
             var moduleProvider = MyApplication.getMyString(androidR.string.unknownName)
             val latestGooglePlaySystemUpdates = lld?.android?.googlePlaySystemUpdates
@@ -661,9 +676,10 @@ class HomeRepository(
                 result,
                 moduleColor
             )
-    }
+        }
 
-    fun detectVndk(lld: Lld?): MyModel = guardedMyModel(R.string.vndk_built_in_title) {
+    fun detectVndk(lld: Lld?): MyModel =
+        guardedMyModel(R.string.vndk_built_in_title) {
             val vndkVersionResult = propertyReader.getString(AndroidDataSource.PROP_VNDK_VERSION, isAtLeastAndroid8())
             // val vendorVndkVersionResult = propertyReader.getString(AndroidDataSource.PROP_VENDOR_VNDK_VERSION, isAtLeastStableAndroid8())
             // val productVndkVersionResult = propertyReader.getString(AndroidDataSource.PROP_PRODUCT_VNDK_VERSION, isAtLeastStableAndroid8())
@@ -702,9 +718,10 @@ class HomeRepository(
                 isVndkBuiltInResult,
                 vndkColor
             )
-    }
+        }
 
-    fun detectApex(mounts: List<MountDataSource.Mount>): MyModel = guardedMyModel(R.string.apex_status_title) {
+    fun detectApex(mounts: List<MountDataSource.Mount>): MyModel =
+        guardedMyModel(R.string.apex_status_title) {
             val apexUpdatable = propertyReader.getBoolean(AndroidDataSource.PROP_APEX_UPDATABLE, isAtLeastAndroid10())
 
             val isFlattenedApexMounted = isAtLeastAndroid10() && mounts.any {
@@ -730,9 +747,10 @@ class HomeRepository(
                 apexEnabledResult,
                 apexColor
             )
-    }
+        }
 
-    fun detectDeveloperOptions(): MyModel = guardedMyModel(R.string.developer_options_status_title) {
+    fun detectDeveloperOptions(): MyModel =
+        guardedMyModel(R.string.developer_options_status_title) {
             val isDeveloperOptionsDisabled = Settings.Global.getInt(
                 MyApplication.instance.contentResolver,
                 Settings.Global.DEVELOPMENT_SETTINGS_ENABLED,
@@ -744,9 +762,10 @@ class HomeRepository(
                 translateDisabled(isDeveloperOptionsDisabled),
                 isDeveloperOptionsDisabled
             )
-    }
+        }
 
-    fun detectAdb(): MyModel = guardedMyModel(R.string.adb_debugging_status_title) {
+    fun detectAdb(): MyModel =
+        guardedMyModel(R.string.adb_debugging_status_title) {
             val isAdbDebuggingDisabled = Settings.Global.getInt(
                 MyApplication.instance.contentResolver,
                 Settings.Global.ADB_ENABLED,
@@ -758,9 +777,10 @@ class HomeRepository(
                 translateDisabled(isAdbDebuggingDisabled),
                 isAdbDebuggingDisabled
             )
-    }
+        }
 
-    fun detectAdbAuthentication(): MyModel = guardedMyModel(R.string.adb_authentication_status_title) {
+    fun detectAdbAuthentication(): MyModel =
+        guardedMyModel(R.string.adb_authentication_status_title) {
             val isAdbAuthenticationEnabled =
                 propertyReader.getString(AndroidDataSource.PROP_ADB_SECURE) == AndroidDataSource.SETTINGS_ENABLED.toString()
 
@@ -769,9 +789,10 @@ class HomeRepository(
                 translateEnabled(isAdbAuthenticationEnabled),
                 isAdbAuthenticationEnabled
             )
-    }
+        }
 
-    fun detectEncryption(): MyModel = guardedMyModel(R.string.encryption_status_title) {
+    fun detectEncryption(): MyModel =
+        guardedMyModel(R.string.encryption_status_title) {
             // val cryptoState = propertyReader.getString(PROP_CRYPTO_STATE)
             val devicePolicyManager = ContextCompat.getSystemService(
                 MyApplication.instance, DevicePolicyManager::class.java
@@ -809,18 +830,19 @@ class HomeRepository(
                 MyApplication.getMyString(result),
                 color
             )
-    }
+        }
 
-    fun detectSELinux(): MyModel = guardedMyModel(R.string.selinux_status) {
-    //        val seLinuxClass = Class.forName("android.os.SELinux")
-    //        val isSELinuxBooted = seLinuxClass
-    //            .getDeclaredMethod("isSELinuxEnabled")
-    //            .invoke(null) as Boolean
-    //        val isSELinuxEnforceBooted = seLinuxClass
-    //            .getDeclaredMethod("isSELinuxEnforced")
-    //            .invoke(null) as Boolean
-    //
-    //        val bootSELinuxProp = propertyReader.getString(PROP_BOOT_SELINUX)
+    fun detectSELinux(): MyModel =
+        guardedMyModel(R.string.selinux_status) {
+            // val seLinuxClass = Class.forName("android.os.SELinux")
+            // val isSELinuxBooted = seLinuxClass
+            //     .getDeclaredMethod("isSELinuxEnabled")
+            //     .invoke(null) as Boolean
+            // val isSELinuxEnforceBooted = seLinuxClass
+            //     .getDeclaredMethod("isSELinuxEnforced")
+            //     .invoke(null) as Boolean
+            //
+            // val bootSELinuxProp = propertyReader.getString(PROP_BOOT_SELINUX)
 
             @StringRes val result: Int
             val color: StatusColor
@@ -863,9 +885,10 @@ class HomeRepository(
                 MyApplication.getMyString(result),
                 color
             )
-    }
+        }
 
-    fun detectToybox(lld: Lld?): MyModel = guardedMyModel(R.string.toybox_built_in_title) {
+    fun detectToybox(lld: Lld?): MyModel =
+        guardedMyModel(R.string.toybox_built_in_title) {
             val toyboxVersionResult = shell.execute(AndroidDataSource.CMD_TOYBOX_VERSION)
             val hasToyboxVersion = toyboxVersionResult.isSuccess
 
@@ -908,10 +931,11 @@ class HomeRepository(
                 MyApplication.getMyString(R.string.toybox_built_in_detail, *infoDetailArgs),
                 toyboxColor
             )
-    }
+        }
 
     // region [WebView]
-    fun detectWebView(lld: Lld?): MyModel = guardedMyModel(R.string.webview_title) {
+    fun detectWebView(lld: Lld?): MyModel =
+        guardedMyModel(R.string.webview_title) {
             val type = if (isAtLeastAndroid10()) {
                 val standalone = MyApplication.getMyString(R.string.webview_standalone)
                 MyApplication.getMyString(R.string.webview_or, "Trichrome", standalone)
@@ -1008,7 +1032,7 @@ class HomeRepository(
                 """.trimMargin(),
                 webViewColor
             )
-    }
+        }
 
     private class WebViewProviderInfo(
         val packageName: String,
@@ -1092,7 +1116,8 @@ class HomeRepository(
     // spot of issues-cn #08's fifth read path)
     fun getOutdatedTargetSdkVersionApkModel(
         lld: Lld?, orderByPackageNameFirst: Boolean
-    ): MyModel = guardedMyModel(R.string.outdated_target_version_sdk_version_apk_title) {
+    ): MyModel =
+        guardedMyModel(R.string.outdated_target_version_sdk_version_apk_title) {
             val packageManager = MyApplication.instance.packageManager
             val installedApplications = if (isAtLeastAndroid13()) {
                 val flags = PackageManager.ApplicationInfoFlags.of(0)
@@ -1150,7 +1175,7 @@ class HomeRepository(
                 color = targetSdkVersionColor,
                 type = MyModelType.OutdatedTargetSdkApk
             )
-    }
+        }
 
     // region [Common]
     private fun isPropertyValueNotEmpty(result: String) =

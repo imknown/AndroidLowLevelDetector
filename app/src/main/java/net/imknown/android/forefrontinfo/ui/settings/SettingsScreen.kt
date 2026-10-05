@@ -110,7 +110,9 @@ fun SettingsScreen(viewModel: SettingsViewModel, modifier: Modifier = Modifier) 
             viewModel.setOutdatedOrderFirst(value) // event up: SP written once, same-frame callback pushes it back -- Home observes the store's flow, no broadcast
         },
         onVersionClick = {
-            viewModel.getVersionClickedMessage()?.let { context.toast(it) } // the 7-tap easter-egg logic lives in the ViewModel, reused as-is
+            viewModel.getVersionClickedMessage()?.let { // the 7-tap easter-egg logic lives in the ViewModel, reused as-is
+                context.toast(it)
+            }
         },
         modifier = modifier,
     )
@@ -350,7 +352,9 @@ private fun SettingsSwitchRow(
         modifier = modifier
             .fillMaxWidth()
             .semantics(mergeDescendants = true) {} // title, summary and switch state announce as one row, as ListItem does
-            .toggleable(value = checked, role = Role.Switch) { onCheckedChange(it) } // toggleable, not clickable: it carries the checked state for TalkBack
+            .toggleable(value = checked, role = Role.Switch) { // toggleable, not clickable: it carries the checked state for TalkBack
+                onCheckedChange(it)
+            }
             .defaultMinSize(minHeight = 88.dp)
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically, // the reason this row is not a ListItem

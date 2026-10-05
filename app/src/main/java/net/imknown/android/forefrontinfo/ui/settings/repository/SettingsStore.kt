@@ -82,7 +82,9 @@ class SettingsStore(private val prefs: SharedPreferences) {
         else -> AppThemeMode.FollowSystem
     }
 
-    private fun parseScrollBarMode(scrollBarStored: String?): ScrollBarMode = when (scrollBarStored) {
+    private fun parseScrollBarMode(
+        scrollBarStored: String?
+    ): ScrollBarMode = when (scrollBarStored) {
         normalScrollBarValue -> ScrollBarMode.Normal
         fastScrollBarValue -> ScrollBarMode.Draggable
         else -> ScrollBarMode.None

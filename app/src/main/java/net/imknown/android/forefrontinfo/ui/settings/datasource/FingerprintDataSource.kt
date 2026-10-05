@@ -24,7 +24,9 @@ class FingerprintDataSource {
             "F1:42:FD:28:A5:AD:78:D5:A6:F4:41:3B:00:B5:16:29:74:91:05:8F:B2:3B:2A:37:15:31:E7:75:63:76:6D:18"
     }
 
-    fun getPublicKeySha256OrNullOrThrow(packageManager: PackageManager, packageName: String): String? {
+    fun getPublicKeySha256OrNullOrThrow(
+        packageManager: PackageManager, packageName: String
+    ): String? {
         val signatures = if (isAtLeastAndroid9()) {
             val packageInfo = if (isAtLeastAndroid13()) {
                 val value = PackageManager.GET_SIGNING_CERTIFICATES.toLong()

@@ -5,7 +5,7 @@ import java.io.File
 
 val json by lazy { Json { ignoreUnknownKeys = true } }
 
-inline fun <reified T : Any> File.toObjectOrThrow(): T  =
+inline fun <reified T : Any> File.toObjectOrThrow(): T =
     readText().toObjectOrThrow()
 
 inline fun <reified T : Any> String.toObjectOrThrow(): T =
