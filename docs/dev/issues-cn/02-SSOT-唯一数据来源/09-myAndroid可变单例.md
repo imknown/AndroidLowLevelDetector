@@ -56,7 +56,7 @@ fun isAtLeastAndroid12() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S || sdk
 
 ## 修复方案
 
-**先要解决的冲突**: [AGENTS.md](../../../../AGENTS.md) 把 "exactly two writers" 写成了约定 — `initMyAndroid()` 与 `HomeRepository.detectAndroid()` 的已知值覆盖, 并且规定 "Never assign to it anywhere else". 下面的单一写入方方案与这条约定相对: 它不是照着约定干活, 而是要改约定本身. **这是负责人欠的一个决定** — 要么确认 "收敛为一个写入方" 仍是目标 (则 AGENTS.md 那一条同批改写), 要么确认两写入方就是可接受的终态 (则本条目降格为记录). 在此之前不要动手, 也不要一边改代码一边留着两份互相矛盾的约定.
+**前置约定变更 (已裁)**: 负责人已确认收敛为单一写入方 — 冻结为不可变 + enrich 纯函数即本条目方案; "本地值先行, 联网取到 LLD 后用修正值展示" 的行为不变, 改的只是修正值不再回写全局. [AGENTS.md](../../../../AGENTS.md) 的 "exactly two writers" 条款随本条目同批改写, 不留两份互相矛盾的约定.
 
 冻结为不可变 (immutable, 创建后不能改), 二次加工用 `copy` 返回新对象, 显式传递:
 
