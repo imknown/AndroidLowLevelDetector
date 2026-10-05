@@ -5,6 +5,8 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.CancellationException
+import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.extension.formatToLocalZonedDatetimeString
@@ -12,8 +14,6 @@ import net.imknown.android.forefrontinfo.base.extension.fullMessage
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.base.list.guardedMyModel
 import net.imknown.android.forefrontinfo.ui.base.list.toTranslatedDetailMyModel
-import kotlinx.coroutines.CancellationException
-import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid13
 import net.imknown.android.forefrontinfo.ui.common.isPreviewAndroid
 import net.imknown.android.forefrontinfo.ui.others.datasource.ArchitectureDataSource

@@ -9,11 +9,11 @@ import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.base.MyApplication
-import net.imknown.android.forefrontinfo.ui.others.datasource.ArchitectureDataSource
 import net.imknown.android.forefrontinfo.ui.base.list.BaseListViewModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid10
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid12
+import net.imknown.android.forefrontinfo.ui.others.datasource.ArchitectureDataSource
 import net.imknown.android.forefrontinfo.ui.others.repository.OthersRepository
 
 // Metro wiring: the three annotations replace the former companion Factory.
