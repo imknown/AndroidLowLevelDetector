@@ -84,6 +84,7 @@ Screen (Compose) → ViewModel (StateFlow) → Repository → DataSource
 
 - `ViewModel` 一律拼全 — 绝不缩写成 `VM`, 标识符, 注释, 提交信息和文档里都不. `VM` 已经是 *virtual machine* 的缩写, 而这应用把虚拟机当作自己的一个检测主题 (进程/VM 架构, `getArchitecture`), 所以即便上下文足以看懂, 这个短写也是有歧义的. `UseCase` 和 `DataSource` 同样拼全 — 不写 `UC` / `DS`.
 - 不用静态事件总线: 绝不把 `SharedFlow`/`StateFlow` 放进 ViewModel 的伴生对象. 跨功能的数据经 repository 传递.
+- UI 层 (Compose / ViewModel) 不用 try 处理业务异常: Repository 与 DataSource 要么自己处理好失败, 要么返回 wrapper 类型; 不带 `OrThrow` 后缀的函数以 "不抛" 为契约. 异常若到达 UI 层, 即为下层的 bug, 修在下层, 不在 UI 吸收. 已知偏差 (随 #11 改造迁移): lld 联网→离线的回退链目前还在 `HomeViewModel` 里.
 - 全局的 `myAndroid` (`AndroidVersionExt`) 只有两个写入方: 启动时的 `initMyAndroid()` (`MyApplication.onCreate`, 来自运行时的 `Build.VERSION`), 以及 `HomeRepository.detectAndroid()` 里的已知值覆写. 绝不在别处赋值 — `isAtLeast...()` 辅助函数到处都在读它.
 - minSdk 是 24: 更新的 API 要用 `isAtLeastAndroidX()` 辅助函数或 `@RequiresApi` 兜住.
 - 新代码用钉住的版本所允许的最新语法和标准库 API: 当前 Kotlin 版本支持的最新语法与 std-lib API, 当前 compileSdk 提供的最新平台 API, 当前依赖版本提供的最新 API — 绝不必就比工具链允许的更老的写法.
