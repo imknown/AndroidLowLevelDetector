@@ -1,6 +1,6 @@
 {
   "scheme": 1,
-  "version": "2026-10-05 07:55 +0800",
+  "version": "2026-10-06 21:15 +0800",
   "android": {
     "securityPatchLevel": "2026-09-05",
     "googlePlaySystemUpdates": "2026-09-01",
@@ -18,13 +18,13 @@
       "api": "34", "apiFull": "34", "version": "14, Upside Down Cake", "name": "Upside Down Cake"
     },
     "stablePreview": {
-      "api": "37", "apiFull": "37.2", "version": "17 QPR2 Beta 6.1, Cinnamon Bun 2", "name": "Cinnamon Bun 2"
+      "api": "37", "apiFull": "37.3", "version": "17 QPR3 Beta 1, Cinnamon Bun 3", "name": "Cinnamon Bun 3"
     },
     "preview": {
       "api": "37", "apiFull": "37.2", "version": "17 Canary 2609, Cinnamon Bun 2", "name": "Cinnamon Bun 2", "phase": ""
     },
     "internal": {
-      "api": "37", "apiFull": "37.2", "version": "17 Internal, Cinnamon Bun 2", "name": "Cinnamon Bun 2"
+      "api": "38", "apiFull": "38.0", "version": "18 Internal, D?", "name": "D?"
     },
     "known": [
       { "api": "21", "apiFull": "21", "version": "5.0", "name": "Lollipop", "codename": "L" },
@@ -46,7 +46,8 @@
       { "api": "36", "apiFull": "36.1", "version": "16", "name": "Baklava 1", "codename": "Baklava" },
       { "api": "37", "apiFull": "37.0", "version": "17", "name": "Cinnamon Bun", "codename": "CinnamonBun" },
       { "api": "37", "apiFull": "37.1", "version": "17", "name": "Cinnamon Bun 1", "codename": "CinnamonBun" },
-      { "api": "37", "apiFull": "37.2", "version": "17", "name": "Cinnamon Bun 2", "codename": "CinnamonBun" }
+      { "api": "37", "apiFull": "37.2", "version": "17", "name": "Cinnamon Bun 2", "codename": "CinnamonBun" },
+      { "api": "37", "apiFull": "37.3", "version": "17", "name": "Cinnamon Bun 3", "codename": "CinnamonBun" }
     ]
   },
   "linux": {
@@ -57,7 +58,7 @@
     "stable": { "version": "0.8.13" },
     "support": { "version": "0.8.9" },
     "mainline": { "version": "0.8.12" },
-    "master": { "version": "0.8.14" }
+    "master": { "version": "0.8.15" }
   },
   "webView": {
     "stable": { "version": "155.0.8059.30" },
