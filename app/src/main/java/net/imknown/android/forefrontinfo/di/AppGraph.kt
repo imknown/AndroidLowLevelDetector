@@ -10,6 +10,7 @@ import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metrox.viewmodel.ViewModelGraph
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.logging.ANDROID
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
@@ -91,6 +92,15 @@ interface AppGraph : ViewModelGraph {
 
 @BindingContainer
 object HttpClientContainer {
+    // issues-cn #21: OkHttp's own defaults (connect / read / write, 10 s each) are
+    // per-layer only and cannot stop a server slowly dripping body bytes -- every
+    // read lands within 10 s, no layer ever fires, and the call has no ceiling;
+    // stacked on BaseListViewModel's loadJob dedup, one hang is a permanent
+    // spinner. requestTimeout supplies the missing overall cap; connect / socket
+    // stay pinned to the OkHttp defaults so all three tiers live in one place.
+    private const val HTTP_REQUEST_TIMEOUT_MILLIS = 15_000L
+    private const val HTTP_CONNECT_TIMEOUT_MILLIS = 10_000L
+    private const val HTTP_SOCKET_TIMEOUT_MILLIS = 10_000L
     // The project's single HttpClient binding (issues-cn #16 second half):
     // the OkHttp engine config moved verbatim from LldDataSource
     // (TrafficStats tagging / Wi-Fi PAC proxy fallback / debug Logging),
@@ -158,6 +168,15 @@ object HttpClientContainer {
                 logger = Logger.ANDROID
                 level = LogLevel.ALL
             }
+        }
+
+        // All three tiers surface as IOException subclasses (HttpRequestTimeoutException /
+        // ConnectTimeoutException / SocketTimeoutException), so HomeViewModel's
+        // tryDetectOnline catches them via catch (e: Exception) and degrades to offline.
+        install(HttpTimeout) {
+            requestTimeoutMillis = HTTP_REQUEST_TIMEOUT_MILLIS
+            connectTimeoutMillis = HTTP_CONNECT_TIMEOUT_MILLIS
+            socketTimeoutMillis = HTTP_SOCKET_TIMEOUT_MILLIS
         }
     }
 }
