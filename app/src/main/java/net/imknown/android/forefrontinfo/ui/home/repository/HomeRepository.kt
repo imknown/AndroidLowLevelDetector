@@ -204,8 +204,8 @@ class HomeRepository(
                 ?: MyApplication.getMyString(androidR.string.unknownName)
 
             val lldDetails = build?.details
-            val builds = lldDetails?.joinToString("\n") { detail ->
-                MyApplication.getMyString(R.string.android_build_id, detail.id, detail.revision)
+            val builds = lldDetails?.joinToString("\n") { (id, revision) ->
+                MyApplication.getMyString(R.string.android_build_id, id, revision)
             } ?: MyApplication.getMyString(androidR.string.unknownName)
 
             // region [Color]
@@ -424,23 +424,23 @@ class HomeRepository(
             val isSar = if (isAtLeastAndroid9()) {
                 val isLAndroid9TheLegacySar = propertyReader.getBoolean(AndroidDataSource.PROP_SYSTEM_ROOT_IMAGE)
 
-                val isTheLegacySarMount = mounts.any {
-                    it.blockDevice == "/dev/root" && it.mountPoint == "/"
+                val isTheLegacySarMount = mounts.any { (blockDevice, mountPoint) ->
+                    blockDevice == "/dev/root" && mountPoint == "/"
                 }
 
                 isTheLegacySar = isLAndroid9TheLegacySar && isTheLegacySarMount
 
                 isThe2siSar = isAtLeastAndroid10()
-                        && mounts.none {
-                            it.blockDevice != "none" && it.mountPoint == "/system" && it.type != "tmpfs"
+                        && mounts.none { (blockDevice, mountPoint, type) ->
+                            blockDevice != "none" && mountPoint == "/system" && type != "tmpfs"
                         }
 
-                isRecoverySar = mounts.any {
-                    it.mountPoint == "/system_root" && it.type != "tmpfs"
+                isRecoverySar = mounts.any { (blockDevice, mountPoint, type) ->
+                    mountPoint == "/system_root" && type != "tmpfs"
                 }
 
-                isSlashSar = mounts.any {
-                    it.mountPoint == "/" && it.type != "rootfs"
+                isSlashSar = mounts.any { (blockDevice, mountPoint, type) ->
+                    mountPoint == "/" && type != "rootfs"
                 }
 
                 isTheLegacySar || isThe2siSar || isRecoverySar || isSlashSar || isAtLeastAndroid10()
