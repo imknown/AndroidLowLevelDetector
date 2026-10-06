@@ -29,7 +29,7 @@ Android 应用, 展示底层系统特征: Treble 与 GSI 兼容性, Mainline/APE
 ./gradlew lintFossDebug          # Android lint
 ```
 
-- **先检查 LSP**: 编辑某个语言的代码之前, 先确认该语言的 LSP 在本环境是否已配置; 没配置就先协助用户配置 (例: Kotlin LSP — `kotlin-lsp` 插件托管 JetBrains ILS, 以 `--stdio` 启动其服务, 等到 `intellij/ready-for-test` 通知后用 **pull 模式** 拉 `textDocument/diagnostic`; ILS 从不主动 push, `textDocument/documentSymbol` 可兼作 "真的在分析" 自检). 每批编辑之后, 先跑 LSP diagnostics — 再加上面几档 Gradle 检查 — 才把 diff 交给负责人 review.
+- **先检查 LSP**: 编辑某个语言的代码之前, 先确认该语言的 LSP 在本环境是否已配置; 没配置就先协助用户配置 (例: Kotlin LSP — `kotlin-lsp` 插件托管 JetBrains ILS, 以 `--stdio` 启动其服务, 等到 `intellij/ready-for-test` 通知后用 **pull 模式** 拉 `textDocument/diagnostic`; ILS 从不主动 push, `textDocument/documentSymbol` 可兼作 "真的在分析" 自检). 每批编辑之后, 先跑 LSP diagnostics — 再加上面几档 Gradle 检查 — 然后派新上下文的 subagent 在后台 review 未提交 diff, 把发现汇报给负责人后停下: 无论是否走 spec 流程, 没有负责人的明确指令一律不提交. 检查级的 LSP 发现 (如 "Use destructuring declaration") 当语法警告同等对待, 直接修, 不记文档.
 
 ## 构建约定
 
@@ -84,7 +84,7 @@ Screen (Compose) → ViewModel (StateFlow) → Repository → DataSource
 
 - `ViewModel` 一律拼全 — 绝不缩写成 `VM`, 标识符, 注释, 提交信息和文档里都不. `VM` 已经是 *virtual machine* 的缩写, 而这应用把虚拟机当作自己的一个检测主题 (进程/VM 架构, `getArchitecture`), 所以即便上下文足以看懂, 这个短写也是有歧义的. `UseCase` 和 `DataSource` 同样拼全 — 不写 `UC` / `DS`.
 - 不用静态事件总线: 绝不把 `SharedFlow`/`StateFlow` 放进 ViewModel 的伴生对象. 跨功能的数据经 repository 传递.
-- UI 层 (Compose / ViewModel) 不用 try 处理业务异常: Repository 与 DataSource 要么自己处理好失败, 要么返回 wrapper 类型; 不带 `OrThrow` 后缀的函数以 "不抛" 为契约. 异常若到达 UI 层, 即为下层的 bug, 修在下层, 不在 UI 吸收. 已知偏差 (随 #11 改造迁移): lld 联网→离线的回退链目前还在 `HomeViewModel` 里.
+- UI 层 (Compose / ViewModel) 不用 try 处理业务异常: Repository 与 DataSource 要么自己处理好失败, 要么返回 wrapper 类型; 不带 `OrThrow` 后缀的函数以 "不抛" 为契约. 异常若到达 UI 层, 即为下层的 bug, 修在下层, 不在 UI 吸收.
 - 全局的 `myAndroid` (`AndroidVersionExt`) 只有两个写入方: 启动时的 `initMyAndroid()` (`MyApplication.onCreate`, 来自运行时的 `Build.VERSION`), 以及 `HomeRepository.detectAndroid()` 里的已知值覆写. 绝不在别处赋值 — `isAtLeast...()` 辅助函数到处都在读它.
 - minSdk 是 24: 更新的 API 要用 `isAtLeastAndroidX()` 辅助函数或 `@RequiresApi` 兜住.
 - 新代码用钉住的版本所允许的最新语法和标准库 API: 当前 Kotlin 版本支持的最新语法与 std-lib API, 当前 compileSdk 提供的最新平台 API, 当前依赖版本提供的最新 API — 绝不必就比工具链允许的更老的写法.
@@ -101,7 +101,7 @@ Screen (Compose) → ViewModel (StateFlow) → Repository → DataSource
 ## 任务工作流 (docs/spec)
 
 负责人 = 开发者本人. AI 负责搜索/分析/编码/测试/review; 负责人负责目标/边界/判断/提交.
-每道闸门以负责人的明确点头收尾 — 未经同意不提交, 不开始下一步.
+每道闸门以负责人的明确点头收尾 — 无论是否走 spec 流程, 没有负责人的明确指令一律不提交; 未经同意不开始下一步.
 
 - 建 `docs/spec/<yyyy-MM-dd-HH-mm-ss-Z>-<english-title>[-cn]/` (宿主机时钟时间戳, 短英文标题). 目录名以 `-cn` 结尾表示报告为非英文; 目录内文件按既定模式命名, **不加**语言后缀.
 - 负责人预写 (AI 动笔前): plan.md 开头由负责人手写 2~3 句 — 要解决什么, 自己的思路, 预测的最大风险; 任务完成前不改, 收尾对照. 【解决: 锚定 (Tversky & Kahneman) 与后见之明偏差 — 预注册自己的判断, 先有预期再看 AI 的方案】
@@ -110,7 +110,7 @@ Screen (Compose) → ViewModel (StateFlow) → Repository → DataSource
 - 进度账本: spec 目录携带 `progress.md`; AI 每过一道闸门更新 — 当前位置, 各子任务闸门状态, 挂起物 (stash), 偏差记录, 下一步. 任何新会话/新 agent/新模型 接续时先读 AGENTS.md + 账本, 然后执行账本的"下一步"; 进行中的步骤 (如正在跑的后台 review) 不落账 — 按账本重跑该步. 账本随下一笔提交入库. 每个会话开始 (或负责人说 "继续") 时, 扫描 `docs/spec/*/progress.md`; 存在未完成任务就按账本接续并向负责人确认 — 负责人只需要记得 "继续" 这一个词; 同时有多个未完成任务时, 列出来让负责人挑.
 - 子任务循环, 严格按序:
   0. 动工对照 (默认路径 — AI 主导开发时, 负责人的生疏是结构性常态, 不按领域分级): 负责人给 目标句 + 问题单 (可空); 替换类任务加 覆盖核对 (用报告的 改动/不改动 清单对照总目标找漏项); 子任务的拆分与顺序是 AI 的职责, 负责人不预生成结构. AI 义务: 每个子任务先给 5~10 行概念 primer, 报告逐条回答问题单, 附覆盖核对清单. 报告过时先显式修订, 说开始才动工; 闸门节拍由负责人决定. 亲手实现不强制进入流程 — 负责人在流程之外自行安排学习. 【解决: AI 主导开发中负责人结构性生疏, 无法跟上实现节奏 (自动化的讽刺, Bainbridge 1983) — 学习放进审计 (问题单/覆盖核对/primer), 学习目标收窄为 架构概念 + 审查判断, 而非实现练习】
-  1. 实施 (代码注释用负责人的聊天语言书写, 解释**为什么**, 对齐代码库注释密度; 提交闸门前把本次新增注释整体译为英语 — 入库形态保持英语; 注释标点遵循 ASCII 规则) 并构建验证; 生疏领域的高风险逻辑, 负责人先无 AI 复现再对照; AI 同一问题重做 2 次不过即停, 由负责人接手或重拆. 【解决: 技能退化 — 自动化的讽刺 (Bainbridge 1983), 程序性记忆靠练习保持; 防无限重试】
+  1. 实施 (代码注释用负责人的聊天语言书写, 解释**为什么**, 对齐代码库注释密度; 提交闸门前把本次新增注释整体译为英语 — 入库形态保持英语; 注释标点遵循 ASCII 规则) 并以 LSP diagnostics 加构建验证; 生疏领域的高风险逻辑, 负责人先无 AI 复现再对照; AI 同一问题重做 2 次不过即停, 由负责人接手或重拆. 【解决: 技能退化 — 自动化的讽刺 (Bainbridge 1983), 程序性记忆靠练习保持; 防无限重试】
   2. 派新上下文的 subagent 在后台 review 未提交的 diff — v1, 之后每修一轮 v2, v3, ... 顺延; 后续轮可续用同一 reviewer 做 delta 复核 (其证据底座已核验 — 更快更省), 但修复大面积重写 diff / 负责人推翻该轮大部分发现 / 续用上下文已臃肿 / 要做最终独立验收时, 应回到全新 reviewer; reviewer 优先换模型; 每个发现必须带可核对的证据 (file:line); 低风险子任务负责人可亲自读 diff 代替. 【解决: 自动化偏见 (Parasuraman & Riley) 与同源盲区 — 证据要求把再认变成核对; 续用带来自证倾向, 由证据要求与上述回退触发点对冲】
   3. review 有发现: 报告负责人; 负责人复核确认确实要改的内容后, 只修本轮要求的部分. 改了就回到 2 进入下一版本; 确认无需修改则直接走第 4 步.
   4. 无新实质发现: 负责人放行时留一句自己的话 (为什么可以过); 低风险子任务可将 4/5 合并为一次点头. 【解决: 测试效应 (Roediger & Karpicke 2006) — 再认升级为检索; 对抗流畅错觉与解释深度错觉 (Rozenblit & Keil 2002); 闸门疲劳】

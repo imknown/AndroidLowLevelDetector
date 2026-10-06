@@ -65,6 +65,8 @@ updateModelDetail(targetIndex, newDetail)   // ViewModel 翻自己的状态找�
 
 **与修复路线的关系**: [README 修复路线](../README.md#修复路线) 把本条目拆成两半排期 — "更新按类型寻址" 一半 (`updateModelDetail` 改按类型 + 补偿路径归位) 不碰该约定, 列入独立小件先行; "编排收回仓库" 一半在走完整条主线时并入注册表引擎那一步 ([#03](../01-架构与分层/03-无三态模型与注册表.md)), 不单独建 `collectHomeModels()` 过渡形态, 下面的落点仅在注册表长期搁置时作为独立路径使用.
 
+**迁移清单再添一项 (UI 不 try 约定, 见 AGENTS.md 代码规则)**: lld 联网→离线的回退链 (`tryDetectOnline()` / `tryDetectOffline()` / `fetchOfflineLldOrNull()` / `getAssetLldOrNull()`) 目前在 `HomeViewModel` 里用 try 编排失败回退, 违反 "UI 层不处理业务异常" 的约定 — 随 "编排收回仓库" 一半一并归位: 取数与回退下沉, 或返回 wrapper 由 mapper 呈现.
+
 编排收回仓库, 更新按类型寻址:
 
 ```kotlin

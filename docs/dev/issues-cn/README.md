@@ -174,7 +174,7 @@
 修复时请保留这些, 不要顺手重构掉:
 
 - `BaseListViewModel` 的状态持有与 `loadJob` 去重: `modelsStateFlow: StateFlow<List<MyModel>?>` (加载不擦掉旧列表, UI 不闪空) + `isLoadingStateFlow`, 配置变更后不重复加载, Compose 侧用 `collectAsStateWithLifecycle` 收集.
-- 逐条错误隔离已落地: 每个检测块经 `guardedMyModel` / `guardedMyModels` 守卫, 失败渲染成自身标题的错误行, `CancellationException` 原样上抛 (`ui/base/list/MyModelExt.kt`).
+- 逐条错误隔离已落地: 每个检测块经 `guardedMyModel` (Home) / `guardedDetectFailedMyModel` (Others) 守卫, 失败渲染成自身标题的错误行, `CancellationException` 原样上抛 (`ui/base/list/MyModelExt.kt`).
 - `lld.json` 的 `version` 格式已升级为机器可查契约: `LLD_DATETIME_FORMATTER` 固定 `Locale.US`, `isLldDatetime()` 在联网数据进门处验货, 格式不符带错误信息降级离线 (`base/.../extension/DateTimeExt.kt`, `base/src/test/.../DateTimeExtTest.kt`).
 - `IShell` / `IProperty` 接口抽象钉在 `:base` (只定义接口与默认实现, 无聚合类) — 接口优先让 DI 接入成为纯接线改造, 实现侧零语义变化 (#02).
 - 按功能分包 (`ui.home` / `ui.others` / `ui.prop` / `ui.settings`), 资源跟包走 (`app/build.gradle.kts` 的 `sourceSets`).
