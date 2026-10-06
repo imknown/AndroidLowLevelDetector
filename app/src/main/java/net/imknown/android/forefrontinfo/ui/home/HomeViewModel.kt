@@ -148,9 +148,9 @@ class HomeViewModel(
     }
 
     private suspend fun tryDetectOffline(errorMessage: String?): List<MyModel> {
-        val lldAndError = fetchOfflineLldOrNull()
-        val errorMessages = listOf(errorMessage, lldAndError.message)
-        return detect(lldAndError.lld, errorMessages, R.string.lld_json_offline)
+        val (lld, message) = fetchOfflineLldOrNull()
+        val errorMessages = listOf(errorMessage, message)
+        return detect(lld, errorMessages, R.string.lld_json_offline)
     }
 
     private suspend fun fetchOfflineLldOrNull(): LldAndError {
