@@ -3,10 +3,10 @@ package net.imknown.android.forefrontinfo.ui.prop.repository
 import android.provider.Settings
 import dev.zacsweers.metro.Inject
 import net.imknown.android.forefrontinfo.BuildConfig
-import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
-import net.imknown.android.forefrontinfo.base.extension.fullMessage
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
+import net.imknown.android.forefrontinfo.ui.base.list.MyModelTitle
+import net.imknown.android.forefrontinfo.ui.base.list.toDetectFailedMyModel
 import net.imknown.android.forefrontinfo.ui.base.list.toPropMyModel
 import net.imknown.android.forefrontinfo.ui.base.list.toTranslatedDetailMyModel
 import net.imknown.android.forefrontinfo.ui.prop.datasource.PropertiesDataSource
@@ -100,8 +100,5 @@ class PropRepository(
     // Failure rows keep the plain no-color row shape: the red/yellow/green dot is a
     // Home-only concept, so this is deliberately not toErrorMyModel.
     private fun toDetectFailedMyModel(title: String, e: Exception): MyModel =
-        toTranslatedDetailMyModel(
-            title,
-            MyApplication.getMyString(R.string.result_detect_failed, e.fullMessage)
-        )
+        toDetectFailedMyModel(MyModelTitle.Raw(title), e)
 }

@@ -12,7 +12,7 @@ import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.extension.formatToLocalZonedDatetimeString
 import net.imknown.android.forefrontinfo.base.extension.fullMessage
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
-import net.imknown.android.forefrontinfo.ui.base.list.guardedMyModel
+import net.imknown.android.forefrontinfo.ui.base.list.guardedDetectFailedMyModel
 import net.imknown.android.forefrontinfo.ui.base.list.toTranslatedDetailMyModel
 import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid13
 import net.imknown.android.forefrontinfo.ui.common.isPreviewAndroid
@@ -36,52 +36,52 @@ class OthersRepository(
     private val othersDataSource: OthersDataSource
 ) {
     // region [Basic]
-    fun getBrand() = guardedMyModel(R.string.build_brand) {
+    fun getBrand() = guardedDetectFailedMyModel(R.string.build_brand) {
         toTranslatedDetailMyModel(R.string.build_brand, basicDataSource.getBrand())
     }
-    fun getManufacturer() = guardedMyModel(R.string.build_manufacturer) {
+    fun getManufacturer() = guardedDetectFailedMyModel(R.string.build_manufacturer) {
         toTranslatedDetailMyModel(R.string.build_manufacturer, basicDataSource.getManufacturer())
     }
-    fun getModel() = guardedMyModel(R.string.build_model) {
+    fun getModel() = guardedDetectFailedMyModel(R.string.build_model) {
         toTranslatedDetailMyModel(R.string.build_model, basicDataSource.getModel())
     }
-    fun getDevice() = guardedMyModel(R.string.build_device) {
+    fun getDevice() = guardedDetectFailedMyModel(R.string.build_device) {
         toTranslatedDetailMyModel(R.string.build_device, basicDataSource.getDevice())
     }
-    fun getProduct() = guardedMyModel(R.string.build_product) {
+    fun getProduct() = guardedDetectFailedMyModel(R.string.build_product) {
         toTranslatedDetailMyModel(R.string.build_product, basicDataSource.getProduct())
     }
-    fun getHardware() = guardedMyModel(R.string.build_hardware) {
+    fun getHardware() = guardedDetectFailedMyModel(R.string.build_hardware) {
         toTranslatedDetailMyModel(R.string.build_hardware, basicDataSource.getHardware())
     }
-    fun getBoard() = guardedMyModel(R.string.build_board) {
+    fun getBoard() = guardedDetectFailedMyModel(R.string.build_board) {
         toTranslatedDetailMyModel(R.string.build_board, basicDataSource.getBoard())
     }
 
     @RequiresApi(Build.VERSION_CODES.S)
-    fun getSocModel() = guardedMyModel(R.string.build_soc_model) {
+    fun getSocModel() = guardedDetectFailedMyModel(R.string.build_soc_model) {
         toTranslatedDetailMyModel(R.string.build_soc_model, basicDataSource.getSocModel())
     }
     @RequiresApi(Build.VERSION_CODES.S)
-    fun getSocManufacturer() = guardedMyModel(R.string.build_soc_manufacturer) {
+    fun getSocManufacturer() = guardedDetectFailedMyModel(R.string.build_soc_manufacturer) {
         toTranslatedDetailMyModel(R.string.build_soc_manufacturer, basicDataSource.getSocManufacturer())
     }
     @RequiresApi(Build.VERSION_CODES.S)
-    fun getSku() = guardedMyModel(R.string.build_hardware_sku) {
+    fun getSku() = guardedDetectFailedMyModel(R.string.build_hardware_sku) {
         toTranslatedDetailMyModel(R.string.build_hardware_sku, basicDataSource.getSku())
     }
-    fun getVendorSku() = guardedMyModel(R.string.build_vendor_sku) {
+    fun getVendorSku() = guardedDetectFailedMyModel(R.string.build_vendor_sku) {
         toTranslatedDetailMyModel(R.string.build_vendor_sku, basicDataSource.getVendorSku())
     }
     @RequiresApi(Build.VERSION_CODES.S)
-    fun getOdmSku() = guardedMyModel(R.string.build_odm_hardware_sku) {
+    fun getOdmSku() = guardedDetectFailedMyModel(R.string.build_odm_hardware_sku) {
         toTranslatedDetailMyModel(R.string.build_odm_hardware_sku, basicDataSource.getOdmSku())
     }
     // endregion [Basic]
 
     // region [Binder]
     fun getBinderStatus(driver: String): MyModel =
-        guardedMyModel(R.string.binder_status) {
+        guardedDetectFailedMyModel(R.string.binder_status) {
             val binderVersion = try {
                 architectureDataSource.getBinderVersionOrThrow(driver)
             } catch (e: UnsatisfiedLinkError) {
@@ -112,7 +112,7 @@ class OthersRepository(
 
     // region [Process]
     fun getProcessBit(): MyModel =
-        guardedMyModel(R.string.current_process_bit) {
+        guardedDetectFailedMyModel(R.string.current_process_bit) {
             val isProcess64Bit = try {
                 architectureDataSource.isProcess64BitOrThrow()
             } catch (e: Exception) {
@@ -126,7 +126,7 @@ class OthersRepository(
         }
 
     fun getArchitecture(): MyModel =
-        guardedMyModel(R.string.os_arch) {
+        guardedDetectFailedMyModel(R.string.os_arch) {
             val a = try {
                 architectureDataSource.getArchitectureOrNullOrThrow()
             } catch (e: Exception) {
@@ -138,17 +138,17 @@ class OthersRepository(
     // endregion [Process]
 
     // region [ABI]
-    fun getCpuAbi() = guardedMyModel(R.string.build_cpu_abi) {
+    fun getCpuAbi() = guardedDetectFailedMyModel(R.string.build_cpu_abi) {
         toTranslatedDetailMyModel(R.string.build_cpu_abi, architectureDataSource.getCpuAbi())
     }
-    fun getPropertyCpuAbi() = guardedMyModel(R.string.current_system_abi) {
+    fun getPropertyCpuAbi() = guardedDetectFailedMyModel(R.string.current_system_abi) {
         toTranslatedDetailMyModel(R.string.current_system_abi, architectureDataSource.getPropertyCpuAbi())
     }
-    fun getSupported32BitAbis() = guardedMyModel(R.string.build_supported_32_bit_abis) {
+    fun getSupported32BitAbis() = guardedDetectFailedMyModel(R.string.build_supported_32_bit_abis) {
         toTranslatedDetailMyModel(R.string.build_supported_32_bit_abis, architectureDataSource.getSupported32BitAbis().joinToString())
     }
     fun getSupported64BitAbis(): MyModel =
-        guardedMyModel(R.string.build_supported_64_bit_abis) {
+        guardedDetectFailedMyModel(R.string.build_supported_64_bit_abis) {
             val supported64BitAbis = architectureDataSource.getSupported64BitAbis().joinToString().takeIf { it.isNotEmpty() }
                 ?: MyApplication.getMyString(R.string.result_not_supported)
             return toTranslatedDetailMyModel(R.string.build_supported_64_bit_abis, supported64BitAbis)
@@ -156,38 +156,38 @@ class OthersRepository(
     // endregion [ABI]
 
     // region [ROM]
-    fun getUser() = guardedMyModel(R.string.build_user) {
+    fun getUser() = guardedDetectFailedMyModel(R.string.build_user) {
         toTranslatedDetailMyModel(R.string.build_user, romDataSource.getUser())
     }
-    fun getHost() = guardedMyModel(R.string.build_host) {
+    fun getHost() = guardedDetectFailedMyModel(R.string.build_host) {
         toTranslatedDetailMyModel(R.string.build_host, romDataSource.getHost())
     }
     fun getTime(): MyModel =
-        guardedMyModel(R.string.build_time) {
+        guardedDetectFailedMyModel(R.string.build_time) {
             val time = romDataSource.getTime().formatToLocalZonedDatetimeString()
             return toTranslatedDetailMyModel(R.string.build_time, time)
         }
-    fun getBaseOs() = guardedMyModel(R.string.build_base_os) {
+    fun getBaseOs() = guardedDetectFailedMyModel(R.string.build_base_os) {
         toTranslatedDetailMyModel(R.string.build_base_os, romDataSource.getBaseOs())
     }
 
-    fun getId() = guardedMyModel(R.string.build_id) {
+    fun getId() = guardedDetectFailedMyModel(R.string.build_id) {
         toTranslatedDetailMyModel(R.string.build_id, romDataSource.getId())
     }
-    fun getDisplay() = guardedMyModel(R.string.build_display) {
+    fun getDisplay() = guardedDetectFailedMyModel(R.string.build_display) {
         toTranslatedDetailMyModel(R.string.build_display, romDataSource.getDisplay())
     }
-    fun getType() = guardedMyModel(R.string.build_type) {
+    fun getType() = guardedDetectFailedMyModel(R.string.build_type) {
         toTranslatedDetailMyModel(R.string.build_type, romDataSource.getType())
     }
-    fun getTags() = guardedMyModel(R.string.build_tags) {
+    fun getTags() = guardedDetectFailedMyModel(R.string.build_tags) {
         toTranslatedDetailMyModel(R.string.build_tags, romDataSource.getTags())
     }
-    fun getIncremental() = guardedMyModel(R.string.build_incremental) {
+    fun getIncremental() = guardedDetectFailedMyModel(R.string.build_incremental) {
         toTranslatedDetailMyModel(R.string.build_incremental, romDataSource.getIncremental())
     }
     fun getCodename(): MyModel =
-        guardedMyModel(R.string.build_codename) {
+        guardedDetectFailedMyModel(R.string.build_codename) {
             var detail = romDataSource.getCodename()
             if (isPreviewAndroid() && isAtLeastAndroid13()) {
                 val previewDisplay = romDataSource.getReleaseOrPreviewDisplay()
@@ -197,15 +197,15 @@ class OthersRepository(
             }
             return toTranslatedDetailMyModel(R.string.build_codename, detail)
         }
-    fun getPreviewSdkInt() = guardedMyModel(R.string.build_preview_sdk_int) {
+    fun getPreviewSdkInt() = guardedDetectFailedMyModel(R.string.build_preview_sdk_int) {
         toTranslatedDetailMyModel(R.string.build_preview_sdk_int, romDataSource.getPreviewSdkInt().toString())
     }
 
     // region [Fingerprint]
-    fun getFingerprint() = guardedMyModel(R.string.build_stock_fingerprint) {
+    fun getFingerprint() = guardedDetectFailedMyModel(R.string.build_stock_fingerprint) {
         toTranslatedDetailMyModel(R.string.build_stock_fingerprint, fingerprintDataSource.getFingerprint())
     }
-    fun getPreviewSdkFingerprint() = guardedMyModel(R.string.build_stock_preview_fingerprint) {
+    fun getPreviewSdkFingerprint() = guardedDetectFailedMyModel(R.string.build_stock_preview_fingerprint) {
         toTranslatedDetailMyModel(R.string.build_stock_preview_fingerprint, fingerprintDataSource.getPreviewSdkFingerprint())
     }
     fun getPartitionFingerprints(): List<MyModel> {
@@ -240,7 +240,7 @@ class OthersRepository(
     // endregion [Fingerprint]
 
     fun getDefaultUserAgent(context: Context): MyModel =
-        guardedMyModel(R.string.webview_user_agent) {
+        guardedDetectFailedMyModel(R.string.webview_user_agent) {
             val userAgent = try {
                 romDataSource.getDefaultUserAgentOrThrow(context)
             } catch (e: Exception) {
@@ -251,7 +251,7 @@ class OthersRepository(
         }
 
     fun getKernelVersion(): MyModel =
-        guardedMyModel(R.string.linux) {
+        guardedDetectFailedMyModel(R.string.linux) {
             var kernelFinal: String? = null
             val kernelVerbose = kernelDataSource.getKernelVersion()
             if (kernelVerbose.isSuccess) {
@@ -268,10 +268,10 @@ class OthersRepository(
     // endregion [ROM]
 
     // region [Others]
-    fun getBootloader() = guardedMyModel(R.string.build_bootloader) {
+    fun getBootloader() = guardedDetectFailedMyModel(R.string.build_bootloader) {
         toTranslatedDetailMyModel(R.string.build_bootloader, othersDataSource.getBootloader())
     }
-    fun getRadioVersionOrNull() = guardedMyModel(R.string.build_radio) {
+    fun getRadioVersionOrNull() = guardedDetectFailedMyModel(R.string.build_radio) {
         toTranslatedDetailMyModel(R.string.build_radio, othersDataSource.getRadioVersionOrNull())
     }
     // endregion [Others]
