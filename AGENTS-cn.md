@@ -29,7 +29,7 @@ Android 应用, 展示底层系统特征: Treble 与 GSI 兼容性, Mainline/APE
 ./gradlew lintFossDebug          # Android lint
 ```
 
-- **先检查 LSP**: 编辑某个语言的代码之前, 先确认该语言的 LSP 在本环境是否已配置; 没配置就先协助用户配置 (例: Kotlin LSP — `kotlin-lsp` 插件托管 JetBrains ILS, 以 `--stdio` 启动其服务, 等到 `intellij/ready-for-test` 通知后用 **pull 模式** 拉 `textDocument/diagnostic`; ILS 从不主动 push, `textDocument/documentSymbol` 可兼作 "真的在分析" 自检). 每批编辑之后, 先跑 LSP diagnostics — 再加上面几档 Gradle 检查 — 然后派新上下文的 subagent 在后台 review 未提交 diff, 把发现汇报给负责人后停下: 无论是否走 spec 流程, 没有负责人的明确指令一律不提交. 检查级的 LSP 发现 (如 "Use destructuring declaration") 当语法警告同等对待, 直接修, 不记文档.
+- **先检查 LSP**: 编辑某个语言的代码之前, 先确认该语言的 LSP 在本环境是否已配置; 没配置就先协助用户配置 (例: Kotlin LSP — `kotlin-lsp` 插件托管 JetBrains ILS, 以 `--stdio` 启动其服务, 等到 `intellij/ready-for-test` 通知后用 **pull 模式** 拉 `textDocument/diagnostic`; ILS 从不主动 push, `textDocument/documentSymbol` 可兼作 "真的在分析" 自检). 每批编辑之后, 先跑 LSP diagnostics — 再加上面几档 Gradle 检查 — 然后派新上下文的 subagent 在后台 review 未提交 diff, 把发现汇报给负责人后停下: 无论是否走 spec 流程, 没有负责人的明确指令一律不提交. 检查级的 LSP 发现 (如 "Use destructuring declaration") 当语法警告同等对待, 直接修, 不记文档. 本仓库 Kotlin 侧已接好: `scripts/kotlin-lsp-diagnostics.js` 一条命令跑完整套握手, 解析 ILS 安装位置的顺序是 `KOTLIN_LSP_SERVER` → `KOTLIN_LSP_HOME` (约定的用户级环境变量, 指向发行版根目录) → `PATH` 上的 `intellij-server`. 索引缓存就是 gitignored 的 `.kotlin/lsp-cache` — 可随时删, 且启动始终带 `--system-path` (不带它 ILS 每次启动都随机临时目录、从头重索引); 重建用 `<ILS 发行版>/bin/warmup.py <repo> <repo>/.kotlin/lsp-cache --server <ILS 发行版>/bin/intellij-server --build-tool gradle`.
 
 ## 构建约定
 
