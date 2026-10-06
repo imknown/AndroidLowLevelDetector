@@ -29,6 +29,8 @@ Android app that surfaces low-level system characteristics: Treble and GSI compa
 ./gradlew lintFossDebug          # Android lint
 ```
 
+- **Check the LSP first**: before editing code in a language, check whether that language's LSP is configured in this environment; if it is not, help the user set one up first (e.g. the Kotlin LSP: the `kotlin-lsp` plugin hosts JetBrains ILS — launch its server with `--stdio`, wait for the `intellij/ready-for-test` notification, then pull `textDocument/diagnostic`; ILS never pushes diagnostics, and `textDocument/documentSymbol` doubles as an "is it really analyzing" check). After each edit batch, run LSP diagnostics — plus the Gradle tiers above — before handing the diff over for review.
+
 ## Build conventions
 
 - Flavors (dimension `IssueTracker` — not the usual `mode` / `store`): `Foss` is the default (no tracking, `-Foss` version name suffix); `Firebase` is the Play variant and requires `google-services.json`, which is gitignored. `AndroidApplicationFirebaseConventionPlugin` attaches Firebase deps as `firebaseImplementation` and disables the GoogleServices / Crashlytics tasks for Foss, so a Foss build never needs that file.

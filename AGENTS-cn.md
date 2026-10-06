@@ -29,6 +29,8 @@ Android 应用, 展示底层系统特征: Treble 与 GSI 兼容性, Mainline/APE
 ./gradlew lintFossDebug          # Android lint
 ```
 
+- **先检查 LSP**: 编辑某个语言的代码之前, 先确认该语言的 LSP 在本环境是否已配置; 没配置就先协助用户配置 (例: Kotlin LSP — `kotlin-lsp` 插件托管 JetBrains ILS, 以 `--stdio` 启动其服务, 等到 `intellij/ready-for-test` 通知后用 **pull 模式** 拉 `textDocument/diagnostic`; ILS 从不主动 push, `textDocument/documentSymbol` 可兼作 "真的在分析" 自检). 每批编辑之后, 先跑 LSP diagnostics — 再加上面几档 Gradle 检查 — 才把 diff 交给负责人 review.
+
 ## 构建约定
 
 - Flavor (维度名 `IssueTracker` — 不是常见的 `mode` / `store`): `Foss` 是默认 (无跟踪, 版本名带 `-Foss` 后缀); `Firebase` 是 Play 变体, 需要 `google-services.json`, 该文件已被 gitignore. `AndroidApplicationFirebaseConventionPlugin` 以 `firebaseImplementation` 附加 Firebase 依赖, 并为 Foss 禁用 GoogleServices / Crashlytics 任务, 所以 Foss 构建永远不需要那个文件.

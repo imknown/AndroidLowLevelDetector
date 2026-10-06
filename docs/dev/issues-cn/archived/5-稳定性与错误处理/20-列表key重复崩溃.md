@@ -49,3 +49,5 @@ fun getBuildProp(): List<MyModel> = guardedMyModels(R.string.title_prop) { ... }
 1. 每个守卫块给不同的标题资源: `title_prop` 拆成系统属性 / `Settings` (再按 System, Secure, Global 区分) / `getprop` 各自的标题, 错误行就各带自身身份 — 改动只在 `PropRepository` 与各 locale 的 `strings.xml`, 最贴现状;
 2. key 侧兜底: 传 UI 前 `distinctBy { it.key }`, 或用 `itemsIndexed` 让序号参与 key. 代价要认下来: `distinctBy` 会把第二条错误行整个藏掉 (故障消失而不是显示), 序号并入 key 则让 "行序变化" 被当成身份变化, 动画与滚动锚点跟着抖;
 3. 终极方案给 `MyModel` 增加显式 `id` 字段, 让 key 不再依赖展示文本.
+
+**落法 (止血批)**: Prop 页三个源取消块级守卫 — 每行标题即各自的数据键 (JVM 系统属性的键, `Settings.<表>.<键>`, getprop 的属性键), 行与行之间不再可能同 key; 取数失败渲染一条源级错误行 (技术标识标题), 失败行保持无色; 未新增任何字符串资源. 走的不是上面三条方案的任何一条: 块守卫整个消失, "身份" 回到数据键本身. Others 页的脚枪保留 — 每个 item 一个 `guardedMyModel` + 专属标题资源, 将来新增条目若复用现有标题资源即复现同 key 崩溃, 该尾巴由 [#03](../01-架构与分层/03-无三态模型与注册表.md) 的显式 id 收口.

@@ -91,7 +91,7 @@ tempModels += propRepository.getSettings(SettingsTable.SYSTEM)
 
 1. `contentResolver.query()` 是跨进程阻塞调用, 按 AGENTS.md 走 `Dispatchers.IO`, 不能留在现在的 `withContext(Dispatchers.Default)` 里 — 与 [#14](../04-并发与调度/14-检测链用CPU线程池.md) 是同一件事.
 2. 三个 `CONTENT_URI` 常量与 `query()` 的 API 等级要按 **minSdk 24** 核对一遍再写 (`@RequiresApi` 或 `isAtLeast...()` 闸门按核对结果决定).
-3. 条目集合的口径会变: 现在由 **SDK 常量名**决定 (`toTranslatedDetailMyModel(key, value)` 把 key 原样当标题, 查不到值的行渲染成 "未填写"), 改后由**实际存储的行**决定 — 空的废弃行消失, 设备自写的项出现. Prop 页每行的 `MyModel.key` 就是这个原始标题 (`MyModelTitle.Raw`), 行集一变, `LazyColumn` 的 key 集合跟着变, 与 [#20](../05-稳定性与错误处理/20-列表key重复崩溃.md) 的重复 key 问题同一条链.
+3. 条目集合的口径会变: 现在由 **SDK 常量名**决定 (`toTranslatedDetailMyModel(key, value)` 把 key 原样当标题, 查不到值的行渲染成 "未填写"), 改后由**实际存储的行**决定 — 空的废弃行消失, 设备自写的项出现. Prop 页每行的 `MyModel.key` 就是这个原始标题 (`MyModelTitle.Raw`), 行集一变, `LazyColumn` 的 key 集合跟着变, 与 [#20](../archived/5-稳定性与错误处理/20-列表key重复崩溃.md) 的重复 key 问题同一条链.
 
 注意事项: 全表 query 能拿到哪些行, 由设备上的框架与权限决定, 与逐 key `getString()` 的可见范围不必完全相同 (个别 ROM 会对 Secure 表的结果做过滤). 真机验证时把两种取法的行集对比一次; 若某张表确实拿不全, 仅对该表保留逐 key 查询 (key 列表仍一次取得), System/Global 照走全表.
 
