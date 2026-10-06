@@ -63,6 +63,6 @@ fun SettingsScreen(viewModel: SettingsViewModel, ...) {
 }
 ```
 
-两个 `setMyXxx` 调用不能省: 明暗与指示条靠 `MyApplication` 那两条 `StateFlow` 生效, 写 SP 不等于写流 (这条 "写路径分两步" 的形状归 #08 一并收敛, `themeMode` / `scrollBarMode` 是否继续留在伴生对象上是那个问题). 可拖动档仍是 stub, 见 [#37](../7-UI与无障碍/37-滚动条可拖动是stub.md).
+两个 `setMyXxx` 调用不能省: 明暗与指示条靠 `MyApplication` 那两条 `StateFlow` 生效, 写 SP 不等于写流 (这条 "写路径分两步" 的形状归 #08 一并收敛, `themeMode` / `scrollBarMode` 是否继续留在伴生对象上是那个问题). 可拖动档仍是 stub, 见 [#37](../../07-UI与无障碍/37-滚动条可拖动是stub.md).
 
 好处: Screen 变成纯 "collect + 转发事件"; `MyApplication.sharedPreferences` 这个全局单例从 UI 层消失; 存值迁移 (例如 `MyApplication.initTheme()` 对已退役的 "省电模式" 存值做的一次性归一) 也变成可测的纯数据映射.

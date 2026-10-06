@@ -16,7 +16,7 @@
 
 **失配已经发生的一例**: `app/src/main/assets/lld.json` 的 `toybox` 现有 4 个键 (`stable` / `support` / `mainline` / `master`), 而 `Lld.Toyboxes` 只声明 3 个 (无 `mainline`) — `ignoreUnknownKeys` 把那一档参考数据静默丢掉, `detectToybox()` 永远读不到它. 数据与模型已经悄悄漂移, 没有任何闸门或日志报告这件事. 这也正是 `scheme` 闸门该拦的形状: 模型与数据任何一侧演进, 现在都只能靠人眼发现.
 
-**连带面**: 模型字段除 `extension` / `phase` 外全部必填, `Json { ignoreUnknownKeys = true }` 对 "加字段" 宽容, 对 "删键 / 改键名 / 改类型" 就是整份 `decodeFromString` 抛异常 → `lld = null` → 各行按 `lld == null` 分支落到 CRITICAL (见 [#33](../07-UI与无障碍/33-Unknown渲染红色.md)).
+**连带面**: 模型字段除 `extension` / `phase` 外全部必填, `Json { ignoreUnknownKeys = true }` 对 "加字段" 宽容, 对 "删键 / 改键名 / 改类型" 就是整份 `decodeFromString` 抛异常 → `lld = null` → 各行按 `lld == null` 分支落到 CRITICAL (见 [#33](../archived/07-UI与无障碍/33-Unknown渲染红色.md)).
 
 **严重程度说明**: `api` 串坏了不再拖垮整页 — 逐条错误隔离 (`f089854a`) 之后, `detectAndroid()` 的异常被它自己的 `guardedMyModel(R.string.android_info_title)` 接住, 降级成该探针的一行错误. 失效面从 "整页" 缩到 "一行", P2 定级不变.
 

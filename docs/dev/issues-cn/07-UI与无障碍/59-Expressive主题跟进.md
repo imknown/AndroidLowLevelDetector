@@ -6,7 +6,7 @@
 
 **严重程度: P3 | 修复难度: 中**
 
-**结论**: 不是缺陷 — `AppTheme()` 现为标准 M3 (light/dark scheme + Android 12+ 动态取色), 是 Compose 迁移决策 8 的有意取舍 (Expressive 主题 API 当时已从 material3 1.4.0 stable 线移除, 仅在 1.5.0-alpha). 本条登记一个**跟版本走的主题观感升级候选项**, 官方转正前无待办.
+**结论**: 不是缺陷 — `AppTheme()` 现为标准 M3 (light/dark scheme + Android 12+ 动态取色), 是 Compose 迁移决策 8 的有意取舍 (Expressive 主题 API 当时已从 material3 1.4.0 stable 线移除, 仅在 1.5.0-alpha). 本条登记一个**跟版本走的主题观感升级候选项**, 随 material3 1.5 落地实施.
 
 **证据**:
 
