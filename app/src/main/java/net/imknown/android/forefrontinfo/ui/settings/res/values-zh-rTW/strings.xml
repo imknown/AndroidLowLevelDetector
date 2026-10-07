@@ -12,7 +12,6 @@
     <string name="interface_themes_title">主題</string>
     <string name="interface_themes_summary">點擊以顯示主題選擇器</string>
     <string name="interface_themes_follow_system_key">跟隨系統</string>
-    <string name="interface_themes_power_saver_key">跟隨省電模式</string>
     <string name="interface_themes_always_light_key">總是淺色</string>
     <string name="interface_themes_always_dark_key">總是深色</string>
 

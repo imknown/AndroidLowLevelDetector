@@ -18,7 +18,6 @@
     <string name="interface_themes_summary">Click to show the theme chooser</string>
     <string name="interface_themes_follow_system_key">Follow system</string>
     <string name="interface_themes_follow_system_value" translatable="false">-1</string>
-    <string name="interface_themes_power_saver_key">Follow power saver</string>
     <string name="interface_themes_power_saver_value" translatable="false">1</string>
     <string name="interface_themes_always_light_key">Always light</string>
     <string name="interface_themes_always_light_value" translatable="false">2</string>
@@ -38,32 +37,26 @@
 
     <string name="no_browser_found">No available browser</string>
 
-    <string name="about_shop_key" translatable="false">about_shop_key</string>
     <string name="about_shop_title">Store page</string>
     <string name="about_shop_summary">Open the page of current app in the store</string>
     <string name="about_shop_uri" translatable="false">https://play.google.com/store/apps/details?id=net.imknown.android.forefrontinfo</string>
 
-    <string name="about_source_key" translatable="false">about_source_key</string>
     <string name="about_source_title">Source code</string>
     <string name="about_source_summary">GitHub address of the app source code</string>
     <string name="about_source_uri" translatable="false">https://github.com/imknown/AndroidLowLevelDetector</string>
 
-    <string name="about_privacy_policy_key" translatable="false">about_privacy_policy_key</string>
     <string name="about_privacy_policy_title">Privacy policy</string>
     <string name="about_privacy_policy_summary">See what will happen when using this app</string>
     <string name="about_privacy_policy_uri" translatable="false">https://github.com/imknown/AndroidLowLevelDetector/blob/master/GOOGLE_PLAY_PRIVACY_POLICY.md</string>
 
-    <string name="about_licenses_key" translatable="false">about_licenses_key</string>
     <string name="about_licenses_title">License</string>
     <string name="about_licenses_summary">Referenced open-source repositories</string>
     <string name="about_licenses_uri" translatable="false">https://github.com/imknown/AndroidLowLevelDetector/blob/master/gradle/toml</string>
 
-    <string name="about_translator_more_info_key" translatable="false">about_translator_more_info_key</string>
     <string name="translation_language_and_translator">English (US), translator: imknown</string>
     <string name="translator_website">https://imknown.net</string>
     <string name="translator_more_info">https://github.com/imknown</string>
 
-    <string name="about_version_key" translatable="false">about_version_key</string>
     <string name="about_version_title">Version</string>
     <string name="about_version_summary">Version: %1$s (Iteration times: %2$d)\nBuilt-in data version: %3$s\nDistributor: %4$s\nInstaller: %5$s\nFirst install: %6$s\nLast update: %7$s</string>
     <string name="about_version_click" translatable="false">🐈==)  🐕===))</string>

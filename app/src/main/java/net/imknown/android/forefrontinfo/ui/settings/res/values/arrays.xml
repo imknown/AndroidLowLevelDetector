@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- The "power saver" theme option was retired with the de-AppCompat change (a View-era feature); only follow system / always light / always dark remain -->
+    <!-- The "power saver" theme option was retired (a View-era feature); only follow system / always light / always dark remain -->
     <string-array name="themeKeys">
         <item>@string/interface_themes_follow_system_key</item>
         <item>@string/interface_themes_always_light_key</item>
