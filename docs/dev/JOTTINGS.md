@@ -37,10 +37,10 @@ https://android.googlesource.com/platform/external/
 
 ## avb
 
-https://source.android.com/security/verifiedboot/avb
-https://source.android.com/security/verifiedboot
-https://android.googlesource.com/platform/external/avb/+/master/README.md
-https://android.googlesource.com/platform/external/avb/+/master/avbtool
+https://source.android.com/security/verifiedboot/avb  
+https://source.android.com/security/verifiedboot  
+https://android.googlesource.com/platform/external/avb/+/master/README.md  
+https://android.googlesource.com/platform/external/avb/+/master/avbtool  
 https://android.googlesource.com/platform/external/avb/+/master/libavb/avb_version.h
 
 ``` sh

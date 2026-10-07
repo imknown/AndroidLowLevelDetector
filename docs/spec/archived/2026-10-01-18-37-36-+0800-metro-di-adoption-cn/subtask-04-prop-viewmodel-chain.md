@@ -1,4 +1,4 @@
-# ST-04 prop-viewmodel-chain — 修改计划报告
+# ST-04 prop-viewmodel-chain: 修改计划报告
 
 > 状态: living (预生成; 动工时与负责人预期对比, 必要时显式修订). 计划: [plan.md](plan.md) 子任务 04. 风险: 低 (机械重复, 链最短).
 
