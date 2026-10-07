@@ -30,4 +30,4 @@ Compose 构建接线实际早于计划文档数月, 分两段:
 
 ## 证据
 
-- 提交: 8cd79baa, 2430be11, 62c36a5c, 16e8d99c; 后续发现: [issues-cn #53](../../../dev/issues-cn/09-构建与CI/53-Compose开关死代码.md).
+- 提交: 8cd79baa, 2430be11, 62c36a5c, 16e8d99c; 后续发现: [issues-cn #53](../../../dev/issues-cn/archived/09-构建与CI/53-Compose开关.md).
