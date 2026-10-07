@@ -2,7 +2,7 @@
 
 # 10 · Settings 在 Composable 里直接读写 SharedPreferences
 
-> 返回 [README 索引](../README.md) · [2 · SSOT · 唯一数据来源](../README.md#2--ssot--唯一数据来源).
+> 返回 [README 索引](../../README.md) · [2 · SSOT · 唯一数据来源](../../README.md#2--ssot--唯一数据来源).
 
 **严重程度: P1 | 修复难度: 中**
 **影响文件: `SettingsScreen.kt`, `SettingsViewModel.kt`**

@@ -20,16 +20,16 @@
 
 ### 遗留优化 8 项的处置 (2026-09-25 抢救版)
 
-1. 滚动条换代 — 活 → ST-10 落替身, 官方组件到位后从零接入 (现 [#37](../../../dev/issues-cn/7-UI与无障碍/37-滚动条可拖动是stub.md)).
+1. 滚动条换代 — 活 → ST-10 落替身, 官方组件到位后从零接入 (现 [#37](../../../dev/issues-cn/07-UI与无障碍/37-滚动条可拖动是stub.md)).
 2. 主题模式去 AppCompat 化 — 完 (ST-08).
-3. Expressive 主题 — 活 (现登记为 [#59](../../../dev/issues-cn/7-UI与无障碍/59-Expressive主题跟进.md); `Type.kt` 的 "Re-tune when Material 3 Expressive becomes available" 仍在等).
-4. Style API 跟进 — 活 (现登记为 [#60](../../../dev/issues-cn/7-UI与无障碍/60-StyleAPI跟进.md); foundation 1.13 重构后从零立项).
+3. Expressive 主题 — 活 (现登记为 [#59](../../../dev/issues-cn/07-UI与无障碍/59-Expressive主题跟进.md); `Type.kt` 的 "Re-tune when Material 3 Expressive becomes available" 仍在等).
+4. Style API 跟进 — 活 (现登记为 [#60](../../../dev/issues-cn/07-UI与无障碍/60-StyleAPI跟进.md); foundation 1.13 重构后从零立项).
 5. 设置存储现代化 — 吸收进 AR-02 → 后成 issues-cn #08/#10 → settings-ssot 任务落地 (兄弟 spec).
-6. 自适应导航 — 吸收进 R2 (现 [#39](../../../dev/issues-cn/7-UI与无障碍/39-无自适应布局.md)).
-7. 底栏随滚动隐藏 — 吸收进 R1 / FR-12 (现 [#38](../../../dev/issues-cn/7-UI与无障碍/38-工具栏不随滚动隐藏.md)).
-8. 测试基建 — 吸收进 AR-16 / A6 (现 [#06](../../../dev/issues-cn/1-架构与分层/06-技术栈缺口.md) + [#50](../../../dev/issues-cn/9-构建与CI/50-CI只编译不测试.md)).
+6. 自适应导航 — 吸收进 R2 (现 [#39](../../../dev/issues-cn/07-UI与无障碍/39-无自适应布局.md)).
+7. 底栏随滚动隐藏 — 吸收进 R1 / FR-12 (现 [#38](../../../dev/issues-cn/07-UI与无障碍/38-工具栏不随滚动隐藏.md)).
+8. 测试基建 — 吸收进 AR-16 / A6 (现 [#06](../../../dev/issues-cn/01-架构与分层/06-技术栈缺口.md) + [#50](../../../dev/issues-cn/09-构建与CI/50-CI只编译不测试.md)).
 
-另: 数据加载惰性化 (`WhileSubscribed(5_000)`, 接网络/DB 时重造) 独立一项, 见 ST-02 遗留节. **2026-10-04 现状注**: 三项已于同日补立项 — Expressive = [#59](../../../dev/issues-cn/7-UI与无障碍/59-Expressive主题跟进.md), Style API = [#60](../../../dev/issues-cn/7-UI与无障碍/60-StyleAPI跟进.md), WhileSubscribed = [#61](../../../dev/issues-cn/3-UDF-单向数据流/61-数据加载惰性化.md), 出处均锚定本目录.
+另: 数据加载惰性化 (`WhileSubscribed(5_000)`, 接网络/DB 时重造) 独立一项, 见 ST-02 遗留节. **2026-10-04 现状注**: 三项已于同日补立项 — Expressive = [#59](../../../dev/issues-cn/07-UI与无障碍/59-Expressive主题跟进.md), Style API = [#60](../../../dev/issues-cn/07-UI与无障碍/60-StyleAPI跟进.md), WhileSubscribed = [#61](../../../dev/issues-cn/archived/03-UDF-单向数据流/61-数据加载惰性化.md), 出处均锚定本目录.
 
 ## 证据
 

@@ -17,7 +17,7 @@
 - 行为延续的现存对照: `AppRoot.kt:73` (NavDisplay 的标签切换行为镜像 legacy Fragment show/hide), `:144` (顶栏标题 = legacy 默认标题栏的 app 名; debug 变体整名改 app — 980bb50f), `:146` (顶栏背景槽位对齐 legacy `AppBarLayout` 的 `?attr/colorSurfaceContainer`).
 - 为可预览拆出的 `AppRootShell` (4ecc412f) 是目标树之外多出来的件 (计划 01 章章首更正); 决策 11 的 ViewModel 工厂小简化随 Fragment 消亡一并成立, 后被 Metro 整体取代.
 - f05b61ec (09-22): 底栏切换的 NavDisplay 转场被砍 — 回到 legacy 的即时切换观感; 动机提交信息未展开, `unknown`.
-- 官方 "先回首页再退出" 未采纳 (决策 10, 保持任何标签直接退出); 返回键语义后来的问题由 [issues-cn #35](../../../dev/issues-cn/7-UI与无障碍/35-onBack矛盾.md) 跟踪.
+- 官方 "先回首页再退出" 未采纳 (决策 10, 保持任何标签直接退出); 返回键语义后来的问题由 [issues-cn #35](../../../dev/issues-cn/07-UI与无障碍/35-onBack矛盾.md) 跟踪.
 
 ## 评审与更正
 

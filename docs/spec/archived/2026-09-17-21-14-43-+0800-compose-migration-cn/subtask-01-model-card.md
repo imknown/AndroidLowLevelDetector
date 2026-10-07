@@ -17,7 +17,7 @@
 
 - **Style API 试水未落地**: stable foundation 1.12.1 反编译实证无文档所示签名, 无法编译 (b16ed770 记录更正); 遗留为 foundation 1.13 重构后从零立项.
 - **`textDirection="locale"` 不复刻** (有意接受的偏差, 观察记录 2026-09-19): Compose `TextDirection` 无 `Locale` 常量, material3 `Text` 无该参数; `TextAlign.Start` + `LocalLayoutDirection` 跟随 locale 已达成等价, 剩余差异只在混排字符的判定方式, 强行写死反而破坏 RTL.
-- **接受的 a11y 取舍**: `Card(onClick = {})` 保留只为涟漪 — TalkBack 宣告 double-tap-activatable 而无动作; 负责人拍板 "记录而非修复" (81dbe020, 逃生口注释在案), 后由 [issues-cn #34](../../../dev/issues-cn/7-UI与无障碍/34-Card空点击.md) 独立跟踪.
+- **接受的 a11y 取舍**: `Card(onClick = {})` 保留只为涟漪 — TalkBack 宣告 double-tap-activatable 而无动作; 负责人拍板 "记录而非修复" (81dbe020, 逃生口注释在案), 后由 [issues-cn #34](../../../dev/issues-cn/07-UI与无障碍/34-Card空点击.md) 独立跟踪.
 - 现存等价性注释: `MyModelCard.kt:34` (16sp → dp 运行时换算), `:43` (ripple-only card), `:53` (DefaultItemAnimator → `animateItem`), `:56` (legacy Card 无阴影, Compose 默认 1dp 清零).
 
 ## 评审与更正

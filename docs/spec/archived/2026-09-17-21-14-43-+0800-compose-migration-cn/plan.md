@@ -47,8 +47,8 @@
 
 ### 决策落地差异 (原 README 2026-09-22 汇总 + 后续走向)
 
-- **决策 6 (滚动条)** 两度变形: 自绘实现做完并通过评审但拍板不落地 (R10, 5cadc172 归真 "inert" 注释); 2026-09-28 落地自绘替身 `nonInteractiveScrollbar` (ST-10, 121dd849), 三档中 None / Normal 两档接线生效 (`drawsScrollBar` 仅认 Normal), Draggable 仍是 stub (现由 [issues-cn #37](../../../dev/issues-cn/7-UI与无障碍/37-滚动条可拖动是stub.md) 跟踪, 保持现状).
-- **决策 7 (Style API)**: 试水代码从未落地 — stable foundation 1.12.1 反编译实证无该签名 (b16ed770 记录更正); 遗留为 foundation 1.13 重构后从零立项, 现登记为 [issues-cn #60](../../../dev/issues-cn/7-UI与无障碍/60-StyleAPI跟进.md).
+- **决策 6 (滚动条)** 两度变形: 自绘实现做完并通过评审但拍板不落地 (R10, 5cadc172 归真 "inert" 注释); 2026-09-28 落地自绘替身 `nonInteractiveScrollbar` (ST-10, 121dd849), 三档中 None / Normal 两档接线生效 (`drawsScrollBar` 仅认 Normal), Draggable 仍是 stub (现由 [issues-cn #37](../../../dev/issues-cn/07-UI与无障碍/37-滚动条可拖动是stub.md) 跟踪, 保持现状).
+- **决策 7 (Style API)**: 试水代码从未落地 — stable foundation 1.12.1 反编译实证无该签名 (b16ed770 记录更正); 遗留为 foundation 1.13 重构后从零立项, 现登记为 [issues-cn #60](../../../dev/issues-cn/07-UI与无障碍/60-StyleAPI跟进.md).
 - **决策 9 (暂留 AppCompatActivity)**: 被推翻 — 09-20/21 的去 AppCompat 链把 `MainActivity` 换成 `ComponentActivity`, 主题改 `StateFlow` 单源, `appcompat` / MDC 依赖删除, "跟随省电模式" 档随之退役 (四档 → 三档终态, 存值 1 保留为 tombstone). 见 ST-08.
 - **决策 11 (ViewModel 工厂简化)**: 落地后又被整体取代 — 2026-10-02 起由 Metro 编译期 DI 接管 (兄弟 spec `2026-10-01-18-37-36-+0800-metro-di-adoption-cn`).
 - 计划 04/05/06 章的四个教学设想 (Style API 试水, `produceState` 防闪空, 自绘滚动条落地, 组合内收集 `SharedFlow`) 均未进入代码 (原 README 落地差异认定); 过期排序事件的收集最终落在 ViewModel (befc120e), 不在组合内.
@@ -77,7 +77,7 @@ ST-00..07 与计划第 0~7 步一一对应; ST-08..10 是计划外的迁移后�
 - 回归验证清单 (2026-09-25 抢救版, 11 项; 括号内是 2026-10-04 的现状注):
   1. 四页面数据正确, 卡片视觉逐项对齐 (圆角, `surfaceBright` 底色, 字号, 色点, 间距 12dp/10dp);
   2. 下拉刷新: 三列表页手势, 转圈配色, 刷新期间列表不闪空;
-  3. 滚动条: 设置项读写正常 (抢救版记 "inert" — 已过时: ST-10 落地后 None/Normal 两档生效, Draggable 仍 stub, [#37](../../../dev/issues-cn/7-UI与无障碍/37-滚动条可拖动是stub.md));
+  3. 滚动条: 设置项读写正常 (抢救版记 "inert" — 已过时: ST-10 落地后 None/Normal 两档生效, Draggable 仍 stub, [#37](../../../dev/issues-cn/07-UI与无障碍/37-滚动条可拖动是stub.md));
   4. 设置项继承: 旧版升级后主题/滚动条/两开关的值全部保留 (SP 键未动 — 该性质经 settings-ssot 任务延续: 键与存值格式零迁移);
   5. 主题: 三档 × 深浅色 × 动态取色 (Android 12+) × 高对比度抽查 (抢救版已更正: "四档" 的省电档随去 AppCompat 退役, 存量值启动时一次性迁回);
   6. 导航: 标签切换各自保留状态; 杀进程重启回原标签; 返回手势正常;

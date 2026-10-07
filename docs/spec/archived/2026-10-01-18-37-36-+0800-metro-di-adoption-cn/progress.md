@@ -31,7 +31,7 @@
 
 - module-structure-cn.md (未跟踪草稿) 保持不入库, 其余内容仍待负责人逐项裁定; 2026-10-03 已记入 Metro 1.5.0 的 `checkMainMetroHiddenDependencies` CI 门禁建议 (模块拆分后采纳)
 - HomeRepository.kt:346 全角 `｜` 分隔符 (既有代码, 与 Metro 接入无关) — 负责人裁定暂不处理 (2026-10-02; v1 评审复核时行号漂移至 349, 非本次引入)
-- 模块化结构改造 (2026-10-02 讨论存档): 负责人意向 = KMP 默认结构 / Kotlin Toolchain 方向; AI 建议草案 (目标结构 / 映射 / 现实检验) 与 5 个待决问题已存档至 [docs/dev/module-structure-cn.md](../../dev/module-structure-cn.md) (living, **待负责人逐项裁定**, 不依赖本会话上下文); ShellDefault 澄清同记其"关联裁定"节, ST-11 纳入 AGENTS.md; 顺序结论 = 先收完 ST-07~11 再动模块
+- 模块化结构改造 (2026-10-02 讨论存档): 负责人意向 = KMP 默认结构 / Kotlin Toolchain 方向; AI 建议草案 (目标结构 / 映射 / 现实检验) 与 5 个待决问题已存档至 [docs/dev/module-structure-cn.md](../../../dev/module-structure-cn.md) (living, **待负责人逐项裁定**, 不依赖本会话上下文); ShellDefault 澄清同记其"关联裁定"节, ST-11 纳入 AGENTS.md; 顺序结论 = 先收完 ST-07~11 再动模块
 
 ## 偏差记录
 

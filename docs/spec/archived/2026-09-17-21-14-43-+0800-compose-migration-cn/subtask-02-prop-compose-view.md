@@ -16,7 +16,7 @@ PropFragment 换壳为 ComposeView 宿主 — 第一个能跑的 Compose 屏; �
 
 1. **`rememberBottomBarHeight` 经 `LocalView.current.context` 取宿主**: Fragment 的 `requireContext()` 就是宿主 Activity 本身, cast 成立; 属过渡期桥接, 第 6 步换 Scaffold 后整体删除 (149f9f94 兑现).
 2. **底栏高度只在首次布局量一次**: 首帧 padding 为 0, 布局后跳真值 — 旧代码同款行为.
-3. **LazyColumn 遇重复 key 直接抛异常** (旧 DiffUtil 只是行为怪异不崩): Compose 侧更严格的一处; 当前三个列表页数据源无 key 碰撞, 后由 [issues-cn #20](../../../dev/issues-cn/5-稳定性与错误处理/20-列表key重复崩溃.md) 独立跟踪.
+3. **LazyColumn 遇重复 key 直接抛异常** (旧 DiffUtil 只是行为怪异不崩): Compose 侧更严格的一处; 当前三个列表页数据源无 key 碰撞, 后由 [issues-cn #20](../../../dev/issues-cn/archived/05-稳定性与错误处理/20-列表key重复崩溃.md) 独立跟踪.
 
 `produceState` 防闪空的教学设想未进入代码 — 防闪空由 `BaseListViewModel` 的 "刷新保留旧列表" 语义承担 (AGENTS.md 现行表述的来源).
 
@@ -28,7 +28,7 @@ dfe23c62 (step-2 等价性说明 + 数据初始加载时机 follow-up).
 
 ## 遗留
 
-数据初始加载时机: `BaseListViewModel` 是 UI 触发型 (`LaunchedEffect` → `init()`, 幂等 + loadJob 去重), 属 Ian Lake 文章定义的两种反模式之一; 观察记录裁定 "现在不动" (本地 prop 毫秒级, 惰性化收益趋零), **接网络/数据库时按 `WhileSubscribed(5_000)` 模式重造**. 现登记为 [issues-cn #61](../../../dev/issues-cn/3-UDF-单向数据流/61-数据加载惰性化.md).
+数据初始加载时机: `BaseListViewModel` 是 UI 触发型 (`LaunchedEffect` → `init()`, 幂等 + loadJob 去重), 属 Ian Lake 文章定义的两种反模式之一; 观察记录裁定 "现在不动" (本地 prop 毫秒级, 惰性化收益趋零), **接网络/数据库时按 `WhileSubscribed(5_000)` 模式重造**. 现登记为 [issues-cn #61](../../../dev/issues-cn/archived/03-UDF-单向数据流/61-数据加载惰性化.md).
 
 ## 证据
 

@@ -11,7 +11,7 @@
 Compose 构建接线实际早于计划文档数月, 分两段:
 
 - **2026-04-20 (8cd79baa)**: Compose 依赖进版本目录 (`gradle/toml/android.toml` + `kotlin.toml`), `build-logic` 新增 `AndroidApplicationComposeConventionPlugin` 与 `configureCompose()` helper — 此后模块只 apply 插件, 与现行 build-logic 约定同构.
-- **2026-07-28 (2430be11)**: `ui/theme/` 的 Color / Theme / Type 三件 (501 行) 先行入库 — 计划盘点时主题已 "就绪" (计划 01 章 1.4 原话), 含高中对比度方案 (这套多 scheme 后来由 [issues-cn #31](../../../dev/issues-cn/6-性能/31-主题死配色.md) 记为 6 套只用 2 套的死配色).
+- **2026-07-28 (2430be11)**: `ui/theme/` 的 Color / Theme / Type 三件 (501 行) 先行入库 — 计划盘点时主题已 "就绪" (计划 01 章 1.4 原话), 含高中对比度方案 (这套多 scheme 后来由 [issues-cn #31](../../../dev/issues-cn/06-性能/31-主题死配色.md) 记为 6 套只用 2 套的死配色).
 - **2026-09-19 当日增量**: 62c36a5c (minSdk 23 → 24, Navigation 3 硬要求) + 16e8d99c (`lifecycle-runtime-compose`, 提供 `collectAsStateWithLifecycle()`).
 
 ## 落地差异
@@ -20,4 +20,4 @@ Compose 构建接线实际早于计划文档数月, 分两段:
 
 ## 证据
 
-- 提交: 8cd79baa, 2430be11, 62c36a5c, 16e8d99c; 后续发现: [issues-cn #53](../../../dev/issues-cn/9-构建与CI/53-Compose开关死代码.md).
+- 提交: 8cd79baa, 2430be11, 62c36a5c, 16e8d99c; 后续发现: [issues-cn #53](../../../dev/issues-cn/09-构建与CI/53-Compose开关死代码.md).

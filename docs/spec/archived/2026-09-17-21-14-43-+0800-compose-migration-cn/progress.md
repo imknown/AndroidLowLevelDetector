@@ -25,7 +25,7 @@
 
 ## 挂起物
 
-- **滚动条 "可拖动" 档**: stub, 保持现状不排期 ([issues-cn #37](../../../dev/issues-cn/7-UI与无障碍/37-滚动条可拖动是stub.md)); 官方 material3 滚动条到位后从零接入.
+- **滚动条 "可拖动" 档**: stub, 保持现状不排期 ([issues-cn #37](../../../dev/issues-cn/07-UI与无障碍/37-滚动条可拖动是stub.md)); 官方 material3 滚动条到位后从零接入.
 - **Expressive 主题 / Style API / WhileSubscribed 数据加载**: 2026-09-25 抢救版记 "活"; 2026-10-04 已补立项为 issues-cn #59 / #60 / #61 (出处锚定本目录).
 - **教学载体**: 概念速成 / API 速查表 / 速记手册 / 术语表只存于 git 历史 (7843a6fc / 9c91c8cc), 负责人已裁定不回写.
 
