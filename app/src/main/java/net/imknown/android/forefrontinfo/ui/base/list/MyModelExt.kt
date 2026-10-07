@@ -19,7 +19,7 @@ import net.imknown.android.forefrontinfo.ui.theme.StatusColor
  *
  * Dot page semantics (issues-cn #69): the red/yellow/green dot is a Home-only
  * per-item concept; Others / Prop / Settings never render dots. Hence two
- * failure-row families:
+ * kinds of failure-row helper:
  * - guardedMyModel: failure row CRITICAL — Home items have dots, failure is red;
  * - guardedDetectFailedMyModel: colorless failure row — dotless pages keep the
  *   plain row shape.

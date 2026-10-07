@@ -43,7 +43,7 @@ class DateTimeExtTest {
         val originalLocale = Locale.getDefault(Locale.Category.FORMAT)
         val originalTimezone = TimeZone.getDefault()
         try {
-            // ar renders native digits by default; the formatter must not adopt them (N1).
+            // ar renders native digits by default; the formatter must not adopt them.
             Locale.setDefault(Locale.Category.FORMAT, Locale("ar"))
             TimeZone.setDefault(TimeZone.getTimeZone("GMT+08:00"))
 

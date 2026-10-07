@@ -47,7 +47,7 @@
 
 ### 决策落地差异 (原 README 2026-09-22 汇总 + 后续走向)
 
-- **决策 6 (滚动条)** 两度变形: 自绘实现做完并通过评审但拍板不落地 (R10, 5cadc172 归真 "inert" 注释); 2026-09-28 落地自绘替身 `nonInteractiveScrollbar` (ST-10, 121dd849), 三档中 None / Normal 两档接线生效 (`drawsScrollBar` 仅认 Normal), Draggable 仍是 stub (现由 [issues-cn #37](../../../dev/issues-cn/07-UI与无障碍/37-滚动条可拖动是stub.md) 跟踪, 保持现状).
+- **决策 6 (滚动条)** 两度变形: 自绘实现做完并通过评审但拍板不落地 (R10, 5cadc172 归真 "inert" 注释 (归真: 把过时的表述改写回与代码现状一致)); 2026-09-28 落地自绘替身 `nonInteractiveScrollbar` (ST-10, 121dd849), 三档中 None / Normal 两档接线生效 (`drawsScrollBar` 仅认 Normal), Draggable 仍是 stub (现由 [issues-cn #37](../../../dev/issues-cn/07-UI与无障碍/37-滚动条可拖动是stub.md) 跟踪, 保持现状).
 - **决策 7 (Style API)**: 试水代码从未落地 — stable foundation 1.12.1 反编译实证无该签名 (b16ed770 记录更正); 遗留为 foundation 1.13 重构后从零立项, 现登记为 [issues-cn #60](../../../dev/issues-cn/07-UI与无障碍/60-StyleAPI跟进.md).
 - **决策 9 (暂留 AppCompatActivity)**: 被推翻 — 09-20/21 的去 AppCompat 链把 `MainActivity` 换成 `ComponentActivity`, 主题改 `StateFlow` 单源, `appcompat` / MDC 依赖删除, "跟随省电模式" 档随之退役 (四档 → 三档终态, 存值 1 保留为 tombstone). 见 ST-08.
 - **决策 11 (ViewModel 工厂简化)**: 落地后又被整体取代 — 2026-10-02 起由 Metro 编译期 DI 接管 (兄弟 spec `2026-10-01-18-37-36-+0800-metro-di-adoption-cn`).

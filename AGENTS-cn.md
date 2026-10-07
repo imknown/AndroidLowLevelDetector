@@ -29,7 +29,8 @@ Android 应用, 展示底层系统特征: Treble 与 GSI 兼容性, Mainline/APE
 ./gradlew lintFossDebug          # Android lint
 ```
 
-- **先检查 LSP**: 编辑某个语言的代码之前, 先确认该语言的 LSP 在本环境是否已配置; 没配置就先协助用户配置 (例: Kotlin LSP — `kotlin-lsp` 插件托管 JetBrains ILS, 以 `--stdio` 启动其服务, 等到 `intellij/ready-for-test` 通知后用 **pull 模式** 拉 `textDocument/diagnostic`; ILS 从不主动 push, `textDocument/documentSymbol` 可兼作 "真的在分析" 自检). 每批编辑之后, 先跑 LSP diagnostics — 再加上面几档 Gradle 检查 — 然后派新上下文的 subagent 在后台 review 未提交 diff, 把发现汇报给负责人后停下: 无论是否走 spec 流程, 没有负责人的明确指令一律不提交. 检查级的 LSP 发现 (如 "Use destructuring declaration") 当语法警告同等对待, 直接修, 不记文档. 本仓库 Kotlin 侧已接好: `scripts/kotlin-lsp-diagnostics.js` 一条命令跑完整套握手, 解析 ILS 安装位置的顺序是 `KOTLIN_LSP_SERVER` → `KOTLIN_LSP_HOME` (约定的用户级环境变量, 指向发行版根目录) → `PATH` 上的 `intellij-server`. 索引缓存就是 gitignored 的 `.kotlin/lsp-cache` — 可随时删, 且启动始终带 `--system-path` (不带它 ILS 每次启动都随机临时目录、从头重索引); 重建用 `<ILS 发行版>/bin/warmup.py <repo> <repo>/.kotlin/lsp-cache --server <ILS 发行版>/bin/intellij-server --build-tool gradle`.
+- 只改文档或注释的编辑不需要过构建那几档 — 没有改代码.
+- **先检查 LSP**: 编辑某个语言的代码之前, 先确认该语言的 LSP 在本环境是否已配置; 没配置就先协助用户配置 (例: Kotlin LSP — `kotlin-lsp` 插件托管 JetBrains ILS (IntelliJ Language Server), 以 `--stdio` 启动其服务, 等到 `intellij/ready-for-test` 通知后用 **pull 模式** 拉 `textDocument/diagnostic`; ILS 从不主动 push, `textDocument/documentSymbol` 可兼作 "真的在分析" 自检). 每批编辑之后, 先跑 LSP diagnostics — 再加上面几档 Gradle 检查 — 然后派新上下文的 subagent 在后台 review 未提交 diff, 把发现汇报给负责人后停下: 无论是否走 spec 流程, 没有负责人的明确指令一律不提交. 检查级的 LSP 发现 (如 "Use destructuring declaration") 当语法警告同等对待, 直接修, 不记文档. 本仓库 Kotlin 侧已接好: `scripts/kotlin-lsp-diagnostics.js` 一条命令跑完整套握手, 解析 ILS 安装位置的顺序是 `KOTLIN_LSP_SERVER` → `KOTLIN_LSP_HOME` (约定的用户级环境变量, 指向发行版根目录) → `PATH` 上的 `intellij-server`. 索引缓存就是 gitignored 的 `.kotlin/lsp-cache` — 可随时删, 且启动始终带 `--system-path` (不带它 ILS 每次启动都随机临时目录、从头重索引); 重建用 `<ILS 发行版>/bin/warmup.py <repo> <repo>/.kotlin/lsp-cache --server <ILS 发行版>/bin/intellij-server --build-tool gradle`.
 
 ## 构建约定
 
@@ -124,7 +125,7 @@ Screen (Compose) → ViewModel (StateFlow) → Repository → DataSource
 
 - PR 目标是 `develop` (默认分支). 提交信息遵循 Conventional Commits, **type + scope 用小写**: `fix(home): ...`.
 - 每条提交信息末尾加一个 trailer, 写明产生它的 agent, 模型, 以及推理 effort 等级 (`off` / `low` / `medium` / `high` / `xhigh` / `max`, ...), 例如 `Generated with ZCode (GLM-5.3, effort: xhigh)`. 等级写作 `effort:` — 它是那个推理 effort 旋钮本身, 不是对推理的评价; 2026-09-22 及更早的提交写的是 `reasoning:`, 保持原样. 绝不猜测取值; 当 agent, 模型或 effort 无法确定时, 问用户要记什么, 不要默默写 `unknown`.
-- 从证据而不是习惯来命名 agent: 怎么找由你决定, 但要说明依据是什么, 并在写下来之前取得用户的同意. 版本级的名称是有区别的 (`Qoder CN` 与 `Qoder`, `Trae CN` 与 `Trae` 是不同的 ADE); 不要自造宿主形态的后缀, 例如 `IDE` / `CLI`, 除非用户要求.
+- 从证据而不是习惯来命名 agent: 怎么找由你决定, 但要说明依据是什么, 并在写下来之前取得用户的同意. 版本级的名称是有区别的 (`Qoder CN` 与 `Qoder`, `Trae CN` 与 `Trae` 是不同的 AI 开发环境 (ADE)); 不要自造宿主形态的后缀, 例如 `IDE` / `CLI`, 除非用户要求.
 - CI 只构建 `assembleFossDebug`. `master` 承载 `lld.json` 数据更新 — 不要向它开 PR.
 
 ## 绝不提交
@@ -140,12 +141,13 @@ Screen (Compose) → ViewModel (StateFlow) → Repository → DataSource
 - **就地修正**文档: 一句话被证明是错的, 就改写它以及所有依赖它的下游内容, 让文档单独读来就是当前事实. 不要让被推翻的句子原样留着, 后面再挂一个括号或引块更正; 也不要给改过的句子标注它是哪次核对改的 — 事实属于句子本身, 不属于谁在何时核对过的说明.
 - 有冲突先问再裁: 两份文档不一致, 或文档与代码不一致且证据不能判定谁错时, 把两边摆出来让负责人裁定 — 然后只改被裁定的那句. 更正不外溢: 另一句看起来像同样问题的话, 记到待问清单里, 不并进同一次修改.
 - 文档只陈述负责人说过的话或代码展示的事实. 不为了让一行或一句话看起来完整而添术语, 检测条目或限定词; 术语表的一行只覆盖本文档自己用到的词汇, 最后一处引用已消失的行要先问, 而不是因为该术语广为人知就留着.
-- **大白话**: 每句话都要能一遍读懂 — 不自造简称, 不给后文要依赖的东西起比喻性的代称 (比如把一批工作项叫成 "桶"), 不用文档没介绍过的缩写. 沿用 AGENTS.md 或本文档已定义的术语; 确实要引入新术语, 在它第一次出现的地方说清.
+- **大白话**: 每句话都要能一遍读懂 — 不自造简称, 不给后文要依赖的东西起比喻性的代称 (比如把一批工作项叫成 "桶"), 不用文档没介绍过的缩写. 沿用 AGENTS.md 或本文档已定义的术语; 确实要引入新术语, 在它第一次出现的地方说清. 同一标准也适用于代码注释, 也适用于跟负责人聊天时的回答.
 - 留在正文里的: 实质与导航 — 句子所划的范围或例外, 按 ID 的交叉引用, 代码符号. **谁在何时裁定了什么, 不是正文**: 带日期的裁定属于 `git log`, 不是每句话上的 "负责人裁定, <日期>" 标签. 带版本行的文档只写版本并指向 `git log`; 它不积累修订日志.
 - 文档默认用英语; 非英语的文件和目录带语言后缀 (中文: `-cn`). 永远以英文版为生效版本: 英文的 `README.md` / `AGENTS.md` 保住规范文件名, 旁边配一份中文翻译 (`README-cn.md`, `AGENTS-cn.md`). 链接跟随链接方文档的语言 — 中文文档指向中文版 (`README-cn.md`), 英文文档指向英文版 — 没有对应版本时, 指向存在的那份. 纯翻译不提它的孪生版, 也不自称中文版或翻译版 — 不加翻译注记, 不加回指; `-cn` 后缀本身已经说明了关系. 文件名默认用英语; 沿用各目录现有的命名. 有理由时, 文档内部仍可使用任何语言.
 - **任何语言都用 ASCII 标点**: 中文 (或日文) 文档用英文标点, 不用 CJK 标点 — `,` `.` `;` `:` `!` `?` `(...)` `"..."`, 而不是 `，。；：！（）「」《》`. 一一对应: `，、` → `,` · `。` → `.` · `；` → `;` · `：` → `:` · `（）` → `()` · `「」『』《》` → `"` (嵌套时用 `'`) · `……`/`…` → `...` · `——` → ` — `. 非标点字形保持原样: `—` `·` `→` `←`, 图中的表格线符号, 以及状态 emoji.
   间距跟英语走, 不论两侧是什么文字: 标点后若还接文字, 后面空一格 (`每个条目, 每次检测`), `,` `.;:!?)` 前不空格, `(` `"` 内不空格. 另外两种情况: `(` 紧跟标识符表示调用, 中间不空格 (`collectModels()`); 数字之间的 `:` 不加空格 (`16:9`, `12:30`).
   这条对每份文档都成立, 包括 **frozen**, **record** 和 **scratch** 的那些 — 标点属于排版, 不是那些状态所保留的实质. 写新文字或重写一段时, 顺手把改动触及的部分一并转换; 在语言之间翻译时也要核一遍标点.
   标题的标点和间距决定目录所指向的 GitHub 锚点, 所以重排一个标题的间距时, 要在同一次修改里改写所有解析到它的 `](#...)`. 显式 `<a id="...">` 锚点是稳定文本, 永不移动.
+- **长行按语义折行** (规则先立; 存量文件的一次性重排暂缓): 一行太长时, 在句子或分句边界折行 (逗号收尾的分句是合法断点, 但特别短的分句可以不换行, 和后面的内容并作一行; 简短的并列枚举不拆开) — 目的是行不整体过长, 不定死宽度. 标题, 链接目标, URL, 代码块, 行内代码永远不折, 各占一个源码行. 表格行不拆成两个源码行, 但过长的单元格可以在单元格内用 `<br>` 折行 (源码里的裸换行会破坏表格). 已有的硬断行是承载语义的: 行尾两个空格 (或 `<br>`) 就是渲染时的换行点, 绝不能删除或折叠 — 一句话内部的软换行则完全不需要行尾空格. 折行属于格式, 对 **frozen**, **record** 和 **scratch** 文档同样适用. 代码注释遵循同样规则; 与代码同行的注释保持一行, 折行时绝不能碰注释以外的任何内容.
 - 任何文档 (memory 文档在内) 都不得含敏感信息: 隐私数据, 密码, 密钥, 证书.
 - `docs/` 下的文档保持简短; 一份长得太长时, 沿自然缝隙拆开, 保留一个 README 做索引页.
