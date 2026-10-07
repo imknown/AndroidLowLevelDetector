@@ -113,6 +113,7 @@ lowleveldetector-android-application = { id = "lowleveldetector.android.applicat
 lowleveldetector-android-application-compose = { id = "lowleveldetector.android.application.compose" }
 lowleveldetector-android-application-flavors = { id = "lowleveldetector.android.application.flavors" }
 lowleveldetector-android-library = { id = "lowleveldetector.android.library" }
+lowleveldetector-android-library-compose = { id = "lowleveldetector.android.library.compose" }
 lowleveldetector-android-application-ndk-version = { id = "lowleveldetector.android.application.ndk.version" }
 lowleveldetector-android-library-ndk-version = { id = "lowleveldetector.android.library.ndk.version" }
 # endregion [For build-logic]

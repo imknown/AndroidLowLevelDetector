@@ -48,6 +48,10 @@ gradlePlugin {
             id = libsAndroid.plugins.lowleveldetector.android.library.asProvider().get().pluginId
             implementationClass = androidLib("AndroidLibraryConventionPlugin")
         }
+        register("androidLibraryCompose") {
+            id = libsAndroid.plugins.lowleveldetector.android.library.compose.get().pluginId
+            implementationClass = androidLib("AndroidLibraryComposeConventionPlugin")
+        }
         register("androidApplicationNdkVersion") {
             id = libsAndroid.plugins.lowleveldetector.android.application.ndk.version.get().pluginId
             implementationClass = androidApp("AndroidApplicationNdkVersionConventionPlugin")
