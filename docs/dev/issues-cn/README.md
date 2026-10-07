@@ -240,7 +240,7 @@
 
 | 项 | 结论 | 落点 |
 |----|------|------|
-| 0a | CI 扩跑 test + lint (#50, AGENTS.md 的 "CI 只编译" 条款随 1a 改写). 现有测试只有 `DateTimeExtTest` 一个真实类, 门禁先立、先守存量; 测试随后续步骤长出来 (1b 的黄金数据, 2a 的逐条单测, #50 条目列的抽纯函数批); 首跑前本地清红 | 步骤 1a |
+| 0a | CI 扩跑 test + lint (#50, AGENTS.md 的 "CI 只编译" 条款随 1a 改写). 现有测试只有 `DateTimeExtTest` 一个真实类, 门禁先立, 先守存量; 测试随后续步骤长出来 (1b 的黄金数据, 2a 的逐条单测, #50 条目列的抽纯函数批); 首跑前本地清红 | 步骤 1a |
 | 0c | 收敛单写入方: `myAndroid` 冻结为不可变, LLD known 修正按 [#09](02-SSOT-唯一数据来源/09-myAndroid可变单例.md) 的 enrich 纯函数 + 显式传参实施: "本地值先行, 联网取到 LLD 后用修正值展示" 的行为不变, 改的只是修正值不再回写全局 | 单独实施 #09 |
 | 0d | 一次性 (步骤 2a 集中迁移全部 detect* 方法); 并立为常驻工作方式: 问题与需求的修复一次做完, 不给同一条目留渐进尾巴 (AGENTS.md 的 "Adding a detection item" 随 2a 改写) | 步骤 2a |
 | 0e | JUnit 5 (含 useJUnitPlatform 接线) + MockK 引入 (interface-first 是现状描述而非禁令, AGENTS.md 测试段随 1b 校准) + Turbine 随首个 Flow 测试进 | 步骤 1b |

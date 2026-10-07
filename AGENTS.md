@@ -165,7 +165,7 @@ Screen (Compose) → ViewModel (StateFlow) → Repository → DataSource
   re-evaluate them whenever a state class changes  
   (follow the pattern in the comment atop `HomeViewModel` / `BaseListViewModel`,  
   which explains *why* the annotation is safe).
-- The bundled `lld.json` data is copied to the external files dir (`LldManager`)  
+- The bundled `lld.json` data is copied to the external files dir (`LldFileStore`)  
   and refreshed online via Ktor when the user allows network; the GitHub or Gitee URL is chosen by timezone.
 - Command execution uses libsu in **non-root** mode  
   (`ui/common/ShellLibSu.kt`, with `Shell.FLAG_NON_ROOT_SHELL`): there is no root layer.

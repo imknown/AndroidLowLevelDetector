@@ -48,7 +48,7 @@ libsu, JNI/NDK. DI 用 Metro (编译期, 无反射).
   `scripts/kotlin-lsp-diagnostics.js` 一条命令跑完整套握手,  
   解析 ILS 安装位置的顺序是 `KOTLIN_LSP_SERVER` → `KOTLIN_LSP_HOME` (约定的用户级环境变量,  
   指向发行版根目录) → `PATH` 上的 `intellij-server`. 索引缓存就是 gitignored 的 `.kotlin/lsp-cache`, 可随时删,  
-  且启动始终带 `--system-path` (不带它 ILS 每次启动都随机临时目录、从头重索引);  
+  且启动始终带 `--system-path` (不带它 ILS 每次启动都随机临时目录, 从头重索引);  
   重建用 `<ILS 发行版>/bin/warmup.py <repo> <repo>/.kotlin/lsp-cache --server <ILS 发行版>/bin/intellij-server --build-tool gradle`.
 
 ## 构建约定
