@@ -70,9 +70,17 @@ kotlinx.serialization, Ktor, libsu, JNI/NDK. DI by Metro (compile-time, no refle
   `scripts/kotlin-lsp-diagnostics.js` runs the whole handshake in one command,  
   resolving the ILS installation from `KOTLIN_LSP_SERVER`,  
   `KOTLIN_LSP_HOME` (the conventional user-level environment variable pointing at the distribution root), or  
-  `intellij-server` on `PATH`. The index cache is the gitignored `.kotlin/lsp-cache`, disposable,  
-  and always launched with `--system-path` because a bare ILS launch picks a random temp dir and re-indexes from scratch;  
-  rebuild it with `<ILS distribution>/bin/warmup.py <repo> <repo>/.kotlin/lsp-cache --server <ILS distribution>/bin/intellij-server --build-tool gradle`.
+  `intellij-server` on `PATH`. The index cache is the gitignored `.kotlin/lsp-cache/<process.platform>`  
+  (`win32`, `linux`, `darwin`), disposable, and kept per platform because each platform has its own ILS distribution,  
+  and the cache one platform warms is not reusable by another.  
+  Always launched with `--system-path` because a bare ILS launch picks a random temp dir and re-indexes from scratch;  
+  rebuild it with `<ILS distribution>/bin/warmup.py <repo> <repo>/.kotlin/lsp-cache/<process.platform> --server <ILS distribution>/bin/intellij-server --build-tool gradle`.  
+  The check covers `.kt` only: ILS builds no model for a `.kts` Gradle build script, so the script fails on one instead of printing an empty  
+  `CLEAN`; verify build scripts with the Gradle build itself.  
+  A run exits 0 only when the pull succeeded and no ERROR-severity item came back: a failed run or any ERROR item exits 1.  
+  `ILS_READY_TIMEOUT_MS` (default 1800000) and `ILS_CALL_TIMEOUT_MS` (default 180000) override the two waits on a slower machine.  
+  A run holds `.kotlin/lsp-cache/<process.platform>.lock` for its whole lifetime, so a second concurrent run exits 1 naming the first pid,  
+  and SIGINT or SIGTERM stop the server before the script exits.
 
 ## Build conventions
 

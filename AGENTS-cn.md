@@ -47,9 +47,17 @@ libsu, JNI/NDK. DI 用 Metro (编译期, 无反射).
   检查级的 LSP 发现 (如 "Use destructuring declaration") 当语法警告同等对待, 直接修, 不记文档. 本仓库 Kotlin 侧已接好:  
   `scripts/kotlin-lsp-diagnostics.js` 一条命令跑完整套握手,  
   解析 ILS 安装位置的顺序是 `KOTLIN_LSP_SERVER` → `KOTLIN_LSP_HOME` (约定的用户级环境变量,  
-  指向发行版根目录) → `PATH` 上的 `intellij-server`. 索引缓存就是 gitignored 的 `.kotlin/lsp-cache`, 可随时删,  
+  指向发行版根目录) → `PATH` 上的 `intellij-server`. 索引缓存就是 gitignored 的 `.kotlin/lsp-cache/<process.platform>`  
+  (`win32`, `linux`, `darwin`), 可随时删, 并按平台分目录: 每个平台有自己的 ILS 发行版,  
+  一个平台热好的缓存另一个平台用不了.  
   且启动始终带 `--system-path` (不带它 ILS 每次启动都随机临时目录, 从头重索引);  
-  重建用 `<ILS 发行版>/bin/warmup.py <repo> <repo>/.kotlin/lsp-cache --server <ILS 发行版>/bin/intellij-server --build-tool gradle`.
+  重建用 `<ILS 发行版>/bin/warmup.py <repo> <repo>/.kotlin/lsp-cache/<process.platform> --server <ILS 发行版>/bin/intellij-server --build-tool gradle`.  
+  这条检查只覆盖 `.kt`: ILS 不为 Gradle 构建脚本 (`.kts`) 建立模型, 所以对 `.kts` 会直接失败,  
+  而不是打印一个空的 CLEAN; 构建脚本要用 Gradle 构建本身来验证.  
+  只有拉取成功且没有 ERROR 级条目时才返回 0: 运行失败或存在 ERROR 条目都返回 1.  
+  `ILS_READY_TIMEOUT_MS` (默认 1800000) 与 `ILS_CALL_TIMEOUT_MS` (默认 180000) 可在更慢的机器上覆盖这两处等待上限.  
+  一次运行全程持有 `.kotlin/lsp-cache/<process.platform>.lock`, 并发的第二个运行会报出第一个的 pid 并 exit 1,  
+  收到 SIGINT 或 SIGTERM 时脚本会先停掉服务器再退出.
 
 ## 构建约定
 
