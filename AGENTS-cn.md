@@ -40,7 +40,9 @@ libsu, JNI/NDK. DI 用 Metro (编译期, 无反射).
 - 只改文档或注释的编辑不需要过构建那几档, 没有改代码.
 - **先检查 LSP**: 编辑某个语言的代码之前, 先确认该语言的 LSP 在本环境是否已配置;  
   没配置就先协助用户配置  
-  (例: Kotlin LSP: `kotlin-lsp` 插件托管 JetBrains ILS (IntelliJ Language Server), 以 `--stdio` 启动其服务,  
+  (例: Kotlin LSP 用 JetBrains ILS (IntelliJ Language Server), 即这门语言官方的服务器,  
+  不用 `fwcd` 的 kotlin-language-server 这类第三方实现; ILS 由下面那个脚本启动, 没有编辑器插件托管它,  
+  以 `--stdio` 启动其服务,  
   等到 `intellij/ready-for-test` 通知后用 **pull 模式** 拉 `textDocument/diagnostic`; ILS 从不主动 push,  
   `textDocument/documentSymbol` 可兼作 "真的在分析" 自检). 每批编辑之后, 先跑 LSP diagnostics (再加上面几档 Gradle  
   检查), 然后派新上下文的 subagent 在后台 review 未提交 diff, 把发现汇报给负责人后停下: 无论是否走 spec 流程, 没有负责人的明确指令一律不提交.  

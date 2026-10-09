@@ -58,7 +58,9 @@ kotlinx.serialization, Ktor, libsu, JNI/NDK. DI by Metro (compile-time, no refle
 - **Check the LSP first**: before editing code in a language,  
   check whether that language's LSP is configured in this environment; if it is not,  
   help the user set one up first  
-  (e.g. the Kotlin LSP: the `kotlin-lsp` plugin hosts JetBrains ILS (the IntelliJ Language Server):  
+  (e.g. the Kotlin LSP: use JetBrains ILS (the IntelliJ Language Server), the language's official server,  
+  not a third-party port such as `fwcd`'s kotlin-language-server; ILS is started by the driver named below,  
+  not hosted by any editor plugin:  
   launch its server with `--stdio`, wait for the `intellij/ready-for-test` notification,  
   then pull `textDocument/diagnostic`; ILS never pushes diagnostics,  
   and `textDocument/documentSymbol` doubles as an "is it really analyzing"  
