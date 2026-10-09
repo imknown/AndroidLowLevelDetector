@@ -77,9 +77,36 @@ kotlinx.serialization, Ktor, libsu, JNI/NDK. DI by Metro (compile-time, no refle
   and the cache one platform warms is not reusable by another.  
   Always launched with `--system-path` because a bare ILS launch picks a random temp dir and re-indexes from scratch;  
   rebuild it with `<ILS distribution>/bin/warmup.py <repo> <repo>/.kotlin/lsp-cache/<process.platform> --server <ILS distribution>/bin/intellij-server --build-tool gradle`.  
+  Both warmup and a diagnostics run do a Gradle project import (sync),  
+  and that sync runs under the build JVM, the JDK that `JAVA_HOME` points at when Gradle runs,  
+  which is a different thing from the toolchain JVM that compiles the app code.  
+  The build JVM must match the project's Java toolchain version  
+  (declared in `gradle/toml/build.toml` as `javaToolchain` and consumed by the `build-logic` convention plugins),  
+  never a hardcoded number and never a hardcoded JDK path:  
+  the `:build-logic:convention` included build is compiled to that toolchain's bytecode version,  
+  so a build JVM older than it cannot load the convention plugins and the sync fails.  
+  The failure is silent: ILS does not error out on a failed sync,  
+  it degrades to an incomplete project model and still answers diagnostics,  
+  so a too-old build JVM makes the analyzer blind and the run prints a FALSE `CLEAN`  
+  (0 items) that looks like success. So before warming or diagnosing,  
+  make sure the `JAVA_HOME` that Gradle will run under is a JDK at least the toolchain version;  
+  `./gradlew -q javaToolchains` shows which JDKs Gradle has detected and the version each is.  
+  Warmup counts as successful only when two things hold together:  
+  the Gradle sync is SUCCESS  
+  (the intellij-server log line reads `"tool":"gradle","status":"SUCCESS"`),  
+  and a diagnostics run against a sentinel file known to report problems actually returns those problems.  
+  The sentinel is not a business file  
+  (do not reuse something like `Theme.kt`, whose findings vanish the moment the real code is cleaned up):  
+  `scripts/kotlin-lsp-selfcheck.js` writes a throwaway probe into the app source package,  
+  carrying a deliberately triggered warning (a non-lowercase function name),  
+  runs diagnostics on it, and deletes it in a `finally` so nothing lands in git or the build.  
+  A `CLEAN` result on the probe means the sync silently failed, not that warmup worked.  
+  `scripts/kotlin-lsp-diagnostics.js` itself inherits the shell `JAVA_HOME` unchanged,  
+  so running the self-check (not just a bare diagnostics run) is what catches a too-old build JVM.  
   The check covers `.kt` only: ILS builds no model for a `.kts` Gradle build script, so the script fails on one instead of printing an empty  
   `CLEAN`; verify build scripts with the Gradle build itself.  
-  A run exits 0 only when the pull succeeded and no ERROR-severity item came back: a failed run or any ERROR item exits 1.  
+  A run exits 0 only when the pull succeeded and no ERROR-severity item came back: a failed run or any ERROR item exits 1  
+  (the exit code does not check the sync, so pair it with the sync-SUCCESS and sentinel checks above before trusting a `CLEAN`).  
   `ILS_READY_TIMEOUT_MS` (default 1800000) and `ILS_CALL_TIMEOUT_MS` (default 180000) override the two waits on a slower machine.  
   A run holds `.kotlin/lsp-cache/<process.platform>.lock` for its whole lifetime, so a second concurrent run exits 1 naming the first pid,  
   and SIGINT or SIGTERM stop the server before the script exits.

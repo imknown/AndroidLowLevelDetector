@@ -54,9 +54,36 @@ libsu, JNI/NDK. DI 用 Metro (编译期, 无反射).
   一个平台热好的缓存另一个平台用不了.  
   且启动始终带 `--system-path` (不带它 ILS 每次启动都随机临时目录, 从头重索引);  
   重建用 `<ILS 发行版>/bin/warmup.py <repo> <repo>/.kotlin/lsp-cache/<process.platform> --server <ILS 发行版>/bin/intellij-server --build-tool gradle`.  
+  warmup 和一次诊断运行都会做一次 Gradle 项目导入 (sync),  
+  这次 sync 跑在构建 JVM 上, 也就是 Gradle 运行时 `JAVA_HOME` 指向的那个 JDK,  
+  它和编译 app 代码用的工具链 JVM 不是一回事.  
+  构建 JVM 必须跟项目的 Java 工具链版本一致  
+  (该版本在 `gradle/toml/build.toml` 里以 `javaToolchain` 声明, 由 `build-logic` 约定插件消费),  
+  不写死版本号, 也不写死 JDK 路径:  
+  `:build-logic:convention` 这个包含构建会被编译成该工具链对应的 bytecode 版本,  
+  所以比它旧的构建 JVM 加载不了约定插件, sync 就会失败.  
+  而且这个失败是静默的: sync 失败时 ILS 不会报错退出,  
+  它会降级成一个不完整的项目模型并照常答复诊断,  
+  于是太旧的构建 JVM 会让分析器变瞎, 运行打印出一个假的 CLEAN  
+  (0 items), 看起来像成功了. 所以预热或诊断之前,  
+  要确保 Gradle 将要运行所用的 `JAVA_HOME` 是一个不低于工具链版本的 JDK;  
+  `./gradlew -q javaToolchains` 能列出 Gradle 探测到的 JDK 以及各自的版本.  
+  warmup 只有同时满足两点才算成功:  
+  一是 Gradle sync 为 SUCCESS  
+  (intellij-server 日志里出现 `"tool":"gradle","status":"SUCCESS"`),  
+  二是对一个已知会报问题的哨兵文件跑诊断, 确实把那些问题返回了.  
+  哨兵不是业务文件  
+  (不要借用 `Theme.kt` 之类, 它的告警会在真实代码被修干净后消失):  
+  `scripts/kotlin-lsp-selfcheck.js` 会往 app 源码包里写一个用完即弃的探针,  
+  带一处故意触发的警告 (一个非小写开头的函数名),  
+  对它跑诊断, 再在 `finally` 里删掉, 所以不会留进 git 或构建产物.  
+  对探针跑出 CLEAN 就说明 sync 静默失败了, 而不是 warmup 成功了.  
+  `scripts/kotlin-lsp-diagnostics.js` 本身原样继承 shell 的 `JAVA_HOME`,  
+  所以要靠跑这个自检 (而不是只跑一次光秃秃的诊断) 才能抓出太旧的构建 JVM.  
   这条检查只覆盖 `.kt`: ILS 不为 Gradle 构建脚本 (`.kts`) 建立模型, 所以对 `.kts` 会直接失败,  
   而不是打印一个空的 CLEAN; 构建脚本要用 Gradle 构建本身来验证.  
-  只有拉取成功且没有 ERROR 级条目时才返回 0: 运行失败或存在 ERROR 条目都返回 1.  
+  只有拉取成功且没有 ERROR 级条目时才返回 0: 运行失败或存在 ERROR 条目都返回 1  
+  (退出码并不检查 sync, 所以信一个 CLEAN 之前, 要配合上面的 sync SUCCESS 和哨兵文件两项检查).  
   `ILS_READY_TIMEOUT_MS` (默认 1800000) 与 `ILS_CALL_TIMEOUT_MS` (默认 180000) 可在更慢的机器上覆盖这两处等待上限.  
   一次运行全程持有 `.kotlin/lsp-cache/<process.platform>.lock`, 并发的第二个运行会报出第一个的 pid 并 exit 1,  
   收到 SIGINT 或 SIGTERM 时脚本会先停掉服务器再退出.
