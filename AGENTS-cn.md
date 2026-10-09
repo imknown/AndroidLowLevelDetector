@@ -244,7 +244,10 @@ Screen (Compose) → ViewModel (StateFlow) → Repository → DataSource
 - 每条提交信息末尾加一个 trailer, 写明产生它的 agent, 模型,  
   以及推理 effort 等级 (`off` / `low` / `medium` / `high` / `xhigh` / `max`, ...),  
   例如 `Generated with ZCode (GLM-5.3, effort: xhigh)`. 等级写作 `effort:`, 它是那个推理 effort 旋钮本身, 不是对推理的评价;  
-  2026-09-22 及更早的提交写的是 `reasoning:`, 保持原样. 绝不猜测取值; 当 agent, 模型或 effort 无法确定时, 问用户要记什么, 不要默默写 `unknown`.
+  2026-09-22 及更早的提交写的是 `reasoning:`, 保持原样. 绝不猜测取值; 当 agent, 模型或 effort 无法确定时, 问用户要记什么.  
+  禁的是你擅自写 `unknown`, 不是这个词本身:  
+  问过之后, 用户确认某个值确实无法确定 (比如 Auto 模式下界面不显示 effort 等级),  
+  这时写 `unknown` 就是正确的, 经同意的记录, 不是猜测.
 - 从证据而不是习惯来命名 agent: 怎么找由你决定, 但要说明依据是什么, 并在写下来之前取得用户的同意.  
   版本级的名称是有区别的 (`Qoder CN` 与 `Qoder`, `Trae CN` 与 `Trae` 是不同的 AI 开发环境 (ADE)); 不要自造宿主形态的后缀, 例如 `IDE` / `CLI`,  
   除非用户要求.

@@ -380,8 +380,11 @@ nothing is committed without the owner's explicit say-so (spec flow or not) and 
   e.g. `Generated with ZCode (GLM-5.3, effort: xhigh)`. Name the level `effort:`.  
   It is the reasoning-effort knob itself, not a verdict on the reasoning;  
   commits from 2026-09-22 and earlier spell it `reasoning:`, leave those as they are. Never guess a value;  
-  when the agent, model, or effort cannot be determined,  
-  ask the user what to record rather than silently writing `unknown`.
+  when the agent, model, or effort cannot be determined, ask the user what to record.  
+  The ban is on writing `unknown` on your own, not on the word itself:  
+  once you have asked and the user confirms the value genuinely cannot be determined  
+  (for example the effort level is not shown in Auto mode),  
+  recording `unknown` is the correct, agreed-on entry, not a guess.
 - Name the agent from evidence, not from habit: how to find it is up to you,  
   but show what it rests on and get the user's agreement before writing it.  
   Edition-level names differ  
