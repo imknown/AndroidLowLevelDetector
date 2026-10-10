@@ -80,7 +80,7 @@ class SettingsViewModel(
 
     // region [Version Info]
     // null = not loaded yet (the built-in data version loads once; there is no reload, so no
-    // State wrapper is needed — the former State.Loading branch was never used here)
+    // State wrapper is needed, since the former State.Loading branch was never used here)
     val version: StateFlow<SettingsRepository.Version?>
         field = MutableStateFlow<SettingsRepository.Version?>(null)
 

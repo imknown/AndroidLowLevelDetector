@@ -15,13 +15,13 @@ import net.imknown.android.forefrontinfo.ui.theme.StatusColor
  * Guards wrap item producers: a failure degrades into that item's own error row
  * instead of escaping collectModels(); CancellationException always rethrows.
  * All guards are inline so the bare `return` statements in blocks keep working
- * as non-local returns — the shared scaffold is the inline guardedItemCore.
+ * as non-local returns, and the shared scaffold is the inline guardedItemCore.
  *
  * Dot page semantics (issues-cn #69): the red/yellow/green dot is a Home-only
  * per-item concept; Others / Prop / Settings never render dots. Hence two
  * kinds of failure-row helper:
- * - guardedMyModel: failure row CRITICAL — Home items have dots, failure is red;
- * - guardedDetectFailedMyModel: colorless failure row — dotless pages keep the
+ * - guardedMyModel: failure row CRITICAL, because Home items have dots and failure is red;
+ * - guardedDetectFailedMyModel: colorless failure row, because dotless pages keep the
  *   plain row shape.
  */
 
@@ -29,7 +29,7 @@ import net.imknown.android.forefrontinfo.ui.theme.StatusColor
 
 /**
  * Single-item guard, Home-only (the 24 detector methods in `HomeRepository`): a
- * failure degrades into that item's own red error row — Home items carry dots,
+ * failure degrades into that item's own red error row, because Home items carry dots and
  * failure is red.
  */
 inline fun guardedMyModel(@StringRes titleRes: Int, block: () -> MyModel): MyModel =
@@ -39,7 +39,7 @@ inline fun guardedMyModel(title: MyModelTitle, block: () -> MyModel): MyModel =
     guardedItemCore(block) { toErrorMyModel(title, it) }
 
 /**
- * Home's failure row: detail = "detection failed" text, status color CRITICAL —
+ * Home's failure row: detail = "detection failed" text, status color CRITICAL,
  * used only by [guardedMyModel].
  */
 @PublishedApi
@@ -50,8 +50,8 @@ internal fun toErrorMyModel(title: MyModelTitle, e: Exception): MyModel = MyMode
 )
 
 /**
- * Home's colored row: the two-state overload maps condition to green / red —
- * only Home items carry dots, so Others / Prop never use this.
+ * Home's colored row: the two-state overload maps condition to green / red, since only
+ * Home items carry dots; Others / Prop never use this.
  */
 fun toColoredMyModel(@StringRes titleRes: Int, detail: String?, condition: Boolean): MyModel {
     val color = if (condition) StatusColor.NO_PROBLEM else StatusColor.CRITICAL
@@ -77,8 +77,8 @@ fun toColoredMyModel(@StringRes titleRes: Int, detail: String?, color: StatusCol
 
 /**
  * Single-item guard, Others-only (the 36 detector methods in `OthersRepository`):
- * a failure degrades into that item's own colorless failure row — Others has no
- * dots, so the failure row keeps the plain row shape.
+ * a failure degrades into that item's own colorless failure row, since Others has no
+ * dots; the failure row keeps the plain row shape.
  */
 inline fun guardedDetectFailedMyModel(@StringRes titleRes: Int, block: () -> MyModel): MyModel =
     guardedDetectFailedMyModel(MyModelTitle.Res(titleRes), block)
@@ -87,7 +87,7 @@ inline fun guardedDetectFailedMyModel(title: MyModelTitle, block: () -> MyModel)
     guardedItemCore(block) { toDetectFailedMyModel(title, it) }
 
 /**
- * Others' failure row: detail = "detection failed" text, no status color — used
+ * Others' failure row: detail = "detection failed" text, no status color, used
  * by [guardedDetectFailedMyModel] and by `PropRepository.toDetectFailedMyModel`'s
  * delegation (Prop is dotless too, same row shape).
  */
@@ -99,7 +99,7 @@ internal fun toDetectFailedMyModel(title: MyModelTitle, e: Exception): MyModel =
 
 /**
  * Plain no-color row, Others-only (resource titles; the 36 regular data rows use
- * this overload). Prop does not use it — Prop's titles are all key originals
+ * this overload). Prop does not use it, since Prop's titles are all key originals
  * returned by the system, handled by the String overload in the Prop region.
  */
 fun toTranslatedDetailMyModel(@StringRes titleRes: Int, detail: String?): MyModel =

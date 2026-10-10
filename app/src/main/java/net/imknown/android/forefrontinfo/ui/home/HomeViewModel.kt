@@ -82,7 +82,7 @@ class HomeViewModel(
     private var loadStartGeneration = 0
 
     init {
-        // Rule 1 — live update: a toggle while any list is on screen (the initial data, or the
+        // Rule 1 (live update): a toggle while any list is on screen (the initial data, or the
         // still-visible previous data during a pull-to-refresh) re-syncs that entry at once.
         // Before the first load lands there is nothing to patch, and the load itself reads the
         // current preference anyway.
@@ -123,7 +123,7 @@ class HomeViewModel(
 
         // The upstream `version` string is outside this app's control; the format contract is
         // machine-checked (LLD_DATETIME_FORMATTER). An unexpected format means the payload
-        // cannot be trusted — degrade to the built-in offline data instead of blowing up in
+        // cannot be trusted, so degrade to the built-in offline data instead of blowing up in
         // the middle of detect().
         if (!lld.version.isLldDatetime()) {
             val errorMessage = errorMessage(
@@ -188,7 +188,7 @@ class HomeViewModel(
     }
 
     // Last link of the offline fallback chain: even the built-in asset read failing must not
-    // escape — a null lld renders as the "unknown" row, not a crash.
+    // escape: a null lld renders as the "unknown" row, not a crash.
     private suspend fun getAssetLldOrNull(): Lld? = try {
         withContext(Dispatchers.IO) {
             homeRepository.getAssetLld(MyApplication.instance.assets)
@@ -252,10 +252,11 @@ class HomeViewModel(
         return MyApplication.getMyString(messageId, cause.fullMessage)
     }
 
-    // Rule 2 — load landing: a toggle while the list was being built (initial load or
-    // pull-to-refresh) is not covered by Rule 1's patch of the old list — the builder read the
-    // preference at some point mid-build, so the freshly landed entry can lag one toggle
-    // behind. Re-sync it with the current stored value in that case.
+    // Rule 2 (load landing): a toggle while the list was being built (initial load or
+    // pull-to-refresh) is not covered by Rule 1's patch of the old list:
+    // the builder read the preference at some point mid-build,
+    // so the freshly landed entry can lag one toggle behind.
+    // Re-sync it with the current stored value in that case.
     override fun onModelsLoaded() {
         if (outdatedOrderChanges.value != loadStartGeneration) {
             viewModelScope.launch {

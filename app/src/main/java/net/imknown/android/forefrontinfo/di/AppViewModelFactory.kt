@@ -14,7 +14,7 @@ import kotlin.reflect.KClass
 // `Factory`s: MetroViewModelFactory's create() resolves ViewModels by the
 // KClasses in the three maps below. The three constructor parameters cover the
 // abstract class's protected vals and must all be supplied even though the two
-// assisted maps are empty today — ViewModelGraph declares them as
+// assisted maps are empty today, since ViewModelGraph declares them as
 // @Multibinds(allowEmpty = true) precisely for that.
 //
 // The day some ViewModel adopts @AssistedInject (a CreationExtras/
@@ -24,7 +24,7 @@ import kotlin.reflect.KClass
 // @ContributesBinding binds this class as *the* MetroViewModelFactory, which is
 // what AppGraph's metroViewModelFactory accessor resolves; @SingleIn caches one
 // factory instance with the graph. ViewModels themselves deliberately get no
-// @SingleIn — see AppGraph.
+// @SingleIn (see AppGraph).
 @Inject
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)

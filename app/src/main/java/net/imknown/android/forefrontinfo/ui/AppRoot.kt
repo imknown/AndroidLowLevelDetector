@@ -69,7 +69,7 @@ private val topLevelTabs = persistentListOf(
 /**
  * Single-Activity + Navigation 3 multi-back-stack skeleton: each top-level tab owns an
  * independent back stack (= one browsing history per browser tab; switching tabs swaps the
- * rendered stack). Unrendered stacks keep their UI state and ViewModels alive — the same
+ * rendered stack). Unrendered stacks keep their UI state and ViewModels alive, the same
  * behavior as the legacy Fragment show/hide.
  */
 @Composable
@@ -86,7 +86,7 @@ fun AppRoot() {
     // called inside; the stack content is rememberSaveable-backed -> survives process death
     val backStacks = topLevelTabs.associate { tab -> tab.key to rememberNavBackStack(tab.key) }
 
-    // Entry decorators: "plugins" that attach capabilities to each navigation entry —
+    // Entry decorators are "plugins" that attach capabilities to each navigation entry:
     // 1) freeze/unfreeze the entry's rememberSaveable state (scroll positions etc.)
     // 2) give the entry its own ViewModelStore (the source of entry-scoped ViewModels)
     val entryDecorators: List<NavEntryDecorator<NavKey>> = listOf(
@@ -94,7 +94,7 @@ fun AppRoot() {
         rememberViewModelStoreNavEntryDecorator(),
     )
 
-    // Turn the keys in each stack into decorated, renderable entries — one pass per tab
+    // Turn the keys in each stack into decorated, renderable entries, one pass per tab
     val decoratedEntries = topLevelTabs.map { tab ->
         rememberDecoratedNavEntries(
             backStack = backStacks.getValue(tab.key), // this tab's own stack
@@ -117,7 +117,7 @@ fun AppRoot() {
             onBack = { activity?.finish() }, // keep legacy behavior: back from any tab exits directly
             modifier = contentModifier,
             // Tab switch replaces the whole stack, so NavDisplay treats it as forward navigation and
-            // uses its own default transition — fadeIn + fadeOut, 700ms each (that constant is
+            // uses its own default transition, i.e. fadeIn + fadeOut, 700ms each (that constant is
             // internal to the library). The switch is meant to be instant, which therefore has to be
             // spelled out: both halves None.
             transitionSpec = {
@@ -130,7 +130,7 @@ fun AppRoot() {
 /**
  * Data-only page skeleton (Scaffold + top/bottom bars + tab state hoisted in): AppRoot itself
  * wires navigation3 and real ViewModels (shell commands, SP reads) so it cannot run in a
- * preview — this shell is the previewable part, same split as SettingsScreen/SettingsContent.
+ * preview; this shell is the previewable part, same split as SettingsScreen/SettingsContent.
  */
 @OptIn(ExperimentalMaterial3Api::class) // TopAppBar is still an experimental API in m3 1.4.0
 @Composable
@@ -143,7 +143,7 @@ private fun AppRootShell(
         topBar = {
             // the app name, as the legacy default title bar showed it; the debug variant renames the
             // app through its own source set, so no build-variant branching is needed here
-            // legacy AppBarLayout: android:background="?attr/colorSurfaceContainer" — same slot
+            // legacy AppBarLayout: android:background="?attr/colorSurfaceContainer", same slot
             TopAppBar(
                 title = { Text(stringResource(R.string.app_name)) },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -163,7 +163,7 @@ private fun AppRootShell(
                 }
             }
         },
-    ) { innerPadding -> // avoidance amounts computed by Scaffold (top + bottom bars + system bars) — end of the manual insets era
+    ) { innerPadding -> // avoidance amounts computed by Scaffold (top + bottom bars + system bars), end of the manual insets era
         content(Modifier.padding(innerPadding))
     }
 }

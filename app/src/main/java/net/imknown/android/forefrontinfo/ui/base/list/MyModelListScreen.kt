@@ -66,7 +66,7 @@ fun MyModelListScreen(
 
     MyModelListContent(
         // null only before the very first load lands (empty list while the spinner spins);
-        // afterwards the ViewModel keeps the previous list during refreshes — no flash of empty list,
+        // afterwards the ViewModel keeps the previous list during refreshes, so no flash of empty list,
         // and mid-refresh patches from the ViewModel reach the UI (legacy behavior needed a
         // produceState workaround for this; the ViewModel now guarantees it directly)
         models = models?.toPersistentList() ?: persistentListOf(),

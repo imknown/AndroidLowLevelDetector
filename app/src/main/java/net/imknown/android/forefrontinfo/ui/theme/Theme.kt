@@ -2,7 +2,7 @@ package net.imknown.android.forefrontinfo.ui.theme
 
 /*
  * [Cheat sheet: the four side-effect siblings] which to use when in Compose:
- *  remember          caches a "value" across recompositions (computed once, recomputed when the key changes) — not an Effect, but usually discussed together
+ *  remember          caches a "value" across recompositions (computed once, recomputed when the key changes), not an Effect, but usually discussed together
  *  LaunchedEffect    runs suspend work (coroutines); a key change cancels the old one and restarts the new
  *  DisposableEffect  subscribe/unsubscribe side effects (listeners/broadcasts); must provide onDispose for cleanup
  *  SideEffect        after each successful recomposition, syncs the computed state to the world outside Compose (e.g. system bars)
@@ -304,7 +304,7 @@ fun AppTheme(
 ) {
     // Source 1: theme mode (the store's non-null enum flow, provided at the setContent root) -- recomposes on Settings writes, no Activity recreate
     val themeMode by LocalThemeMode.current.collectAsStateWithLifecycle()
-    // Source 2: system dark — isSystemInDarkTheme() reads LocalConfiguration and recomposes automatically when the system toggles.
+    // Source 2: system dark, where isSystemInDarkTheme() reads LocalConfiguration and recomposes automatically when the system toggles.
     // The three-way mapping lives on AppThemeMode.isDark (shared with MainActivity), so the two can never drift apart
     val darkTheme = themeMode.isDark(isSystemInDarkTheme())
 
