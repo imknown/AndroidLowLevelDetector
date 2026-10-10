@@ -1,6 +1,6 @@
 [versions]
 # https://github.com/JetBrains/kotlin/releases
-kotlin = "2.4.20"
+kotlin = "2.4.21"
 
 # https://github.com/Kotlin/kotlinx.collections.immutable/releases
 kotlinx-collections-immutable = "0.5.2"
