@@ -152,7 +152,10 @@ Screen (Compose) → ViewModel (StateFlow) → Repository → DataSource
   leaf bindings live in the binding containers in `di/AppGraph.kt`,  
   and the graph factory binds `MyApplication`. The Gradle plugin, runtime,  
   and MetroX artifacts are version-locked to one `version.ref` in `gradle/toml/thirdParty.toml`;  
-  a Kotlin upgrade requires a matching Metro upgrade, so check the official compatibility matrix first.
+  a Kotlin upgrade requires a matching Metro upgrade, so check the official compatibility matrix first.  
+  Deferred injection sites use the function type `() -> T`, not Metro's `Provider<T>`: Metro treats `() -> T` as a  
+  provider by default, so a declared `Provider<T>` is the discouraged sugar it reports as  
+  `DESUGARED_PROVIDER_WARNING` (the check reads the declared type, not how the value is called).
 - Settings are owned by `SettingsStore` (`ui/settings/repository/SettingsStore.kt`):  
   the single observable holder of every setting's key/value plus the write entry points,  
   bound in the graph and injected into consumers,  

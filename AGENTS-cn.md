@@ -110,7 +110,9 @@ Screen (Compose) → ViewModel (StateFlow) → Repository → DataSource
   在 Navigation 3 的 entry 经 `metroViewModel<...>()` 解析; Repository 与 DataSource 是普通 `@Inject` 构造注入;  
   承载不了 `@Inject` 构造函数的叶子绑定住在 `di/AppGraph.kt` 的 binding container 里, 图工厂绑定 `MyApplication`.  
   Gradle 插件 / 运行时 / MetroX 构件在 `gradle/toml/thirdParty.toml` 里同 `version.ref` 锁升; 升 Kotlin 必须同步升 Metro,  
-  先查官方兼容矩阵.
+  先查官方兼容矩阵.  
+  延迟注入的接收方写函数类型 `() -> T`, 不写 Metro 的 `Provider<T>`: Metro 默认就把 `() -> T` 当作 provider,  
+  声明 `Provider<T>` 就是它不推荐的糖, 编译器会报 `DESUGARED_PROVIDER_WARNING` (该检查只看声明类型, 不看取值写法).
 - 设置项由 `SettingsStore` (`ui/settings/repository/SettingsStore.kt`) 持有: 全部设置的键/值与写入口的唯一可观察归属, 绑定在图里注入给消费方,  
   它之外任何地方都不直接碰 SharedPreferences (图里的 SharedPreferences 绑定就是为喂它而存在).
 - 可测试性来自 **接口优先的设计**, 不是 mock 框架:  
