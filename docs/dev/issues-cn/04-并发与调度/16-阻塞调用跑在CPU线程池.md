@@ -9,7 +9,8 @@
 `ui/settings/repository/SettingsRepository.kt`**
 
 > 原标题 "阻塞调用跑在 CPU 线程池, 每次请求新建 HttpClient" 的后半 (每次请求新建 `HttpClient` + `client.use{}` 关闭) 已随 DI 接入关闭:  
-> 客户端收成图内 `@SingleIn` 绑定, 经 `Provider` 惰性解析, `use{}` 关闭随之消失, 引擎配置原样上移, 明细见 git log. 当时并排的 "HTTP 状态码闸门" 没有一起加,  
+> 客户端收成图内 `@SingleIn` 绑定, 经 `() -> HttpClient` 惰性解析, `use{}` 关闭随之消失,  
+> 引擎配置原样上移, 明细见 git log. 当时并排的 "HTTP 状态码闸门" 没有一起加,  
 > 仍归 [#24](../05-稳定性与错误处理/24-杂项隐患.md).
 
 ## 问题核心代码
