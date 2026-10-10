@@ -432,11 +432,16 @@ the files are not edited to carry it, and a status header inside that still says
   A heading's punctuation and spacing decide the GitHub anchor its table of contents points at,  
   so re-spacing a heading means rewriting every `](#...)` that resolves to it, in the same edit.  
   Explicit `<a id="...">` anchors are stable text and never move.
-- **No em dash**: never use the em dash `—` (nor the CJK dash `——`) in any doc, code comment,  
-  or chat reply; rewrite each occurrence as equivalent words chosen by meaning:  
+- **No dashes**: never use a dash as punctuation in any doc, code comment, or chat reply: no em dash `—`,  
+  no CJK dash `——`, no ASCII stand-in `--`, and no `----` decorative rule opening or closing a comment.  
+  Rewrite each occurrence as equivalent words chosen by meaning:  
   a gloss becomes `, i.e. ` (Chinese: `, 即 `), a rephrase `, that is, ` (Chinese: `, 也就是 `),  
+  a reason, an explanation or an enumeration takes a colon, two independent clauses take a semicolon,  
   a true aside goes in parentheses, a plain continuation takes a plain comma.  
-  Naming the symbol inside inline code, as this rule does, is the only exception.
+  Naming the symbol inside inline code, as this rule does, is the only exception to that ban.  
+  A `--` that is not punctuation carries structure and stays as it is: the doubled hyphen in a GitHub anchor  
+  (`../README.md#1--架构与分层`), a markdown table separator (`|---|`), an XML comment delimiter (`<!-- -->`),  
+  a command-line flag (`--project=...`), a postfix decrement (`i--`), and the `git ... -- ` end-of-options marker.
 - **Hard-wrap long lines by meaning** (rule recorded; the one-time reflow of existing files is done):  
   when a source line runs long,  
   break it at a sentence or clause boundary  
