@@ -105,8 +105,9 @@ object HttpClientContainer {
     // the OkHttp engine config moved verbatim from LldDataSource
     // (TrafficStats tagging / Wi-Fi PAC proxy fallback / debug Logging),
     // logic untouched. @SingleIn caches the client with the graph; resolved
-    // lazily through Provider injection in LldDataSource, so it is built on
-    // the first real request and the pool is reused across refreshes.
+    // lazily through the () -> HttpClient provider injected in
+    // LldDataSource, so it is built on the first real request and the pool
+    // is reused across refreshes.
     // Behavior change from the old per-request client: client.use {}'s
     // close-after-use is gone -- Metro does no close, the process lifetime
     // is the client lifetime, a net win for this single-request use case.
