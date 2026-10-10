@@ -55,61 +55,31 @@ kotlinx.serialization, Ktor, libsu, JNI/NDK. DI by Metro (compile-time, no refle
 ```
 
 - Docs and comment-only edits skip the build tiers (no code changed).
-- **Check the LSP first**: before editing code in a language,  
-  check whether that language's LSP is configured in this environment; if it is not,  
-  help the user set one up first  
-  (e.g. the Kotlin LSP: use JetBrains ILS (the IntelliJ Language Server), the language's official server,  
-  not a third-party port such as `fwcd`'s kotlin-language-server; ILS is started by the driver named below,  
-  not hosted by any editor plugin:  
-  launch its server with `--stdio`, wait for the `intellij/ready-for-test` notification,  
-  then pull `textDocument/diagnostic`; ILS never pushes diagnostics,  
-  and `textDocument/documentSymbol` doubles as an "is it really analyzing"  
-  check). After each edit batch, run LSP diagnostics (plus the Gradle tiers above)  
-  then have a fresh-context subagent review the uncommitted diff in the background,  
-  report the findings to the owner, and stop: nothing is committed without the owner's explicit say-so,  
-  spec flow or not. Inspection-level LSP findings (e.g. "Use destructuring declaration") are treated like  
-  syntax warnings: fixed directly, not documented. The Kotlin side is already wired here:  
-  `scripts/kotlin-lsp-diagnostics.js` runs the whole handshake in one command,  
-  resolving the ILS installation from `KOTLIN_LSP_SERVER`,  
-  `KOTLIN_LSP_HOME` (the conventional user-level environment variable pointing at the distribution root), or  
-  `intellij-server` on `PATH`. The index cache is the gitignored `.kotlin/lsp-cache/<process.platform>`  
-  (`win32`, `linux`, `darwin`), disposable, and kept per platform because each platform has its own ILS distribution,  
-  and the cache one platform warms is not reusable by another.  
-  Always launched with `--system-path` because a bare ILS launch picks a random temp dir and re-indexes from scratch;  
-  rebuild it with `<ILS distribution>/bin/warmup.py <repo> <repo>/.kotlin/lsp-cache/<process.platform> --server <ILS distribution>/bin/intellij-server --build-tool gradle`.  
-  Both warmup and a diagnostics run do a Gradle project import (sync),  
-  and that sync runs under the build JVM, the JDK that `JAVA_HOME` points at when Gradle runs,  
-  which is a different thing from the toolchain JVM that compiles the app code.  
-  The build JVM must match the project's Java toolchain version  
-  (declared in `gradle/toml/build.toml` as `javaToolchain` and consumed by the `build-logic` convention plugins),  
-  never a hardcoded number and never a hardcoded JDK path:  
-  the `:build-logic:convention` included build is compiled to that toolchain's bytecode version,  
-  so a build JVM older than it cannot load the convention plugins and the sync fails.  
-  The failure is silent: ILS does not error out on a failed sync,  
-  it degrades to an incomplete project model and still answers diagnostics,  
-  so a too-old build JVM makes the analyzer blind and the run prints a FALSE `CLEAN`  
-  (0 items) that looks like success. So before warming or diagnosing,  
-  make sure the `JAVA_HOME` that Gradle will run under is a JDK at least the toolchain version;  
-  `./gradlew -q javaToolchains` shows which JDKs Gradle has detected and the version each is.  
-  Warmup counts as successful only when two things hold together:  
-  the Gradle sync is SUCCESS  
-  (the intellij-server log line reads `"tool":"gradle","status":"SUCCESS"`),  
-  and a diagnostics run against a sentinel file known to report problems actually returns those problems.  
-  The sentinel is not a business file  
-  (do not reuse something like `Theme.kt`, whose findings vanish the moment the real code is cleaned up):  
-  `scripts/kotlin-lsp-selfcheck.js` writes a throwaway probe into the app source package,  
-  carrying a deliberately triggered warning (a non-lowercase function name),  
-  runs diagnostics on it, and deletes it in a `finally` so nothing lands in git or the build.  
-  A `CLEAN` result on the probe means the sync silently failed, not that warmup worked.  
-  `scripts/kotlin-lsp-diagnostics.js` itself inherits the shell `JAVA_HOME` unchanged,  
-  so running the self-check (not just a bare diagnostics run) is what catches a too-old build JVM.  
-  The check covers `.kt` only: ILS builds no model for a `.kts` Gradle build script, so the script fails on one instead of printing an empty  
-  `CLEAN`; verify build scripts with the Gradle build itself.  
-  A run exits 0 only when the pull succeeded and no ERROR-severity item came back: a failed run or any ERROR item exits 1  
-  (the exit code does not check the sync, so pair it with the sync-SUCCESS and sentinel checks above before trusting a `CLEAN`).  
-  `ILS_READY_TIMEOUT_MS` (default 1800000) and `ILS_CALL_TIMEOUT_MS` (default 180000) override the two waits on a slower machine.  
-  A run holds `.kotlin/lsp-cache/<process.platform>.lock` for its whole lifetime, so a second concurrent run exits 1 naming the first pid,  
-  and SIGINT or SIGTERM stop the server before the script exits.
+- **Analyze with Android Studio**: the Android CLI command `android studio analyze-file` drives a *running*  
+  Android Studio instance and reports its live inspection results for one file at a time: compiler errors,  
+  warnings, and Android Lint inspections.  
+  After each edit batch, run it for every changed file (plus the Gradle tiers above), then have a  
+  fresh-context subagent review the uncommitted diff in the background, report the findings to the owner,  
+  and stop: nothing is committed without the owner's explicit say-so, spec flow or not.  
+  Inspection-level findings (e.g. "Use destructuring declaration") are treated like syntax warnings:  
+  fixed directly, not documented.
+  - Usage: `android studio analyze-file --project=AndroidLowLevelDetector <path>`, add `--pid=<pid>` when  
+    more than one Android Studio instance is running; the path is relative or absolute.  
+    Anything Android Studio can analyze is in scope, including what its installed plugins inspect.
+  - The command carries no analyzer of its own: it queries a running Android Studio, so the project has  
+    to be open there first. `android studio check` listing it as `READY` is what makes a result worth  
+    reading; when no instance has the project open the run fails, so ask the owner to open it.
+  - Analyze a file only while it is closed in the editor. Android Studio filters inspections by its  
+    Severity and "Highlighting in editor" settings, and analyze-file inherits that filter, so a file  
+    sitting in an editor tab comes back truncated (the Problems view is just as partial even with every  
+    displayable severity ticked). A closed file is the only way to get the complete list.
+  - The exit code is not a verdict: a run that prints `ERROR` items still exits 0, and exit 1 only says the  
+    call failed (no instance has the project open, or the file does not exist). Read the printed  
+    `ERROR` / `WARNING` / `INFO` blocks, each of which carries a line and a column.
+  - A file the IDE cannot see prints a false `No issues found!` (still exit 0): a file created in this  
+    session stays invisible until the IDE indexes it, so re-run it after indexing has caught up before  
+    treating the silence as a pass, and a path outside the `--project` named is invisible the same way.  
+    Editing a file the IDE already knows is analyzed right away.
 
 ## Build conventions
 
@@ -326,7 +296,7 @@ nothing is committed without the owner's explicit say-so (spec flow or not) and 
      (code comments written in the owner's chat language, explaining *why*, at the codebase's density;  
      at the commit gate all new comments are translated to English, i.e. the committed codebase stays English;  
      comment punctuation follows the ASCII rule)  
-     and verify with LSP diagnostics plus the build; for high-risk logic in unfamiliar areas,  
+     and verify with `android studio analyze-file` plus the build; for high-risk logic in unfamiliar areas,  
      the owner reproduces it without AI first, then compares; if the AI fails on the same problem twice, stop:  
      the owner takes over or re-splits.  
      (Guards against deskilling, the ironies of automation (Bainbridge 1983): procedural memory needs practice;  

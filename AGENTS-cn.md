@@ -38,55 +38,27 @@ libsu, JNI/NDK. DI 用 Metro (编译期, 无反射).
 ```
 
 - 只改文档或注释的编辑不需要过构建那几档, 没有改代码.
-- **先检查 LSP**: 编辑某个语言的代码之前, 先确认该语言的 LSP 在本环境是否已配置;  
-  没配置就先协助用户配置  
-  (例: Kotlin LSP 用 JetBrains ILS (IntelliJ Language Server), 即这门语言官方的服务器,  
-  不用 `fwcd` 的 kotlin-language-server 这类第三方实现; ILS 由下面那个脚本启动, 没有编辑器插件托管它,  
-  以 `--stdio` 启动其服务,  
-  等到 `intellij/ready-for-test` 通知后用 **pull 模式** 拉 `textDocument/diagnostic`; ILS 从不主动 push,  
-  `textDocument/documentSymbol` 可兼作 "真的在分析" 自检). 每批编辑之后, 先跑 LSP diagnostics (再加上面几档 Gradle  
-  检查), 然后派新上下文的 subagent 在后台 review 未提交 diff, 把发现汇报给负责人后停下: 无论是否走 spec 流程, 没有负责人的明确指令一律不提交.  
-  检查级的 LSP 发现 (如 "Use destructuring declaration") 当语法警告同等对待, 直接修, 不记文档. 本仓库 Kotlin 侧已接好:  
-  `scripts/kotlin-lsp-diagnostics.js` 一条命令跑完整套握手,  
-  解析 ILS 安装位置的顺序是 `KOTLIN_LSP_SERVER` → `KOTLIN_LSP_HOME` (约定的用户级环境变量,  
-  指向发行版根目录) → `PATH` 上的 `intellij-server`. 索引缓存就是 gitignored 的 `.kotlin/lsp-cache/<process.platform>`  
-  (`win32`, `linux`, `darwin`), 可随时删, 并按平台分目录: 每个平台有自己的 ILS 发行版,  
-  一个平台热好的缓存另一个平台用不了.  
-  且启动始终带 `--system-path` (不带它 ILS 每次启动都随机临时目录, 从头重索引);  
-  重建用 `<ILS 发行版>/bin/warmup.py <repo> <repo>/.kotlin/lsp-cache/<process.platform> --server <ILS 发行版>/bin/intellij-server --build-tool gradle`.  
-  warmup 和一次诊断运行都会做一次 Gradle 项目导入 (sync),  
-  这次 sync 跑在构建 JVM 上, 也就是 Gradle 运行时 `JAVA_HOME` 指向的那个 JDK,  
-  它和编译 app 代码用的工具链 JVM 不是一回事.  
-  构建 JVM 必须跟项目的 Java 工具链版本一致  
-  (该版本在 `gradle/toml/build.toml` 里以 `javaToolchain` 声明, 由 `build-logic` 约定插件消费),  
-  不写死版本号, 也不写死 JDK 路径:  
-  `:build-logic:convention` 这个包含构建会被编译成该工具链对应的 bytecode 版本,  
-  所以比它旧的构建 JVM 加载不了约定插件, sync 就会失败.  
-  而且这个失败是静默的: sync 失败时 ILS 不会报错退出,  
-  它会降级成一个不完整的项目模型并照常答复诊断,  
-  于是太旧的构建 JVM 会让分析器变瞎, 运行打印出一个假的 CLEAN  
-  (0 items), 看起来像成功了. 所以预热或诊断之前,  
-  要确保 Gradle 将要运行所用的 `JAVA_HOME` 是一个不低于工具链版本的 JDK;  
-  `./gradlew -q javaToolchains` 能列出 Gradle 探测到的 JDK 以及各自的版本.  
-  warmup 只有同时满足两点才算成功:  
-  一是 Gradle sync 为 SUCCESS  
-  (intellij-server 日志里出现 `"tool":"gradle","status":"SUCCESS"`),  
-  二是对一个已知会报问题的哨兵文件跑诊断, 确实把那些问题返回了.  
-  哨兵不是业务文件  
-  (不要借用 `Theme.kt` 之类, 它的告警会在真实代码被修干净后消失):  
-  `scripts/kotlin-lsp-selfcheck.js` 会往 app 源码包里写一个用完即弃的探针,  
-  带一处故意触发的警告 (一个非小写开头的函数名),  
-  对它跑诊断, 再在 `finally` 里删掉, 所以不会留进 git 或构建产物.  
-  对探针跑出 CLEAN 就说明 sync 静默失败了, 而不是 warmup 成功了.  
-  `scripts/kotlin-lsp-diagnostics.js` 本身原样继承 shell 的 `JAVA_HOME`,  
-  所以要靠跑这个自检 (而不是只跑一次光秃秃的诊断) 才能抓出太旧的构建 JVM.  
-  这条检查只覆盖 `.kt`: ILS 不为 Gradle 构建脚本 (`.kts`) 建立模型, 所以对 `.kts` 会直接失败,  
-  而不是打印一个空的 CLEAN; 构建脚本要用 Gradle 构建本身来验证.  
-  只有拉取成功且没有 ERROR 级条目时才返回 0: 运行失败或存在 ERROR 条目都返回 1  
-  (退出码并不检查 sync, 所以信一个 CLEAN 之前, 要配合上面的 sync SUCCESS 和哨兵文件两项检查).  
-  `ILS_READY_TIMEOUT_MS` (默认 1800000) 与 `ILS_CALL_TIMEOUT_MS` (默认 180000) 可在更慢的机器上覆盖这两处等待上限.  
-  一次运行全程持有 `.kotlin/lsp-cache/<process.platform>.lock`, 并发的第二个运行会报出第一个的 pid 并 exit 1,  
-  收到 SIGINT 或 SIGTERM 时脚本会先停掉服务器再退出.
+- **用 Android Studio 做分析**: Android CLI 的 `android studio analyze-file` 命令驱动一个**正在运行**的 Android Studio  
+  实例, 一次分析一个文件, 返回 IDE 的实时检查结果: 编译错误, 告警, 以及 Android Lint 检查.  
+  每批编辑之后, 对每个改动文件跑它 (再加上面几档 Gradle 检查), 然后派新上下文的 subagent 在后台 review 未提交 diff,  
+  把发现汇报给负责人后停下: 无论是否走 spec 流程, 没有负责人的明确指令一律不提交.  
+  检查级的发现 (如 "Use destructuring declaration") 当语法警告同等对待, 直接修, 不记文档.
+  - 用法: `android studio analyze-file --project=AndroidLowLevelDetector <path>`, 有多个 Android Studio 实例在跑时加  
+    `--pid=<pid>`. 路径可相对当前目录, 也可为绝对路径.  
+    凡是 Android Studio 能分析的文件都在范围内, 它安装的插件所贡献的检查同样包含在内.
+  - 命令本身不带分析引擎, 它查的是正在运行的 Android Studio, 所以项目必须先在 Studio 里打开.  
+    `android studio check` 把它列为 `READY`, 结果才值得读; 没有实例开着本项目时运行直接失败,  
+    这时请负责人打开 Android Studio 和本项目.
+  - 只在文件于编辑器中处于关闭状态时分析它. Android Studio 会按 Severity 与 "Highlighting in editor"  
+    设置过滤检查结果, analyze-file 继承同一套过滤, 所以在编辑器标签里开着的文件只会返回一份被截断的  
+    清单 (Problems 视图即使把所有可显示级别都勾上也不完整). 文件关闭才拿得到完整问题清单.
+  - 退出码不是结论: 打印出 `ERROR` 条目的运行照样 exit 0, exit 1 只说明调用本身失败 (没有实例开着本项目,  
+    或文件不存在). 要读打印出来的 `ERROR` / `WARNING` / `INFO` 分块, 每块都带行号与列号.
+  - IDE 看不见的文件会打印一个假的 `No issues found!`, 仍然 exit 0:  
+    本次会话新建的文件在 IDE 索引到它之前是看不见的, 所以要等索引跟上之后重跑一次,  
+    才能把这份沉默当作通过.  
+    不在所给 `--project` 范围内的路径同样看不见.  
+    IDE 已知的文件一经编辑就能立刻分析.
 
 ## 构建约定
 
@@ -221,7 +193,7 @@ Screen (Compose) → ViewModel (StateFlow) → Repository → DataSource
      (问题单/覆盖核对/primer), 学习目标收窄为 架构概念 + 审查判断, 而非实现练习】
   1. 实施 (代码注释用负责人的聊天语言书写, 解释**为什么**, 对齐代码库注释密度; 提交闸门前把本次新增注释整体译为英语, 入库形态保持英语;  
      注释标点遵循 ASCII  
-     规则) 并以 LSP diagnostics 加构建验证; 生疏领域的高风险逻辑, 负责人先无 AI 复现再对照; AI 同一问题重做 2 次不过即停, 由负责人接手或重拆. 【解决: 技能退化,  
+     规则) 并以 `android studio analyze-file` 加构建验证; 生疏领域的高风险逻辑, 负责人先无 AI 复现再对照; AI 同一问题重做 2 次不过即停, 由负责人接手或重拆. 【解决: 技能退化,  
      自动化的讽刺 (Bainbridge 1983), 程序性记忆靠练习保持; 防无限重试】
   2. 派新上下文的 subagent 在后台 review 未提交的 diff: v1, 之后每修一轮 v2, v3, ... 顺延;  
      后续轮可续用同一 reviewer 做 delta 复核 (其证据底座已核验, 更快更省), 但修复大面积重写 diff / 负责人推翻该轮大部分发现 / 续用上下文已臃肿 / 要做最终独立验收时,  
