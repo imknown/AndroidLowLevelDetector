@@ -18,8 +18,8 @@ import java.io.FileWriter
 // (resolved on first use, keeping disk work off the main thread) and reads
 // through the Application bound by ST-08's graph factory instead of a static
 // slot (the companion action of issues-cn #02). LLD_JSON_NAME moved here from
-// LldDataSource, making LldDataSource -> LldFileStore a one-way dependency --
-// the reference cycle is gone. Methods are line-identical to the original
+// LldDataSource, making LldDataSource -> LldFileStore a one-way dependency.
+// The reference cycle is gone. Methods are line-identical to the original
 // (move only, no semantic change); the internal MyApplication.instance.assets
 // / getMyString statics stay as is (deeper orchestration refactoring belongs
 // to issues-cn #11, getMyString to #01).

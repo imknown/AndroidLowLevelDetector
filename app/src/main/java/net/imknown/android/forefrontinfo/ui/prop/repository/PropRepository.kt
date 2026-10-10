@@ -37,7 +37,7 @@ class PropRepository(
         subSettingsKClass: KClass<T>
     ): List<MyModel> {
         // Both queries are plain blocking calls that never cross a suspension point, so
-        // CancellationException cannot arise here -- no guard-style cancellation rethrow.
+        // CancellationException cannot arise here; no guard-style cancellation rethrow.
         val keys = try {
             settingsDataSource.getSettingsOrThrow(subSettingsKClass)
         } catch (e: Exception) {
@@ -65,7 +65,7 @@ class PropRepository(
 
     fun getBuildProp(): List<MyModel> {
         // issues-cn #63 standalone subset: a failed getprop no longer folds into the success
-        // path as an empty table -- one source-level row instead, carrying exitCode so the
+        // path as an empty table; one source-level row instead, carrying exitCode so the
         // failure is attributable. Parsing is pure string work: no try/catch that could never fire.
         val result = propertiesDataSource.getBuildProp()
         if (!result.isSuccess) {

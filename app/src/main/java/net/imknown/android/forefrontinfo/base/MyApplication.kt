@@ -40,7 +40,7 @@ enum class ScrollBarMode {
     Normal,
     Draggable;
 
-    // What the pages ask: is a scroll indicator drawn. Only Normal is, today -- Draggable has no
+    // What the pages ask: is a scroll indicator drawn. Only Normal is, today; Draggable has no
     // implementation yet, which is the same outcome the legacy setScrollBarMode reached (its when()
     // matched only the normal value)
     val drawsScrollBar: Boolean

@@ -72,7 +72,7 @@ import net.imknown.android.forefrontinfo.ui.theme.AppTheme
 fun SettingsScreen(viewModel: SettingsViewModel, modifier: Modifier = Modifier) {
     val context = LocalContext.current
 
-    // ---- Current preference values: all four rows read the store (via the ViewModel's hot
+    // Current preference values: all four rows read the store (via the ViewModel's hot
     // flow, the persisted value on the first frame), and this function only collects state
     // and forwards events
     val themeValue by viewModel.themeValue.collectAsStateWithLifecycle()
@@ -80,7 +80,7 @@ fun SettingsScreen(viewModel: SettingsViewModel, modifier: Modifier = Modifier) 
     val allowNetwork by viewModel.allowNetwork.collectAsStateWithLifecycle()
     val outdatedOrderFirst by viewModel.outdatedOrderFirst.collectAsStateWithLifecycle()
 
-    // ---- Version info: mirrors the legacy Fragment ("subscribe + init once"; the ViewModel guards re-entry) ----
+    // Version info: mirrors the legacy Fragment ("subscribe + init once"; the ViewModel guards re-entry)
     val version by viewModel.version.collectAsStateWithLifecycle()
     LaunchedEffect(viewModel) {
         viewModel.setBuiltInDataVersion(context.packageManager, context.packageName)
@@ -98,16 +98,16 @@ fun SettingsScreen(viewModel: SettingsViewModel, modifier: Modifier = Modifier) 
         outdatedOrderFirst = outdatedOrderFirst,
         version = version,
         onThemeSelect = { value ->
-            viewModel.setTheme(value) // event up to the store: SP written once, the same-frame callback refreshes the flow -- this row and AppTheme recompose, no Activity recreate
+            viewModel.setTheme(value) // event up to the store: SP written once, the same-frame callback refreshes the flow, so this row and AppTheme recompose, no Activity recreate
         },
         onScrollBarSelect = { value ->
-            viewModel.setScrollBarMode(value) // event up to the store: SP written once, the same-frame callback refreshes the flow -- this row and every list page's indicator update at once
+            viewModel.setScrollBarMode(value) // event up to the store: SP written once, the same-frame callback refreshes the flow, so this row and every list page's indicator update at once
         },
         onAllowNetworkChange = { value ->
             viewModel.setAllowNetworkData(value) // event up: SP written once, same-frame callback pushes it back
         },
         onOutdatedOrderChange = { value ->
-            viewModel.setOutdatedOrderFirst(value) // event up: SP written once, same-frame callback pushes it back -- Home observes the store's flow, no broadcast
+            viewModel.setOutdatedOrderFirst(value) // event up: SP written once, same-frame callback pushes it back, and Home observes the store's flow, no broadcast
         },
         onVersionClick = {
             viewModel.getVersionClickedMessage()?.let { // the 7-tap easter-egg logic lives in the ViewModel, reused as-is

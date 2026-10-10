@@ -67,10 +67,10 @@ class HomeViewModel(
     // region [Outdated order switch]
     // The order switch's single source of truth is the store (SP is the persisted truth,
     // Settings writes through it); this ViewModel folds the store's flow into a generation
-    // counter -- it only counts "how many times it changed", and StateFlow's equality
+    // counter: it only counts "how many times it changed", and StateFlow's equality
     // conflation collapses rapid toggles into one recompute (which reads the latest stored
-    // value anyway). The hand-written OnSharedPreferenceChangeListener -- its registration,
-    // unregistration and the onCleared cleanup -- disappears entirely. The two source-swap
+    // value anyway). The hand-written OnSharedPreferenceChangeListener (its registration,
+    // unregistration and the onCleared cleanup) disappears entirely. The two source-swap
     // behavior deltas are argued in the subtask-04 report: same-value writes are folded twice
     // over (SP skips unchanged keys, StateFlow equality-folds), and the one initial emission
     // a subscription gets is absorbed by Rule 1's short-circuit / at most one invisible

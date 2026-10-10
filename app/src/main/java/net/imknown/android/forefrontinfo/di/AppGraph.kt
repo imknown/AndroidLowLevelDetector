@@ -40,7 +40,7 @@ import java.net.URI
 // @DependencyGraph's bindingContainers parameter): the HttpClient singleton is
 // the first, the IProperty binding (PropertyDefault lives in :base) the second,
 // the SharedPreferences binding the third (ST-10); the lld file store turned
-// out to need no container -- it is a plain @Inject class (ST-09).
+// out to need no container: it is a plain @Inject class (ST-09).
 //
 // Extending ViewModelGraph brings in MetroX's three ViewModel multibindings
 // plus the metroViewModelFactory accessor that MainActivity provides down to
@@ -64,7 +64,7 @@ import java.net.URI
 interface AppGraph : ViewModelGraph {
 
     // The settings store accessor (issues-cn #08, ST-01): non-ViewModel types reach the store
-    // through the graph -- the same precedent as metroViewModelFactory. @SingleIn(AppScope)
+    // through the graph, the same precedent as metroViewModelFactory. @SingleIn(AppScope)
     // makes the accessor resolve the same instance the ViewModels inject, so seeding runs
     // exactly once with the first construction; MyApplication.onCreate resolves it eagerly
     // where initTheme used to sit, so pre-composition reads see seeded flows.
@@ -81,7 +81,7 @@ interface AppGraph : ViewModelGraph {
     // existing companion and a nested factory never gets its SAM implementation
     // generated (reproduced with fun create, operator fun invoke, and an
     // explicit source-declared companion object : Factory). Companion-free
-    // graphs get a generated companion implementing the factory instead --
+    // graphs get a generated companion implementing the factory instead,
     // hence the @Provides moving from the companion into the binding
     // containers. Worth rechecking after a Metro upgrade.
     @DependencyGraph.Factory
@@ -93,7 +93,7 @@ interface AppGraph : ViewModelGraph {
 @BindingContainer
 object HttpClientContainer {
     // issues-cn #21: OkHttp's own defaults (connect / read / write, 10 s each) are
-    // per-layer only and cannot stop a server slowly dripping body bytes -- every
+    // per-layer only and cannot stop a server slowly dripping body bytes: every
     // read lands within 10 s, no layer ever fires, and the call has no ceiling;
     // stacked on BaseListViewModel's loadJob dedup, one hang is a permanent
     // spinner. requestTimeout supplies the missing overall cap; connect / socket
@@ -109,7 +109,7 @@ object HttpClientContainer {
     // LldDataSource, so it is built on the first real request and the pool
     // is reused across refreshes.
     // Behavior change from the old per-request client: client.use {}'s
-    // close-after-use is gone -- Metro does no close, the process lifetime
+    // close-after-use is gone: Metro does no close, the process lifetime
     // is the client lifetime, a net win for this single-request use case.
     @Provides
     @SingleIn(AppScope::class)
@@ -186,7 +186,7 @@ object HttpClientContainer {
 object PropertyContainer {
     // The IProperty binding: PropertyDefault lives in :base, keeping the
     // interface module free of Metro annotations. Reflective SystemProperties
-    // reads are stateless -- the provider returns the same object every time,
+    // reads are stateless: the provider returns the same object every time,
     // so no @SingleIn is needed.
     @Provides
     fun property(): IProperty = PropertyDefault
@@ -194,13 +194,13 @@ object PropertyContainer {
 
 @BindingContainer
 object SharedPreferencesContainer {
-    // The SharedPreferences binding: the default preferences file -- a natural
+    // The SharedPreferences binding: the default preferences file, a natural
     // singleton through SharedPreferences' own per-file caching, so no
     // @SingleIn. The provider's app parameter declares the dependency edge on
     // the Application (bound by ST-08's graph factory); the body reads the
-    // companion val -- the canonical accessor the whole codebase has always
-    // used -- rather than building a parallel path via the app parameter.
-    // Its consumer is SettingsStore (issues-cn #08) -- the former static
+    // companion val (the canonical accessor the whole codebase has always
+    // used) rather than building a parallel path via the app parameter.
+    // Its consumer is SettingsStore (issues-cn #08); the former static
     // direct readers (SettingsScreen / HomeRepository) were migrated onto
     // the store.
     @Provides

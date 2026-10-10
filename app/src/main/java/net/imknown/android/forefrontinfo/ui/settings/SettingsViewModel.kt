@@ -37,7 +37,7 @@ class SettingsViewModel(
 
     // region [Theme]
     // The stored value straight from the store's hot StateFlow (seeded synchronously at store
-    // construction): the dialog's selected item is the persisted value on the first frame --
+    // construction): the dialog's selected item is the persisted value on the first frame,
     // no WhileSubscribed + default flash (the first-frame-stored-value constraint the plan pins)
     val themeValue: StateFlow<String> = settingsStore.themeValue
 
@@ -68,7 +68,7 @@ class SettingsViewModel(
 
     // Write path: the event goes up to the store, which touches SP once; the same-frame
     // callback pushes it back (HomeViewModel, the order switch's consumer, observes the
-    // store's flow -- no broadcast of any kind)
+    // store's flow, no broadcast of any kind)
     fun setAllowNetworkData(value: Boolean) {
         settingsStore.setAllowNetworkData(value)
     }

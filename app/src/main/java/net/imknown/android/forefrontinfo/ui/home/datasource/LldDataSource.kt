@@ -10,7 +10,7 @@ import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.base.extension.isChinaMainlandTimezone
 
 // HttpClient is injected from the graph (the AppGraph httpClient binding):
-// the () -> HttpClient provider form defers resolution -- constructed on the
+// the () -> HttpClient provider form defers resolution, constructed on the
 // first real request, zero footprint if the network toggle is never enabled;
 // once built it is cached with the graph and the connection pool is reused
 // across refreshes (issues-cn #16 second half).

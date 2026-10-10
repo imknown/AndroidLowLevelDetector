@@ -23,7 +23,7 @@ private const val ScrollBarFadeOutDelayMillis = 300
 
 /**
  * Vertical scroll indicator for a scrolling list: the thumb appears while the list scrolls and fades
- * out once it settles. Nothing is draggable -- it only shows where the viewport sits, which is what
+ * out once it settles. Nothing is draggable; it only shows where the viewport sits, which is what
  * the View-era "normal" scroll bar mode came down to (the retired "fast / draggable" option never got
  * an implementation).
  *
@@ -50,7 +50,7 @@ fun Modifier.nonInteractiveScrollbar(
         label = "scrollbarAlpha",
     )
     // The platform thumb is #84ffffff tinted by colorControlNormal, and Material3 maps that attr to
-    // colorOnSurfaceVariant -- the same color at the same 52% alpha
+    // colorOnSurfaceVariant, the same color at the same 52% alpha
     val barColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.52f)
 
     return drawWithContent {

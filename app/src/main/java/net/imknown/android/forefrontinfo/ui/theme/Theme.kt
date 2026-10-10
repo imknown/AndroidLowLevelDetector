@@ -283,7 +283,7 @@ val unspecified_scheme = ColorFamily(
 
 // Theme mode reaches AppTheme as a per-flow CompositionLocal rather than a whole-store one: a
 // store-typed local's default would have to be a store instance, whose construction needs
-// SharedPreferences -- impossible in previews. The default here is a constant follow-system
+// SharedPreferences, impossible in previews. The default here is a constant follow-system
 // flow, which is exactly right for previews: they derive dark/light from uiMode +
 // isSystemInDarkTheme(), and FollowSystem defers to that. MainActivity provides the store's
 // flow once at the setContent root; staticCompositionLocalOf because the provided reference
@@ -302,7 +302,7 @@ fun AppTheme(
     dynamicColor: Boolean = true,
     content: @Composable() () -> Unit
 ) {
-    // Source 1: theme mode (the store's non-null enum flow, provided at the setContent root) -- recomposes on Settings writes, no Activity recreate
+    // Source 1: theme mode (the store's non-null enum flow, provided at the setContent root), recomposes on Settings writes, no Activity recreate
     val themeMode by LocalThemeMode.current.collectAsStateWithLifecycle()
     // Source 2: system dark, where isSystemInDarkTheme() reads LocalConfiguration and recomposes automatically when the system toggles.
     // The three-way mapping lives on AppThemeMode.isDark (shared with MainActivity), so the two can never drift apart

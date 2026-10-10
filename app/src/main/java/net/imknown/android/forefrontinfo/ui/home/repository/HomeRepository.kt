@@ -53,7 +53,7 @@ import android.R as androidR
 
 // Constructor injection puts the dependency chain on the signature and lets Metro build it
 // (issues-cn #02); the DataSource params are concrete @Inject types, and IShell is an
-// interface bound by ShellLibSu's @ContributesBinding -- none of this chain's own types
+// interface bound by ShellLibSu's @ContributesBinding, so none of this chain's own types
 // needs a @Provides.
 @Inject
 class HomeRepository(

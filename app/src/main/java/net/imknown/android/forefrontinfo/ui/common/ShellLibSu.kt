@@ -8,7 +8,7 @@ import net.imknown.android.forefrontinfo.base.shell.IShell
 import net.imknown.android.forefrontinfo.base.shell.ShellResult
 
 // The libsu implementation of IShell: the object contributes the IShell binding to
-// AppScope directly -- Metro does no constructor injection on objects, so the
+// AppScope directly: Metro does no constructor injection on objects, so the
 // singleton comes for free (the companion action of issues-cn #02). It lives in
 // :app's ui/common instead of :base: :base holds interfaces only, keeping the
 // interface module free of a Metro dependency.

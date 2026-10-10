@@ -14,14 +14,14 @@ import net.imknown.android.forefrontinfo.base.ScrollBarMode
 
 // The single observable owner of the settings (issues-cn #08): keys defined in one place, one
 // entry point each for reads and writes. SharedPreferences stays the persisted truth on disk;
-// this class is the single in-memory read/write front -- the five read points that each reached
+// this class is the single in-memory read/write front: the five read points that each reached
 // into SharedPreferences directly switched to observing these flows in ST-02..04.
 // Flow-vs-storage consistency runs on listener callback: a write touches SP exactly once, and
 // OnSharedPreferenceChangeListener's same-process synchronous callback pushes the new value into
-// the flows -- one update path, no two-step "wrote SP, forgot to refresh the flow" shape.
+// the flows: one update path, no two-step "wrote SP, forgot to refresh the flow" shape.
 // First resolution is construction, and seeding happens synchronously there; MyApplication
-// (the graph's owner) pins that point eagerly in onCreate, where initTheme used to sit --
-// nothing before that point may read the flows.
+// (the graph's owner) pins that point eagerly in onCreate, where initTheme used to sit,
+// so nothing before that point may read the flows.
 @SingleIn(AppScope::class)
 @Inject
 class SettingsStore(private val prefs: SharedPreferences) {
@@ -50,7 +50,7 @@ class SettingsStore(private val prefs: SharedPreferences) {
     val themeValue: StateFlow<String>
         field = MutableStateFlow(followSystemValue)
 
-    // Current-value flow: non-null enum, seeded synchronously at construction -- consumers
+    // Current-value flow: non-null enum, seeded synchronously at construction, and consumers
     // (AppTheme / MainActivity.isAppDark) read .value before composition and still get the
     // persisted value; no window where a subscriber sees the default (the timing constraint
     // issues-cn #08 hinges on)
@@ -137,14 +137,14 @@ class SettingsStore(private val prefs: SharedPreferences) {
         outdatedOrderFirst.value = prefs.getBoolean(outdatedOrderKey, false)
 
         // The normalization write happens before registration, so it never triggers the store's
-        // own listener -- seeding and callback each own their phase. Process-lifetime singleton:
+        // own listener; seeding and callback each own their phase. Process-lifetime singleton:
         // the listener lives as long as the process, no unregister needed
         prefs.registerOnSharedPreferenceChangeListener(preferenceChangeListener)
     }
 
     // Write entry points: touch SP exactly once and let the listener's synchronous callback
-    // (same-process writes notify synchronously, effective the same frame) refresh the flows --
-    // never write a flow here, preserving the single update path: SP is the persisted truth and
+    // (same-process writes notify synchronously, effective the same frame) refresh the flows,
+    // so never write a flow here, preserving the single update path: SP is the persisted truth and
     // flows are only ever updated via the callback
     fun setTheme(value: String) {
         prefs.edit { putString(themeKey, value) }
