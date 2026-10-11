@@ -36,7 +36,7 @@ class SettingsRepository(
         // endregion [lld]
 
         // region [distributor]
-        val distributor = withContext(Dispatchers.Default) {
+        val distributor = withContext(Dispatchers.IO) {
             val mySha256 = try {
                 fingerprintDataSource.getPublicKeySha256OrNullOrThrow(packageManager, packageName)
             } catch (e: Exception) {
@@ -49,7 +49,7 @@ class SettingsRepository(
         // endregion [distributor]
 
         // region [installer]
-        val installer = withContext(Dispatchers.Default) {
+        val installer = withContext(Dispatchers.IO) {
             val installerPackageName = try {
                 appInfoDataSource.getInstallerPackageNameOrNullOrThrow(packageManager, packageName)
             } catch (e: Exception) {
@@ -71,7 +71,7 @@ class SettingsRepository(
         // endregion [installer]
 
         // region [install time]
-        val [firstInstallTime, lastUpdateTime] = withContext(Dispatchers.Default) {
+        val [firstInstallTime, lastUpdateTime] = withContext(Dispatchers.IO) {
             val packageInfo = try {
                 appInfoDataSource.getPackageInfoOrThrow(packageManager, packageName)
             } catch (e: Exception) {

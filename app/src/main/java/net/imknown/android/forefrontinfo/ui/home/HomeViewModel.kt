@@ -208,11 +208,9 @@ class HomeViewModel(
     ): List<MyModel> {
         val tempModels = mutableListOf<MyModel>()
 
-        withContext(Dispatchers.Default) {
+        withContext(Dispatchers.IO) {
             tempModels += homeRepository.detectMode(lld, errorMessage, modeResId)
-        }
 
-        withContext(Dispatchers.Default) {
             tempModels += homeRepository.detectAndroid(lld)
             tempModels += homeRepository.detectSdkExtension(lld)
             tempModels += homeRepository.detectBuildId(lld)
@@ -270,7 +268,7 @@ class HomeViewModel(
         val lld = fetchOfflineLldOrNull().lld
             ?: return
 
-        val newDetail = withContext(Dispatchers.Default) {
+        val newDetail = withContext(Dispatchers.IO) {
             homeRepository.getOutdatedTargetSdkVersionApkModel(
                 lld, settingsStore.outdatedOrderFirst.value
             ).detail

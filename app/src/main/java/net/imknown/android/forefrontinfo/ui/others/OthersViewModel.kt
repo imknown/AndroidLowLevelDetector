@@ -31,7 +31,7 @@ class OthersViewModel(
     override suspend fun collectModels(): List<MyModel> {
         val tempModels = mutableListOf<MyModel>()
 
-        withContext(Dispatchers.Default) {
+        withContext(Dispatchers.IO) {
             // region [Basic]
             tempModels += othersRepository.getBrand()
             tempModels += othersRepository.getManufacturer()

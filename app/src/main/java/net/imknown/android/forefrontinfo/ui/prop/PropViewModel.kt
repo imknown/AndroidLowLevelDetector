@@ -28,7 +28,7 @@ class PropViewModel(
     override suspend fun collectModels(): List<MyModel> {
         val tempModels = mutableListOf<MyModel>()
 
-        withContext(Dispatchers.Default) {
+        withContext(Dispatchers.IO) {
             tempModels += propRepository.getSystemProp()
 
             tempModels += propRepository.getSettings(Settings.System::class)
