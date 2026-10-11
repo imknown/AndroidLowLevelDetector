@@ -75,7 +75,11 @@ kotlinx.serialization, Ktor, libsu, JNI/NDK. DI by Metro (compile-time, no refle
   fresh-context subagent review the uncommitted diff in the background, report the findings to the owner,  
   and stop: nothing is committed without the owner's explicit say-so, spec flow or not.  
   The reviewer owes verifiable evidence (file:line) for every finding, and prefer a different model for the  
-  reviewer than the one that wrote the change: that duty binds every session, not only a spec task.  
+  reviewer than the one that wrote the change: those duties bind every session, not only a spec task.  
+  Review is round-based (v1, v2, ... after each fix round), and later rounds may resume the same reviewer  
+  for a delta pass under the policy written in the Review step of  
+  [docs/agents/task-workflow.md](docs/agents/task-workflow.md), fresh-reviewer triggers included:  
+  that policy binds every session too, not only a spec task.  
   Inspection-level findings (e.g. "Use destructuring declaration") are treated like syntax warnings:  
   fixed directly, not documented.
   - [docs/agents/verification.md](docs/agents/verification.md) is the full contract for that command:  
