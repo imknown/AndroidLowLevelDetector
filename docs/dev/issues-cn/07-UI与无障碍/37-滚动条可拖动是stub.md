@@ -7,9 +7,11 @@
 **严重程度: P2(🟢) | 修复难度: 低**
 
 - **数组维持现状**: `ui/settings/res/values/arrays.xml` 的 `scrollBarKeys` 三个 item 里第三个  
-  (`@string/interface_fast_scroll_bar_key`) 是注释状态, 于是 2 个 label 对 3 个 value;  
+  (`@string/interface_fast_scroll_bar_key`) 是注释状态, `scrollBarValues` 侧对应的  
+  `@string/interface_fast_scroll_bar_value` item 同样注释, 两侧对齐成 2 项  
+  (曾经的 2/3 错位按 values 侧对齐修复, 见 [archived #18](../archived/05-稳定性与错误处理/18-滚动条数组错位.md));  
   默认值是 None, `SettingsStore` 播种时拿  
-  `interface_no_scroll_bar_value` 兜底. 这条 2/3 错位本身的翻车风险归 [#18](../05-稳定性与错误处理/18-滚动条数组错位.md).
+  `interface_no_scroll_bar_value` 兜底.
 - **两档今天生效**: 这个偏好经 `SettingsStore.scrollBarMode: StateFlow` 送出 (根部经 `LocalScrollBarMode` provide; 曾经的  
   `MyApplication.scrollBarMode` 伴生流由 `121dd849` 引入, 已迁入 store,  
   原条目见 [archived #08](../archived/02-SSOT-唯一数据来源/08-设置无唯一数据来源.md)), 两个滚动列表  
@@ -33,7 +35,7 @@
 - **历史载体**: 原 `ui/common/ViewExt.kt` (只切 `RecyclerView.isVerticalScrollBarEnabled`) 已随 `64e36091` 删除.  
   `base/MyApplication.kt` 的 `ScrollBarMode` 注释记录了更早的一段: 那一档对应 View 时代的 fast scroll,  
   其 RecyclerView `FastScroller` 早在 2019 年就因 bug 被弃用.
-- **界面选不到第三档**: `SettingsChoiceDialog()` 用 `labels.zip(values)` 配对, `zip` 截断到较短的一侧,  
+- **界面选不到第三档**: `SettingsChoiceDialog()` 用 `labels.zip(values)` 配对, 数组两侧各 2 个活 item,  
   所以对话框里只渲染 2 个选项.  
   存着 `"2"` 的老偏好仍会被读成 `Draggable`, 因为  
   `SettingsStore.parseScrollBarMode()` 特意保留那条映射 (`interface_fast_scroll_bar_value -> ScrollBarMode.Draggable`),  
