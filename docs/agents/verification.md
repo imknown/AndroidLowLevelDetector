@@ -5,7 +5,9 @@
 > The invariant that stays in AGENTS.md is the duty itself: run it for every changed file after each edit batch.
 
 `android studio analyze-file` drives a *running* Android Studio instance and reports its live inspection  
-results for one file at a time: compiler errors, warnings, and Android Lint inspections.
+results for one file at a time: compiler errors, IDE inspections at every severity  
+(Warning / WeakWarning / Info; that spectrum covers the abilities of a language server  
+and goes far beyond them), Android Lint, and the inspections of installed IDE plugins.
 
 ## Usage
 
@@ -29,8 +31,16 @@ android studio analyze-file --project=AndroidLowLevelDetector <path>
 
 Run analyze-file first for every changed file, then the Gradle tiers from AGENTS.md's Build and verify  
 section (`assembleFossDebug`, `testFossDebugUnitTest`, `lintFossDebug`): the per-file result comes back  
-fast and catches compile errors and inspection findings early, and the Gradle build then runs the full  
-check over the whole batch. The fresh-context diff review comes after both.
+fast and catches compile errors and inspection findings early, and the Gradle build then runs its check  
+over the whole batch. The fresh-context diff review comes after both.
+
+The Gradle tiers do not substitute for analyze-file, and the two only partly overlap:  
+the Gradle tiers check that the batch compiles, plus compiler warnings and Android Lint,  
+and they sometimes surface syntax-level warnings of their own;  
+analyze-file adds the rest of the IDE inspection spectrum  
+(usage findings at every severity, installed-plugin inspections), which a green build never sees.  
+That is why the analyze-file duty holds for every changed file, resource files included:  
+skipping it is a real coverage gap, not a redundant second pass.
 
 ## Reading the result
 
