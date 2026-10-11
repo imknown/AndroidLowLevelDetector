@@ -68,7 +68,7 @@ suspend fun fetchOnlineLldJsonStringOrThrow(): String {
 ### 缓解: 8 处 `Dispatchers.Default` 改 `Dispatchers.IO`
 
 改动量 8 处, 每处一词, 其余一字不动. `HomeViewModel.detect()` 里读 mounts 的那处内层已经是 `withContext(Dispatchers.IO)`, 保留.  
-这一步就是同目录 [#14](../../04-并发与调度/14-检测链用CPU线程池.md) 的修法, 那条记的是检测链的池选择与本条这 8 处调用点, 两条一起动.
+这一步就是同目录 [#14](14-检测链用CPU线程池.md) 的修法, 那条记的是检测链的池选择与本条这 8 处调用点, 两条一起动.
 
 - **性质与边界**: 这是**临时缓解**, 不是完整修法: ViewModel 仍然知道 "里面有阻塞调用" 这个细节, 完整方案是把 IO 声明下沉到各 DataSource 方法内部, 本步为下沉铺路.
 - **行为等价性**: 加载顺序, 结果, 异常路径不变. 线程池参数不同 (Default 按 CPU 核数给线程, IO 池是为阻塞设计的可扩容池), 高并发下的排队细节会变; 本项目这几个调用点都是单次顺序加载, 无感知.

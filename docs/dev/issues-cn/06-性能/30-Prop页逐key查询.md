@@ -47,7 +47,7 @@ list.forEach {
 Prop 页一次加载 = 与常量数等量的**串行跨进程 binder 查询**, 外加两轮反射. 具体次数要在真机上量才知道 ("几百"  
 是按 SDK 常量数给出的量级, 不是实测值); 串行次数直接乘在加载时间上,  
 低端机上最吃紧. 整段跑在 `PropViewModel.collectModels()` 的 `withContext(Dispatchers.Default)` 里,  
-于是还与 [#16](../04-并发与调度/16-阻塞调用跑在CPU线程池.md) / [#14](../04-并发与调度/14-检测链用CPU线程池.md)  
+于是还与 [#16](../archived/04-并发与调度/16-阻塞调用跑在CPU线程池.md) / [#14](../archived/04-并发与调度/14-检测链用CPU线程池.md)  
 的 "阻塞调用占用 CPU 池" 叠加.
 
 ## 根本原因
@@ -105,7 +105,7 @@ tempModels += propRepository.getSettings(SettingsTable.SYSTEM)
 
 1. `contentResolver.query()` 是跨进程阻塞调用, 按 AGENTS.md 走 `Dispatchers.IO`,  
    不能留在现在的 `withContext(Dispatchers.Default)` 里,  
-   与 [#14](../04-并发与调度/14-检测链用CPU线程池.md) 是同一件事.
+   与 [#14](../archived/04-并发与调度/14-检测链用CPU线程池.md) 是同一件事.
 2. 三个 `CONTENT_URI` 常量与 `query()` 的 API 等级要按 **minSdk** (`gradle/toml/build.toml` 的 `minSdk`)  
    核对一遍再写 (`@RequiresApi` 或 `isAtLeast...()` 闸门按核对结果决定).
 3. 条目集合的口径会变: 现在由 **SDK 常量名**决定 (`toTranslatedDetailMyModel(key, value)` 把 key 原样当标题,  
