@@ -2,9 +2,10 @@
 
 # 41 · 图标 `fillColor` 硬编码黑色, 正确性依赖 `Icon` 的默认 tint
 
-> 返回 [README 索引](../README.md) · [7 · UI 与无障碍](../README.md#7--ui-与无障碍).
+> 返回 [README 索引](../../README.md) · [7 · UI 与无障碍](../../README.md#7--ui-与无障碍).
 
-**严重程度: P3 | 修复难度: 低 (补注释)**
+**严重程度: P3 | 修复难度: 低 (补注释) | 状态: 已修复 (依赖已在调用处留痕, 现状保持)**
+
 
 **现象**: 四个导航图标把 `?attr/colorOnSurface` 改成了 `#FF000000`. 四个文件的 `android:fillColor` 都在第 8 行:  
 `ui/home/res/drawable/ic_home_24dp.xml`, `ui/others/res/drawable/ic_others_24dp.xml`,  
@@ -30,6 +31,6 @@ tint 是整体替换 RGB (这几条是 material3 的行为, 不在本仓库代�
 哪天把同一个 drawable 放到 `Image(painter = painterResource(...))` 或不带 `colorFilter` 的地方,  
 立刻变成纯黑且深浅色都不对.
 
-**修改方案**: 保持现状, 在 `AppRoot.kt` 的 `Icon(...)` 处补一行注释: "图标资源为纯黑,  
-颜色由 `Icon` 的默认 tint (`LocalContentColor`) 决定,  
-勿改用无 tint 的载体". 调用处现在没有这行注释.
+**处置**: 现状保持, 风险已在 `AppRoot.kt` 的 `icon` 槽位调用处以注释留痕:  
+"图标 drawable 本体是纯黑 (fillColor 硬编码): 实际颜色完全依赖 Icon 默认 tint  
+(LocalContentColor), 勿放到无 tint 的载体 (如裸 Image), 否则深浅色都不对".

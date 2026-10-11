@@ -164,6 +164,8 @@ private fun AppRootShell(
                     NavigationBarItem(
                         selected = index == currentTabIndex, // selected state is driven by state
                         onClick = { onTabSelect(index) }, // click only reports up, rendering follows
+                        // 图标 drawable 本体是纯黑 (fillColor 硬编码): 实际颜色完全依赖 Icon 默认 tint
+                        // (LocalContentColor), 勿放到无 tint 的载体 (如裸 Image), 否则深浅色都不对
                         icon = { Icon(painterResource(tab.iconRes), contentDescription = null) },
                         label = { Text(stringResource(tab.labelRes)) },
                     )
