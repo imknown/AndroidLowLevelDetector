@@ -23,6 +23,15 @@ Working principles:
   write `unknown` rather than inventing a value. A conflict is a stop sign, not a licence to pick:  
   when the evidence does not settle which side is wrong (doc vs doc, doc vs code), show both sides and ask.  
   Scope an instruction to what was named:  
+- **Report before editing**: an instruction to change the project  
+  starts a report gate, not the edit. When a doc tracks the target, re-verify what it says  
+  against the current code first (docs can be stale or wrong; see the preamble),  
+  then present the owner a short report before any edit: the current behavior and what is missing or wrong in it,  
+  the candidate fixes where more than one exists, and which one you recommend and why.  
+  The owner picks the fix; the edit starts only on the nod.  
+  A spec subtask's step-0 report is this gate; anything else owes the short report on its own.  
+  This is the spec flow's gate discipline applied to every change, documented or not,  
+  and it binds every session.
   a second sentence that looks like the same problem goes on a list you ask about, not into the same edit.
 - **English by default**: anything you generate (docs, comments, commit messages)  
   is in English unless the user specifies otherwise. Exception:  
