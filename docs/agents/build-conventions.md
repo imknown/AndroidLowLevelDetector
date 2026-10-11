@@ -15,7 +15,7 @@
 ## Application identity
 
 - Debug builds work out of the box; debug adds `applicationIdSuffix = ".debug"`, so it installs side by side  
-  with release.
+  with release. Remember the suffix when dealing with app identity (permissions, adb).
 - Release signing is configured outside the repository, in gitignored `local.properties` (see the root README).
 
 ## JDK on two independent tracks

@@ -46,6 +46,7 @@ wrong. The long form of an activity lives in `docs/agents/` and is read when tha
 |---|---|
 | [docs/agents/verification.md](docs/agents/verification.md) | you rely on an `android studio analyze-file` result |
 | [docs/agents/build-conventions.md](docs/agents/build-conventions.md) | you change Gradle, a version catalog, a toolchain version, a CMakeLists.txt, or CI |
+| [docs/agents/detection-item.md](docs/agents/detection-item.md) | you add a detection item to a feature |
 | [docs/agents/task-workflow.md](docs/agents/task-workflow.md) | you open a spec directory, start a subtask, or close a task |
 | [docs/agents/doc-formatting.md](docs/agents/doc-formatting.md) | you write a doc, a code comment, a commit message, or a reply |
 
@@ -70,43 +71,30 @@ kotlinx.serialization, Ktor, libsu, JNI/NDK. DI by Metro (compile-time, no refle
 ```
 
 - Docs and comment-only edits skip the build tiers (no code changed).
-- **Analyze with Android Studio**: the Android CLI command `android studio analyze-file` drives a *running*  
-  Android Studio instance and reports its live inspection results for one file at a time: compiler errors,  
-  warnings, and Android Lint inspections.  
-  After each edit batch, run it for every changed file first, then the Gradle tiers above, then have a  
-  fresh-context subagent review the uncommitted diff in the background, report the findings to the owner,  
-  and stop: nothing is committed without the owner's explicit say-so, spec flow or not.  
+- **Analyze with Android Studio**: after each edit batch, run `android studio analyze-file` for every  
+  changed file first, then the Gradle tiers above, then have a fresh-context subagent review the uncommitted  
+  diff in the background, report the findings to the owner, and stop: nothing is committed without the  
+  owner's explicit say-so, spec flow or not.  
   The reviewer owes verifiable evidence (file:line) for every finding, and prefer a different model for the  
   reviewer than the one that wrote the change: those duties bind every session, not only a spec task.  
-  Review is round-based (v1, v2, ... after each fix round), and later rounds may resume the same reviewer  
-  for a delta pass under the policy written in the Review step of  
-  [docs/agents/task-workflow.md](docs/agents/task-workflow.md), fresh-reviewer triggers included:  
-  that policy binds every session too, not only a spec task.  
-  Inspection-level findings (e.g. "Use destructuring declaration") are treated like syntax warnings:  
-  fixed directly, not documented.
+  Review is round-based (v1, v2, ... after each fix round); the delta-pass and fresh-reviewer policy in the  
+  Review step of [docs/agents/task-workflow.md](docs/agents/task-workflow.md) binds every session too.
   - [docs/agents/verification.md](docs/agents/verification.md) is the full contract for that command:  
-    its usage line, why the project has to be open in a running Android Studio first (`android studio check`  
-    listing it as `READY` is what makes a result worth reading), how to read the printed blocks, and which  
-    Android Studio settings filter the list.
-  - Two runs look like a pass and are not: a file sitting open in an editor tab comes back truncated, because  
-    analyze-file inherits Android Studio's Severity and "Highlighting in editor" filter (the Problems view is  
-    just as partial even with every displayable severity ticked), so analyze it closed; and a file Android  
-    Studio has not indexed prints a false `No issues found!` with exit 0, so a file created in this session  
-    needs a re-run after indexing catches up before you treat the silence as a pass. A path outside the  
-    `--project` named is invisible the same way; a file Android Studio already knows is analyzed right away  
-    after an edit.
+    read it before you rely on a result, and beware that some runs look like a pass and are not  
+    (the trap list and how to read the printed blocks live there).
 
 ## Build conventions
 
 [docs/agents/build-conventions.md](docs/agents/build-conventions.md) is the layout of the build: the Foss /  
-Firebase flavors and what each needs, where release signing lives, the two JDK tracks, the NDK and CMake pins  
-and their CI lockstep, the five catalog files, repository filtering, configuration cache, and Develocity  
-scans. Read it before changing Gradle, a version catalog, a toolchain version, or CI. These bind any build edit:
+Firebase flavors and the `IssueTracker` dimension, application identity (debug adds an `applicationIdSuffix`),  
+where release signing lives, the two JDK tracks, the NDK and CMake pins and their CI lockstep, the five  
+catalog files and their accessors, repository filtering, the Kotlin flags, configuration cache, and  
+Develocity scans. Read it before changing Gradle, a version catalog, a toolchain version, or CI.  
+These bind any build edit:
 
-- Dependencies and versions live exclusively in the five catalogs under `gradle/toml/` (`build` / `android` /  
-  `kotlin` / `google` / `thirdParty`), reached through `libsAndroid`, `libsBuild`, `libsKotlin`, `libsGoogle`,  
-  `libsThirdParty`. There is no default `libs` accessor: never write a bare coordinate in a module  
-  `build.gradle.kts`, and decide which catalog a dependency belongs to before referencing it.
+- Dependencies and versions live exclusively in the five catalogs under `gradle/toml/`:  
+  there is no default `libs` accessor, so never write a bare coordinate in a module `build.gradle.kts`,  
+  and decide which catalog a dependency belongs to before referencing it.
 - SDK, build-tools, and NDK versions live only in `gradle/toml/build.toml` (with an `isPreview` toggle) and  
   reach modules through the `build-logic` convention plugins. Never hardcode SDK levels in module scripts.
 - No version number in prose: whichever build file carries the value is that value's source of truth, so a doc,  
@@ -119,15 +107,12 @@ scans. Read it before changing Gradle, a version catalog, a toolchain version, o
   in the sentence when it is its substance, because no file in this repo is its source of truth. A restated  
   number goes stale the moment the file behind it is bumped, and a stale number inside this file is a bug the  
   next session inherits as truth.
-- The Kotlin compiler runs with a set of experimental flags declared in `build-logic`, grouped by the Kotlin  
-  version that introduced them: those flags are intentional, don't remove them; re-review the groups on every  
-  Kotlin upgrade and drop stabilized ones. Code style is `official`.
+- The Kotlin compiler runs with a set of experimental flags declared in `build-logic`: those flags are  
+  intentional, don't remove them; re-review the flag groups on every Kotlin upgrade and drop stabilized ones.  
+  Code style is `official`.
 - Version tiers: an RC / Stable dependency or toolchain version may go into production directly.  
   A Beta / Alpha / Canary one may too, but only when it has been researched thoroughly,  
   its known issues can be fixed or avoided, and the adoption has been evaluated.
-- Debug adds an `applicationIdSuffix = ".debug"` so it installs side by side with release.  
-  Remember the suffix when dealing with app identity (permissions, adb).
-- The flavor dimension is `IssueTracker`, not the usual `mode` / `store`, and `Foss` is the default flavor.
 - Configuration cache (with parallel + integrity checks) and parallel builds are enabled;  
   keep custom tasks configuration-cache compatible.
 
@@ -198,17 +183,8 @@ Screen (Compose) → ViewModel (StateFlow) → Repository → DataSource
 
 ## Adding a detection item
 
-Current workflow (list order = call order):
-
-1. Add property keys / shell commands to the feature `DataSource`.
-2. Add a `detect...()` method to the feature `Repository` returning `MyModel`  
-   (new Repository / DataSource classes join the graph via `@Inject` constructor injection;  
-   a missing annotation fails the build with `[Metro/MissingBinding]`).
-3. Call it from the feature `ViewModel.collectModels()`: the call order defines the list order.
-4. Add the strings to the feature package's `strings.xml` (default English) plus the three translation files.
-5. If the item needs a new package with resources, register its res directory in  
-   `app/build.gradle.kts` sourceSets.
-6. Verify with `./gradlew assembleFossDebug`.
+[docs/agents/detection-item.md](docs/agents/detection-item.md) is the workflow (list order = call order):  
+read it before adding a detection item to a feature.
 
 ## Code rules
 
@@ -272,25 +248,12 @@ and re-read the step you are in before you act on it.
 
 These bind every session, spec task or not:
 
-- A spec directory is `docs/spec/<yyyy-MM-dd-HH-mm-ss-Z>-<english-title>[-cn]/` (host-clock timestamp, short  
-  English title). The trailing `-cn` marks non-English reports; files inside a suffixed directory keep their  
-  prescribed names WITHOUT a language suffix.
-- Each spec dir carries `progress.md`, the ledger, which the AI updates at every gate: current position,  
-  per-subtask gate state, suspended items (stashes), deviations, next action. The ledger rides the next commit.
-- Any new session/agent/model resumes by reading AGENTS.md + the ledger first, then executing the ledger's next  
-  action. In-flight steps (a background review still running) are not captured, so re-run the step the ledger  
-  points at.
+- Each spec dir carries `progress.md`, the ledger; the AI updates it at every gate,  
+  and it rides the next commit.
 - At session start, or whenever the owner says "continue", scan `docs/spec/*/progress.md` for unfinished tasks  
   and resume from the ledger: the owner needs to remember nothing but that word. Confirm the resume with the  
   owner before acting on it, even when only one task is unfinished; when several are in flight, list them and  
   ask which.
-- Task workflow step 1 (Implement) is where the comments written during implementation get translated to  
-  English at the commit gate, so the committed codebase stays English.
-- When a task is fully closed out (the ledger's next action is none), its whole spec dir moves under  
-  `docs/spec/archived/` unchanged and is never edited again: the move itself declares the dir a **record**  
-  (see [Documentation rules](#documentation-rules)), a ledger header still saying living is superseded by the  
-  location rather than a drift to fix in place, and the resume scan above does not reach one level deeper, so  
-  archived tasks never resurface as unfinished.
 
 ## Git and CI
 
@@ -368,26 +331,13 @@ the files are not edited to carry it, and a status header inside that still says
   Links point at the file that exists, and where a document has no counterpart in the reader's language, at  
   the one that does. Where a directory already has a naming pattern, follow it.  
   Any language may still be used inside a doc when there is a reason.
-- **ASCII punctuation in every language**: a Chinese (or Japanese) doc uses English punctuation marks, never  
-  CJK ones: `,` `.` `;` `:` `!` `?` `(...)` `"..."` instead of `，。；：！（）「」《》`, and the spacing  
-  follows English whatever the script on either side. This holds for every doc, including the **frozen**,  
-  **record**, and **scratch** ones: punctuation there is formatting, not the substance those statuses preserve.
-- **No dashes**: never use a dash as punctuation in any doc, code comment, or chat reply: no em dash `—`,  
-  no CJK dash `——`, no ASCII stand-in `--`, and no `----` decorative rule opening or closing a comment  
-  (naming the symbol inside inline code, as this rule does, is the only exception). Rewrite each occurrence as  
-  the connective its meaning needs: a gloss becomes `, i.e. `, a rephrase `, that is, `, a reason or an  
-  enumeration takes a colon, two independent clauses take a semicolon, a true aside goes in parentheses,  
-  a plain continuation a plain comma. A `--` that is not punctuation carries structure and stays as it is.
-- **Hard-wrap long lines by meaning**: when a source line runs long, break it at a sentence or clause boundary,  
-  so that no line ends up too long overall (there is no fixed width); never break a heading, a link target,  
-  a URL, a code block, or inline code; end every wrapped line inside a paragraph, list item, or blockquote with  
-  two trailing spaces so the break also survives rendering, the block's last line carrying none. Those spaces  
-  are load-bearing: never strip or collapse them.
-- [docs/agents/doc-formatting.md](docs/agents/doc-formatting.md) carries the machinery of those three rules:  
-  the CJK-to-ASCII mapping, the spacing cases, the dash rewrites listed per relation in both languages,  
-  the structural `--` exemptions, the heading-anchor consequence of re-spacing a heading, and the table and  
-  code-comment wrapping cases. Read it before you write a doc, a code comment, a commit message, or a reply to  
-  the owner, and whenever you convert or reflow text that already exists.
+- **ASCII punctuation in every language**, **no dash as punctuation**, and **hard-wrap long lines by meaning**  
+  hold in every doc, code comment, and chat reply, the **frozen**, **record**, and **scratch** ones included  
+  (punctuation and wrapping are formatting, not the substance those statuses preserve).  
+  [docs/agents/doc-formatting.md](docs/agents/doc-formatting.md) is the machinery: the CJK-to-ASCII mapping  
+  and spacing cases, the dash rewrites per relation and the structural `--` exemptions, and the table and  
+  code-comment wrapping cases. Read it before you write a doc, a code comment, a commit message, or a reply  
+  to the owner, and whenever you convert or reflow text that already exists.
 - No document (memory docs included) may contain sensitive information:  
   privacy data, passwords, keys, certificates.
 - Keep a note short; when one grows too long, split it along natural seams, keeping an index page in front.
