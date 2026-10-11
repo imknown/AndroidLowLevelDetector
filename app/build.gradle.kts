@@ -110,6 +110,13 @@ android {
         buildConfig = true
     }
 
+    lint {
+        // The Slack Compose checks arrived with findings in existing code: the
+        // baseline records them so the checks gate new code without forcing
+        // the existing cleanup; shrink the baseline as the debt gets fixed
+        baseline = file("lint-baseline.xml")
+    }
+
     packaging {
         resources.excludes += "DebugProbesKt.bin"
     }
@@ -150,5 +157,9 @@ dependencies {
     // Compose side (LocalMetroViewModelFactory, metroViewModel()). The metro
     // runtime itself (annotations) comes in transitively via the Gradle plugin.
     implementation(libsThirdParty.bundles.metrox.viewmodel)
+
+    // Slack Compose lints: third-party lint checks for the Compose code; the
+    // lintChecks configuration keeps them off every runtime classpath
+    lintChecks(libsThirdParty.composeLintChecks)
     // endregion [3rd Parties]
 }
