@@ -3,8 +3,9 @@
 # The Gradle plugin, the runtime, and the metrox artifacts must share one
 # version.ref: they are version-locked together. The compiler plugin tracks
 # the Kotlin version, so a Kotlin upgrade requires a Metro upgrade in
-# lockstep, so check https://zacsweers.github.io/metro/latest/compatibility/
-# first (Kotlin 2.4.20 needs Metro >= 1.2.0).
+# lockstep: check https://zacsweers.github.io/metro/latest/compatibility/
+# against the `kotlin` entry in gradle/toml/kotlin.toml before bumping,
+# and keep the pair out of comments so it cannot go stale here.
 metro = "1.4.5"
 
 # https://github.com/topjohnwu/libsu/releases
