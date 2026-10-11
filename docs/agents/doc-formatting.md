@@ -1,10 +1,10 @@
 # Documentation Formatting Reference
 
 > **Status**: **living**, part of [AGENTS.md](../../AGENTS.md)'s Documentation rules section.  
-> Read this before you write or rework anything governed by the three rules below (a doc, a code comment, a  
-> commit message, or a chat reply to the owner).  
-> The prohibitions themselves stay in AGENTS.md; this file is the mapping, the spacing cases, and the  
-> exemptions.
+> Read this before you write or rework anything governed by the rules collected here (a doc, a code comment,  
+> a commit message, or a chat reply to the owner), and whenever you convert or reflow text that already exists.  
+> The prohibitions themselves stay in AGENTS.md; this file is the mapping, the spacing cases, the exemptions,  
+> and the language and file-naming mechanics.
 
 ## ASCII punctuation in every language
 
@@ -87,3 +87,15 @@ Code comments follow the same rule; a comment sharing its line with code stays o
 must never touch anything that is not a comment.
 
 Wrapping is formatting, so it holds for **frozen**, **record**, and **scratch** docs too.
+
+## Language and file naming
+
+English is the default language for documents, and file names are English by default; a non-English  
+document carries a language suffix (Chinese: `-cn`), as `docs/dev/module-structure-cn.md` does.
+
+Where a document has a translated twin, the English file is the one in force and keeps the canonical name;  
+the translation carries the suffix, does not mention its twin, does not call itself a translation, and adds  
+no back-reference: the suffix states the relationship. No translated twin stands in the repo now, so  
+`AGENTS.md` and the root `README.md` are single-language files. Links point at the file that exists, and  
+where a document has no counterpart in the reader's language, at the one that does. Where a directory  
+already has a naming pattern, follow it. Any language may still be used inside a doc when there is a reason.

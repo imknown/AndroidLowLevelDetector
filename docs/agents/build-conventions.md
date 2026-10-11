@@ -47,6 +47,13 @@
   `FAIL_ON_PROJECT_REPOS`.
 - `jitpack.io` exists only in the main build's dependency repositories.
 
+## No version numbers in prose
+
+- Whichever build file carries a value is that value's source of truth; a restated number goes stale the  
+  moment the file behind it is bumped, and a stale number inside a doc is a bug the next session inherits  
+  as truth. That is why AGENTS.md's prose ban covers docs, code comments, and commit messages alike, and  
+  why it names the holder files instead of restating any number.
+
 ## Kotlin flags
 
 - The Kotlin version lives only in `gradle/toml/kotlin.toml`; the compiler runs with a set of experimental  

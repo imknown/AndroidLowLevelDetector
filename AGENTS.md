@@ -23,6 +23,7 @@ Working principles:
   write `unknown` rather than inventing a value. A conflict is a stop sign, not a licence to pick:  
   when the evidence does not settle which side is wrong (doc vs doc, doc vs code), show both sides and ask.  
   Scope an instruction to what was named:  
+  a second sentence that looks like the same problem goes on a list you ask about, not into the same edit.
 - **Report before editing**: an instruction to change the project  
   starts a report gate, not the edit. When a doc tracks the target, re-verify what it says  
   against the current code first (docs can be stale or wrong; see the preamble),  
@@ -32,7 +33,6 @@ Working principles:
   A spec subtask's step-0 report is this gate; anything else owes the short report on its own.  
   This is the spec flow's gate discipline applied to every change, documented or not,  
   and it binds every session.
-  a second sentence that looks like the same problem goes on a list you ask about, not into the same edit.
 - **English by default**: anything you generate (docs, comments, commit messages)  
   is in English unless the user specifies otherwise. Exception:  
   code comments are written in the owner's chat language during implementation  
@@ -55,6 +55,7 @@ wrong. The long form of an activity lives in `docs/agents/` and is read when tha
 |---|---|
 | [docs/agents/verification.md](docs/agents/verification.md) | you rely on an `android studio analyze-file` result |
 | [docs/agents/build-conventions.md](docs/agents/build-conventions.md) | you change Gradle, a version catalog, a toolchain version, a CMakeLists.txt, or CI |
+| [docs/agents/architecture.md](docs/agents/architecture.md) | you touch navigation, the DI graph, a ViewModel or a state class, a list page, settings persistence, or shell/property access |
 | [docs/agents/detection-item.md](docs/agents/detection-item.md) | you add a detection item to a feature |
 | [docs/agents/task-workflow.md](docs/agents/task-workflow.md) | you open a spec directory, start a subtask, or close a task |
 | [docs/agents/doc-formatting.md](docs/agents/doc-formatting.md) | you write a doc, a code comment, a commit message, or a reply |
@@ -94,11 +95,8 @@ kotlinx.serialization, Ktor, libsu, JNI/NDK. DI by Metro (compile-time, no refle
 
 ## Build conventions
 
-[docs/agents/build-conventions.md](docs/agents/build-conventions.md) is the layout of the build: the Foss /  
-Firebase flavors and the `IssueTracker` dimension, application identity (debug adds an `applicationIdSuffix`),  
-where release signing lives, the two JDK tracks, the NDK and CMake pins and their CI lockstep, the five  
-catalog files and their accessors, repository filtering, the Kotlin flags, configuration cache, and  
-Develocity scans. Read it before changing Gradle, a version catalog, a toolchain version, or CI.  
+[docs/agents/build-conventions.md](docs/agents/build-conventions.md) is the layout of the build.  
+Read it before changing Gradle, a version catalog, a toolchain version, or CI.  
 These bind any build edit:
 
 - Dependencies and versions live exclusively in the five catalogs under `gradle/toml/`:  
@@ -107,15 +105,12 @@ These bind any build edit:
 - SDK, build-tools, and NDK versions live only in `gradle/toml/build.toml` (with an `isPreview` toggle) and  
   reach modules through the `build-logic` convention plugins. Never hardcode SDK levels in module scripts.
 - No version number in prose: whichever build file carries the value is that value's source of truth, so a doc,  
-  a code comment, and a commit message name the file or the key behind it instead of restating the number. The  
-  holders are the five catalogs under `gradle/toml/` (reached through the catalog accessors and through  
-  `buildVersion("<key>")` in `build-logic`), `gradle/wrapper/gradle-wrapper.properties` for Gradle itself, and  
-  `gradle/gradle-daemon-jvm.properties` for the Gradle Daemon's JDK: a `.kts` script or a `.properties` file  
-  counts exactly as much as a `.toml` catalog does. The ban covers the values our own build files carry; a  
-  version that belongs to the outside world (an upstream library's release line, an Android API level) stays  
-  in the sentence when it is its substance, because no file in this repo is its source of truth. A restated  
-  number goes stale the moment the file behind it is bumped, and a stale number inside this file is a bug the  
-  next session inherits as truth.
+  a code comment, and a commit message name the file or the key behind it instead of restating the number.  
+  The holders are the five catalogs under `gradle/toml/` (also reached via `buildVersion("<key>")` in  
+  `build-logic`), `gradle/wrapper/gradle-wrapper.properties`, and `gradle/gradle-daemon-jvm.properties`:  
+  a `.kts` script or a `.properties` file counts exactly as much as a `.toml` catalog does. The ban covers the  
+  values our own build files carry; a version of the outside world (an upstream release line, an API level)  
+  stays in the sentence when it is its substance.
 - The Kotlin compiler runs with a set of experimental flags declared in `build-logic`: those flags are  
   intentional, don't remove them; re-review the flag groups on every Kotlin upgrade and drop stabilized ones.  
   Code style is `official`.
@@ -149,46 +144,20 @@ Each feature lives in its own package under `ui` (`ui.home`, `ui.others`, `ui.pr
 Screen (Compose) → ViewModel (StateFlow) → Repository → DataSource
 ```
 
-- Navigation is **Navigation 3** (`androidx.navigation3`), not the mainstream Navigation 2:  
-  the API shape is `NavKey` + back stack + entryProvider (`ui/navigation/NavKeys.kt`).  
-  Don't think in Nav2 terms (`NavHost(route = ...)`).
-- **DI by Metro**: compile-time DI,  
-  a deliberate deviation from the Hilt / Koin mainstream  
-  (the hand-written companion `Factory` / `viewModel(factory = ...)` era is retired). ViewModels are `@Inject` +  
-  `@ViewModelKey` + `@ContributesIntoMap(AppScope::class, binding<ViewModel>())`  
-  and resolve at the Navigation 3 entry via  
-  `metroViewModel<...>()`; Repositories and DataSources are plain `@Inject` constructor injection;  
-  leaf bindings live in the binding containers in `di/AppGraph.kt`,  
-  and the graph factory binds `MyApplication`. The Gradle plugin, runtime,  
-  and MetroX artifacts are version-locked to one `version.ref` in `gradle/toml/thirdParty.toml`;  
-  a Kotlin upgrade requires a matching Metro upgrade, so check the official compatibility matrix first.  
-  Deferred injection sites use the function type `() -> T`, not Metro's `Provider<T>`:  
-  Metro treats `() -> T` as a provider by default, so a declared `Provider<T>` is the discouraged sugar it  
-  reports as `DESUGARED_PROVIDER_WARNING` (the check reads the declared type, not how the value is called).
-- Settings are owned by `SettingsStore` (`ui/settings/repository/SettingsStore.kt`):  
-  the single observable holder of every setting's key/value plus the write entry points,  
-  bound in the graph and injected into consumers,  
-  so nothing outside it touches SharedPreferences directly  
-  (the graph's SharedPreferences binding exists to feed it).
-- Testability comes from **interface-first design**, not a mocking framework:  
-  `:base` defines `IProperty` / `IShell` with default implementations (`PropertyDefault` / `ShellDefault`)  
-  and has no aggregation classes: the graph binds both  
-  (`ShellLibSu` contributes `IShell` via `@ContributesBinding`,  
-  `PropertyDefault` is `@Provides`-bound by `PropertyContainer`),  
-  and `PropertyReader` (`ui/common`) wraps `IProperty` with the shared placeholder fallback.
-- `BaseListViewModel` drives every list page with two `StateFlow`s:  
-  `modelsStateFlow: StateFlow<List<MyModel>?>`  
-  (null = cold start; a refresh deliberately keeps the previous list so the UI never flashes empty) and  
-  `isLoadingStateFlow`, plus `loadJob` dedup: don't reintroduce redundant loads on recreation.  
-  `onModelsLoaded()` runs after each load lands, for reconciling state that changed mid-build.
-- Compose stability annotations (`@Immutable` / `@Stable`) are deliberate;  
-  re-evaluate them whenever a state class changes  
-  (follow the pattern in the comment atop `HomeViewModel` / `BaseListViewModel`,  
-  which explains *why* the annotation is safe).
-- The bundled `lld.json` data is copied to the external files dir (`LldFileStore`)  
-  and refreshed online via Ktor when the user allows network; the GitHub or Gitee URL is chosen by timezone.
-- Command execution uses libsu in **non-root** mode  
-  (`ui/common/ShellLibSu.kt`, with `Shell.FLAG_NON_ROOT_SHELL`): there is no root layer.
+- Navigation is **Navigation 3**, not Navigation 2; don't think in Nav2 terms.
+- DI is by **Metro** (compile-time, no reflection); deferred injection uses `() -> T`, never `Provider<T>`.
+- Metro artifacts are version-locked to one `version.ref` in `gradle/toml/thirdParty.toml`;  
+  a Kotlin upgrade requires a matching Metro upgrade, so check the official compatibility matrix first.
+- Settings are owned by `SettingsStore`; nothing outside it touches SharedPreferences directly.
+- Testability is interface-first: `:base` defines `IProperty` / `IShell`, the graph binds the live ones.
+- `BaseListViewModel` drives every list page; a refresh deliberately keeps the previous list  
+  so the UI never flashes empty, and `loadJob` dedups loads.
+- Compose stability annotations are deliberate; re-evaluate them whenever a state class changes.
+- The bundled `lld.json` is copied to external storage and refreshed online via Ktor when allowed;  
+  the GitHub or Gitee URL is chosen by timezone.
+- Command execution uses libsu in **non-root** mode; there is no root layer.
+
+[docs/agents/architecture.md](docs/agents/architecture.md) carries the detail and the why behind each decision.
 
 ## Adding a detection item
 
@@ -268,20 +237,16 @@ These bind every session, spec task or not:
 
 - PRs target `develop` (the default branch).  
   Commit messages follow Conventional Commits with **lowercase type + scope**: `fix(home): ...`.
-- End every commit message with a trailer naming the agent, the model,  
-  and the reasoning effort level (`off` / `low` / `medium` / `high` / `xhigh` / `max`, ...) that produced it,  
-  e.g. `Generated with ZCode (GLM-5.3, effort: xhigh)`. Name the level `effort:`.  
-  It is the reasoning-effort knob itself, not a verdict on the reasoning;  
-  commits from 2026-09-22 and earlier spell it `reasoning:`, leave those as they are. Never guess a value;  
-  when the agent, model, or effort cannot be determined, ask the user what to record.  
-  The ban is on writing `unknown` on your own, not on the word itself:  
-  once you have asked and the user confirms the value genuinely cannot be determined  
-  (for example the effort level is not shown in Auto mode),  
-  recording `unknown` is the correct, agreed-on entry, not a guess.
-- Name the agent from evidence, not from habit: how to find it is up to you,  
-  but show what it rests on and get the user's agreement before writing it.  
-  Edition-level names differ  
-  (`Qoder CN` and `Qoder`, `Trae CN` and `Trae` are different AI development environments (ADEs));  
+- End every commit message with a trailer naming the agent, the model, and the reasoning effort level  
+  (`off` / `low` / `medium` / `high` / `xhigh` / `max`, ...) that produced it,  
+  shaped like `Generated with ZCode (GLM-5.3, effort: xhigh)`.  
+  `effort:` is the reasoning-effort knob itself, not a verdict on the reasoning; very old commits spell it  
+  `reasoning:`, leave those as they are. Never guess a value and never write `unknown` on your own: ask the  
+  user what to record, and once they confirm a value genuinely cannot be determined, `unknown` is the  
+  correct, agreed-on entry.
+- Name the agent from evidence, not from habit, show what it rests on,  
+  and get the user's agreement before writing it. Edition-level names differ  
+  (`Qoder CN` and `Qoder` are different AI development environments (ADEs));  
   do not invent host-form suffixes such as `IDE` / `CLI` unless the user asks for them.
 - CI builds `assembleFossDebug` only. `master` carries `lld.json` data updates, so don't open PRs against it.
 
@@ -331,15 +296,9 @@ the files are not edited to carry it, and a status header inside that still says
   dated rulings belong in `git log`, not as an "owner ruled, <date>" tag on every sentence.  
   A doc that carries a version row names the version and points at `git log`;  
   it does not accumulate a revision log.
-- English is the default language for documents, and file names are English by default; a non-English  
-  document carries a language suffix (Chinese: `-cn`), as `docs/dev/module-structure-cn.md` does. Where a  
-  document has a translated twin, the English file is the one in force and keeps the canonical name; the  
-  translation carries the suffix, does not mention its twin, does not call itself a translation, and adds no  
-  back-reference: the suffix states the relationship. No translated twin stands in the repo now, so  
-  `README.md` and this file are single-language files.  
-  Links point at the file that exists, and where a document has no counterpart in the reader's language, at  
-  the one that does. Where a directory already has a naming pattern, follow it.  
-  Any language may still be used inside a doc when there is a reason.
+- English is the default language for documents and file names; a non-English document carries a language  
+  suffix (Chinese: `-cn`), and the twin mechanics (which file is in force, how the suffix relates the pair,  
+  where links point) live in [doc-formatting.md](docs/agents/doc-formatting.md).
 - **ASCII punctuation in every language**, **no dash as punctuation**, and **hard-wrap long lines by meaning**  
   hold in every doc, code comment, and chat reply, the **frozen**, **record**, and **scratch** ones included  
   (punctuation and wrapping are formatting, not the substance those statuses preserve).  
@@ -347,6 +306,4 @@ the files are not edited to carry it, and a status header inside that still says
   and spacing cases, the dash rewrites per relation and the structural `--` exemptions, and the table and  
   code-comment wrapping cases. Read it before you write a doc, a code comment, a commit message, or a reply  
   to the owner, and whenever you convert or reflow text that already exists.
-- No document (memory docs included) may contain sensitive information:  
-  privacy data, passwords, keys, certificates.
 - Keep a note short; when one grows too long, split it along natural seams, keeping an index page in front.
