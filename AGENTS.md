@@ -71,7 +71,7 @@ kotlinx.serialization, Ktor, libsu, JNI/NDK. DI by Metro (compile-time, no refle
 - **Analyze with Android Studio**: the Android CLI command `android studio analyze-file` drives a *running*  
   Android Studio instance and reports its live inspection results for one file at a time: compiler errors,  
   warnings, and Android Lint inspections.  
-  After each edit batch, run it for every changed file (plus the Gradle tiers above), then have a  
+  After each edit batch, run it for every changed file first, then the Gradle tiers above, then have a  
   fresh-context subagent review the uncommitted diff in the background, report the findings to the owner,  
   and stop: nothing is committed without the owner's explicit say-so, spec flow or not.  
   The reviewer owes verifiable evidence (file:line) for every finding, and prefer a different model for the  

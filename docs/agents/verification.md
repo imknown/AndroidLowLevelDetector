@@ -25,6 +25,13 @@ android studio analyze-file --project=AndroidLowLevelDetector <path>
   When no instance has the project open, the run fails, so ask the owner to open Android Studio and  
   this project.
 
+## Place in the verify flow
+
+Run analyze-file first for every changed file, then the Gradle tiers from AGENTS.md's Build and verify  
+section (`assembleFossDebug`, `testFossDebugUnitTest`, `lintFossDebug`): the per-file result comes back  
+fast and catches compile errors and inspection findings early, and the Gradle build then runs the full  
+check over the whole batch. The fresh-context diff review comes after both.
+
 ## Reading the result
 
 - The exit code is not a verdict: a run that prints `ERROR` items still exits 0, and exit 1 only says the  
