@@ -82,6 +82,11 @@ fun AppRoot() {
     // rotation and process death; storing the index is the simplest option (fixed key list)
     var currentTabIndex by rememberSaveable { mutableIntStateOf(0) }
 
+    // The persisted index is restored without validation: if the top-level tabs ever shrink,
+    // a stale index saved by an older build indexes decoratedEntries out of bounds and crashes
+    // on the first cold-start frame; clamp once, shared by rendering and the selected state
+    val selectedTabIndex = currentTabIndex.coerceIn(0, topLevelTabs.lastIndex)
+
     // One back stack per tab; map is inline, so @Composable rememberNavBackStack can be
     // called inside; the stack content is rememberSaveable-backed -> survives process death
     val backStacks = topLevelTabs.associate { tab -> tab.key to rememberNavBackStack(tab.key) }
@@ -99,6 +104,8 @@ fun AppRoot() {
         rememberDecoratedNavEntries(
             backStack = backStacks.getValue(tab.key), // this tab's own stack
             entryDecorators = entryDecorators, // decorator list
+            // The four providers with identical content are deliberate: each back stack only
+            // ever looks up its own key, so the other three registrations are never resolved
             entryProvider = entryProvider { // key -> UI mapping DSL
                 entry<HomeKey> { MyModelListScreen(metroViewModel<HomeViewModel>()) } // explicit type (reified generic): MyModelListScreen takes the abstract BaseListViewModel
                 entry<OthersKey> { MyModelListScreen(metroViewModel<OthersViewModel>()) } // explicit type (reified generic): the factory map only registers the concrete class (asking for the abstract BaseListViewModel crashes)
@@ -109,11 +116,11 @@ fun AppRoot() {
     }
 
     AppRootShell(
-        currentTabIndex = currentTabIndex, // state down: which tab is selected/rendered
+        currentTabIndex = selectedTabIndex, // state down: which tab is selected/rendered
         onTabSelect = { currentTabIndex = it }, // event up: click only changes state, rendering follows
     ) { contentModifier -> // the modifier carries the Scaffold insets so content consumes them in one line
         NavDisplay(
-            entries = decoratedEntries[currentTabIndex], // render only the entries of the currently selected tab stack
+            entries = decoratedEntries[selectedTabIndex], // render only the entries of the currently selected tab stack
             onBack = { activity?.finish() }, // keep legacy behavior: back from any tab exits directly
             modifier = contentModifier,
             // Tab switch replaces the whole stack, so NavDisplay treats it as forward navigation and
