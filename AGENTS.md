@@ -17,6 +17,8 @@ Working principles:
   When unsure what or where to record, discuss with the user.
 - **Never guess**: investigate the codebase and docs first;  
   base every change on evidence you can point to (file, line, doc section).  
+  Saying a rule does not exist anywhere is the same kind of claim and needs the same evidence:  
+  grep the whole repo for it first, not just the files already read.  
   When something cannot be determined or multiple valid approaches exist, present findings and ask the user;  
   write `unknown` rather than inventing a value. A conflict is a stop sign, not a licence to pick:  
   when the evidence does not settle which side is wrong (doc vs doc, doc vs code), show both sides and ask.  
