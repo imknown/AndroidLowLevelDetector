@@ -18,14 +18,18 @@
 改动分两步落地: `9b3404a6` 把 `@color/md_theme_onSurface` 换成 `?attr/colorOnSurface`,  
 `600629f7` 在把窗口主题换成平台外壳并删掉 `md_theme` 色板的那次提交里把它换成 `#FF000000`.
 
-**评估**: **方向是对的**, 因为 XML 主题现在只管窗口外壳, 不可能跟着 App 内主题 (例如 "系统浅色 + 应用强制深色") 走, 保留 `?attr` 反而会取到错误的颜色.
+**评估**: **方向是对的**, 因为 XML 主题现在只管窗口外壳, 不可能跟着 App 内主题 (例如 "系统浅色 + 应用强制深色")  
+走, 保留 `?attr` 反而会取到错误的颜色.
 
 **风险**: 正确性**完全依赖** "必须用带 tint 的载体承载". 眼下这条依赖链是干净的,  
 四个 drawable 的唯一消费点就是 `AppRoot()` 里的 `Icon(painterResource(tab.iconRes), contentDescription = null)`  
 (在 `NavigationBarItem` 的 `icon` 槽位), 全仓 `Image(` 零使用; 深色下取到的也是内容色而不是纯黑,  
-因为 M3 `Icon` 默认 `tint = LocalContentColor.current`, 而 `NavigationBarItem` 为图标槽位提供 `LocalContentColor`,  
+因为 M3 `Icon` 默认 `tint = LocalContentColor.current`,  
+而 `NavigationBarItem` 为图标槽位提供 `LocalContentColor`,  
 tint 是整体替换 RGB (这几条是 material3 的行为, 不在本仓库代码里).  
-哪天把同一个 drawable 放到 `Image(painter = painterResource(...))` 或不带 `colorFilter` 的地方, 立刻变成纯黑且深浅色都不对.
+哪天把同一个 drawable 放到 `Image(painter = painterResource(...))` 或不带 `colorFilter` 的地方,  
+立刻变成纯黑且深浅色都不对.
 
-**修改方案**: 保持现状, 在 `AppRoot.kt` 的 `Icon(...)` 处补一行注释: "图标资源为纯黑, 颜色由 `Icon` 的默认 tint (`LocalContentColor`) 决定,  
+**修改方案**: 保持现状, 在 `AppRoot.kt` 的 `Icon(...)` 处补一行注释: "图标资源为纯黑,  
+颜色由 `Icon` 的默认 tint (`LocalContentColor`) 决定,  
 勿改用无 tint 的载体". 调用处现在没有这行注释.

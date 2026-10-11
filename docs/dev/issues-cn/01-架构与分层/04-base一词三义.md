@@ -13,7 +13,8 @@
 "base" 在项目里有三个互不相干的含义:
 
 1. **Gradle 模块** `base/` (`net.imknown.android.forefrontinfo.base.property` / `base.shell`);
-2. **app 模块里的同名包** `app/src/main/java/.../base/MyApplication.kt`: Application 类住在 app 模块却顶着 base 的包名;
+2. **app 模块里的同名包** `app/src/main/java/.../base/MyApplication.kt`:  
+   Application 类住在 app 模块却顶着 base 的包名;
 3. **app 模块里的资源目录** `app/src/main/java/.../base/res`, `resLauncher`, `resBackup`,  
    `resTheme` (`app/build.gradle.kts` 的 `sourceSets` 注册).
 
@@ -27,21 +28,26 @@ import net.imknown.android.forefrontinfo.ui.common.initMyAndroid
 而 `ui.common` 又反向 import app 的 base 包  
 (`PropertyReader` 顶上的 `net.imknown.android.forefrontinfo.base.MyApplication` import, 取占位文案), 即包级循环:  
 `base ↔ ui.common`. 原 `PropertyExt` / `ShellExt` 顶着的 `base.property.PropertyManager` /  
-`base.shell.ShellManager` import 已随那两个文件删除 (`8b5dc266` / `c87137a2`) 而消失, 但环本身还在, 只是换了支撑点.
+`base.shell.ShellManager` import 已随那两个文件删除 (`8b5dc266` / `c87137a2`) 而消失, 但环本身还在,  
+只是换了支撑点.
 
-同时 `ui/common/` 成了大杂烩: 这个包现有 5 个文件, 其中 4 个是与 UI 毫无关系的底层设施: `ShellLibSu` (shell 实现), `JsonExt` (序列化),  
-`AndroidVersionExt` (全局可变状态), `PropertyReader` (属性回退门面, 原 `PropertyExt` 顶层函数的类化). 唯一的例外是 `ScrollBarExt.kt`:  
+同时 `ui/common/` 成了大杂烩: 这个包现有 5 个文件, 其中 4 个是与 UI 毫无关系的底层设施:  
+`ShellLibSu` (shell 实现), `JsonExt` (序列化),  
+`AndroidVersionExt` (全局可变状态), `PropertyReader` (属性回退门面,  
+原 `PropertyExt` 顶层函数的类化). 唯一的例外是 `ScrollBarExt.kt`:  
 它确实是 Compose 的 `Modifier.nonInteractiveScrollbar()` 扩展, 该住在 UI 层.  
 原来挤在这个包里的真 UI 扩展 `ViewExt.setScrollBarMode` 是另一个形状的问题, 那个文件已随 `fcc048d5` 删除,  
 它的替代品正是如今这个合规的 `ScrollBarExt.kt`. 包名承诺的 "common = UI 通用工具", 对 4 个文件里的内容都不成立.
 
 ## 直接原因
 
-"common / base = 什么都往里放" 的惯性: 新文件找不到明确归属时进 common; 底层实现图方便放进 common; common 再被最底层反向引用, 环就闭上了.
+"common / base = 什么都往里放" 的惯性: 新文件找不到明确归属时进 common; 底层实现图方便放进 common;  
+common 再被最底层反向引用, 环就闭上了.
 
 ## 根本原因
 
-包结构没有表达层次规则. 包名是开发者 (和 IDE 检查) 判断 "谁能依赖谁" 的第一线索; 当 base/ui/common 的实际依赖与名字承诺相反时, 每次新文件选址都在掷骰子, 圈只会越画越大.
+包结构没有表达层次规则. 包名是开发者 (和 IDE 检查) 判断 "谁能依赖谁" 的第一线索;  
+当 base/ui/common 的实际依赖与名字承诺相反时, 每次新文件选址都在掷骰子, 圈只会越画越大.
 
 ## 修复方案
 
@@ -63,20 +69,25 @@ app/src/main/java/net/imknown/android/forefrontinfo/
 ```
 
 搬移后 `MyApplication` 只 import `core.*`, 环消除; `ui.common` 缩小为纯 UI 工具.  
-`app/build.gradle.kts` sourceSets 里那组 "资源跟包走" 的路径需同步加 `core` (若 core 下有 res 的话目前没有, 可不加).
+`app/build.gradle.kts` sourceSets 里那组 "资源跟包走" 的路径需同步加 `core` (若 core 下有 res 的话目前没有,  
+可不加).
 
 三处搬移不是纯机械的, 得连带处理:
 
-- `LldManager` → `LldFileStore` 的中立化已随 `6e4e9ebf` 落地 (`LLD_JSON_NAME` 常量随迁, 与 `LldDataSource` 的边已消除); 剩余的  
+- `LldManager` → `LldFileStore` 的中立化已随 `6e4e9ebf` 落地 (`LLD_JSON_NAME` 常量随迁,  
+  与 `LldDataSource` 的边已消除); 剩余的  
   `ui.home.model.Lld` import 仍要随搬移中立化 (模型归 [#01] 的目标结构).
-- `ShellLibSu` 的路径被 [AGENTS.md](../../../../AGENTS.md) 写死 (`ui/common/ShellLibSu.kt`), 搬它就得在同一次提交里改 AGENTS.md,  
+- `ShellLibSu` 的路径被 [AGENTS.md](../../../../AGENTS.md) 写死 (`ui/common/ShellLibSu.kt`),  
+  搬它就得在同一次提交里改 AGENTS.md,  
   否则记忆里那条路径立刻失效.
-- `ToastExt` 不在 `ui/common`, 它在 `ui/base/ext/`; 目标结构里 "只留真 UI 工具" 的那一份清单要按这个实际位置合并, 而不是再开一个包.  
+- `ToastExt` 不在 `ui/common`, 它在 `ui/base/ext/`; 目标结构里 "只留真 UI 工具"  
+  的那一份清单要按这个实际位置合并, 而不是再开一个包.  
   `ViewBindingExt` 已随 View 层删除, 不再是要搬的东西.
 
 迁移清单 (一次提交): 移动 6 个文件 (`MyApplication.kt` 出 `base` 包 + `AndroidVersionExt.kt`, `JsonExt.kt`,  
 `LldFileStore.kt`, `PropertyReader.kt`,  
 `ShellLibSu.kt` 出  
 `ui/common`), 全局改 import, 同批改 AGENTS.md. 原先顺手列的 "删除 `ShellDefault`" 不成立:  
-它按 [AGENTS.md](../../../../AGENTS.md) 与 [#45 第 6 项](../08-反模式与卫生/45-零散小问题.md) 作为不依赖 libsu 的原生备选实现保留 (零调用是有意状态),  
+它按 [AGENTS.md](../../../../AGENTS.md) 与 [#45 第 6 项](../08-反模式与卫生/45-零散小问题.md)  
+作为不依赖 libsu 的原生备选实现保留 (零调用是有意状态),  
 搬移清单里没有它. IDE 的 Refactor → Move 可全自动完成 import 改写.

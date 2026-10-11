@@ -33,14 +33,18 @@ withContext(Dispatchers.Default) {              // Default 是给纯计算用的
 }
 ```
 
-`/proc/mounts` 那一处已经在 IO 上: `HomeViewModel.detect()` 里 `homeRepository.getMounts()` 单独包了 `withContext(Dispatchers.IO)`.
+`/proc/mounts` 那一处已经在 IO 上:  
+`HomeViewModel.detect()` 里 `homeRepository.getMounts()` 单独包了 `withContext(Dispatchers.IO)`.
 
 ## 直接原因
 
 `Shell.cmd().exec()`, `/proc/mounts` 读取, 反射 `SystemProperties` (`PropertyDefault`),  
-packageManager 查询都是**阻塞 IO**; `Dispatchers.Default` 的线程按 CPU 核数分配, 阻塞调用在里面是空等而不是工作. 协程的约定是 Default 给计算,  
-IO 给阻塞. AGENTS.md 也把它写成了项目规则 ("阻塞工作 (shell, 系统属性, 文件, 网络) 走 `Dispatchers.IO`"), 所以**错的是代码, 不是约定**.  
-当前没出事是因为并发量小 (每个页面都是单次顺序加载, 见 [#15](15-检测串行不感知取消.md)), 但 8 个点都在错误的池上排队.
+packageManager 查询都是**阻塞 IO**; `Dispatchers.Default` 的线程按 CPU 核数分配,  
+阻塞调用在里面是空等而不是工作. 协程的约定是 Default 给计算,  
+IO 给阻塞. AGENTS.md 也把它写成了项目规则 ("阻塞工作 (shell, 系统属性, 文件, 网络) 走 `Dispatchers.IO`"),  
+所以**错的是代码, 不是约定**.  
+当前没出事是因为并发量小 (每个页面都是单次顺序加载, 见 [#15](15-检测串行不感知取消.md)),  
+但 8 个点都在错误的池上排队.
 
 ## 根本原因
 
@@ -53,8 +57,10 @@ IO 给阻塞. AGENTS.md 也把它写成了项目规则 ("阻塞工作 (shell, �
 改动量 8 处, 每处一词, 其余一字不动. `HomeViewModel.detect()` 里读 mounts 的那处内层已经是 `withContext(Dispatchers.IO)`, 保留.  
 这一步就是同目录 [#14](14-检测链用CPU线程池.md) 的修法: 那条记的是检测链的池选择与本条这 8 处调用点, 两条一起动.
 
-- **性质与边界**: 这是**临时缓解**, 不是完整修法: ViewModel 仍然知道 "里面有阻塞调用" 这个细节, 完整方案是把 IO 声明下沉到各 DataSource 方法内部, 本步为下沉铺路.
-- **行为等价性**: 加载顺序, 结果, 异常路径不变. 线程池参数不同 (Default 按 CPU 核数给线程, IO 池是为阻塞设计的可扩容池), 高并发下的排队细节会变; 本项目这几个调用点都是单次顺序加载, 无感知.
+- **性质与边界**: 这是**临时缓解**, 不是完整修法: ViewModel 仍然知道 "里面有阻塞调用" 这个细节,  
+  完整方案是把 IO 声明下沉到各 DataSource 方法内部, 本步为下沉铺路.
+- **行为等价性**: 加载顺序, 结果, 异常路径不变. 线程池参数不同 (Default 按 CPU 核数给线程,  
+  IO 池是为阻塞设计的可扩容池), 高并发下的排队细节会变; 本项目这几个调用点都是单次顺序加载, 无感知.
 - **来历**: 这 8 处不是一次写成的: `5f8fc45f` (仓库化重构) 起了 `SettingsRepository` 的签名与安装者两处,  
   `1266cb6f` 定了首页 `detect()` 的两处与 Others / Prop 各一处,  
   剩下的 `payloadOutdatedTargetSdkVersionApk()` 与安装时间两处由 `1e66c6f8` 与 `c0ef562e` 补上.  

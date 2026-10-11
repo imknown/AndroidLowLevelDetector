@@ -18,14 +18,19 @@
 而这类调用是常态 (Android 16 以下的设备上 `isAtLeastAndroid16()` 必读它);  
 `isLatestPreviewAndroid()` 则无条件读 `myAndroid.apiFull`. 每个页面各有自己的 `viewModelScope`, 谁也不等谁.
 
-**这条链上没有任何同步**: `app`, `base`, `binderDetector` 的源码里 `volatile`, `synchronized`, `AtomicReference`,  
+**这条链上没有任何同步**: `app`, `base`, `binderDetector` 的源码里 `volatile`, `synchronized`,  
+`AtomicReference`,  
 `Mutex` 全部为零, `myAndroid` 的读写两侧也没有别的保护.
 
 **危害在组合, 不在撕裂**: 单次 int 写入本身是原子的, `api` 不会被读成 "半个值";  
-危险的是 `detectAndroid()` 是**四次独立赋值** (`api` → `apiFull` → `version` → `dessert`), 这四步之间落进来的任何一次读, 拿到的都是跨两代的搭配:  
+危险的是 `detectAndroid()` 是**四次独立赋值** (`api` → `apiFull` → `version` → `dessert`),  
+这四步之间落进来的任何一次读, 拿到的都是跨两代的搭配:  
 新 `api` 配旧 `version`, 或新 `apiFull` 配旧 `dessert`.  
-只读 `api` 的 `isAtLeastAndroidX()` 与读 `apiFull` 的 `isLatestPreviewAndroid()`, 在同一时刻给出的判断可以互相矛盾.  
+只读 `api` 的 `isAtLeastAndroidX()` 与读 `apiFull` 的 `isLatestPreviewAndroid()`,  
+在同一时刻给出的判断可以互相矛盾.  
 `detectAndroid()` 自己也是这种读法: 它先用 `myAndroid.apiFull` 去 `known` 列表里找行, 找到后再把四个字段改掉.
 
-**修复方向**: 与 [#09](../02-SSOT-唯一数据来源/09-myAndroid可变单例.md) 的冻结方案合流实施即同时解决, 那是同一个根对象, 本条不单独开工.  
-全 `val` + `copy()` 返回新对象之后, 不存在 "改到一半" 的状态, 同步问题随之消失; 在那之前, 短期做法是在加载开始时把四个字段快照进局部变量, 整页只用这份快照.
+**修复方向**: 与 [#09](../02-SSOT-唯一数据来源/09-myAndroid可变单例.md) 的冻结方案合流实施即同时解决,  
+那是同一个根对象, 本条不单独开工.  
+全 `val` + `copy()` 返回新对象之后, 不存在 "改到一半" 的状态, 同步问题随之消失; 在那之前,  
+短期做法是在加载开始时把四个字段快照进局部变量, 整页只用这份快照.

@@ -48,19 +48,23 @@ fun isAtLeastAndroid12() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S || sdk
 
 ## 直接原因
 
-"这台设备的 Android 版本信息" 有两个 "事实版本": `Build.VERSION.*` 推导出的初始值, 和 LLD 数据库 JSON 修正后的值. 两处写入, 多处读取, 没有任何机制保证先后一致:  
+"这台设备的 Android 版本信息" 有两个 "事实版本": `Build.VERSION.*` 推导出的初始值,  
+和 LLD 数据库 JSON 修正后的值. 两处写入, 多处读取, 没有任何机制保证先后一致:  
 `isAtLeast*`, `isLatestPreviewAndroid` 等函数在首页加载前后的返回值**理论上可能不同**(大多数设备上两次写入恰好相同, 所以问题平时不发作). 具体触点: 过时应用过滤阈值  
 `it.targetSdkVersion < myAndroid.api` (`HomeRepository.getOutdatedTargetSdkVersionApkModel()`) 读的正是这个全局.  
-把 `detect()` 里 `detectAndroid` 与 `getOutdatedTargetSdkVersionApkModel` 的调用顺序对调, 过滤结果就会变, 一致性全靠手写顺序维持.
+把 `detect()` 里 `detectAndroid` 与 `getOutdatedTargetSdkVersionApkModel` 的调用顺序对调, 过滤结果就会变,  
+一致性全靠手写顺序维持.
 
 ## 根本原因
 
-可变全局单例 = 把 "数据" 和 "数据的位置" 混在一起: 值随时可被任何代码改写, 读到的结果取决于 "谁最后写过", 这就是**时间耦合**(temporal coupling, 正确性依赖调用顺序).  
+可变全局单例 = 把 "数据" 和 "数据的位置" 混在一起: 值随时可被任何代码改写, 读到的结果取决于 "谁最后写过",  
+这就是**时间耦合**(temporal coupling, 正确性依赖调用顺序).  
 LLD 的 `known` 数据本应作为参数参与计算, 却通过篡改全局变量来 "顺便" 传递.
 
 ## 修复方案
 
-**前置约定变更 (已裁)**: 负责人已确认收敛为单一写入方: 冻结为不可变 + enrich 纯函数即本条目方案; "本地值先行, 联网取到 LLD 后用修正值展示" 的行为不变, 改的只是修正值不再回写全局.  
+**前置约定变更 (已裁)**: 负责人已确认收敛为单一写入方: 冻结为不可变 + enrich 纯函数即本条目方案; "本地值先行,  
+联网取到 LLD 后用修正值展示" 的行为不变, 改的只是修正值不再回写全局.  
 [AGENTS.md](../../../../AGENTS.md) 的 "exactly two writers" 条款随本条目同批改写, 不留两份互相矛盾的约定.
 
 冻结为不可变 (immutable, 创建后不能改), 二次加工用 `copy` 返回新对象, 显式传递:
@@ -109,13 +113,18 @@ fun detectAndroid(lld: Lld?, androidInfo: MyAndroid): MyModel {   // androidInfo
 **这不是纯机械替换, 需要多想一步**: `initMyAndroid()` 的第一句就读全局:  
 `val kClass = if (isAtLeastAndroid16()) { Build.VERSION_CODES_FULL::class } else { ... }`,  
 而 `isAtLeastAndroid16()` 经 `sdkInt` 读 `myAndroid.api` (此刻还是顶层初始化留下的 `Build.VERSION.SDK_INT`).  
-直接把 `var` 改成 `val` 会把 "先初始化, 后回写" 的两段式压成一次构造, 处理不好就自我引用. 必须像 `build()` 那样把推导结果先放进局部变量,  
+直接把 `var` 改成 `val` 会把 "先初始化, 后回写" 的两段式压成一次构造,  
+处理不好就自我引用. 必须像 `build()` 那样把推导结果先放进局部变量,  
 最后一次性构造返回 (推导逻辑本身原样搬, 不改判断).
 
-迁移注意: `myAndroid` 的直接引用点不多: `AndroidVersionExt.kt` 内 2 处读 (`sdkInt` 的 getter, `isLatestPreviewAndroid`) 加  
+迁移注意: `myAndroid` 的直接引用点不多:  
+`AndroidVersionExt.kt` 内 2 处读 (`sdkInt` 的 getter, `isLatestPreviewAndroid`) 加  
 `initMyAndroid()` 的 4 行回写;  
-`HomeRepository` 内 5 处读 (`detectAndroid()` 的 4 处取值加 `getOutdatedTargetSdkVersionApkModel()` 的阈值) 加 4 行回写.  
-全局替换为 `AndroidInfo.current` 后编译器会兜底找出遗漏; 真正间接依赖它的是整套 `isAtLeast*` 系列, 它们只经 `sdkInt` 一个入口,  
+`HomeRepository` 内 5 处读 (`detectAndroid()` 的 4 处取值加 `getOutdatedTargetSdkVersionApkModel()` 的阈值)  
+加 4 行回写.  
+全局替换为 `AndroidInfo.current` 后编译器会兜底找出遗漏; 真正间接依赖它的是整套 `isAtLeast*` 系列,  
+它们只经 `sdkInt` 一个入口,  
 所以改动面收敛在这一个 getter 上.
 
-按这份落点清单, 改动是十几行的量级; 并发侧的无同步读写另记 [#17](../04-并发与调度/17-myAndroid并发读写.md), 随本条目一并关闭.
+按这份落点清单, 改动是十几行的量级; 并发侧的无同步读写另记 [#17](../04-并发与调度/17-myAndroid并发读写.md),  
+随本条目一并关闭.

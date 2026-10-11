@@ -15,7 +15,8 @@
 
 **根本原因**: 没弄清稳定性由**声明类型**决定.  
 三个列表页 (`AppRoot()` 的 `entry<HomeKey>`, `entry<OthersKey>`,  
-`entry<PropKey>`) 都把具体 ViewModel 传给 `MyModelListScreen(viewModel: BaseListViewModel)`, 参数声明类型就是基类,  
+`entry<PropKey>`) 都把具体 ViewModel 传给 `MyModelListScreen(viewModel: BaseListViewModel)`,  
+参数声明类型就是基类,  
 `@Stable` 标在基类上已经足够,  
 `HomeViewModel` 上那份是**冗余的**  
 (`SettingsViewModel` 那份有效, 因为 `SettingsScreen(viewModel: SettingsViewModel)` 的参数声明类型就是它).
@@ -24,10 +25,14 @@
 目前各 ViewModel 的可变字段都是 `private`  
 (`BaseListViewModel.loadJob`, `HomeViewModel.loadStartGeneration`,  
 `SettingsViewModel.initBuiltInDataVersionJob` 与  
-`SettingsViewModel.timesLeft`), 承诺成立; 但一旦有人往 ViewModel 上加一个公开 `var`, Compose 会因为 "类型稳定" 跳过重组, 产生极难排查的状态不同步.  
+`SettingsViewModel.timesLeft`), 承诺成立; 但一旦有人往 ViewModel 上加一个公开 `var`, Compose 会因为 "类型稳定"  
+跳过重组, 产生极难排查的状态不同步.  
 这是对未来改动的约束, 不是当下的缺陷.
 
-**与 AGENTS.md 的张力**: AGENTS.md 把 `@Immutable` / `@Stable` 记为**有意的**约定, 并要求每当状态类变化时重评一次;  
-三个类上方的注释就是那条约定要求的 "为什么这个注解安全" 的说明. 所以删掉一处注解是负责人的取舍决定, 不是可以顺手做的清理.
+**与 AGENTS.md 的张力**: AGENTS.md 把 `@Immutable` / `@Stable` 记为**有意的**约定,  
+并要求每当状态类变化时重评一次;  
+三个类上方的注释就是那条约定要求的 "为什么这个注解安全" 的说明. 所以删掉一处注解是负责人的取舍决定,  
+不是可以顺手做的清理.
 
-**处置 (已裁)**: 暂缓: 负责人已过目, 查清前不动, 三处注解与各自的 "为什么安全" 注释原样保留; 重启时按本条正文的风险提示复核, 再定删不删.
+**处置 (已裁)**: 暂缓: 负责人已过目, 查清前不动, 三处注解与各自的 "为什么安全" 注释原样保留;  
+重启时按本条正文的风险提示复核, 再定删不删.
