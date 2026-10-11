@@ -22,6 +22,7 @@
     <string-array name="scrollBarValues">
         <item>@string/interface_no_scroll_bar_value</item>
         <item>@string/interface_normal_scroll_bar_value</item>
-        <item>@string/interface_fast_scroll_bar_value</item>
+        <!-- "fast" was retired along with the draggable scroll bar; the string itself stays alive so SettingsStore still recognizes a legacy stored "2" -->
+        <!-- <item>@string/interface_fast_scroll_bar_value</item> -->
     </string-array>
 </resources>
