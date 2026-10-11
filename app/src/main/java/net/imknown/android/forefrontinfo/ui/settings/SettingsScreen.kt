@@ -18,6 +18,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.HorizontalDivider
@@ -313,12 +315,18 @@ private fun SettingsChoiceDialog(
         onDismissRequest = onDismiss, // tap outside or system back = dismiss
         title = { Text(title) }, // slot parameter: the value is @Composable, content is up to you
         text = {
-            Column {
+            Column(
+                modifier = Modifier.selectableGroup(), // makes TalkBack announce the rows as a radio group ("1 of 3" position info)
+            ) {
                 labels.zip(values).forEach { [label, value] -> // zip the arrays into (label, value) pairs; Kotlin 2.4 positional destructuring uses brackets
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { onSelect(value) } // whole row clickable (not just the radio)
+                            .semantics(mergeDescendants = true) {} // title and selected state announce as one focus, same as the switch rows
+                            .selectable( // selectable, not clickable: it carries the selected state for TalkBack
+                                selected = value == selected,
+                                role = Role.RadioButton,
+                            ) { onSelect(value) } // whole row selectable (not just the radio)
                             .padding(vertical = 12.dp), // vertical breathing room for tap targets
                         verticalAlignment = Alignment.CenterVertically, // radio and text vertically centered
                     ) {
