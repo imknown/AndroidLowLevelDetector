@@ -99,7 +99,9 @@ numbering stays 0..5.
    rejected most findings, when the reused context grows bloated, or for a final independent acceptance pass.  
    The reviewer duties stated in [AGENTS.md](../../AGENTS.md#build-and-verify) apply here: verifiable evidence  
    (file:line) per finding, and the preference for a reviewer model different from the one that wrote the  
-   change.  
+   change. The model and the reasoning effort the reviewer runs on are the owner's pick: that section  
+   carries the procedure (fetch the model list, show it, let the owner pick) and the fallback for when the  
+   list cannot be fetched.  
    For low-risk subtasks the owner may read the diff personally instead.  
    (Guards against automation bias (Parasuraman & Riley) and correlated same-model blind spots: the evidence  
    requirement turns recognition into verification; resuming a reviewer adds a self-confirming tendency,  

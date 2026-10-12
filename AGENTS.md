@@ -88,7 +88,23 @@ kotlinx.serialization, Ktor, libsu, JNI/NDK. DI by Metro (compile-time, no refle
   The reviewer owes verifiable evidence (file:line) for every finding, and prefer a different model for the  
   reviewer than the one that wrote the change: those duties bind every session, not only a spec task.  
   Review is round-based (v1, v2, ... after each fix round); the delta-pass and fresh-reviewer policy in the  
-  Review step of [docs/agents/task-workflow.md](docs/agents/task-workflow.md) binds every session too.
+  Review step of [docs/agents/task-workflow.md](docs/agents/task-workflow.md) binds every session too.  
+  - **Picking the reviewer model and the reasoning effort is the owner's call**: fetch the model list before  
+    the reviewer is launched. Whether a model list exists at all, and which fields it carries, depends on  
+    the agent running the session; some expose such a tool, some do not. When the list comes back, show  
+    the owner the whole table, one column for each field the tool carries, plus a positioning note when  
+    the tool describes one. The example fields are id, name, price, release time or effort values; never  
+    invent a column. When the list carries no effort column, say so when the table is shown, and let the  
+    owner name the effort; an empty result counts as a list that cannot be fetched. Then the owner  
+    chooses both the model and the effort, and multi-select is the default: naming several models launches  
+    one reviewer per model in parallel, and their reports are merged, with agreements combined and  
+    disagreements surfaced for the owner. The effort is picked per model, and a model that has no such  
+    value runs at its own default, which the report states. The pick lasts for a whole review  
+    sequence: a reused reviewer keeps its model and effort, and a fresh reviewer is asked for again. When  
+    the list cannot be fetched, ask the owner how to proceed: falling back to the model that wrote the  
+    change needs the owner's opt-in, and where the session's own effort level is not readable, it still  
+    comes from the owner. Never guess the effort level; the commit-trailer rule in [Git and CI](#git-and-ci)  
+    applies.
   - [docs/agents/verification.md](docs/agents/verification.md) is the full contract for that command:  
     read it before you rely on a result, and beware that some runs look like a pass and are not  
     (the trap list and how to read the printed blocks live there).
