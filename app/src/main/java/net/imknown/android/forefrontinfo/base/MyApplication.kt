@@ -1,7 +1,6 @@
 package net.imknown.android.forefrontinfo.base
 
 import android.app.Application
-import android.content.Context
 import android.content.SharedPreferences
 import android.os.Environment
 import androidx.annotation.StringRes
@@ -75,7 +74,7 @@ open class MyApplication : Application() {
         lateinit var instance: MyApplication
 
         val sharedPreferences: SharedPreferences by lazy {
-            instance.getSharedPreferences("${instance.packageName}_preferences", Context.MODE_PRIVATE)
+            instance.getSharedPreferences("${instance.packageName}_preferences", MODE_PRIVATE)
         }
 
         fun getMyString(@StringRes resId: Int) =
