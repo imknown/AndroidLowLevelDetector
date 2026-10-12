@@ -36,14 +36,10 @@ class PropertyReader(
         }
     }
 
-    fun getBoolean(key: String, condition: Boolean = true) = if (condition) {
-        try {
-            property.getBooleanOrThrow(key, false)
-        } catch (e: Exception) {
-            Log.w("getBooleanProperty", "$key: ${e.fullMessage}")
-            false
-        }
-    } else {
+    fun getBoolean(key: String, condition: Boolean = true) = condition && try {
+        property.getBooleanOrThrow(key, false)
+    } catch (e: Exception) {
+        Log.w("getBooleanProperty", "$key: ${e.fullMessage}")
         false
     }
 }
