@@ -300,7 +300,7 @@ val LocalThemeMode: ProvidableCompositionLocal<StateFlow<AppThemeMode>> =
 fun AppTheme(
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
-    content: @Composable() () -> Unit
+    content: @Composable () -> Unit
 ) {
     // Source 1: theme mode (the store's non-null enum flow, provided at the setContent root), recomposes on Settings writes, no Activity recreate
     val themeMode by LocalThemeMode.current.collectAsStateWithLifecycle()
