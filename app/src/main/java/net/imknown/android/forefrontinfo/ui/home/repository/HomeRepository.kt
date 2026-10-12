@@ -435,12 +435,12 @@ class HomeRepository(
                             blockDevice != "none" && mountPoint == "/system" && type != "tmpfs"
                         }
 
-                isRecoverySar = mounts.any { (blockDevice, mountPoint, type) ->
-                    mountPoint == "/system_root" && type != "tmpfs"
+                isRecoverySar = mounts.any {
+                    it.mountPoint == "/system_root" && it.type != "tmpfs"
                 }
 
-                isSlashSar = mounts.any { (blockDevice, mountPoint, type) ->
-                    mountPoint == "/" && type != "rootfs"
+                isSlashSar = mounts.any {
+                    it.mountPoint == "/" && it.type != "rootfs"
                 }
 
                 isTheLegacySar || isThe2siSar || isRecoverySar || isSlashSar || isAtLeastAndroid10()
