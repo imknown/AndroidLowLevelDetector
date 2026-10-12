@@ -1,6 +1,5 @@
 package net.imknown.android.forefrontinfo.ui.theme
 
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
@@ -40,7 +39,6 @@ internal val ExtendedDarkColors = ExtendedColors(
 val LocalExtendedColors = staticCompositionLocalOf { ExtendedLightColors }
 
 /** Maps a [StatusColor] onto the extended palette; NONE yields Color.Unspecified (caller may also filter it out). */
-@Composable
 fun ExtendedColors.of(status: StatusColor): Color = when (status) {
     StatusColor.NO_PROBLEM -> noProblem
     StatusColor.WARNING -> warning
