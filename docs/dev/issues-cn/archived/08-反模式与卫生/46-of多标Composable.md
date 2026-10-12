@@ -2,9 +2,9 @@
 
 # 46 · `ExtendedColors.of()` 多标了 `@Composable` (P2)
 
-> 返回 [README 索引](../README.md) · [8 · 反模式与卫生](../README.md#8--反模式与卫生).
+> 返回 [README 索引](../../README.md) · [8 · 反模式与卫生](../../README.md#8--反模式与卫生).
 
-**严重程度: P2 | 修复难度: 低**  
+**严重程度: P2 | 修复难度: 低 | 状态: 已修复 (注解与随之失效的 import 已删, 调用点零改动)**  
 **影响文件: `ExtendedColors.kt`, `MyModelCard.kt`**
 
 **现象**: 一个纯映射函数被声明成 `@Composable`.
