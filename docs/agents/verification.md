@@ -61,3 +61,7 @@ skipping it is a real coverage gap, not a redundant second pass.
   treating the silence as a pass. A path outside the `--project` named is invisible the same way.
 - **A file Android Studio already knows is analyzed right away** once you edit it, so no waiting is needed  
   there.
+- **One inspection reports once per file.** A run lists at most one item of a given inspection in a given  
+  file, so N findings are not N sites: fixing the reported one uncovers the next. Measured on the assert  
+  rewrite, the unused-declaration group, `Missing line break`, and the French apostrophes, where the 3  
+  reported items were 19 sites across 3 files. Count sites in the source, not in the run.
