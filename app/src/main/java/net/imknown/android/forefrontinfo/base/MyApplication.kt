@@ -96,10 +96,11 @@ open class MyApplication : Application() {
         // point, so MainActivity's pre-composition reads and every collect downstream see the
         // persisted values. The access itself is the point (the seed); both mode flows'
         // consumers have switched to the store (ST-02/03), the boolean switches' consumers
-        // switched in ST-04. The unused-result warning is inherent to a
-        // resolve-for-side-effect statement and is suppressed deliberately.
-        @Suppress("RETURN_VALUE_NOT_USED")
-        appGraph.settingsStore
+        // switched in ST-04. The store is resolved for that side effect, and this declaration
+        // discards the value, so no unused-result warning and no suppression here. A named local
+        // would trade it for "never used"; the sentences above are the record of why the discard
+        // is the point.
+        val _ = appGraph.settingsStore
 
         initShell()
     }
