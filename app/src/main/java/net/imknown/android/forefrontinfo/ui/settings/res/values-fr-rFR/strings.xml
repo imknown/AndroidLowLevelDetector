@@ -19,21 +19,21 @@
     <string name="function_allow_network_data_title">Activer les données en ligne</string>
     <string name="function_allow_network_data_summary">Lorsque cette option est activée, les données seront préalablement extraites du serveur réseau distant, puis mises en cache sur le stockage local.</string>
 
-    <string name="function_outdated_target_order_by_package_name_first_title">"Commandez d'abord par nom de colis"</string>
-    <string name="function_outdated_target_order_by_package_name_first_summary">"Commandez d'abord les applications obsolètes par nom de package, sinon par targetSdkVersion d'abord."</string>
+    <string name="function_outdated_target_order_by_package_name_first_title">"Commandez d’abord par nom de colis"</string>
+    <string name="function_outdated_target_order_by_package_name_first_summary">"Commandez d’abord les applications obsolètes par nom de package, sinon par targetSdkVersion d’abord."</string>
 
     <string name="about_title">À propos</string>
 
     <string name="no_browser_found">Aucun navigateur disponible</string>
 
     <string name="about_shop_title">Play Store</string>
-    <string name="about_shop_summary">"Ouvre la page de l'application dans Play Store"</string>
+    <string name="about_shop_summary">"Ouvre la page de l’application dans Play Store"</string>
 
     <string name="about_source_title">Code source</string>
-    <string name="about_source_summary">"L'adresse GitHub du code sourcce de l'application"</string>
+    <string name="about_source_summary">"L’adresse GitHub du code sourcce de l’application"</string>
 
     <string name="about_privacy_policy_title">Politique de confidentialité</string>
-    <string name="about_privacy_policy_summary">"Voyez ce qui se passe quand vous utilisez l'application"</string>
+    <string name="about_privacy_policy_summary">"Voyez ce qui se passe quand vous utilisez l’application"</string>
 
     <string name="about_licenses_title">Licences</string>
     <string name="about_licenses_summary">Les dépots open-source.</string>

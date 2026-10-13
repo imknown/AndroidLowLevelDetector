@@ -11,11 +11,11 @@
     <string name="lld_json_mode_title">Mode de détection</string>
     <string name="lld_json_offline">Hors-ligne (%s)</string>
     <string name="lld_json_online">Enligne (%s)</string>
-    <string name="lld_json_fetch_failed">"Impossible d'atteindre les données en ligne.\nUtilisation des données locales.\n\n%s"</string>
-    <string name="lld_json_save_failed">"L'enregistrement des données a échoué.\nVeuillez vérifier votre stockage.\n\n%s"</string>
-    <string name="lld_json_parse_failed">"Impossible de parser les données.\nEssayez de mettre à jour l'application.\n\n%s"</string>
+    <string name="lld_json_fetch_failed">"Impossible d’atteindre les données en ligne.\nUtilisation des données locales.\n\n%s"</string>
+    <string name="lld_json_save_failed">"L’enregistrement des données a échoué.\nVeuillez vérifier votre stockage.\n\n%s"</string>
+    <string name="lld_json_parse_failed">"Impossible de parser les données.\nEssayez de mettre à jour l’application.\n\n%s"</string>
 
-    <string name="android_info_title">"Version d'Android"</string>
+    <string name="android_info_title">"Version d’Android"</string>
     <string name="android_info">%1$s (API %2$s)</string>
     <string name="android_info_preview">Aperçu</string>
     <string name="android_info_detail">Moi: %1$s\n\nDernière stable: %2$s\nPlus faible prise en charge: %3$s\nDernière Béta: %4$s\nDernière aperçu: %5$s\nDernière interne: %6$s</string>
@@ -70,11 +70,11 @@
 
     <string name="adb_debugging_status_title">Statut de débogage ADB</string>
 
-    <string name="adb_authentication_status_title">"Statut d'authentification ADB"</string>
+    <string name="adb_authentication_status_title">"Statut d’authentification ADB"</string>
 
     <string name="encryption_status_title">Statut de chiffrement</string>
     <string name="result_encrypted">Crypté</string>
-    <string name="result_encrypted_no_key_set">"Chiffré mais le mot de passe n'a pas été défini"</string>
+    <string name="result_encrypted_no_key_set">"Chiffré mais le mot de passe n’a pas été défini"</string>
     <string name="result_not_encrypted">Non crypté</string>
 
     <string name="selinux_status">Status SELinux</string>
@@ -90,12 +90,12 @@
     <string name="webview_or">%1$s ou %2$s</string>
     <string name="webview_standalone">Autonome</string>
     <string name="webview_built_in_not_installed">Pas installé</string>
-    <string name="webview_must_be_chosen_by_user">"Doit être choisi par l'utilisateur"</string>
+    <string name="webview_must_be_chosen_by_user">"Doit être choisi par l’utilisateur"</string>
     <string name="webview_fallback">Se retirer</string>
     <string name="webview_signed">Signé</string>
     <string name="webview_implement_version">Mon implémentation de WebView</string>
 
-    <string name="outdated_target_version_sdk_version_apk_my_first_api_level">"API Android à la sortie d'usine: %s\n\n"</string>
+    <string name="outdated_target_version_sdk_version_apk_my_first_api_level">"API Android à la sortie d’usine: %s\n\n"</string>
     <string name="outdated_target_version_sdk_version_apk_title">Les application system avec targetVersionSdk dépassé</string>
-    <string name="outdated_target_version_sdk_version_apk_result_none">"Pas d'application dépassé"</string>
+    <string name="outdated_target_version_sdk_version_apk_result_none">"Pas d’application dépassé"</string>
 </resources>
