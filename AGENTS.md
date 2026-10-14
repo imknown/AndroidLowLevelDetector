@@ -9,6 +9,23 @@ So classify a doc-vs-code disagreement before editing (stale doc, code bug, unim
 or a doc that overstated the requirement) and when the evidence won't classify it,  
 or the question is whether stated intent really is the owner's, ask.
 
+What binds you is decided by what a statement is **about**, never by which field, column, label, or section  
+carries it, and not by which doc carries it either  
+(this file and everything under `docs/` are the same in this respect):
+
+- A statement **about the code** is a fact: verify it against the current code before acting on it.
+- A statement **about a problem** is an estimate: anything whose subject is how an issue rates rather than  
+  what the code does, in whatever slot a doc or a table puts it, now or added later. It sizes the problem;  
+  it never caps the fix. Where the rating calls the problem small and the owner wants the problem gone,  
+  the thorough fix is still the right target, and steering the owner to the shallow one because of that  
+  rating is exactly the mistake this rule exists to prevent.
+- A **convention the owner set** binds, and it is the only one of the three. A doc's description of how things  
+  are done now is not such a convention unless it declares itself one: changing that practice is the owner's  
+  call to make, and it is never a reason to steer the owner toward the weaker fix.
+
+So a list of slots is not how this works and none is maintained here: the subject of the statement is the test,  
+and a statement whose kind you cannot tell from the doc alone is one to ask about, not to default to obeying.
+
 Working principles:
 
 - **Memory**: this file is the durable memory: settled decisions, conventions, gotchas,  
@@ -34,17 +51,33 @@ Working principles:
   This is the spec flow's gate discipline applied to every change, documented or not,  
   and it binds every session.
 - **English by default**: anything you generate (docs, comments, commit messages)  
-  is in English unless the user specifies otherwise. Exception:  
-  code comments are written in the owner's chat language during implementation  
-  and translated to English at the commit gate  
-  (Task workflow, step 1). Whatever language a doc is written in, its punctuation is ASCII,  
+  is in English unless the user specifies otherwise. Exception: a **new** code comment is written  
+  in the owner's chat language while the change is being implemented, so the owner can read the wording  
+  in their own language when they look at the work in progress; the committed codebase stays English,  
+  so every such comment is translated to English before the commit. The translation is owed by the gate of  
+  the change in hand, not only by Task workflow, step 1:  
+  a change that opens no spec directory never reaches that step.  
+  A comment that already exists and is not being rewritten keeps the file's language,  
+  and a file whose comments are all English does not exempt a new comment from this exception.  
+  Whatever language a doc is written in, its punctuation is ASCII,  
   spaced as in English (no `，。、：（）「」`): see [Documentation rules](#documentation-rules).
 - **No sensitive information** in any document, memory included: no privacy data, passwords, keys,  
   certificates, or signing material.
 
 Conventions that deliberately diverge from the mainstream / official template are called out inline below:  
 they are not smells to fix, so don't "normalize" them in passing.  
-When a statement here disagrees with the code, trust the code and fix this file.
+**Whichever side is wrong is the side that gets edited**: right code and a wrong statement, fix the statement;  
+wrong code and a right statement, fix the code; both wrong, fix both.  
+The four-way classification at the top of this file (stale doc, code bug, unimplemented requirement,  
+doc that overstated the requirement) is how you work out which side that is.  
+When you cannot settle it, investigate before you speak: read the code, then trace both sides in `git log`  
+to see how each came to be, report the evidence you traced for each side with the confidence you actually  
+hold in it, and ask the owner what they really want: their answer decides, and a silent guess does not.  
+A statement that **is a convention** binds whoever reads it, wherever it sits: what makes one a convention is  
+that it says what the code should do, not that it sits in the Code rules section or beside a flagged divergence  
+(the Build conventions, Localization, and Git and CI rules are such statements too, and any rule added later  
+counts the same way). So a disagreement between code and a convention is a code bug to fix, never a stale line  
+to delete; retiring a convention is the owner's call.
 
 ## Where the detail lives
 
@@ -275,16 +308,20 @@ These bind every session, spec task or not:
 
 ## Documentation rules
 
-The rules for writing anything here. This file and the conventions it carries are **living**:  
-they describe the present, and drift is a bug to fix in place.  
+The rules for writing anything here. This file is **living**: a statement it makes about the code describes  
+the present, so drift is a bug to fix in place. Its conventions are living in a different sense: they state  
+what the code should do, so they do not expire when the code fails to do it, and updating them to match  
+current code is the wrong edit (see the doc-vs-code classification at the top of this file).  
 [docs/dev/JOTTINGS.md](docs/dev/JOTTINGS.md) is **scratch**: unsorted material, not a source of rules.  
 A note may declare itself **frozen** or **record**: it keeps the text it was written with,  
 corrections and later findings included, so cite it for history but never back-fill today's code into it.  
 Nothing is frozen by default; anything written new is living until it says otherwise,  
 and a new note says which status it has: **living**, **frozen / record**, or **scratch**.  
 One status is declared by location instead of by the file:  
-a spec dir under `docs/spec/archived/` is a **record**: the archiving move is the declaration,  
-the files are not edited to carry it, and a status header inside that still says living is superseded.
+a note moved under any `archived/` directory is a **record** (a spec dir in `docs/spec/archived/`, an issue  
+entry in `docs/dev/issues-cn/archived/`, and any other archive the repo grows later all count the same way):  
+the archiving move is the declaration, the files are not edited to carry it,  
+and a status header inside that still says living is superseded.
 
 - Whatever a doc tracks gets an ID, and IDs are shared across docs, so reference them by ID.
 - Fix docs **in place**: when a statement turns out to be wrong,  
