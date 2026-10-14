@@ -291,13 +291,14 @@
 
 **步骤 0 · 拍板批** (零代码, 主线开工前一次裁完; 结论改写 AGENTS.md 对应条款并写回条目, 不留没有落点的未决问题),  
 **已全部裁定**: AGENTS.md 的条款改写不提前做,  
-随对应代码步骤落地 (0a 随 1a, 0c 随 [#09](02-SSOT-唯一数据来源/09-myAndroid可变单例.md), 0d 随 2a, 0e 随 1b):
+随对应代码步骤落地 (0a 随 1a, 0c 随 [#09](02-SSOT-唯一数据来源/09-myAndroid可变单例.md), 0e 随 1b;  
+0d 只随 2a 改写 "Adding a detection item" 一处, 它的常驻工作方式已提前立为 AGENTS.md 的 "Finish in one go"):
 
 | 项 | 结论 | 落点 |
 |----|------|------|
 | 0a | CI 扩跑 test + lint (#50, AGENTS.md 的 "CI 只编译" 条款随 1a 改写). 现有测试只有 `DateTimeExtTest` 一个真实类, 门禁先立, 先守存量; 测试随后续步骤长出来 (1b 的黄金数据, 2a 的逐条单测, #50 条目列的抽纯函数批); 首跑前本地清红 | 步骤 1a |
 | 0c | 收敛单写入方: `myAndroid` 冻结为不可变, LLD known 修正按 [#09](02-SSOT-唯一数据来源/09-myAndroid可变单例.md) 的 enrich 纯函数 + 显式传参实施: "本地值先行, 联网取到 LLD 后用修正值展示" 的行为不变, 改的只是修正值不再回写全局 | 单独实施 #09 |
-| 0d | 一次性 (步骤 2a 集中迁移全部 detect* 方法); 并立为常驻工作方式: 问题与需求的修复一次做完, 不给同一条目留渐进尾巴 (AGENTS.md 的 "Adding a detection item" 随 2a 改写) | 步骤 2a |
+| 0d | 一次性 (步骤 2a 集中迁移全部 detect* 方法); 已立为常驻工作方式, 见 AGENTS.md 的 "Finish in one go" 条款 (AGENTS.md 的 "Adding a detection item" 随 2a 改写) | 步骤 2a |
 | 0e | JUnit 5 (含 useJUnitPlatform 接线) + MockK 引入 (interface-first 是现状描述而非禁令, AGENTS.md 测试段随 1b 校准) + Turbine 随首个 Flow 测试进 | 步骤 1b |
 | 0f | 逐项裁量, 优先级: 真机 / 模拟器 (仪器测试) > Robolectric > 探针假值; CI 门禁只跑 JVM 测试, 真机验证走现有流程 | 步骤 2a 的逐条单测 |
 | 0g | 入: Others / Prop 仿 Home 一并入注册表 | 步骤 2b 的范围 |

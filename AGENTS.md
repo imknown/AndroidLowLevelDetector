@@ -50,6 +50,18 @@ Working principles:
   A spec subtask's step-0 report is this gate; anything else owes the short report on its own.  
   This is the spec flow's gate discipline applied to every change, documented or not,  
   and it binds every session.
+- **Finish in one go**: a coherent unit of change (a spec subtask, a standalone change, a doc revision:  
+  whatever the unit is) is carried through in one continuous run until it can be verified.  
+  No gradual tail on the same unit: no remaining part pushed to a later session or a later change,  
+  and no half-finished state treated as done because a gate came up in the middle.  
+  Waiting for the owner's nod is not a tail: a gate asks for a decision, and it does not end the unit.  
+  A problem found while working goes into the report before the edit extends to it,  
+  even when it looks like the same unit; reporting it is not a tail either.  
+  The owner's answer names it, and from then on it is part of this unit.  
+  Candidates are drawn only from what is related to this problem (how the boundary is drawn:  
+  "Scope an instruction to what was named" above), and among them the one that settles the problem  
+  thoroughly is the one recommended: the cheaper candidate is listed as a candidate, never as the default,  
+  and a rating or a column in a doc never makes the shallow one the default either (see the preamble).
 - **English by default**: anything you generate (docs, comments, commit messages)  
   is in English unless the user specifies otherwise. Exception: a **new** code comment is written  
   in the owner's chat language while the change is being implemented, so the owner can read the wording  
