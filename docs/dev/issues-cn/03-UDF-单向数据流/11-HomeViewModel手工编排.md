@@ -124,7 +124,7 @@ override suspend fun collectModels(): List<MyModel> {
 
 ```kotlin
 // BaseListViewModel: 下标成为私有细节, 公开 API 按类型寻址.
-// 状态按现状的形状写: modelsStateFlow: StateFlow<List<MyModel>?> (null = 还没加载过),
+// 状态按现状的形状写: modelsStateFlow: StateFlow<PersistentList<MyModel>?> (null = 还没加载过),
 // 加载标志另在 isLoadingStateFlow, 不再包一层 State
 @MainThread
 fun updateModelDetail(type: MyModelType, newDetail: String) {
@@ -132,7 +132,7 @@ fun updateModelDetail(type: MyModelType, newDetail: String) {
         if (list == null) return@update list
         val index = list.indexOfFirst { it.type == type }
         if (index == -1) return@update list
-        list.toMutableList().also { it[index] = it[index].copy(detail = newDetail) }
+        list.replacingAt(index, list[index].copy(detail = newDetail))
     }
 }
 ```

@@ -35,8 +35,7 @@
 - **[02-SSOT-唯一数据来源](02-SSOT-唯一数据来源/)**:  
   [#09 myAndroid 可变单例](02-SSOT-唯一数据来源/09-myAndroid可变单例.md)
 - **[03-UDF-单向数据流](03-UDF-单向数据流/)**:  
-  [#11 HomeViewModel 手工编排](03-UDF-单向数据流/11-HomeViewModel手工编排.md) ·  
-  [#13 toPersistentList 重组分配](03-UDF-单向数据流/13-toPersistentList重组分配.md)
+  [#11 HomeViewModel 手工编排](03-UDF-单向数据流/11-HomeViewModel手工编排.md)
 - **[04-并发与调度](04-并发与调度/)**: [#15 检测串行不感知取消](04-并发与调度/15-检测串行不感知取消.md) ·  
   [#17 myAndroid 并发读写](04-并发与调度/17-myAndroid并发读写.md)
 - **[05-稳定性与错误处理](05-稳定性与错误处理/)**:  
@@ -75,7 +74,8 @@
   [#05 组合根分散](archived/01-架构与分层/05-组合根分散.md)  
   · [#08 设置 SSOT](archived/02-SSOT-唯一数据来源/08-设置无唯一数据来源.md) ·  
   [#10 设置页直读 SP](archived/02-SSOT-唯一数据来源/10-设置页直读SharedPreferences.md) ·  
-  [#12 拖拽重建吞手势](archived/03-UDF-单向数据流/12-拖拽重建吞手势.md)  
+  [#12 拖拽重建吞手势](archived/03-UDF-单向数据流/12-拖拽重建吞手势.md) ·  
+  [#13 toPersistentList 重组分配 (转换移到边界)](archived/03-UDF-单向数据流/13-toPersistentList重组分配.md)  
   · [#14 检测链用 CPU 线程池 (IO 迁移)](archived/04-并发与调度/14-检测链用CPU线程池.md) ·  
   [#16 的前身](archived/04-并发与调度/16-阻塞调用与HttpClient.md) ·  
   [#16 阻塞调用跑在 CPU 线程池 (IO 迁移)](archived/04-并发与调度/16-阻塞调用跑在CPU线程池.md) ·  
@@ -166,7 +166,6 @@
 | 编号 | 问题 | 严重程度 | 修复难度 | 状态 | 一句话危害 |
 |------|------|----------|----------|------|------------|
 | [#11](03-UDF-单向数据流/11-HomeViewModel手工编排.md) | `HomeViewModel` 手工编排 23 个仓库方法并按下标打补丁 | P1 | 中 | 开放 | 每加一个首页条目要同时改 ViewModel 和仓库两处 |
-| [#13](03-UDF-单向数据流/13-toPersistentList重组分配.md) | `toPersistentList()` 在每次重组时重新分配 | P2 | 低 | 开放 | 加载态翻动即触发 O(n) 复制, 破坏稳定跳过前提 |
 
 ### 4 · 并发与调度
 
@@ -264,7 +263,7 @@
 修复时请保留这些, 不要顺手重构掉:
 
 - `BaseListViewModel` 的状态持有与 `loadJob` 去重:  
-  `modelsStateFlow: StateFlow<List<MyModel>?>` (加载不擦掉旧列表, UI 不闪空) +  
+  `modelsStateFlow: StateFlow<PersistentList<MyModel>?>` (加载不擦掉旧列表, UI 不闪空) +  
   `isLoadingStateFlow`, 配置变更后不重复加载, Compose 侧用 `collectAsStateWithLifecycle` 收集.
 - 逐条错误隔离已落地: 每个检测块经 `guardedMyModel` (Home) / `guardedDetectFailedMyModel` (Others) 守卫,  
   失败渲染成自身标题的错误行,  
@@ -357,7 +356,7 @@
 / #19 (字典序与  
 LldFileStore 一路; 覆盖闸门已裁不设), 06-性能 的 #30 (修法是 DataSource 层的全表 query,  
 与 0g 的裁定无关) / #64, 07-UI与无障碍 的 #34 / #38 / #39,  
-08-反模式与卫生 的 #44 第 2 处, 09-构建与CI 的 #52 / #51 / #55, 03-UDF-单向数据流 的 #13.  
+08-反模式与卫生 的 #44 第 2 处, 09-构建与CI 的 #52 / #51 / #55.  
 未列入本清单的开放条目 (#27 / #28 / #29 / #32 / #45 第 1-5 项) 也归入这批一起做, 先后由负责人定;  
 #63 的剩余部分随 2a 的三态走,  
 #67 与 #66 的 binder 行已裁暂缓, 均不单独开工.

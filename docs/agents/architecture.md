@@ -45,9 +45,13 @@ and `PropertyReader` (`ui/common`) wraps `IProperty` with the shared placeholder
 ## BaseListViewModel
 
 `BaseListViewModel` drives every list page with two `StateFlow`s:  
-`modelsStateFlow: StateFlow<List<MyModel>?>`  
+`modelsStateFlow: StateFlow<PersistentList<MyModel>?>`  
 (null = cold start; a refresh deliberately keeps the previous list so the UI never flashes empty) and  
 `isLoadingStateFlow`, plus `loadJob` dedup: don't reintroduce redundant loads on recreation.  
+The `PersistentList` is built once in `setModels()` at that boundary,  
+and `updateModelDetail()` patches it with `PersistentList.replacingAt()` (`set()` is deprecated).  
+A composable never converts the collection:  
+a conversion in a composable body reruns `O(n)` on every recomposition of that scope.  
 `onModelsLoaded()` runs after each load lands, for reconciling state that changed mid-build.
 
 ## Compose stability

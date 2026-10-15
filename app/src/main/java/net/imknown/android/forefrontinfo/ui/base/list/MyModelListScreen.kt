@@ -25,7 +25,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import net.imknown.android.forefrontinfo.R
@@ -69,7 +68,7 @@ fun MyModelListScreen(
         // afterwards the ViewModel keeps the previous list during refreshes, so no flash of empty list,
         // and mid-refresh patches from the ViewModel reach the UI (legacy behavior needed a
         // produceState workaround for this; the ViewModel now guarantees it directly)
-        models = models?.toPersistentList() ?: persistentListOf(),
+        models = models ?: persistentListOf(),
         isRefreshing = isLoading, // first load and pull-to-refresh both spin (same as legacy)
         onRefresh = viewModel::refresh, // event up: gesture -> ViewModel refresh (a method reference is just a lambda)
         scrollBarMode = scrollBarMode,

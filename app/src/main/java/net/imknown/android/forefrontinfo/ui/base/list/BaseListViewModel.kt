@@ -3,6 +3,8 @@ package net.imknown.android.forefrontinfo.ui.base.list
 import androidx.annotation.MainThread
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.viewModelScope
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,8 +20,11 @@ abstract class BaseListViewModel : BaseViewModel() {
     // null = nothing loaded yet (cold start). A refresh deliberately keeps the previous list:
     // the UI never flashes empty mid-refresh, and in-place patches (updateModelDetail) stay
     // possible while the reload is still running.
-    val modelsStateFlow: StateFlow<List<MyModel>?>
-        field = MutableStateFlow<List<MyModel>?>(null)
+    // PersistentList rather than List: the immutable collection is built once at this boundary, so no
+    // composable converts it (a conversion in a composable body reruns the O(n) copy on every
+    // recomposition of that scope).
+    val modelsStateFlow: StateFlow<PersistentList<MyModel>?>
+        field = MutableStateFlow<PersistentList<MyModel>?>(null)
 
     // Spinner flag, split from the data so loading no longer has to erase the list (the two
     // concerns replaced the former single State.Loading which carried no data).
@@ -77,15 +82,13 @@ abstract class BaseListViewModel : BaseViewModel() {
                 return@update list
             }
 
-            val newList = list.toMutableList()
-            newList[targetIndex] = newList[targetIndex].copy(detail = newDetail)
-            newList
+            list.replacingAt(targetIndex, list[targetIndex].copy(detail = newDetail))
         }
     }
 
     @MainThread
     private fun setModels(tempModels: List<MyModel>) {
-        modelsStateFlow.value = tempModels
+        modelsStateFlow.value = tempModels.toPersistentList()
         setLoading(false)
     }
 }
