@@ -3,6 +3,7 @@ package net.imknown.android.forefrontinfo.ui.settings
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import androidx.annotation.ArrayRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -34,15 +35,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.semantics
@@ -238,8 +241,8 @@ private fun SettingsContent(
 
     if (showThemeDialog) {
         // the arrays only matter while the dialog is open: declaring them inside the sole consumer skips the resource reads entirely when closed
-        val themeLabels = stringArrayResource(R.array.themeKeys).toPersistentList()
-        val themeValues = stringArrayResource(R.array.themeValues).toPersistentList()
+        val themeLabels = rememberPersistentStringArray(R.array.themeKeys)
+        val themeValues = rememberPersistentStringArray(R.array.themeValues)
         SettingsChoiceDialog(
             title = stringResource(R.string.interface_themes_title),
             labels = themeLabels,
@@ -253,8 +256,8 @@ private fun SettingsContent(
         )
     }
     if (showScrollBarDialog) {
-        val scrollBarLabels = stringArrayResource(R.array.scrollBarKeys).toPersistentList()
-        val scrollBarValues = stringArrayResource(R.array.scrollBarValues).toPersistentList()
+        val scrollBarLabels = rememberPersistentStringArray(R.array.scrollBarKeys)
+        val scrollBarValues = rememberPersistentStringArray(R.array.scrollBarValues)
         SettingsChoiceDialog(
             title = stringResource(R.string.interface_scroll_bar_title),
             labels = scrollBarLabels,
@@ -300,6 +303,19 @@ private fun SettingsChoiceRow(
         colors = ListItemDefaults.colors(containerColor = Color.Transparent), // follows the row card background
         modifier = modifier.clickable { onClick() },
     )
+}
+
+// stringArrayResource caches nothing: it re-reads the resource on every call and returns a fresh Array, so
+// converting at the call site rebuilds the array and its copy each time the dialog branch recomposes.
+// The key is the resource id plus LocalConfiguration.current, not the Resources object: a configuration change
+// does not necessarily swap the Resources instance (LocalResources invalidates its readers by reading
+// LocalConfiguration), while AndroidComposeView installs a deep copy of the Configuration on every real
+// change, which is exactly what lets consumers use it as a key.
+@Composable
+private fun rememberPersistentStringArray(@ArrayRes id: Int): PersistentList<String> {
+    val resources = LocalResources.current
+    val configuration = LocalConfiguration.current
+    return remember(id, configuration) { resources.getStringArray(id).toPersistentList() }
 }
 
 @Composable
