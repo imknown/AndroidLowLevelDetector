@@ -15,6 +15,8 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
+private const val UNKNOWN = "unknown"
+
 class AndroidApplicationConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
@@ -32,8 +34,9 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 versionName = buildVersion("versionName")
 
                 val currentDatetime = getCurrentDatetime()
-                val currentGitBranchName =
-                    providers.execute("git", "rev-parse", "--abbrev-ref", "HEAD")
+                val currentGitBranchName = runCatching {
+                    providers.executeOrThrow("git", "rev-parse", "--abbrev-ref", "HEAD").ifEmpty { UNKNOWN }
+                }.getOrDefault(UNKNOWN)
                 this@configureName.configure<BasePluginExtension> {
                     archivesName.set("lld-$versionName-$versionCode-$currentDatetime-$currentGitBranchName")
                 }
@@ -51,6 +54,9 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
         return formatter.format(datetime)
     }
 
-    private fun ProviderFactory.execute(vararg args: Any) =
-        exec { commandLine(*args) }.standardOutput.asText.get().trim()
+    private fun ProviderFactory.executeOrThrow(vararg args: Any): String =
+        exec {
+            commandLine(*args)
+            isIgnoreExitValue = true
+        }.standardOutput.asText.get().trim()
 }
