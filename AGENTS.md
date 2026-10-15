@@ -5,8 +5,9 @@ Guidance for coding agents working in this repository. Read this before making c
 Neither side is authoritative by default: **code and docs can both be wrong**.  
 Code settles what the app does *today*, a verifiable fact. What the app *should* do belongs to the owner,  
 and a doc's statement of intent can itself be a mistake (written too far, or invented).  
-So classify a doc-vs-code disagreement before editing (stale doc, code bug, unimplemented requirement,  
-or a doc that overstated the requirement) and when the evidence won't classify it,  
+Only an owner-set convention outranks the code, and then it is the code that is wrong, not the doc that is stale.  
+So classify a doc-vs-code disagreement before editing (commonly one of: stale doc, code bug,  
+unimplemented requirement, or a doc that overstated the requirement) and when the evidence won't classify it,  
 or the question is whether stated intent really is the owner's, ask.
 
 What binds you is decided by what a statement is **about**, never by which field, column, label, or section  
@@ -18,10 +19,15 @@ carries it, and not by which doc carries it either
   what the code does, in whatever slot a doc or a table puts it, now or added later. It sizes the problem;  
   it never caps the fix. Where the rating calls the problem small and the owner wants the problem gone,  
   the thorough fix is still the right target, and steering the owner to the shallow one because of that  
-  rating is exactly the mistake this rule exists to prevent.
-- A **convention the owner set** binds, and it is the only one of the three. A doc's description of how things  
-  are done now is not such a convention unless it declares itself one: changing that practice is the owner's  
-  call to make, and it is never a reason to steer the owner toward the weaker fix.
+  rating is exactly the mistake this rule exists to prevent. Rules that bound a change's scope (scoping an  
+  instruction to what was named, not making existing debt worse) say which problem you take on, never how  
+  shallowly a problem already taken on may be solved: settling it is related work by definition.
+- A **convention the owner set** binds, and it is the only one of the three. What makes a statement a  
+  convention is that it prescribes what the code should do; a doc's description of how things are done now  
+  is not one, so changing that practice is the owner's call and never a reason to steer the owner toward  
+  the weaker fix. A note's **status** is the one thing besides the subject that changes this: a record or a  
+  frozen note is the owner's withdrawal of that note from today's rules, so a prescribing line inside one  
+  binds nothing (see Documentation rules).
 
 So a list of slots is not how this works and none is maintained here: the subject of the statement is the test,  
 and a statement whose kind you cannot tell from the doc alone is one to ask about, not to default to obeying.
@@ -38,7 +44,9 @@ Working principles:
   grep the whole repo for it first, not just the files already read.  
   When something cannot be determined or multiple valid approaches exist, present findings and ask the user;  
   write `unknown` rather than inventing a value. A conflict is a stop sign, not a licence to pick:  
-  when the evidence does not settle which side is wrong (doc vs doc, doc vs code), show both sides and ask.  
+  investigate before you speak. Read the code, then trace both sides in `git log` to see how each came to be,  
+  report the evidence you traced for each side with the confidence you actually hold in it, and ask the owner  
+  what they really want: their answer decides, and a silent guess does not.  
   Scope an instruction to what was named:  
   a second sentence that looks like the same problem goes on a list you ask about, not into the same edit.
 - **Report before editing**: an instruction to change the project  
@@ -78,18 +86,9 @@ Working principles:
 
 Conventions that deliberately diverge from the mainstream / official template are called out inline below:  
 they are not smells to fix, so don't "normalize" them in passing.  
-**Whichever side is wrong is the side that gets edited**: right code and a wrong statement, fix the statement;  
-wrong code and a right statement, fix the code; both wrong, fix both.  
-The four-way classification at the top of this file (stale doc, code bug, unimplemented requirement,  
-doc that overstated the requirement) is how you work out which side that is.  
-When you cannot settle it, investigate before you speak: read the code, then trace both sides in `git log`  
-to see how each came to be, report the evidence you traced for each side with the confidence you actually  
-hold in it, and ask the owner what they really want: their answer decides, and a silent guess does not.  
-A statement that **is a convention** binds whoever reads it, wherever it sits: what makes one a convention is  
-that it says what the code should do, not that it sits in the Code rules section or beside a flagged divergence  
-(the Build conventions, Localization, and Git and CI rules are such statements too, and any rule added later  
-counts the same way). So a disagreement between code and a convention is a code bug to fix, never a stale line  
-to delete; retiring a convention is the owner's call.
+**Whichever side is wrong is the side that gets edited**; the kinds above are how you tell which side that is,  
+and a rule that scopes a change says which problem you take on, never how shallowly it may be solved.  
+Retiring a convention is the owner's call.
 
 ## Where the detail lives
 
