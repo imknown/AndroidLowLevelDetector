@@ -29,7 +29,7 @@
 
 **修复方向**: 产物名的时间戳交给 CI 在 artifact 命名上做, 构建内部保持稳定名; 分支相关值改由 CI 显式注入,  
 在线 URL 指向稳定 ref.  
-两条都得保持 configuration-cache 兼容 ([AGENTS.md](../../../../AGENTS.md) 的约定),  
+两条都得保持 configuration-cache 兼容 ([AGENTS-cn.md](../../../../AGENTS-cn.md) 的约定),  
 也就是不能改成运行期才读时钟或 git 的任务.
 
 用分支名拼在线数据 URL 本身是另一件事, 有它自己的取舍, 本条不重开,  

@@ -77,8 +77,8 @@ app/src/main/java/net/imknown/android/forefrontinfo/
 - `LldManager` → `LldFileStore` 的中立化已随 `6e4e9ebf` 落地 (`LLD_JSON_NAME` 常量随迁,  
   与 `LldDataSource` 的边已消除); 剩余的  
   `ui.home.model.Lld` import 仍要随搬移中立化 (模型归 [#01] 的目标结构).
-- `ShellLibSu` 的路径被 [AGENTS.md](../../../../AGENTS.md) 写死 (`ui/common/ShellLibSu.kt`),  
-  搬它就得在同一次提交里改 AGENTS.md,  
+- `ShellLibSu` 的路径被 [docs/agents-cn/architecture.md](../../../../docs/agents-cn/architecture.md) 写死  
+  (`ui/common/ShellLibSu.kt`), 搬它就得在同一次提交里改这份细则的两种语言 (镜像同步义务),  
   否则记忆里那条路径立刻失效.
 - `ToastExt` 不在 `ui/common`, 它在 `ui/base/ext/`; 目标结构里 "只留真 UI 工具"  
   的那一份清单要按这个实际位置合并, 而不是再开一个包.  
@@ -87,7 +87,8 @@ app/src/main/java/net/imknown/android/forefrontinfo/
 迁移清单 (一次提交): 移动 6 个文件 (`MyApplication.kt` 出 `base` 包 + `AndroidVersionExt.kt`, `JsonExt.kt`,  
 `LldFileStore.kt`, `PropertyReader.kt`,  
 `ShellLibSu.kt` 出  
-`ui/common`), 全局改 import, 同批改 AGENTS.md. 原先顺手列的 "删除 `ShellDefault`" 不成立:  
-它按 [AGENTS.md](../../../../AGENTS.md) 与 [#45 第 6 项](../08-反模式与卫生/45-零散小问题.md)  
+`ui/common`), 全局改 import, 同批改 memory 文档与架构细则的两种语言 (镜像同步义务).  
+原先顺手列的 "删除 `ShellDefault`" 不成立:  
+它按 [AGENTS-cn.md](../../../../AGENTS-cn.md) 与 [#45 第 6 项](../08-反模式与卫生/45-零散小问题.md)  
 作为不依赖 libsu 的原生备选实现保留 (零调用是有意状态),  
 搬移清单里没有它. IDE 的 Refactor → Move 可全自动完成 import 改写.

@@ -103,7 +103,7 @@ tempModels += propRepository.getSettings(SettingsTable.SYSTEM)
 
 落地时必须一起处理的三点:
 
-1. `contentResolver.query()` 是跨进程阻塞调用, 按 AGENTS.md 走 `Dispatchers.IO`,  
+1. `contentResolver.query()` 是跨进程阻塞调用, 按 AGENTS-cn.md 走 `Dispatchers.IO`,  
    不能留在现在的 `withContext(Dispatchers.Default)` 里,  
    与 [#14](../archived/04-并发与调度/14-检测链用CPU线程池.md) 是同一件事.
 2. 三个 `CONTENT_URI` 常量与 `query()` 的 API 等级要按 **minSdk** (`gradle/toml/build.toml` 的 `minSdk`)  
