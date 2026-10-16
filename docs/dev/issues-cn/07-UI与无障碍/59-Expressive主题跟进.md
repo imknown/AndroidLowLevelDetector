@@ -8,12 +8,12 @@
 
 **结论**: 不是缺陷, 因为 `AppTheme()` 现为标准 M3 (light/dark scheme + Android 12+ 动态取色),  
 是 Compose 迁移决策 8 的有意取舍 (Expressive 主题 API 当时已从 material3 1.4.0 stable 线移除, 仅在 1.5.0-alpha).  
-本条登记一个**跟版本走的主题观感升级候选项**, 随 material3 1.5 落地实施.
+本条登记一个**跟版本走的主题观感升级候选项**, 在 material3 1.5 时实施.
 
 **证据**:
 
 - `ui/theme/Type.kt` 文件头注释原文: "Re-tune when Material 3 Expressive becomes available.",  
-  迁移落地时就挂了升级标记.
+  迁移完成时就挂了升级标记.
 - `ui/theme/Theme.kt` 的 `AppTheme()` 分支只在 `dynamicDarkColorScheme` / `dynamicLightColorScheme` / `darkScheme` / `lightScheme`  
   之间选; 同文件原四套零引用的对比度 scheme 已随 [#31](../archived/06-性能/31-主题死配色.md) 注释保留.
 - 等的是什么: material3 1.5 线的 `MaterialExpressiveTheme` / `expressiveLightColorScheme()` /  

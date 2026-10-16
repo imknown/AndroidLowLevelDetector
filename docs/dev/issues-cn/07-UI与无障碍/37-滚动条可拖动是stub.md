@@ -8,10 +8,10 @@
 
 - **数组维持现状**: `ui/settings/res/values/arrays.xml` 的 `scrollBarKeys` 三个 item 里第三个  
   (`@string/interface_fast_scroll_bar_key`) 是注释状态, `scrollBarValues` 侧对应的  
-  `@string/interface_fast_scroll_bar_value` item 同样注释, 两侧对齐成 2 项  
-  (曾经的 2/3 错位按 values 侧对齐修复, 见 [archived #18](../archived/05-稳定性与错误处理/18-滚动条数组错位.md));  
+  `@string/interface_fast_scroll_bar_value` item 同样注释, 两侧改成一致的 2 项  
+  (曾经的 2/3 错位以 values 侧为准修成一致, 见 [archived #18](../archived/05-稳定性与错误处理/18-滚动条数组错位.md));  
   默认值是 None, `SettingsStore` 播种时拿  
-  `interface_no_scroll_bar_value` 兜底.
+  `interface_no_scroll_bar_value` 作默认值.
 - **两档今天生效**: 这个偏好经 `SettingsStore.scrollBarMode: StateFlow` 送出 (根部经 `LocalScrollBarMode` provide; 曾经的  
   `MyApplication.scrollBarMode` 伴生流由 `121dd849` 引入, 已迁入 store,  
   原条目见 [archived #08](../archived/02-SSOT-唯一数据来源/08-设置无唯一数据来源.md)), 两个滚动列表  

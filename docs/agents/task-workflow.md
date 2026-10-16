@@ -3,11 +3,11 @@
 > **Status**: **living**, part of [AGENTS.md](../../AGENTS.md)'s Task workflow section.  
 > Read this in full before you create a spec directory, before you start a subtask, and before you call a  
 > task closed.  
-> The invariants that stay in AGENTS.md are these: nothing is committed without the owner's explicit say-so,  
-> no next step starts without one, and a new session resumes from the progress ledger.
+> The invariants that stay in AGENTS.md are these: nothing is committed without the owner's explicit approval,  
+> no next step starts without one, and a new session resumes from the progress record.
 
 The owner = the developer. AI handles research/analysis/coding/testing/review;  
-the owner owns goals/boundaries/judgment/commit. Every gate ends in an explicit owner nod.
+the owner owns goals/boundaries/judgment/commit. Every approval point ends with the owner explicitly approving.
 
 ## Directory and file layout
 
@@ -15,12 +15,12 @@ the owner owns goals/boundaries/judgment/commit. Every gate ends in an explicit 
 - The trailing `-cn` marks non-English reports; files inside a suffixed directory keep their prescribed names  
   WITHOUT a language suffix.
 - The files: `plan.md` (task level), `subtask-01..NN` (one modification plan report per subtask),  
-  `progress.md` (the ledger).
+  `progress.md` (the progress record).
 
 ## Owner pre-write (before AI starts)
 
 The owner hand-writes 2-3 sentences at the top of `plan.md`: the problem, their own approach, the biggest risk  
-they predict. That block stays unchanged until the task ends and is compared against at the close.
+they predict. That block stays unchanged until the task ends and is compared against at task end.
 
 (Guards against anchoring (Tversky & Kahneman) and hindsight bias: pre-register your own judgment before  
 seeing the AI's plan.)
@@ -33,10 +33,10 @@ low = mechanical/boilerplate), and unfamiliar-area tags; a to-learn list at the 
 
 The report language is the owner's call per task and applies to the plan and every subtask report.
 
-(Guards against cognitive load (Sweller): small chunks cut extraneous load; risk tiering prevents gate  
+(Guards against cognitive load (Sweller): small chunks cut extraneous load; risk tiering prevents approval-point  
 fatigue.)
 
-## Plan gate
+## Plan approval
 
 Before starting subtasks:
 
@@ -48,18 +48,18 @@ Before starting subtasks:
   confirmation; only confirmed items get fixed).
 - Only then enter the per-subtask loop.
 
-## Progress ledger
+## Progress record
 
-The spec dir carries `progress.md`; the AI updates it at every gate: current position, per-subtask gate state,  
-suspended items (stashes), deviations, next action.
+The spec dir carries `progress.md`; the AI updates it at every approval point: current position, per-subtask  
+approval state, suspended items (stashes), deviations, next action.
 
-- Any new session/agent/model resumes by reading AGENTS.md + the ledger first, then executing the ledger's next  
-  action.
-- In-flight steps (for example a running background review) are not captured, so re-run the step the ledger  
-  points at.
-- The ledger rides the next commit.
+- Any new session/agent/model resumes by reading AGENTS.md + the progress record first, then executing that  
+  record's next action.
+- Steps still running (for example a background review in progress) are not captured, so re-run the step the  
+  progress record points at.
+- The progress record goes in with the next commit.
 - The resume protocol (scan `docs/spec/*/progress.md` on "continue", confirm the resume with the owner, list  
-  and ask when several tasks are in flight) lives in  
+  and ask when several tasks are unfinished) lives in  
   [AGENTS.md](../../AGENTS.md#task-workflow-docsspec): it binds every session, so it is stated there once.
 
 (Guards against self-review blind spots: an independent context removes in-context anchoring.)
@@ -76,16 +76,16 @@ numbering stays 0..5.
    The decomposition and ordering are AI's responsibility: the owner does not pre-generate structure.  
    What the report owes the owner: a 5-10 line concept primer for the subtask, an answer to every question on  
    the list, and the coverage checklist.  
-   Amend a stale report visibly before start; begin only when the owner says start; the gate tempo (how often  
-   a nod is asked for) is the owner's call.  
+   Amend a stale report visibly before start; begin only when the owner says start; how often approval is  
+   asked for is the owner's call.  
    Hands-on implementation is not part of the flow: the owner arranges learning outside it.  
    (Guards against the ironies of automation (Bainbridge 1983): under AI-driven development the owner  
    structurally cannot keep up with implementation, so learning lives in the audit (question list / coverage  
    check / concept primers) with the learning scope narrowed to architecture concepts and review judgment, not  
    line-level implementation.)
 1. **Implement** (code comments written in the owner's chat language, explaining *why*, at the codebase's  
-   density; at the commit gate all new comments are translated to English, i.e. the committed codebase stays  
-   English; comment punctuation follows the ASCII rule in  
+   density; before the commit all new comments are translated to English, i.e. the committed codebase  
+   stays English; comment punctuation follows the ASCII rule in  
    [Documentation Formatting Reference](doc-formatting.md)) and verify with  
    [the Android Studio checks](verification.md) plus the build.  
    For high-risk logic in unfamiliar areas, the owner reproduces it without AI first, then compares.  
@@ -100,7 +100,7 @@ numbering stays 0..5.
    The reviewer duties stated in [AGENTS.md](../../AGENTS.md#build-and-verify) apply here: verifiable evidence  
    (file:line) per finding, and the preference for a reviewer model different from the one that wrote the  
    change. The model and the reasoning effort the reviewer runs on are the owner's pick: that section  
-   carries the procedure (fetch the model list, show it, let the owner pick) and the fallback for when the  
+   carries the procedure (fetch the model list, show it, let the owner pick) and what to do when the  
    list cannot be fetched.  
    For low-risk subtasks the owner may read the diff personally instead.  
    (Guards against automation bias (Parasuraman & Riley) and correlated same-model blind spots: the evidence  
@@ -110,26 +110,26 @@ numbering stays 0..5.
    round requires. If anything was fixed, loop back to step 2 with the next version; if the owner confirms  
    nothing needs fixing, step 4 applies.
 4. **No new substantive findings**: the owner leaves one sentence of their own words when approving (why this  
-   can pass). Low-risk subtasks may merge steps 4 and 5 into a single nod.  
+   can pass). Low-risk subtasks may merge steps 4 and 5 into a single approval.  
    (The testing effect (Roediger & Karpicke 2006) upgrades recognition into retrieval; counters the fluency  
-   illusion and the illusion of explanatory depth (Rozenblit & Keil 2002); gate fatigue.)
-5. **Commit** the subtask (Conventional Commits plus the trailer), then wait for another nod before starting the  
-   next subtask.
+   illusion and the illusion of explanatory depth (Rozenblit & Keil 2002); approval-point fatigue.)
+5. **Commit** the subtask (Conventional Commits plus the trailer), then wait for another approval before starting  
+   the next subtask.
 
-## Convergence guard
+## When the review loop stops
 
 Review rounds chase substance: subjective style preferences and premature-optimization suggestions do not force  
 another round. If rounds keep churning without new findings, surface that to the owner instead of looping  
 forever.
 
-## Deviation ledger
+## Deviation record
 
-Skipping a step is allowed, but log one line (task / which step / why) into the spec dir's progress ledger.
+Skipping a step is allowed, but log one line (task / which step / why) into the spec dir's progress record.
 
 (Behavioral economics: allowed-but-logged beats forbidden; prevents both silent process decay and wholesale  
 abandonment of the workflow.)
 
-## Close-out
+## Finishing the task
 
 Clear the to-learn list; hold one cross-cutting retrospective (which classes of problems the AI gets wrong  
 repeatedly, distilled into a review checklist).
@@ -138,11 +138,11 @@ repeatedly, distilled into a review checklist).
 
 ## Archiving
 
-When a task is fully closed out (the ledger's next action is none), its whole spec dir moves under  
+When a task is finished (the progress record's next action is none), its whole spec dir moves under  
 `docs/spec/archived/` unchanged and is never edited again.
 
 - The move itself declares the dir a **record** (see the status model in  
-  [AGENTS.md](../../AGENTS.md#documentation-rules)); a ledger header still saying living is superseded by the  
-  location, not a drift to fix in place.
+  [AGENTS.md](../../AGENTS.md#documentation-rules)); a progress-record header still saying living is  
+  superseded by the location, not an out-of-date wording to fix in place.
 - The resume scan (`docs/spec/*/progress.md`) does not reach one level deeper, so archived tasks never  
   resurface as unfinished.

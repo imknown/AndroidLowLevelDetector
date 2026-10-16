@@ -20,7 +20,7 @@ carries it, and not by which doc carries it either
   it never caps the fix. Where the rating calls the problem small and the owner wants the problem gone,  
   the thorough fix is still the right target, and steering the owner to the shallow one because of that  
   rating is exactly the mistake this rule exists to prevent. Rules that bound a change's scope (scoping an  
-  instruction to what was named, not making existing debt worse) say which problem you take on, never how  
+  instruction to what was named, not making existing problems worse) say which problem you take on, never how  
   shallowly a problem already taken on may be solved: settling it is related work by definition.
 - A **convention the owner set** binds, and it is the only one of the three. What makes a statement a  
   convention is that it prescribes what the code should do; a doc's description of how things are done now  
@@ -35,7 +35,7 @@ and a statement whose kind you cannot tell from the doc alone is one to ask abou
 Working principles:
 
 - **Memory**: this file is the durable memory: settled decisions, conventions, gotchas,  
-  and doc corrections land here, so the next session starts from them instead of rediscovering them.  
+  and doc corrections are recorded here, so the next session starts from them instead of rediscovering them.  
   Unsorted personal material goes in [docs/dev/JOTTINGS.md](docs/dev/JOTTINGS.md).  
   When unsure what or where to record, discuss with the user.
 - **Never guess**: investigate the codebase and docs first;  
@@ -50,21 +50,22 @@ Working principles:
   Scope an instruction to what was named:  
   a second sentence that looks like the same problem goes on a list you ask about, not into the same edit.
 - **Report before editing**: an instruction to change the project  
-  starts a report gate, not the edit. When a doc tracks the target, re-verify what it says  
+  starts a report the owner answers, not the edit. When a doc tracks the target, re-verify what it says  
   against the current code first (docs can be stale or wrong; see the preamble),  
   then present the owner a short report before any edit: the current behavior and what is missing or wrong in it,  
   the candidate fixes where more than one exists, and which one you recommend and why.  
-  The owner picks the fix; the edit starts only on the nod.  
-  A spec subtask's step-0 report is this gate; anything else owes the short report on its own.  
-  This is the spec flow's gate discipline applied to every change, documented or not,  
+  The owner picks the fix; the edit starts only after the owner's approval.  
+  A spec subtask's step-0 report is this report; anything else owes the short report on its own.  
+  This is the spec flow's approval discipline applied to every change, documented or not,  
   and it binds every session.
 - **Finish in one go**: a coherent unit of change (a spec subtask, a standalone change, a doc revision:  
   whatever the unit is) is carried through in one continuous run until it can be verified.  
-  No gradual tail on the same unit: no remaining part pushed to a later session or a later change,  
-  and no half-finished state treated as done because a gate came up in the middle.  
-  Waiting for the owner's nod is not a tail: a gate asks for a decision, and it does not end the unit.  
+  No leftover part of the same unit: nothing remaining pushed to a later session or a later change,  
+  and no half-finished state treated as done because an approval point came up in the middle.  
+  Waiting for the owner's approval is not a leftover: an approval point asks for a decision,  
+  and it does not end the unit.  
   A problem found while working goes into the report before the edit extends to it,  
-  even when it looks like the same unit; reporting it is not a tail either.  
+  even when it looks like the same unit; reporting it is not a leftover either.  
   The owner's answer names it, and from then on it is part of this unit.  
   Candidates are drawn only from what is related to this problem (how the boundary is drawn:  
   "Scope an instruction to what was named" above), and among them the one that settles the problem  
@@ -74,8 +75,8 @@ Working principles:
   is in English unless the user specifies otherwise. Exception: a **new** code comment is written  
   in the owner's chat language while the change is being implemented, so the owner can read the wording  
   in their own language when they look at the work in progress; the committed codebase stays English,  
-  so every such comment is translated to English before the commit. The translation is owed by the gate of  
-  the change in hand, not only by Task workflow, step 1:  
+  so every such comment is translated to English before the commit. The translation is owed by the approval  
+  point of the change in hand, not only by Task workflow, step 1:  
   a change that opens no spec directory never reaches that step.  
   A comment that already exists and is not being rewritten keeps the file's language,  
   and a file whose comments are all English does not exempt a new comment from this exception.  
@@ -128,7 +129,7 @@ kotlinx.serialization, Ktor, libsu, JNI/NDK. DI by Metro (compile-time, no refle
 - **Analyze with Android Studio**: after each edit batch, run `android studio analyze-file` for every  
   changed file first, then the Gradle tiers above, then have a fresh-context subagent review the uncommitted  
   diff in the background, report the findings to the owner, and stop: nothing is committed without the  
-  owner's explicit say-so, spec flow or not.  
+  owner's explicit approval, spec flow or not.  
   The reviewer owes verifiable evidence (file:line) for every finding, and prefer a different model for the  
   reviewer than the one that wrote the change: those duties bind every session, not only a spec task.  
   Review is round-based (v1, v2, ... after each fix round); the delta-pass and fresh-reviewer policy in the  
@@ -226,7 +227,7 @@ read it before adding a detection item to a feature.
 
 ## Code rules
 
-Rules for new code. They encode settled decisions; don't make existing debt worse:
+Rules for new code. They encode settled decisions; don't make existing problems worse:
 
 - Spell `ViewModel` out in full: never abbreviate it to `VM`, in identifiers, comments, commit messages,  
   or docs. `VM` is already the abbreviation of *virtual machine*,  
@@ -243,7 +244,7 @@ Rules for new code. They encode settled decisions; don't make existing debt wors
   `initMyAndroid()` at startup (`MyApplication.onCreate`, from the runtime `Build.VERSION`)  
   and the known-values override in `HomeRepository.detectAndroid()`.  
   Never assign to it anywhere else: the `isAtLeast...()` helpers read it from everywhere.
-- minSdk comes from `gradle/toml/build.toml`: gate newer APIs with the `isAtLeastAndroidX()` helpers or  
+- minSdk comes from `gradle/toml/build.toml`: restrict newer APIs with the `isAtLeastAndroidX()` helpers or  
   `@RequiresApi`.
 - New code uses the newest syntax and standard-library APIs the pinned versions allow:  
   the newest Kotlin syntax and std-lib APIs the current Kotlin version supports,  
@@ -275,23 +276,24 @@ Rules for new code. They encode settled decisions; don't make existing debt wors
 ## Task workflow (docs/spec)
 
 The owner = the developer. AI handles research/analysis/coding/testing/review;  
-the owner owns goals/boundaries/judgment/commit. Every gate ends in an explicit owner nod:  
-nothing is committed without the owner's explicit say-so (spec flow or not) and no next step starts without one.
+the owner owns goals/boundaries/judgment/commit. Every approval point ends with the owner explicitly approving:  
+nothing is committed without the owner's explicit approval (spec flow or not) and no next step starts without one.
 
-[docs/agents/task-workflow.md](docs/agents/task-workflow.md) is the flow itself: the spec directory layout, the  
-owner's pre-write block, what `plan.md` owes (the subtask split, why each unit stands alone, its risk tier, the  
-to-learn list), the plan gate, the per-subtask steps 0..5 with their fresh-context review rounds, the  
-convergence guard, the deviation ledger, close-out, and archiving. Read it before you create a spec directory,  
+[docs/agents/task-workflow.md](docs/agents/task-workflow.md) is the flow itself: the spec directory layout,  
+the owner's pre-write block, what `plan.md` owes (the subtask split, why each unit stands alone, its risk tier,  
+the to-learn list), the plan approval, the per-subtask steps 0..5 with their fresh-context review rounds,  
+when the review loop stops, the deviation record, finishing the task, and archiving.  
+Read it before you create a spec directory,  
 and re-read the step you are in before you act on it.
 
 These bind every session, spec task or not:
 
-- Each spec dir carries `progress.md`, the ledger; the AI updates it at every gate,  
-  and it rides the next commit.
+- Each spec dir carries `progress.md`, the progress record; the AI updates it at every approval point,  
+  and it goes in with the next commit.
 - At session start, or whenever the owner says "continue", scan `docs/spec/*/progress.md` for unfinished tasks  
-  and resume from the ledger: the owner needs to remember nothing but that word. Confirm the resume with the  
-  owner before acting on it, even when only one task is unfinished; when several are in flight, list them and  
-  ask which.
+  and resume from the progress record: the owner needs to remember nothing but that word.  
+  Confirm the resume with the owner before acting on it, even when only one task is unfinished;  
+  when several are unfinished, list them and ask which.
 
 ## Git and CI
 
@@ -320,9 +322,10 @@ These bind every session, spec task or not:
 ## Documentation rules
 
 The rules for writing anything here. This file is **living**: a statement it makes about the code describes  
-the present, so drift is a bug to fix in place. Its conventions are living in a different sense: they state  
-what the code should do, so they do not expire when the code fails to do it, and updating them to match  
-current code is the wrong edit (see the doc-vs-code classification at the top of this file).  
+the present, so a sentence that has gone out of date is a bug to fix in place. Its conventions are living in a  
+different sense: they state what the code should do, so they do not expire when the code fails to do it,  
+and updating them to match current code is the wrong edit  
+(see the doc-vs-code classification at the top of this file).  
 [docs/dev/JOTTINGS.md](docs/dev/JOTTINGS.md) is **scratch**: unsorted material, not a source of rules.  
 A note may declare itself **frozen** or **record**: it keeps the text it was written with,  
 corrections and later findings included, so cite it for history but never back-fill today's code into it.  
@@ -340,9 +343,9 @@ and a status header inside that still says living is superseded.
   Do not leave the superseded sentence standing with a parenthetical or blockquote correction appended to it,  
   and do not label a corrected sentence with the check that produced it: the fact belongs in the sentence,  
   not in a note about who checked it and when.
-- Ask before adjudicating a conflict: when two docs disagree,  
+- Ask before deciding which side of a conflict is wrong: when two docs disagree,  
   or a doc and the code disagree and the evidence does not settle which side is wrong,  
-  present both sides and let the owner rule, then rewrite only the statement that was ruled on.  
+  present both sides and let the owner decide, then rewrite only the statement that was decided on.  
   Corrections do not spread: another sentence that looks like the same problem goes on a list to ask about,  
   not into the same edit.
 - A doc states only what the owner said or the code shows. No term, detection item,  
@@ -356,9 +359,11 @@ and a status header inside that still says living is superseded.
   a genuinely new term is defined where it first appears. The same standard applies to code comments,  
   and to chat replies to the owner.
 - **Chat replies to the owner**: write for a reader who has not opened this file.  
-  The standard is the same in every language you may write in.  
-  Give the result first, then the reason, then (only when you are waiting on the owner's answer) the one  
-  sentence that says what you will do next.  
+  The standard is the same in every language you may write in: the wording lists in  
+  [docs/agents/doc-formatting.md](docs/agents/doc-formatting.md) are the wording this repo wrote and the  
+  wording the owner called out, not the edge of the rule.  
+  Give the result first, then the reason, then (only when you are waiting on the owner's answer) the one sentence  
+  that says what you will do next.  
   Say only what changes the owner's decision: no recap of the question, no rule quoted back at the owner,  
   no closing summary unless asked.  
   Never narrate internal work: which rule you are following, what you are about to check,  
@@ -368,10 +373,12 @@ and a status header inside that still says living is superseded.
   of your own work that would otherwise surround it.  
   Name things by code symbol, file path, or the exact string rather than by a nickname this file invented;  
   where a term defined here is the clearest name available, say it in plain words first and put the term  
-  in parentheses, at its first appearance only.
+  in parentheses, at its first appearance only.  
+  The wording bans and the list of renamed terms live in the `Plain wording` and `Terms this repo renamed`  
+  sections of [docs/agents/doc-formatting.md](docs/agents/doc-formatting.md).
 - What stays in prose: substance and navigation: the scope or exception the sentence is drawing,  
-  cross-references by ID, code symbols. **Who ruled what, and when, is not prose**:  
-  dated rulings belong in `git log`, not as an "owner ruled, <date>" tag on every sentence.  
+  cross-references by ID, code symbols. **Who decided what, and when, is not prose**:  
+  dated decisions belong in `git log`, not as an "owner decided, <date>" tag on every sentence.  
   A doc that carries a version row names the version and points at `git log`;  
   it does not accumulate a revision log.
 - English is the default language for documents and file names; a non-English document marks its language on  
@@ -384,8 +391,9 @@ and a status header inside that still says living is superseded.
 - **ASCII punctuation in every language**, **no dash as punctuation**, and **hard-wrap long lines by meaning**  
   hold in every doc, code comment, and chat reply, the **frozen**, **record**, and **scratch** ones included  
   (punctuation and wrapping are formatting, not the substance those statuses preserve).  
-  [docs/agents/doc-formatting.md](docs/agents/doc-formatting.md) is the machinery: the CJK-to-ASCII mapping  
-  and spacing cases, the dash rewrites per relation and the structural `--` exemptions, and the table and  
-  code-comment wrapping cases. Read it before you write a doc, a code comment, a commit message, or a reply  
-  to the owner, and whenever you convert or reflow text that already exists.
-- Keep a note short; when one grows too long, split it along natural seams, keeping an index page in front.
+  [docs/agents/doc-formatting.md](docs/agents/doc-formatting.md) is the machinery: the banned wording lists  
+  and the rename table, the CJK-to-ASCII mapping and spacing cases, the dash rewrites per relation and the  
+  structural `--` exemptions, and the table and code-comment wrapping cases. Read it before you write a doc,  
+  a code comment, a commit message, or a reply to the owner, and whenever you convert or reflow text that  
+  already exists.
+- Keep a note short; when one grows too long, split it along its natural boundaries, keeping an index page in front.

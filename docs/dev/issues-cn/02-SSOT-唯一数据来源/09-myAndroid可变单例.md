@@ -63,7 +63,7 @@ LLD 的 `known` 数据本应作为参数参与计算, 却通过篡改全局变�
 
 ## 修复方案
 
-**前置约定变更 (已裁)**: 负责人已确认收敛为单一写入方: 冻结为不可变 + enrich 纯函数即本条目方案; "本地值先行,  
+**前置约定变更 (已定)**: 负责人已确认收敛为单一写入方: 冻结为不可变 + enrich 纯函数即本条目方案; "本地值先行,  
 联网取到 LLD 后用修正值展示" 的行为不变, 改的只是修正值不再回写全局.  
 [AGENTS-cn.md](../../../../AGENTS-cn.md) 的 "只有两个写入方" 条款随本条目同批改写, 不留两份互相矛盾的约定.
 
@@ -122,9 +122,9 @@ fun detectAndroid(lld: Lld?, androidInfo: MyAndroid): MyModel {   // androidInfo
 `initMyAndroid()` 的 4 行回写;  
 `HomeRepository` 内 5 处读 (`detectAndroid()` 的 4 处取值加 `getOutdatedTargetSdkVersionApkModel()` 的阈值)  
 加 4 行回写.  
-全局替换为 `AndroidInfo.current` 后编译器会兜底找出遗漏; 真正间接依赖它的是整套 `isAtLeast*` 系列,  
+全局替换为 `AndroidInfo.current` 后编译器会强制暴露遗漏; 真正间接依赖它的是整套 `isAtLeast*` 系列,  
 它们只经 `sdkInt` 一个入口,  
 所以改动面收敛在这一个 getter 上.
 
-按这份落点清单, 改动是十几行的量级; 并发侧的无同步读写另记 [#17](../04-并发与调度/17-myAndroid并发读写.md),  
+按这份改动点清单, 改动是十几行的量级; 并发侧的无同步读写另记 [#17](../04-并发与调度/17-myAndroid并发读写.md),  
 随本条目一并关闭.

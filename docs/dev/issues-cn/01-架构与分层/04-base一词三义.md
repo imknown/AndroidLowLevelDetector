@@ -74,7 +74,7 @@ app/src/main/java/net/imknown/android/forefrontinfo/
 
 三处搬移不是纯机械的, 得连带处理:
 
-- `LldManager` → `LldFileStore` 的中立化已随 `6e4e9ebf` 落地 (`LLD_JSON_NAME` 常量随迁,  
+- `LldManager` → `LldFileStore` 的中立化已随 `6e4e9ebf` 完成 (`LLD_JSON_NAME` 常量随迁,  
   与 `LldDataSource` 的边已消除); 剩余的  
   `ui.home.model.Lld` import 仍要随搬移中立化 (模型归 [#01] 的目标结构).
 - `ShellLibSu` 的路径被 [docs/agents-cn/architecture.md](../../../../docs/agents-cn/architecture.md) 写死  

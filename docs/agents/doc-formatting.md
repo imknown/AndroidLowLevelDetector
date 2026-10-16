@@ -3,8 +3,72 @@
 > **Status**: **living**, part of [AGENTS.md](../../AGENTS.md)'s Documentation rules section.  
 > Read this before you write or rework anything governed by the rules collected here (a doc, a code comment,  
 > a commit message, or a chat reply to the owner), and whenever you convert or reflow text that already exists.  
-> The prohibitions themselves stay in AGENTS.md; this file is the mapping, the spacing cases, the exemptions,  
-> and the language and file-naming mechanics.
+> AGENTS.md states the prohibitions; this file holds the wording lists, the rename table, the CJK-to-ASCII  
+> mapping, the spacing cases, the exemptions, and the language and file-naming mechanics.
+
+## Plain wording
+
+What not to write, and what to write instead. It governs a doc, a code comment, a commit message, and a chat reply.  
+It holds in every language you may write in: the lists below are the wording this repo wrote and the wording the  
+owner called out, and the test carries over to any other language rather than the list being the boundary.
+
+Three kinds of wording are out:
+
+1. **Filler and hedging**: wording that carries no fact. Delete the phrase and check that the sentence still says  
+   what it said: `It is worth noting that`, `In summary`, `As we can see`, `Obviously`, `Needless to say`,  
+   `crucial`, `paramount`, `Let us begin`, `In today's fast-moving world`.  
+   In Chinese: `值得注意的是`, `综上所述`, `不难看出`, `众所周知`, `毋庸置疑`, `至关重要`, `重中之重`,  
+   `让我们开始吧`, `在当今快速发展的时代`.
+2. **Marketing adjectives**: a claim nobody can check. Name the fact instead, or drop it: `seamless` says  
+   "no manual step is needed", `powerful` says what the feature does, `robust` says which failures it handles.  
+   Also out: `ultimate`, `disruptive`, `revolutionary`, `comprehensive`, `world-class`, `cutting-edge`,  
+   `ecosystem`, `赋能`, `抓手`, `无缝`, `强大`, `极致`, `颠覆`, `革命性`, `全方位`, `高水平`, `高质量`, `生态`.
+3. **A cross-domain metaphor used as the name of a work item, a check, or a decision.**  
+   The list is not what makes this work; the test is whether a reader who has not opened this repo's docs can  
+   follow the sentence. Three groups, because their evidence differs:
+   - written into this repo's own docs at some point: `bucket`, `gate`, `ledger`, `close-out`, `land`/`landing`,  
+     `tail`, `drift`, `debt`, `seam`, `in-flight`, `tempo`, and in Chinese `桶`, `闸门`, `台账`/`账本`, `收口`,  
+     `收尾`, `落地`, `尾巴`, `漂移`, `债`, `接缝`, `护栏`, `兜底`, `兜住`, `裁定`, `定夺`, `拍板`, `点头`,  
+     `落点`, `门禁`, `地基`, `伸手点`, `保护网`, `沉淀`, `复盘`, `闭环`, `对齐` (for agreement), `粒度`.
+   - named in the owner's complaint about AI replies and never found in a file of this repo: `顶牛`, `揪出`,  
+     `放宽`, `颗粒度`.
+   - English siblings of the same failure, named by this rule before anyone here wrote one: `guardrail`,  
+     `harness`, `circle back`, `touch base`.
+
+A word that names something the code already names stays: `Alignment` in a layout, a Gradle build artifact,  
+the Metro artifacts in `gradle/toml/thirdParty.toml`, the placeholder fallback in `PropertyReader`.  
+The ban is on a second, invented name for a thing the code already has a name for.
+
+## Terms this repo renamed
+
+Use the right-hand column in a living doc. The old wording still stands in archived records  
+(`docs/spec/archived/`, `docs/dev/issues-cn/archived/`), which are never rewritten in place, and in the entry  
+titles and the section titles a living doc quotes from one of those records: cite a record by the name it was  
+archived with, and a banned word inside such a name stays because it is that record's name, not today's wording.  
+The middle column is the meaning, not a mandated synonym: when a plain sentence carries the meaning, write that.
+
+| Renamed away from | Now in force | What it means |
+|---|---|---|
+| gate (plan gate, commit gate), 闸门 | approval point, 确认点 | a stop where the AI asks and the owner answers |
+| ledger, deviation ledger, 台账, 账本, 偏差台账 | progress record, deviation record, 进度记录, 偏差记录 | `progress.md`, and one line logged per skipped step |
+| convergence guard, 收敛护栏 | when the review loop stops, review 循环何时停 | stop looping review rounds once they bring no new finding |
+| close-out, 收尾 (as the stage name) | finishing the task, 任务结束 | clear the to-learn list and hold the one cross-cutting retrospective |
+| adjudicate, rule (verb: the owner ruled), 裁定, 定夺 | decide which side is wrong, 判定哪边错 | the owner decides, not the AI |
+| nod, say-so, 点头 | the owner's approval, 负责人的明确同意 | the owner says yes in words |
+| tail, 尾巴 | leftover part, 没做完的部分 | work of this unit that is not yet done |
+| land, 落地 | record, implement, 记录, 实现, 完成, 实施 | write it down, or build it |
+| fallback (as a doc term), 兜底 | what to do when it fails, 失败时怎么做 | keep the code's own name when the code has one |
+| drift, 漂移 | out of date, inconsistent, 过期, 不一致 | a sentence the code no longer matches |
+| debt, 债 | existing problem, 已有的问题 | work the code already owes |
+| seam, 接缝 | natural boundary, 天然的边界 | where a long note gets split |
+| 落点 | 归到哪一条, 记在哪一条 | which entry or step carries a decision or a fix |
+| 门禁 | CI 上必须通过的检查 | the CI check that blocks a merge |
+| 地基, 保护网 | 基础, 防回归的测试与检查 | what must already work before the main line starts |
+| 伸手点 | 全局取用点 | a value any call site can reach without it being passed in |
+| 沉淀 (as a verb) | 写成文档, 汇总成文档 | write knowledge down so it survives |
+| in-flight, tempo | still running, unfinished, how often approval is asked for | a step still executing, and the rate of asking |
+| 对齐 (for agreement) | 一致 | two descriptions saying the same thing |
+| 粒度 | 精确到 | how fine a value or a split is |
 
 ## ASCII punctuation in every language
 
@@ -124,6 +188,6 @@ the English file. The duty covers a citation written as prose, not only a link: 
 sentence keeps the English name on purpose: a statement about which side governs points at the file in force.
 
 Archived material is exempt from this duty: a record keeps the links and the citations it was archived with,  
-so a Chinese record still pointing at an English file is the correct state, not a drift to fix in place.
+so a Chinese record still pointing at an English file is the correct state, not an inconsistency to fix in place.
 
 Any language may still be used inside a doc when there is a reason.

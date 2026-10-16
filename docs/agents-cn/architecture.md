@@ -52,7 +52,7 @@ Metro 默认就把 `() -> T` 当 provider, 所以声明出来的 `Provider<T>` �
 并由 `updateModelDetail()` 用 `PersistentList.replacingAt()` 修补它 (`set()` 已废弃).  
 composable 从不转换这个集合:  
 在 composable 正文里的转换会在该作用域的每次重组时重跑 `O(n)`.  
-`onModelsLoaded()` 在每次加载落地之后运行, 用来校正构建中途发生变化的状态.
+`onModelsLoaded()` 在每次加载完成之后运行, 用来校正构建中途发生变化的状态.
 
 ## Compose 稳定性
 

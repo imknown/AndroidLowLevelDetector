@@ -56,7 +56,7 @@ updateModelDetail(targetIndex, newDetail)   // ViewModel 翻自己的状态找�
 同一条目还有第二个生产者, 与加载路径对 `lld == null` 的处置相反:  
 加载路径里 `detect()` 接受 `lld == null` (渲染成含 "未知" 的行),  
 补偿路径 `payloadOutdatedTargetSdkVersionApk()` 却是 `fetchOfflineLldOrNull().lld ?: return`,  
-离线兜底链整体失败时,  
+离线数据的备用取法整体失败时,  
 排序补丁静默放弃, 没有任何错误行说明为什么. 补偿路径还固定重读**离线**文件 (而刚才那次加载可能用的是在线数据),  
 且这个名为 payload 的动作里做磁盘写 (`copyJsonIfNeededOrThrow()`). 编排收进仓库时这两条路径要一起归位.
 
@@ -64,7 +64,7 @@ updateModelDetail(targetIndex, newDetail)   // ViewModel 翻自己的状态找�
 
 "首页有哪些条目, 什么顺序" 是仓库 (数据) 的知识, 却由 ViewModel 逐行手抄; `updateModelDetail` 暴露下标参数,  
 把 "如何定位一个条目" 的内部表示 (List 下标) 泄漏给了子类: 下标取自一次 `modelsStateFlow.value` 快照,  
-`updateModelDetail()` 改的却是它被调用那一刻的最新列表, 中间若另一次加载落地, 补丁就打到了别的条目上.
+`updateModelDetail()` 改的却是它被调用那一刻的最新列表, 中间若另一次加载完成, 补丁就打到了别的条目上.
 
 更深一层: 条目身份同时存在三套标识:  
 `MyModelListScreen` 的 `LazyColumn` 按 `key = { it.key }` 认条目 (值是 `MyModel.key`,  
@@ -82,13 +82,13 @@ updateModelDetail(targetIndex, newDetail)   // ViewModel 翻自己的状态找�
 **动手前先与负责人确认约定**: 把编排整体移进 `HomeRepository.collectHomeModels()` 与 AGENTS-cn.md 相反:  
 该文件 "新增一个检测条目" 一节写明检测项由 `ViewModel.collectModels()` 调用,  
 **调用顺序就是列表顺序**. 下面的仓库化仍是目标形态,  
-但采纳它等于同时改这条约定, 不是可以直接自行落地的事.
+但采纳它等于同时改这条约定, 不是可以直接自行实施的事.
 
 **与修复路线的关系**: [README 修复路线](../README.md#修复路线) 把本条目拆成两半排期:  
 "更新按类型寻址" 一半 (`updateModelDetail` 改按类型 + 补偿路径归位) 不碰该约定, 列入独立小件先行;  
 "编排收回仓库" 一半在走完整条主线时并入注册表引擎那一步 ([#03](../01-架构与分层/03-无三态模型与注册表.md)),  
 不单独建 `collectHomeModels()` 过渡形态,  
-下面的落点仅在注册表长期搁置时作为独立路径使用.
+下面列出的改法仅在注册表长期搁置时作为独立路径使用.
 
 **迁移清单再添一项 (UI 不 try 约定, 见 AGENTS-cn.md 代码规则)**:  
 lld 联网→离线的回退链  
@@ -117,7 +117,7 @@ suspend fun collectHomeModels(
 ```kotlin
 // HomeViewModel: 只剩一句话
 override suspend fun collectModels(): List<MyModel> {
-    // ... 联网/离线探测逻辑不变 (设置经注入的 SettingsStore 读取, 已落地, 原条目见 archived #08)
+    // ... 联网/离线探测逻辑不变 (设置经注入的 SettingsStore 读取, 已完成, 原条目见 archived #08)
     return homeRepository.collectHomeModels(lld, errorMessages, modeResId)
 }
 ```

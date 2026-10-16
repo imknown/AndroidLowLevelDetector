@@ -52,7 +52,7 @@ The `PersistentList` is built once in `setModels()` at that boundary,
 and `updateModelDetail()` patches it with `PersistentList.replacingAt()` (`set()` is deprecated).  
 A composable never converts the collection:  
 a conversion in a composable body reruns `O(n)` on every recomposition of that scope.  
-`onModelsLoaded()` runs after each load lands, for reconciling state that changed mid-build.
+`onModelsLoaded()` runs after each load completes, for reconciling state that changed mid-build.
 
 ## Compose stability
 
