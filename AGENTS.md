@@ -360,9 +360,13 @@ and a status header inside that still says living is superseded.
   dated rulings belong in `git log`, not as an "owner ruled, <date>" tag on every sentence.  
   A doc that carries a version row names the version and points at `git log`;  
   it does not accumulate a revision log.
-- English is the default language for documents and file names; a non-English document carries a language  
-  suffix (Chinese: `-cn`), and the twin mechanics (which file is in force, how the suffix relates the pair,  
-  where links point) live in [doc-formatting.md](docs/agents/doc-formatting.md).
+- English is the default language for documents and file names; a non-English document marks its language on  
+  the directory when a whole directory is written in it, and on the file otherwise. The mirrored docs (the  
+  root `AGENTS.md` and `README.md`, plus every English original in `docs/agents/`) exist as twins in every  
+  language the repo translates them into, and an edit to any one file of a mirrored doc is incomplete until  
+  every other file of that doc carries the same change: revise the whole set in one pass. The twin mechanics  
+  (which file is in force, which docs are mirrored, where the language marker goes, where links and  
+  citations point, what adopting a new language adds) live in [doc-formatting.md](docs/agents/doc-formatting.md).
 - **ASCII punctuation in every language**, **no dash as punctuation**, and **hard-wrap long lines by meaning**  
   hold in every doc, code comment, and chat reply, the **frozen**, **record**, and **scratch** ones included  
   (punctuation and wrapping are formatting, not the substance those statuses preserve).  

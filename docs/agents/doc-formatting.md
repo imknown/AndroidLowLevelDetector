@@ -90,12 +90,40 @@ Wrapping is formatting, so it holds for **frozen**, **record**, and **scratch** 
 
 ## Language and file naming
 
-English is the default language for documents, and file names are English by default; a non-English  
-document carries a language suffix (Chinese: `-cn`), as `docs/dev/module-structure-cn.md` does.
+English is the default language for documents, and file names are English by default. A non-English document  
+marks its language on the directory when a whole directory is written in it, and the files inside then keep  
+their plain names, as `docs/dev/issues-cn/` and `docs/agents-cn/` do. The marker goes on the file itself only  
+where the document sits in a mixed directory or at the repository root, as `docs/dev/module-structure-cn.md`,  
+`AGENTS-cn.md` and `README-cn.md` do. A translated root `README` stays a root file: GitHub renders only the  
+repository root's `README.md`, so it cannot move into a language directory. Where a directory already has a  
+naming pattern, follow it.
 
-Where a document has a translated twin, the English file is the one in force and keeps the canonical name;  
-the translation carries the suffix, does not mention its twin, does not call itself a translation, and adds  
-no back-reference: the suffix states the relationship. No translated twin stands in the repo now, so  
-`AGENTS.md` and the root `README.md` are single-language files. Links point at the file that exists, and  
-where a document has no counterpart in the reader's language, at the one that does. Where a directory  
-already has a naming pattern, follow it. Any language may still be used inside a doc when there is a reason.
+The mirrored set is the root `AGENTS.md` and `README.md` plus every English original in `docs/agents/`.  
+The copies standing in the repo today are the Chinese ones: `AGENTS-cn.md`, `README-cn.md`, and  
+`docs/agents-cn/`, which holds the plain file names. A doc in that set is mirrored into every language the  
+repo holds a translation in, and the twins of a doc hold the same statements in the same order. Nothing else  
+is mirrored, and a doc that stands in one language is not half of a pair: `docs/dev/JOTTINGS.md` is English  
+only, and `docs/dev/module-structure-cn.md` and `docs/dev/issues-cn/` are Chinese originals with no  
+counterpart. A doc outside the set owes no twin in any language.
+
+Where a doc is mirrored, its English file is the one in force and keeps the unsuffixed, canonical name.  
+A translation carries its language's marker, does not label itself a translation, and holds no link pointing  
+at another language's copy of itself: the marker states the relationship.
+
+An edit to any one file of a mirrored doc is incomplete until every other file of that doc carries the same  
+change, so revise the whole set in one pass: a rule in force reads the same in every language. When two  
+copies disagree, the English file decides and the translations are the side that gets fixed. Adopting a new  
+language adds a copy of every file in the set: a copy of a file that lives in `docs/agents/` goes into a  
+directory marked with that language, while a copy of a root file stays a root file carrying the file marker;  
+from then on all of them join that same sync duty.
+
+Links follow the language of the document carrying them: any document, mirrored or not, points at the copy  
+in its own language where one exists and at the English file where none does; an English document points at  
+the English file. The duty covers a citation written as prose, not only a link: a Chinese document cites  
+`AGENTS-cn.md`, and it names the default English file only where its own language has no copy of it. One  
+sentence keeps the English name on purpose: a statement about which side governs points at the file in force.
+
+Archived material is exempt from this duty: a record keeps the links and the citations it was archived with,  
+so a Chinese record still pointing at an English file is the correct state, not a drift to fix in place.
+
+Any language may still be used inside a doc when there is a reason.
