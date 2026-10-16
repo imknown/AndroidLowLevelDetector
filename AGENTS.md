@@ -355,6 +355,20 @@ and a status header inside that still says living is superseded.
   Reuse terms AGENTS.md or the document itself already defines;  
   a genuinely new term is defined where it first appears. The same standard applies to code comments,  
   and to chat replies to the owner.
+- **Chat replies to the owner**: write for a reader who has not opened this file.  
+  The standard is the same in every language you may write in.  
+  Give the result first, then the reason, then (only when you are waiting on the owner's answer) the one  
+  sentence that says what you will do next.  
+  Say only what changes the owner's decision: no recap of the question, no rule quoted back at the owner,  
+  no closing summary unless asked.  
+  Never narrate internal work: which rule you are following, what you are about to check,  
+  how you arrived at your own judgment.  
+  A report this repo asks you to hand over (the report before an edit, a reviewer's findings) is substance  
+  the owner is waiting on, not internal narration: give its content, and leave out the step-by-step account  
+  of your own work that would otherwise surround it.  
+  Name things by code symbol, file path, or the exact string rather than by a nickname this file invented;  
+  where a term defined here is the clearest name available, say it in plain words first and put the term  
+  in parentheses, at its first appearance only.
 - What stays in prose: substance and navigation: the scope or exception the sentence is drawing,  
   cross-references by ID, code symbols. **Who ruled what, and when, is not prose**:  
   dated rulings belong in `git log`, not as an "owner ruled, <date>" tag on every sentence.  
