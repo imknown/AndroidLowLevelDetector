@@ -31,6 +31,10 @@ Write the subtask split: each subtask's scope, why it is its own unit (minimal, 
 independently compilable changes), its risk level (high = security/data/core logic/unfamiliar areas;  
 low = mechanical/boilerplate), and unfamiliar-area tags; a to-learn list at the end.
 
+Split as finely as each change allows, so every subtask can be verified and committed on its own.  
+A wrong direction, a misread requirement, or a wrong investigation report then shows up at the first subtask,  
+instead of after the whole task is built.
+
 The report language is the owner's call per task and applies to the plan and every subtask report.
 
 (Guards against cognitive load (Sweller): small chunks cut extraneous load; risk tiering prevents approval-point  

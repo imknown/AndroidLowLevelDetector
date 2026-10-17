@@ -42,6 +42,9 @@ Working principles:
   base every change on evidence you can point to (file, line, doc section).  
   Saying a rule does not exist anywhere is the same kind of claim and needs the same evidence:  
   grep the whole repo for it first, not just the files already read.  
+  When a written answer already exists in a doc (a problem inventory, an earlier report),  
+  investigate on your own first and read that answer afterwards,  
+  so it cannot decide what you find before you look.  
   When something cannot be determined or multiple valid approaches exist, present findings and ask the user;  
   write `unknown` rather than inventing a value. A conflict is a stop sign, not a licence to pick:  
   investigate before you speak. Read the code, then trace both sides in `git log` to see how each came to be,  
@@ -52,7 +55,9 @@ Working principles:
 - **Report before editing**: an instruction to change the project  
   starts a report the owner answers, not the edit. When a doc tracks the target, re-verify what it says  
   against the current code first (docs can be stale or wrong; see the preamble),  
-  then present the owner a short report before any edit: the current behavior and what is missing or wrong in it,  
+  and a fix plan already written there is not the plan to execute: derive the fix from the current code,  
+  the same way the problem itself is re-verified.  
+  Then present the owner a short report before any edit: the current behavior and what is missing or wrong in it,  
   the candidate fixes where more than one exists, and which one you recommend and why.  
   The owner picks the fix; the edit starts only after the owner's approval.  
   A spec subtask's step-0 report is this report; anything else owes the short report on its own.  
