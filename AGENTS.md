@@ -125,7 +125,7 @@ kotlinx.serialization, Ktor, libsu, JNI/NDK. DI by Metro (compile-time, no refle
 ./gradlew lintFossDebug          # Android lint
 ```
 
-- Docs and comment-only edits skip the build tiers (no code changed).
+- Docs and comment-only edits skip the build tiers (no code changed), but the diff review below applies to them too.
 - **Analyze with Android Studio**: after each edit batch, run `android studio analyze-file` for every  
   changed file first, then the Gradle tiers above, then have a fresh-context subagent review the uncommitted  
   diff in the background, report the findings to the owner, and stop: nothing is committed without the  

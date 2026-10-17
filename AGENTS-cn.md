@@ -106,7 +106,7 @@ kotlinx.serialization, Ktor, libsu, JNI/NDK. DI 用 Metro (编译期, 无反射)
 ./gradlew lintFossDebug          # Android lint
 ```
 
-- 只改文档或注释的编辑跳过构建那几档 (没改代码).
+- 只改文档或注释的编辑跳过构建那几档 (没改代码), 但下面那条 diff review 同样适用于它们.
 - **用 Android Studio 做分析**: 每批编辑之后, 先对每个改动文件跑 `android studio analyze-file`,  
 然后是上面那几档 Gradle 检查,  
   再派一个新上下文的 subagent 在后台 review 未提交的 diff,  
