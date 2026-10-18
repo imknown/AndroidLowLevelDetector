@@ -126,7 +126,7 @@ kotlinx.serialization, Ktor, libsu, JNI/NDK. DI by Metro (compile-time, no refle
 
 ```bash
 ./gradlew assembleFossDebug      # what CI builds (GitHub Actions)
-./gradlew testFossDebugUnitTest  # unit tests (template-only today)
+./gradlew testFossDebugUnitTest  # unit tests
 ./gradlew lintFossDebug          # Android lint
 ```
 

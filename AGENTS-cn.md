@@ -105,7 +105,7 @@ kotlinx.serialization, Ktor, libsu, JNI/NDK. DI 用 Metro (编译期, 无反射)
 
 ```bash
 ./gradlew assembleFossDebug      # CI 构建的目标 (GitHub Actions)
-./gradlew testFossDebugUnitTest  # 单元测试 (目前只有模板)
+./gradlew testFossDebugUnitTest  # 单元测试
 ./gradlew lintFossDebug          # Android lint
 ```
 
