@@ -9,8 +9,8 @@
   未使用 `docs/` 下任何文档作为依据, 分析以代码为准; 唯一例外是 CP1, 判定"该处不是问题"  
 时引用了 `MyModelCard.kt:43-48` 一行标注已接受取舍的注释, 其余结论不依赖任何注释,  
 全部落在可指认的 `文件:行` 上.
-- 按约定排除的角度: CI, Test, NDK, JNI. 涵盖的角度: SSOT, UDF, 架构, 设计模式, 模块化,  
-  Security, Compose 性能, App 性能.
+- 按约定排除的角度: CI, NDK, JNI. 涵盖的角度: SSOT, UDF, 架构, 设计模式, 模块化,  
+  Security, Compose 性能, App 性能, Test. Test 一节为 2026-10-18 后补, 外部参考资料见该节开头.
 - 方式: 五路并行审查 (架构/SSOT/UDF, 模块化, 安全, Compose 性能, App 性能) 加撰写者抽查.  
   抽查核对过的条目在文末"核对说明"列出; 其余条目的 `文件:行` 来自审查的直接读取.
 - 本报告不改任何代码. 条目编号全文件唯一, 供其他文档引用.
@@ -27,6 +27,7 @@
 | MD1 | 高 | `:app` 中的 `MyApplication` 使用 `:base` 的包名, 两模块共用一个包 |
 | SE1 | 高 | lld.json 保存于外部目录, 内容零校验即全信, 部分场景可被其他 app 覆写 |
 | AP1 | 高 | Prop 页对每个 Settings 键做一次 ContentResolver 查询, 数百次串行 binder 往返 |
+| TE1 | 高 | 业务逻辑零测试: 唯一真实测试只覆盖 `:base` 的时间格式契约 |
 | SS3 | 中 | SharedPreferences 有 DI 绑定与 companion 静态两条读取路径 |
 | SS4 | 中 | theme 与 scrollBar 两组设置各由两个 StateFlow 手工配对维护 |
 | SS5 | 中 | 本地化文案字符串被当作数据有效性哨兵, 检查逻辑重复实现 |
@@ -54,6 +55,8 @@
 | AP3 | 中 | 每次刷新全量枚举 `getInstalledApplications`, 切换排序时重复 |
 | AP4 | 中 | 系统属性读取每次调用重新做 `getDeclaredMethod` 反射定位 |
 | AP5 | 中 | 每次刷新串行执行 4 次以上 shell 调用 |
+| TE2 | 中 | 唯一真实测试不在 `testFossDebugUnitTest` 的执行面内 (该 flavor 任务只有 `:app` 有) |
+| TE4 | 中 | 可测性被既有条目阻断 (DP2, SS2, SS3, SS5, SS1, 无超时的加载链) |
 | CP1 | 低 | 每行一个空 `onClick` 的可点击 Card, 以 Prop 页的数百行叠加为甚 |
 | CP2 | 低 | Settings 页六个流在同一作用域采集, 任一改动整页重算 |
 | UD4 | 低 | 一次性事件以 ViewModel 返回值触发屏幕侧效应, 与其余形态不一致 |
@@ -74,8 +77,9 @@
 | AP7 | 低 | 启动路径: 反射完整 VERSION_CODES 表与 SharedPreferences 首读在主线程 |
 | AP8 | 低 | 在线获取无 HTTP 缓存, 成功即整文件重写, 资产比对每次加载都重跑 |
 | AP9 | 低 | 每次格式化时间新建 `DateTimeFormatter`, Prop 键枚举反射每次重跑 |
+| TE3 | 低 | 模板 instrumented 断言与 `applicationIdSuffix` 冲突, 模板测试本身无价值 |
 
-级别统计: 高 8, 中 27, 低 20, 共 55 项 (同类项已合并).
+级别统计: 高 9, 中 29, 低 21, 共 59 项 (同类项已合并).
 
 ## SSOT (单一事实源)
 
@@ -341,9 +345,8 @@
 
 ### MD8 [低] settings 级插件版本不在目录内
 
-- `settings.gradle.kts:63` (`com.gradle.develocity` 版本 "4.6.0") 与 `:69`  
-  (foojay resolver 版本 "1.0.0") 是构建脚本里唯一不在版本目录内的版本号,  
-  更新点只能靠脚本改动.
+- `settings.gradle.kts:63` (`com.gradle.develocity`) 与 `:69` (foojay resolver)  
+  是构建脚本里唯一不在版本目录内的版本号, 脚本改动是唯一的更新点.
 - 修复方向: 保留但确认这两处的更新纳入与其他版本一致的审查路径 (现状可接受).
 
 ### MD9 [低] 组合根引用 feature 辅助包
@@ -429,7 +432,8 @@
 
 ### 确认无问题的面
 
-- 仅 HTTPS: 无 `usesCleartextTraffic`, targetSdk 37 下默认安全;  
+- 仅 HTTPS: 无 `usesCleartextTraffic`, targetSdk 锁值导致平台默认禁止明文流量  
+  (锁值见 `gradle/toml/build.toml`);  
   两 URL 硬编码 `https://` (`LldDataSource.kt:41`).
 - 组件受攻击面最小化: 出口仅 launcher `MainActivity` (`AndroidManifest.xml:23-31`),  
   无 receiver/provider/服务, 本应用不能被外部 app 唤起做侦测动作.
@@ -566,6 +570,104 @@
 - 无 Activity/View 级 Context 泄漏进 `object`/companion (Application 级的静态持有就是 SS2 本身);  
   解析产物不驻留进程.
 
+## Test (测试)
+
+本节后补 (2026-10-18). 参考的外部资料: 负责人指定的 developer.android.google.cn 的 testing  
+系列页面 (local-tests, robolectric, screenshot testing, what-to-test, compose synchronization  
+与 compose migrate-v2 等), 以及官方测试基础设施指引; 官方页面内容以抓取时点为准, 引用行以补写时  
+核对为准. 本节分现状盘点, 问题条目 (TE1-TE4), 建议的测试基础设施三部分.
+
+### 现状盘点 (补写当日核对)
+
+- 测试依赖只有一个注入点, 在 convention plugin: `build-logic/convention/.../KotlinAndroid.kt:72-83`  
+  的 `configureTest` (runner 为默认的 `androidx.test.runner.AndroidJUnitRunner`, `:75`), 下挂  
+  两个 bundle (`:79-80`): `test = ["junit"]` (bundle 行为 `gradle/toml/android.toml:104`,  
+  它指向的 junit 条目在 `:47`,`:91`), `androidTest = ["test-core", "test-ext-junit"]`  
+  (`:105`; 其中 test-ext-junit 条目在 `:54`,`:93`, test-core 条目在 `:53`,`:92`).
+- 测试文件实况 (5 个文件, 1 个真):
+  - 真测试: `base/src/test/.../DateTimeExtTest.kt`, 4 个用例, 守住 lld `version` 字段的格式契约  
+    与本地化无关性;
+  - 模板 4 个: `app` 与 `base` 的 `ExampleUnitTest.kt` (断言 2+2), `app` 与 `base` 的  
+    `ExampleInstrumentedTest.kt`;
+  - `binderDetector` 无任何测试目录.
+- 没有 Robolectric, Espresso, `androidx.compose.ui:ui-test-*`, mock 框架,  
+  `kotlinx-coroutines-test`, 覆盖率工具或截图测试 (全目录 grep 为零).
+
+### TE1 [高] 业务逻辑零测试
+
+- 本报告其他角度定位出的全部业务逻辑没有相应测试: `HomeRepository` 约 1211 行 (AR3),  
+  `SettingsStore` 双流配对 (SS4), `BaseListViewModel` 加载契约 (AR9), `LldFileStore` 文件编排  
+  (SE1, AP2), `MyAndroid` 全局与版本比较 (SS1, SS6), `PropertyReader` 与哨兵 (SS5),  
+  `MyModelExt` (MD6), `JsonExt` 与 `DateTimeExt` 其余两个 function (AP9 涉及处).
+- 按"What to test"官方页, ViewModel, 数据层, 工具类的单元测试是基本要求; 现况一条都没有,  
+  这些条目既无测试在当初指出, 也无测试守住回归.
+- 修复方向: 建立测试基础设施 (见下) 后补测试, 顺序从纯逻辑到 Robolectric 到 ViewModel  
+  (与 TE4 对应的重构同批做).
+
+### TE2 [中] 唯一的真实测试不在现况命令入口的执行面内
+
+- `testFossDebugUnitTest` 是 flavor 任务, 只有 `:app` 定义了 flavor; `:base` 只有不带 flavor  
+  的 `testDebugUnitTest`, 两者不同名, 所以跑 `testFossDebugUnitTest` 时 `DateTimeExtTest`  
+  不会执行. 全仓库唯一的真测试实际处于"只有单独手动触发 `:base:testDebugUnitTest` 才会跑"的状态.
+- 修复方向: 统一测试命令 (库模块加任务别名, 或约定用全工程任务), 属命令约定问题, 不改业务代码.
+
+### TE3 [低] 模板测试与 flavor 设置冲突, 且模板本身无价值
+
+- `ExampleInstrumentedTest` (`app/src/androidTest`) 断言 `targetContext.packageName` 等于  
+  无后缀包名, 而构建对变体设置了 `applicationIdSuffix = ".$name"` (`app/build.gradle.kts:105`):  
+  debug 变体上该断言必失败; 现在没有设备执行入口, 从未暴露.
+- 两处 `ExampleUnitTest` 断言 2+2, 无覆盖价值.
+- 修复方向: 直接删除全部模板测试; `androidTest` 源集在决定做乐器测试时再建.
+
+### TE4 [中] 可测性被既有条目阻断
+
+- 不先处理下面的条目, 测试会写成大面积 mock 或以静态初始化为前提的形态:
+  - 具体类型注入 `MyApplication` (DP2) 与静态 service locator (SS2, SS3): JVM 单测里  
+    `MyApplication.instance` 未初始化即系统性 NPE, 静态路径也无法用 fake 替换.
+  - 本地化哨兵 (SS5): 测试断言会绑死翻译文案.
+  - 全局可变 `myAndroid` (SS1): 测试之间相互污染.
+  - 无超时的加载链 (AR9): fake 卡住的路径需要能被测试观察到才可断言.
+  - 物理 shell: libsu 无法在 JVM 造真 shell; `:base` 的 `IProperty`/`IShell` 接口是现成替换点  
+    (接口先行的设计在这里直接受益), 测试用 fake 实现即可.
+- 修复方向: TE1 的第一批纯 JVM 测试 (版本比较, 日期, `JsonExt`, `SettingsStore` 流)  
+  不受以上影响可先行; 其余排到对应重构之后.
+
+### 建议的测试基础设施 (分层建议; 引入与否由负责人决定)
+
+1. **纯 JVM 单元测试** (`src/test` 中无 Android 依赖的纯逻辑): 负责人指定的 JUnit 5 可行,  
+   引 `junit-jupiter` 加 junit-bom; 实现时以当时的 AGP 文档核对 (Local test task 本质是  
+   Gradle 的 Test 任务, 配 `useJUnitPlatform()` 即跑 JUnit 5). 两个现况需要一致: 官方  
+   local-tests 页与 instrumented 测试文档当前仍以 JUnit 4 为基准; Compose 测试的  
+   `createComposeRule` (v1 与 v2 相同) 是 JUnit 4 的 Rule, JUnit 5 不能直接承载.  
+   所以现实形态是混合: 纯逻辑与 ViewModel (配 `kotlinx-coroutines-test` 的 `runTest` 与  
+   Main dispatcher 替换) 走 JUnit 5, Compose/instrumented 保留 JUnit 4. 这是决策点一  
+   (另一选项: 全 JUnit 4, 与官方文档完全一致).
+2. **Robolectric 承载 Compose 行为测试** (官方建议: 不必每个 UI 都上设备; 把 instrumented  
+   搬进 `test` 源集, `testOptions.unitTests.isIncludeAndroidResources = true`): 需补  
+   `androidx.compose.ui:ui-test-junit4` 与 `ui-test-manifest`, 外加 robolectric. Compose 测试  
+   v2 API (`androidx.compose.ui.test.junit4.v2.createComposeRule` 等) 自 `ui-test`  
+   1.11.0-alpha03 起可用; `ComposeUiTestConfig` 自 1.13.0-alpha01 起, 主线程同步同样自  
+   1.13.0-alpha01 起; 本工程 BOM 锁值见 `gradle/toml/android.toml:22`, 其解析出的  
+  `ui-test` 具体版本实现时按 BOM 映射核对后定;  
+   v1 API 已标弃用但仍可用. 决策点二: 锁 BOM 内可用版本先写, 还是等 v2 API 全量可用再起 UI 层.
+3. **截图测试** (官方把截图测试点名为 Compose 视觉回归的首选): 建议最小面起步  
+   (`MyModelCard`, Settings 关键行), 控制截图数量, 官方页强调不要做全组合. 官方  
+   Compose Preview Screenshot Testing 方案的 test-suite 入口自 AGP 9.5.0-alpha03 起,  
+   本工程 AGP 走不到入口 (版本目录另备 canary 档 `androidGradlePlugin-canary`  
+   (`gradle/toml/android.toml:9`), 该档高于 9.5.0-alpha03 门槛, 是否启用按版本分层规则  
+   由负责人决定); 旧独立插件路径仍可用但官方已标注 deprecated. 选项 (a) 单独决策 AGP 升级后走 test-suite; 选项 (b) Roborazzi  
+   (基于 Robolectric 渲染). 决策点三, 与 AGP 升级解耦.
+4. **乐器与端到端**: UIAutomator 与 Gemini Journeys 建议暂不引入: 本 app 无 deep link,  
+   无系统 UI 交涉, 首批旅程 (启动, 三个 tab, 设置项切换) 用 Robolectric 旅程即可; Journeys  
+   属实验性能力, 按仓库的版本分层规则需负责人另行决定. 性能测试 (Macrobenchmark 等) 本轮不引入.
+
+### 测试基础设施汇总
+
+- 决策点四个: (1) JUnit 5 混合 vs 全 JUnit 4; (2) Compose 测试先锁 BOM 内 v1 写起, 还是等  
+  v2 API 齐后起 UI 层; (3) 截图方案选 (a) 或 (b); (4) 覆盖率工具 (Jacoco) 是否引入.
+- 引入次序建议: 决策完成后, 先 TE1 第一批纯 JVM 测试与 TE3 模板清理, 再 Robolectric 层,  
+  与 TE4 对应的重构同步推进.
+
 ## 核对说明
 
 撰写者直接读过并复核了以下条目的引用行 (其余条目的引用行来自五路审查的直接读取):
@@ -578,3 +680,7 @@
   CP1 (`MyModelCard.kt:40-79`), MD1 的 split package 事实 (`MyApplication.kt:1` 的 package 声明).
 
 报告其余条目的 `文件:行` 以当时代码为准; 若后续代码变更, 先逐行复验再引用.
+
+Test 一节 (现状盘点, TE1-TE4, 测试基础设施建议) 的引用行由撰写者亲自读取核对  
+(5 个测试文件, `KotlinAndroid.kt` 的 `configureTest`, `android.toml` 的两个 bundle 与  
+`compose-bom` 与 AGP 的锁值, `app/build.gradle.kts` 的 flavor 后缀).
