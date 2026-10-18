@@ -88,6 +88,7 @@
 | [docs/agents-cn/detection-item.md](docs/agents-cn/detection-item.md) | 你给某个功能新增一个检测条目 |
 | [docs/agents-cn/task-workflow.md](docs/agents-cn/task-workflow.md) | 你开一个 spec 目录, 开始一个子任务, 或关闭一个任务 |
 | [docs/agents-cn/doc-formatting.md](docs/agents-cn/doc-formatting.md) | 你写一份文档, 一条代码注释, 一笔提交信息, 或一条回复 |
+| [docs/requirements-cn/README.md](docs/requirements-cn/README.md) | 你需要知道应用应该做什么, 给谁用, 或某项能力排在发布计划的哪里 |
 
 ## 项目概览
 

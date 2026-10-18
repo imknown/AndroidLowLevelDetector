@@ -109,6 +109,7 @@ wrong. The long form of an activity lives in `docs/agents/` and is read when tha
 | [docs/agents/detection-item.md](docs/agents/detection-item.md) | you add a detection item to a feature |
 | [docs/agents/task-workflow.md](docs/agents/task-workflow.md) | you open a spec directory, start a subtask, or close a task |
 | [docs/agents/doc-formatting.md](docs/agents/doc-formatting.md) | you write a doc, a code comment, a commit message, or a reply |
+| [docs/requirements/README.md](docs/requirements/README.md) | you need what the app should do, who it is for, or where a capability sits in the release plan |
 
 ## Project overview
 
