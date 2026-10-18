@@ -2,8 +2,8 @@
 
 > **状态**: **living** (未归档, 可原地修订).  
 > **依据**: 只以当前代码为证据, 每条给出文件与行号; 代码注释与 `docs/dev/issues-cn/` 未作为证据使用.  
-> **范围**: SSOT, UDF, 架构, 设计模式, 模块化, Security, Compose 性能, App 性能.  
-> 本次不考虑: CI, Test, NDK, JNI.  
+> **范围**: SSOT, UDF, 架构, 设计模式, 模块化, Security, Compose 性能, App 性能, Test.  
+> 本次不考虑: CI, NDK, JNI.  
 > **严重度**是影响面的估计, 用于排优先级, 不是修复深度的上限: 定为"低"的问题, 要彻底解决也照彻底解决.  
 > **陈述边界**: 条目里叙述平台或库行为 (非本仓库代码所能证实) 之处, 按对应平台或库文档判断;
 > 只在该边界会改变条目结论时, 才在条目内逐句标注.  
@@ -11,14 +11,14 @@
 
 ## 结论
 
-共 38 条. 最该先处理的是这 5 条:
+共 47 条. 最该先处理的是这 5 条:
 
 - **PA-32** (高): 启动把 SharedPreferences 文件解析, 反射遍历, libsu 默认 builder 配置都压在主线程.  
 - **PA-27** (高): 项目没有任何 Baseline Profile.  
 - **PA-02** (高): `myAndroid` 是进程级可变全局, 由 Home 的加载写入, 其它页面的 API 判定因此依赖"Home 是否已加载";
   该双写入者设计是 AGENTS.md 已记录的约定, 是否动它由负责人决定.  
+- **PA-40** (高): release 变体没有任何测试覆盖, 而 R8 与反射正好是本项目的高风险组合.  
 - **PA-10** (中): `BaseListViewModel` 没有失败分支, 而"不抛异常"的契约至少在两处 shell 调用上没有兜底.  
-- **PA-35** (中): 最贵的那行每次加载都全量枚举已安装应用, 同一刷新里还可能算两遍.  
 
 ## 1. SSOT
 
@@ -335,6 +335,102 @@ catch 分支的值是 `Unit`, 所以 `binderVersion` 被推断为 `Any`, 之后 
 - `PropRepository.getBuildProp` 在循环里用 `+=` 累加字符串 (`PropRepository.kt:79-93`), `getprop` 输出上千行时是 O(n^2).
 - `SettingsDataSource.getSettingsOrThrow` 在 `filter` 谓词里写 `it.isAccessible = true` (`ui/prop/datasource/SettingsDataSource.kt:13-16`):
   带副作用的判断条件.  
+
+## 9. Test
+
+本节按参考清单里的分层模型判定 (unit / component / feature / application / release candidate,
+见 [Testing strategies](https://developer.android.google.cn/training/testing/fundamentals/strategies)),
+并对照 [What to test in Android](https://developer.android.google.cn/training/testing/fundamentals/what-to-test)
+列出的必测项与边界项. 测试栈由 `build-logic/.../KotlinAndroid.kt:72-83` 的 `configureTest` 同时发给两个模块,
+依赖只有三件 (`gradle/toml/android.toml:47,53,54`), 测试文件共 5 个.
+
+### PA-39 (高) 测试资产几乎为零
+
+5 个测试文件里 4 个只断言 `4 == 2 + 2` 或包名, 不含任何本项目被测代码:
+`app/src/test/.../ExampleUnitTest.kt:13-14`, `app/src/androidTest/.../ExampleInstrumentedTest.kt:20`,
+以及 `:base` 下同名的两个 (`base/src/test/.../ExampleUnitTest.kt:13-14`,
+`base/src/androidTest/.../ExampleInstrumentedTest.kt:20`).  
+唯一有内容的是 `base/src/test/.../DateTimeExtTest.kt` (4 个方法, 全部在测 lld 的时间格式契约).  
+按 what-to-test 的必测清单 (ViewModel / 数据层 / 领域与工具类), 目前只有"工具类"这一档的 1 个类有测试.  
+**方向**: 先补 unit 层, 具体目标见 PA-41 与 PA-42.
+
+### PA-40 (高) release 变体没有任何测试覆盖
+
+`testBuildType` 未设置, androidTest 因此只跑 debug 变体 (AGP 的默认值, 属工具链语义), 而 release 打开
+R8 与资源收缩 (`app/build.gradle.kts:88-96`).  
+这个应用的运行时恰好全是 R8 敏感项: 隐藏 API 反射 (`base/.../property/impl/PropertyDefault.kt:8-18`,
+`HomeRepository.kt:1045-1111`), kotlinx.serialization 模型 (`ui/home/model/Lld.kt:10` 起每个模型类都带 `@Keep`),
+WebView 反射, 以及 libsu 与 JNI.  
+参考模型里负责这一层的第 5 层 (release candidate, 压缩后的二进制) 完全没有设施.  
+**方向**: 至少给 release 变体留一条能跑的路径; 否则"debug 能跑"证明不了发布版能跑.
+
+### PA-41 (中) 纯逻辑大量未测, 而它们正是参考文档点名的边界与坏数据场景
+
+可测而没测的逻辑 (多数是纯判断, 少数要先开可见性或抽纯函数):
+- `SettingsStore.parseThemeMode` / `parseScrollBarMode` 的兜底与那次迁移 (`ui/settings/repository/SettingsStore.kt:79-91,116-143`);
+  两个函数是 private, 要先开放可见性或经 store 的公共路径测.
+- `LldFileStore.copyJsonIfNeededOrThrow` 的版本比较与脏目录分支 (`ui/home/datasource/LldFileStore.kt:46-65`):
+  判断本身是纯逻辑, 但函数体绑定 `MyApplication.instance.assets` 与下载路径 (`:32,61,76`), 要先抽出纯函数.
+- `PropRepository.getBuildProp` 的多行折叠 (`ui/prop/repository/PropRepository.kt:79-93`),
+  以及 `toPropMyModel` 的解析 (`ui/base/list/MyModelExt.kt:127-134`).
+- `MyModel.key` (`ui/base/list/MyModel.kt:24-28`) 与 `AppRoot` 的下标 clamp (`ui/AppRoot.kt:88`).
+- `HomeRepository.isDateHigherThanConfig` 里硬编码的偏移 `250205 - 250101` (`ui/home/repository/HomeRepository.kt:212-253`).
+
+what-to-test 把"损坏数据, 畸形 JSON, 边界条件"列在必测里, 而 lld 的解析与回退链正好是这类:
+格式契约本身有测试 (`DateTimeExtTest.kt`), 反序列化 (`ui/common/JsonExt.kt:8-12`) 与回退链
+(`ui/home/HomeViewModel.kt:101-204`) 没有.
+
+### PA-42 (中) interface-first 的可测性主张没有兑现, 接缝也盖不到判定输入
+
+能注入的只有 `IProperty` / `IShell` (`di/AppGraph.kt:186-193`, `ui/common/ShellLibSu.kt:15-16`),
+而判定输入大多是静态读取: `Build.*` (`ui/others/repository/OthersRepository.kt:39-58`),
+`Settings.Global` (`HomeRepository.kt:754-780`), `PackageManager` (`:946,1121`),
+`System.getProperty` (`:344`), `File.exists()` (`:529-534`), `WebViewCompat` (`:994`),
+以及 PA-15 的全局取值路径.  
+结果是参考文档列为最该做单测的"数据层", 现在只能在真机上测. 配套设施也缺: catalog 里没有任何 mock 或 fake 框架,
+也没有 Robolectric (`testOptions` 因此也没必要配 `isIncludeAndroidResources`).  
+**方向**: 与 PA-15 同一处收口 (把 Context 与字符串从全局改成注入), 判定输入再抽成可注入的小接口.
+
+### PA-43 (中) Compose 侧零 UI 测试与零截图测试, 但接缝已经备好
+
+0 个 Compose UI test, 0 个截图测试. 而 screen/content 拆分 (屏幕函数只订阅与转发, content 只吃数据) 与
+`previewModels` 正是 component 层的现成接缝: `ui/base/list/MyModelListScreen.kt:82-166`,
+`ui/settings/SettingsScreen.kt:126-468`, `ui/AppRoot.kt:182-199`.  
+参考清单里对应的是 [Behavior UI tests](https://developer.android.google.cn/training/testing/ui-tests/behavior)
+与 [Screenshot tests](https://developer.android.google.cn/training/testing/ui-tests/screenshot),
+Compose 侧的 API, semantics 与同步机制见
+[Test your Compose layout](https://developer.android.google.cn/develop/ui/compose/testing).
+
+### PA-44 (中) 没有测试策略文档, 也没有测试约定
+
+`docs/agents/` 只有 architecture, build-conventions, detection-item, doc-formatting, task-workflow, verification
+六个文件, 没有 testing; AGENTS.md 也没有 Testing 一节. 于是分层, 跑在哪, 什么时候跑, 谁负责都没有书面定义,
+而 Testing strategies 明确要求"写一份测试策略并随团队演进".  
+另外现在没有任何入口在跑测试: androidTest 需要设备, `testFossDebugUnitTest` 不在自动化里
+(测试在何时何地跑属于 CI 角度, 本文只指出这一层目前是空的).
+
+### PA-45 (中) `:app` 唯一的 instrumented 测试与它运行的变体不一致
+
+`app/src/androidTest/.../ExampleInstrumentedTest.kt:20` 断言 `"net.imknown.android.forefrontinfo"`,
+而 debug 变体带 `.debug` 后缀 (`app/build.gradle.kts:105`).  
+`targetContext` 指向被测应用属于 AndroidX 的语义 (按参考清单里的 AndroidX Test 页面判断),
+若成立, 这条断言在 FossDebug 与 FirebaseDebug 下都不成立: 唯一的 application 层测试是红的.  
+**方向**: 断言改成不依赖 applicationId, 或者按变体取包名.
+
+### PA-46 (低) 测试框架与参考标准不一致, 采用路径待查证
+
+现状是 JUnit 4 (版本持于 `gradle/toml/android.toml:47`) 加 `org.junit.Assert` / `@Test`
+(`base/src/test/.../DateTimeExtTest.kt:3-6`). 你的参考里列了 JUnit 5, 而官方
+[local tests](https://developer.android.google.cn/training/testing/local-tests) 的示例栈仍是 JUnit 4.  
+"迁到 JUnit 5 的机制" (能否原生支持, 还是需要额外插件, 与当前 AGP 版本是什么关系) 需要先查证再采用, 本文不预设结论.
+
+### PA-47 (低) 没有性能与稳定性层
+
+参考清单里的 [Performance testing](https://developer.android.google.cn/training/testing/instrumented-tests/performance)
+与 [Big test stability](https://developer.android.google.cn/training/testing/instrumented-tests/stability)
+对不到任何设施: 没有 benchmark 或 macrobenchmark 模块 (`settings.gradle.kts:54-56` 只含三个模块),
+没有 Baseline Profile (与 PA-27 同源), 也没有 flake 策略.  
+对这个应用尤其相关: 启动与检测耗时是它的主要性能面 (PA-32, PA-33, PA-35), 而没有任何自动化的耗时或帧时间基线.
 
 ## 后续
 
