@@ -1,12 +1,12 @@
 # 项目分析报告 (mimo-v2.6-flash)
 
-> **Status**: **record**. 2026-10-16 对代码的一次时点阅读; 文本保留当时写下的内容,  
-> 含其中的更正, 后续发现可以追加进来.
+> **Status**: **record**. 2026-10-16 对代码的一次时点阅读, 测试角度于 2026-10-18 补入; 文本  
+> 保留当时写下的内容, 含其中的更正, 后续发现可以追加进来.
 
 ## 范围
 
-- 覆盖的角度: SSOT, UDF, 架构, 设计模式, 模块化, Security, Compose 性能, App 性能.
-- 按要求排除的角度: CI, 测试, NDK/JNI.
+- 覆盖的角度: SSOT, UDF, 架构, 设计模式, 模块化, Security, Compose 性能, App 性能, 测试.
+- 按要求排除的角度: CI, NDK/JNI.
 - 输入: Kotlin 源码, `AndroidManifest.xml`, 资源, Gradle 脚本与版本目录. 未作为输入:  
   `docs/dev`, `docs/spec` 与代码注释, 所以下面每条发现只以可执行代码为依据.
 - 证据路径中 `...` 代表 `net/imknown/android/forefrontinfo/`.
@@ -14,6 +14,7 @@
   或后续成本明确的结构性问题; 低 = 卫生问题或很小的成本.
 - 标签 `note` 不是严重度: 它标记一处查过, 没有问题的位置, 并指向相关发现.
 - 发现编号 (`SSOT-1`, `SEC-3`, ...) 只在本报告内使用.
+- 测试角度的评判基准: 负责人指定的官方测试文档与 JUnit 5, 清单见第 9 节末尾的参考材料.
 
 SSOT (单一事实来源): 一个事实只有一个持有者, 没有第二个位置可以更新它.  
 UDF (单向数据流): 状态向下流向 UI, 事件向上流向状态的持有者, 每个事实只有一个写入方向.
@@ -81,6 +82,10 @@ UDF (单向数据流): 状态向下流向 UI, 事件向上流向状态的持有�
 | AP-5 | 低 | 每次属性读取都重新解析反射方法 |
 | AP-6 | 低 | 离线载荷每次加载被解析三遍 |
 | AP-7 | 低 | 排序开关会重新扫描已安装应用列表 |
+| TEST-1 | 中 | 测试内容基本是模板, 检测与解析逻辑零覆盖 |
+| TEST-2 | 中 | 没有可替换的测试替身入口, 仓库与 ViewModel 逻辑做不了本地宿主测试 |
+| TEST-3 | 低 | 仍是 JUnit 4, JUnit 5 未接入 |
+| TEST-4 | 中 | UI 与截图测试能力没有接线 |
 
 ## 1. SSOT
 
@@ -492,6 +497,66 @@ WebView provider 反射 (`:1045-1111`) 和文件检查, 整套在每次下拉刷
 `getInstalledApplications` 加排序和字符串拼装 (`HomeRepository.kt:1121-1176`). 它在 IO 上为一次  
 少有的用户操作运行, 所以这是值得知道的成本而不是瓶颈.
 
+## 9. 测试
+
+**TEST-1 (中)**: 测试内容基本是模板. 全仓 5 个测试文件里有 4 个是 IDE 模板: app 与 base 各一份  
+`ExampleUnitTest` 断言 2+2 (app/src/test/java/.../ExampleUnitTest.kt:11-15,  
+base/src/test/java/.../base/ExampleUnitTest.kt:11-15), 以及各一份 `ExampleInstrumentedTest` 断言  
+包名 (app/src/androidTest/java/.../ExampleInstrumentedTest.kt:14-21,  
+base/src/androidTest/java/.../base/ExampleInstrumentedTest.kt:14-21). 唯一的真实测试是  
+`base/src/test/java/.../base/extension/DateTimeExtTest.kt:12-57` 的 4 个用例, 覆盖 `isLldDatetime`  
+的格式契约, 往返格式化, 以及语言环境与时区的独立性. 风险最集中的部分没有回归防护: Home 的检测与  
+比较 (`HomeRepository.kt`), 设置解析 (`SettingsStore.kt:79-91`), SEC-3 里那串 API 检查, MOD-4 的  
+占位值规则, 都属于官方 what-to-test 文档所说应当覆盖的行为.
+
+**TEST-2 (中)**: 没有可替换的测试替身入口, 仓库与 ViewModel 的逻辑做不了本地宿主测试.  
+数据源全是具体类, 没有接口, ViewModel 与仓库伸手取 `MyApplication.instance`, `getMyString`  
+和可变的 `myAndroid` 全局 (ARCH-4, SSOT-1), 所以除 `:base` 的 `IProperty` 与 `IShell` 这两个接口  
+之外, 仓库与 ViewModel 的逻辑无法在宿主 JVM 上构造出来; 目录里也没有 fake 或 mock 库, 没有  
+Robolectric (android.toml:44-55 只有 junit, test-core, test-ext-junit 三个测试构件). 对照官方  
+test-doubles 与 strategies 文档, 现状是要么先补可替换的接口与替身, 要么什么都测不了.
+
+**TEST-3 (低)**: 仍是 JUnit 4. 测试依赖固定在 JUnit 4 这条线上, `junit` 版本键在目录里  
+(android.toml:47), 测试 bundle 只有它 (android.toml:104), 现有测试也用 `org.junit.Test`  
+(DateTimeExtTest.kt:3,6); JUnit 5 (jupiter) 没有出现在任何构建文件里. 负责人参考清单以 JUnit 5  
+打头, 这是与基准的差距, 也少了 `@Nested`, `@TestFactory` 动态测试和扩展模型这些 JUnit 5 独有的  
+能力.
+
+**TEST-4 (中)**: UI 与截图测试能力没有接线. androidTest 的依赖只有 Compose BOM 约束  
+(Compose.kt:24) 加 test-core 与 test-ext-junit (KotlinAndroid.kt:80), 没有 `ui-test-junit4`,  
+`ui-test-manifest`, Espresso, UI Automator 或 Robolectric, 所以 `createAndroidComposeRule` 这类  
+入口今天连编译都过不了; 四个页面 (AppRoot, Home/Others/Prop 列表, Settings) 没有 UI 行为测试,  
+也没有截图基线 (对照 ui-tests, screenshot, compose testing 系列文档).
+
+### 参考材料
+
+测试角度的评判基准, 由负责人指定, 补入日期 2026-10-18:
+
+- JUnit 5
+- https://developer.android.google.cn/training/testing/local-tests
+- https://developer.android.google.cn/training/testing/local-tests/robolectric
+- https://developer.android.google.cn/training/testing/instrumented-tests
+- https://developer.android.google.cn/training/testing/instrumented-tests/stability
+- https://developer.android.google.cn/training/testing/instrumented-tests/performance
+- https://developer.android.google.cn/training/testing/ui-tests
+- https://developer.android.google.cn/training/testing/ui-tests/behavior
+- https://developer.android.google.cn/training/testing/ui-tests/screenshot
+- https://developer.android.google.cn/training/testing/fundamentals#compose-ui
+- https://developer.android.google.cn/training/testing/fundamentals/what-to-test
+- https://developer.android.google.cn/training/testing/fundamentals/test-doubles
+- https://developer.android.google.cn/training/testing/fundamentals/strategies
+- https://developer.android.google.cn/training/testing/other-components/ui-automator
+- https://developer.android.google.cn/studio/gemini/journeys
+- https://developer.android.google.cn/develop/ui/compose/testing
+- https://developer.android.google.cn/develop/ui/compose/testing/testing-cheatsheet
+- https://developer.android.google.cn/develop/ui/compose/testing/semantics
+- https://developer.android.google.cn/develop/ui/compose/testing/apis
+- https://developer.android.google.cn/develop/ui/compose/testing/migrate-v2
+- https://developer.android.google.cn/develop/ui/compose/testing/synchronization
+- https://developer.android.google.cn/develop/ui/compose/testing/interoperability
+- https://developer.android.google.cn/develop/ui/compose/testing/common-patterns
+- https://developer.android.google.cn/develop/ui/compose/testing/debug
+
 ## 检查过, 没有发现的问题
 
 - 阻塞的 shell, 属性和包工作在观察到的每个仓库调用点都在 `Dispatchers.IO` 之下  
@@ -512,3 +577,6 @@ WebView provider 反射 (`:1045-1111`) 和文件检查, 整套在每次下拉刷
   (`SettingsStore.kt:33-45`); 树里没有令牌或账号数据, 唯一的签名材料是 SEC-9 提到的 debug 签名库.
 - 反射是只读的 (没有对隐藏 API 的写入), `PropertyDefault` 调用 `SystemProperties.get` 时没有  
   `setAccessible` (`base/src/main/java/.../base/property/impl/PropertyDefault.kt:10-18`).
+- 测试基建的接线集中且正常: runner 与 test/androidTest 依赖在 build-logic 统一注入  
+  (build-logic/convention/src/main/kotlin/.../android/KotlinAndroid.kt:72-83), DateTimeExtTest 的  
+  用例覆盖了时间戳格式契约以及语言环境与时区的独立性.
