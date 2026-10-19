@@ -111,6 +111,8 @@ wrong. The long form of an activity lives in `docs/agents/` and is read when tha
 | [docs/agents/doc-formatting.md](docs/agents/doc-formatting.md) | you write a doc, a code comment, a commit message, or a reply |
 | [docs/requirements/README.md](docs/requirements/README.md) | you need what the app should do, who it is for, or where a capability sits in the release plan |
 
+Per-screen design is not a separate document: read the code under `ui/<feature>/`.
+
 ## Project overview
 
 Android app that surfaces low-level system characteristics: Treble and GSI compatibility,  

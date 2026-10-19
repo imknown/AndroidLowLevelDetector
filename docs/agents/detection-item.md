@@ -11,9 +11,13 @@ The workflow (list order = call order):
 2. Add a `detect...()` method to the feature `Repository` returning `MyModel`  
    (new Repository / DataSource classes join the graph via `@Inject` constructor injection;  
    a missing annotation fails the build with `[Metro/MissingBinding]`).
-3. Call it from the feature `ViewModel.collectModels()`: the call order defines the list order.
+3. Call it where the feature ViewModel builds the list: `collectModels()` for Others and Prop, and the  
+   `detect()` call it makes for Home. The call order defines the list order.
 4. Add the strings to the feature package's `strings.xml` (default English) plus the three translation files.
-5. If the item needs a new package with resources, register its res directory in  
+5. Add the item to [the detection item catalog](../requirements/04-detection-item-catalog.md) and its  
+   Chinese copy: a row in the screen's table and, on Home, its definition block with `question`,  
+   `techniques` and `tri-state semantics`. The catalog's order is the call order of step 3.
+6. If the item needs a new package with resources, register its res directory in  
    `app/build.gradle.kts` sourceSets.
-6. Verify with `./gradlew assembleFossDebug`; this step covers the change itself, and the verify flow that  
+7. Verify with `./gradlew assembleFossDebug`; this step covers the change itself, and the verify flow that  
    binds every session (see [AGENTS.md](../../AGENTS.md)'s Build and verify section) applies on top of it.

@@ -5,6 +5,9 @@
 > settings persistence, or shell/property access.  
 > The one-sentence decisions stay in AGENTS.md; this file carries the detail and the why.
 
+Per-screen design is not a separate document: read the code under `ui/`; this file carries the  
+cross-cutting decisions and their reasons.
+
 ## Navigation
 
 Navigation is **Navigation 3** (`androidx.navigation3`), not the mainstream Navigation 2:  

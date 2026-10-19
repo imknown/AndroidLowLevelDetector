@@ -5,6 +5,8 @@
 > 设置持久化, 或 shell/属性访问之前, 先读本文.  
 > 一句话的决策留在 AGENTS-cn.md 里; 本文承载细节和理由.
 
+逐屏设计不再单独成文: 直接读 `ui/` 下的代码; 本文承载跨切面的决策和理由.
+
 ## 导航
 
 导航用的是 **Navigation 3** (`androidx.navigation3`), 不是主流的 Navigation 2:  

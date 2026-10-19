@@ -90,6 +90,8 @@
 | [docs/agents-cn/doc-formatting.md](docs/agents-cn/doc-formatting.md) | 你写一份文档, 一条代码注释, 一笔提交信息, 或一条回复 |
 | [docs/requirements-cn/README.md](docs/requirements-cn/README.md) | 你需要知道应用应该做什么, 给谁用, 或某项能力排在发布计划的哪里 |
 
+逐屏设计不再单独成文: 直接读 `ui/<feature>/` 下的代码.
+
 ## 项目概览
 
 一个把底层系统特征摊开来看的 Android 应用: Treble 与 GSI 兼容性, Mainline/APEX 模块, system-as-root,  

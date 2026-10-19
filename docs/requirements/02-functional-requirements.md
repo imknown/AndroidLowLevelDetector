@@ -59,7 +59,8 @@ their phone at a glance. The parameter families, item by item in [the catalog](0
   architecture, Binder protocol bitness.
 - **Kernel**, **WebView user agent**.
 - **Raw property and settings dumps** (the Prop screen: `getprop`, build.prop, and the `Settings.System`,  
-  `Settings.Secure` and `Settings.Global` tables), shown row by row as they are, not parsed and not judged.
+  `Settings.Secure` and `Settings.Global` tables), split into a key and a value for display,  
+  not interpreted and not judged.
 - **Not in the parameter families**: hardware parameters such as memory, screen and battery. The app calls  
   none of `ActivityManager.MemoryInfo`, `WindowManager`, `DisplayMetrics` or `BatteryManager`, and does not  
   read `/proc/meminfo`; values of that kind can only appear **passively** in the Prop screen dumps, as part  
@@ -306,6 +307,18 @@ Which data the Home screen uses is decided by the network switch (FR-8, **off by
   version **as strings**. The versions are `yyyy-MM-dd HH:mm Z` datetimes, whose string order is their  
   chronological order, so the newer one wins: a newer bundled file overwrites the cache, and with no cache  
   the bundled one is used.
+- **The detection mode row** is the first row of the Home list. It renders the source this run used as  
+  `Online (<version>)` or `Offline (<version>)`, where `<version>` is the version of the json actually used,  
+  converted to the phone's local timezone:
+  - **Online**: the server json was fetched, parsed, and its version is a `yyyy-MM-dd HH:mm Z` datetime. A  
+    failure to write the cache is appended to the row and does not change the mode.
+  - **Offline**: the network switch is off, or any of the steps above failed. The row then also carries the  
+    failure text, one block per failure, below the mode line.
+  - **No usable json at all**: the version position shows `Unknown`.
+- A downloaded json whose version string is not a `yyyy-MM-dd HH:mm Z` datetime is unusable: the run treats it  
+  as a parse failure and continues offline.
+- The row's dot follows FR-15 and this item's own semantics (HOME-01 in the catalog): online is the good  
+  state, while offline and no-data are the worst state.
 - Every failure degrades per FR-6, and there is never a page-wide error.
 
 **Acceptance criteria**
@@ -349,5 +362,5 @@ Tapping an entire row triggers its action; not every row is a switch.
 **Acceptance criteria**
 
 - AC1: every listed item is present, the whole row is tappable, and each behaves as stated above.
-- AC2: the theme and scroll bar options take effect without a restart.
+- AC2: the theme and scroll bar options take effect in the app's own UI without a restart.
 - AC3: the variant-specific items follow their variant, and the `foss` store page never links to Google Play.
