@@ -396,12 +396,18 @@ and a status header inside that still says living is superseded.
   every other file of that doc carries the same change: revise the whole set in one pass. The twin mechanics  
   (which file is in force, which docs are mirrored, where the language marker goes, where links and  
   citations point, what adopting a new language adds) live in [doc-formatting.md](docs/agents/doc-formatting.md).
+- **Lists and sentences**: two or more parallel items go in a list, one item per line, when the text  
+  labels them (`(a)`, `1)`) or when each item is a clause.  
+  One sentence carries one idea: split a long sentence instead of capping the line at a fixed width.  
+  A numbered list writes the real start number on its first item and `1.` on every item after it.  
+  It applies to text being written or reworked (a doc, a code comment, a commit message, or a reply);  
+  a **frozen** or **record** doc keeps its own wording, apart from the punctuation and wrapping below.
 - **ASCII punctuation in every language**, **no dash as punctuation**, and **hard-wrap long lines by meaning**  
   hold in every doc, code comment, and chat reply, the **frozen**, **record**, and **scratch** ones included  
   (punctuation and wrapping are formatting, not the substance those statuses preserve).  
   [docs/agents/doc-formatting.md](docs/agents/doc-formatting.md) is the machinery: the banned wording lists  
-  and the rename table, the CJK-to-ASCII mapping and spacing cases, the dash rewrites per relation and the  
-  structural `--` exemptions, and the table and code-comment wrapping cases. Read it before you write a doc,  
-  a code comment, a commit message, or a reply to the owner, and whenever you convert or reflow text that  
-  already exists.
+  and the rename table, the CJK-to-ASCII mapping and spacing cases, the dash rewrites per relation, the  
+  structural `--` exemptions, the list and sentence rules, and the table and code-comment wrapping cases.  
+  Read it before you write a doc, a code comment, a commit message, or a reply to the owner, and whenever you  
+  convert or reflow text that already exists.
 - Keep a note short; when one grows too long, split it along its natural boundaries, keeping an index page in front.

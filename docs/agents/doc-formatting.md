@@ -4,7 +4,8 @@
 > Read this before you write or rework anything governed by the rules collected here (a doc, a code comment,  
 > a commit message, or a chat reply to the owner), and whenever you convert or reflow text that already exists.  
 > AGENTS.md states the prohibitions; this file holds the wording lists, the rename table, the CJK-to-ASCII  
-> mapping, the spacing cases, the exemptions, and the language and file-naming mechanics.
+> mapping, the spacing cases, the exemptions, the list and sentence rules, and the language and file-naming  
+> mechanics.
 
 ## Plain wording
 
@@ -19,11 +20,11 @@ Three kinds of wording are out:
    `crucial`, `paramount`, `Let us begin`, `In today's fast-moving world`.  
    In Chinese: `值得注意的是`, `综上所述`, `不难看出`, `众所周知`, `毋庸置疑`, `至关重要`, `重中之重`,  
    `让我们开始吧`, `在当今快速发展的时代`.
-2. **Marketing adjectives**: a claim nobody can check. Name the fact instead, or drop it: `seamless` says  
+1. **Marketing adjectives**: a claim nobody can check. Name the fact instead, or drop it: `seamless` says  
    "no manual step is needed", `powerful` says what the feature does, `robust` says which failures it handles.  
    Also out: `ultimate`, `disruptive`, `revolutionary`, `comprehensive`, `world-class`, `cutting-edge`,  
    `ecosystem`, `赋能`, `抓手`, `无缝`, `强大`, `极致`, `颠覆`, `革命性`, `全方位`, `高水平`, `高质量`, `生态`.
-3. **A cross-domain metaphor used as the name of a work item, a check, or a decision.**  
+1. **A cross-domain metaphor used as the name of a work item, a check, or a decision.**  
    The list is not what makes this work; the test is whether a reader who has not opened this repo's docs can  
    follow the sentence. Three groups, because their evidence differs:
    - written into this repo's own docs at some point: `bucket`, `gate`, `ledger`, `close-out`, `land`/`landing`,  
@@ -120,6 +121,8 @@ Rewrite each occurrence as equivalent words chosen by meaning:
 | A true aside | `(...)` | `(...)` |
 | A plain continuation | `,` | `,` |
 
+When the enumeration becomes a list, the colon stays and the list follows it.
+
 Naming the symbol inside inline code, as this rule does, is the only exception to that ban.
 
 A `--` that is not punctuation carries structure and stays as it is:
@@ -131,11 +134,37 @@ A `--` that is not punctuation carries structure and stays as it is:
 - A postfix decrement (`i--`).
 - The `git ... -- ` end-of-options marker.
 
+## When items go in a list
+
+Two or more parallel items go in a list, one item per line, when the text labels them (`(a)`, `1)`)  
+or when each item is a clause.  
+A short series of names, values, or short phrases inside one sentence is not an enumeration  
+and stays inline (`off` / `low` / `high`, `read and write`). A table cell keeps its series inline.  
+An example quoted in inline code does not trigger this rule.  
+A long item is wrapped by the hard-wrapping rules below like any other line,  
+but two items never share one line.
+
+When a paragraph is reworked, its inline enumerations are converted too. An untouched paragraph stays as it is.
+
+### Numbered lists
+
+A numbered list writes the real start number on its first item and `1.` on every item after it:  
+a 1-based list is `1.`, `1.`, `1.`. A 0-based list starts with `0.`.  
+The renderer numbers them, so an inserted item never shifts the rest.  
+Number the items when their order matters. Use bullets otherwise.
+
+## One idea per sentence
+
+One sentence carries one idea, so split a sentence whose last fact needs a second conjunction to reach it.  
+`and` fills that role in English, "和" or "而且" in Chinese.  
+A line's width follows its sentence; see the hard-wrapping rules below.  
+It applies to the same text as the list rule: text being written or reworked.
+
 ## Hard-wrapping long lines by meaning
 
 When a source line runs long, break it at a sentence or clause boundary  
 (a comma-ended clause is a valid break point, but a very short clause may stay on one line with what follows;  
-keep a short enumeration together). The point is that no line ends up too long overall, not a fixed width.
+keep a short series of names together). The point is that no line ends up too long overall, not a fixed width.
 
 Never break these; each stays on one source line:
 
