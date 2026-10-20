@@ -114,9 +114,14 @@ kotlinx.serialization, Ktor, libsu, JNI/NDK. DI 用 Metro (编译期, 无反射)
 
 - 只改文档或注释的编辑跳过构建那几档 (没改代码), 但下面那条 diff review 同样适用于它们.
 - **用 Android Studio 做分析**: 每批编辑之后, 先对每个改动文件跑 `android studio analyze-file`,  
-然后是上面那几档 Gradle 检查,  
+  再对每个改动的 `.kt` 文件跑 `node scripts/ils-diagnostics.js <file>`,  
+  然后是上面那几档 Gradle 检查,  
   再派一个新上下文的 subagent 在后台 review 未提交的 diff,  
   把发现汇报给负责人后停下: 无论是否走 spec 流程, 没有负责人的明确同意一律不提交.  
+  ILS 这一步排在 analyze-file 之后, Gradle 那些档位之前, 因为它把一个文件的每处编译类发现逐处列出,  
+  analyze-file 的结果做不到这一点 (那个结果在一个文件里只留一条消息文本相同的条目).  
+  analyze-file 排在最前, 因为它几秒就回, 读的是 IDE 的实时状态.  
+  Gradle 那些档位排在最后, 因为它们的任务是把编译类发现在整批改动上再讲一遍.  
   reviewer 欠每一条发现可核验的证据 (文件:行号), 且优先给 reviewer 选一个与写下这次改动时不同的模型:  
   这些义务约束每个会话, 不只是 spec 任务.  
   Review 按轮次进行 (v1, v2, ... 每修一轮顺延);  
@@ -133,7 +138,11 @@ kotlinx.serialization, Ktor, libsu, JNI/NDK. DI 用 Metro (编译期, 无反射)
     而读不到本会话自己的 effort 级别时, 该取值仍然出自负责人. 绝不猜 effort 级别;  
     [Git 与 CI](#git-与-ci) 里的提交 trailer 规则照常适用.
   - [docs/agents-cn/verification.md](docs/agents-cn/verification.md) 是那条命令的完整契约:  
-    依赖任何结果之前先读它, 并当心有些运行看着像通过其实不是 (坑清单和怎么读打印出来的分块都在那儿).
+    依赖任何结果之前先读它, 并当心有些运行看着像通过其实不是 (坑清单和怎么读打印出来的分块都在那儿).  
+    坑里的一条是: 一次运行在一个文件里只列出一条消息文本与别条相同的条目, 所以重复的发现只回来一次,  
+    位置要在源码里数. Gradle 那些档位把整批改动的每条编译类发现都打印出来, 每条一个 `Problem found:` 块,  
+    每块带一行 `Location:`.  
+    上面那一步 ILS 则从 JetBrains IntelliJ Language Server 把同一类发现按单个文件拉出来, 每一处都给出.
 
 ## 构建约定
 

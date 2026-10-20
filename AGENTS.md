@@ -135,9 +135,15 @@ kotlinx.serialization, Ktor, libsu, JNI/NDK. DI by Metro (compile-time, no refle
 
 - Docs and comment-only edits skip the build tiers (no code changed), but the diff review below applies to them too.
 - **Analyze with Android Studio**: after each edit batch, run `android studio analyze-file` for every  
-  changed file first, then the Gradle tiers above, then have a fresh-context subagent review the uncommitted  
+  changed file first, then `node scripts/ils-diagnostics.js <file>` for every changed `.kt` file, then the  
+  Gradle tiers above, then have a fresh-context subagent review the uncommitted  
   diff in the background, report the findings to the owner, and stop: nothing is committed without the  
   owner's explicit approval, spec flow or not.  
+  The ILS step comes after analyze-file and before the Gradle tiers because it lists every site of a  
+  compiler finding of one file, which the analyze-file result does not do (that result keeps one item per  
+  distinct message text per file).  
+  analyze-file stays first because it answers in seconds and reads the live IDE state.  
+  The Gradle tiers come last because they repeat the compiler findings over the whole batch.  
   The reviewer owes verifiable evidence (file:line) for every finding, and prefer a different model for the  
   reviewer than the one that wrote the change: those duties bind every session, not only a spec task.  
   Review is round-based (v1, v2, ... after each fix round); the delta-pass and fresh-reviewer policy in the  
@@ -160,7 +166,12 @@ kotlinx.serialization, Ktor, libsu, JNI/NDK. DI by Metro (compile-time, no refle
     applies.
   - [docs/agents/verification.md](docs/agents/verification.md) is the full contract for that command:  
     read it before you rely on a result, and beware that some runs look like a pass and are not  
-    (the trap list and how to read the printed blocks live there).
+    (the trap list and how to read the printed blocks live there).  
+    One of those traps is that a run lists one item per distinct message text per file, so a repeated  
+    finding comes back once: count the sites in the source. The Gradle tiers print every compiler  
+    finding over the batch, one `Problem found:` block per finding, each with a `Location:` line.  
+    The ILS step above pulls the same class of findings for a single file from the JetBrains IntelliJ  
+    Language Server, every site of each.
 
 ## Build conventions
 
