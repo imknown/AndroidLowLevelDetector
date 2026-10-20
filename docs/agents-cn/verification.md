@@ -26,13 +26,14 @@ android studio analyze-file --project=AndroidLowLevelDetector <path>
 
 ## 在验证流程中的位置
 
-先为每个改动过的文件跑 analyze-file, 再为每个改动的 `.kt` 文件跑 `node scripts/ils-diagnostics.js <file>`,  
+先在本 agent 自己的上下文里自审一遍改动 (AGENTS-cn.md 的构建与验证一节有这条规则).  
+接着为每个改动过的文件先跑 analyze-file, 再为每个改动的 `.kt` 文件跑 `node scripts/ils-diagnostics.js <file>`,  
 然后跑 AGENTS-cn.md 的构建与验证一节里的 Gradle 档位  
 (`assembleFossDebug`, `testFossDebugUnitTest`, `lintFossDebug`): IDE 的单文件结果几秒就回,  
 能尽早抓到编译错误和检查发现的问题, ILS 随后给出这些文件的编译类发现的完整清单,  
 Gradle 构建再对整批改动跑它自己的检查. 新上下文的 diff review 排在三者之后.
 
-这个顺序不是随便定的. analyze-file 排在最前, 因为它几秒就回, 而且读的是 IDE 的实时状态,  
+这个顺序不是随便定的. analyze-file 在检查里排在最前, 因为它几秒就回, 而且读的是 IDE 的实时状态,  
 明显的问题不用等更慢的东西. ILS 排在第二, 因为它把一个文件的每处编译类发现逐处列出,  
 analyze-file 的结果做不到这一点; 它自己还要做一次 Gradle 导入, 比 IDE 那次检查贵.  
 Gradle 那些档位排在最后, 因为它们的任务就是把编译类发现在整批改动上再讲一遍.

@@ -113,19 +113,23 @@ kotlinx.serialization, Ktor, libsu, JNI/NDK. DI 用 Metro (编译期, 无反射)
 ```
 
 - 只改文档或注释的编辑跳过构建那几档 (没改代码), 但下面那条 diff review 同样适用于它们.
-- **用 Android Studio 做分析**: 每批编辑之后, 先对每个改动文件跑 `android studio analyze-file`,  
+- **用 Android Studio 做分析**: 每批编辑之后, 写下这次改动的 agent 先在自己的上下文里 review 自己的 diff,  
+  发现问题直接修改, 再自查, 直到只剩不重要的措辞问题.  
+  然后对每个改动文件跑 `android studio analyze-file`,  
   再对每个改动的 `.kt` 文件跑 `node scripts/ils-diagnostics.js <file>`,  
   然后是上面那几档 Gradle 检查,  
-  再派一个新上下文的 subagent 在后台 review 未提交的 diff,  
+  最后派一个新上下文的 subagent 在后台 review 未提交的 diff,  
   把发现汇报给负责人后停下: 无论是否走 spec 流程, 没有负责人的明确同意一律不提交.  
   ILS 这一步排在 analyze-file 之后, Gradle 那些档位之前, 因为它把一个文件的每处编译类发现逐处列出,  
   analyze-file 的结果做不到这一点 (那个结果在一个文件里只留一条消息文本相同的条目).  
-  analyze-file 排在最前, 因为它几秒就回, 读的是 IDE 的实时状态.  
+  analyze-file 在检查里排在最前, 因为它几秒就回, 读的是 IDE 的实时状态.  
   Gradle 那些档位排在最后, 因为它们的任务是把编译类发现在整批改动上再讲一遍.  
   reviewer 欠每一条发现可核验的证据 (文件:行号), 且优先给 reviewer 选一个与写下这次改动时不同的模型:  
   这些义务约束每个会话, 不只是 spec 任务.  
-  Review 按轮次进行 (v1, v2, ... 每修一轮顺延);  
-  [docs/agents-cn/task-workflow.md](docs/agents-cn/task-workflow.md) 的 Review 步骤里那套增量复核与换新 reviewer 的策略同样约束每个会话.
+  subagent 发现只剩不重要的措辞问题时停止 review, 把这些发现报上来, 不要求再来一轮.  
+  Review 按轮次进行 (v1, v2, ... 每修一轮顺延), 自审在每一轮之前都跑, v1 和之后的每次 delta pass 都不例外;  
+  [docs/agents-cn/task-workflow.md](docs/agents-cn/task-workflow.md) 的 Review 步骤里那套增量复核与换新 reviewer 的策略同样约束每个会话.  
+  自审适用于每一次 subagent review, 不只是 diff: plan 或报告在交出去之前也要先自审一遍.
   - **选 reviewer 的模型和推理强度是负责人的决定**: 启动 reviewer 之前先取模型清单.  
     到底有没有一份模型清单, 以及它带着哪些字段, 取决于跑这个会话的 agent; 有的暴露这样的工具, 有的没有.  
     清单返回时, 把整张表展示给负责人, 工具带一个字段就给一列, 工具对某个模型有定位说明时就附上.  

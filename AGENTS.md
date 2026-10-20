@@ -134,20 +134,27 @@ kotlinx.serialization, Ktor, libsu, JNI/NDK. DI by Metro (compile-time, no refle
 ```
 
 - Docs and comment-only edits skip the build tiers (no code changed), but the diff review below applies to them too.
-- **Analyze with Android Studio**: after each edit batch, run `android studio analyze-file` for every  
-  changed file first, then `node scripts/ils-diagnostics.js <file>` for every changed `.kt` file, then the  
-  Gradle tiers above, then have a fresh-context subagent review the uncommitted  
+- **Analyze with Android Studio**: after each edit batch, the agent that made the change reviews its own  
+  diff in its own context, fixes what it finds, and repeats that pass until only unimportant wording  
+  issues remain. Then run `android studio analyze-file` for every  
+  changed file, then `node scripts/ils-diagnostics.js <file>` for every changed `.kt` file, then the  
+  Gradle tiers above, and finally have a fresh-context subagent review the uncommitted  
   diff in the background, report the findings to the owner, and stop: nothing is committed without the  
   owner's explicit approval, spec flow or not.  
   The ILS step comes after analyze-file and before the Gradle tiers because it lists every site of a  
   compiler finding of one file, which the analyze-file result does not do (that result keeps one item per  
   distinct message text per file).  
-  analyze-file stays first because it answers in seconds and reads the live IDE state.  
+  analyze-file stays first among the checks because it answers in seconds and reads the live IDE state.  
   The Gradle tiers come last because they repeat the compiler findings over the whole batch.  
   The reviewer owes verifiable evidence (file:line) for every finding, and prefer a different model for the  
   reviewer than the one that wrote the change: those duties bind every session, not only a spec task.  
-  Review is round-based (v1, v2, ... after each fix round); the delta-pass and fresh-reviewer policy in the  
+  The reviewer stops once only unimportant wording issues remain, and reports them without asking for  
+  another round.  
+  Review is round-based (v1, v2, ... after each fix round), and the self-review pass runs before every  
+  round, including v1 and each delta pass; the delta-pass and fresh-reviewer policy in the  
   Review step of [docs/agents/task-workflow.md](docs/agents/task-workflow.md) binds every session too.  
+  The self-review pass applies to every subagent review, not only a diff: a plan or a report gets the  
+  same pass before it is handed over.  
   - **Picking the reviewer model and the reasoning effort is the owner's call**: fetch the model list before  
     the reviewer is launched. Whether a model list exists at all, and which fields it carries, depends on  
     the agent running the session; some expose such a tool, some do not. When the list comes back, show  

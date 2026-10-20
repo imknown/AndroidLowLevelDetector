@@ -44,8 +44,8 @@ fatigue.)
 
 Before starting subtasks:
 
-- A fresh-context subagent reviews `plan.md` in the background; report the findings and wait for the owner to  
-  confirm them.
+- After the AI's own self-review pass, a fresh-context subagent reviews `plan.md` in the background; report  
+  the findings and wait for the owner to confirm them.
 - Once the owner confirms, commit `plan.md` automatically.
 - Generate ALL per-subtask modification plan reports (`subtask-01..NN`) in one pass, and have a fresh-context  
   subagent review that batch too, same loop as the code reviews (v1, v2, ...; findings wait for the owner's  
@@ -90,14 +90,17 @@ numbering stays 0..5.
 1. **Implement** (code comments written in the owner's chat language, explaining *why*, at the codebase's  
    density; before the commit all new comments are translated to English, i.e. the committed codebase  
    stays English; comment punctuation follows the ASCII rule in  
-   [Documentation Formatting Reference](doc-formatting.md)) and verify with  
+   [Documentation Formatting Reference](doc-formatting.md)), then review your own diff in your own context,  
+   fix what you find, and repeat until only unimportant wording issues remain; only then verify with  
    [the Android Studio checks](verification.md) plus the build.  
    For high-risk logic in unfamiliar areas, the owner reproduces it without AI first, then compares.  
    If the AI fails on the same problem twice, stop: the owner takes over or re-splits.  
    (Guards against deskilling, the ironies of automation (Bainbridge 1983): procedural memory needs practice;  
    and against endless retries.)
 2. **Review**: a fresh-context subagent reviews the uncommitted diff in the background: v1, then v2, v3, ...  
-   after each fix round. Later rounds may resume the same reviewer for a delta pass (it re-reads only what  
+   after each fix round. Step 1 runs the self-review pass and then the checks, so v1 starts from a checked  
+   diff; after each fix round, that same sequence runs over the fixes before the next round.  
+   Later rounds may resume the same reviewer for a delta pass (it re-reads only what  
    changed since its own previous round, because its evidence base is already checked, so it is faster and  
    cheaper), but go back to a fresh reviewer when fixes rewrite large parts of the diff, when the owner  
    rejected most findings, when the reused context grows bloated, or for a final independent acceptance pass.  
@@ -123,8 +126,9 @@ numbering stays 0..5.
 ## When the review loop stops
 
 Review rounds chase substance: subjective style preferences and premature-optimization suggestions do not force  
-another round. If rounds keep churning without new findings, surface that to the owner instead of looping  
-forever.
+another round. The reviewer stops once only unimportant wording issues remain, and reports them without  
+asking for another round. If rounds keep churning without new findings, surface that to the owner instead of  
+looping forever.
 
 ## Deviation record
 

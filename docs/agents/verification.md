@@ -29,14 +29,15 @@ android studio analyze-file --project=AndroidLowLevelDetector <path>
 
 ## Place in the verify flow
 
-Run analyze-file first for every changed file, then `node scripts/ils-diagnostics.js <file>` for every
+The agent's own self-review pass comes before the checks (the Build and verify rule in AGENTS.md). Then run
+analyze-file first for every changed file, then `node scripts/ils-diagnostics.js <file>` for every
 changed `.kt` file, then the Gradle tiers from AGENTS.md's Build and verify section
 (`assembleFossDebug`, `testFossDebugUnitTest`, `lintFossDebug`): the per-file IDE result comes back in
 seconds and catches compile errors and inspection findings early, the ILS then gives the complete list of
 the compiler findings of those files, and the Gradle build runs its check over the whole batch. The
 fresh-context diff review comes after all three.
 
-The order is not arbitrary. analyze-file stays first because it answers in seconds and reads the live
+The order is not arbitrary. analyze-file stays first among the checks because it answers in seconds and reads the live
 IDE state, so the obvious break shows up before anything slower runs. The ILS step comes second because
 it lists every site of a compiler finding of one file, which the analyze-file result does not do, and
 because it needs a Gradle import of its own, so it costs more than the IDE check. The Gradle tiers
