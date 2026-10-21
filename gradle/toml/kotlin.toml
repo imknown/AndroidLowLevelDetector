@@ -9,7 +9,7 @@ kotlinx-collections-immutable = "0.5.2"
 kotlinx-coroutines = "1.11.0"
 
 # https://github.com/Kotlin/kotlinx.serialization/releases
-kotlinx-serialization = "1.12.0-RC"
+kotlinx-serialization = "1.12.0"
 
 # https://github.com/ktorio/ktor/releases
 ktor = "3.6.0"
