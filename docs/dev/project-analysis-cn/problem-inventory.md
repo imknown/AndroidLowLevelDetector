@@ -1395,7 +1395,7 @@
 
 ### PA-120 (中) 没有测试策略文档与约定
 
-- `docs/agents/` 只有 architecture, build-conventions, detection-item, doc-formatting,  
+- `docs/agents-cn/` 只有 architecture, build-conventions, detection-item, doc-formatting,  
   task-workflow, verification 六个文件, 没有 testing; `AGENTS-cn.md` 也没有测试一节.  
   于是分层, 跑在哪, 什么时候跑, 谁负责都没有书面定义, 而 Testing strategies  
   明确要求写一份测试策略并随团队演进.

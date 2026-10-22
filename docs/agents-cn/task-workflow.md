@@ -125,8 +125,9 @@ subagent 发现只剩不重要的措辞问题时停止 review, 把这些发现�
 
 ## 归档
 
-任务彻底结束时 (进度记录的下一步动作为无), 它的整个 spec 目录原样移到  
-`docs/spec/archived/` 之下, 此后不再编辑.
+任务彻底结束时 (进度记录的下一步动作为无), 它的整个 spec 目录原样移到 `docs/spec/archived/` 之下.  
+以后你还可以用平实语言重写这份正文, 要先取得负责人同意, 而且不改动这个 spec 目录说过的事.  
+步骤见 [doc-formatting.md](doc-formatting.md) 的 `重写已有文本时不改实质` 一节.
 
 - 移动本身就声明该目录是 **record** (状态模型见  
   [AGENTS-cn.md](../../AGENTS-cn.md#文档规则)); 进度记录的抬头还写着 living 时, 那是被位置取代了,  
