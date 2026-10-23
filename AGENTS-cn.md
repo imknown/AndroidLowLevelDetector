@@ -303,8 +303,8 @@ Screen (Compose) → ViewModel (StateFlow) → Repository → DataSource
 
 ## 绝不提交
 
-- 凭据, 签名材料, 本地配置 (`local.properties`, `keys/release.jks`, `google-services.json`)  
-  绝不提交, 也不许用 `git add -f` 强制加进去. 根 `.gitignore` 已经把它们排除了.
+- 凭据, 签名材料, 本地配置 (`local.properties`, `keys/release.jks`, `google-services.json`) 绝不提交,  
+  也不许用 `git add -f` 强制加进去. 根 `.gitignore` 已经把它们排除了.
 - 一个改动看着非提交这类文件不可时, 先停下来问.
 
 ## 文档规则
