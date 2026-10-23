@@ -21,16 +21,18 @@
 
 - 一条**讲代码**的陈述是事实. 照着它做之前, 先对照当前代码验证一遍.
 - 一条**讲问题**的陈述是估算. 这类陈述说的是一个问题有多重, 不是代码做什么. 写在文档或表格的哪一格都算,  
-  现在就在那儿的和以后加上去的也一样. 这类陈述给问题定量, 永远不给修复设上限. 评级把问题说小了, 而负责人要  
-  把问题清掉, 那还是该做彻底的修复. 照着那个评级就推荐浅的修法, 正是这条规则要拦的事.
+  现在就在那儿的和以后加上去的也一样. 这类陈述给问题定量, 永远不给修复设上限.  
+  评级把问题说小了, 而负责人要把问题清掉, 那还是该做彻底的修复.  
+  照着那个评级就推荐浅的修法, 正是这条规则要拦的事.
 - **负责人定下的约定**有约束力, 三类里只有它有. 一条陈述算约定, 是因为它规定代码*应该*怎么做.  
   文档只是记下现在怎么做, 这不算约定. 所以改不改这种做法归负责人定, 也不能拿这个当理由, 把负责人往弱修法上带.
 
 一条划定改动范围的规则 (要么只管被点名的东西, 要么不许让已有的问题更糟) 说的是你接手哪个问题.  
 它从来不说你接手之后可以修得多浅. 把接手的问题解决掉, 本来就算相关工作.
 
-上面这些只看陈述的主语, 只有笔记的**状态**是例外. 一份笔记标成 record 或 frozen, 就是负责人把它从今天  
-的规定里撤走, 所以里面那句 "必须怎么做" 不约束任何人 (见 [文档规则](#文档规则)).
+上面这些只看陈述的主语, 只有笔记的**状态**是例外.  
+一份笔记标成 record 或 frozen, 就是负责人把它从今天的规定里撤走,  
+所以里面那句 "必须怎么做" 不约束任何人 (见 [文档规则](#文档规则)).
 
 本文件不列 "哪一格算什么" 的清单, 因为这里不是这么运作的. 检验标准就是陈述的主语.  
 光看文档判断不出一句陈述算哪类时, 拿来问, 别默认照办.
@@ -67,7 +69,7 @@
   候选只从跟这个问题有关的东西里挑 (边界怎么划: 见上面 "一条指令只管被点名的东西").  
   候选里要推荐那个能把问题彻底解决的. 便宜的那个只当候选列出来, 绝不当作默认;  
   文档里的评级或某一列, 也不能拿来当理由挑浅的那个 (见开头).
-- **English by default**: 你生成的代码注释和提交信息一律用英语, 用户另有说明时除外. 文档用什么语言, 由负责人定.  
+- **English by default**: 你生成的代码注释和提交信息一律用英语, 用户另有说明时除外. 文档用什么语言, 负责人定.  
   只有一条例外: 一条**新增**的代码注释在实施期间用负责人的聊天语言写, 这样负责人看没完工的东西时读的是自己的语言.  
   入库的代码库还是英语, 所以每条这样的注释在提交前都要翻成英语.  
   这笔翻译归当下这次改动的确认点做, 不是只有任务工作流的第 1 步才做: 一次没开 spec 目录的改动,  
@@ -85,8 +87,8 @@
 
 ## 细节写在哪份文档里
 
-本文件是规则的正本, 也是索引: 它留下约束每个会话的东西, 再加上容易做错的流程要点. 每项活动的长文放在  
-`docs/agents-cn/`, 活动开始的时候去读.
+本文件是规则的正本, 也是索引: 它留下约束每个会话的东西, 再加上容易做错的流程要点.  
+每项活动的长文放在 `docs/agents-cn/`, 活动开始的时候去读.
 
 | 读 | 什么时候 |
 |---|---|
@@ -104,8 +106,8 @@
 
 这个 Android 应用读出设备的底层系统特征, 一项项列出来: Treble 与 GSI 兼容性, Mainline/APEX 模块, system-as-root,  
 A/B 分区, Binder 位数, 安全补丁级别. 技术栈是 Kotlin, Jetpack Compose (单 Activity, Navigation 3),  
-MVVM 加 StateFlow 的单向数据流, kotlinx.serialization, Ktor, libsu, JNI/NDK. 依赖注入用 Metro  
-(编译期完成, 不走反射).
+MVVM 加 StateFlow 的单向数据流, kotlinx.serialization, Ktor, libsu, JNI/NDK.  
+依赖注入用 Metro (编译期完成, 不走反射).
 
 - 应用 id 是 `net.imknown.android.forefrontinfo`; 版本信息在 `gradle/toml/build.toml`.
 - 模块: `:app` (Compose UI, 各功能在 `ui` 下) · `:base` (`IProperty`/`IShell` 抽象) ·  
@@ -137,10 +139,10 @@ MVVM 加 StateFlow 的单向数据流, kotlinx.serialization, Ktor, libsu, JNI/N
   给 reviewer 选的模型, 最好跟写下这次改动用的模型不一样.  
   这些义务每个会话都要守, 不只是 spec 任务.  
   只剩下不重要的措辞问题时, reviewer 就停止 review, 把这些发现报上来, 不再要求多一轮.  
-  Review 按轮次来 (v1, v2, ... 每修一轮往后排一轮). 每一轮之前都要先自审, v1 和后面的每次  
-  delta pass 都不例外.  
-  [docs/agents-cn/task-workflow.md](docs/agents-cn/task-workflow.md) 的 Review 步骤里那套增量复核和换新  
-  reviewer 的做法, 每个会话都要守.  
+  Review 按轮次来 (v1, v2, ... 每修一轮往后排一轮).  
+  每一轮之前都要先自审, v1 和后面的每次 delta pass 都不例外.  
+  任务工作流细则的 Review 步骤里写着增量复核和换新 reviewer 的做法, 每个会话都要守.  
+  见 [docs/agents-cn/task-workflow.md](docs/agents-cn/task-workflow.md).  
   自审不只针对 diff, 每次 subagent review 都要: 交出去之前的 plan 或报告也要先自审一遍.
   - **reviewer 用哪个模型, 用哪一档推理强度, 负责人定**: 启动 reviewer 之前先把模型清单取出来.  
     到底有没有这份清单, 它带着哪些字段, 取决于跑这个会话的 agent; 有的暴露这样的工具, 有的没有.  
@@ -170,12 +172,13 @@ MVVM 加 StateFlow 的单向数据流, kotlinx.serialization, Ktor, libsu, JNI/N
   所以模块的 `build.gradle.kts` 里绝不写裸坐标; 引用之前先定这个依赖归哪份目录.
 - SDK, build-tools, NDK 的版本只写在 `gradle/toml/build.toml` 里, 配一个 `isPreview` 开关,  
   再由 `build-logic` 的约定插件下发给各模块. 模块脚本里绝不硬编码 SDK 级别.
-- 正文里不写版本号. 哪个构建文件存着这个值, 真值源就是它, 所以文档, 代码注释, 提交信息都点名那个文件或  
-  它背后的 key, 不复述数字. 存这些值的地方有五份目录 (`gradle/toml/` 下, 在 `build-logic` 里也能用  
-  `buildVersion("<key>")` 取), `gradle/wrapper/gradle-wrapper.properties`,  
-  `gradle/gradle-daemon-jvm.properties`. 一个 `.kts` 脚本或一个 `.properties` 文件,  
-  分量跟一份 `.toml` 目录完全一样. 禁令管的是我们自己构建文件里的值. 外面世界的版本  
-  (某条上游发布线, 某个 API level), 句子讲的就是它时, 就留在句子里.
+- 正文里不写版本号. 哪个构建文件存着这个值, 真值源就是它,  
+  所以文档, 代码注释, 提交信息都点名那个文件或它背后的 key, 不复述数字.  
+  存这些值的地方有五份目录 (`gradle/toml/` 下, 在 `build-logic` 里也能用 `buildVersion("<key>")` 取),  
+  `gradle/wrapper/gradle-wrapper.properties` 和 `gradle/gradle-daemon-jvm.properties`.  
+  一个 `.kts` 脚本或一个 `.properties` 文件, 分量跟一份 `.toml` 目录完全一样.  
+  禁令管的是我们自己构建文件里的值. 外面世界的版本 (某条上游发布线, 某个 API level),  
+  句子讲的就是它时, 就留在句子里.
 - Kotlin 编译器带着一组实验性 flag 跑, 这些 flag 声明在 `build-logic` 里. 它们是故意加的, 别删.  
   每升一次 Kotlin 就把这些 flag 分组重新看一遍, 已经稳定的去掉. 代码风格是 `official`.
 - 版本分级: RC 或 Stable 的依赖和工具链版本可以直接进生产.  
@@ -185,14 +188,14 @@ MVVM 加 StateFlow 的单向数据流, kotlinx.serialization, Ktor, libsu, JNI/N
 ## 模块细节
 
 - `:app`: 应用本身; namespace 也是 applicationId. 它的 `sourceSets` 注册了贴着包路径的 res 目录.  
-  资源放在 `java/<package>/.../res` 这样的路径下, 比如  
-  `app/src/main/java/net/imknown/android/forefrontinfo/ui/home/res`. 这里没有 `app/src/main/res`,  
+  资源放在 `java/<package>/.../res` 这样的路径下.  
+  比如 `app/src/main/java/net/imknown/android/forefrontinfo/ui/home/res`. 这里没有 `app/src/main/res`,  
   所以新加一个 res 目录, 必须去 `app/build.gradle.kts` 的 sourceSets 里注册.
 - `build-logic`: 一个 included build, 里面装的是约定插件. 所有模块的 SDK 和构建值只从它这里来.  
-  公共配置 (SDK, desugaring, Java 工具链, Kotlin 编译器参数, 测试依赖) 写在  
+  公共配置有 SDK, desugaring, Java 工具链, Kotlin 编译器参数, 测试依赖, 都写在一处:  
   `build-logic/convention/src/main/kotlin/.../android/`; 模块只负责 apply 插件.  
-  新增一个约定插件: 在 `build-logic/convention` 下实现, 然后在 `gradle/toml/android.toml` 的  
-  `[plugins]` 一节里注册一个 alias.
+  新增一个约定插件: 在 `build-logic/convention` 下实现,  
+  然后在 `gradle/toml/android.toml` 的 `[plugins]` 一节里注册一个 alias.
 
 ## 架构
 
@@ -233,11 +236,12 @@ Screen (Compose) → ViewModel (StateFlow) → Repository → DataSource
 - UI 层 (Compose / ViewModel) 绝不用 try 去接业务异常. Repository 和 DataSource 要么自己把失败处理掉,  
   要么返回 wrapper 类型; 名字不带 `OrThrow` 后缀的函数, 约定就是不抛.  
   异常能跑到 UI 层, 就是要从源头修的 bug, 不该让 UI 咽下去.
-- 全局的 `myAndroid` (`AndroidVersionExt`) 只有两处代码会写它: 启动时的 `initMyAndroid()`  
-  (`MyApplication.onCreate`, 读运行时的 `Build.VERSION`), 和 `HomeRepository.detectAndroid()`  
-  里那段已知值覆盖. 别的地方一律不许给它赋值, 因为 `isAtLeast...()` 这些辅助函数到处都在读它.
-- minSdk 从 `gradle/toml/build.toml` 来. 新一点的 API 要用 `isAtLeastAndroidX()` 辅助函数或  
-  `@RequiresApi` 挡住.
+- 全局的 `myAndroid` (`AndroidVersionExt`) 只有两处代码会写它:  
+  启动时的 `initMyAndroid()` (`MyApplication.onCreate`, 读运行时的 `Build.VERSION`),  
+  和 `HomeRepository.detectAndroid()` 里那段已知值覆盖.  
+  别的地方一律不许给它赋值, 因为 `isAtLeast...()` 这些辅助函数到处都在读它.
+- minSdk 从 `gradle/toml/build.toml` 来.  
+  新一点的 API 要用 `isAtLeastAndroidX()` 辅助函数或 `@RequiresApi` 挡住.
 - 新代码用钉住的版本允许的最新语法和 API. 绝不写比工具链允许的更老的写法. 要紧的是这三样:
   - 现在的 Kotlin 版本支持的最新 Kotlin 语法和 std-lib API
   - 现在的 compileSdk 给得出的最新平台 API
@@ -250,8 +254,9 @@ Screen (Compose) → ViewModel (StateFlow) → Repository → DataSource
 
 ## 本地化
 
-- 字符串按功能包拆开. 支持的 locale 有: 默认 (英语), `zh-rCN`, `zh-rTW`, `fr-rFR`  
-  (`localeFilters` + `generateLocaleConfig`). 要加一门新语言时, 把它的 locale 加进 `localeFilters`.
+- 字符串按功能包拆开. 支持的 locale 有:  
+  默认 (英语), `zh-rCN`, `zh-rTW`, `fr-rFR` (`localeFilters` + `generateLocaleConfig`).  
+  要加一门新语言时, 把它的 locale 加进 `localeFilters`.
 - 新的面向用户字符串一律要有默认英语条目; 做得到的时候, 把三个翻译文件一起更新.
 - 各语言自己的排版标点 (中文用全角冒号, 法语冒号前面要留空格, ...) 只管面向用户的本地化文案.  
   [文档规则](#文档规则) 里那条 ASCII 标点规则照样管文档, 代码注释, 还有非文案的字符串资源 (存储 key, URI,  
@@ -259,7 +264,7 @@ Screen (Compose) → ViewModel (StateFlow) → Repository → DataSource
 
 ## 任务工作流 (docs/spec)
 
-负责人就是开发者本人. AI 做搜索, 分析, 编码, 测试, review. 目标, 边界, 判断, 提交, 这四样都由负责人定.  
+负责人就是开发者本人. AI 做搜索, 分析, 编码, 测试, review. 目标, 边界, 判断, 提交, 这四样负责人定.  
 每个确认点都要以负责人的明确同意收尾: 负责人没明确同意就不提交 (走不走 spec 流程都一样),  
 没同意也不许开下一步.
 
@@ -329,27 +334,28 @@ Screen (Compose) → ViewModel (StateFlow) → Repository → DataSource
 - 文档只写负责人说过的或代码显示的. 不能为了让某一行或某一句看着完整就加术语, 加检测条目, 加限定语.  
   词汇表的每一行只管这份文档自己用到的词. 一行的最后一处引用没了, 那是拿来问的,  
   不能因为这个词谁都认识就留着.
-- **大白话**: 每个短语都要一遍读懂. 不许自造简称; 不许给后面要依赖的东西起比喻性的外号  
-  (比如把一批工作项叫成 "桶"); 不许用文档里没介绍过的缩写. 沿用 AGENTS-cn.md 或本文档已经定义过的词;  
+- **大白话**: 每个短语都要一遍读懂.  
+  不许自造简称; 不许给后面要依赖的东西起比喻性的外号 (比如把一批工作项叫成 "桶");  
+  不许用文档里没介绍过的缩写. 沿用 AGENTS-cn.md 或本文档已经定义过的词;  
   真是新词, 就在它第一次出现的地方定义. 代码注释和给负责人的聊天回复也按这个标准来.  
   一句里有三个以上并列分句, 或者说到一半主语换了, 或者要读第二遍才知道谁对谁做了什么, 就拆开.  
   句式挑最短还能把意思说全的那个: 一个主句加一个事实, 好过在主句上挂三层限定语.
-- **禁止的句式**: 词都对, 句式照样可能是错的. 全表和每一种怎么改, 在  
-  [docs/agents-cn/doc-formatting.md](docs/agents-cn/doc-formatting.md) 的 `禁止的句式` 一节.  
+- **禁止的句式**: 词都对, 句式照样可能是错的.  
+  全表和每一种的改法在 [docs/agents-cn/doc-formatting.md](docs/agents-cn/doc-formatting.md) 的 `禁止的句式` 一节.  
   最容易写出来的是这四条:
   - 否定式对比 (`不是 X, 而是 Y`, `并非 X, 而是 Y`)
   - 把刚说过的话再说一遍
   - 让事物做人的动作, 或者无人称的公文被动 (`由负责人决定`, `予以记录`)
   - 句式比意思还复杂
 - **译本要像用那门语言原写的**: 别照搬原语言的句式和语序, 也别写成公文腔. 中文就该主语和动词先出,  
-  把定语从句拆成单独一句, 主语要再写一遍就再写一遍, 别连着用 `它`/`该`/`其`, 说法按中文自己的习惯写  
-  (`住在` 对应 lives in, `欠` 对应 owes, 这两个就是照搬出来的). `由 ... 决定`, `予以记录`, `上述`, `此类`  
-  这类空话不写. 仓库以后加别的语言的副本, 同样按那门语言的习惯写. 词要日常, 但 `必须` 和 `绝不` 的力度不许松.  
-  句子规则和对照表见  
-  [docs/agents-cn/doc-formatting.md](docs/agents-cn/doc-formatting.md) 的 `中文怎么写` 一节.
-- **给负责人的聊天回复**: 写给一个没打开过本文件的人看. 这条标准对你写作的任何一种语言都一样:  
-  [docs/agents-cn/doc-formatting.md](docs/agents-cn/doc-formatting.md) 里的词表是本仓库写出过的写法和负责人  
-  点名的写法, 不是规则的边界.  
+  把定语从句拆成单独一句, 主语要再写一遍就再写一遍, 别连着用 `它`/`该`/`其`,  
+  说法按中文自己的习惯写 (`住在` 对应 lives in, `欠` 对应 owes, 这两个就是照搬出来的).  
+  `由 ... 决定`, `予以记录`, `上述`, `此类` 这类空话不写. 仓库以后加别的语言的副本, 同样按那门语言的习惯写.  
+  词要日常, 但 `必须` 和 `绝不` 的力度不许松.  
+  句子规则和对照表见 [docs/agents-cn/doc-formatting.md](docs/agents-cn/doc-formatting.md) 的 `中文怎么写` 一节.
+- **给负责人的聊天回复**: 写给一个没打开过本文件的人看. 这条标准对你写作的任何一种语言都一样.  
+  [docs/agents-cn/doc-formatting.md](docs/agents-cn/doc-formatting.md) 里的词表是两种来源:  
+  本仓库写出过的写法, 和负责人点名的写法. 词表不是规则的边界.  
   先给结果, 再给原因. 只有在等负责人答复时, 才加一句话说下一步做什么.  
   只说会改变负责人决定的内容: 不复述问题, 不把规则原文背回给负责人, 结尾不加没人要的总结.  
   不叙述内部工作: 你在守哪条规则, 你打算查什么, 你自己的判断怎么推出来的.  
@@ -357,9 +363,8 @@ Screen (Compose) → ViewModel (StateFlow) → Repository → DataSource
   给出内容, 去掉那些一步步交代自己过程的文字.  
   指称一样东西时用代码符号, 文件路径或原文字符串, 本文件自起的外号不算名字.  
   本文件定义的术语确实是最清楚的说法时, 先用大白话说它, 再把术语放进括号, 而且只放第一次.  
-  禁用词表和改过名的术语清单见  
-  [docs/agents-cn/doc-formatting.md](docs/agents-cn/doc-formatting.md) 的 `用词要平实` 和  
-  `本仓库改过名的术语` 两节.  
+  禁用词表在 [docs/agents-cn/doc-formatting.md](docs/agents-cn/doc-formatting.md) 的 `用词要平实` 一节,  
+  改过名的术语清单在同文件的 `本仓库改过名的术语` 一节.  
   聊天回复的口吻:  
   - 自称先认自己的 agent 名字, Qoder 就自称 Qoder 小姐. 称呼负责人为老板.  
   - 人设是一个充满活力, 活泼幽默的少女: 说话带俏皮和元气, 偶尔撒一点娇, 用 `呀` `啦` `嘛` 这类语气词, 点到为止.  
@@ -369,11 +374,12 @@ Screen (Compose) → ViewModel (StateFlow) → Repository → DataSource
   - 再怎么活泼, 一遍就要让老板看懂.  
   - 这套只管聊天回复. 代码, 注释, 提交信息, 文档都不带这个口吻.
 - 留在正文里的是实质和导航: 句子划的范围或给的例外, 按 ID 的交叉引用, 代码符号.  
-  **谁在什么时候决定了什么, 不是正文**: 带日期的决定属于 `git log`, 不该变成每句后面挂一个  
-  "负责人决定, <日期>" 的标签. 一份带版本行的文档点名版本并指向 `git log`; 它不攒修订记录.
+  **谁在什么时候决定了什么, 不是正文**: 带日期的决定属于 `git log`.  
+  不该给每句挂一个 "负责人决定, <日期>" 的标签. 一份带版本行的文档点名版本并指向 `git log`;  
+  它不攒修订记录.
 - 语言与文件命名:  
-  - 每份文档和文件名用什么语言, 由负责人定, 仓库不做默认语言的预设.  
-  - 标识加在哪, 链接和引用指向哪里, 一对副本要同步什么, 写在  
+  - 每份文档和文件名用什么语言, 负责人定, 仓库不做默认语言的预设.  
+  - 标识加在哪, 链接和引用指向哪里, 一对副本要同步什么, 都写在同一节里:  
     [docs/agents-cn/doc-formatting.md](docs/agents-cn/doc-formatting.md) 的语言与文件命名一节.  
   - 仓库现状: 规则只有本文件一份, 根 `AGENTS.md` 只是指向这里的一行, 所以没有需要双向同步的镜像对.  
     活动长文和需求正文也只有中文一份, 在 `docs/agents-cn/` 和 `docs/requirements-cn/`.
@@ -386,14 +392,14 @@ Screen (Compose) → ViewModel (StateFlow) → Repository → DataSource
 - **重写不许改实质**: 重写已有的文本时, 代码块, 命令, 路径, 标识符, 版本, URL, 文件名,  
   还有从界面引来的原文, 一律逐字保留. 不加事实, 不减事实, 每条规定的力度和每条例外的范围都保持原样.  
   判断不出原来那句话有多强时, 问负责人, 别自己挑一种读法.  
-  完整步骤见 [docs/agents-cn/doc-formatting.md](docs/agents-cn/doc-formatting.md) 的  
-  `重写已有文本时不改实质` 一节.
+  完整步骤在另一节里:  
+  [docs/agents-cn/doc-formatting.md](docs/agents-cn/doc-formatting.md) 的 `重写已有文本时不改实质` 一节.
 - **任何语言都用 ASCII 标点**, **不把破折号当标点**, **长行按语义硬换行**:  
   这三条每一份文档, 每一条代码注释, 每一次聊天回复都要守, **frozen**, **record**, **scratch** 的也一样.  
   聊天里的 emoji 和颜文字不算标点, 不在这三条之内.  
   标点和换行是排版, 不是那几种状态要保住的东西.  
-  写文档, 代码注释, 提交信息或给负责人的回复之前读  
-  [docs/agents-cn/doc-formatting.md](docs/agents-cn/doc-formatting.md), 转换或重排已有文本时也要读.  
+  写文档, 代码注释, 提交信息或给负责人的回复之前要读它, 转换或重排已有文本时也要读:  
+  [docs/agents-cn/doc-formatting.md](docs/agents-cn/doc-formatting.md).  
   它是机械部分, 里面有:
   - 禁用词表和改名对照表
   - 禁止的句式
@@ -405,6 +411,6 @@ Screen (Compose) → ViewModel (StateFlow) → Repository → DataSource
   - 重写已有文本的步骤
   - 表格和代码注释的换行例外
 - **不许长篇大论**: 一段只说一件事; 一段里有第二件事, 就拆成两段. 一条规定只在管它的那份文件里写一遍,  
-  别处给指向它的链接. 本文件留禁令, 细则在  
+  别处给指向它的链接. 本文件留禁令, 长度的细则留一个指针:  
   [docs/agents-cn/doc-formatting.md](docs/agents-cn/doc-formatting.md) 的 `长度: 不许长篇大论` 一节.
 - 笔记别写长; 一份长到过头时, 照它天然的边界拆开, 前面留一页当索引.
