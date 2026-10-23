@@ -2,9 +2,9 @@
 
 > **状态**: **living**, 属于[需求文档](README.md).
 
-逐条列出应用检查什么, 按每屏产生行的顺序. 这份目录是 [FR-1](02-functional-requirements.md) 和  
-[FR-2](02-functional-requirements.md) 的范围: FR-1 是 Home 条目, 它们的行带结论;  
-FR-2 是其余全部.
+这份目录逐条列出应用检查什么, 顺序就是每屏产生行的顺序.  
+[FR-1](02-functional-requirements.md) 和 [FR-2](02-functional-requirements.md) 的范围都在这份目录里:  
+FR-1 是 Home 条目, 那些行带结论; FR-2 是其余全部.
 
 **计数规则**: 按检测条目计数, 不按屏幕行数: Home 23, Others 37, Prop 5, **共 65**.  
 Home 显示 25 行, 因为有两个条目各产生两行. Others 的分区指纹按分区各一行,  
@@ -14,13 +14,13 @@ Prop 按属性, 设置项或 build.prop 行各一行, 所以这两屏的行数�
 Others 和 Prop 是纯展示: 信息行, 没有结论, 没有颜色.
 
 **条目 id**: `HOME-01` ... `HOME-23`, `OTH-01` ... `OTH-37`, `PROP-01` ... `PROP-05`.  
-编号是该条目在所属屏列表里的位置, 而一屏的列表顺序就是该功能 ViewModel 构建列表的顺序:  
-Others 与 Prop 是 `collectModels()`, Home 是它调用的 `detect()`.  
-新条目追加到列表末尾时取下一个编号; 插进中间时, 它后面条目的编号依次顺延,  
+编号是这个条目在所属屏列表里的位置. 一屏的列表顺序就是那个功能 ViewModel 构建列表的顺序:  
+Others 与 Prop 在 `collectModels()` 里排出来, Home 在 `collectModels()` 调用的 `detect()` 里排出来.  
+新条目追加到列表末尾时取下一个编号; 插进中间时, 后面的条目依次顺延,  
 所有引用这个 id 的文档要在同一次改动里一起更新.
 
 **失败行**: 每个 Home 条目的失败行都是红色, 错误文字写在这一行的内容里 (FR-6).  
-所以下面的定义只列该条目自己区分的结果.
+所以下面的定义只列这个条目自己区分的结果.
 
 ## Home (23 条)
 
@@ -77,25 +77,25 @@ Others 与 Prop 是 `collectModels()`, Home 是它调用的 `detect()`.
 
 #### HOME-04 Build ID
 
-- **问题**: 这个构建是否和参考数据里该 Android 版本的构建一样新?
-- **手段**: 公开 SDK API (`Build.ID`), `ro.system.build.id` / `ro.vendor.build.id` /  
-  `ro.odm.build.id` 属性, 与参考数据比对.
-- **三态语义**: 绿: 构建日期不早于该版本参考数据里的第一条构建;  
+- **问题**: 这个构建是否和参考数据里那个 Android 版本的构建一样新?
+- **手段**: 公开 SDK API (`Build.ID`),  
+  `ro.system.build.id` / `ro.vendor.build.id` / `ro.odm.build.id` 属性, 与参考数据比对.
+- **三态语义**: 绿: 构建日期不早于那个版本参考数据里的第一条构建;  
   琥珀: 设备运行最新稳定版或预览版, 但构建日期更早; 红: 其余情况, 以及没有参考数据时.
 
 #### HOME-05 安全补丁 (两行)
 
 - **问题**: 平台安全补丁级别和厂商安全补丁级别是否达到参考级别?
-- **手段**: 公开 SDK API (`Build.VERSION.SECURITY_PATCH`) 和 `ro.vendor.build.security_patch`  
-  属性, 与参考数据比对.
+- **手段**: 公开 SDK API (`Build.VERSION.SECURITY_PATCH`), `ro.vendor.build.security_patch` 属性,  
+  与参考数据比对.
 - **三态语义** (每一行): 绿: 设备的级别达到或超过参考级别;  
-  琥珀: 低于参考级别, 但落在同一年月; 红: 更低且不是同一年月, 值为空, 或没有参考值.
+  琥珀: 低于参考级别, 但还在同一年月; 红: 更低且不是同一年月, 值为空, 或没有参考值.
 
 #### HOME-06 性能等级
 
 - **问题**: 设备声明的是哪一档媒体性能等级?
 - **手段**: 公开 SDK API (`Build.VERSION.MEDIA_PERFORMANCE_CLASS`).
-- **三态语义**: 绿: 声明的等级等于设备的 SDK 级别; 琥珀: 比它低一级;  
+- **三态语义**: 绿: 声明的等级等于设备的 SDK 级别; 琥珀: 比这个等级低一级;  
   红: 更低, 没有声明等级, 或设备太旧没有这个字段 (Android 11 及以下).
 
 #### HOME-07 内核
@@ -109,8 +109,8 @@ Others 与 Prop 是 `collectModels()`, Home 是它调用的 `detect()`.
 
 - **问题**: 设备是否使用无缝 A/B 更新?
 - **手段**: `ro.build.ab_update`, `ro.boot.slot_suffix` 和相关的 virtual A/B 属性.
-- **三态语义**: 绿: 所查属性里有任何一个表明 A/B 已开启, 这一行还会写出当前 slot  
-  以及 virtual A/B 是否为 retrofit; 红: 它们都没有表明. 这个条目没有琥珀色结果.
+- **三态语义**: 绿: 所查属性里有任何一个表明 A/B 已开启, 这一行还会写出当前 slot,  
+  以及 virtual A/B 是否为 retrofit. 红: 没有一个属性表明. 这个条目没有琥珀色结果.
 
 #### HOME-09 system-as-root (SAR)
 
@@ -141,8 +141,8 @@ Others 与 Prop 是 `collectModels()`, Home 是它调用的 `detect()`.
 #### HOME-12 DSU (动态系统更新)
 
 - **问题**: 设备是否支持动态系统更新?
-- **手段**: `persist.sys.fflag.override.settings_dynamic_system` 和  
-  `sys.fflag.override.settings_dynamic_system` 属性.
+- **手段**: `persist.sys.fflag.override.settings_dynamic_system`,  
+  以及 `sys.fflag.override.settings_dynamic_system` 属性.
 - **三态语义**: 绿: 任一属性表明 DSU 已开启; 红: 其余情况, 关闭时这一行显示 `Unknown`.  
   这个条目没有琥珀色结果.
 
@@ -150,7 +150,7 @@ Others 与 Prop 是 `collectModels()`, Home 是它调用的 `detect()`.
 
 - **问题**: 已安装的 Mainline 模块是否达到或超过 Google 为这个版本发布的版本?
 - **手段**: 框架的 `config_defaultModuleMetadataProvider` 字符串资源 (经 `Resources.getSystem()` 读取),  
-  再取模块包的版本名, 与参考数据比对.
+  再读那个提供者包的版本名, 与参考数据比对.
 - **三态语义**: 绿: 已安装模块的版本达到发布的版本;  
   红: 更低, 提供者或其包读不到, 以及没有参考数据时. 这个条目没有琥珀色结果.
 
@@ -199,7 +199,7 @@ Others 与 Prop 是 `collectModels()`, Home 是它调用的 `detect()`.
 
 - **问题**: SELinux 是否处于 enforcing?
 - **手段**: shell 命令 (`getenforce`).
-- **三态语义**: 绿: 模式是 enforcing, 以及命令被拒这种方式本身就证明策略在 enforcing;  
+- **三态语义**: 绿: 模式是 enforcing; 命令被拒, 而这次被拒本身就说明策略在 enforcing, 也算绿;  
   琥珀: 模式是 permissive; 红: 已关闭, 以及读不到模式时.
 
 #### HOME-21 Toybox
@@ -276,20 +276,20 @@ Prop 的行没有结论: 没有圆点, 没有颜色. 每行的标题就是键本
 | id | 条目 | 问题 | 手段 | 备注 |
 |---|---|---|---|---|
 | PROP-01 | 系统属性 (`getprop`) | 应用的进程能看到哪些系统属性? | 公开 SDK API (`System.getProperties()`) 加对 `Properties.defaults` 字段的反射读取 | 每个属性一行, 按键排序 |
-| PROP-02 | `Settings.System` 表 | 系统设置表里有哪些条目? | 该类的已声明 `String` 字段, 再逐键反射调用 `getString(ContentResolver, String)` | 每个键一行 |
-| PROP-03 | `Settings.Secure` 表 | 安全设置表里有哪些条目? | 该类的已声明 `String` 字段, 再逐键反射调用 `getString(ContentResolver, String)` | 每个键一行 |
-| PROP-04 | `Settings.Global` 表 | 全局设置表里有哪些条目? | 该类的已声明 `String` 字段, 再逐键反射调用 `getString(ContentResolver, String)` | 每个键一行 |
+| PROP-02 | `Settings.System` 表 | 系统设置表里有哪些条目? | 这个类的已声明 `String` 字段, 再逐键反射调用 `getString(ContentResolver, String)` | 每个键一行 |
+| PROP-03 | `Settings.Secure` 表 | 安全设置表里有哪些条目? | 这个类的已声明 `String` 字段, 再逐键反射调用 `getString(ContentResolver, String)` | 每个键一行 |
+| PROP-04 | `Settings.Global` 表 | 全局设置表里有哪些条目? | 这个类的已声明 `String` 字段, 再逐键反射调用 `getString(ContentResolver, String)` | 每个键一行 |
 | PROP-05 | build.prop | `getprop` 的输出里有哪些条目? | shell 命令 (`getprop`) | 每个解析出的 `[key]: [value]` 条目一行; 多行条目算一行 |
 
 ## 条目模板
 
-新增或调整条目时, 它带这些字段:
+新增或调整一个条目时, 这个条目带这些字段:
 
 | 字段 | 含义 |
 |---|---|
-| **id** | 该条目的稳定标识符 |
+| **id** | 这个条目的稳定标识符 |
 | **screen** | Home, Others 或 Prop |
-| **title** | 该条目在本目录里的名字; 用户看到的文字在功能自己的 `strings.xml` 里 |
+| **title** | 这个条目在本目录里的名字; 用户看到的文字在功能自己的 `strings.xml` 里 |
 | **question** | 这个条目回答什么问题, 用大白话说 |
 | **techniques** | 这个条目实际使用的检测手段, 适用时用 FR-9 的说法, 与参考数据比对时再加上 FR-16 的参考数据 |
-| **tri-state semantics** | 什么算支持, 不支持, 未知, 以及各自取什么颜色, 由该条目自己的语义决定 (FR-3, FR-15, NFR-7); 只区分两种结果的条目要写明这一点 |
+| **tri-state semantics** | 什么算支持, 不支持, 未知, 以及各自取什么颜色, 按这个条目自己的语义写 (FR-3, FR-15, NFR-7); 只区分两种结果的条目要写明这一点 |
