@@ -32,7 +32,8 @@ android studio analyze-file --project=AndroidLowLevelDetector <path>
 1. 给每个改过的 `.kt` 文件跑 `node scripts/ils-diagnostics.js <file>`.
 1. 跑 AGENTS-cn.md 的构建与验证一节里那几档 Gradle 检查: `assembleFossDebug`, `testFossDebugUnitTest`,  
    `lintFossDebug`.
-1. 新上下文的 diff review 排在这三步之后.
+1. 新上下文的 review 排在这三步之后. 它查这次改动, 也查该改而没改的地方.  
+   怎么枚举应改清单, 三档怎么分, 见 [task-workflow.md](task-workflow.md) 的第 2 步.
 
 这么排有理由. analyze-file 排最前, 因为它几秒就回, 读的是 IDE 的实时状态, 一眼就能看出来的问题不用等慢的.  
 ILS 排第二, 因为它把一个文件的每处编译类发现逐处列出来, analyze-file 做不到; 而且它自己要做一次 Gradle 导入,  

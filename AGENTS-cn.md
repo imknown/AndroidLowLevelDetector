@@ -125,14 +125,18 @@ MVVM 加 StateFlow 的单向数据流, kotlinx.serialization, Ktor, libsu, JNI/N
 ./gradlew lintFossDebug          # Android lint
 ```
 
-- 只改文档或注释的编辑跳过构建那几档, 因为没碰代码. 下面那条 diff review 照样要做.
-- **用 Android Studio 做分析**: 每批编辑之后, 写下这次改动的 agent 先在自己的上下文里 review 自己的 diff,  
+- 只改文档或注释的编辑跳过构建那几档, 因为没碰代码. 下面那条 review 照样要做, 文档改动拿需求正文当参照物.
+- **用 Android Studio 做分析**: 每批编辑之后, 写下这次改动的 agent 先在自己的上下文里 review 自己的改动,  
   发现问题就改, 改完再自查, 一直查到最后只剩不重要的措辞问题.  
   然后给每个改动文件跑 `android studio analyze-file`,  
   再给每个改过的 `.kt` 文件跑 `node scripts/ils-diagnostics.js <file>`,  
   然后跑上面那几档 Gradle 检查.  
-  最后找一个不带本次上下文的 subagent, 让它在后台 review 未提交的 diff,  
+  最后找一个不带本次上下文的 subagent, 让它在后台 review 这次未提交的改动,  
   把发现汇报给负责人, 然后停下.  
+  自审和 subagent review 都要把已改的和该改而没改的一起查, 也要列出超出本次范围的改动.  
+  漏改的文件根本不进 diff, 要另建应改清单才查得到.  
+  没有需求正文可对照时, 目标和范围取自 `plan.md` 的子任务范围, `subtask-NN` 报告, 或者负责人的原话.  
+  怎么枚举, 三档怎么分, 见 [docs/agents-cn/task-workflow.md](docs/agents-cn/task-workflow.md).  
   不管走不走 spec 流程, 负责人没明确同意, 一律不提交.  
   ILS 这步排在 analyze-file 之后, Gradle 那几档之前, 因为它会把一个文件里的每处编译类发现逐处列出来.  
   analyze-file 做不到这一点: 它在同一个文件里, 同一条消息文本只留一个条目.  
@@ -146,7 +150,7 @@ MVVM 加 StateFlow 的单向数据流, kotlinx.serialization, Ktor, libsu, JNI/N
   每一轮之前都要先自审, v1 和后面的每次 delta pass 都不例外.  
   任务工作流细则的 Review 步骤里写着增量复核和换新 reviewer 的做法, 每个会话都要守.  
   见 [docs/agents-cn/task-workflow.md](docs/agents-cn/task-workflow.md).  
-  自审不只针对 diff, 每次 subagent review 都要: 交出去之前的 plan 或报告也要先自审一遍.
+  交出去之前的 plan 或报告也要先自审一遍, 每一次 subagent review 都算.
   - **reviewer 用哪个模型, 用哪一档推理强度, 负责人定**: 启动 reviewer 之前先把模型清单取出来.  
     到底有没有这份清单, 它带着哪些字段, 取决于跑这个会话的 agent; 有的暴露这样的工具, 有的没有.  
     清单回来了, 就把整张表给负责人看: 工具带一个字段就给一列, 工具对某个模型有定位说明时就附上.  
@@ -276,7 +280,7 @@ Screen (Compose) → ViewModel (StateFlow) → Repository → DataSource
 - spec 目录怎么摆, 以及负责人的预写块
 - `plan.md` 必须写什么: 子任务怎么拆, 每个单元为什么单列, 它的风险级别, 待学习清单
 - 计划确认
-- 子任务的第 0..5 步, 每一步各自的新上下文 review 轮次, 以及 review 循环什么时候停
+- 子任务的第 0..5 步, 每一步各自的新上下文 review 轮次, review 查漏改和超出范围, 以及 review 循环什么时候停
 - 偏差记录, 任务结束, 还有归档
 
 建 spec 目录之前读它, 要做某一步之前再把你那一步读一遍.
