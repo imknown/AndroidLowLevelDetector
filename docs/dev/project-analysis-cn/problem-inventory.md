@@ -84,7 +84,7 @@
   于是设置对话框显示 "无选中项" 而界面按跟随系统运行. 迁移路径 (`:116-143`) 是第三个必须同时维护两处的地方.
 - 消费方按表示形式分开: 设置对话框读原始串 (`SettingsScreen.kt:83-84`, `:250`, `:265`),  
   主题与列表页读枚举 (`MainActivity.kt:77`, `ui/theme/Theme.kt:306`, `ui/base/list/MyModelListScreen.kt:64`).
-- 参考修法: 只持久化一种表示, 另一种由它派生 (`map { parse(it) }`), 写点收敛到一处.
+- 参考修法: 只持久化一种表示, 另一种由它派生 (`map { parse(it) }`), 写点收到一处.
 - 出处: deepseek PA-03 (中), glm SS4 (中), mimo SSOT-4 (低).
 
 ### PA-04 (中) 本地化文案被当作数据有效性哨兵, "没有值" 有三种词
@@ -153,7 +153,7 @@
   把 "不认识的 `scheme`" 与 "缺字段" 区分成两种可显示的失败; `api` 改用 `toIntOrNull` 加默认值.
 - 出处: deepseek PA-04 (中), mimo SEC-4 (低), qwen SSOT-06 (未定级).
 
-### PA-10 (低) 设置项的键与存储值住在 string 资源里, 同一映射抄了三份
+### PA-10 (低) 设置项的键与存储值放在 string 资源里, 同一映射抄了三份
 
 - `SettingsStore.kt:33-45` 用 11 个 `MyApplication.getMyString(R.string.*)` 的返回值当 SharedPreferences  
   的键与存储值; 枚举映射在 `:79-91` 的两个 `when` 里第二次书写; 标签与值的配对在  
@@ -202,7 +202,7 @@
   `onModelsLoaded()` (`:66-69`), 而 `setLoading(false)` 只经 `setModels()` 可达 (`:89-93`).
 - 后果: `collectModels()` 一抛出, `isLoading` 停在 `true` (页面继续转圈), 异常冲出 `viewModelScope`  
   成为未捕获异常; 一次不返回的 shell 或文件调用没有任何超时, 而 `:61-63` 的去重判断还挡住后续刷新.
-- 该契约靠逐个调用点套守卫实现, 至少两处 shell 调用在守卫之外: `HomeRepository.getMounts()`  
+- 这份契约靠逐个调用点套守卫实现, 至少两处 shell 调用在守卫之外: `HomeRepository.getMounts()`  
   (`ui/home/repository/HomeRepository.kt:415`, 调用于 `ui/home/HomeViewModel.kt:221-223`) 与  
   `PropRepository.getBuildProp()` (`ui/prop/repository/PropRepository.kt:70`).
 - `IShell` (`base/src/main/java/net/imknown/android/forefrontinfo/base/shell/IShell.kt:3-5`)  
@@ -230,9 +230,9 @@
 
 - `BaseListViewModel.kt:79-87`; 唯一调用方 `HomeViewModel.kt:277-285` 先 `indexOfFirst` 求下标  
   (`:278-280`), 再按下标替换, 两步之间一次 `refresh()` 就会把内容写到另一行上.
-- 该类型当前只有一个实例 (`HomeRepository.kt:1176` 是唯一构造点), 出现第二个时更新会落到第一行,  
+- 这个类型当前只有一个实例 (`HomeRepository.kt:1176` 是唯一构造点), 出现第二个时更新会落到第一行,  
   且不会报错; 类型本已带 `MyModelType` 作身份标识.
-- 参考修法: 按类型或 `key` 在基类内完成查找与替换, 或把该入口收进 `HomeViewModel`.
+- 参考修法: 按类型或 `key` 在基类内完成查找与替换, 或把这个入口收进 `HomeViewModel`.
 - 出处: deepseek PA-13 (低), glm UD1 (中), qwen UDF-03 (未定级).
 
 ### PA-17 (中) `allowNetworkData` 只在加载时读一次
@@ -291,7 +291,7 @@
 - common 与 home 互引: `AndroidVersionExt.kt:11` 引 `ui.home.model.Lld` (`:132-134` 使用),  
   `ui/home/model/Lld.kt:5` 引 `ui.common.CODENAME_NONE`, `HomeRepository.kt:28-43` 引一排 `ui.common.*`.
 - others 到 home: `ui/others/datasource/BasicDataSource.kt:7,25` 引 `ui.home.datasource.AndroidDataSource`.
-- 后果: 任何 feature 都抽不出来也单独推理不了; 被两个 feature 消费的 `LldFileStore` 住在  
+- 后果: 任何 feature 都抽不出来也单独推理不了; 被两个 feature 消费的 `LldFileStore` 放在  
   `ui.home.datasource`, `AndroidDataSource` 事实上是共享常量层. `internal` 在 `:app` 里只用于 7 个符号,  
   所以 "每个特性一个包 + 同构分层" 只是命名约定 (另见 PA-23).
 - 参考修法: 把跨特性复用的原始能力 (`AppInfoDataSource`, `LldFileStore`, 常量表, `PropertyReader`)  
@@ -315,7 +315,7 @@
 - 四个仓库都引 UI 侧类型: `HomeRepository.kt:23-27,50` (`MyModel`, `MyModelTitle`, `MyModelType`,  
   `guardedMyModel`, `toColoredMyModel`, `StatusColor`), `OthersRepository.kt:14-16`,  
   `PropRepository.kt:7-13`, `SettingsRepository.kt:104-113` (返回带 `@StringRes id` 的版本模型).
-- 展示类型住在 `ui/base/list/MyModel.kt:7-29` 与 `ui/theme/ExtendedColors.kt:9-47`;  
+- 展示类型放在 `ui/base/list/MyModel.kt:7-29` 与 `ui/theme/ExtendedColors.kt:9-47`;  
   数据层于是必须有 `Context` 才能干活 (`getMyString` 99 处), 行模型由仓库拼好  
   (`HomeRepository.kt:1172-1177`). 屏幕再用位置占位符把仓库返回的 `@StringRes` 拼一次  
   (`SettingsScreen.kt:224-233`), 格式串拆在两层; 预览代码还硬编码同一组版本常量 (`:453-456`).
@@ -339,12 +339,12 @@
 - `base/.../extension/DateTimeExt.kt:9-26` 写死了 lld.json 的时间格式契约, `:35-37` 的  
   `isChinaMainlandTimezone()` 是 `:app` 的分发决策 (`ui/home/datasource/LldDataSource.kt:34-39`  
   用它选 Gitee 还是 GitHub).
-- 该模块自己声明的依赖只有 `base/build.gradle.kts:14` 的一条 `api(fileTree("libs"))`  
+- 这个模块自己声明的依赖只有 `base/build.gradle.kts:14` 的一条 `api(fileTree("libs"))`  
   (libs 目录为空, 见 PA-38), 没有 project 依赖, 于是这些规则位于它们的使用者之下, 而不是被使用者拉下去.
 - 参考修法: 应用域内容回 `:app`, 接口模块只留接口与不依赖 app 的扩展 (与 PA-25 同一轮).
 - 出处: mimo ARCH-6 (中), qwen ARC-05 (未定级).
 
-### PA-27 (中) `MyApplication` 一个文件身兼五职, 两个设置枚举也住在其中
+### PA-27 (中) `MyApplication` 一个文件身兼五职, 两个设置枚举也放在其中
 
 - 五职: 依赖图构造 (`MyApplication.kt:58`), 目录管理 (`:60-71`), 静态 companion (`:73-85`),  
   启动编排 (`:87-106`), libsu 配置 (`:108-116`).
@@ -403,7 +403,7 @@
 ### PA-33 (中) 业务决策位置不对档 (主机选择在数据源, 时区工具在 `:base`)
 
 - `LldDataSource.kt:34-39` 在数据源里按是否中国大陆时区选 Gitee 或 GitHub,  
-  而判断工具 `isChinaMainlandTimezone()` 住在共享模块 (`base/.../extension/DateTimeExt.kt:35-37`).
+  而判断工具 `isChinaMainlandTimezone()` 放在共享模块 (`base/.../extension/DateTimeExt.kt:35-37`).
 - 参考修法: 仓库层选定主机再交给数据源; 时区工具按其使用归属移动.
 - 出处: glm AR8 (中).
 
@@ -443,7 +443,7 @@
   (`SettingsScreen.kt:62`); `ui/common` 既放数据基础设施与 Compose 绘制, 又反向依赖 home (PA-22).
 - 这种没有规则的归属直接表现为 PA-22 的包环.
 - 参考修法: 明文定规则 (例如 `:base` 收平台无关物, `ui.base.list` 收共享 UI 模型,  
-  `ui.common` 收共享扩展), 按规则归位文件.
+  `ui.common` 收共享扩展), 按规则把文件放回各自的位置.
 - 出处: deepseek PA-20 (低), glm MD4 (中), mimo MOD-1 (中).
 
 ### PA-37 (中) `:binderDetector` 的边界已经失效
@@ -525,7 +525,7 @@
   自己 catch 并直接构建失败行; `OthersRepository.kt:87-88,118-119,132-133,246-247`  
   手工 catch 加 `printStackTrace`; `SettingsRepository.kt:42-43,55-56,77-78` catch 加 `Log.w`  
   并用默认值顶替失败的读取, 没有守卫. 失败行的消息文本本身构建了两遍 (`MyModelExt.kt:48` 与 `:97`).
-- 参考修法: 收敛成一种失败表达 (与 PA-24 的领域结果同一处改动).
+- 参考修法: 统一成一种失败表达 (与 PA-24 的领域结果同一处改动).
 - 出处: mimo PATTERN-6 (中).
 
 ### PA-46 (中) 反射被当作 API 使用, 其中一部分有公开替代物
@@ -555,7 +555,7 @@
 - 参考修法: 删除并让 git 保存历史; `ShellDefault` 见 PA-124.
 - 出处: qwen ARC-08 (未定级). 本文件的级别是估计.
 
-### PA-48 (中) 领域语义色 `StatusColor` 住在 Compose 主题包
+### PA-48 (中) 领域语义色 `StatusColor` 放在 Compose 主题包
 
 - `ui/theme/ExtendedColors.kt:9-14` 定义, 数据层与共享模型引用: `HomeRepository.kt:50`,  
   `MyModel.kt:5,21`, `MyModelExt.kt:9`. 每个特性的数据路径都与只为 Compose 服务的包耦合.
@@ -627,7 +627,7 @@
   而 `SettingsRepository` 只服务一个调用 `getBuiltInDataVersion` (`:99`), 连这个也是页面触发的  
   (`SettingsScreen.kt:91`). `SettingsStore` 这个仓库层类被 ViewModel, `MainActivity.kt:26-28`  
   与依赖图 (`AppGraph.kt:71`) 直接消费.
-- 参考修法: 仓库层覆盖该功能的全部读写, 或把 `SettingsStore` 的归属定清楚 (与 PA-36 同一轮).
+- 参考修法: 仓库层覆盖这个功能的全部读写, 或把 `SettingsStore` 的归属定清楚 (与 PA-36 同一轮).
 - 出处: mimo PATTERN-3 (中).
 
 ### PA-57 (低) 两个 CompositionLocal 用静默的错误默认值
@@ -650,14 +650,14 @@
 
 - 路径: `MyApplication.getDownloadDir()` (`base/MyApplication.kt:60-71`) 优先 `getExternalFilesDir(...)`,  
   只有外部目录为 null 或不存在时才退到内部 `filesDir`; `LldFileStore.kt:32` 据此确定保存路径,  
-  `:101-109` 用 `FileWriter` 覆盖写入, `:45-65` 再把该文件读回来当可信输入解析.
+  `:101-109` 用 `FileWriter` 覆盖写入, `:45-65` 再把这个文件读回来当可信输入解析.
 - 信任面: 已存在文件只看它能否解析, 以及 `savedLldVersion` 不早于内置资产, 目录是否脏, 文件是否存在  
   这几条 (`:46-48`, `:62-64`, `:67-69`). 复核更正: 归档报告里 "重拷只发生在解析失败时" 说过头了,  
   准确说法是 "投毒文件的 version 不旧于内置资产时就不会被重拷".
 - 写入门槛按平台语义: API 30 起其他应用无法写本应用的外部专属目录 (持 `MANAGE_EXTERNAL_STORAGE` 也不行),  
   而 minSdk 覆盖的更低版本上, 持旧存储权限的应用可以写; adb / root 与被篡改的备份恢复路径始终可达.  
   这一层按平台文档判断, 仓库内不可证.
-- 后果: 该文件是全部检测结论的事实源, 一旦被覆写, 安全补丁, targetSdk 阈值, WebView 结论这些行  
+- 后果: 这个文件是全部检测结论的事实源, 一旦被覆写, 安全补丁, targetSdk 阈值, WebView 结论这些行  
   会一起翻转, 而且没有错误行. 载荷的第二个影响面见 PA-61.
 - 参考修法: 保存路径改内部 `filesDir` (回退路径已经存在), 外部目录只留给用户导出的副本;  
   或对已存文件做指纹比对, 而不是信它自报的 version.
@@ -748,8 +748,8 @@
 
 - `LldFileStore.kt:34-40` 的 `deleteDirtyDirectoryOrThrow()` 在目标路径是目录时调 `deleteRecursively()`,  
   调用点包括 `:47` (拷贝前) 与 `:102-104` (保存前); 路径来自 `getDownloadDir()` (`:32`), 位于外部存储.
-- 正常情况下那只是一个文件, 但该名字一旦被占成目录 (用户或别的持存储权限的应用造成),  
-  应用会递归删掉该目录的内容.
+- 正常情况下那只是一个文件, 但这个名字一旦被占成目录 (用户或别的持存储权限的应用造成),  
+  应用会递归删掉那个目录的内容.
 - 参考修法: 只删自己创建的文件, 目录形态改为报错.
 - 出处: qwen SEC-04 (未定级). 本文件的级别是估计.
 
@@ -839,7 +839,7 @@
   组合期计算 `val scrolling = enabled && scrollState.isScrollInProgress` (`:41`),  
   由此驱动 `animateFloatAsState` 的目标 (`:42-51`); 调用点是页面级 LazyColumn 的 modifier 链  
   (`MyModelListScreen.kt:118`, `SettingsScreen.kt:160`).
-- 于是每次滚动开始与结束都会重组该页面并重跑 `items` lambda; 默认安装上滚动条模式是 `None`,  
+- 于是每次滚动开始与结束都会重组这一页并重跑 `items` lambda; 默认安装上滚动条模式是 `None`,  
   `enabled &&` 在读取之前短路, 所以代价只在滚动条模式为 Normal 时出现.  
   alpha 已经正确下沉到 `drawWithContent` (`:56-88`).
 - 参考修法: 把 "是否在滚动" 的读取下推到 draw / graphicsLayer 阶段.
@@ -862,7 +862,7 @@
   (`MyModelListScreen.kt:141`).
 - 刷新或切换排序时, 这个极高的行会被整体重排, 同时做位置动画与高度动画, 每帧重新测量这块 Text;  
   WebView 行 (`HomeRepository.kt:998-1032`) 同样可以很长.
-- 参考修法: 两种动画二选一; 长文本默认截断加 "展开全部", 或把该行改成可折叠的子列表,  
+- 参考修法: 两种动画二选一; 长文本默认截断加 "展开全部", 或把这一行改成可折叠的子列表,  
   让 LazyColumn 真正虚拟化.
 - 出处: deepseek PA-30 (中), mimo CP-4 (低), qwen CP-03 (未定级), qwen AP-08 (未定级).
 
