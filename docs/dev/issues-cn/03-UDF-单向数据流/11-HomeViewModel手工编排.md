@@ -53,7 +53,7 @@ if (targetIndex == -1) {
 updateModelDetail(targetIndex, newDetail)   // ViewModel 翻自己的状态找位置, 再交给基类按下标改
 ```
 
-同一条目还有第二个生产者, 与加载路径对 `lld == null` 的处置相反:  
+同一条目还有第二个生产者, 与加载路径对 `lld == null` 的处理相反:  
 加载路径里 `detect()` 接受 `lld == null` (渲染成含 "未知" 的行),  
 补偿路径 `payloadOutdatedTargetSdkVersionApk()` 却是 `fetchOfflineLldOrNull().lld ?: return`,  
 离线数据的备用取法整体失败时,  
