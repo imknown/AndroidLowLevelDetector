@@ -23,7 +23,7 @@ KMP 文章的动因之一 (从 AGP 9 起, 应用入口必须独立于 KMP 共享
 Android 官方的构建插件) 本项目已天然满足  
 (:app 与 :base 本来就是分开的). 现状的真实问题: :base 名不副实 (issues-cn #04: 一词三义,  
 一个名字同时表达了三种含义; 还有包级循环依赖, 即包之间互相引用绕成圈),  
-:app 巨石化 (什么都往里堆, 越长越大).
+:app 越长越大 (什么都往里堆).
 
 ## 现实检验 (AI 判断, 待负责人确认)
 
@@ -52,12 +52,11 @@ Binder 是 Android 的进程间通信机制), 真正能跨平台共享的只有�
 :binderDetector JNI (不动)
 ```
 
-与材料的映射 (对应关系): KMP 文章的 shared (共享代码模块) ≈ :core/*, androidApp (应用入口模块) ≈ :  
-app + features;  
+与材料的映射 (对应关系): KMP 文章的 shared (共享代码模块) ≈ :core/*, androidApp (应用入口模块) ≈ :app + features;  
 Toolchain 的 module.yaml 单一职责 ≈ 每模块一个 product, templates (模板)  
 ≈ 现有 build-logic convention plugins (约定插件),  
 library catalogs (依赖版本目录) ≈ TOML 五目录 (五个 .toml 依赖清单文件),  
-exported (对外导出) ≈ api/implementation 收敛 (收紧"谁能看到这个依赖"的边界).  
+exported (对外导出) ≈ api/implementation 的可见性收紧 ("谁能看到这个依赖" 的边界).  
 现有构建投入 (convention plugins / 内容过滤仓库 / 配置缓存 / Firebase flavor 约定) 基本可平移,  
 因此现在不值得整体换构建系统, 把模块切干净,  
 未来无论迁到哪种构建系统都只是机械活.
@@ -71,7 +70,7 @@ exported (对外导出) ≈ api/implementation 收敛 (收紧"谁能看到这个
 3. 跨 feature 共用的类归到哪: AppInfoDataSource (home 和 settings 两个功能共用) 与 LldFileStore (同样共用)  
    应放进 :core/data;  
    否则 feature 模块之间要互相依赖, "纵切" (一个功能从界面到数据整条线独立成一个模块) 就拆不动.
-4. :app 的 .base 包怎么处置: MyApplication 留在入口模块 (组合根, 即统一组装各部件的地方, 就在这里);  
+4. :app 的 .base 包怎么安排: MyApplication 留在入口模块 (组合根, 即统一组装各部件的地方, 就在这里);  
    其 companion (伴生对象) 里的主题/滚动条状态流 (界面可以监听的数据流) 已随 #08 (设置 SSOT, 方案 A;  
    SSOT 即唯一数据源) 迁入 `SettingsStore`,  
    本行不再是待决项; getMyString / getDownloadDir 会在 #01 的 mapper (数据转换层) 迁移中一并消亡.
@@ -84,9 +83,9 @@ exported (对外导出) ≈ api/implementation 收敛 (收紧"谁能看到这个
 依赖图 (谁依赖谁的接线关系) 自动重连; 没有 DI 时,  
 每搬一次类都要手工重接一遍线. tracker #04 既定"放主线最后" (大面积的路径移动会污染每一步 diff,  
 让改动记录难以阅读). ST-11 (`subtask-11-docs-closeout`) 重写 AGENTS.md 时,  
-把议定的目标结构写进去, 后续搬移向它收敛. Metro 原生支持 Anvil 式聚合 (Anvil 式做法: 各模块自行声明绑定,  
+把议定的目标结构写进去, 后续搬移都以它为准. Metro 原生支持 Anvil 式聚合 (Anvil 式做法: 各模块自行声明绑定,  
 最后由根图统一汇总; 根图即最上层的那张总依赖图), 绑定可以散在各模块,  
-由根图统一聚合, 所以模块化后 @ContributesBinding 跟着类走即可; 且选型表里 Metro 的 KMP 列与该方向吻合.
+由根图统一聚合, 所以模块化后 @ContributesBinding 跟着类走即可; 且选型表里 Metro 的 KMP 列与这个方向吻合.
 
 ## 关联决定
 
