@@ -208,7 +208,7 @@
 - `IShell` (`base/src/main/java/net/imknown/android/forefrontinfo/base/shell/IShell.kt:3-5`)  
   没有声明 "不抛", 实现 `ShellLibSu` (`ui/common/ShellLibSu.kt:15-20`) 直接转发 libsu;  
   `PropertyDefault` 是 `object`, 类初始化失败抛 `ExceptionInInitializerError`, 那是 `Error`, 守卫只抓 `Exception`.
-- 参考修法: 按 `AGENTS-cn.md` 的代码规则, UI 层不处理异常, 正解是让下层不抛:  
+- 参考修法: 按 [05-代码规则](../../agents-cn/05-代码规则.md), UI 层不处理异常, 正解是让下层不抛:  
   `IShell.execute` 明确不抛的契约并把异常转成 `ShellResult(isSuccess = false)`; `waitFor` 加超时;  
   两处未守卫的调用点把失败当正常结果处理; `PropertyDefault` 的类初始化加保护 (见 PA-46 与 PA-68).  
   执行方式本身见 PA-85 与 PA-86.
@@ -319,7 +319,7 @@
   数据层于是必须有 `Context` 才能干活 (`getMyString` 99 处), 行模型由仓库拼好  
   (`HomeRepository.kt:1172-1177`). 屏幕再用位置占位符把仓库返回的 `@StringRes` 拼一次  
   (`SettingsScreen.kt:224-233`), 格式串拆在两层; 预览代码还硬编码同一组版本常量 (`:453-456`).
-- 这是 PA-22 与 PA-36 的共同原因, 也是最深的一处: `AGENTS-cn.md` 架构一节画的四级顺序是对现有代码的  
+- 这是 PA-22 与 PA-36 的共同原因, 也是最深的一处: [03-概览](../../agents-cn/03-概览.md) 架构一节画的四级顺序是对现有代码的  
   陈述, 与代码不符的那一边要改哪边由负责人判定 (见 [第 11 节](#11-需要负责人判定的问题) 的 Q-07).
 - 参考修法: 检测返回领域结果 (值加判定), 行模型与文案在 UI 侧唯一一处映射; 仓库返回普通字段.
 - 出处: glm DP1 (中), mimo ARCH-2 (中), qwen ARC-01 (未定级), qwen PAT-03 (未定级).
@@ -506,7 +506,7 @@
 
 ### PA-44 (低) `OrThrow` 后缀不再表示 "会抛", 各数据源的后缀约定也混用
 
-- 契约 (`AGENTS-cn.md` 的代码规则) 是 "没有 `OrThrow` 后缀的函数承诺不抛". 两处相反:  
+- 契约 ([05-代码规则](../../agents-cn/05-代码规则.md)) 是 "没有 `OrThrow` 后缀的函数承诺不抛". 两处相反:  
   `LldDataSource.kt:50` 的 `fetchOfflineLldFileOrThrow()` (经 `HomeRepository.kt:67` 透出)  
   只返回一个 `File`, 真正抛异常的是调用方 `HomeViewModel.kt:173` 的 `toObjectOrThrow()`;  
   `PropertyReader.kt:29` 调 `IProperty.getStringOrThrow` 又在 `:30-33` 捕获,  
@@ -538,7 +538,7 @@
   (`Resources.getSystem().getIdentifier`).
 - 有公开路径的: `Settings.Secure.getString(ContentResolver, name)`, `PackageInfo` 的公开签名接口,  
   `Build.getFingerprintedPartitions()` (PA-43), 以及 `Properties` 的公开 `getProperty()` 与  
-  `stringPropertyNames()`. `AGENTS-cn.md` 那条 "新代码用当前版本允许的最新 API" 只管此后新增的代码,  
+  `stringPropertyNames()`. [05-代码规则](../../agents-cn/05-代码规则.md) 那条 "新代码用当前版本允许的最新 API" 只管此后新增的代码,  
   既有反射是否回头改由负责人判定 (Q-05); 隐藏 API 那两处 (`SystemProperties`, `WebViewUpdateService`)  
   没有公开对应物, 要修的是 "每次读都重新查找方法" 与失败时的表现 (PA-68, PA-90).
 - 出处: deepseek PA-23 (中), qwen ARC-06 (未定级).
@@ -617,7 +617,7 @@
   `MyApplication.instance.assets`. 而 `HomeRepository` 在这段只做转发 (`HomeRepository.kt:67-72`).
 - 检测部分正相反: 仓库才是功能的主体 (PA-29). Screen 到 ViewModel 到 Repository 到 DataSource  
   的名义链条两端各做对方的工作.
-- `AGENTS-cn.md` 说 UI 层不接业务异常, 所以这是规则与代码的分歧, 要定性:  
+- [05-代码规则](../../agents-cn/05-代码规则.md) 说 UI 层不接业务异常, 所以这是规则与代码的分歧, 要定性:  
   要么把回退与错误映射下沉到仓库, 要么改规则 (与 PA-14 同一轮).
 - 出处: deepseek PA-09 (中), mimo PATTERN-2 (中).
 
@@ -720,7 +720,7 @@
   于是 `signingConfig = signingConfigs.named("release")` (`:91`) 拿到未配置的签名,  
   `assembleFossRelease` 会产出未签名包而不报错; `v1..v4` 手工全开 (`:67-70,80-83`)  
   在 AGP 上是多余的.
-- 与 `AGENTS-cn.md` 的 "Never commit" 一节有张力, 由负责人判定 (见  
+- [12-git](../../agents-cn/12-git.md) 的 "绝不提交" 一节有张力, 由负责人判定 (见  
   [第 11 节](#11-需要负责人判定的问题) 的 Q-02).
 - 参考修法: 签名材料移出仓库, 公开渠道只走 release 签名; release 签名缺失时让构建报错.
 - 出处: glm SE4 (中), mimo SEC-9 (低), qwen SEC-09 (未定级).
@@ -1138,11 +1138,11 @@
 
 ### PA-99 (中) 文档写的测试命令跑不到唯一的真测试
 
-- `AGENTS-cn.md` 写的是 `./gradlew testFossDebugUnitTest`, 而这是 flavor 任务,  
+- [11-构建与验证](../../agents-cn/11-构建与验证.md) 写的是 `./gradlew testFossDebugUnitTest`, 而这是 flavor 任务,  
   只有 `:app` 定义了 flavor (`app/build.gradle.kts:6`); `:base` 只有不带 flavor 的  
   `testDebugUnitTest` (`base/build.gradle.kts:1-3`), `:binderDetector` 同形且根本没有测试源目录.
 - 后果: 全仓库唯一的真测试实际处于 "只有单独手动触发 `:base:testDebugUnitTest` 才会跑" 的状态.
-- 参考修法: 统一测试命令 (库模块加任务别名, 或约定用全工程任务), 并把 `AGENTS-cn.md` 的命令同步;  
+- 参考修法: 统一测试命令 (库模块加任务别名, 或约定用全工程任务), 并把 [11-构建与验证](../../agents-cn/11-构建与验证.md) 的命令同步;  
   不改业务代码.
 - 出处: glm TE2 (中), qwen TST-02 (未定级).
 
@@ -1170,7 +1170,7 @@
   `MyApplication.sharedPreferences` (`:207`), OkHttp `HttpClient` (`:116`),  
   `ShellLibSu` 贡献的 `IShell` (`ShellLibSu.kt:15-16`); 加上 114 处静态取用 (PA-02)  
   与可变的 `myAndroid` (PA-01), 仓库与 ViewModel 无法在宿主 JVM 上构造.
-- `AGENTS-cn.md` 的 interface-first 只覆盖了 `IProperty` / `IShell`, 它们正好是现成的替换点.
+- [04-架构](../../agents-cn/04-架构.md) 的 interface-first 只覆盖了 `IProperty` / `IShell`, 它们正好是现成的替换点.
 - 参考修法: 工厂签名加 binding container 变长参数 (或另建测试图), 资源与 Context 走注入.
 - 出处: deepseek PA-42 (中), glm TE4 (中), mimo TEST-2 (中), qwen TST-04 (未定级).
 
@@ -1395,8 +1395,8 @@
 
 ### PA-120 (中) 没有测试策略文档与约定
 
-- `docs/agents-cn/` 只有 architecture, build-conventions, detection-item, doc-formatting,  
-  task-workflow, verification 六个文件, 没有 testing; `AGENTS-cn.md` 也没有测试一节.  
+- `docs/agents-cn/` 现在是 01-判据 到 13-任务工作流 的十三份编号文件, 没有 testing;
+  规则文件里也没有测试一节.  
   于是分层, 跑在哪, 什么时候跑, 谁负责都没有书面定义, 而 Testing strategies  
   明确要求写一份测试策略并随团队演进.
 - 另外现在没有任何入口在跑测试: androidTest 需要设备, `testFossDebugUnitTest` 不在自动化里  
@@ -1436,7 +1436,7 @@
 
 - `base/src/main/java/.../base/shell/impl/ShellDefault.kt:14-21`: 先 `process.waitFor()` (`:15`)  
   再读流 (`:20-21`), 命令输出超过管道缓冲区就永久阻塞; 全仓库没有调用方  
-  (在用的是 `ShellLibSu`), `AGENTS-cn.md` 把它记为有意保留的预备实现.
+  (在用的是 `ShellLibSu`), [05-代码规则](../../agents-cn/05-代码规则.md) 把它记为有意保留的预备实现.
 - 它不是缺陷, 但启用前必须先修死锁; 它还把参数拼进 `sh -c` (`:14`),  
   所以启用它而不逐个复查调用方会引入 PA-72 记的那条形状风险.
 - 参考修法: 保留的前提下把读流移到 `waitFor()` 之前, 或加显著标记并记下启用前的必做修复  
@@ -1489,8 +1489,8 @@ glm 定 "高", mimo 定 "中"; qwen 把它排在判定正确性之后. 从包名
 动工前先定): `:core` 放与平台无关的模型与工具 (含常量表, `Lld`, 日期与版本比较),  
 `:feature/*` 各自独立 (Screen + ViewModel + Repository + 专属 DataSource),  
 `MyApplication` 移到 `:app` 根包, `:base` 只留 `IShell` / `IProperty` 接口.  
-先把 Metro 图接完, 再拆模块; 搬移只是移动文件与改引用, 但必须与两种语言的文档路径一起改:  
-`ShellLibSu` 的路径就写在 `docs/agents-cn/architecture.md` 里.
+先把 Metro 图接完, 再拆模块; 搬移只是移动文件与改引用, 但规则文件里记的路径要一起改:  
+`ShellLibSu` 的路径就写在 [docs/agents-cn/04-架构.md](../../agents-cn/04-架构.md) 里.
 
 优先级报告在本组引到的条目: PA-02, PA-22, PA-23, PA-24, PA-25, PA-26, PA-27, PA-28, PA-29,  
 PA-30, PA-31, PA-35, PA-36, PA-37, PA-38, PA-39, PA-40, PA-41, PA-42, PA-43, PA-49, PA-55, PA-86.  
@@ -1593,7 +1593,7 @@ PA-117, PA-118, PA-119, PA-125.
 
 | 主题 | issues-cn | 本清单 | 代码复核 |
 |---|---|---|---|
-| 加载失败边界 | #62 判 "有意接受" (UI 不 try, 契约是下层不抛) | PA-14 | `BaseListViewModel.kt:60-71` 仍没有失败分支; `IShell` 没有 "不抛" 的声明. 没有失败分支属实; 正解是下层不抛 (与 `AGENTS-cn.md` 一致), 不是让 UI 吸收异常 |
+| 加载失败边界 | #62 判 "有意接受" (UI 不 try, 契约是下层不抛) | PA-14 | `BaseListViewModel.kt:60-71` 仍没有失败分支; `IShell` 没有 "不抛" 的声明. 没有失败分支属实; 正解是下层不抛 (与 [05-代码规则](../../agents-cn/05-代码规则.md) 一致), 不是让 UI 吸收异常 |
 | `myAndroid` | #09 P0, #17 P2 | PA-01 | 一致 |
 | 模块环与共用包名 | #04 P1, #07 P2 | PA-22, PA-25 | 代码一致; 定级不同 |
 | 静态取全局 | #02 P1 (DI 已接入, 剩全局取用点) | PA-02 | 一致, 本文更强调 "与图并行" |
@@ -1615,17 +1615,17 @@ issues-cn 独有, 四份分析没覆盖, 但代码能证实的, 仍然值得做,
 
 - **Q-01** `QUERY_ALL_PACKAGES` (PA-65) 是保留并申报, 还是把过时 targetSdk 那一行改成 `<queries>`  
   加限定查询? 这条权限同时掩盖了 `SettingsScreen.kt:421` 已废弃的 `resolveActivity` 的可见性问题.
-- **Q-02** `keys/debug.keystore` 被提交 (PA-64) 与 `AGENTS-cn.md` 的 "Never commit" 如何调和?  
+- **Q-02** `keys/debug.keystore` 被提交 (PA-64) 与 [12-git](../../agents-cn/12-git.md) 的 "绝不提交" 一节如何调和?  
   是为了 Firebase 的调试证书指纹而有意保留, 还是移出仓库?
 - **Q-03** `gwpAsanMode="always"` 与 `nativeSymbolUploadEnabled` (PA-70) 是只在 Firebase 包要,  
   还是两种包都要?
-- **Q-04** `ShellDefault` (PA-124) 按 `AGENTS-cn.md` 是保留的预备实现, 但它带一个已知的读流死锁:  
+- **Q-04** `ShellDefault` (PA-124) 按 [05-代码规则](../../agents-cn/05-代码规则.md) 是保留的预备实现, 但它带一个已知的读流死锁:  
   继续保留 (并在文档里记录启用前的必做修复), 还是删除?
-- **Q-05** 分区指纹清单 (PA-43) 硬编码 10 项, 其余反射 (PA-46) 同理: `AGENTS-cn.md` 那条  
+- **Q-05** 分区指纹清单 (PA-43) 硬编码 10 项, 其余反射 (PA-46) 同理: [05-代码规则](../../agents-cn/05-代码规则.md) 那条  
   "新代码用最新可用 API" 只管新写的代码, 既有代码是否回头改要你的决定.
 - **Q-06** lld.json 缓存放外部存储 (PA-59) 是刻意选择吗 (例如便于用户查看)?  
   若只是历史选择, 内部存储是更安全的一侧.
-- **Q-07** PA-24 属于 "描述与代码不符" 一类: `AGENTS-cn.md` 架构一节的四级画法是对现有代码的陈述,  
+- **Q-07** PA-24 属于 "描述与代码不符" 一类: [03-概览](../../agents-cn/03-概览.md) 架构一节的四级画法是对现有代码的陈述,  
   而代码里仓库直接产出界面行模型. 要你判定改哪一边 (把那句描述改成实际层数, 还是补出领域层).
 - **Q-08** 归档的四份分析标的是 record 或 scratch, 可执行的发现要不要转进  
   `docs/dev/issues-cn/` 的编号条目, 本文件只做清单?
@@ -1706,6 +1706,6 @@ TST-21 → PA-106.
 
 ## 后续
 
-本文件是问题清单, 不含修复方案与排期; 若要把其中某条转成改动, 按 `AGENTS-cn.md` 的流程  
+本文件是问题清单, 不含修复方案与排期; 若要把其中某条转成改动, 按 [02-工作原则](../../agents-cn/02-工作原则.md) 的流程  
 先出一份短报告再动手. 归档的四份分析与优先级报告只作历史记录, 引用条目时以本文件的编号为准;  
 它们写下的行号是当时读到的, 本文件的行号已按 2026-10-18 的当前代码复核过.

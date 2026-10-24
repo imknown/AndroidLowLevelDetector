@@ -26,7 +26,7 @@
 顺带去掉了原来每个补丁一次的 `toMutableList()` 全表复制,  
 `MyModelListScreen()` 只剩 `models ?: persistentListOf()`.  
 编译产物里 `MyModelListScreenKt` 已无 `toPersistentList` 引用.  
-状态形状的现状记录在 [docs/agents/architecture.md](../../../../agents/architecture.md) 的  
+状态形状的现状记录在 [docs/agents/architecture.md](../../../../agents-cn/04-架构.md) 的  
 BaseListViewModel 一节, 已同步改写.  
 只给那一行加 `remember(models)` 是把复制挪进缓存: 转换点仍在 UI 层, `models` 真更新时仍要复制一次,  
 可变 `List` 仍然跨过 ViewModel 边界, 所以不走那条.

@@ -79,8 +79,8 @@ updateModelDetail(targetIndex, newDetail)   // ViewModel 翻自己的状态找�
 
 ## 修复方案
 
-**动手前先与负责人确认约定**: 把编排整体移进 `HomeRepository.collectHomeModels()` 与 AGENTS-cn.md 相反:  
-该文件 "新增一个检测条目" 一节写明检测项由 `ViewModel.collectModels()` 调用,  
+**动手前先与负责人确认约定**: 把编排整体移进 `HomeRepository.collectHomeModels()` 与 [06-检测条目](../../../agents-cn/06-检测条目.md) 相反:  
+那份流程写明检测项由 `ViewModel.collectModels()` 调用,  
 **调用顺序就是列表顺序**. 下面的仓库化仍是目标形态,  
 但采纳它等于同时改这条约定, 不是可以直接自行实施的事.
 
@@ -90,7 +90,7 @@ updateModelDetail(targetIndex, newDetail)   // ViewModel 翻自己的状态找�
 不单独建 `collectHomeModels()` 过渡形态,  
 下面列出的改法仅在注册表长期搁置时作为独立路径使用.
 
-**迁移清单再添一项 (UI 不 try 约定, 见 AGENTS-cn.md 代码规则)**:  
+**迁移清单再添一项 (UI 不 try 约定, 见 [05-代码规则](../../../agents-cn/05-代码规则.md))**:  
 lld 联网→离线的回退链  
 (`tryDetectOnline()` / `tryDetectOffline()` / `fetchOfflineLldOrNull()` / `getAssetLldOrNull()`) 目前在  
 `HomeViewModel` 里用 try 编排失败回退, 违反 "UI 层不处理业务异常" 的约定, 随 "编排收回仓库" 一半一并归位:  

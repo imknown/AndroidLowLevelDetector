@@ -18,7 +18,7 @@ Compose 构建接线实际早于计划文档数月, 分两段:
   与现行 build-logic 约定同构.
 - **2026-07-28 (2430be11)**: `ui/theme/` 的 Color / Theme / Type 三件 (501 行) 先行入库:  
   计划盘点时主题已 "就绪" (计划 01 章 1.4 原话),  
-  含高中对比度方案 (这套多 scheme 后来由 [issues-cn #31](../../../dev/issues-cn/06-性能/31-主题死配色.md) 记为 6 套只用 2 套的死配色).
+  含高中对比度方案 (这套多 scheme 后来由 [issues-cn #31](../../../dev/issues-cn/archived/06-性能/31-主题死配色.md) 记为 6 套只用 2 套的死配色).
 - **2026-09-19 当日增量**:  
   62c36a5c (minSdk 23 → 24, Navigation 3 硬要求) + 16e8d99c  
   (`lifecycle-runtime-compose`, 提供 `collectAsStateWithLifecycle()`).

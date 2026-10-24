@@ -37,4 +37,4 @@ CI 也不跑 `lintFossDebug`, 所以这些项没人检查过, 只能靠人或靠
 (本条曾经的 "1 条 `EmptySuperCall`" (`HomeViewModel.onCleared()` 的空 `super` 调用) 已随该监听器整体删除而消失,  
 `onCleared` 现在只剩一句过去时注释, 记录见 git log.)
 
-`:app` 零 lint 配置这个现状因此不算欠账, 真正缺的是 CI 跑它 ([#50](../09-构建与CI/50-CI只编译不测试.md)).
+`:app` 零 lint 配置这个现状因此不算欠账, 真正缺的是 CI 跑它 ([#50](../../09-构建与CI/50-CI只编译不测试.md)).

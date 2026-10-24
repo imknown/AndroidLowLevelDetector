@@ -44,4 +44,4 @@ android, sdkExtension, buildId,
 `gradle/toml/android.toml` 的 `test` bundle 目前只有 JUnit 4 (版本取该目录的 `junit`), 仓库里没有 JUnit 5,  
 MockK,  
 Turbine ([#06](../01-架构与分层/06-技术栈缺口.md)). 是否引入 JUnit 5 这类新依赖,  
-按 AGENTS-cn.md 的版本分级规则要由负责人评估后采纳, 不是本条能顺带决定的.
+按 [09-构建约定](../../../agents-cn/09-构建约定.md) 的版本分级规则要由负责人评估后采纳, 不是本条能顺带决定的.
