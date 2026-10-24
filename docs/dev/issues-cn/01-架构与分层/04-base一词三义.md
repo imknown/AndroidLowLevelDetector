@@ -14,7 +14,7 @@
 
 1. **Gradle 模块** `base/` (`net.imknown.android.forefrontinfo.base.property` / `base.shell`);
 2. **app 模块里的同名包** `app/src/main/java/.../base/MyApplication.kt`:  
-   Application 类住在 app 模块却顶着 base 的包名;
+   Application 类在 app 模块里, 却顶着 base 的包名;
 3. **app 模块里的资源目录** `app/src/main/java/.../base/res`, `resLauncher`, `resBackup`,  
    `resTheme` (`app/build.gradle.kts` 的 `sourceSets` 注册).
 
@@ -34,9 +34,9 @@ import net.imknown.android.forefrontinfo.ui.common.initMyAndroid
 同时 `ui/common/` 成了大杂烩: 这个包现有 5 个文件, 其中 4 个是与 UI 毫无关系的底层设施:  
 `ShellLibSu` (shell 实现), `JsonExt` (序列化),  
 `AndroidVersionExt` (全局可变状态), `PropertyReader` (属性回退门面,  
-原 `PropertyExt` 顶层函数的类化). 唯一的例外是 `ScrollBarExt.kt`:  
-它确实是 Compose 的 `Modifier.nonInteractiveScrollbar()` 扩展, 该住在 UI 层.  
-原来挤在这个包里的真 UI 扩展 `ViewExt.setScrollBarMode` 是另一个形状的问题, 那个文件已随 `fcc048d5` 删除,  
+原 `PropertyExt` 顶层函数收拢成的类). 唯一的例外是 `ScrollBarExt.kt`:  
+它确实是 Compose 的 `Modifier.nonInteractiveScrollbar()` 扩展, 就该放在 UI 层.  
+原来挤在这个包里的真 UI 扩展 `ViewExt.setScrollBarMode` 是另一类问题, 那个文件已随 `fcc048d5` 删除,  
 它的替代品正是如今这个合规的 `ScrollBarExt.kt`. 包名承诺的 "common = UI 通用工具", 对 4 个文件里的内容都不成立.
 
 ## 直接原因
@@ -51,7 +51,7 @@ common 再被最底层反向引用, 环就闭上了.
 
 ## 修复方案
 
-只搬包不改逻辑. 目标结构 (配合 [#09](../02-SSOT-唯一数据来源/09-myAndroid可变单例.md), [#02](02-服务定位器上帝对象.md) 一并落位):
+只搬包不改逻辑. 目标结构 (配合 [#09](../02-SSOT-唯一数据来源/09-myAndroid可变单例.md), [#02](02-服务定位器上帝对象.md) 一起完成搬移):
 
 ```
 app/src/main/java/net/imknown/android/forefrontinfo/
@@ -69,8 +69,8 @@ app/src/main/java/net/imknown/android/forefrontinfo/
 ```
 
 搬移后 `MyApplication` 只 import `core.*`, 环消除; `ui.common` 缩小为纯 UI 工具.  
-`app/build.gradle.kts` sourceSets 里那组 "资源跟包走" 的路径需同步加 `core` (若 core 下有 res 的话目前没有,  
-可不加).
+`app/build.gradle.kts` sourceSets 里那组 "资源跟包走" 的路径现在不用动:  
+`core` 下目前没有 res; 以后 `core` 下有了 res, 这组路径要同步加 `core`.
 
 三处搬移不是纯机械的, 得连带处理:
 
@@ -81,7 +81,7 @@ app/src/main/java/net/imknown/android/forefrontinfo/
   (`ui/common/ShellLibSu.kt`), 搬它就得在同一次提交里改这份细则,  
   否则记忆里那条路径立刻失效.
 - `ToastExt` 不在 `ui/common`, 它在 `ui/base/ext/`; 目标结构里 "只留真 UI 工具"  
-  的那一份清单要按这个实际位置合并, 而不是再开一个包.  
+  的那一份清单要按这个实际位置合并, 不再开一个包.  
   `ViewBindingExt` 已随 View 层删除, 不再是要搬的东西.
 
 迁移清单 (一次提交): 移动 6 个文件 (`MyApplication.kt` 出 `base` 包 + `AndroidVersionExt.kt`, `JsonExt.kt`,  

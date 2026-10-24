@@ -58,7 +58,7 @@ updateModelDetail(targetIndex, newDetail)   // ViewModel 翻自己的状态找�
 补偿路径 `payloadOutdatedTargetSdkVersionApk()` 却是 `fetchOfflineLldOrNull().lld ?: return`,  
 离线数据的备用取法整体失败时,  
 排序补丁静默放弃, 没有任何错误行说明为什么. 补偿路径还固定重读**离线**文件 (而刚才那次加载可能用的是在线数据),  
-且这个名为 payload 的动作里做磁盘写 (`copyJsonIfNeededOrThrow()`). 编排收进仓库时这两条路径要一起归位.
+且这个名为 payload 的动作里做磁盘写 (`copyJsonIfNeededOrThrow()`). 编排收进仓库时, 这两条路径要一起收进去.
 
 ## 直接原因
 
@@ -73,7 +73,7 @@ updateModelDetail(targetIndex, newDetail)   // ViewModel 翻自己的状态找�
 
 ## 根本原因
 
-基类 API 按实现细节 (下标) 而非语义 (哪个条目) 设计; 编排逻辑没有归位到拥有列表知识的一侧. 两处合起来,  
+基类 API 按实现细节 (下标) 而非语义 (哪个条目) 设计; 编排逻辑没有放到拥有列表知识的那一侧. 两处合起来,  
 加一个首页条目要同时改 ViewModel (加一行编排) 和 Repository (加一个方法),  
 且顺序知识从此有两份可能的真相 (仓库方法顺序 vs ViewModel 编排顺序).
 
@@ -82,10 +82,10 @@ updateModelDetail(targetIndex, newDetail)   // ViewModel 翻自己的状态找�
 **动手前先与负责人确认约定**: 把编排整体移进 `HomeRepository.collectHomeModels()` 与 [06-检测条目](../../../agents-cn/06-检测条目.md) 相反:  
 那份流程写明检测项由 `ViewModel.collectModels()` 调用,  
 **调用顺序就是列表顺序**. 下面的仓库化仍是目标形态,  
-但采纳它等于同时改这条约定, 不是可以直接自行实施的事.
+但采纳它等于同时改这条约定, 所以不能直接自行实施.
 
 **与修复路线的关系**: [README 修复路线](../README.md#修复路线) 把本条目拆成两半排期:  
-"更新按类型寻址" 一半 (`updateModelDetail` 改按类型 + 补偿路径归位) 不碰该约定, 列入独立小件先行;  
+"更新按类型寻址" 一半 (`updateModelDetail` 改按类型 + 补偿路径收回) 不碰该约定, 列入独立小件先行;  
 "编排收回仓库" 一半在走完整条主线时并入注册表引擎那一步 ([#03](../01-架构与分层/03-无三态模型与注册表.md)),  
 不单独建 `collectHomeModels()` 过渡形态,  
 下面列出的改法仅在注册表长期搁置时作为独立路径使用.
@@ -93,7 +93,7 @@ updateModelDetail(targetIndex, newDetail)   // ViewModel 翻自己的状态找�
 **迁移清单再添一项 (UI 不 try 约定, 见 [05-代码规则](../../../agents-cn/05-代码规则.md))**:  
 lld 联网→离线的回退链  
 (`tryDetectOnline()` / `tryDetectOffline()` / `fetchOfflineLldOrNull()` / `getAssetLldOrNull()`) 目前在  
-`HomeViewModel` 里用 try 编排失败回退, 违反 "UI 层不处理业务异常" 的约定, 随 "编排收回仓库" 一半一并归位:  
+`HomeViewModel` 里用 try 编排失败回退, 违反 "UI 层不处理业务异常" 的约定, 随 "编排收回仓库" 一半一并处理:  
 取数与回退下沉, 或返回 wrapper 由 mapper 呈现.
 
 编排收回仓库, 更新按类型寻址:
