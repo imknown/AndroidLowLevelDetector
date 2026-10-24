@@ -9,7 +9,7 @@
 
 1 文件 3 行量级的小步: 盘点既有 Compose 依赖, 补齐缺失项, 为后续每步提供编译基础.
 
-## 实际落地
+## 实施结果
 
 Compose 构建接线实际早于计划文档数月, 分两段:
 
@@ -23,7 +23,7 @@ Compose 构建接线实际早于计划文档数月, 分两段:
   62c36a5c (minSdk 23 → 24, Navigation 3 硬要求) + 16e8d99c  
   (`lifecycle-runtime-compose`, 提供 `collectAsStateWithLifecycle()`).
 
-## 落地差异
+## 与计划的差异
 
 计划设想的 "第 0 步" 在计划写作时已大半完成: 依赖与主题数月前已备, 当日实际增量只有 minSdk 与 lifecycle-runtime-compose 两笔.  
 后续 (2026-09-30 起) issues-cn #53 记录 `configureCompose()` 存在死分支 (`when` 判 `Project` 永不成立), 属这批早期接线代码的后续发现.

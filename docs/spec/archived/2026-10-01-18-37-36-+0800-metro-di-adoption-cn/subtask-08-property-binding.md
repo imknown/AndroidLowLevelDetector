@@ -2,7 +2,7 @@
 
 > 状态: living (预生成; 动工时与负责人预期对比, 必要时显式修订). 计划: [plan.md](plan.md) 子任务 08. 风险: 低 (改动量大但全是机械替换; 引入 graph factory 是唯一结构性变化).  
 > 修订 (2026-10-02): "经 `OthersRepository` 构造传入" 已过时, 同 ST-07 报告的同型修订,  
-> ST-03/04 落地后全部 DataSource 均为 @Inject 图构造, `PropertyReader` 由图直接解析进各自构造函数,  
+> ST-03/04 完成后全部 DataSource 均为 @Inject 图构造, `PropertyReader` 由图直接解析进各自构造函数,  
 > 无需经 Repository 传参 (`OthersRepository` 自身零 property 调用点).  
 > 修订 (2026-10-02, 实施时): 原方案的 "AppGraph companion @Provides" 在 Metro 1.4.5 + Kotlin 2.4.20 上无法编译, 图声明  
 > `@DependencyGraph.Factory` 后, 插件的 supertype 生成器无条件给已存在的 companion 挂 `: Factory` 父类型, 但 SAM 实现生成环节不生效  
@@ -11,12 +11,12 @@
 > 改走 Metro 主干路径: 图不声明 companion (Metro 自行生成并实现工厂接口),  
 > 两个 `@Provides` 挪入 `@BindingContainer` object (`HttpClientContainer` / `PropertyContainer`),  
 > 经 `@DependencyGraph(bindingContainers = [...])` 挂入; 工厂用普通 interface (非 `fun interface`),  
-> 调用点 `createGraphFactory<AppGraph.Factory>().create(this)` 与原方案一致. 该限制升级 Metro 后值得复核 (AppGraph.kt 注释有记). 另:  
+> 调用点 `createGraphFactory<AppGraph.Factory>().create(this)` 与原方案一致. 这个限制升级 Metro 后值得复核 (AppGraph.kt 注释有记). 另:  
 > `initShellAndProperty` 随 property 半边摘除更名为 `initShell`.
 
 ## 要改什么
 
-- **引入 graph factory** (Context 绑定的地基): `AppGraph` 增加
+- **引入 graph factory** (Context 绑定的基础): `AppGraph` 增加
   ```kotlin
   @DependencyGraph.Factory
   fun interface Factory { fun create(@Provides app: MyApplication): AppGraph }

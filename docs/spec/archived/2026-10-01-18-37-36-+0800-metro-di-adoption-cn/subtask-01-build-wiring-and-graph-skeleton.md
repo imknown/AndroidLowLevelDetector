@@ -71,7 +71,7 @@ CompositionLocal 取工厂, entry 作用域由 Nav3 的 `rememberViewModelStoreN
 ## 验证
 
 - `./gradlew assembleFossDebug` → BUILD SUCCESSFUL (失败→修复→通过的过程见第 6 节).
-- 运行期验证 (四个 tab 正常加载) 需要真机/模拟器, 属 ST-05 第一段收尾时的整体验证项; ST-01 的工厂 map 为空, 页面行为与改造前一致.
+- 运行期验证 (四个 tab 正常加载) 需要真机/模拟器, 属 ST-05 第一段结束时的整体验证项; ST-01 的工厂 map 为空, 页面行为与改造前一致.
 
 ## 遗留
 

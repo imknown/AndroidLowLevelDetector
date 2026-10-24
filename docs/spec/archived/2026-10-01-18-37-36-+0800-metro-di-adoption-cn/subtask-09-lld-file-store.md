@@ -8,12 +8,12 @@
 > `SettingsRepository` 跨特性引用 `ui/home/datasource` 有 `BasicDataSource` → `AndroidDataSource`  
 > 先例). `LLD_JSON_NAME` 常量随迁, `LldDataSource` 的远程 URL 改引 `LldFileStore.LLD_JSON_NAME`.  
 > 修订 (2026-10-02, 实施时): `MyApplication.getDownloadDir()` 是 companion 成员,  
-> Kotlin 不允许经实例引用调用 (`application.getDownloadDir()` 编译错 UNRESOLVED_REFERENCE), 报告"经 Application 绑定取  
-> getDownloadDir()"按字面不可编译. 因 LldFileStore 是其唯一调用方,  
+> Kotlin 不允许经实例引用调用 (`application.getDownloadDir()` 编译错 UNRESOLVED_REFERENCE), 报告 "经 Application 绑定取  
+> getDownloadDir()" 按字面不可编译. 因 LldFileStore 是其唯一调用方,  
 > 将 `getDownloadDir` / `getFileDir` 从 companion 移为 MyApplication 实例成员  
 > (原 `instance` 静态读改为 `this`, 行为逐字节等价, 顺带消除一处静态访问). MyApplication.kt 因此进入本子任务文件清单.  
-> 修订 (2026-10-02, v1 review): 原文"构造时解析"有误, 被搬代码本为 `by lazy`, 急切初始化意味着首个 ViewModel 创建时主线程磁盘 IO 且多实例重复解析,  
-> 违反本报告"只搬不改"的总纲 (批次 review 未拦住该措辞, 记入收尾复盘). 按负责人裁定改回 `by lazy` (注入的 application 保留),  
+> 修订 (2026-10-02, v1 review): 原文 "构造时解析" 有误, 被搬代码本为 `by lazy`, 急切初始化意味着首个 ViewModel 创建时主线程磁盘 IO 且多实例重复解析,  
+> 违反本报告 "只搬不改" 的总纲 (批次 review 未拦住这个措辞, 记入任务结束时的横向回顾). 按负责人决定改回 `by lazy` (注入的 application 保留),  
 > v1 finding ① 的其余候选 (`@SingleIn`) 不采纳.
 
 ## 要改什么

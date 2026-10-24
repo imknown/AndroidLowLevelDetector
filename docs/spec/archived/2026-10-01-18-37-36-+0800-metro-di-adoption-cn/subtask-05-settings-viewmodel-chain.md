@@ -1,6 +1,6 @@
 # ST-05 settings-viewmodel-chain: 修改计划报告
 
-> 状态: living (预生成; 动工时与负责人预期对比, 必要时显式修订). 计划: [plan.md](plan.md) 子任务 05. 风险: 低 (同型机械改造 + 文档收尾; 含第一段的整体运行时验证).
+> 状态: living (预生成; 动工时与负责人预期对比, 必要时显式修订). 计划: [plan.md](plan.md) 子任务 05. 风险: 低 (同型机械改造 + 文档收束; 含第一段的整体运行时验证).
 
 ## 要改什么
 
@@ -17,7 +17,7 @@
 
 ## 覆盖核对
 
-- 覆盖: SettingsViewModel 链全部对象 + `SettingsKey` entry; `AppRoot` 的 androidx `viewModel` 收尾;  
+- 覆盖: SettingsViewModel 链全部对象 + `SettingsKey` entry; `AppRoot` 的 androidx `viewModel` 收束;  
   issues-cn #05 条目关闭与引用修剪, 第一段在此完整覆盖
 - 不在本子任务: 静态单例与 HttpClient (ST-06~10, 第二段), 有意不做清单
 

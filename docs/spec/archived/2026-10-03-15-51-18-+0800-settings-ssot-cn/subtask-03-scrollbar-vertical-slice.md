@@ -6,10 +6,10 @@
 
 - 按本报告实施: `LocalScrollBarMode` 定义在 `MyModelListScreen.kt` (形态与 `LocalThemeMode` 同构:  
   `ProvidableCompositionLocal<StateFlow<ScrollBarMode>>` + staticCompositionLocalOf + 常量 None preview 默认;  
-  定义落点 = 首要消费方同文件, 对齐 LocalThemeMode-in-Theme.kt 先例), `MainActivity` 根部 provide 第二行 + 字段注释更新,  
-  `MyModelListScreen` 收集换源 + 注释归真,  
-  `MyApplication` 删滚动条三件 (伴生对象只剩 `instance` / `sharedPreferences` / `getMyString`, 留给 #02 收口; 未用 import 清理),  
-  `SettingsScreen` 滚动条行换源 + 注释归真, `SettingsViewModel` 加 [Scroll bar] 区.  
+  定义位置 = 首要消费方同文件, 照 LocalThemeMode-in-Theme.kt 先例), `MainActivity` 根部 provide 第二行 + 字段注释更新,  
+  `MyModelListScreen` 收集换源 + 注释按现状改写,  
+  `MyApplication` 删滚动条三件 (伴生对象只剩 `instance` / `sharedPreferences` / `getMyString`, 留给 #02 清理; 未用 import 清理),  
+  `SettingsScreen` 滚动条行换源 + 注释按现状改写, `SettingsViewModel` 加 [Scroll bar] 区.  
   三态语义逐字保留 (存值 "2" 仍解析为 Draggable, `drawsScrollBar` 只认 Normal).
 - 验证: `assembleFossDebug` 绿 (EXIT=0, 唯一警告为 `LldDataSource` 既有); 零残留 (三个已删符号全仓零现在时引用, SettingsStore 的过去时溯源注释除外); 标点零违规.
 
@@ -21,18 +21,18 @@
 ## 变更清单
 
 1. `base/MyApplication.kt`: 删 companion `scrollBarMode` / `setMyScrollBar`;  
-   删 `initScrollBar()` 及其 `onCreate` 调用 (store 播种已随 ST-02 的首解析落地); 相邻注释归真.
+   删 `initScrollBar()` 及其 `onCreate` 调用 (store 初值已随 ST-02 的首解析完成); 相邻注释按现状改写.
 2. `ui/MainActivity.kt`:  
    `setContent` 根部的 `CompositionLocalProvider` 补一行 `LocalScrollBarMode provides settingsStore.scrollBarMode`  
-   (store 字段 ST-02 已缓存, 只差 provide). 缺这行则下方两个收集点永远拿到定义处默认 `None`, 指示条全站消失, 三档切换失效, 且单独可编译不报错, 只能靠真机冒烟兜住.
+   (store 字段 ST-02 已缓存, 只差 provide). 缺这行则下方两个收集点永远拿到定义处默认 `None`, 指示条全站消失, 三档切换失效, 且单独可编译不报错, 只能靠真机冒烟接住.
 3. `ui/base/list/MyModelListScreen.kt`: `MyApplication.scrollBarMode.collectAsStateWithLifecycle()` (`:54`) 换源  
    (`LocalScrollBarMode` CompositionLocal, 即 ST-02 钉死的按流拆形态在此复用:  
    类型 `CompositionLocal<StateFlow<ScrollBarMode>>`, 携带 `settingsStore.scrollBarMode`,  
    preview 默认 `MutableStateFlow(ScrollBarMode.None)`;  
-   `MyModelListScreen.kt:153` 的 preview 传常量不受影响); 相邻注释 (`:52-53` "MyApplication owns it") 归真.
+   `MyModelListScreen.kt:153` 的 preview 传常量不受影响); 相邻注释 (`:52-53` "MyApplication owns it") 按现状改写.
 4. `ui/settings/SettingsScreen.kt`: `scrollBarMode` 收集 (`:115`) 换源 (`LocalScrollBarMode`, 同上);  
    `scrollBarValue` 的 `remember` 初读 (`:90-95`) 改 ViewModel 状态 (首帧即存值形态); `onScrollBarSelect` (`:129-133`) 改  
-   `viewModel.setScrollBarMode(value)`; 删 `scrollBarKey` / `scrollBarDefaultValue` 直读; 相邻注释归真.
+   `viewModel.setScrollBarMode(value)`; 删 `scrollBarKey` / `scrollBarDefaultValue` 直读; 相邻注释按现状改写.
 5. `ui/settings/SettingsViewModel.kt`: 滚动条原始存值状态 + `setScrollBarMode(value: String)`.
 6. `ui/AppRoot.kt:186` 的 preview 常量传参不受影响.
 

@@ -7,15 +7,15 @@
 Home 与 Others 换壳; `home/HomeScreen.kt` 包一层共用列表并收集 Home 的两个 `SharedFlow` 事件 (滚动条模式, 过期应用排序):  
 "包一层" 扩展模式与 SharedFlow 事件收集是本章教学点.
 
-## 实际落地
+## 实施结果
 
 - 78566930: HomeFragment 与 OthersFragment → ComposeView, 复用 `MyModelListScreen`.
 
-## 落地差异
+## 与计划的差异
 
 - **`home/HomeScreen.kt` 做出后撤销** (计划 01 章章首更正): Home 没有页面特有逻辑, 直接用共用 `MyModelListScreen`, 由 `AppRoot()` 的  
-  `entryProvider(Home entry)` 装配, 目标树里的该文件不存在.
-- **组合内收集 `SharedFlow` 的教学设想未进入代码**: 过期排序事件的收集最终落在 ViewModel (befc120e, 09-21, 属 ST-08 的状态重构), 不在组合内;  
+  `entryProvider(Home entry)` 装配, 目标树里的那个文件不存在.
+- **组合内收集 `SharedFlow` 的教学设想未进入代码**: 过期排序事件的收集最终归到 ViewModel (befc120e, 09-21, 属 ST-08 的状态重构), 不在组合内;  
   09-19 到 09-21 之间的过渡形态无存档, `unknown`.
 - 6d4d76d8 (includeFontPadding 恢复) 落在本步提交区间, 更正记录挂在 step-1 章 (8461d8b2), 见 ST-01.
 

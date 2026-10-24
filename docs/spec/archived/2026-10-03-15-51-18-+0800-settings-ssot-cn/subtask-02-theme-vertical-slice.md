@@ -4,18 +4,18 @@
 
 ## 动工记录 (2026-10-03)
 
-- 按本报告实施, 形态与钉死裁定一致: `LocalThemeMode` 为 per-flow `ProvidableCompositionLocal<StateFlow<AppThemeMode>>`  
+- 按本报告实施, 形态与钉死决定一致: `LocalThemeMode` 为 per-flow `ProvidableCompositionLocal<StateFlow<AppThemeMode>>`  
   (staticCompositionLocalOf + 常量 FollowSystem preview 默认),  
   `MainActivity` 根部 provide + `settingsStore` lazy 字段, `MyApplication` 删主题三件并在 initTheme 原位 eager 解析 store  
   (`initScrollBar` 过渡保留), `SettingsViewModel` 注入 store (`themeValue` 直通热流 + `setTheme` 委托),  
-  `SettingsScreen` 主题行换源. `AppGraph` / `SettingsStore` 头注释的现在时陈述 ("initTheme sits today") 归真为过去时;  
+  `SettingsScreen` 主题行换源. `AppGraph` / `SettingsStore` 头注释的现在时陈述 ("initTheme sits today") 按现状改为过去时;  
   `initTheme` 的 DynamicColors 说明迁往 Theme.kt.
 - 构建波折两处 (已修并落注释): ① `provides` infix 只定义在 `ProvidableCompositionLocal` 子类型上, 显式标注父类型 `CompositionLocal` 会把它抹掉,  
   声明改标子类型; ② `onCreate` 裸首解析表达式触发 `RETURN_VALUE_NOT_USED`,  
-  `@Suppress` 压制 (reviewer 实证: 该诊断为 IDE 侧, 项目 CLI 2.4.20 不发, 压制对未来升级免疫).
+  `@Suppress` 压制 (reviewer 实证: 这个诊断为 IDE 侧, 项目 CLI 2.4.20 不发, 压制对未来升级免疫).
 - 验证: `assembleFossDebug` 绿 (EXIT=0, 唯一警告为 `LldDataSource` 既有);  
   v1 review "pass" (承重论断全核实, 3 条低: ① 滚动条注释措辞微调已落 ② `LocalThemeMode` 静默默认留档 ③ 提交范围提醒);  
-  负责人真机冒烟全过 (冷启不闪 / 切换即时 / recreate 保持 / `am kill` 恢复 / 设置页首帧即存值); 注释经中文中间态在提交闸门译回英语.
+  负责人真机冒烟全过 (冷启不闪 / 切换即时 / recreate 保持 / `am kill` 恢复 / 设置页首帧即存值); 注释经中文中间态在提交确认点译回英语.
 
 ## 目标句 (占位, 动工对照时由负责人确认或改写)
 
@@ -26,11 +26,11 @@
 
 1. `base/MyApplication.kt`:
    - 删 companion `themeMode` / `setMyTheme` (AppThemeMode 顶层枚举原地保留, 去留 ST-05 终裁).
-   - 删 `initTheme()` (power-saver 归一已随 ST-01 迁入 store 播种段);  
-     `onCreate` 里 `initTheme()` 的位置改为解析一次 store (`appGraph.settingsStore`), 这同时完成滚动条流的播种 (store 一次构造播两条),  
+   - 删 `initTheme()` (power-saver 归一已随 ST-01 迁入 store 填初值段);  
+     `onCreate` 里 `initTheme()` 的位置改为解析一次 store (`appGraph.settingsStore`), 这同时完成滚动条流的填初值 (store 一次构造填两条),  
      `initScrollBar` 留到 ST-03 删, 两者并存期 companion 流与 store 流互不干扰.
    - `initScrollBar` 头注释 "(same as initTheme)" (`MyApplication.kt:160`) 本子任务顺带改写 (函数本体 ST-03 才删), 使本子任务的零残留 grep 可过.
-   - 相邻注释归真 (companion 段引用 themeMode 的注释随成员删除一并处理).
+   - 相邻注释按现状改写 (companion 段引用 themeMode 的注释随成员删除一并处理).
 2. `ui/theme/Theme.kt`: `MyApplication.themeMode.collectAsStateWithLifecycle()` (`:279`) 换源.  
    接入方式对比后**钉死 (a) 按流拆 CompositionLocal**:
    - (a) **已选**: `setContent` 根部与 `LocalMetroViewModelFactory` 并排 provide `LocalThemeMode`:  
@@ -42,26 +42,26 @@
      (SettingsScreen / MyModelListScreen / AppRoot 三处 AppTheme) 要逐个补参, 穿透整条 preview 链.
    - preview 默认的正确性: preview 靠 `uiMode` + `isSystemInDarkTheme()` 出深色, FollowSystem 默认即正确.
 3. `ui/MainActivity.kt`: `isAppDark()` (`:77`) 改读 `settingsStore.themeMode.value`;  
-   store 经 `(application as MyApplication).appGraph.settingsStore` 取, `onCreate` 里缓存为字段; 相邻注释 (`:75-76`) 归真.
+   store 经 `(application as MyApplication).appGraph.settingsStore` 取, `onCreate` 里缓存为字段; 相邻注释 (`:75-76`) 按现状改写.
 4. `ui/settings/SettingsViewModel.kt`: 注入 store; 新增主题原始存值状态 (首帧即存值形态, 见 plan 约定 #1, 即同步初值或 `stateIn(Eagerly)`) +  
    `setTheme(value: String)` 委托 store.
 5. `ui/settings/SettingsScreen.kt`: 主题行读写换源:  
    `themeValue` 的 `remember { ... getString(...) }` (`:81-86`) 改收集 ViewModel 状态;  
    `onThemeSelect` 回调 (`:124-128`) 改 `viewModel.setTheme(value)`; 删 `themeKey` / `themeDefaultValue` 的  
-   `stringResource` 直读; 相邻注释 (`:79-80` initTheme 迁移注) 归真.
+   `stringResource` 直读; 相邻注释 (`:79-80` initTheme 迁移注) 按现状改写.
 6. preview (`SettingsContentPreview`): `themeValue` 照旧传常量, 不受影响.
 
 ## 有意不做 (documented non-goal)
 
 - 对话框枚举化 (`SettingsChoiceDialog` 泛型化收枚举, enum 带 `labelRes` 与可选子集, store 的原始存值流随之退役) 是合理的后续演进, 但属设置 UI 的类型安全改造,  
   不混入本次存储层 SSOT 迁移: 文案搬家 ×4 locale, 且退役编码要重表达 (滚动条 Draggable 档今日以 "注释掉数组项" 的方式退役). 主线走完后再择机立项;  
-  本任务两个对话框维持数组元数据形态, 本条裁定与 ST-03 的滚动条对话框共用.
+  本任务两个对话框维持数组元数据形态, 本条决定与 ST-03 的滚动条对话框共用.
 
 ## 时序论证 (报告必须写清的三段)
 
-1. `MyApplication.onCreate`: `instance` 赋值 → store 首解析 (SP 此时可用, 播种 + power-saver 归一), 与今天 `initTheme()` 完全同位.
-2. `MainActivity.onCreate` 前半 (`setTheme` / `enableEdgeToEdge`): 读 `store.themeMode.value`, 已播种, 值与今天伴生流一致.
-3. 组合首帧: `AppTheme` collect, 初值即播种值, 无默认闪烁.
+1. `MyApplication.onCreate`: `instance` 赋值 → store 首解析 (SP 此时可用, 填初值 + power-saver 归一), 与今天 `initTheme()` 完全同位.
+2. `MainActivity.onCreate` 前半 (`setTheme` / `enableEdgeToEdge`): 读 `store.themeMode.value`, 已填初值, 值与今天伴生流一致.
+3. 组合首帧: `AppTheme` collect, 初值即填入的值, 无默认闪烁.
 
 ## 行为等价性 / 已知差值
 

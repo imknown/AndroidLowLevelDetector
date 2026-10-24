@@ -1,6 +1,6 @@
 # ST-02 home-viewmodel-chain: 修改计划报告
 
-> 状态: living (预生成; 动工时与负责人预期对比, 必要时显式修订). 计划: [plan.md](plan.md) 子任务 02. 风险: 高 (试点链, 生疏领域, 即 MetroX multibinding 首次落地).
+> 状态: living (预生成; 动工时与负责人预期对比, 必要时显式修订). 计划: [plan.md](plan.md) 子任务 02. 风险: 高 (试点链, 生疏领域, 即 MetroX multibinding 首次实现).
 
 ## 要改什么
 
@@ -26,9 +26,9 @@
 
 - `./gradlew assembleFossDebug`
 - `rg "HomeViewModel.Factory" --glob "*.kt"` 全仓零残留
-- 运行时四 tab smoke 统一放 ST-05 (第一段收尾)
+- 运行时四 tab smoke 统一放 ST-05 (第一段结束时)
 
 ## 依赖与前提
 
 - ST-01 已提供 `AppGraph` / `AppViewModelFactory` / `MainActivity` 工厂下发
-- 本任务落地后工厂的 `viewModelProviders` map 出现第一个条目
+- 本任务完成后工厂的 `viewModelProviders` map 出现第一个条目
