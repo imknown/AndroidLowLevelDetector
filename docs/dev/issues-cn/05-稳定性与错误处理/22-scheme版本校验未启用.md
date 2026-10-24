@@ -8,7 +8,7 @@
 
 **结论**: `ui/home/model/Lld.kt` 的 `SCHEME_VERSION = 1` 定义后全仓零引用, 该文件之外再无任何一处出现这个标识符.  
 数据类里的 `scheme: Int` 字段被反序列化进模型, 但没有任何地方拿它跟 `SCHEME_VERSION` 比: `scheme` 本该是  
-" 数据格式过新" 的校验, 现在上游升了 scheme,  
+"数据格式过新" 的校验, 现在上游升了 scheme,  
 老版本只会把它当成一次普通的解析失败, 然后静默回退离线数据.
 
 **证据**:
@@ -16,7 +16,7 @@
 - `ui/common/JsonExt.kt` 的 `json = Json { ignoreUnknownKeys = true }`: 上游 **加字段** 不报错也不崩;  
   改字段类型或结构会在  
   `decodeFromString` 抛异常; 而 **只改值的写法** (`api` 从 `"37"` 写成 `"37.1"`) 反序列化照样成功,  
-  坏值原样进模型, 引爆点被推到后面的 `toInt()`.
+  坏值原样进模型, 出错点被推到后面的 `toInt()`.
 - `Lld.Androids.Android.api` 是 `String` (`lld.android.stable.api` 等取值点都经它), 消费处一律裸 `toInt()`:  
   `AndroidVersionExt.kt` 的 `isLatestStableAndroid()` (`lld.android.stable.api.toInt()`)  
   与 `isSupportedByUpstreamAndroid()`  
@@ -29,7 +29,7 @@
 **失配已经发生的一例**: `app/src/main/assets/lld.json` 的 `toybox` 现有 4 个键 (`stable` / `support` / `mainline` /  
 `master`), 而 `Lld.Toyboxes` 只声明 3 个 (无  
 `mainline`), 所以 `ignoreUnknownKeys` 把那一档参考数据静默丢掉, `detectToybox()` 永远读不到它. 数据与模型已经悄悄不一致, 没有任何校验或日志报告这件事.  
-这也正是 `scheme` 校验该拦的形状: 模型与数据任何一侧演进, 现在都只能靠人眼发现.
+这也正是 `scheme` 校验该拦的那种情况: 模型与数据任何一侧演进, 现在都只能靠人眼发现.
 
 **连带面**: 模型字段除 `extension` / `phase` 外全部必填, `Json { ignoreUnknownKeys = true }` 对 "加字段" 宽容,  
 对 "删键 / 改键名 / 改类型" 就是整份 `decodeFromString` 抛异常 → `lld = null` → 各行按 `lld == null` 分支落到 CRITICAL  

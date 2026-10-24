@@ -6,11 +6,11 @@
 
 **严重程度: P2 | 修复难度: 低**
 
-**结论**: `binderDetector/src/main/cpp/BinderDetector.cpp` 的 `getErrorNo()` 顺序是 先  
+**结论**: `binderDetector/src/main/cpp/BinderDetector.cpp` 的 `getErrorNo()` 顺序是先  
 `__android_log_print(ANDROID_LOG_WARN, "BinderDetector", "... errorNo: %d, error: %s", function, driverChars, ret, errno, strerror(errno))`,  
 再 `int errorNo = -abs(errno)`: 返回给 Kotlin 的那个值取的是 **打完日志之后** 的 `errno`.  
 参数里的 `errno` 与 `strerror(errno)` 在调用前求值, 读到的还是真实失败原因;  
-坏在后一次: `__android_log_print` 内部要走 socket 写 logd,  
+问题出在后一次: `__android_log_print` 内部要走 socket 写 logd,  
 这次调用自身失败或其内部的 libc 调用都可以改写 `errno`.
 
 是否真被改写取决于运行期 (该条日志有没有被过滤掉, logd 写入有没有失败), 所以这是概率性的失真, 不是每次都错.

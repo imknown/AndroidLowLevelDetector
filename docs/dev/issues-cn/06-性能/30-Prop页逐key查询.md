@@ -54,10 +54,10 @@ Prop 页一次加载 = 与常量数等量的**串行跨进程 binder 查询**, �
 
 把 "一张可以整表枚举的 ContentProvider 表" 当成了 "键值对 API" 来用. 这同时还造成**漏数据**:  
 常量列表 ≠ 实际存储的行: 设备上动态写入的,  
-不在 SDK 常量里的设置项全都显示不出来, SDK 里已废弃的常量又会查出空值. 这个漏法是取 key 方式的必然结果,  
+不在 SDK 常量里的设置项全都显示不出来, SDK 里已废弃的常量又会查出空值. 漏掉数据是取 key 方式的必然结果,  
 换掉取 key 的方式才能一并解决. 顺带如实记录:  
 反射枚举出的键集里含 `ANDROID_ID` 之类的标识键, 该页会把对应值原样显示在屏幕上, 仅本地展示,  
-应用的网络只取 `lld.json`, 不外发; 换全表 query 后这一面自然收窄到实际存储的行.
+应用的网络只取 `lld.json`, 不外发; 换全表 query 后暴露范围自然收窄到实际存储的行.
 
 ## 修复方案
 
@@ -108,7 +108,7 @@ tempModels += propRepository.getSettings(SettingsTable.SYSTEM)
    与 [#14](../archived/04-并发与调度/14-检测链用CPU线程池.md) 是同一件事.
 2. 三个 `CONTENT_URI` 常量与 `query()` 的 API 等级要按 **minSdk** (`gradle/toml/build.toml` 的 `minSdk`)  
    核对一遍再写 (`@RequiresApi` 或 `isAtLeast...()` 版本检查按核对结果决定).
-3. 条目集合的口径会变: 现在由 **SDK 常量名**决定 (`toTranslatedDetailMyModel(key, value)` 把 key 原样当标题,  
+3. 条目集合由什么决定会变: 现在由 **SDK 常量名**决定 (`toTranslatedDetailMyModel(key, value)` 把 key 原样当标题,  
    查不到值的行渲染成 "未填写"),  
    改后由**实际存储的行**决定: 空的废弃行消失,  
    设备自写的项出现. Prop 页每行的 `MyModel.key` 就是这个原始标题 (`MyModelTitle.Raw`), 行集一变,  

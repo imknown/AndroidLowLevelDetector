@@ -91,7 +91,7 @@ class MountDataSource {
 // (#01 / #11 改造后若仓库内还有纯计算, Default 才有保留价值)
 ```
 
-### HttpClient 复用 + 状态码闸门
+### HttpClient 复用 + 状态码检查
 
 改动量约 18 行, 文件 `ui/home/datasource/LldDataSource.kt`.
 
@@ -131,7 +131,7 @@ class LldDataSource {
 需新增 `io.ktor.http.isSuccess` 的 import (`java.io.IOException` 文件里已有);  
 Ktor 钉在 `gradle/toml/kotlin.toml` 的 **3.6.0**, 动手时按该版本核对 `discard()` 的 import.  
 TrafficStats 的 `EventListener` 随连接触发, 客户端复用后行为不变.  
-异常路径走既有的 "联网失败 → 降级离线" 分支 (`HomeViewModel.tryDetectOnline()`), 降级文案从 "解析失败" 变成 "获取失败", 归因更准. 状态码这道闸门与  
+异常路径走既有的 "联网失败 → 降级离线" 分支 (`HomeViewModel.tryDetectOnline()`), 降级文案从 "解析失败" 变成 "获取失败", 归因更准. 状态码这道检查与  
 [#24](../../05-稳定性与错误处理/24-杂项隐患.md) 的 "Ktor 不校验 HTTP 状态码" 是同一次改动.
 
 **来历**: "一次请求一个客户端" 的写法随 Ktor 迁移带入,  

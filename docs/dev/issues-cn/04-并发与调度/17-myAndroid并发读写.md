@@ -24,7 +24,7 @@
 
 **危害在组合, 不在撕裂**: 单次 int 写入本身是原子的, `api` 不会被读成 "半个值";  
 危险的是 `detectAndroid()` 是**四次独立赋值** (`api` → `apiFull` → `version` → `dessert`),  
-这四步之间落进来的任何一次读, 拿到的都是跨两代的搭配:  
+这四步之间发生的任何一次读, 拿到的都是跨两代的搭配:  
 新 `api` 配旧 `version`, 或新 `apiFull` 配旧 `dessert`.  
 只读 `api` 的 `isAtLeastAndroidX()` 与读 `apiFull` 的 `isLatestPreviewAndroid()`,  
 在同一时刻给出的判断可以互相矛盾.  
