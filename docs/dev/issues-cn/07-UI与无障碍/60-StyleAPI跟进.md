@@ -18,7 +18,7 @@ Compose 迁移决策 7 原计划的 "单文件试水" 从未实施 (stable found
   1.12.1 stable 反编译无该签名; 且 foundation 1.13.0-alpha03 已宣布重构, 旧实现将废弃移除,  
   所以试水代码即使硬写也会立刻报废.
 - 当前依赖 pin: `gradle/toml/android.toml` → `compose-bom` 条目.
-- 出处: Compose 迁移遗留优化, 2026-09-25 整理旧 tracker 时的抢救记录把它记为 "活" 项 ([归档  
+- 出处: Compose 迁移遗留优化, 2026-09-25 整理旧 tracker 并把可留内容移入 issues-cn 的那份记录把它记为 "活" 项 ([归档  
   spec](../../../spec/archived/2026-09-17-21-14-43-+0800-compose-migration-cn/plan.md) 决策 7  
   与 "决策落地差异" 一节). 它曾作为附录收入当时的 tracker; 现行 tracker 按问题性质重建后已无对应条目 (2026-10-04 全目录 grep 零命中), 本条补回并把出处锚定到归档 spec.
 

@@ -4,9 +4,9 @@
 
 > 返回 [README 索引](../../README.md) · [10 · 权限与合规](../../README.md#10--权限与合规).
 
-**严重程度: P2(ℹ️ 非缺陷) | 修复难度: 无 | 处置: 有意接受, 无待办**
+**严重程度: P2(ℹ️ 非缺陷) | 修复难度: 无 | 处理: 有意接受, 无待办**
 
-留这一条只为防止有人把它当欠账重新提一遍:  
+留这一条只为防止有人把它当没做的问题重新提一遍:  
 [AGENTS.md](../../../../../AGENTS.md) 写的是 "libsu 非 root 模式  
 (`ui/common/ShellLibSu.kt`, `Shell.FLAG_NON_ROOT_SHELL`): there is no root layer", 代码与之一致.
 
@@ -33,4 +33,4 @@ WebView 那区注释掉 `dumpsys webviewupdate` 并写明 "Need `android.permiss
   由 `ui/others/datasource/ArchitectureDataSource` `System.loadLibrary(...)` 后接进 Others 页.
 
 提权是待想的功能而不是缺失的实现: `docs/dev/JOTTINGS.md` 的 features todo 在 `settings` 下记着 `root mode`. 所以本条目没有待办.  
-各检测条目实际够得着哪一层, 等 [#03](../../01-架构与分层/03-无三态模型与注册表.md) 的检测条目目录真落地时随目录一并记录, 目录里不要承诺基于 root 的检测.
+各检测条目实际够得着哪一层, 等 [#03](../../01-架构与分层/03-无三态模型与注册表.md) 的检测条目目录真做出来时随目录一并记录, 目录里不要承诺基于 root 的检测.

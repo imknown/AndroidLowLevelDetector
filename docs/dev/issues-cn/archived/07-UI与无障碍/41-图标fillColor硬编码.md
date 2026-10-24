@@ -16,7 +16,7 @@
 +        android:fillColor="#FF000000"
 ```
 
-改动分两步落地: `9b3404a6` 把 `@color/md_theme_onSurface` 换成 `?attr/colorOnSurface`,  
+改动分两步完成: `9b3404a6` 把 `@color/md_theme_onSurface` 换成 `?attr/colorOnSurface`,  
 `600629f7` 在把窗口主题换成平台外壳并删掉 `md_theme` 色板的那次提交里把它换成 `#FF000000`.
 
 **评估**: **方向是对的**, 因为 XML 主题现在只管窗口外壳, 不可能跟着 App 内主题 (例如 "系统浅色 + 应用强制深色")  
@@ -31,6 +31,6 @@ tint 是整体替换 RGB (这几条是 material3 的行为, 不在本仓库代�
 哪天把同一个 drawable 放到 `Image(painter = painterResource(...))` 或不带 `colorFilter` 的地方,  
 立刻变成纯黑且深浅色都不对.
 
-**处置**: 现状保持, 风险已在 `AppRoot.kt` 的 `icon` 槽位调用处以注释留痕:  
+**怎么处理的**: 现状保持, 风险已在 `AppRoot.kt` 的 `icon` 槽位调用处以注释留痕:  
 "图标 drawable 本体是纯黑 (fillColor 硬编码): 实际颜色完全依赖 Icon 默认 tint  
 (LocalContentColor), 勿放到无 tint 的载体 (如裸 Image), 否则深浅色都不对".

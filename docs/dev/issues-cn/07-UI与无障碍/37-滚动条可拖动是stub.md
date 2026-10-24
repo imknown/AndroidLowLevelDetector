@@ -10,7 +10,7 @@
   (`@string/interface_fast_scroll_bar_key`) 是注释状态, `scrollBarValues` 侧对应的  
   `@string/interface_fast_scroll_bar_value` item 同样注释, 两侧改成一致的 2 项  
   (曾经的 2/3 错位以 values 侧为准修成一致, 见 [archived #18](../archived/05-稳定性与错误处理/18-滚动条数组错位.md));  
-  默认值是 None, `SettingsStore` 播种时拿  
+  默认值是 None, `SettingsStore` 初始化时拿  
   `interface_no_scroll_bar_value` 作默认值.
 - **两档今天生效**: 这个偏好经 `SettingsStore.scrollBarMode: StateFlow` 送出 (根部经 `LocalScrollBarMode` provide; 曾经的  
   `MyApplication.scrollBarMode` 伴生流由 `121dd849` 引入, 已迁入 store,  
@@ -30,7 +30,7 @@
   官方到位后的动作是删掉这个文件, 调用点改传  
   `scrollState.scrollIndicatorState`.
 - **自绘这半边不解决 "可拖动"**: 官方那个扩展按其名字就是非交互的, `ScrollBarExt.kt` 的注释也写着  
-  " Nothing is draggable";  
+  "Nothing is draggable";  
   所以官方组件到位并不等于 `Draggable` 有了实现, fast-scroll 若还想要是另一件事.
 - **历史载体**: 原 `ui/common/ViewExt.kt` (只切 `RecyclerView.isVerticalScrollBarEnabled`) 已随 `64e36091` 删除.  
   `base/MyApplication.kt` 的 `ScrollBarMode` 注释记录了更早的一段: 那一档对应 View 时代的 fast scroll,  
@@ -39,7 +39,7 @@
   所以对话框里只渲染 2 个选项.  
   存着 `"2"` 的老偏好仍会被读成 `Draggable`, 因为  
   `SettingsStore.parseScrollBarMode()` 特意保留那条映射 (`interface_fast_scroll_bar_value -> ScrollBarMode.Draggable`),  
-  正是为了认得这个值而不是把它塌缩成 None;  
+  正是为了认得这个值而不是把它压成 None;  
   枚举也因此保持三档而不折成一个布尔位. 这类老用户打开对话框还有一个观感后果: 两个选项的 value 都不等于 `"2"`,  
   没有任何单选被选中.
 

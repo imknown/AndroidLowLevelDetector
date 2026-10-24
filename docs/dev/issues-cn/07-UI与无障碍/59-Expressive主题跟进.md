@@ -20,7 +20,7 @@
   `MaterialTheme.motionScheme` (迁移期 2026-09-16 对官方文档与 androidx 仓库逐条核对的结论);  
   当前 pin `gradle/toml/android.toml` →  
   `compose-bom` 条目 (其 material3 版本由 BOM 决定, 见 [#37](37-滚动条可拖动是stub.md) 与 121dd849 的替身记录).
-- 出处: Compose 迁移遗留优化, 2026-09-25 整理旧 tracker 时的抢救记录把它记为 "活" 项 ([归档  
+- 出处: Compose 迁移遗留优化, 2026-09-25 整理旧 tracker 并把可留内容移入 issues-cn 的那份记录把它记为 "活" 项 ([归档  
   spec](../../../spec/archived/2026-09-17-21-14-43-+0800-compose-migration-cn/plan.md) 决策  
   8). 它曾作为附录收入当时的 tracker; 现行 tracker 按问题性质重建后已无对应条目 (2026-10-04 全目录 grep 零命中),  
   本条补回并把出处锚定到归档 spec.

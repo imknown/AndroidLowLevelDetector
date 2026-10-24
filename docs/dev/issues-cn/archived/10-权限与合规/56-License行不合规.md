@@ -20,7 +20,7 @@
   代码里再没有许可相关的入口;
 - 许可文本本身只在仓库根 `LICENSE` (Apache-2.0 全文), `README.md` 不提许可.
 
-**处置**: owner 裁定接受现状: `gradle/toml` 目录页本身就是所用开源库的清单, 与摘要  
+**怎么处理**: 负责人已定接受现状: `gradle/toml` 目录页本身就是所用开源库的清单, 与摘要  
 "Referenced open-source repositories" / "引用的开源库" 的语义一致, 不改 URI, 不加许可页.  
 原评估里 "一个 toml 链接算不上合格的 License 入口" 的缺口 (许可文本不在手边) 若将来要补,  
 走应用内许可页或 AboutLibraries 一类生成工具, 影响面超出小修队列定位, 归单独议;  
