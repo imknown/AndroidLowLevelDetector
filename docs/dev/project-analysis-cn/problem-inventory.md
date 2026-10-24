@@ -10,7 +10,7 @@
 > 引用它们时一律带来源名, 例如 `deepseek PA-02`, `qwen SEC-03`.  
 > **复核**: 每一条写出的事实与文件行号都在 2026-10-18 对当前代码逐条复核过;  
 > 生产代码自 2026-10-15 起没有再改 (此后的提交只有文档), 复核里更正了旧报告里过期或不准的行号与少数计数,  
-> 也把被旧报告说过头的几条按当前代码写窄 (条目内以"复核更正"标出).  
+> 也把被旧报告说过头的几条按当前代码写窄 (条目内以 "复核更正" 标出).  
 > **编号**: 本文件的 `PA-nn` 是一条新序列, 与归档报告里的同前缀编号无关 (deepseek 那份也用 `PA-nn`).  
 > **出处**: 每条末尾的 "出处" 列出提出它的报告与它在那份报告里的编号, 括号里是那一份自己给的级别.  
 > **级别**: 只用来排先后, 不决定某个问题可以修得多浅; 一条被多份来源定过级时取其中最高的一级;  
@@ -49,7 +49,7 @@
   (`:132-134`), 以及过时 targetSdk 的过滤阈值 (`HomeRepository.kt:1130`). 全仓库没有  
   `volatile` / `synchronized` / `AtomicReference` / `Mutex`.
 - 后果: 同一进程内 Home 加载前后对同一台设备可以给出不同的 API 判定; 四次独立赋值之间落进来的读会拿到  
-  "新 `api` 配旧 `version`"; 覆盖值只写不清, 没有复位路径; 或条件 `Build.VERSION.SDK_INT >= X || sdkInt >= X`  
+  "新 `api` 配旧 `version`"; 覆盖值写了就留在那里, 没有复位路径; 或条件 `Build.VERSION.SDK_INT >= X || sdkInt >= X`  
   只能把级别抬高不能压低, 于是 `isAtLeastAndroid12()` 护着的五个调用  
   (`ui/others/repository/OthersRepository.kt:61-79`) 可能在真实级别更低的预览设备上执行.
 - 参考修法: 四个字段改 `val`; 加一个只读入口 (例如 `AndroidInfo.current`, 第一次用到时才构建);  
@@ -996,7 +996,7 @@
   这种取键方式还会漏掉设备动态写入, 不在 SDK 常量里的设置项.
 - 参考修法: 每张表用一次 `contentResolver.query(NAME, VALUE)` 取回全部键值对,  
   用显式的表枚举取代 `KClass` 反射; 键集合改成 "设备上实际存了哪些行".  
-  该调用走 `Dispatchers.IO`; 三个 `CONTENT_URI` 与 `query()` 的 API 等级按 `gradle/toml/build.toml`  
+  这个调用走 `Dispatchers.IO`; 三个 `CONTENT_URI` 与 `query()` 的 API 等级按 `gradle/toml/build.toml`  
   的 minSdk 核对; 行集合变化会牵动 `LazyColumn` 的 key 与失败行的身份, 与 PA-16, PA-54 一起定.
 - 出处: glm AP1 (高), mimo AP-3 (中), qwen AP-04 (未定级).
 
@@ -1080,7 +1080,7 @@
   即 `WebSettings.getDefaultUserAgent`; 调用点在 `OthersViewModel.kt:90`.
 - 调用链可证; "会加载 WebView 包并拉起其进程" 是平台行为, 仓库内不可证, 需按平台文档判断;  
   若它成立, 代价与一行文本不成比例.
-- 参考修法: 该行改为按需展开, 或标为 "触发时会初始化 WebView".
+- 参考修法: 这一行改为按需展开, 或标为 "触发时会初始化 WebView".
 - 出处: deepseek PA-34 (中).
 
 ### PA-96 (低) 没有 HTTP 缓存, 每次成功获取都整文件重写
@@ -1239,7 +1239,7 @@
 
 - 测试主页的示例仍用 `createComposeRule()`, 而迁移页把 `test.junit4.createComposeRule`,  
   `createAndroidComposeRule`, `createEmptyComposeRule`, `AndroidComposeTestRule`,  
-  `runComposeUiTest` 列为废弃并建议迁移, v2 住在 `androidx.compose.ui.test.junit4.v2`  
+  `runComposeUiTest` 列为废弃并建议迁移, v2 放在 `androidx.compose.ui.test.junit4.v2`  
   与 `androidx.compose.ui.test.v2`; 同一页还写明 v1 走 `UnconfinedTestDispatcher`,  
   可能掩盖真实的时序与竞态.
 - 本工程 BOM 锁值 (`gradle/toml/android.toml:22`, `2026.09.00`) 解析出的 Compose UI 是 1.12.1  
@@ -1485,7 +1485,7 @@ PA-05 也见第 7 组.
 
 glm 定 "高", mimo 定 "中"; qwen 把它排在判定正确性之后. 从包名判断不出依赖方向,  
 任何特性都抽不出来也单独推理不了; 它与第 2 组的检测项清单, 第 1 组的改成不可变是同一轮工作.  
-修法: 采用 `docs/dev/module-structure-cn.md` 里的目标结构 (该文件标注目标结构尚未经负责人逐项定下,  
+修法: 采用 `docs/dev/module-structure-cn.md` 里的目标结构 (那个文件标注目标结构尚未经负责人逐项定下,  
 动工前先定): `:core` 放与平台无关的模型与工具 (含常量表, `Lld`, 日期与版本比较),  
 `:feature/*` 各自独立 (Screen + ViewModel + Repository + 专属 DataSource),  
 `MyApplication` 移到 `:app` 根包, `:base` 只留 `IShell` / `IProperty` 接口.  
@@ -1513,7 +1513,7 @@ PA-71. 另有一条本文件补进本组主题: PA-62 (离线路径的 version �
 ### 第 5 组: Prop 页对每个键各查一次
 
 glm 定 "高", mimo 定 "中", qwen 把它排进性能那一轮. 每次打开 Prop 页都会执行,  
-键的数量是几百量级, 低端机上能感觉到. 修法见 PA-87.
+键的数量是几百的量级, 低端机上能感觉到. 修法见 PA-87.
 
 优先级报告在本组引到的条目: PA-87.
 
