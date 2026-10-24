@@ -37,7 +37,7 @@ UDF (单向数据流): 状态向下流向 UI, 事件向上流向状态的持有�
 | ARCH-2 | 中 | 仓库构建 Compose 行对象, 数据层反向依赖 UI 类型 |
 | ARCH-3 | 中 | 分层只是 `:app` 内的包名约定 |
 | ARCH-4 | 中 | 静态服务定位器与 Metro 图并存 |
-| ARCH-5 | 中 | 设置存储的种子加载依赖一条看起来像死代码的语句 |
+| ARCH-5 | 中 | 设置存储的初值加载依赖一条看起来像死代码的语句 |
 | ARCH-6 | 中 | `:base` 放着应用特有规则, 且没有任何声明依赖 |
 | PATTERN-1 | 中 | 加载模板没有失败路径 |
 | PATTERN-2 | 中 | Home 的 ViewModel 在做数据层工作, 仓库只是转发 |
@@ -78,7 +78,7 @@ UDF (单向数据流): 状态向下流向 UI, 事件向上流向状态的持有�
 | AP-1 | 高 | 首屏列表要等完整条检测流水线 |
 | AP-2 | 中 | Home 的检测项严格串行执行 |
 | AP-3 | 中 | prop 页对整张 settings 表逐键反射 |
-| AP-4 | 低 | `Application.onCreate` 里有同步的设置种子加载和反射 |
+| AP-4 | 低 | `Application.onCreate` 里有同步的设置初值加载和反射 |
 | AP-5 | 低 | 每次属性读取都重新解析反射方法 |
 | AP-6 | 低 | 离线载荷每次加载被解析三遍 |
 | AP-7 | 低 | 排序开关会重新扫描已安装应用列表 |
@@ -104,7 +104,7 @@ UDF (单向数据流): 状态向下流向 UI, 事件向上流向状态的持有�
 也经静态成员暴露 (`base/MyApplication.kt:73-85`: `instance`, `sharedPreferences`,  
 `getMyString`), 而且有一个类把两种都用了: `LldFileStore` 在构造器里接收 `application`,  
 方法体内却读 `MyApplication.instance.assets` (`LldFileStore.kt:61,76`). 图自己的  
-`SharedPreferences` 提供者声明了 `app: MyApplication` 却忽略该参数, 返回静态伴生对象的值  
+`SharedPreferences` 提供者声明了 `app: MyApplication` 却忽略这个参数, 返回静态伴生对象的值  
 (`di/AppGraph.kt:206-207`), 于是这条被声明的依赖边只存在于签名里. 没有任何标记说明哪条路径  
 才是权威.
 
@@ -117,7 +117,7 @@ UDF (单向数据流): 状态向下流向 UI, 事件向上流向状态的持有�
 
 **SSOT-4 (低)**: 每个枚举型设置被物化为两条并行的流: 一条存原始字符串, 一条存解析后的枚举  
 (`app/src/main/java/.../ui/settings/repository/SettingsStore.kt:50-64`). 配对逻辑写了两遍,  
-构造时播种 (`SettingsStore.kt:119-134`) 一次, 偏好监听器 (`SettingsStore.kt:95-114`) 一次,  
+构造时填初值 (`SettingsStore.kt:119-134`) 一次, 偏好监听器 (`SettingsStore.kt:95-114`) 一次,  
 而消费方按表示形式分开: 设置弹窗读原始字符串 (`SettingsScreen.kt:83-84`), 主题和列表页读枚举  
 (`ui/MainActivity.kt:77`, `ui/theme/Theme.kt:306`, `MyModelListScreen.kt:64`). 一个无法识别的  
 已存值会让这对流不一致 (原始流保留未知字符串, 枚举流说 `FollowSystem`), 每个新消费方都得知道  
@@ -204,7 +204,7 @@ Compose 辅助函数, ViewModel 能直接调用数据源的原因 (PATTERN-2, PA
 **ARCH-6 (中)**: `:base` 在最底层放着应用特有的规则.  
 `base/src/main/java/.../base/extension/DateTimeExt.kt:9-20` 编码了 `lld.json` 的时间戳格式,  
 `DateTimeExt.kt:35` 编码了应用的镜像选择规则 (中国大陆时区), 由  
-`ui/home/datasource/LldDataSource.kt:35` 消费. 该模块自己声明的依赖为零  
+`ui/home/datasource/LldDataSource.kt:35` 消费. 这个模块自己声明的依赖为零  
 (`base/build.gradle.kts:13-15`), 所以这些规则位于它们的使用者之下, 而不是被使用者拉下去.
 
 ## 4. 设计模式
@@ -267,7 +267,7 @@ Compose 辅助函数, ViewModel 能直接调用数据源的原因 (PATTERN-2, PA
 
 **PATTERN-9 (低)**: 给一个会切换调度器的挂起函数标了 `@MainThread`:  
 `payloadOutdatedTargetSdkVersionApk` (`HomeViewModel.kt:266-271`) 在 `:271` 进入  
-`withContext(Dispatchers.IO)`. 该注解无法跨越挂起点成立, 它声明的线程恰恰是这个函数按设计  
+`withContext(Dispatchers.IO)`. 这个注解无法跨越挂起点成立, 它声明的线程恰恰是这个函数按设计  
 会离开的.
 
 **PATTERN-10 (低)**: 留作备用的 `:base` shell 实现在源码里没有调用方 (在用的绑定是  
@@ -367,7 +367,7 @@ debug 日志 (`di/AppGraph.kt:116-182`), 载荷被保存和使用之前唯一的
 (`HomeRepository.kt:318-319` 到 `Build.VERSION.MEDIA_PERFORMANCE_CLASS`). 随之而来的  
 `NoSuchMethodError` 与 `NoSuchFieldError` 是 `Error`, 行守卫抓不住 (它只抓 `Exception`,  
 `MyModelExt.kt:156`), 而加载没有处理器 (PATTERN-1), 于是直达未捕获处理. 同一个值也是 targetSdk  
-阈值 (`HomeRepository.kt:1130`). 利用它需要控制载荷 (SEC-1) 或控制该文件 (SEC-2).
+阈值 (`HomeRepository.kt:1130`). 利用它需要控制载荷 (SEC-1) 或控制这个文件 (SEC-2).
 
 **SEC-4 (低)**: 载荷声明的 schema 从未被比对. `Lld.kt:8` 定义 `SCHEME_VERSION`, `Lld.kt:13`  
 反序列化 `scheme`, 但没有任何代码比较两者 (全仓搜索只有声明处), 而  
@@ -416,7 +416,7 @@ debug 日志 (`di/AppGraph.kt:116-182`), 载荷被保存和使用之前唯一的
 它为 Foss flavor 关闭了 Google services 和 Crashlytics 任务 (`:52-70`), 所以默认构建不受  
 影响. 给负责人的提示: 同一模块里存在一个启用遥测的变体, 值得一个明确的决定.
 
-**SEC-12 (低)**: `QUERY_ALL_PACKAGES` 是一项用于枚举所有已安装应用的常驻能力. 该权限在声明时  
+**SEC-12 (低)**: `QUERY_ALL_PACKAGES` 是一项用于枚举所有已安装应用的常驻能力. 这个权限在声明时  
 压掉了两项 lint 检查 (`app/src/main/AndroidManifest.xml:6-8`), `getInstalledApplications` 为  
 过时 targetSdk 行返回完整清单 (`HomeRepository.kt:1121-1131`). 应用自己的 HTTP 客户端只发出  
 `lld.json` 这一个 GET (`LldDataSource.kt:42`), Firebase flavor 的遥测是另一条路径 (SEC-11),  
@@ -429,8 +429,8 @@ debug 日志 (`di/AppGraph.kt:116-182`), 载荷被保存和使用之前唯一的
 `scrollState.isScrollInProgress` (`ui/common/ScrollBarExt.kt:41`) 并由此导出  
 `animateFloatAsState` 的目标 (`:42-51`); 它在页面级修饰符链上被实例化  
 (`MyModelListScreen.kt:118`, `SettingsScreen.kt:160`), 于是滚动会话的起止 (拖动开始, 惯性结束)  
-会在该工厂里安排组合工作, 并为 `LazyColumn` 产出一条新的修饰符链, 而不是只更新绘制阶段.  
-默认安装上该设置是 `ScrollBarMode.None`, `enabled &&` 在读取之前短路 (`ScrollBarExt.kt:41`),  
+会在这个工厂里安排组合工作, 并为 `LazyColumn` 产出一条新的修饰符链, 而不是只更新绘制阶段.  
+默认安装上这个设置是 `ScrollBarMode.None`, `enabled &&` 在读取之前短路 (`ScrollBarExt.kt:41`),  
 所以代价只在滚动条模式为 Normal 时出现. 每帧部分 (`alpha`, 滑块几何) 正确地位于  
 `drawWithContent` 内 (`:56-88`).
 
@@ -440,14 +440,14 @@ debug 日志 (`di/AppGraph.kt:116-182`), 载荷被保存和使用之前唯一的
 代价在长列表里按行重复.
 
 **CP-4 (低)**: 每张卡片都带一个尺寸动画节点: 每行的 `.animateContentSize()`  
-(`MyModelCard.kt:55`). 一行的 detail 变化时 (就地补丁 `BaseListViewModel.kt:79-87`), 该行在  
+(`MyModelCard.kt:55`). 一行的 detail 变化时 (就地补丁 `BaseListViewModel.kt:79-87`), 这一行在  
 动画持续期间每帧重新测量; 受影响的行包括最长的那些 (`HomeRepository.kt` 里构建的 WebView 与  
 过时应用详情).
 
 **CP-5 (低)**: 指示器淡出时每帧重绘整个内容. 滑块淡出期间 `alpha` 每帧都在变, 且在  
 `drawWithContent` 内被读取 (`ScrollBarExt.kt:58,84`), 于是包含无条件 `drawContent()` 的整个  
 lambda 每帧重跑, 没有图层缓存列表的绘制命令. 只有 `ScrollBarMode.drawsScrollBar` 为真时可达  
-(`SettingsStore.kt:60-64` 把默认值播种为 None), 所以默认安装上不会触发.
+(`SettingsStore.kt:60-64` 把默认值置为 None), 所以默认安装上不会触发.
 
 ## 8. App 性能
 

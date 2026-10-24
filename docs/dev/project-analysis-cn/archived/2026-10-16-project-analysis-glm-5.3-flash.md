@@ -6,13 +6,13 @@
 ## 范围与方法
 
 - 分析对象仅限当前代码: Kotlin 源文件, AndroidManifest, Gradle 构建脚本, 备份规则 XML.  
-  未使用 `docs/` 下任何文档作为依据, 分析以代码为准; 唯一例外是 CP1, 判定"该处不是问题"  
+  未使用 `docs/` 下任何文档作为依据, 分析以代码为准; 唯一例外是 CP1, 判定 "该处不是问题"  
 时引用了 `MyModelCard.kt:43-48` 一行标注已接受取舍的注释, 其余结论不依赖任何注释,  
 全部落在可指认的 `文件:行` 上.
 - 按约定排除的角度: CI, NDK, JNI. 涵盖的角度: SSOT, UDF, 架构, 设计模式, 模块化,  
-  Security, Compose 性能, App 性能, Test. Test 一节为 2026-10-18 后补, 外部参考资料见该节开头.
+  Security, Compose 性能, App 性能, Test. Test 一节为 2026-10-18 后补, 外部参考资料见这一节开头.
 - 方式: 五路并行审查 (架构/SSOT/UDF, 模块化, 安全, Compose 性能, App 性能) 加撰写者抽查.  
-  抽查核对过的条目在文末"核对说明"列出; 其余条目的 `文件:行` 来自审查的直接读取.
+  抽查核对过的条目在文末 "核对说明" 列出; 其余条目的 `文件:行` 来自审查的直接读取.
 - 本报告不改任何代码. 条目编号全文件唯一, 供其他文档引用.
 
 ## 总览
@@ -122,7 +122,7 @@
 
 - `ui/settings/repository/SettingsStore.kt:50-64`:  
   `themeValue: StateFlow<String>` 与 `themeMode: StateFlow<AppThemeMode>` 同存一个事实.
-- 两处手工成对赋值: 构造播种 `:129-134`, 监听回调 `:98-108`.  
+- 两处手工成对赋值: 构造时填初值 `:129-134`, 监听回调 `:98-108`.  
   无任何机制强制两者同步, 新增写点忘记成对更新即静默分叉. 四个设置中只有这两组是成对流,  
   另两个 boolean 开关各为单流 (`SettingsStore.kt:68-72`), 不受此问题影响.
 - 修复方向: 只持久化字符串流, enum 用 `.map { parse(it) }` 派生, 单点写入.
@@ -195,7 +195,7 @@
 - settings 到 home: `SettingsRepository.kt:14` 引 `ui.home.datasource.LldFileStore` (用于 `:32`).
 - others 到 home: `BasicDataSource.kt:7` 引 `ui.home.datasource.AndroidDataSource` (用于 `:25`).
 - 后果: feature 不是独立单元; `LldFileStore` 被两个 feature (ui.home, ui.settings) 消费  
-  却住在 `ui.home.datasource`.
+  却放在 `ui.home.datasource`.
 - 修复方向: 把 `AppInfoDataSource`, `LldFileStore`, `AndroidDataSource` 常量移入共享数据层,  
   feature 间只留 feature 专属的引用.
 
@@ -248,9 +248,9 @@
 ### AR8 [中] 业务决策位置错档
 
 - 主机选择 (按是否中国大陆时区选 Gitee 或 GitHub) 在数据源内: `LldDataSource.kt:34-39`;  
-  判断工具 `isChinaMainlandTimezone()` 反而住在共享模块 `:base`  
+  判断工具 `isChinaMainlandTimezone()` 反而放在共享模块 `:base`  
   (`base/src/main/java/net/imknown/android/forefrontinfo/base/extension/DateTimeExt.kt:35-37`).
-- 修复方向: 仓库层选定主机再交给数据源; 时区工具按其使用归属移动.
+- 修复方向: 仓库层选定主机再交给数据源; 时区工具按它的使用归属移动.
 
 ## 设计模式
 
@@ -260,7 +260,7 @@
   `setLoading(false)` 只在成功路径执行, 基类也没有加载超时的概念.
 - 今日的实际风险是卡住: 各仓库的侦测条目目前都有守卫, 尚不会抛异常,  
   但一次不返回的 shell/文件调用 (`IShell`/libsu 无超时) 会让 `isLoading` 永远为 true,  
-  且 `:61-63` 的"活跃任务即去重"判断挡住一切刷新.
+  且 `:61-63` 的 "活跃任务即去重" 判断挡住一切刷新.
 - 潜在风险: 未来任一子类只要有一条路径未守卫而抛出, 会走协程未捕获处理器崩溃.
 - 修复方向: `startLoad` 内包 try/catch, 失败渲染失败态并复位 loading; 加载加超时.
 
@@ -297,7 +297,7 @@
   未来向 `:base` 迁移任何类型都会先撞名.
 - 修复方向: `MyApplication` 移到应用根包, 两个 mode 类型给真实归属.
 
-### MD2 [中] 领域语义色住在 Compose 主题包
+### MD2 [中] 领域语义色放在 Compose 主题包
 
 - `ui/theme/ExtendedColors.kt:9-14` 定义 `StatusColor`;  
   数据层引用: `HomeRepository.kt:50`, 共享模型 `MyModel.kt:5,21`, `MyModelExt.kt:9`.
@@ -318,7 +318,7 @@
   `ui/base/list/*` (模型, 列表 ViewModel, 屏), `ui/common/*`, `ui/base/ext/ToastExt.kt`.  
   归属不一致的后果已直接体现在 AR1 与 AR2 的包环上.
 - 修复方向: 明文定规则 (如 `:base` 收平台无关物, `ui.base.list` 收共享 UI 模型,  
-  `ui.common` 收共享扩展), 按规则归迁文件.
+  `ui.common` 收共享扩展), 按规则把文件放回各自的位置.
 
 ### MD5 [中] 同名类的注入陷阱
 
@@ -368,17 +368,17 @@
 - 信任面: `LldFileStore.kt:45-79` 对已存在文件只看它能否解析, 以及 `version` 不旧于内置资产  
   (即 `:62` 的比较) 即继续使用. 此后被攻击者投毒的文件成为全部侦测事实  
   (Treble/GSI/补丁/内核属性等) 的唯一来源, 没有任何错误行; 重拷只发生在解析失败时.
-- 定级说明: 维持 高. 理由不在写入面的广度, 而在信任结构: 该文件是零来源校验的外部输入,  
-  却是全部侦测结论的事实源, 一旦沿上述路径被覆写, 每一行结论即刻被翻转.
+- 定级说明: 维持 高. 定级理由与写入面的广度无关, 关键在信任结构: 这个文件是零来源校验的外部输入,  
+  却是全部侦测结论的事实源, 一旦沿上面那条路径被覆写, 每一行结论即刻被翻转.
 - 修复方向: 保存路径改内部 `filesDir` (退路已存在), 外部目录只留给用户导出副本;  
-  或对已存文件做指纹比对而非信其自报的 version.
+  或对已存文件做指纹比对而非信它自报的 version.
 
 ### SE2 [中] 在线 payload 无完整性校验, 且影响放大作用于全局状态
 
 - `LldDataSource.kt:34-48`: GET 固定 HTTPS URL, `response.body()` 直取 String,  
   无哈希, 无签名, 无固定 digest.
 - 唯二校验: 可解析, 加 `version` 符合 `yyyy-MM-dd HH:mm Z` 格式 (`HomeViewModel.kt:128`,  
-  我核对过该处确实是主线唯一的格式门槛).
+  我核对过这个位置确实是主线唯一的格式门槛).
 - 影响放大: 通过校验即落盘 (`HomeViewModel.kt:136-145`), 并经 `HomeRepository.kt:124-131`  
   反写全局 `myAndroid` (同 SS1), 整个 app 后续读到的就是攻击者的版本.  
   任何能在 HTTPS 链路上替换 payload 的攻击者 (用户自选的代理, 被攻破的 CA,  
@@ -398,7 +398,7 @@
 ### SE4 [中] debug 签名材料入库
 
 - `keys/debug.keystore` 确认被 git 跟踪; debug 签名配置的 storePassword 与 keyPassword  
-  均硬编码在 `app/build.gradle.kts:73-83` (取值为 AOSP 默认值, 按仓库"无敏感信息"规矩,  
+  均硬编码在 `app/build.gradle.kts:73-83` (取值为 AOSP 默认值, 按仓库 "无敏感信息" 规矩,  
   原文不在本报告复述).
 - app 自身公开列出 debug 签名的分发者 (`ui/settings/datasource/FingerprintDataSource.kt:23-24,53-57`),  
   即公开渠道确有 debug 构建.
@@ -420,7 +420,7 @@
 ### SE7 [低] `QUERY_ALL_PACKAGES` 授权偏宽
 
 - `app/src/main/AndroidManifest.xml:6-8` (带 `tools:ignore`),  
-  支撑"旧 targetSdk 系统 APK"扫描与 WebView provider 枚举.
+  支撑 "旧 targetSdk 系统 APK" 扫描与 WebView provider 枚举.
 - 修复方向: 迁移到 `<queries>` 细化块, 或补商店申报理由.
 
 ### SE8 [低] 系统属性未清洗即入路径
@@ -449,7 +449,7 @@
 - `MyModelCard.kt:49` `onClick = {}` 带涟漪与交互语义; 每行只为涟漪付出  
   pointer-input 节点与 semantics 成本, 以 Prop 页 (可能数百行) 叠加最多.  
   此处的判断依据是 `MyModelCard.kt:43-48` 的行内注释 (分析唯一动用注释的例外,  
-  见"范围与方法"), 认定为负责人接受过的取舍 (涟漪反馈与 TalkBack 双击播报),  
+  见 "范围与方法"), 认定为负责人接受过的取舍 (涟漪反馈与 TalkBack 双击播报),  
   故只记录开销, 不计作问题.
 - 修复方向: 若重评取舍, 用 `clickable(enabled=false)` 或 `clearAndSetSemantics { }`.
 
@@ -515,7 +515,7 @@
 
 - `HomeRepository.kt:1121-1131`: 每次 `collectModels` 枚举全部包, 过滤排序拼串;  
   排序切换路径 (`HomeViewModel.kt:93, 261-274`) 再来一遍. 数据只在安装/卸载时变.
-- 修复方向: 结果按包变更缓存, 或只在需要该行时计算; 切换排序时仅对既有行重排.
+- 修复方向: 结果按包变更缓存, 或只在需要这一行时计算; 切换排序时仅对既有行重排.
 
 ### AP4 [中] 系统属性反射每次调用重定位
 
@@ -599,7 +599,7 @@
   `SettingsStore` 双流配对 (SS4), `BaseListViewModel` 加载契约 (AR9), `LldFileStore` 文件编排  
   (SE1, AP2), `MyAndroid` 全局与版本比较 (SS1, SS6), `PropertyReader` 与哨兵 (SS5),  
   `MyModelExt` (MD6), `JsonExt` 与 `DateTimeExt` 其余两个 function (AP9 涉及处).
-- 按"What to test"官方页, ViewModel, 数据层, 工具类的单元测试是基本要求; 现况一条都没有,  
+- 按 "What to test" 官方页, ViewModel, 数据层, 工具类的单元测试是基本要求; 现况一条都没有,  
   这些条目既无测试在当初指出, 也无测试守住回归.
 - 修复方向: 建立测试基础设施 (见下) 后补测试, 顺序从纯逻辑到 Robolectric 到 ViewModel  
   (与 TE4 对应的重构同批做).
@@ -608,16 +608,16 @@
 
 - `testFossDebugUnitTest` 是 flavor 任务, 只有 `:app` 定义了 flavor; `:base` 只有不带 flavor  
   的 `testDebugUnitTest`, 两者不同名, 所以跑 `testFossDebugUnitTest` 时 `DateTimeExtTest`  
-  不会执行. 全仓库唯一的真测试实际处于"只有单独手动触发 `:base:testDebugUnitTest` 才会跑"的状态.
+  不会执行. 全仓库唯一的真测试实际处于 "只有单独手动触发 `:base:testDebugUnitTest` 才会跑" 的状态.
 - 修复方向: 统一测试命令 (库模块加任务别名, 或约定用全工程任务), 属命令约定问题, 不改业务代码.
 
 ### TE3 [低] 模板测试与 flavor 设置冲突, 且模板本身无价值
 
 - `ExampleInstrumentedTest` (`app/src/androidTest`) 断言 `targetContext.packageName` 等于  
   无后缀包名, 而构建对变体设置了 `applicationIdSuffix = ".$name"` (`app/build.gradle.kts:105`):  
-  debug 变体上该断言必失败; 现在没有设备执行入口, 从未暴露.
+  debug 变体上这条断言必失败; 现在没有设备执行入口, 从未暴露.
 - 两处 `ExampleUnitTest` 断言 2+2, 无覆盖价值.
-- 修复方向: 直接删除全部模板测试; `androidTest` 源集在决定做乐器测试时再建.
+- 修复方向: 直接删除全部模板测试; `androidTest` 源集在决定做插桩测试时再建.
 
 ### TE4 [中] 可测性被既有条目阻断
 
@@ -654,10 +654,10 @@
    (`MyModelCard`, Settings 关键行), 控制截图数量, 官方页强调不要做全组合. 官方  
    Compose Preview Screenshot Testing 方案的 test-suite 入口自 AGP 9.5.0-alpha03 起,  
    本工程 AGP 走不到入口 (版本目录另备 canary 档 `androidGradlePlugin-canary`  
-   (`gradle/toml/android.toml:9`), 该档高于 9.5.0-alpha03 门槛, 是否启用按版本分层规则  
+   (`gradle/toml/android.toml:9`), 这一档高于 9.5.0-alpha03 门槛, 是否启用按版本分层规则  
    由负责人决定); 旧独立插件路径仍可用但官方已标注 deprecated. 选项 (a) 单独决策 AGP 升级后走 test-suite; 选项 (b) Roborazzi  
    (基于 Robolectric 渲染). 决策点三, 与 AGP 升级解耦.
-4. **乐器与端到端**: UIAutomator 与 Gemini Journeys 建议暂不引入: 本 app 无 deep link,  
+4. **插桩与端到端**: UIAutomator 与 Gemini Journeys 建议暂不引入: 本 app 无 deep link,  
    无系统 UI 交涉, 首批旅程 (启动, 三个 tab, 设置项切换) 用 Robolectric 旅程即可; Journeys  
    属实验性能力, 按仓库的版本分层规则需负责人另行决定. 性能测试 (Macrobenchmark 等) 本轮不引入.
 

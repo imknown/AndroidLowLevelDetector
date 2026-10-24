@@ -10,16 +10,16 @@
 > 报告之间冲突时以代码复核为准; 各条的文件与行号出自被引的那份报告.  
 > **次要依据**: `issues-cn`, 更早的调查, 与它的明确分歧单列在 [与 issues-cn 的分歧](#与-issues-cn-的分歧) 一节.  
 > **范围**: 去掉 CI / NDK / JNI; Test 已纳入.  
-> **排序原则**: 主体按"会不会让 App 报出假结论 / 用户可感的错误"排, 不按修改难度, 复杂度, 工时排;  
-> 测试那一组另按"它是不是前面那些重构的防回归测试, 以及它覆盖的是不是 App 的判断核心"排.  
-> **修法一节的地位**: 每组的"彻底修法"只是修改实装时的参考, 不是子任务列表;  
+> **排序原则**: 主体按 "会不会让 App 报出假结论 / 用户可感的错误" 排, 不按修改难度, 复杂度, 工时排;  
+> 测试那一组另按 "它是不是前面那些重构的防回归测试, 以及它覆盖的是不是 App 的判断核心" 排.  
+> **修法一节的地位**: 每组的 "彻底修法" 只是修改实装时的参考, 不是子任务列表;  
 > 子任务怎么切, 每个子任务怎么提交, 归开工时写的计划.  
 > **条目号**: 沿用四个来源的既有编号, 本报告不自造编号.
 
 ## 结论
 
-最该先修的是下面几组: 第一组 deepseek, glm, mimo 三份定"高" (qwen 也把它排进判定正确性那一批);  
-第二组与第三组只有 glm 定"高", 另两份定"中".
+最该先修的是下面几组: 第一组 deepseek, glm, mimo 三份定 "高" (qwen 也把它排进判定正确性那一批);  
+第二组与第三组只有 glm 定 "高", 另两份定 "中".
 
 1. **全局版本事实 `myAndroid`** (deepseek PA-02, glm SS1, mimo SSOT-1, qwen SSOT-01).  
    四个来源都指它: 同一台设备有两个版本来源, 其中之一可变, 且写入后不复位.  
@@ -35,7 +35,7 @@
 (deepseek PA-27, deepseek PA-32, qwen AP-05, qwen AP-06), 把判断与展示分开 (数据层直接产出展示内容),  
 测试 (第 9 组), 以及一批安全与卫生的低分项.
 
-下面每组的"为什么优先"引用四份报告的结论, "彻底修法"是代码复核后的方案.
+下面每组的 "为什么优先" 引用四份报告的结论, "彻底修法" 是代码复核后的方案.
 
 ## 第 1 组: 全局版本事实 `myAndroid` (deepseek PA-02, glm SS1, mimo SSOT-1, qwen SSOT-01)
 
@@ -46,10 +46,10 @@
 `:132-134` 里读它的 `isLatestPreviewAndroid` (读 `myAndroid.apiFull`),  
 以及 `HomeRepository.kt:1130` 里比 targetSdk 用的阈值. 全仓没有 `volatile` / `synchronized` / `AtomicReference` / `Mutex`.
 
-**为什么优先** (deepseek, glm, mimo 定"高"; qwen 把它排进"判定正确性"一批):  
+**为什么优先** (deepseek, glm, mimo 定 "高"; qwen 把它排进 "判定正确性" 一批):  
 同一个进程里, Home 加载前后对同一台设备可以给出不同的 API 判定;  
 `detectAndroid()` 又是四次独立赋值 (`api` 到 `apiFull` 到 `version` 到 `dessert`),  
-两步之间落进来的读会拿到"新 api 配旧 version"这种跨代的组合 (glm SS1 与 mimo SSOT-1 记读写无同步;  
+两步之间落进来的读会拿到 "新 api 配旧 version" 这种跨代的组合 (glm SS1 与 mimo SSOT-1 记读写无同步;  
 四次独立赋值与跨代组合这一层见 issues-cn #17);  
 qwen SSOT-01 补充三处后果: `Build.VERSION.SDK_INT >= X || sdkInt >= X` 这种或条件只能把级别抬高不能压低,  
 `isAtLeast*` 保护的调用可能在更低的预览设备上执行; 覆盖值只写不清, 没有任何复位路径;  
@@ -72,7 +72,7 @@ lld 的修正改成纯函数 (例如 `enrichWithLld(base, lld): MyAndroid`), 返
 
 **证据**: `BaseListViewModel.kt:60-71` 的 `startLoad()` 是一个没有 `try` / `finally` 的  
 `viewModelScope.launch`, `setLoading(false)` 只经 `setModels()` 可达;  
-`IShell` (`base/.../shell/IShell.kt`) 没有声明"不抛", 实现 `ShellLibSu` 直接转发 libsu;  
+`IShell` (`base/.../shell/IShell.kt`) 没有声明 "不抛", 实现 `ShellLibSu` 直接转发 libsu;  
 `HomeViewModel.kt:221-223` 的 `getMounts()` 与 `PropRepository.kt:70` 的 shell 调用  
 (它属于 `:66` 开始的 `getBuildProp()`) 是检测链里没有守卫的两处;  
 `PropertyDefault` 是 object, 类初始化失败会抛 `ExceptionInInitializerError` (它是 `Error`, 守卫只抓 `Exception`).  
@@ -89,9 +89,9 @@ lld 的修正改成纯函数 (例如 `enrichWithLld(base, lld): MyAndroid`), 返
 慢设备上依次执行的 shell 与包枚举直接相加 (deepseek PA-33, glm AP5, mimo AP-2).
 
 **彻底修法**: 按 `AGENTS.md` 的代码规则, UI 层不处理异常, 所以正解是让下层不抛, 不是让 UI 吸收异常:  
-1. `IShell.execute` 明确"不抛"契约 (它没有 `OrThrow` 后缀), `ShellLibSu` 与 `ShellDefault` 各自  
+1. `IShell.execute` 明确 "不抛" 契约 (它没有 `OrThrow` 后缀), `ShellLibSu` 与 `ShellDefault` 各自  
    把 libsu 与进程异常转成 `ShellResult(isSuccess = false)`, 并给 `waitFor` 加超时.  
-2. 没被守卫的调用点 (`getMounts`, `getBuildProp`) 把"失败"当成一种正常结果处理 (结果类型或 wrapper),  
+2. 没被守卫的调用点 (`getMounts`, `getBuildProp`) 把 "失败" 当成一种正常结果处理 (结果类型或 wrapper),  
    不再让异常从 `collectModels()` 里抛出.  
 3. `PropertyDefault` 的类初始化加保护, 或把隐藏 API 反射失败变成可判定的结果 (见第 8 组的 qwen ARC-06).  
 4. 执行方式: 检测项改成一份清单 (每一项含身份与执行函数), 由一段统一的代码按清单执行,  
@@ -130,11 +130,11 @@ lld 的修正改成纯函数 (例如 `enrichWithLld(base, lld): MyAndroid`), 返
   `BaseViewModel` 是空壳, `AndroidDataSource` 与 `AppViewModelFactory` 里两个 map 恒为空 (qwen PAT-02).  
 - **格式串**: 格式串与位置参数数组分离 (`HomeRepository.kt:158,263,919-927,1133-1166`, `SettingsScreen.kt:226-232`) (qwen PAT-06).
 
-**为什么优先** (glm 定高, mimo 定中; qwen 把它排在"判定正确性"之后, 与 TST-04/TST-08 一起):  
+**为什么优先** (glm 定高, mimo 定中; qwen 把它排在 "判定正确性" 之后, 与 TST-04/TST-08 一起):  
 从包名判断不出依赖方向, 任何 feature 都抽不出来, 单独推理不了;  
 它与第 2 组的检测项清单, 第 1 组的改成不可变是同一轮工作.
 
-**彻底修法**: 采用 `module-structure-cn.md` 里的目标结构 (该文件标注未定, 动工前先定):  
+**彻底修法**: 采用 `module-structure-cn.md` 里的目标结构 (那个文件标注未定, 动工前先定):  
 `:core` 放与平台无关的模型与工具 (含 `AndroidDataSource` 的常量, `Lld`, 日期与版本比较),  
 `:feature/*` 各自独立, 含 Screen + ViewModel + Repository + 专属 DataSource,  
 `MyApplication` 移到 `:app` 根包, `:base` 只留 `IShell` / `IProperty` 接口.  
@@ -144,7 +144,7 @@ lld 的修正改成纯函数 (例如 `enrichWithLld(base, lld): MyAndroid`), 返
 ## 第 4 组: `lld.json` 的校验 (glm SE1, glm SE2, mimo SEC-1/2/3/4, deepseek PA-04, deepseek PA-24, qwen SSOT-06, qwen SEC-02, qwen SEC-03)
 
 **证据**: 文件写在应用专属的外部目录 (`MyApplication.kt:60-71` 的 `getDownloadDir`), 读回时没有来源校验,  
-只查"能否解析"与"version 不旧于内置资产" (`LldFileStore.kt:45-64`, 且是直接比较字符串) (glm SE1, mimo SEC-2);  
+只查 "能否解析" 与 "version 不旧于内置资产" (`LldFileStore.kt:45-64`, 且是直接比较字符串) (glm SE1, mimo SEC-2);  
 在线拉取用固定 HTTPS 地址, 直接取 `response.body()`, 不看 HTTP 状态 (`LldDataSource.kt:41-47`) (glm SE2, mimo SEC-1);  
 `SCHEME_VERSION` (`Lld.kt:8`) 全仓只有定义没有使用, `scheme` 只被反序列化;  
 `Json { ignoreUnknownKeys = true }` (`JsonExt.kt:6`);  
@@ -160,7 +160,7 @@ lld 的修正改成纯函数 (例如 `enrichWithLld(base, lld): MyAndroid`), 返
 
 **为什么优先** (glm SE1 高): 这份文件决定安全相关的行 (安全补丁, targetSdk 阈值, WebView 结论),  
 一旦被覆写或被上游账号失陷替换, 每一行结论立刻翻转;  
-而且载荷还会写回全局 `myAndroid` (第 1 组的 mimo SEC-3), 影响扩大到"所有 API 检查".  
+而且载荷还会写回全局 `myAndroid` (第 1 组的 mimo SEC-3), 影响扩大到 "所有 API 检查".  
 与第 3 组的结构问题不同, 这是数据是否可信的问题.
 
 **彻底修法**: 解析后校验 `scheme == SCHEME_VERSION`, 不符时给出明确提示并回退;  
@@ -179,8 +179,8 @@ qwen AP-04 数出三张表的公开常量共 195 个 (System 92, Secure 62, Glob
 而且这种取键的方式会漏掉设备动态写入, 不在 SDK 常量里的设置项.
 
 **彻底修法**: 每张表用一次 `contentResolver.query(NAME, VALUE)` 取回全部键值对,  
-用显式的表枚举取代 KClass 反射; 键集合改成"设备上实际存了哪些行".  
-三点注意: 该调用按 `AGENTS.md` 走 `Dispatchers.IO`;  
+用显式的表枚举取代 KClass 反射; 键集合改成 "设备上实际存了哪些行".  
+三点注意: 这个调用按 `AGENTS.md` 走 `Dispatchers.IO`;  
 三个 `CONTENT_URI` 与 `query()` 的 API 等级按 `build.toml` 的 minSdk 核对;  
 行集合变化会牵动 `LazyColumn` 的 key 与失败行的身份, 与第 3 组的条目身份一起定.
 
@@ -201,7 +201,7 @@ Compose 侧还有: `contentType` 只有两类, 而 Prop 页行长度差别很大
 已知的 Compose lint 结论被写进 `app/lint-baseline.xml` 而不是处理 (qwen CP-08);  
 `AndroidManifest.xml:15` 的 `gwpAsanMode="always"` 对所有构建类型和两种 flavor 生效, 没有测量支撑 (qwen AP-07).
 
-**为什么优先** (deepseek 两处"高"; qwen 把性能排成独立一轮): 这些都是每次启动或每次加载都会发生的成本, 与第 2 组的首屏问题相加.  
+**为什么优先** (deepseek 两处 "高"; qwen 把性能排成独立一轮): 这些都是每次启动或每次加载都会发生的成本, 与第 2 组的首屏问题相加.  
 Baseline Profile 是本项目收益最大的一处改动 (启动期本来就要反射, 执行 shell, 枚举应用包).
 
 **彻底修法**: 把 SharedPreferences 读取与反射移出首帧路径 (第 1 组改成用时才构建已顺带解决反射);  
@@ -217,7 +217,7 @@ Baseline Profile 是本项目收益最大的一处改动 (启动期本来就要�
 
 ## 第 7 组: 把判断与展示分开 (数据层直接产出展示内容)
 
-这一组是 glm 与 mimo 定"中", deepseek 的相关条目定"低", qwen 归入 `ARC-01` 并说"改哪一边要负责人判定";  
+这一组是 glm 与 mimo 定 "中", deepseek 的相关条目定 "低", qwen 归入 `ARC-01` 并说 "改哪一边要负责人判定";  
 但它在结构上是最深的一处, 也是 mimo `MOD-1` / `MOD-2` 与 glm `AR1` / `AR2` 的共同原因:  
 `MyModel` (界面模型, 带 `StatusColor` 与本地化详情) 被下推到数据层,  
 于是仓库必须有 `Context` 才能干活 (`getMyString` 99 处, `HomeRepository` 69 处),  
@@ -234,14 +234,14 @@ Baseline Profile 是本项目收益最大的一处改动 (启动期本来就要�
 `detectBuildId` 用了 250205-250101 这样的固定偏移 (`:249`),  
 `detectVndk` 直接比 `vndkResult >= lld.android.stable.api` (`:697`);  
 `HomeViewModel` 里用 try 编排 lld 的联网与离线回退 (deepseek PA-09).  
-设置项的键与存储值住在 string 资源里, 同一映射在 `SettingsStore.kt:33-45`, `:79-91`, `arrays.xml:4-27` 抄了三份 (qwen SSOT-04);  
+设置项的键与存储值放在 string 资源里, 同一映射在 `SettingsStore.kt:33-45`, `:79-91`, `arrays.xml:4-27` 抄了三份 (qwen SSOT-04);  
 标题在组合期用 `stringResource`, 明细在数据层用 `MyApplication.getMyString`, 同一行的两半来自两个 Context 的 resources (qwen SSOT-05);  
 补丁路径重读离线文件, 而列表可能由在线 payload 构造 (`HomeViewModel.kt:267-286`) (qwen UDF-02);  
 `outdatedOrderChanges` 与 `loadStartGeneration` 是手写的世代判定 (qwen UDF-04);  
 彩蛋计数是私有 `var`, 通过返回值表达事件 (qwen UDF-07);  
-`OrThrow` 后缀不再表示"会抛" (`LldDataSource.kt:50`) (qwen MOD-05).
+`OrThrow` 后缀不再表示 "会抛" (`LldDataSource.kt:50`) (qwen MOD-05).
 
-**彻底修法**: 取数层返回"发生了什么" (有值 / 无值 / 失败), 判断与格式化分开,  
+**彻底修法**: 取数层返回 "发生了什么" (有值 / 无值 / 失败), 判断与格式化分开,  
 展示集中到 UI 层唯一的一处 (把结果翻成 `MyModel` 的那一个函数); 比较版本与日期统一解析后再比;  
 编排与回退从 ViewModel 下沉到数据层.  
 与第 2 组的检测项清单是同一轮: 清单里的每一项持有自己的结果类型与比较方式.
@@ -258,7 +258,7 @@ Baseline Profile 是本项目收益最大的一处改动 (启动期本来就要�
   14 处 `printStackTrace()` 里 8 处没有 debug 门槛; 有一处 release 日志可能带出文件内容.  
 - mimo SEC-11, deepseek PA-26, qwen SEC-07: Firebase flavor 带统计与崩溃上报, 值得做一次明确的隐私决定.  
 - qwen SEC-05: `IShell.execute(cmd: String)` 收一整行命令, 备用的 `ShellDefault` 走 `sh -c`; 今天调用点全是常量, 记的是形状.  
-- qwen ARC-07: `AppRoot.kt:123-133` 的 `onBack` 只有 `finish`, 与"每个 tab 一条返回栈"的骨架不匹配,  
+- qwen ARC-07: `AppRoot.kt:123-133` 的 `onBack` 只有 `finish`, 与 "每个 tab 一条返回栈" 的骨架不匹配,  
   而 manifest 声明了 `enableOnBackInvokedCallback="true"`.  
 - qwen ARC-08: 仓库里留着大段注释掉的代码与无人使用的分支 (`Theme.kt:118-282` 等), `ShellDefault` 带读后死锁.  
 - 卫生杂项: `OthersRepository.kt:85-89` 的 catch 分支返回 `Unit`, 使 `binderVersion` 退化成 `Any` (deepseek PA-36);  
@@ -300,7 +300,7 @@ glm TE4 列了阻断它的既有条目: `DP2` / `SS2` / `SS3` / `SS5` / `SS1` / 
 现有 semantics 会让断言假通过或无从断言 (qwen `TST-17`); 中间帧要显式驱动帧时钟 (qwen `TST-18`);  
 组合外的 Toast 断不到 (qwen `TST-19`); 失败捕获的配置项还够不到 (qwen `TST-20`).
 
-**JUnit 5**: deepseek PA-46 说"迁到 JUnit 5 的机制待查证"; glm 说现实形态可能是混合 (纯逻辑与 ViewModel 走 5,  
+**JUnit 5**: deepseek PA-46 说 "迁到 JUnit 5 的机制待查证"; glm 说现实形态可能是混合 (纯逻辑与 ViewModel 走 5,  
 Compose 与插桩保留 4); mimo TEST-3 记仍是 JUnit 4; qwen 说本地测试确实是 Gradle `Test` 任务, 加 `useJUnitPlatform()` 即可,  
 但插桩侧仍是 JUnit 4 (社区插件把 Jupiter 插桩限制在 API 26 以上, 高于本项目 minSdk).  
 官方本地测试页的示例栈仍是 JUnit 4. 这是决策点.
@@ -313,12 +313,12 @@ Compose 与插桩保留 4); mimo TEST-3 记仍是 JUnit 4; qwen 说本地测试�
 qwen 报告列了 8 条需要你判定的前置问题 (它的 `Q-01` 到 `Q-08`), 其中几条会改变上面某组的修法方向:
 
 - `Q-01`: `QUERY_ALL_PACKAGES` 保留并申报, 还是把过时 targetSdk 那一行改成 `<queries>` 加限定查询 (第 8 组).  
-- `Q-02`: `keys/debug.keystore` 被提交与"不提交签名材料"如何调和 (第 8 组).  
+- `Q-02`: `keys/debug.keystore` 被提交与 "不提交签名材料" 如何调和 (第 8 组).  
 - `Q-03`: `gwpAsanMode="always"` 与 `nativeSymbolUploadEnabled` 是只在 Firebase 包要, 还是两种包都要 (第 6, 第 8 组).  
 - `Q-04`: `ShellDefault` 保留并记录前置修复, 还是删除 (第 8 组).  
 - `Q-05`: 分区指纹清单与其余反射是既有问题, 是否回头改成公开 API (第 8 组).  
 - `Q-06`: lld.json 缓存放外部存储是刻意的吗 (第 4 组).  
-- `Q-07`: `MyModel` 下推是"描述与代码不符", 改描述还是补出领域层 (第 7 组).  
+- `Q-07`: `MyModel` 下推是 "描述与代码不符", 改描述还是补出领域层 (第 7 组).  
 - `Q-08`: qwen 报告标的是 record, 可执行的发现是否要转进 `issues-cn` 的编号条目.
 
 ## 与 issues-cn 的分歧
@@ -328,10 +328,10 @@ qwen 报告列了 8 条需要你判定的前置问题 (它的 `Q-01` 到 `Q-08`)
 
 | 主题 | issues-cn | project-analysis-cn | 代码复核 |
 |------|-----------|---------------------|----------|
-| 加载失败边界 | #62 判"有意接受" (UI 不 try, 契约是下层不抛) | deepseek PA-10 / glm AR9 / mimo PATTERN-1 / qwen UDF-01 记为待修 | `BaseListViewModel.kt:60-71` 仍没有失败分支; `IShell` 没有"不抛"声明. 没有失败分支属实; 正解是下层不抛 (与 AGENTS.md 一致), 不是让 UI 吸收异常 |
+| 加载失败边界 | #62 判 "有意接受" (UI 不 try, 契约是下层不抛) | deepseek PA-10 / glm AR9 / mimo PATTERN-1 / qwen UDF-01 记为待修 | `BaseListViewModel.kt:60-71` 仍没有失败分支; `IShell` 没有 "不抛" 声明. 没有失败分支属实; 正解是下层不抛 (与 AGENTS.md 一致), 不是让 UI 吸收异常 |
 | `myAndroid` | #09 P0, #17 P2 | deepseek PA-02 / glm SS1 / mimo SSOT-1 高, qwen SSOT-01 | 一致 |
 | 模块环与共用包名 | #04 P1, #07 P2 | glm AR1 / AR2 / MD1 高, mimo MOD-1/2, qwen ARC-02/ARC-05/MOD-02 | 代码一致; 定级不同 |
-| 静态取全局 | #02 P1 (DI 已接入, 剩全局取用点) | glm SS2 高, mimo ARCH-4 中, qwen ARC-03 | 一致, project-analysis 更强调"与图并行" |
+| 静态取全局 | #02 P1 (DI 已接入, 剩全局取用点) | glm SS2 高, mimo ARCH-4 中, qwen ARC-03 | 一致, project-analysis 更强调 "与图并行" |
 | lld.json | 外部目录无条目; `scheme` 与 `toInt()` 是 #22, `LldFileStore` 的直接比较是 #19 | glm SE1 高, glm SE2 / mimo SEC-1/2 中, deepseek PA-04 中, qwen SSOT-06 / SEC-02 / SEC-03 | 代码属实 (`MyApplication.kt:60-71`, `LldFileStore.kt:45-64`) |
 | 无 Baseline Profile | 无条目 | deepseek PA-27 高, qwen AP-06 | 属实 (`settings.gradle.kts` 没有 profileinstaller) |
 | 首屏要等整条检测 | 串行那半是 #15 (P1); 首屏那半无独立条目 | mimo AP-1 高, deepseek PA-33 中, qwen AP-01 / CP-05 | 属实 (`BaseListViewModel.kt:26-27,65-70`) |
@@ -348,9 +348,9 @@ qwen 报告列了 8 条需要你判定的前置问题 (它的 `Q-01` 到 `Q-08`)
 
 ## 建议顺序
 
-从高到低: 第 9 组的"不等重构"半段; 第 1 组; 第 2 组与第 3 组 (第 9 组的"要等重构"半段随第 1 到第 3 组);  
+从高到低: 第 9 组的 "不等重构" 半段; 第 1 组; 第 2 组与第 3 组 (第 9 组的 "要等重构" 半段随第 1 到第 3 组);  
 第 4 组; 第 5 组与第 6 组; 第 7 组; 第 8 组.
 
-先做第 9 组的"不等重构"半段, 理由是先立起防回归的测试, 让后面那些重构被验证, 而不是靠人眼.
+先做第 9 组的 "不等重构" 半段, 理由是先立起防回归的测试, 让后面那些重构被验证, 而不是靠人眼.
 
 本报告只排先后. 子任务怎么切, 每个子任务怎么提交, 归开工时写的计划.

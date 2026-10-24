@@ -79,7 +79,7 @@
 ### PA-03 (中) 枚举型设置被物化成两条并行流, 靠回调手工配对
 
 - `SettingsStore.kt:50-64` 同时暴露 `themeValue` / `scrollBarValue` (原始字符串) 与 `themeMode` /  
-  `scrollBarMode` (枚举) 四个流; 配对赋值出现在构造播种 (`:119-134`) 与偏好监听回调 (`:95-114`) 两处.
+  `scrollBarMode` (枚举) 四个流; 配对赋值出现在构造填初值 (`:119-134`) 与偏好监听回调 (`:95-114`) 两处.
 - 存值无法识别时两者分叉: `themeMode` 回退 `FollowSystem` (`:79-83`), `themeValue` 保留原字符串 (`:100`),  
   于是设置对话框显示 "无选中项" 而界面按跟随系统运行. 迁移路径 (`:116-143`) 是第三个必须同时维护两处的地方.
 - 消费方按表示形式分开: 设置对话框读原始串 (`SettingsScreen.kt:83-84`, `:250`, `:265`),  
@@ -354,14 +354,14 @@
 - 参考修法: 枚举给真实归属, 文件按职责拆开 (与 PA-25 同一轮).
 - 出处: deepseek PA-17 (低), mimo MOD-6 (中).
 
-### PA-28 (中) 建图与播种靠调用顺序, 一行看起来像死代码的语句是承重的
+### PA-28 (中) 建图与填初值靠调用顺序, 一行看起来像死代码的语句是承重的
 
 - `MyApplication.kt:58` 在属性初始化里建图, `:90` 才 `instance = this`, 而 `SettingsStore` 的字段初始化  
   (`:33-45`) 读的正是 `instance`: 提前解析 `AppGraph.settingsStore` 会抛  
   `UninitializedPropertyAccessException`.
-- `:103` 的 `val _ = appGraph.settingsStore` 用一次解析触发同步播种, 它必须先于 `MainActivity`  
+- `:103` 的 `val _ = appGraph.settingsStore` 用一次解析触发同步填初值, 它必须先于 `MainActivity`  
   组合前的读取 (`MainActivity.kt:26-28,89-92` 读 `themeMode.value`), 而读者从那行字看不出它是承重的.
-- 参考修法: 先绑定 `Context` 再建图, 或让播种所需的读取走注入的 `Context`.
+- 参考修法: 先绑定 `Context` 再建图, 或让填初值所需的读取走注入的 `Context`.
 - 出处: mimo ARCH-5 (中), qwen ARC-04 (未定级).
 
 ### PA-29 (中) `HomeRepository` 是 1211 行的巨类
@@ -404,7 +404,7 @@
 
 - `LldDataSource.kt:34-39` 在数据源里按是否中国大陆时区选 Gitee 或 GitHub,  
   而判断工具 `isChinaMainlandTimezone()` 放在共享模块 (`base/.../extension/DateTimeExt.kt:35-37`).
-- 参考修法: 仓库层选定主机再交给数据源; 时区工具按其使用归属移动.
+- 参考修法: 仓库层选定主机再交给数据源; 时区工具按它的使用归属移动.
 - 出处: glm AR8 (中).
 
 ### PA-34 (中) 导航: 每个标签页复制一份注册, 四个返回栈从不放第二个条目, 返回只有 `finish`
@@ -1258,7 +1258,7 @@
   (`AndroidManifest.xml:23-31`).
 - `KotlinAndroid.kt:72-83` 与 `app/build.gradle.kts` 的 `defaultConfig` 没有  
   `testInstrumentationRunnerArguments` (全仓库零命中), `testApplicationId` 取默认值意味着  
-  每个插桩测试都要执行 `MyApplication.onCreate` (建图, 反射, 设置播种, libsu builder,  
+  每个插桩测试都要执行 `MyApplication.onCreate` (建图, 反射, 设置初值写入, libsu builder,  
   即 PA-88), 被测应用无法在测试里变轻.
 - 另一条复核更正: `AppRoot.kt:79` 与 `Theme.kt:312` 读 `LocalActivity.current` 并不构成  
   "必须用 Activity 规则" 的理由, 因为 `createComposeRule()` 也在测试 Activity 里 setContent,  

@@ -11,11 +11,11 @@
   `res/values/arrays.xml` `app/src/main/assets/lld.json`. Test 一节是例外: 它同时按官方测试文档逐页对照,  
   那几条都写了文档出处.
 - 按要求未读 `docs/dev/` 与 `docs/spec/` 的任何内容; 未把代码注释当作事实, 注释里对行为的断言一律重新在代码里核对过,  
-  因此下面的判定与注释写的意图无关. `AGENTS.md` 只作为"负责人定过的约定"来对照代码.
+  因此下面的判定与注释写的意图无关. `AGENTS.md` 只作为 "负责人定过的约定" 来对照代码.
 - 不含 CI, NDK, JNI 三个角度.
 - 本报告自己的 ID 形如 `SSOT-01`, 只在本文内部互指, 不进入仓库的 `issues-cn` 编号序列.
 
-一句话结论: 项目的真问题集中在"一件事有多个来源"和"数据层与 UI 层互相穿插"这两条上, 由此带出检测结论会随构建环境, 语言与调用时序交错变化的风险;  
+一句话结论: 项目的真问题集中在 "一件事有多个来源" 和 "数据层与 UI 层互相穿插" 这两条上, 由此带出检测结论会随构建环境, 语言与调用时序交错变化的风险;  
 测试侧只有一个真实测试文件, 且 androidTest 的 runner 依赖缺失, 所以现在任何回归都只能靠人眼发现.
 
 | 一览 | 内容 |
@@ -54,14 +54,14 @@ known 条目作为另一份可显示的数据参与判定, 与 ARC-03 的注入�
 (`versionName >= latestGooglePlaySystemUpdates`, 还拼了 `"$versionName-01"` 覆盖另一种形态),  
 `AndroidVersionExt.kt:133`(`myAndroid.apiFull >= lld.android.preview.apiFull`), `:132,134`(`api.toInt()` 后比 Int),  
 `ui/home/datasource/LldFileStore.kt:62`(`savedLldVersion < assetLldVersion` 决定要不要重新拷贝资产文件).  
-字符串比较对当前的两位数 API 恰好成立, 但它把"这一行结论是否正确"寄托在数据形态上. 统一到一套比较类型即可.
+字符串比较对当前的两位数 API 恰好成立, 但它把 "这一行结论是否正确" 寄托在数据形态上. 统一到一套比较类型即可.
 
 **SSOT-03 判定阈值写在代码里而不是数据文件里**  
-`HomeRepository.kt:245-252` 的 `offset` 用字面量 `250205 - 250101` 表示"非最新稳定版时允许多旧的 build",  
+`HomeRepository.kt:245-252` 的 `offset` 用字面量 `250205 - 250101` 表示 "非最新稳定版时允许多旧的 build",  
 `:232` 注释里的 `"250705"` 也是同类字面量; `:234-242` 直接把 build id 第二段当 `Int` 比. lld.json 已经承载了 build  
 明细(`:206-209`)和 `scheme`, 这条容差应当与它同源. 现在它随时间自行失配, 失配后表现为绿色圆点变红, 没有代码会报错.
 
-**SSOT-04 设置项的持久化标识住在 string 资源里, 同一映射抄了三份**  
+**SSOT-04 设置项的持久化标识放在 string 资源里, 同一映射抄了三份**  
 `ui/settings/repository/SettingsStore.kt:33-45` 用 `MyApplication.getMyString(R.string.interface_themes_key)` 等 11 个  
 资源值当 SharedPreferences 的键和存储值; 枚举映射在 `:79-91` 的 `when` 里第二次书写; 标签与值的配对在  
 `ui/settings/res/values/arrays.xml:4-27` 用两个平行数组第三次表达, 消费处靠下标配对(`ui/settings/SettingsScreen.kt:337`  
@@ -77,7 +77,7 @@ Application 的 resources), `HomeRepository.kt` 单文件 69 处. `app/build.gra
 会不会因此给出两种语言, 取决于 Application 的 resources 有没有被设成该 locale, 这一层我没有可引的出处, 记 unknown.  
 `generateLocaleConfig` 与 `localeFilters` 确实产出了按应用选语言的配置(构建产物 `app/build/intermediates/merged_manifest/`  
 下的清单带 `android:localeConfig`, 那个目录不入库且随 variant 变), 但两个 Context 各自拿到什么 locale 是另一件事, 一致性  
-没有代码保证. 修法: 明细也走 `MyModelTitle` 那种"传 id, 渲染处解析"的形态  
+没有代码保证. 修法: 明细也走 `MyModelTitle` 那种 "传 id, 渲染处解析" 的形态  
 (`ui/base/list/MyModel.kt:12-15` 已有这个形状), 测试侧后果见 TST-19.
 
 **SSOT-06 lld.json 自带 `scheme` 但没人校验, 解析器也不检查必备字段是否齐**  
@@ -87,7 +87,7 @@ Application 的 resources), `HomeRepository.kt` 单文件 69 处. `app/build.gra
 `LldFileStore.kt:111-120` 吞掉异常返回 `null`, 用户只看到一行 unknown. 修法: 解析后校验 `scheme == SCHEME_VERSION`,  
 并把不认识的 `scheme` 与缺字段区分成两种可显示的失败原因.
 
-另外两条归属于别处但同属"一个事实多个来源": 服务定位器与 DI 并存见 ARC-03; 占位文案被当数据比较见 PAT-05.
+另外两条归属于别处但同属 "一个事实多个来源": 服务定位器与 DI 并存见 ARC-03; 占位文案被当数据比较见 PAT-05.
 
 ## UDF, 单向数据流上的断点
 
@@ -102,22 +102,22 @@ Application 的 resources), `HomeRepository.kt` 单文件 69 处. `app/build.gra
 **UDF-02 补丁行走的是与列表不同的数据来源**  
 `HomeViewModel.kt:267-286` 的 `payloadOutdatedTargetSdkVersionApk()` 为拿 `Lld` 调 `fetchOfflineLldOrNull()`, 而列表  
 可能是 `:101-148` 用在线 payload 构造的, 于是这一行与相邻行来自不同版本的同一份数据; 更糟的是 `fetchOfflineLldOrNull()`  
-在 `:159` 会调 `copyJsonIfNeededOrThrow()`, 于是"切换排序方式"这个纯展示动作可能重写缓存文件.  
+在 `:159` 会调 `copyJsonIfNeededOrThrow()`, 于是 "切换排序方式" 这个纯展示动作可能重写缓存文件.  
 修法: 把已解析的 `Lld` 作为一次加载的状态保留下来, 补丁复用它.
 
 **UDF-03 按位置改数据**  
 `BaseListViewModel.kt:79-87` 的 `updateModelDetail(targetIndex, newDetail)` 用下标定位行, 下标在  
 `HomeViewModel.kt:278-280` 从当时的 `modelsStateFlow.value` 求出, 求完到写回之间一次 `refresh()` 完成就会把内容写到  
-另一行上. 修法: 按 `key` 或按 `MyModelType` 定位, 或者让该行整体由一个可观察输入重算.
+另一行上. 修法: 按 `key` 或按 `MyModelType` 定位, 或者让这一行整体由一个可观察输入重算.
 
 **UDF-04 手工计数器代替数据流**  
 `HomeViewModel.kt:78-82` 的 `outdatedOrderChanges`(变更次数)与 `loadStartGeneration`(普通 `var`)组合成一套  
-"本次加载用的是哪一世代的偏好"判定, 消费点在 `:54` 与 `:258-264`. 这恰好是 `combine`/`snapshotFlow` 提供的能力,  
+"本次加载用的是哪一世代的偏好" 判定, 消费点在 `:54` 与 `:258-264`. 这恰好是 `combine`/`snapshotFlow` 提供的能力,  
 自己写出来之后需要注释解释三段时序(`:70-77`). 修法: 把排序偏好作为流输入交给构造列表的那一步.
 
 **UDF-05 去重会把用户主动发起的刷新丢掉**  
 `BaseListViewModel.kt:61-63` 在 `loadJob?.isActive == true` 时直接 return; 用户在加载过程中下拉一次, 这次手势不会  
-补做, 也不会给出任何提示, 结果是最坏情况下满屏旧数据加一个已消失的转圈. 修法: 记录"请求过再加载一次", 在尾部补一次.
+补做, 也不会给出任何提示, 结果是最坏情况下满屏旧数据加一个已消失的转圈. 修法: 记录 "请求过再加载一次", 在尾部补一次.
 
 **UDF-06 首屏与刷新都由组合层触发, 且行序在三个地方手写**  
 `ui/base/list/MyModelListScreen.kt:59` 的 `LaunchedEffect(viewModel) { viewModel.init() }` 把首次加载的时机放在 UI 里;  
@@ -128,7 +128,7 @@ Application 的 resources), `HomeRepository.kt` 单文件 69 处. `app/build.gra
 
 **UDF-07 副作用不走状态**  
 `SettingsViewModel.kt:104-121` 的彩蛋计数是私有 `var timesLeft`, 通过 `getVersionClickedMessage(): Int?` 的返回值  
-表达事件, UI 在点击回调里直接弹 Toast(`SettingsScreen.kt:117-121`). 这类"调用即事件"的形态在配置变更后重放, 也无法  
+表达事件, UI 在点击回调里直接弹 Toast(`SettingsScreen.kt:117-121`). 这类 "调用即事件" 的形态在配置变更后重放, 也无法  
 在测试里观察. 修法: 一次性事件放进可被消费的 state, 或让点击本身只改计数状态.
 
 ## 架构
@@ -136,7 +136,7 @@ Application 的 resources), `HomeRepository.kt` 单文件 69 处. `app/build.gra
 **ARC-01 数据层依赖 UI 层, 中间没有领域层**  
 四个仓库都 import UI 侧类型: `HomeRepository.kt:23-27,50`(`MyModel`, `MyModelTitle`, `MyModelType`,  
 `guardedMyModel`, `toColoredMyModel`, `StatusColor`), `OthersRepository.kt:14-16`, `PropRepository.kt:7-13`,  
-`SettingsRepository.kt:104-113`(返回带 `@StringRes id` 的 `Version`). `AGENTS.md` "架构"一节写的  
+`SettingsRepository.kt:104-113`(返回带 `@StringRes id` 的 `Version`). `AGENTS.md` "架构" 一节写的  
 Screen → ViewModel → Repository → DataSource 是对现有代码的描述, 不是负责人定的约定, 所以这里的不一致属于描述与代码  
 不符一类: 代码里 Repository 与 ViewModel 之间实际没有边界, 仓库既是数据源调度者, 又是行模型构造者和文案拼接者.  
 后果之一是无法在没有 Android 资源的情况下测试任何一条检测(见 TST-04).  
@@ -160,9 +160,9 @@ Metro 图之外还有 `MyApplication` 的三个静态成员, 实测 `MyApplicati
 
 **ARC-04 图的创建时序靠调用顺序保证, 没有任何强制**  
 `MyApplication.kt:58` 在属性初始化里建图, `:90` 才 `instance = this`, 而 `SettingsStore` 的字段初始化(`:33-45`)读的正是  
-`instance`; `:103` 用一次解析触发同步播种, 注释说明"这行之前谁都不能读这两个流". 也就是说  
+`instance`; `:103` 用一次解析触发同步填初值, 注释说明 "这行之前谁都不能读这两个流". 也就是说  
 `AppGraph.settingsStore` 一旦被提前解析就抛 `UninitializedPropertyAccessException`. 修法: 先绑定 Context 再建图,  
-或让播种所需的读取走注入的 `Context`.
+或让填初值所需的读取走注入的 `Context`.
 
 **ARC-05 `:base` 不是抽象层, 而且和 `:app` 共用一个包名**  
 `base/build.gradle.kts:6` 的 namespace 是 `net.imknown.android.forefrontinfo.base`, 而 `:app` 里也有同名包  
@@ -179,21 +179,21 @@ Metro 图之外还有 `MyApplication` 的三个静态成员, 实测 `MyApplicati
 `ui/prop/datasource/SettingsDataSource.kt:11-26` 反射 `Settings.*` 的 `declaredFields` 与 `getDeclaredMethod("getString")`;  
 `ui/prop/datasource/PropertiesDataSource.kt:17-25` 反射 `java.util.Properties` 的私有 `defaults` 字段;  
 `HomeRepository.kt:641-645` 用 `Resources.getSystem().getIdentifier("config_defaultModuleMetadataProvider", ...)`.  
-`AGENTS.md` 的"新代码用当前版本允许的最新 API"这条约定只管此后新增的代码, 所以下面这些既有反射不属于违反该约定,  
-它们是已有的问题, 要不要按该约定回头改由负责人判定(见 Q-05). 其中确有公开路径的地方是 Settings 的公开  
+`AGENTS.md` 的 "新代码用当前版本允许的最新 API" 这条约定只管此后新增的代码, 所以下面这些既有反射不属于违反这个约定,  
+它们是已有的问题, 要不要按这个约定回头改由负责人判定 (见 Q-05). 其中确有公开路径的地方是 Settings 的公开  
 `Settings.Secure.getString(ContentResolver, name)`(只需键名), `PackageInfo` 的公开签名接口,  
 `Build.getFingerprintedPartitions()`(见 MOD-04), 以及 `Properties` 的公开 `getProperty()` 与 `stringPropertyNames()`(两者本来  
 就会回落到 defaults). 对这一页要渲染的内容来说公开路径可以替代 `PropertiesDataSource.kt:17-25` 那次读私有 `defaults` 字段的  
 反射(要不要回头改见 Q-05), 因为消费点只做字符串渲染: `PropRepository.kt:26-34` 取 `toString()`, `:28` 还有一次与  
-`System.lineSeparator()` 的字符串相等比较. 类型上该函数声明的是 `List<Pair<Any?, Any?>>`(`:15`), 而公开的字符串视图按 JDK 的  
+`System.lineSeparator()` 的字符串相等比较. 类型上这个函数声明的是 `List<Pair<Any?, Any?>>`(`:15`), 而公开的字符串视图按 JDK 的  
 `stringPropertyNames()` 会略去键或值不是 String 的条目; 本仓库唯一往系统属性写入的点是 `MyDebugApplication.kt:17` 的  
 `setProperty(String, String)`, 框架侧的形态我没有自己核对, 所以会不会出现非 String 条目记 unknown. 其余两处(隐藏的  
-`SystemProperties`, `WebViewUpdateService` 与 `WebViewProviderInfo`)没有公开对应物, 反射是唯一路径, 那要记的就不是"该用  
-公开 API", 而是"每次读都重新查找方法". 性能代价见 AP-03, AP-04.
+`SystemProperties`, `WebViewUpdateService` 与 `WebViewProviderInfo`)没有公开对应物, 反射是唯一路径,  
+那要记录的缺口是 "每次读都重新查找方法", 不是 "该用公开 API". 性能代价见 AP-03, AP-04.
 
 **ARC-07 返回处理只有 finish, 与多栈骨架不匹配**  
 `ui/AppRoot.kt:123-133` 的 `onBack = { activity?.finish() }` 不弹出选中栈; 现在每个栈只有一个条目所以看不出问题,  
-但骨架是"每页独立返回栈"(`:92` 为每个 tab 建 `rememberNavBackStack`), 一旦加入详情页或弹层, 系统返回会直接退出应用.  
+但骨架是 "每页独立返回栈"(`:92` 为每个 tab 建 `rememberNavBackStack`), 一旦加入详情页或弹层, 系统返回会直接退出应用.  
 `AndroidManifest.xml:13` 又声明了 `enableOnBackInvokedCallback="true"`, 而代码里没有 `OnBackInvokedCallback` 或  
 预测式返回的实现. 修法: `entries.size > 1` 时 pop, 否则 finish, 并把预测式返回接进 Nav3.
 
@@ -217,12 +217,12 @@ Metro 图之外还有 `MyApplication` 的三个静态成员, 实测 `MyApplicati
 没有任何成员, 但两个 ViewModel 继承它, `BaseListViewModel`(`:18`)再继承它; `ui/home/datasource/AndroidDataSource.kt:3-4`  
 是一个永不实例化的类只为装 companion 常量; `di/AppViewModelFactory.kt:32-34` 的三个 map 里两个今天恒为空,  
 因为仓库里没有 `@AssistedInject` 声明(grep 唯一命中是 `AppViewModelFactory.kt:20` 的注释).  
-前两者是可以直接去掉的层次, 保留只会让"谁负责什么"更难看清.
+前两者是可以直接去掉的层次, 保留只会让 "谁负责什么" 更难看清.
 
 **PAT-03 页面的渲染规则被编进数据生产的 API** `ui/base/list/MyModelExt.kt` 提供四个行构造函数与两个守卫:  
 `toErrorMyModel`(`:46-50`, 红点), `toDetectFailedMyModel`(`:95-98`, 无点), `toColoredMyModel` 两个重载(`:56-72`),  
-`toTranslatedDetailMyModel` 两个重载(`:105-124`), 选择依据是"这一页画不画圆点". 同一个失败行在 `PropRepository.kt:102-103`  
-还有第三个包装. 于是"要不要画点"这个渲染决定写在 62 个条目生产者上(`guardedMyModel(` 25 处,  
+`toTranslatedDetailMyModel` 两个重载(`:105-124`), 选择依据是 "这一页画不画圆点". 同一个失败行在 `PropRepository.kt:102-103`  
+还有第三个包装. 于是 "要不要画点" 这个渲染决定写在 62 个条目生产者上(`guardedMyModel(` 25 处,  
 `guardedDetectFailedMyModel(` 37 处, 定义行已扣除), 一个页面日后想画点需要改数据层.  
 修法: 行模型携带检测结果, 页面映射决定表达(与 ARC-01 一起做, 改哪一边见 Q-07).
 
@@ -230,7 +230,7 @@ Metro 图之外还有 `MyApplication` 的三个静态成员, 实测 `MyApplicati
 `HomeRepository.kt` 1211 行, 25 个 `detect*` 方法(3 个 private)加通用格式化(`:1181-1210`); 条目顺序在  
 `HomeViewModel.kt:211-241` 用 23 条 `tempModels +=` 手写一遍, 其中两个方法各返回 2 行, 所以这一页实际 25 行;  
 `OthersRepository.kt` 278 行 37 个 `get*` 方法, 顺序在 `OthersViewModel.kt:36-97` 又是 37 条 `+=`.  
-没有"检测项"这一抽象类型, 因此无法注册, 无法单测,  
+没有 "检测项" 这一抽象类型, 因此无法注册, 无法单测,  
 无法只重跑其中一条(UDF-02 的补丁路径因此把整份数据重读一遍). 修法: `interface Detector`, 一个条目一个类型, 列表顺序由注册表给出.
 
 **PAT-05 用本地化文案当哨兵值** `ui/common/PropertyReader.kt:25,28` 把 `result_not_supported` 与 `build_not_filled`  
@@ -249,7 +249,7 @@ Metro 图之外还有 `MyApplication` 的三个静态成员, 实测 `MyApplicati
 `base/res`, `base/resLauncher`, `base/resBackup`, `base/resTheme`, 另 6 个是 `ui`, `ui/base/list` 与四个特性包  
 `ui/home`, `ui/others`, `ui/prop`, `ui/settings`, 全仓库没有 `app/src/main/res`.  
 新增一个页面必须回来加一行, 漏加时资源不参与合并. 修法: 把特性抽成模块(见 MOD-02), 让 AGP 自己合并资源; 或把这个约定写成一处可校验的函数并在  
-`check` 阶段断言"每个特性包都有已登记的 res 目录".
+`check` 阶段断言 "每个特性包都有已登记的 res 目录".
 
 **MOD-02 四个特性只是包, 层级没有任何构建约束** `settings.gradle.kts:54-56` 只 include 了 `:binderDetector`, `:base`, `:app` 三个模块,  
 `ui.home` / `ui.others` / `ui.prop` / `ui.settings` 全在 `:app` 内, 于是 ARC-02 的双向依赖不会让构建失败, 也不会有人发现.  
@@ -266,13 +266,13 @@ Metro 图之外还有 `MyApplication` 的三个静态成员, 实测 `MyApplicati
 前者只有常量, 后者只有两个 `Build` 读取; `IProperty.getStringOrThrow` 与 `PropertyReader.getString` 的命名与抛出契约不一致,  
 见 MOD-05. 候选修法是改名加用公开 API(既有代码是否回头改见 Q-05).
 
-**MOD-05 `OrThrow` 后缀不再表示"会抛"** 契约(`AGENTS.md` 的"Code rules")是"没有 `OrThrow` 后缀的函数承诺不抛".  
+**MOD-05 `OrThrow` 后缀不再表示 "会抛"** 契约(`AGENTS.md` 的 "Code rules")是 "没有 `OrThrow` 后缀的函数承诺不抛".  
 实测两处相反: `LldDataSource.kt:34` 的 `fetchOnlineLldJsonStringOrThrow` 名实相符, 但 `:50` 的  
 `fetchOfflineLldFileOrThrow()`(经 `HomeRepository.kt:67` 透出)只是返回 `LldFileStore.kt:32` 的一个 `File`, 真正抛异常的是  
 调用方 `HomeViewModel.kt:173` 的 `toObjectOrThrow()`; `AppGraph.kt:149-161` 的 `ProxySelector.select` 里 catch 之后  
 返回 `Proxy.NO_PROXY`, 而 `PropertyReader.kt:29` 调用的 `IProperty.getStringOrThrow` 抛出的异常在 `PropertyReader` 内部被捕获,  
-使 `PropertyReader.getString` 成为"带 OrThrow 依赖却从不抛"的中间层(抛与吞的分工被后缀名藏了起来;  
-这与 UDF-01 记的"加载契约没有错误出口"是两件事). 修法: 重命名, 让后缀只描述本函数的行为.
+使 `PropertyReader.getString` 成为 "带 OrThrow 依赖却从不抛" 的中间层(抛与吞的分工被后缀名藏了起来;  
+这与 UDF-01 记的 "加载契约没有错误出口" 是两件事). 修法: 重命名, 让后缀只描述本函数的行为.
 
 **MOD-06 flavor 维度名与实际用途不符, 版本名标记只给了一边**  
 `build-logic/.../android/Flavor.kt:9-16,25` 用 `IssueTracker` 作为维度名划分 `Foss` 与 `Firebase`, 这条维度实际划分的是  
@@ -283,7 +283,7 @@ build.toml 里 `versionName` 键的值完全相同, 出问题时无法从版本�
 `build-logic/.../app/AndroidApplicationConventionPlugin.kt:36-44` 在配置期执行 `git rev-parse --abbrev-ref HEAD` 并取  
 `Instant.now()`, 前者进入 `BuildConfig.GIT_BRANCH`, 后者进入 `archivesName`; 项目开了 configuration cache  
 (`gradle.properties:28-30`). 这条 git 状态同时是在线数据的 URL 路径段(`LldDataSource.kt:41`), 后果见 SEC-02.  
-另注: `gradle/toml/*.toml` 的"版本只住在 catalog"约定在这里被绕过了一次, `settings.gradle.kts:63` 与 `:69`  
+另注: `gradle/toml/*.toml` 的 "版本只放在 catalog" 约定在这里被绕过了一次, `settings.gradle.kts:63` 与 `:69`  
 把 `com.gradle.develocity` 和 `org.gradle.toolchains.foojay-resolver-convention` 两个插件的版本直接写在脚本里.
 
 ## Security
@@ -295,24 +295,24 @@ build.toml 里 `versionName` 键的值完全相同, 出问题时无法从版本�
 抑制标记把检查关掉而不是记录理由. 可判定项见 Q-01.
 
 **SEC-02 在线数据路径由构建机的 git 状态决定, 失败后静默降级**  
-`LldDataSource.kt:41` 把 `BuildConfig.GIT_BRANCH` 拼进 URL; 该值来自配置期的  
+`LldDataSource.kt:41` 把 `BuildConfig.GIT_BRANCH` 拼进 URL; 这个值来自配置期的  
 `git rev-parse`(`AndroidApplicationConventionPlugin.kt:37-44`),  
 从 tag 或 detached HEAD 构建时得到 `HEAD`, 非 git 目录得到 `unknown`, 于是 URL 指向不存在的路径; 而  
-`HomeViewModel.kt:108-111` 把任何异常都转成离线分支, 界面只显示"离线"加一句错误文本. 结果是发布包的"是否最新"结论  
+`HomeViewModel.kt:108-111` 把任何异常都转成离线分支, 界面只显示 "离线" 加一句错误文本. 结果是发布包的 "是否最新" 结论  
 可能在用户设备上永远来自包内旧数据, 而构建与运行两端都没有信号. 修法: 数据分支/通道作为显式构建输入, 并在 UI 上  
-区分"网络失败"与"数据通道不可用".
+区分 "网络失败" 与 "数据通道不可用".
 
 **SEC-03 缓存的 lld.json 可被外部写, 又被当作可信判定依据**  
-`MyApplication.kt:60-71` 用 `getExternalFilesDir(DIRECTORY_DOWNLOADS)`, 该函数在外部目录不可用时回落到 `filesDir.resolve(type)`,  
+`MyApplication.kt:60-71` 用 `getExternalFilesDir(DIRECTORY_DOWNLOADS)`, 这个函数在外部目录不可用时回落到 `filesDir.resolve(type)`,  
 所以这条面不是恒在, 而是取决于设备状态; `LldFileStore.kt:101-109` 直接  
-`FileWriter` 覆盖, `:50-65` 读取该文件决定是否重新拷贝资产. 在 minSdk 覆盖的 API 24..29 区间, 应用专属外部目录对其他持有  
+`FileWriter` 覆盖, `:50-65` 读取这个文件决定是否重新拷贝资产. 在 minSdk 覆盖的 API 24..29 区间, 应用专属外部目录对其他持有  
 旧存储权限的应用是可读可写的; 这份文件又没有 `scheme` 校验(见 SSOT-06), 也没有完整性或签名校验, 传输侧也没有证书固定  
-(`AppGraph.kt:116-182` 只设了超时与调试日志). 篡改者可以让"安全补丁等级""最新 Android"这些行的红点绿点按他的意愿出现.  
-修法: 把缓存放内部存储(`filesDir`), 校验 `scheme` 与 `version` 单调性, 或对该端点做证书固定(外部存储是否刻意选择见 Q-06).
+(`AppGraph.kt:116-182` 只设了超时与调试日志). 篡改者可以让 "安全补丁等级""最新 Android" 这些行的红点绿点按他的意愿出现.  
+修法: 把缓存放内部存储(`filesDir`), 校验 `scheme` 与 `version` 单调性, 或对这个端点做证书固定 (外部存储是否刻意选择见 Q-06).
 
 **SEC-04 对外部存储路径做递归删除** `LldFileStore.kt:34-40` 的 `deleteDirtyDirectoryOrThrow()` 在目标路径是目录时  
 调用 `deleteRecursively()`, 调用点包括 `:47`(拷贝前)与 `:102-104`(保存前). 路径来自 `getDownloadDir()`, 正常情况下只是  
-一个文件, 但一旦该名字被占成目录(用户或别的持有存储权限的应用造成), 应用会递归删掉那个目录的内容, 而它位于外部存储.  
+一个文件, 但一旦这个名字被占成目录 (用户或别的持有存储权限的应用造成), 应用会递归删掉那个目录的内容, 而它位于外部存储.  
 修法: 只删自己创建的文件, 目录形态改为报错而不是删除.
 
 **SEC-05 shell 命令今天全是常量, 但接口不收参数数组** 逐处核对: 7 个 `shell.execute` 调用点  
@@ -339,7 +339,7 @@ crashlytics-ndk, `:37` 打开 `nativeSymbolUploadEnabled`; 代码里唯一的网
 
 **SEC-08 备份配置是两个空元素, 等于不排除任何东西**  
 `AndroidManifest.xml:12,14` 指向 `resBackup/xml/backup_rules.xml` 与 `data_extraction_rules.xml`, 两个文件里分别是  
-`<full-backup-content />`(`backup_rules.xml:5`)和 `<data-extraction-rules />`(`:4`), 空元素表示"无 include/exclude",  
+`<full-backup-content />`(`backup_rules.xml:5`)和 `<data-extraction-rules />`(`:4`), 空元素表示 "无 include/exclude",  
 即全部备份并随设备迁移, 包含 SharedPreferences 与 `filesDir`, 外部目录副本也在其中; `allowBackup` 未写, 取默认 `true`.  
 修法: 显式写 `android:allowBackup="false"`, 或者按目录写 exclude 规则, 把缓存数据排除.
 
@@ -347,7 +347,7 @@ crashlytics-ndk, `:37` 打开 `nativeSymbolUploadEnabled`; 代码里唯一的网
 `git ls-files keys` 显示 `keys/debug.keystore` 被提交, `app/build.gradle.kts:74-79` 里 debug 库的口令写死为 `android`;  
 release 侧 `:51-65` 从 `local.properties` 读口令, 文件不存在时 `:52-55` 静默 `return@register`, 于是  
 `signingConfig = signingConfigs.named("release")`(`:91`)拿到的是未配置的签名, `assembleFossRelease` 会产出未签名包而不报错.  
-`v1..v4` 手工全开(`:67-70,80-83`)在 AGP 上是多余的. `AGENTS.md` 的"Never commit"一节与此有张力, 见 Q-02.
+`v1..v4` 手工全开(`:67-70,80-83`)在 AGP 上是多余的. `AGENTS.md` 的 "Never commit" 一节与此有张力, 见 Q-02.
 
 ## Compose 性能
 
@@ -358,7 +358,7 @@ release 侧 `:51-65` 从 `local.properties` 读口令, 文件不存在时 `:52-5
 **CP-02 滚动状态被在组合期读取** `ui/common/ScrollBarExt.kt:41` 的 `val scrolling = enabled && scrollState.isScrollInProgress`  
 是一次组合期 state 读取, 于是每次开始与停止滚动都会重组 `MyModelListContent`(`ui/base/list/MyModelListScreen.kt:82-150`)  
 整个函数体, 项目本身可以跳过, 但 `rememberPullToRefreshState()`, 两处 `dimensionResource` 和整条 modifier 链会重建.  
-修法: 把该读取下推到 draw/layout 期(或 `derivedStateOf` 加 lambda modifier), 与 `alpha` 现有的 draw 期读取(`:56-88`)一致.
+修法: 把这个读取下推到 draw/layout 期 (或 `derivedStateOf` 加 lambda modifier), 与 `alpha` 现有的 draw 期读取(`:56-88`)一致.
 
 **CP-03 同一行做了两次动画** `MyModelListScreen.kt:141` 给每个 item 加了 `animateItem()`, `MyModelCard.kt:55` 又给  
 卡片加了 `animateContentSize()`; 刷新完成时每个可见行同时参与位置动画与自身高度动画, 而 `HomeRepository.kt:1163-1167`  
@@ -366,7 +366,7 @@ release 侧 `:51-65` 从 `local.properties` 读口令, 文件不存在时 `:52-5
 修法: 二选一, 并给长文本一个折叠或上限, 见 AP-08.
 
 **CP-04 每行一个空 click 的 Card** `MyModelCard.kt:42-49` 用 `onClick = {}` 只为了找回旧的 ripple 反馈, 代价是每个行都  
-带上 clickable 节点, focus 与 indication, 无障碍朗读会说"点按即可激活"却什么都不发生. 修法: 要么取消 ripple,  
+带上 clickable 节点, focus 与 indication, 无障碍朗读会说 "点按即可激活" 却什么都不发生. 修法: 要么取消 ripple,  
 要么把行展开做成真实动作; 这条也是可访问性缺陷, 不只是性能.
 
 **CP-05 列表首帧没有占位** `MyModelListScreen.kt:71` 把 `null` 显示成空列表, 于是 Home 的 25 行, Others 的 37 行与 Prop 的  
@@ -385,7 +385,7 @@ release 侧 `:51-65` 从 `local.properties` 读口令, 文件不存在时 `:52-5
 **CP-08 已知的 Compose lint 结论被写进基线而不是处理** `app/lint-baseline.xml:38-90` 记录  
 `ComposeCompositionLocalUsage` 三条(`ExtendedColors.kt:40`, `MyModelListScreen.kt:36`, `Theme.kt:284`),  
 `ComposeModifierMissing` 一条(`AppRoot.kt:76`), `ComposeReadOnlyComposable` 一条(`MyModelCard.kt:97`),  
-`UnusedResources` 三条(`:3-35`). `app/build.gradle.kts:113-117` 的意图是"让检查管住新代码, 基线随修复缩小".  
+`UnusedResources` 三条(`:3-35`). `app/build.gradle.kts:113-117` 的意图是 "让检查管住新代码, 基线随修复缩小".  
 修法: 逐条清掉, 让基线变短; `AppRoot` 缺 `modifier` 参数与 `asText()` 缺 `@ReadOnlyComposable` 都是一行改动.
 
 ## App 性能
@@ -397,7 +397,7 @@ PackageManager 调用; `OthersViewModel.kt:34-98` 与 `PropViewModel.kt:31-39` �
 **AP-02 每次刷新都重复的重活** `getInstalledApplications`(`HomeRepository.kt:1122-1127`)一次全量扫描,  
 `cat /proc/mounts`(`MountDataSource.kt:27`), `getenforce`(`HomeRepository.kt:850`), `toybox --version`(`:892`),  
 `cat|grep|grep`(`:579`)以及每个 WebView 提供方一次 `getApplicationInfo` 加 `loadLabel`(`:956-994`). 这些都随下拉刷新  
-重跑, 且都是非 root shell 冷启动的进程间调用. 修法: 进程内缓存, 或把"深扫"与"刷新"分成两个动作.
+重跑, 且都是非 root shell 冷启动的进程间调用. 修法: 进程内缓存, 或把 "深扫" 与 "刷新" 分成两个动作.
 
 **AP-03 属性读取的热路径上有反射查找** `PropertyDefault.kt:10-18` 每次读属性都重做 `getDeclaredMethod`  
 (`Class.forName` 由 `:8` 的字段承担了一次); 一次 Home 加载有 29 处 `propertyReader` 调用, Others 加载另有约 13 次属性读取  
@@ -410,9 +410,9 @@ Global 41), 也就是一次进入 Prop 页至少 195 次 Settings 查询加 195 
 修法: 用公开 getter 与一次性整表查询, 或者按可见区域分片加载.
 
 **AP-05 启动主线程上有磁盘与反射** `MyApplication.kt:58,92,103` 依次建图, 反射遍历  
-`Build.VERSION_CODES*` 公开字段(`AndroidVersionExt.kt:22-44`), 同步播种设置(`SettingsStore.kt:116-143`,  
+`Build.VERSION_CODES*` 公开字段(`AndroidVersionExt.kt:22-44`), 同步填初值设置(`SettingsStore.kt:116-143`,  
 含一次可能的迁移写盘 `:126`), `:105` 初始化 libsu builder. debug 包开了 `StrictMode.enableDefaults()`  
-(`app/src/debug/java/.../MyDebugApplication.kt:13`), 这些磁盘读会直接报违规. 修法: 播种挪出 `onCreate` 或改为异步加  
+(`app/src/debug/java/.../MyDebugApplication.kt:13`), 这些磁盘读会直接报违规. 修法: 初值的写入挪出 `onCreate` 或改为异步加  
 首帧等待点; 反射表只在用到时算.
 
 **AP-06 没有 baseline profile, 也没有 profileinstaller** `gradle/toml/*.toml` 里没有  
@@ -425,12 +425,12 @@ profileinstaller 依赖.
 是否只在 debug, 或配合 macrobenchmark 量一次(见 Q-03).
 
 **AP-08 巨行文本** `HomeRepository.kt:998-1032`(WebView 行, 多段拼接)与 `:1163-1167`(每个系统应用一行)产生的  
-`detail` 可以很长, 而 `MyModelCard.kt:87-91` 用一个 `Text` 全量渲染, 无 `maxLines`, 无折叠. 修法: 默认截断加"展开全部",  
+`detail` 可以很长, 而 `MyModelCard.kt:87-91` 用一个 `Text` 全量渲染, 无 `maxLines`, 无折叠. 修法: 默认截断加 "展开全部",  
 长清单改成可点开的详情条目.
 
-**AP-09 空结果被当作"否"的证据, 且成功与否被丢掉** `MountDataSource.kt:24-36` 不看 `ShellResult.isSuccess`  
+**AP-09 空结果被当作 "否" 的证据, 且成功与否被丢掉** `MountDataSource.kt:24-36` 不看 `ShellResult.isSuccess`  
 就返回解析结果, shell 失败时得到空列表; `HomeRepository.kt:434-436` 的 `isThe2siSar = isAtLeastAndroid10() && mounts.none { ... }`  
-在空列表上为真, 于是把"读不到 mounts"显示成"支持 2SI system-as-root"并配绿色点(`:462-466`); `:727-729` 的 APEX 判断同样  
+在空列表上为真, 于是把 "读不到 mounts" 显示成 "支持 2SI system-as-root" 并配绿色点(`:462-466`); `:727-729` 的 APEX 判断同样  
 把空列表当证据. 修法: 保留成功状态, 失败时渲染 unknown.
 
 ## Test
@@ -439,7 +439,7 @@ profileinstaller 依赖.
 what-to-test, test-doubles, strategies, UI Automator, Gemini Journeys)与负责人补给的 Compose 测试九页(测试主页,  
 速查表, semantics, 测试 API, v1 到 v2 迁移, 同步, 互操作, 常见模式, 调试)逐页核对, 现状如下. 两点取材说明:  
 速查表那页没有正文, 只有一个 PDF 下载链接; 调试那页只点名 `composeTestRule.onRoot().printToLog()` 一件工具,  
-所以"Compose 编译器报告没打开"属于性能页的空白(已记在 CP-07), 不是这九页的要求.
+所以 "Compose 编译器报告没打开" 属于性能页的空白(已记在 CP-07), 不是这九页的要求.
 
 **TST-01 五个被跟踪的测试文件里四个是 IDE 模板** `app/src/test/.../ExampleUnitTest.kt:14` 与  
 `base/src/test/.../ExampleUnitTest.kt:14` 断言 `2+2`; 两个 `ExampleInstrumentedTest.kt:20` 断言包名. 真实测试只有  
@@ -492,12 +492,12 @@ Robolectric 页要求 `isIncludeAndroidResources = true` 加 `@RunWith(AndroidJU
 
 **TST-10 bundle 把测试依赖无差别发给所有模块** `KotlinAndroid.kt:78-81` 把 `android.toml:104-105` 的两个 bundle  
 发给每个应用约定的模块, `:binderDetector` 没有测试源集也照样拿到 `junit`, `base/build.gradle.kts:13-15` 自己不声明任何测试依赖.  
-结果是"某个模块用什么测"在读模块构建文件时看不出来, 缺失也看不出来. 修法: 按层拆命名别名(unit, instrumentation,  
+结果是 "某个模块用什么测" 在读模块构建文件时看不出来, 缺失也看不出来. 修法: 按层拆命名别名(unit, instrumentation,  
 composeUi, robolectric, screenshot), 在需要处声明.
 
 **TST-11 文档已把 v1 入口标为废弃, 新套件应直接写 v2** 测试主页的示例仍用 `createComposeRule()`, 但迁移页把  
 `test.junit4.createComposeRule`, `createAndroidComposeRule`, `createEmptyComposeRule`, `AndroidComposeTestRule`,  
-`runComposeUiTest` 列为废弃并建议迁移, v2 住在 `androidx.compose.ui.test.junit4.v2` 与 `androidx.compose.ui.test.v2`;  
+`runComposeUiTest` 列为废弃并建议迁移, v2 放在 `androidx.compose.ui.test.junit4.v2` 与 `androidx.compose.ui.test.v2`;  
 同一页还写明 v1 走 `UnconfinedTestDispatcher`, 可能掩盖真实的时序与竞态. `gradle/toml/android.toml` 的 `compose-bom` 键  
 解析出 Compose UI 1.12.1(BOM 对照页), v2 包在这一线已经存在. 后果: 现在写下的第一个测试就落在废弃面上, 而且比生产环境  
 更少暴露竞态. 修法: 两个 v2 artifact 进 catalog 的命名别名(与 TST-10 的拆分一起做), 从第一条测试起用 v2 加  
@@ -506,7 +506,7 @@ composeUi, robolectric, screenshot), 在需要处声明.
 **TST-12 没有 `ui-test-manifest`, 测试容器里的 Activity 也不存在** 测试主页与常见模式页都要求  
 `debugImplementation(ui-test-manifest)`, 作用是把 `ComponentActivity` 写进测试 apk 的清单; 仓库没有这条依赖(TST-09),  
 `AndroidManifest.xml:23-31` 只声明了 `.ui.MainActivity`. 这里更正一处容易误判的推理: `ui/AppRoot.kt:79` 与  
-`ui/theme/Theme.kt:312` 读 `LocalActivity.current` 并不构成"必须用 Activity 规则"的理由, 因为 `createComposeRule()` 也在  
+`ui/theme/Theme.kt:312` 读 `LocalActivity.current` 并不构成 "必须用 Activity 规则" 的理由, 因为 `createComposeRule()` 也在  
 测试 Activity 里 setContent, 所以 `Theme.kt:314` 的 `activity != null` 判断在测试里走的是真写窗口 flags 的一侧,  
 只有 `@Preview` 才跳过(那里的注释说预览没有 Activity, 这句话对预览成立, 对测试规则不成立).  
 修法: 补这条 debugImplementation, 需要 Activity 的用例按常见模式页用 `createAndroidComposeRule<ComponentActivity>()`.
@@ -548,7 +548,7 @@ contentDescription 定位, 而 tab 图标是 `contentDescription = null`(`AppRoo
 **TST-17 现有 semantics 会让断言假通过, 或根本无从断言** 三条都按页面对照过. (a) `MyModelCard.kt:42-49` 的  
 `Card(onClick = {})` 让测试 API 页那种打印树里出现 `Actions = [OnClick]` 与 `MergeDescendants = 'true'`, 于是  
 `performClick()` 和 `hasClickAction()` 双双通过而实际无事发生(与 CP-04 同一处代码); (b) `MyModelCard.kt:74-83` 的状态圆点  
-是只有 `clip` 与 `background` 的 Box, 不带任何 semantics, 所以"这一行是红是绿"查不到, 而常见模式页明确反对为纯视觉属性  
+是只有 `clip` 与 `background` 的 Box, 不带任何 semantics, 所以 "这一行是红是绿" 查不到, 而常见模式页明确反对为纯视觉属性  
 自造 semantics, 文档给的路子是像素比对, 本仓库没有截图测试基础设施(TST-09); (c) `SettingsScreen.kt:341,378` 的  
 `semantics(mergeDescendants = true)` 把标题与摘要并成一个 Text, `assertTextEquals(标题)` 因此失败, 要用测试 API 页写明  
 所有 finder 都支持的 `useUnmergedTree = true`, 机器可读的状态只剩 `Role.Switch` 与 `Role.RadioButton`(`:344,:379`).
@@ -579,8 +579,8 @@ targetContext 的包名等于 `net.imknown.android.forefrontinfo`, 而 `app/buil
 `ComposeUiTestConfig` 与 `TestFailurePolicy` 承载, 迁移页把两者门在比现有 BOM 线更高的 ui-test alpha 线上, 所以现在写了  
 也无效; `KotlinAndroid.kt:72-83` 与 `app/build.gradle.kts` 的 `defaultConfig` 没有  
 `testInstrumentationRunnerArguments`(全仓库 0 命中). 另一条即时后果是: `testApplicationId` 取默认值意味着每个插桩测试都要  
-执行 `MyApplication.onCreate`(`MyApplication.kt:87-106`: 建图, 反射, 设置播种, libsu builder, 即 AP-05),  
-被测应用无法在测试里变轻. 修法: 先给 `testApplicationId` 与一个测试用 Application, 等 BOM 升到含该配置的线之后再打开  
+执行 `MyApplication.onCreate`(`MyApplication.kt:87-106`: 建图, 反射, 设置初值写入, libsu builder, 即 AP-05),  
+被测应用无法在测试里变轻. 修法: 先给 `testApplicationId` 与一个测试用 Application, 等 BOM 升到含这个配置的线之后再打开  
 两个捕获键.
 
 关于 JUnit 5: 本地测试确实是 Gradle `Test` 任务(`app/build/test-results/testFossDebugUnitTest/`,  
@@ -606,17 +606,17 @@ TST-03 到 TST-06. 官方本地测试页写的也是 JUnit 4.
 
 - **Q-01** `QUERY_ALL_PACKAGES`(SEC-01)是保留并申报, 还是把过期 targetSdk 那行改成 `<queries>` 加限定查询?  
   这条权限同时掩盖了 `SettingsScreen.kt:421` 已废弃的 `resolveActivity` 在 Android 11+ 上的可见性问题.  
-- **Q-02** `keys/debug.keystore` 被提交(SEC-09)与 `AGENTS.md` 的"Never commit signing material"如何调和?  
+- **Q-02** `keys/debug.keystore` 被提交(SEC-09)与 `AGENTS.md` 的 "Never commit signing material" 如何调和?  
   是为了 Firebase 的调试证书指纹而有意保留, 还是应移出仓库?  
 - **Q-03** `gwpAsanMode="always"`(AP-07)与 `nativeSymbolUploadEnabled`(SEC-07)是只在 Firebase 包想要的配置,  
   还是两种包都要?  
 - **Q-04** `ShellDefault`(`base/.../impl/ShellDefault.kt`)按 `AGENTS.md` 是保留的预备实现, 但它带一个已知的读流死锁(ARC-08).  
   继续保留(并在文档里记录前置修复), 还是删除?  
 - **Q-05** 分区指纹清单(MOD-04)硬编码 10 项, 公开 API `Build.getFingerprintedPartitions()` 要更高的 API 级别分支.  
-  `AGENTS.md` 那条"新代码用最新可用 API"只管新写的代码, 所以这里要的是你的决定: 既有代码是否回头改.  
+  `AGENTS.md` 那条 "新代码用最新可用 API" 只管新写的代码, 所以这里要的是你的决定: 既有代码是否回头改.  
   ARC-06 里的其余反射同理, 它们是已有的问题, 不是违例.
 - **Q-06** lld.json 缓存放外部存储是刻意的吗(SEC-03: 便于用户查看)? 若只是历史选择, 内部存储是更安全的一侧.
-- **Q-07** ARC-01 属于描述与代码不符一类: `AGENTS.md` "架构"一节的四级画法是对现有代码的陈述, 而代码里 Repository 直接产出  
+- **Q-07** ARC-01 属于描述与代码不符一类: `AGENTS.md` "架构" 一节的四级画法是对现有代码的陈述, 而代码里 Repository 直接产出  
   UI 行模型. 要你先判定改哪一边(把那句描述改成实际层数, 还是按那句补出领域层).  
 - **Q-08** 本报告标的是 record, 但每条都带修法, 属于会被当作活文档引用的形态. 可执行的发现要不要转进  
   `docs/dev/issues-cn/` 的编号条目, 这里只留时点记录?

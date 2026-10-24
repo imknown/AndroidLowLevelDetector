@@ -4,9 +4,9 @@
 > **依据**: 只以当前代码为证据, 每条给出文件与行号; 代码注释与 `docs/dev/issues-cn/` 未作为证据使用.  
 > **范围**: SSOT, UDF, 架构, 设计模式, 模块化, Security, Compose 性能, App 性能, Test.  
 > 本次不考虑: CI, NDK, JNI.  
-> **严重度**是影响面的估计, 用于排优先级, 不是修复深度的上限: 定为"低"的问题, 要彻底解决也照彻底解决.  
+> **严重度**是影响面的估计, 用于排优先级, 不是修复深度的上限: 定为 "低" 的问题, 要彻底解决也照彻底解决.  
 > **陈述边界**: 条目里叙述平台或库行为 (非本仓库代码所能证实) 之处, 按对应平台或库文档判断;
-> 只在该边界会改变条目结论时, 才在条目内逐句标注.  
+> 只在这个边界会改变条目结论时, 才在条目内逐句标注.  
 > 条目编号 `PA-nn` 全仓库唯一, 后续讨论请直接引用编号.
 
 ## 结论
@@ -15,10 +15,10 @@
 
 - **PA-32** (高): 启动把 SharedPreferences 文件解析, 反射遍历, libsu 默认 builder 配置都压在主线程.  
 - **PA-27** (高): 项目没有任何 Baseline Profile.  
-- **PA-02** (高): `myAndroid` 是进程级可变全局, 由 Home 的加载写入, 其它页面的 API 判定因此依赖"Home 是否已加载";
-  该双写入者设计是 AGENTS.md 已记录的约定, 是否动它由负责人决定.  
+- **PA-02** (高): `myAndroid` 是进程级可变全局, 由 Home 的加载写入, 其它页面的 API 判定因此依赖 "Home 是否已加载";
+  这个双写入者设计是 AGENTS.md 已记录的约定, 是否动它由负责人决定.  
 - **PA-40** (高): release 变体没有任何测试覆盖, 而 R8 与反射正好是本项目的高风险组合.  
-- **PA-10** (中): `BaseListViewModel` 没有失败分支, 而"不抛异常"的契约至少在两处 shell 调用上没有兜底.  
+- **PA-10** (中): `BaseListViewModel` 没有失败分支, 而 "不抛异常" 的契约至少在两处 shell 调用上没有接住.  
 
 ## 1. SSOT
 
@@ -30,7 +30,7 @@
 同一写法还在分区指纹 (`ui/others/repository/OthersRepository.kt:219-221`) 与 `detectVndk` (`HomeRepository.kt:687,691`).  
 两侧当前都经同一个 `MyApplication` 实例的 `getString` 解析, 所以各语言下比较都能命中, **行为不随系统语言变化**.  
 脆点在于这是一条隐式约定: 两处独立代码必须解析到同一个资源串. 任一侧改成别的 Context 或 locale,
-或把占位串写成字面量, 判定就会静默失效 (把"没有值"当成正常值, 例如缺失的 vendor 安全补丁被算作正常).  
+或把占位串写成字面量, 判定就会静默失效 (把 "没有值" 当成正常值, 例如缺失的 vendor 安全补丁被算作正常).  
 **方向**: 让占位符不参与判定, 改成比较基准不到的哨兵值, 或让读取端返回 null 而不是本地化文案.
 
 ### PA-02 (高) `myAndroid` 全局可变, 跨特性顺序依赖
@@ -41,15 +41,15 @@
 `OthersViewModel` (`:44-50,78-80`), `HomeRepository`, `AppGraph` (`:125`) 等处.
 
 先打开 Others 或 Prop 再回 Home, 先建好的列表用的是 Home 改写前的判定结果; 同一进程内两个页面可以对同一台设备给出不同结论.  
-**定性**: "恰好两个写入者"是 AGENTS.md 已记录的约定, 所以这算不算缺陷由负责人裁定, 本文不替其决定.
-若要消除顺序依赖而又保留该约定, 需要让判定不读被覆盖的字段 (例如判定统一用 `Build.VERSION.SDK_INT`, 覆盖只用于展示).
+**定性**: "恰好两个写入者" 是 AGENTS.md 已记录的约定, 所以这算不算缺陷由负责人判定, 本文不替负责人决定.
+若要消除顺序依赖而又保留这个约定, 需要让判定不读被覆盖的字段 (例如判定统一用 `Build.VERSION.SDK_INT`, 覆盖只用于展示).
 
 ### PA-03 (中) 每个设置有两份表示, 靠回调手工同步
 
 `SettingsStore` 同时暴露原始字符串 Flow (`themeValue`, `scrollBarValue`) 与枚举 Flow (`themeMode`, `scrollBarMode`)
 (`ui/settings/repository/SettingsStore.kt:50-64`), 由同一个监听回调一起更新 (`:99-113`).  
 存储值无法识别时 `themeMode` 回退 `FollowSystem` (`:79-83`), 而 `themeValue` 保留原值 (`:100`),
-于是设置对话框显示"无选中项"而界面按 follow system 运行. 迁移路径 (`:116-143`) 是第三个必须同时维护两处的地方.  
+于是设置对话框显示 "无选中项" 而界面按 follow system 运行. 迁移路径 (`:116-143`) 是第三个必须同时维护两处的地方.  
 **方向**: 只保留枚举 Flow, 由枚举反向生成对话框需要的字符串.
 
 ### PA-04 (中) `lld.json` 的 schema 版本从不校验
@@ -80,7 +80,7 @@
 同一个后缀, 两种语义, 而两者都同时出现在 `SettingsStore.kt:33-45` 和 `arrays.xml:4-27` 里.  
 另: 同一批常量有两条解析路径, store 直接读资源, 对话框经 `LocalResources` (`SettingsScreen.kt:315-319`).  
 
-### PA-08 (低) "没有值"有 3 个词
+### PA-08 (低) "没有值" 有 3 个词
 
 `result_not_supported` (`PropertyReader.kt:25,32`), `build_not_filled` (`PropertyReader.kt:28`, `MyModelExt.kt:164`),
 `android.R.string.unknownName` (`HomeRepository.kt:86` 等) 三者在页面上表达同一件事, 取哪个取决于取值路径而不是语义.  
@@ -96,14 +96,14 @@
 AGENTS 的规则是 UI 层 (Compose / ViewModel) 不接业务异常; 同一文件还直接读 `MyApplication.instance.assets` (`:194`).
 这是规则与代码的分歧, 需要定性: 要么把回退与错误映射下沉到 repository, 要么改规则.  
 
-### PA-10 (中) "不抛异常"的契约没有兜底, 且有漏洞
+### PA-10 (中) "不抛异常" 的契约没有接住, 且有漏洞
 
 `BaseListViewModel.startLoad` (`ui/base/list/BaseListViewModel.kt:60-71`) 没有失败分支: `collectModels()` 一旦抛出,
 `isLoadingStateFlow` 永远停在 true, 异常冲出 `viewModelScope`.  
-该契约靠调用点逐个套 guard 实现, 而至少两处 shell 调用在 guard 之外:
+这份契约靠调用点逐个套 guard 实现, 而至少两处 shell 调用在 guard 之外:
 `HomeRepository.getMounts()` (`HomeRepository.kt:415`, 调用于 `HomeViewModel.kt:221`) 与
 `PropRepository.getBuildProp()` (`ui/prop/repository/PropRepository.kt:70`); `IShell` (`base/.../shell/IShell.kt:3-5`)
-没有声明"不抛", 实现 `ShellLibSu` (`ui/common/ShellLibSu.kt:17-20`) 直接转发 libsu.  
+没有声明 "不抛", 实现 `ShellLibSu` (`ui/common/ShellLibSu.kt:17-20`) 直接转发 libsu.  
 **方向**: 先明确 `IShell.execute` 是否可能抛; 若可能, 这两个调用点需要 guard 或停转 spinner 的失败分支.  
 
 ### PA-11 (低) 同一个设置在同一个屏幕里有两条读取路径
@@ -119,7 +119,7 @@ AGENTS 的规则是 UI 层 (Compose / ViewModel) 不接业务异常; 同一文�
 ### PA-13 (低) 行内更新按下标 + 类型定位
 
 `HomeViewModel.payloadOutdatedTargetSdkVersionApk()` 用 `indexOfFirst { it.type == OutdatedTargetSdkApk }` 找行
-(`HomeViewModel.kt:278-280`), 再按下标替换 (`BaseListViewModel.kt:79-87`). 该类型当前只有一个实例; 出现第二个时,
+(`HomeViewModel.kt:278-280`), 再按下标替换 (`BaseListViewModel.kt:79-87`). 这个类型当前只有一个实例; 出现第二个时,
 更新会落到第一行, 且不会报错.  
 
 ## 3. 架构 / 设计模式
@@ -151,7 +151,7 @@ AGENTS 的规则是 UI 层 (Compose / ViewModel) 不接业务异常; 同一文�
 
 `internal` 在 `:app` 里只用于 7 个符号 (例如 `MyModelListContent`, `previewModels`, `guardedItemCore`,
 `toErrorMyModel`, `toDetectFailedMyModel`, `ExtendedLightColors`, `ExtendedDarkColors`),
-所以"每个特性一个包 + 同构分层"只是命名约定, 不是编译期边界.  
+所以 "每个特性一个包 + 同构分层" 只是命名约定, 不是编译期边界.  
 
 ### PA-17 (低) 设置领域枚举放在 Application 文件里
 
@@ -161,10 +161,10 @@ AGENTS 的规则是 UI 层 (Compose / ViewModel) 不接业务异常; 同一文�
 ### PA-18 (低) 统一行模型装不下更复杂的行
 
 `MyModel(title, detail, color, type)` (`ui/base/list/MyModel.kt:18-28`) 是唯一行模型, 所以整份
-"targetSdk 过低的系统应用"列表被拼进一个 `detail` 字符串 (`HomeRepository.kt:1163-1167`).  
+"targetSdk 过低的系统应用" 列表被拼进一个 `detail` 字符串 (`HomeRepository.kt:1163-1167`).  
 行同时被 `LazyColumn` 当作 key, 而 key 取自显示数据 (资源 id 的字符串形式或原始标题, `MyModel.kt:24-28`).  
-可证的是 key 的来源: 重复标题会产出重复 key; "重复 key 会崩溃"是 LazyColumn 的库行为, 仓库内不可证, 按库文档判断.
-当前靠"数据恰好唯一"维持.  
+可证的是 key 的来源: 重复标题会产出重复 key; "重复 key 会崩溃" 是 LazyColumn 的库行为, 仓库内不可证, 按库文档判断.
+当前靠 "数据恰好唯一" 维持.  
 
 ## 4. 模块化
 
@@ -174,7 +174,7 @@ AGENTS 的规则是 UI 层 (Compose / ViewModel) 不接业务异常; 同一文�
 被代码 `R.x` 引用的资源会以编译错误暴露, 没有任何代码引用的资源则静默缺失.  
 资源目录本身也放在 `java/<package>/<feature>/res` 下, 与代码同层.  
 
-### PA-20 (低) 共享 UI 套件的位置与"全 app 契约"的位置
+### PA-20 (低) 共享 UI 套件的位置与 "全 app 契约" 的位置
 
 `:base` 只放接口与扩展 (`IProperty`, `IShell`, `ShellResult`, 两个扩展文件); 共享 UI 套件
 (`MyModel`, `BaseListViewModel`, `MyModelCard`, guard 助手) 留在 `:app` 的 `ui.base.list`.  
@@ -184,7 +184,7 @@ AGENTS 的规则是 UI 层 (Compose / ViewModel) 不接业务异常; 同一文�
 ### PA-21 (低) 保留实现带已知死锁
 
 `ShellDefault` 没有被调用者, 是有意保留的原生实现, 但启用前必须先修 `waitFor()` 之后的管道读取死锁 (见 AGENTS.md 的 Code rules).
-它不是缺陷, 是雷区: 只要有人"顺手"启用它就会挂.  
+它不是缺陷, 但只要有人 "顺手" 启用它, 应用就会挂住.  
 
 ## 5. Security
 
@@ -203,7 +203,7 @@ AGENTS 的规则是 UI 层 (Compose / ViewModel) 不接业务异常; 同一文�
 
 非 SDK 接口限制下两者都可能失效, 失效时只走 `Log.w` / 空列表 (`getBuildInWebViewProvidersAndroid7` 的 catch 分支),
 表现为 WebView 内置版本显示 `build_not_filled`. `@SuppressLint` 同时也去掉了编译期提示.  
-可证的是"反射加失败降级路径"存在; "限制会不会真的拦住它们"属平台策略, 仓库内不可证, 按平台文档判断.  
+可证的是 "反射加失败降级路径" 存在; "限制会不会真的拦住它们" 属平台策略, 仓库内不可证, 按平台文档判断.  
 **方向**: 为这两处各留一条可见的退化标记, 或在可行时改用 `Build` / `getprop` 取值.  
 
 ### PA-24 (中) 下载数据只靠 HTTPS, schema 不校验
@@ -211,12 +211,12 @@ AGENTS 的规则是 UI 层 (Compose / ViewModel) 不接业务异常; 同一文�
 `LldDataSource.fetchOnlineLldJsonStringOrThrow` (`ui/home/datasource/LldDataSource.kt:34-48`) 走 HTTPS 并带
 `Referer: <applicationId>`, 内容落盘到外部 files 目录 (`LldFileStore.kt:101-109`), 解析用 `ignoreUnknownKeys = true`.  
 唯一的契约检查是 `version` 的日期时间格式 (`HomeViewModel.kt:128-134`);
-声明式 schema 版本不校验 (见 PA-04). 数据本身决定 UI 判定结果, 所以这是"数据可信度"链条的薄弱点.  
+声明式 schema 版本不校验 (见 PA-04). 数据本身决定 UI 判定结果, 所以这是 "数据可信度" 链条的薄弱点.  
 
 ### PA-25 (低) 备份规则为空
 
 `base/resBackup/xml/backup_rules.xml` 与 `data_extraction_rules.xml` 都是空元素 (可证); 按平台备份语义, 空规则等于默认全量备份,
-SP 里的设置与 `files/` 下内容都会进云端备份 ("空规则到全量备份"属平台语义, 仓库内不可证).  
+SP 里的设置与 `files/` 下内容都会进云端备份 ("空规则到全量备份" 属平台语义, 仓库内不可证).  
 `MyApplication.getFileDir` 在外部目录不可用时回退到 `filesDir` (`MyApplication.kt:62-71`), 所以拉取来的 `lld.json` 也可能落到备份范围.
 数据敏感度低, 但这是默认选择而不是显式选择.  
 
@@ -243,7 +243,7 @@ foss 版通过任务禁用排除 (`:46-71`). 在一个以暴露设备信息为�
 和 `entryProvider { ... }` (`:109-114`); 切 tab 会触发 `AppRoot` 自身重组 (读点 `:88,119,123`).  
 可证实的部分到此为止: 两个参数每次重组都是新对象, 每次重组都产生这些分配.  
 它们是否因此让 `rememberDecoratedNavEntries` 的缓存失效, 取决于 Navigation 3 库内部的 remember 键选取,
-仓库内代码无法证实, 因此"四个栈被重新装饰"不作为结论.  
+仓库内代码无法证实, 因此 "四个栈被重新装饰" 不作为结论.  
 **方向**: 把这两个参数提到 `remember` 里 (它们只依赖常量与 ViewModel 工厂), 这样无论库内部怎么取键都不会被换掉.  
 
 ### PA-29 (中) 滚动状态在组合期被读取, 且挂在页面级 LazyColumn 上
@@ -251,16 +251,16 @@ foss 版通过任务禁用排除 (`:46-71`). 在一个以暴露设备信息为�
 `ScrollBarExt.nonInteractiveScrollbar` 在组合期计算 `val scrolling = enabled && scrollState.isScrollInProgress`
 (`ui/common/ScrollBarExt.kt:41`), 由此驱动 `animateFloatAsState` 的目标值.  
 调用点是页面级 LazyColumn 的 modifier 链 (`MyModelListScreen.kt:118`, `SettingsScreen.kt:160`),
-所以每次滚动开始/结束都会重组该页面并重跑 `items` lambda.  
+所以每次滚动开始/结束都会重组这一页并重跑 `items` lambda.  
 alpha 本身已经正确下沉到 `drawWithContent` (`ScrollBarExt.kt:56-58`), 这部分是好的.  
-**方向**: 把"是否在滚动"的读取下沉到 draw / graphicsLayer, 或用不需要组合期读取的指示器封装.  
+**方向**: 把 "是否在滚动" 的读取下沉到 draw / graphicsLayer, 或用不需要组合期读取的指示器封装.  
 
 ### PA-30 (中) 超长内容放在单个 Text 里并做高度动画
 
-"targetSdk 过低的应用"整份列表是一个 `detail` 字符串 (`HomeRepository.kt:1163-1167`),
+"targetSdk 过低的应用" 整份列表是一个 `detail` 字符串 (`HomeRepository.kt:1163-1167`),
 渲染为单个 `Text` (`MyModelCard.kt:88`), 外层 Card 还带 `animateContentSize()` (`:55`).  
 刷新或切换排序时, 这个极高的行会被整体重排并做高度动画, 而不是虚拟化.  
-**方向**: 该行改成可折叠的子列表 (或独立 item), 让 LazyColumn 真正虚拟化.  
+**方向**: 这一行改成可折叠的子列表 (或独立 item), 让 LazyColumn 真正虚拟化.  
 
 ### PA-31 (低) 主题构建与遗留 lint 条目
 
@@ -294,9 +294,9 @@ Others 的约 36 个同理 (`OthersViewModel.kt:31-101`). 每个调用都可能�
 
 `OthersRepository.getDefaultUserAgent` (`OthersRepository.kt:242-251`) 调用
 `RomDataSource.getDefaultUserAgentOrThrow` (`ui/others/datasource/RomDataSource.kt:26`), 即 `WebSettings.getDefaultUserAgent`.  
-调用链可证; "会加载 WebView 包并拉起其进程"是平台行为, 仓库内不可证, 需按平台文档判断.  
+调用链可证; "会加载 WebView 包并拉起其进程" 是平台行为, 仓库内不可证, 需按平台文档判断.  
 若它成立, 代价与一行文本不成比例.  
-**方向**: 该行改为按需展开, 或标为"触发时会初始化 WebView".  
+**方向**: 这一行改为按需展开, 或标为 "触发时会初始化 WebView".  
 
 ### PA-35 (中) 最贵的行每次加载都重算, 且同一刷新可能算两次
 
@@ -322,7 +322,7 @@ val binderVersion = try {
 catch 分支的值是 `Unit`, 所以 `binderVersion` 被推断为 `Any`, 之后 `when (binderVersion) { -ERRNO_... -> ... }`
 虽然能编译, 但已经失去类型约束 (把返回值写成任何类型都不会报错).  
 本文件的 `printStackTrace()` 无 `BuildConfig.DEBUG` 门控的有 4 处 (`:88,:119,:133,:247`).  
-**方向**: catch 分支返回明确的兜底值 (例如 `null` 或哨兵整数).  
+**方向**: catch 分支返回明确的失败值 (例如 `null` 或哨兵整数).  
 
 ### PA-37 (低) 日志风格与门控不一致
 
@@ -351,7 +351,7 @@ catch 分支的值是 `Unit`, 所以 `binderVersion` 被推断为 `Any`, 之后 
 以及 `:base` 下同名的两个 (`base/src/test/.../ExampleUnitTest.kt:13-14`,
 `base/src/androidTest/.../ExampleInstrumentedTest.kt:20`).  
 唯一有内容的是 `base/src/test/.../DateTimeExtTest.kt` (4 个方法, 全部在测 lld 的时间格式契约).  
-按 what-to-test 的必测清单 (ViewModel / 数据层 / 领域与工具类), 目前只有"工具类"这一档的 1 个类有测试.  
+按 what-to-test 的必测清单 (ViewModel / 数据层 / 领域与工具类), 目前只有 "工具类" 这一档的 1 个类有测试.  
 **方向**: 先补 unit 层, 具体目标见 PA-41 与 PA-42.
 
 ### PA-40 (高) release 变体没有任何测试覆盖
@@ -362,12 +362,12 @@ R8 与资源收缩 (`app/build.gradle.kts:88-96`).
 `HomeRepository.kt:1045-1111`), kotlinx.serialization 模型 (`ui/home/model/Lld.kt:10` 起每个模型类都带 `@Keep`),
 WebView 反射, 以及 libsu 与 JNI.  
 参考模型里负责这一层的第 5 层 (release candidate, 压缩后的二进制) 完全没有设施.  
-**方向**: 至少给 release 变体留一条能跑的路径; 否则"debug 能跑"证明不了发布版能跑.
+**方向**: 至少给 release 变体留一条能跑的路径; 否则 "debug 能跑" 证明不了发布版能跑.
 
 ### PA-41 (中) 纯逻辑大量未测, 而它们正是参考文档点名的边界与坏数据场景
 
 可测而没测的逻辑 (多数是纯判断, 少数要先开可见性或抽纯函数):
-- `SettingsStore.parseThemeMode` / `parseScrollBarMode` 的兜底与那次迁移 (`ui/settings/repository/SettingsStore.kt:79-91,116-143`);
+- `SettingsStore.parseThemeMode` / `parseScrollBarMode` 的回退与那次迁移 (`ui/settings/repository/SettingsStore.kt:79-91,116-143`);
   两个函数是 private, 要先开放可见性或经 store 的公共路径测.
 - `LldFileStore.copyJsonIfNeededOrThrow` 的版本比较与脏目录分支 (`ui/home/datasource/LldFileStore.kt:46-65`):
   判断本身是纯逻辑, 但函数体绑定 `MyApplication.instance.assets` 与下载路径 (`:32,61,76`), 要先抽出纯函数.
@@ -376,25 +376,25 @@ WebView 反射, 以及 libsu 与 JNI.
 - `MyModel.key` (`ui/base/list/MyModel.kt:24-28`) 与 `AppRoot` 的下标 clamp (`ui/AppRoot.kt:88`).
 - `HomeRepository.isDateHigherThanConfig` 里硬编码的偏移 `250205 - 250101` (`ui/home/repository/HomeRepository.kt:212-253`).
 
-what-to-test 把"损坏数据, 畸形 JSON, 边界条件"列在必测里, 而 lld 的解析与回退链正好是这类:
+what-to-test 把 "损坏数据, 畸形 JSON, 边界条件" 列在必测里, 而 lld 的解析与回退链正好是这类:
 格式契约本身有测试 (`DateTimeExtTest.kt`), 反序列化 (`ui/common/JsonExt.kt:8-12`) 与回退链
 (`ui/home/HomeViewModel.kt:101-204`) 没有.
 
-### PA-42 (中) interface-first 的可测性主张没有兑现, 接缝也盖不到判定输入
+### PA-42 (中) interface-first 的可测性主张没有兑现, 可替换点也盖不到判定输入
 
 能注入的只有 `IProperty` / `IShell` (`di/AppGraph.kt:186-193`, `ui/common/ShellLibSu.kt:15-16`),
 而判定输入大多是静态读取: `Build.*` (`ui/others/repository/OthersRepository.kt:39-58`),
 `Settings.Global` (`HomeRepository.kt:754-780`), `PackageManager` (`:946,1121`),
 `System.getProperty` (`:344`), `File.exists()` (`:529-534`), `WebViewCompat` (`:994`),
 以及 PA-15 的全局取值路径.  
-结果是参考文档列为最该做单测的"数据层", 现在只能在真机上测. 配套设施也缺: catalog 里没有任何 mock 或 fake 框架,
+结果是参考文档列为最该做单测的 "数据层", 现在只能在真机上测. 配套设施也缺: catalog 里没有任何 mock 或 fake 框架,
 也没有 Robolectric (`testOptions` 因此也没必要配 `isIncludeAndroidResources`).  
-**方向**: 与 PA-15 同一处收口 (把 Context 与字符串从全局改成注入), 判定输入再抽成可注入的小接口.
+**方向**: 与 PA-15 在同一处解决 (把 Context 与字符串从全局改成注入), 判定输入再抽成可注入的小接口.
 
-### PA-43 (中) Compose 侧零 UI 测试与零截图测试, 但接缝已经备好
+### PA-43 (中) Compose 侧零 UI 测试与零截图测试, 但天然的拆分边界已经备好
 
 0 个 Compose UI test, 0 个截图测试. 而 screen/content 拆分 (屏幕函数只订阅与转发, content 只吃数据) 与
-`previewModels` 正是 component 层的现成接缝: `ui/base/list/MyModelListScreen.kt:82-166`,
+`previewModels` 正是 component 层现成的天然边界: `ui/base/list/MyModelListScreen.kt:82-166`,
 `ui/settings/SettingsScreen.kt:126-468`, `ui/AppRoot.kt:182-199`.  
 参考清单里对应的是 [Behavior UI tests](https://developer.android.google.cn/training/testing/ui-tests/behavior)
 与 [Screenshot tests](https://developer.android.google.cn/training/testing/ui-tests/screenshot),
@@ -405,7 +405,7 @@ Compose 侧的 API, semantics 与同步机制见
 
 `docs/agents/` 只有 architecture, build-conventions, detection-item, doc-formatting, task-workflow, verification
 六个文件, 没有 testing; AGENTS.md 也没有 Testing 一节. 于是分层, 跑在哪, 什么时候跑, 谁负责都没有书面定义,
-而 Testing strategies 明确要求"写一份测试策略并随团队演进".  
+而 Testing strategies 明确要求 "写一份测试策略并随团队演进".  
 另外现在没有任何入口在跑测试: androidTest 需要设备, `testFossDebugUnitTest` 不在自动化里
 (测试在何时何地跑属于 CI 角度, 本文只指出这一层目前是空的).
 
