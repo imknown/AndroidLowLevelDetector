@@ -12,7 +12,7 @@
 
 | 文件 | 内容 |
 |---|---|
-| [01-product-and-users.md](01-product-and-users.md) | 目的, 范围, 术语表, 给谁用; 背景, 定位, 目标, 不做的事, 两个发布变体与各自收集的数据 |
-| [02-functional-requirements.md](02-functional-requirements.md) | FR-1 ... FR-17: 每条需求怎么才算做完 (核心能力, 然后是应用外壳和界面) |
-| [03-non-functional-requirements-and-roadmap.md](03-non-functional-requirements-and-roadmap.md) | NFR-1 ... NFR-8, 发布范围与路线图清单 (只有这一份), 成功标准, 还没定的问题 |
-| [04-detection-item-catalog.md](04-detection-item-catalog.md) | Home / Others / Prop 三屏的检测条目, 按产生的顺序 |
+| [01-产品与用户.md](01-产品与用户.md) | 目的, 范围, 术语表, 给谁用; 背景, 定位, 目标, 不做的事, 两个发布变体与各自收集的数据 |
+| [02-功能需求.md](02-功能需求.md) | FR-1 ... FR-17: 每条需求怎么才算做完 (核心能力, 然后是应用外壳和界面) |
+| [03-非功能需求与路线图.md](03-非功能需求与路线图.md) | NFR-1 ... NFR-8, 发布范围与路线图清单 (只有这一份), 成功标准, 还没定的问题 |
+| [04-检测条目目录.md](04-检测条目目录.md) | Home / Others / Prop 三屏的检测条目, 按产生的顺序 |
