@@ -64,7 +64,7 @@ val myAndroid = MyAndroid(
 )
 
 fun initMyAndroid() {
-    val kClass = if (isAtLeastAndroid16()) {
+    val kClass = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
         Build.VERSION_CODES_FULL::class
     } else {
         Build.VERSION_CODES::class
@@ -79,12 +79,12 @@ fun initMyAndroid() {
     if (isStableAndroid()) {
         apiFull = api.toString() // "36"
 
-        if (isAtLeastAndroid16()) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
             val suffix = ".$minor" // ".1"
             apiFull += suffix // "36.1"
         }
     } else {
-        if (!isAtLeastAndroid15()) { // MinSupport ~ Android 15 Preview
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) { // MinSupport ~ Android 15 Preview
             api++ // 34 → 35
             apiFull = api.toString() // "34" → "35"
             version.toIntOrNull()?.let {
@@ -110,21 +110,6 @@ fun initMyAndroid() {
 }
 // endregion [MyAndroid]
 
-// region [IsAtLeast]
-private val sdkInt get() = myAndroid.api
-
-fun isAtLeastAndroid8() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O || sdkInt >= Build.VERSION_CODES.O
-fun isAtLeastAndroid8p1() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1 || sdkInt >= Build.VERSION_CODES.O_MR1
-fun isAtLeastAndroid9() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P || sdkInt >= Build.VERSION_CODES.P
-fun isAtLeastAndroid10() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q || sdkInt >= Build.VERSION_CODES.Q
-fun isAtLeastAndroid11() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R || sdkInt >= Build.VERSION_CODES.R
-fun isAtLeastAndroid12() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S || sdkInt >= Build.VERSION_CODES.S
-fun isAtLeastAndroid13() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU || sdkInt >= Build.VERSION_CODES.TIRAMISU
-// fun isAtLeastAndroid14() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE || sdkInt >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE
-fun isAtLeastAndroid15() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM || sdkInt >= Build.VERSION_CODES.VANILLA_ICE_CREAM
-fun isAtLeastAndroid16() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA || sdkInt >= Build.VERSION_CODES.BAKLAVA
-// endregion [IsAtLeast]
-
 // region [Stable/Preview]
 fun isStableAndroid() = Build.VERSION.CODENAME == CODENAME_RELEASE
 fun isPreviewAndroid() = !isStableAndroid()
@@ -134,7 +119,7 @@ fun isLatestPreviewAndroid(lld: Lld) = isPreviewAndroid() && myAndroid.apiFull >
 fun isSupportedByUpstreamAndroid(lld: Lld) = isStableAndroid() && Build.VERSION.SDK_INT >= lld.android.support.api.toInt()
 // endregion [Stable/Preview]
 
-fun Context.isGoEdition() = isAtLeastAndroid8p1() && isLowRamDevice()
+fun Context.isGoEdition() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1 && isLowRamDevice()
 
 private fun Context.isLowRamDevice() = ContextCompat.getSystemService(
     this, ActivityManager::class.java

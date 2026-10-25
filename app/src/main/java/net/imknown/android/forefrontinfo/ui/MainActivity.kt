@@ -3,6 +3,7 @@ package net.imknown.android.forefrontinfo.ui
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
@@ -13,7 +14,6 @@ import dev.zacsweers.metrox.viewmodel.LocalMetroViewModelFactory
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.ui.base.list.LocalScrollBarMode
-import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid10
 import net.imknown.android.forefrontinfo.ui.settings.repository.SettingsStore
 import net.imknown.android.forefrontinfo.ui.theme.AppTheme
 import net.imknown.android.forefrontinfo.ui.theme.LocalThemeMode
@@ -57,7 +57,7 @@ class MainActivity : ComponentActivity() {
                 ::isAppDark,
             ),
         ) // edge to edge: content draws behind system bars (insets handled by Scaffold)
-        if (isAtLeastAndroid10()) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             window.isNavigationBarContrastEnforced = false // no forced contrast scrim on the navigation bar
         }
 

@@ -1,5 +1,6 @@
 package net.imknown.android.forefrontinfo.ui.others
 
+import android.os.Build
 import androidx.lifecycle.ViewModel
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
@@ -11,8 +12,6 @@ import kotlinx.coroutines.withContext
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.ui.base.list.BaseListViewModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
-import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid10
-import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid12
 import net.imknown.android.forefrontinfo.ui.others.datasource.ArchitectureDataSource
 import net.imknown.android.forefrontinfo.ui.others.repository.OthersRepository
 
@@ -41,7 +40,7 @@ class OthersViewModel(
             tempModels += othersRepository.getHardware()
             tempModels += othersRepository.getBoard()
 
-            if (isAtLeastAndroid12()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 tempModels += othersRepository.getSocModel()
                 tempModels += othersRepository.getSocManufacturer()
                 tempModels += othersRepository.getSku()
@@ -75,7 +74,7 @@ class OthersViewModel(
             tempModels += othersRepository.getBaseOs()
             // region [Fingerprints]
             tempModels += othersRepository.getFingerprint()
-            if (isAtLeastAndroid10()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 tempModels += othersRepository.getPreviewSdkFingerprint()
             }
             tempModels += othersRepository.getPartitionFingerprints()

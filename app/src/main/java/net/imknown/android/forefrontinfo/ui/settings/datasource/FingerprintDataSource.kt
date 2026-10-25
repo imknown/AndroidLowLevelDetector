@@ -1,10 +1,9 @@
 package net.imknown.android.forefrontinfo.ui.settings.datasource
 
 import android.content.pm.PackageManager
+import android.os.Build
 import dev.zacsweers.metro.Inject
 import net.imknown.android.forefrontinfo.R
-import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid13
-import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid9
 import java.security.MessageDigest
 import java.util.Locale
 import android.R as androidR
@@ -27,8 +26,8 @@ class FingerprintDataSource {
     fun getPublicKeySha256OrNullOrThrow(
         packageManager: PackageManager, packageName: String
     ): String? {
-        val signatures = if (isAtLeastAndroid9()) {
-            val packageInfo = if (isAtLeastAndroid13()) {
+        val signatures = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            val packageInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 val value = PackageManager.GET_SIGNING_CERTIFICATES.toLong()
                 val flags = PackageManager.PackageInfoFlags.of(value)
                 packageManager.getPackageInfo(packageName, flags)

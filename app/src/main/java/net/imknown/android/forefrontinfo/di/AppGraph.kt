@@ -2,6 +2,7 @@ package net.imknown.android.forefrontinfo.di
 
 import android.content.SharedPreferences
 import android.net.TrafficStats
+import android.os.Build
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.DependencyGraph
@@ -19,7 +20,6 @@ import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.property.IProperty
 import net.imknown.android.forefrontinfo.base.property.impl.PropertyDefault
-import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid16
 import net.imknown.android.forefrontinfo.ui.settings.repository.SettingsStore
 import okhttp3.Call
 import okhttp3.EventListener
@@ -122,7 +122,7 @@ object HttpClientContainer {
                         call: Call, inetSocketAddress: InetSocketAddress, proxy: Proxy
                     ) {
                         val thread = Thread.currentThread()
-                        val id = if (isAtLeastAndroid16()) {
+                        val id = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
                             thread.threadId()
                         } else {
                             @Suppress("DEPRECATION")

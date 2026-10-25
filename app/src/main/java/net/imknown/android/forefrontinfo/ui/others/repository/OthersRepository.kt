@@ -14,7 +14,6 @@ import net.imknown.android.forefrontinfo.base.extension.fullMessage
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.base.list.guardedDetectFailedMyModel
 import net.imknown.android.forefrontinfo.ui.base.list.toTranslatedDetailMyModel
-import net.imknown.android.forefrontinfo.ui.common.isAtLeastAndroid13
 import net.imknown.android.forefrontinfo.ui.common.isPreviewAndroid
 import net.imknown.android.forefrontinfo.ui.others.datasource.ArchitectureDataSource
 import net.imknown.android.forefrontinfo.ui.others.datasource.BasicDataSource
@@ -189,7 +188,7 @@ class OthersRepository(
     fun getCodename(): MyModel =
         guardedDetectFailedMyModel(R.string.build_codename) {
             var detail = romDataSource.getCodename()
-            if (isPreviewAndroid() && isAtLeastAndroid13()) {
+            if (isPreviewAndroid() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 val previewDisplay = romDataSource.getReleaseOrPreviewDisplay()
                 if (detail != previewDisplay) {
                     detail += " ($previewDisplay)"
