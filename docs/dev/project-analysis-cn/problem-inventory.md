@@ -11,6 +11,8 @@
 > **复核**: 每一条写出的事实与文件行号都在 2026-10-18 对当前代码逐条复核过;  
 > 生产代码自 2026-10-15 起没有再改 (此后的提交只有文档), 复核里更正了旧报告里过期或不准的行号与少数计数,  
 > 也把被旧报告说过头的几条按当前代码写窄 (条目内以 "复核更正" 标出).  
+> 2026-10-25 起的例外: `myAndroid` 全局删除落地, 状态行加在 PA-01 与 PA-61,  
+> 其余条目对它的提及按删除前取证理解.  
 > **编号**: 本文件的 `PA-nn` 是一条新序列, 与归档报告里的同前缀编号无关 (deepseek 那份也用 `PA-nn`).  
 > **出处**: 每条末尾的 "出处" 列出提出它的报告与它在那份报告里的编号, 括号里是那一份自己给的级别.  
 > **级别**: 只用来排先后, 不决定某个问题可以修得多浅; 一条被多份来源定过级时取其中最高的一级;  
@@ -24,11 +26,11 @@
 
 条目共 125 条: 高 12, 中 66, 低 47. 最该先处理的几组 (彻底修法见 [第 9 节](#9-优先级与建议顺序)):
 
-1. **全局版本事实 `myAndroid`** (PA-01): 四份来源都指它, 同一台设备有两个版本来源, 其中之一可变且写后不复位.
+1. **全局版本事实 `myAndroid`** (PA-01, 已解决: 全局删除, 2026-10-25): 四份来源都指它, 同一台设备有两个版本来源, 其中之一可变且写后不复位.
 2. **加载的失败边界与检测执行方式** (PA-14, PA-85, PA-86): 每个检测块各有守卫, 把它们合起来的那一层没有;  
    首屏要等整条检测串行跑完才能看到第一行.
 3. **结构与分层的根本原因** (PA-22, PA-24, PA-25, PA-36): `ui.home` 与 `ui.settings` 互相引用成环,  
-   `ui.common` 反向依赖 home 的模型, `:app` 顶着 `:base` 的包名, 数据层直接产出界面模型.
+   `ui.common` 反向依赖 home 的模型 (该边已于 2026-10-25 断开, 见 PA-22 的复核更正), `:app` 顶着 `:base` 的包名, 数据层直接产出界面模型.
 4. **`lld.json` 的信任链** (PA-59, PA-60, PA-61, PA-09): 文件写在其他应用够得到的外部目录,  
    读回与在线拉取都不校验完整性与 `scheme`, 而它决定安全相关的每一行结论.
 5. **Prop 页对每个键各查一次** (PA-87): 三张设置表共 195 个公开常量, 每键一次跨进程查询.
@@ -39,6 +41,10 @@
 
 ### PA-01 (高) `myAndroid` 是进程级可变全局, 两个写入者, 读写没有同步
 
+- **状态: 已解决 (2026-10-25)**: 全局 `myAndroid` 与 `initMyAndroid()` 已删除,  
+  版本事实由 `ui/home/datasource/AndroidVersionDataSource.currentAndroidInfo` 进程内派生一次;  
+  lld known 修正只作用于 Android 版本行的显示 (`HomeRepository.detectAndroid`);  
+  版本闸门自 `16e60255` 起只读 `Build.VERSION.SDK_INT`. 下方为删除前取证.
 - 事实源: `MyAndroid` 的 `api` / `apiFull` / `version` / `dessert` 四个字段都是 `var`, 顶层 `val myAndroid`  
   持有实例 (`ui/common/AndroidVersionExt.kt:53-64`).
 - 写入者一: `initMyAndroid()` (`:66-110`, 赋值在 `:104-109`), 由 `MyApplication.onCreate` 调用  
@@ -288,11 +294,12 @@
 - home 到 settings: `HomeRepository.kt:49` 引 `ui.settings.datasource.AppInfoDataSource`  
   (`:1204-1209` 使用); settings 到 home: `SettingsRepository.kt:14` 引 `ui.home.datasource.LldFileStore`  
   (`:32` 使用).
-- common 与 home 互引: `AndroidVersionExt.kt:11` 引 `ui.home.model.Lld` (`:132-134` 使用),  
-  `ui/home/model/Lld.kt:5` 引 `ui.common.CODENAME_NONE`, `HomeRepository.kt:28-43` 引一排 `ui.common.*`.
+- common 与 home 曾互引 (复核更正 2026-10-25: `AndroidVersionExt` 引 `ui.home.model.Lld` 一条已随  
+  `myAndroid` 全局删除消失, 只剩 home→common 单向): `ui/home/model/Lld.kt:5` 引 `ui.common.CODENAME_NONE`,  
+  `HomeRepository.kt:28-43` 引一排 `ui.common.*`.
 - others 到 home: `ui/others/datasource/BasicDataSource.kt:7,25` 引 `ui.home.datasource.AndroidDataSource`.
 - 后果: 任何 feature 都抽不出来也单独推理不了; 被两个 feature 消费的 `LldFileStore` 放在  
-  `ui.home.datasource`, `AndroidDataSource` 事实上是共享常量层. `internal` 在 `:app` 里只用于 7 个符号,  
+  `ui.home.datasource`, `AndroidDataSource` 事实上是共享常量层. `internal` 在 `:app` 里只用于 8 个符号 (2026-10-25 起含 `AndroidVersionDataSource` 的 `deriveAndroidInfo`),  
   所以 "每个特性一个包 + 同构分层" 只是命名约定 (另见 PA-23).
 - 参考修法: 把跨特性复用的原始能力 (`AppInfoDataSource`, `LldFileStore`, 常量表, `PropertyReader`)  
   移出特性包, 特性之间只允许向下依赖; 目标结构见第 9 节的第 3 组.
@@ -440,7 +447,7 @@
 - 复核更正: `:base` 不止接口与扩展, 另含两个实现文件 (`PropertyDefault`, `ShellDefault`).  
   共享 UI 套件与 "全 app 契约" 也混在 `ui.base.list`: `LocalScrollBarMode` 定义在列表特性里  
   (`MyModelListScreen.kt:39`), 却由根节点提供 (`MainActivity.kt:78`) 并被 `ui.settings` 消费  
-  (`SettingsScreen.kt:62`); `ui/common` 既放数据基础设施与 Compose 绘制, 又反向依赖 home (PA-22).
+  (`SettingsScreen.kt:62`); `ui/common` 既放数据基础设施与 Compose 绘制, 曾反向依赖 home (该边已断, PA-22 的复核更正).
 - 这种没有规则的归属直接表现为 PA-22 的包环.
 - 参考修法: 明文定规则 (例如 `:base` 收平台无关物, `ui.base.list` 收共享 UI 模型,  
   `ui.common` 收共享扩展), 按规则把文件放回各自的位置.
@@ -677,6 +684,8 @@
 
 ### PA-61 (中) 载荷会改写所有 API 检查背后的版本事实, 伪造条目可以弄崩应用
 
+- **状态: 已解决 (2026-10-25)**: 随 PA-01 的全局删除关闭: 载荷不再能改写任何全局版本事实,  
+  API 闸门只读 `Build.VERSION.SDK_INT`, known 修正仅显示. 下方为删除前取证.
 - `HomeRepository.detectAndroid()` 把载荷的 `api` 字段拷进全局 `myAndroid` (`HomeRepository.kt:107-109`  
   按 `apiFull` 匹配, `:124-131` 写入), 而 `isAtLeastAndroid*()` 读这个值 (`AndroidVersionExt.kt:114-125`).
 - 检测顺序把这个写入排在 `detectSdkExtension` 与 `detectPerformanceClass` 之前  
@@ -1462,6 +1471,7 @@
 
 ### 第 1 组: 全局版本事实 `myAndroid`
 
+已解决 (2026-10-25): 全局删除, 版本事实由 `AndroidVersionDataSource` 派生, known 修正仅显示 (见 PA-01 与 PA-61 的状态行).  
 四份来源都指它, 其中三份定 "高". 同一进程里 Home 加载前后对同一台设备可以给出不同的 API 判定;  
 四次独立赋值之间落进来的读会拿到跨代组合; 覆盖值只写不清, 没有复位路径;  
 载荷经这里写回之后, 所有 API 检查都被改写 (PA-61). 它也是第 3 组的前置.  
@@ -1531,7 +1541,7 @@ PA-74 与 PA-80, PA-83, PA-84 是 Compose 侧与测试侧的低分项.
 
 glm 与 mimo 定 "中", deepseek 的相关条目定 "低", qwen 归入 `ARC-01` 并说改哪一边要负责人判定  
 (Q-07); 但它在结构上是最深的一处, 也是 PA-22 与 PA-36 的共同原因: 界面模型被下推到数据层,  
-于是仓库必须有 `Context` 才能干活, `ui.common` 反向依赖 home, 包环跟着出现.  
+于是仓库必须有 `Context` 才能干活, `ui.common` 曾反向依赖 home (该边已于 2026-10-25 断开), 包环跟着出现.  
 连带一起处理的: PA-05 (判定没有结果类型), PA-06 与 PA-07 (逐行各写各的比较),  
 PA-10 (设置键的映射抄三份), PA-11 (标题与明细来自两个 Context), PA-15 (补丁路径重读, 手写计数器),  
 PA-19 (一次性事件用返回值), PA-42 (格式串与参数分离), PA-44 (`OrThrow` 后缀), PA-45 (失败行四种写法),  
@@ -1594,7 +1604,7 @@ PA-117, PA-118, PA-119, PA-125.
 | 主题 | issues-cn | 本清单 | 代码复核 |
 |---|---|---|---|
 | 加载失败边界 | #62 判 "有意接受" (UI 不 try, 契约是下层不抛) | PA-14 | `BaseListViewModel.kt:60-71` 仍没有失败分支; `IShell` 没有 "不抛" 的声明. 没有失败分支属实; 正解是下层不抛 (与 [05-代码规则](../../agents-cn/05-代码规则.md) 一致), 不是让 UI 吸收异常 |
-| `myAndroid` | #09 P0, #17 P2 | PA-01 | 一致 |
+| `myAndroid` | #09 P0, #17 P2 | PA-01 | 一致; 两者已于 2026-10-25 随全局删除解决 |
 | 模块环与共用包名 | #04 P1, #07 P2 | PA-22, PA-25 | 代码一致; 定级不同 |
 | 静态取全局 | #02 P1 (DI 已接入, 剩全局取用点) | PA-02 | 一致, 本文更强调 "与图并行" |
 | lld.json | 外部目录无条目; `scheme` 与 `toInt()` 是 #22, `LldFileStore` 的直接比较是 #19 | PA-09, PA-59, PA-60, PA-62 | 代码属实 (`MyApplication.kt:60-71`, `LldFileStore.kt:45-64`) |

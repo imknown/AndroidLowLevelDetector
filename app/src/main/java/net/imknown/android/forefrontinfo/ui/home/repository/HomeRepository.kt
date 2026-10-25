@@ -29,13 +29,11 @@ import net.imknown.android.forefrontinfo.ui.common.CODENAME_CANARY
 import net.imknown.android.forefrontinfo.ui.common.PropertyReader
 import net.imknown.android.forefrontinfo.ui.common.getSdkExtension
 import net.imknown.android.forefrontinfo.ui.common.isGoEdition
-import net.imknown.android.forefrontinfo.ui.common.isLatestPreviewAndroid
-import net.imknown.android.forefrontinfo.ui.common.isLatestStableAndroid
 import net.imknown.android.forefrontinfo.ui.common.isPreviewAndroid
-import net.imknown.android.forefrontinfo.ui.common.isSupportedByUpstreamAndroid
-import net.imknown.android.forefrontinfo.ui.common.myAndroid
+import net.imknown.android.forefrontinfo.ui.common.isStableAndroid
 import net.imknown.android.forefrontinfo.ui.common.toPascalCase
 import net.imknown.android.forefrontinfo.ui.home.datasource.AndroidDataSource
+import net.imknown.android.forefrontinfo.ui.home.datasource.AndroidVersionDataSource
 import net.imknown.android.forefrontinfo.ui.home.datasource.LldDataSource
 import net.imknown.android.forefrontinfo.ui.home.datasource.LldFileStore
 import net.imknown.android.forefrontinfo.ui.home.datasource.MountDataSource
@@ -96,10 +94,13 @@ class HomeRepository(
     fun detectAndroid(lld: Lld?): MyModel =
         guardedMyModel(R.string.android_info_title) {
             val lldAndroid = lld?.android
+            val androidInfo = AndroidVersionDataSource.currentAndroidInfo
 
             // region [Mine]
-            val android = lldAndroid?.known?.find {
-                it.apiFull == myAndroid.apiFull
+            // The lld known row corrects what this row displays only (version / dessert);
+            // the correction never reaches other detections or any global (AndroidVersionDataSource is the single source).
+            val known = lldAndroid?.known?.find {
+                it.apiFull == androidInfo.apiFull
             }
 
             fun String.toStableOrPreview(): String {
@@ -115,24 +116,16 @@ class HomeRepository(
                 return versionTemp
             }
 
-            if (android != null) {
-                with(android) {
-                    myAndroid.api = api.toInt()
-                    myAndroid.apiFull = apiFull
-                    myAndroid.version = version
-                    myAndroid.dessert = name
-                }
-            }
-
-            val version = myAndroid.version.toStableOrPreview()
-            val dessert = myAndroid.dessert
+            val version = (known?.version ?: androidInfo.version).toStableOrPreview()
+            val dessert = known?.name
+                ?: androidInfo.dessert
                 ?: MyApplication.getMyString(androidR.string.unknownName)
             var myVersionAndDessert = "$version, $dessert"
             if (MyApplication.instance.isGoEdition()) {
                 myVersionAndDessert += " (Go)"
             }
 
-            val mine = MyApplication.getMyString(R.string.android_info, myVersionAndDessert, myAndroid.apiFull)
+            val mine = MyApplication.getMyString(R.string.android_info, myVersionAndDessert, androidInfo.apiFull)
             // endregion [Mine]
 
             fun oneLine(android: Lld.Androids.Android?): String {
@@ -1122,7 +1115,9 @@ class HomeRepository(
             }
             var systemApkList = installedApplications.filter {
                 val systemFlags = it.flags and (ApplicationInfo.FLAG_UPDATED_SYSTEM_APP or ApplicationInfo.FLAG_SYSTEM)
-                (systemFlags > 0) && (it.targetSdkVersion < myAndroid.api)
+                // On pre-release builds platform apps often (not always) target CUR_DEVELOPMENT (10000);
+                // such entries stay above this threshold, lower targets are compared as usual.
+                (systemFlags > 0) && (it.targetSdkVersion < AndroidVersionDataSource.currentAndroidInfo.api)
             }
 
             var result = MyApplication.getMyString(
@@ -1173,6 +1168,15 @@ class HomeRepository(
         }
 
     // region [Common]
+    private fun isLatestStableAndroid(lld: Lld) =
+        isStableAndroid() && Build.VERSION.SDK_INT >= lld.android.stable.api.toInt()
+
+    private fun isLatestPreviewAndroid(lld: Lld) =
+        isPreviewAndroid() && AndroidVersionDataSource.currentAndroidInfo.apiFull >= lld.android.preview.apiFull
+
+    private fun isSupportedByUpstreamAndroid(lld: Lld) =
+        isStableAndroid() && Build.VERSION.SDK_INT >= lld.android.support.api.toInt()
+
     private fun isPropertyValueNotEmpty(result: String) =
         result.isNotEmpty()
             && result != MyApplication.getMyString(R.string.result_not_supported)

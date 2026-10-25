@@ -8,7 +8,6 @@ import com.topjohnwu.superuser.Shell
 import dev.zacsweers.metro.createGraphFactory
 import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.di.AppGraph
-import net.imknown.android.forefrontinfo.ui.common.initMyAndroid
 import java.io.File
 
 // Both enums below live in this file on purpose (settings SSOT ST-05): they are app-wide model
@@ -88,8 +87,6 @@ open class MyApplication : Application() {
         super.onCreate()
 
         instance = this@MyApplication
-
-        initMyAndroid()
 
         // First resolution of the settings store = construction = synchronous seeding of both
         // mode flows from SP, pinned here where initTheme sat: instance and SP exist from this

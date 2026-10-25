@@ -18,10 +18,10 @@
   `decodeFromString` 抛异常; 而 **只改值的写法** (`api` 从 `"37"` 写成 `"37.1"`) 反序列化照样成功,  
   坏值原样进模型, 出错点被推到后面的 `toInt()`.
 - `Lld.Androids.Android.api` 是 `String` (`lld.android.stable.api` 等取值点都经它), 消费处一律裸 `toInt()`:  
-  `AndroidVersionExt.kt` 的 `isLatestStableAndroid()` (`lld.android.stable.api.toInt()`)  
-  与 `isSupportedByUpstreamAndroid()`  
-  (`lld.android.support.api.toInt()`), 以及 `HomeRepository.detectAndroid()` 的 `myAndroid.api = api.toInt()`:  
-  三处都没有用 `toIntOrNull` 做防护, 上游把 `"37"` 写成 `"37.1"` 即抛 `NumberFormatException`.
+  `HomeRepository` 私有的 `isLatestStableAndroid()` (`lld.android.stable.api.toInt()`) 与  
+  `isSupportedByUpstreamAndroid()`  
+  (`lld.android.support.api.toInt()`); 第三处 `HomeRepository.detectAndroid()` 的 `myAndroid.api = api.toInt()`  
+  已随 `myAndroid` 全局删除 (2026-10-25) 消失. 剩下两处都没有用 `toIntOrNull` 做防护, 上游把 `"37"` 写成 `"37.1"` 即抛 `NumberFormatException`.
 - 降级形态: 联网解析失败时 `HomeViewModel.tryDetectOnline()` 走 `tryDetectOffline()`,  
   把 `R.string.lld_json_parse_failed` 拼上 `e.fullMessage` 作为错误文案交给 `HomeRepository.detectMode()`,  
   附在那条 "lld json 来源" 行的详情末尾, 所以用户看到的是一条含糊的解析失败, 而不是 "数据版本过新".

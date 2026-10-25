@@ -1,6 +1,6 @@
 <a id="i04"></a>
 
-# 04 包结构误导: base 一词三义 + 包级循环依赖
+# 04 包结构误导: base 一词三义 + 包级循环依赖 (环已断)
 
 > 返回 [README 索引](../README.md) · [1 · 架构与分层](../README.md#1--架构与分层).
 
@@ -18,7 +18,7 @@
 3. **app 模块里的资源目录** `app/src/main/java/.../base/res`, `resLauncher`, `resBackup`,  
    `resTheme` (`app/build.gradle.kts` 的 `sourceSets` 注册).
 
-更糟的是依赖方向成环 (app 模块的 `base` 包与 `ui.common` 互相 import):
+更糟的是依赖方向曾成环 (app 模块的 `base` 包与 `ui.common` 互相 import; 反向那条已于 2026-10-25 断开):
 
 ```kotlin
 // app 模块的 base 包 (最底层的东西) 反向 import UI 层:
@@ -28,12 +28,14 @@ import net.imknown.android.forefrontinfo.ui.common.initMyAndroid
 而 `ui.common` 又反向 import app 的 base 包  
 (`PropertyReader` 顶上的 `net.imknown.android.forefrontinfo.base.MyApplication` import, 取占位文案), 即包级循环:  
 `base ↔ ui.common`. 原 `PropertyExt` / `ShellExt` 顶着的 `base.property.PropertyManager` /  
-`base.shell.ShellManager` import 已随那两个文件删除 (`8b5dc266` / `c87137a2`) 而消失, 但环本身还在,  
-只是换了支撑点.
+`base.shell.ShellManager` import 已随那两个文件删除 (`8b5dc266` / `c87137a2`) 而消失;  
+上面那条 base 包 → `ui.common` 的 import 也已随 `myAndroid` 全局删除 (2026-10-25,  
+[#09](../archived/02-SSOT-唯一数据来源/09-myAndroid可变单例.md)) 消失, 环已开,  
+只剩 `ui.common → base` 单向 (`PropertyReader`, `ShellLibSu`).
 
 同时 `ui/common/` 成了大杂烩: 这个包现有 5 个文件, 其中 4 个是与 UI 毫无关系的底层设施:  
 `ShellLibSu` (shell 实现), `JsonExt` (序列化),  
-`AndroidVersionExt` (全局可变状态), `PropertyReader` (属性回退门面,  
+`AndroidVersionExt` (版本判断扩展, 原 `myAndroid` 全局已删), `PropertyReader` (属性回退门面,  
 原 `PropertyExt` 顶层函数收拢成的类). 唯一的例外是 `ScrollBarExt.kt`:  
 它确实是 Compose 的 `Modifier.nonInteractiveScrollbar()` 扩展, 就该放在 UI 层.  
 原来挤在这个包里的真 UI 扩展 `ViewExt.setScrollBarMode` 是另一类问题, 那个文件已随 `fcc048d5` 删除,  
@@ -42,7 +44,7 @@ import net.imknown.android.forefrontinfo.ui.common.initMyAndroid
 ## 直接原因
 
 "common / base = 什么都往里放" 的惯性: 新文件找不到明确归属时进 common; 底层实现图方便放进 common;  
-common 再被最底层反向引用, 环就闭上了.
+common 曾因此被最底层反向引用闭上环, 那条反向边已于 2026-10-25 断开 (见上文), 惯性本身还在.
 
 ## 根本原因
 
@@ -51,7 +53,7 @@ common 再被最底层反向引用, 环就闭上了.
 
 ## 修复方案
 
-只搬包不改逻辑. 目标结构 (配合 [#09](../02-SSOT-唯一数据来源/09-myAndroid可变单例.md), [#02](02-服务定位器上帝对象.md) 一起完成搬移):
+只搬包不改逻辑. 目标结构 (配合 [#09](../archived/02-SSOT-唯一数据来源/09-myAndroid可变单例.md), [#02](02-服务定位器上帝对象.md) 一起完成搬移):
 
 ```
 app/src/main/java/net/imknown/android/forefrontinfo/
