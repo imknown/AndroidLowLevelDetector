@@ -77,13 +77,15 @@ interface AppGraph : ViewModelGraph {
     // until now the graph was all @Inject constructor chains and needed no
     // entry point.
     //
-    // No companion object in source: on Metro 1.4.5, a graph with BOTH an
-    // existing companion and a nested factory never gets its SAM implementation
-    // generated (reproduced with fun create, operator fun invoke, and an
-    // explicit source-declared companion object : Factory). Companion-free
-    // graphs get a generated companion implementing the factory instead,
-    // hence the @Provides moving from the companion into the binding
-    // containers. Worth rechecking after a Metro upgrade.
+    // No companion object in source: a graph with BOTH an existing companion and
+    // a nested factory never gets its SAM implementation generated. The whole
+    // repro is adding a bare `companion object` here: the build then fails with
+    // "Object 'AppGraph.Companion' is not abstract and does not implement
+    // abstract member: fun create(app: MyApplication): AppGraph".
+    // Companion-free graphs get a generated companion implementing the factory
+    // instead, hence the @Provides moving from the companion into the binding
+    // containers. Recheck by re-running that probe against whatever Metro
+    // revision gradle/toml/thirdParty.toml pins.
     @DependencyGraph.Factory
     interface Factory {
         fun create(@Provides app: MyApplication): AppGraph

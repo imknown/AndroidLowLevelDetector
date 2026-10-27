@@ -6,7 +6,7 @@
 # lockstep: check https://zacsweers.github.io/metro/latest/compatibility/
 # against the `kotlin` entry in gradle/toml/kotlin.toml before bumping,
 # and keep the pair out of comments so it cannot go stale here.
-metro = "1.4.5"
+metro = "1.5.0"
 
 # https://github.com/topjohnwu/libsu/releases
 libsu = "6.0.0"
