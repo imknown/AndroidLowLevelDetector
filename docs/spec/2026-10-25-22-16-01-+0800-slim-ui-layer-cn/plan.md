@@ -34,9 +34,10 @@ ViewModel 侧只剩状态推导. 防回归的检查先立起来再动核心 ([#5
   2. #44 第 1 处: 引入 `LldSource` 枚举, `HomeRepository.detectMode()` 的颜色判别改用它,  
      `HomeViewModel.detect()` / `tryDetectOnline()` / `tryDetectOffline()` 的 `modeResId` 参数跟着换,  
      资源 ID 只在拼文案时用.
-  3. #63 剩余小件: `MountDataSource.getMounts()` 查 `isSuccess`, 失败时仿 `PropRepository.getBuildProp()`  
-     的已有做法渲染源级错误行. `getBuildProp` 与 `exitCode` 已完成; `ShellLibSu` 合并 stderr 不在本件,  
-     随 2b 的 #03 主体一并定.
+  3. #63 剩余小件: `MountDataSource.getMounts()` 查 `isSuccess`, 失败时两个条目 (SAR 与 APEX)  
+     各自渲染自己那一行的未知, 行内带 `exitCode` (按 FR-3 AC2 "错误文字装在该条目自己的行里";  
+     2026-10-28 定为 B, 不是合成一行源级错误行). `getBuildProp` 与 `exitCode` 已完成;  
+     `ShellLibSu` 合并 stderr 不在本件, 随 2b 的 #03 主体一并定.
 - 独立性: 三件都不改函数间的语义约定, 每件 1~3 个文件, 独立编译, 独立提交.
 - 风险级别: 低 (机械改写与既有模式复制).
 - 生疏领域: 否.
@@ -44,7 +45,7 @@ ViewModel 侧只剩状态推导. 防回归的检查先立起来再动核心 ([#5
 ### subtask-02 1b 基线快照与测试栈
 
 - 范围: 引入 JUnit 5 (含 useJUnitPlatform 接线) 与 MockK; 把 Home, Others, Prop 三页每行的  
-  (key, detail, color) 现状导成黄金数据, 作为行为等价重构的回归网;  
+  (key, detail, color, type) 现状导成黄金数据, 作为行为等价重构的回归网;  
   Turbine 随首个 Flow 测试进; 规则文件的测试段随本步校准 (0e).
 - 独立性: 不动产品代码. 2a 的一次性迁移没有它就只能靠人工核对行为等价, 所以它是 2a 的硬前置.
 - 风险级别: 低 (测试基础设施; 黄金数据怎么导出在子任务报告里定).
@@ -67,7 +68,7 @@ ViewModel 侧只剩状态推导. 防回归的检查先立起来再动核心 ([#5
   `toColoredMyModel` / `toTranslatedDetailMyModel` 里 MyApplication 取不到值时的默认处理移入 mapper;  
   [06-检测条目](../../agents-cn/06-检测条目.md) 与 0d 条款随本步改写.  
   不走渐进, 全部迁完, 不留过渡形态.
-- 独立性: 依赖 subtask-02 的黄金数据. 验收标准: 三页每行 (key, detail, color) 与快照逐行一致.
+- 独立性: 依赖 subtask-02 的黄金数据. 验收标准: 三页每行 (key, detail, color, type) 与快照逐行一致.
 - 风险级别: 高 (核心逻辑; `getMyString` 全项目 99 处调用点, 其中 69 处在 HomeRepository).  
   Settings 页的 Version 行不在本步, 它是 #44 第 2 处, 在独立小件清单里.
 - 生疏领域: 部分 (测试手段按 0f 可能新引入 Robolectric 或仪器测试).
