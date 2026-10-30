@@ -2,11 +2,11 @@
 
 > **状态**: **living** (未归档, 可原地修订).  
 > **来源**: 本文件合并了同一目录下四份对同一版代码的独立通读与一份优先级报告, 五份都已移入 `archived/`:  
-> `2026-10-16-project-analysis-deepseek-v4.1-flash.md` (条目号 `PA-nn`),  
-> `2026-10-16-project-analysis-glm-5.3-flash.md` (`SS/UD/AR/DP/MD/SE/CP/AP/TE-nn`),  
-> `2026-10-16-project-analysis-mimo-v2.6-flash.md` (`SSOT/UDF/ARCH/PATTERN/MOD/SEC/CP/AP/TEST-nn`),  
-> `2026-10-16-project-analysis-qwen-3.8-flash.md` (`SSOT/UDF/ARC/PAT/MOD/SEC/CP/AP/TST-nn`),  
-> 以及 `2026-10-17-priority-report.md`.  
+> `deepseek-v4.1-flash-high.md` (条目号 `PA-nn`),  
+> `glm-5.3-flash-high.md` (`SS/UD/AR/DP/MD/SE/CP/AP/TE-nn`),  
+> `mimo-v2.6-flash-high.md` (`SSOT/UDF/ARCH/PATTERN/MOD/SEC/CP/AP/TEST-nn`),  
+> `qwen-3.8-flash-xhigh.md` (`SSOT/UDF/ARC/PAT/MOD/SEC/CP/AP/TST-nn`),  
+> 以及 `priority-report.md`.  
 > 引用它们时一律带来源名, 例如 `deepseek PA-02`, `qwen SEC-03`.  
 > **复核**: 每一条写出的事实与文件行号都在 2026-10-18 对当前代码逐条复核过;  
 > 生产代码自 2026-10-15 起没有再改 (此后的提交只有文档), 复核里更正了旧报告里过期或不准的行号与少数计数,  
@@ -1126,7 +1126,7 @@
 
 本节按参考清单里的分层模型判定 (unit / component / feature / application / release candidate),  
 并对照 what-to-test 列出的必测项与边界项; 基准材料是负责人指定的官方测试文档与 JUnit 5,  
-清单见归档的 `2026-10-16-project-analysis-qwen-3.8-flash.md` 末尾.  
+清单见归档的 `qwen-3.8-flash-xhigh.md` 末尾.  
 测试栈由 `build-logic/.../android/KotlinAndroid.kt:72-83` 的 `configureTest` 注入, 依赖三件  
 (`gradle/toml/android.toml:47,53,54`), 测试文件共 5 个.
 
@@ -1637,7 +1637,7 @@ issues-cn 独有, 四份分析没覆盖, 但代码能证实的, 仍然值得做,
   若只是历史选择, 内部存储是更安全的一侧.
 - **Q-07** PA-24 属于 "描述与代码不符" 一类: [03-概览](../../agents-cn/03-概览.md) 架构一节的四级画法是对现有代码的陈述,  
   而代码里仓库直接产出界面行模型. 要你判定改哪一边 (把那句描述改成实际层数, 还是补出领域层).
-- **Q-08** 归档的四份分析标的是 record 或 scratch, 可执行的发现要不要转进  
+- **Q-08** 归档的四份分析标的是 record, 可执行的发现要不要转进  
   `docs/dev/issues-cn/` 的编号条目, 本文件只做清单?
 - 另外第 10 节的分歧表里还有一条要你定: 空 `onClick` 的 Card (PA-74) 算不算缺陷.
 
@@ -1646,7 +1646,7 @@ issues-cn 独有, 四份分析没覆盖, 但代码能证实的, 仍然值得做,
 每个来源报告的全部编号都映射到本文件的编号; 同一编号出现在多处时就都列出.  
 归档报告的原文在 `archived/`, 引用旧编号时用它归档时的文件名.
 
-**deepseek** (`archived/2026-10-16-project-analysis-deepseek-v4.1-flash.md`):  
+**deepseek** (`archived/deepseek-v4.1-flash-high.md`):  
 PA-01 → PA-04, PA-02 → PA-01, PA-03 → PA-03, PA-04 → PA-09, PA-05 → PA-08, PA-06 → PA-06,  
 PA-07 → PA-10, PA-08 → PA-04, PA-09 → PA-55, PA-10 → PA-14, PA-11 → PA-18, PA-12 → PA-19,  
 PA-13 → PA-16, PA-14 → PA-25, PA-15 → PA-02, PA-16 → PA-22, PA-17 → PA-27, PA-18 → PA-54,  
@@ -1657,7 +1657,7 @@ PA-35 → PA-92, PA-36 → PA-122, PA-37 → PA-69, PA-38 → PA-123, PA-39 → 
 PA-41 → PA-104, PA-42 → PA-102, PA-43 → PA-107, PA-44 → PA-120, PA-45 → PA-106, PA-46 → PA-119,  
 PA-47 → PA-89, PA-121.
 
-**glm** (`archived/2026-10-16-project-analysis-glm-5.3-flash.md`):  
+**glm** (`archived/glm-5.3-flash-high.md`):  
 SS1 → PA-01, SS2 → PA-02, SS3 → PA-02, SS4 → PA-03, SS5 → PA-04, SS6 → PA-06,  
 UD1 → PA-16, UD2 → PA-17, UD3 → PA-18, UD4 → PA-19, UD5 → PA-20,  
 AR1 → PA-22, AR2 → PA-22, AR3 → PA-29, AR4 → PA-30, AR5 → PA-39, AR6 → PA-31, AR7 → PA-32,  
@@ -1671,7 +1671,7 @@ AP1 → PA-87, AP2 → PA-91, AP3 → PA-92, AP4 → PA-90, AP5 → PA-86, PA-93
 AP7 → PA-88, AP8 → PA-96, AP9 → PA-97,  
 TE1 → PA-98, TE2 → PA-99, TE3 → PA-106, TE4 → PA-102.
 
-**mimo** (`archived/2026-10-16-project-analysis-mimo-v2.6-flash.md`):  
+**mimo** (`archived/mimo-v2.6-flash-high.md`):  
 SSOT-1 → PA-01, SSOT-2 → PA-02, SSOT-3 → PA-15, SSOT-4 → PA-03, SSOT-5 → PA-13, SSOT-6 → PA-12,  
 UDF-1 → PA-15, UDF-2 → PA-17, UDF-3 → PA-18, UDF-4 → PA-19,  
 ARCH-1 → PA-29, ARCH-2 → PA-24, ARCH-3 → PA-23, ARCH-4 → PA-02, ARCH-5 → PA-28, ARCH-6 → PA-26,  
@@ -1687,7 +1687,7 @@ AP-1 → PA-85, AP-2 → PA-86, PA-93, AP-3 → PA-87, AP-4 → PA-88, AP-5 → 
 AP-7 → PA-92,  
 TEST-1 → PA-98, PA-106, TEST-2 → PA-102, TEST-3 → PA-119, TEST-4 → PA-107.
 
-**qwen** (`archived/2026-10-16-project-analysis-qwen-3.8-flash.md`):  
+**qwen** (`archived/qwen-3.8-flash-xhigh.md`):  
 SSOT-01 → PA-01, SSOT-02 → PA-06, SSOT-03 → PA-07, SSOT-04 → PA-10, SSOT-05 → PA-11,  
 SSOT-06 → PA-09,  
 UDF-01 → PA-14, UDF-02 → PA-15, UDF-03 → PA-16, UDF-04 → PA-15, UDF-05 → PA-21,  
@@ -1711,7 +1711,7 @@ TST-11 → PA-108, TST-12 → PA-109, TST-13 → PA-110, TST-14 → PA-111, TST-
 TST-16 → PA-113, TST-17 → PA-114, TST-18 → PA-115, TST-19 → PA-116, TST-20 → PA-109,  
 TST-21 → PA-106.
 
-**优先级报告** (`archived/2026-10-17-priority-report.md`): 它的分组, 修法, 与 issues-cn 的分歧表  
+**优先级报告** (`priority-report.md`): 它的分组, 修法, 与 issues-cn 的分歧表  
 与判定清单分别收进本文件的第 9, 10, 11 节; 它自己没有条目编号.
 
 ## 后续

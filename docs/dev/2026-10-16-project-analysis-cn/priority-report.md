@@ -1,10 +1,10 @@
 # 优先修复报告 (2026-10-17)
 
 > **状态**: living (未归档, 可原地修订).  
-> **首要依据**: 四份对当前代码的独立通读: `2026-10-16-project-analysis-deepseek-v4.1-flash.md` (条目号 `PA-nn`),  
-> `2026-10-16-project-analysis-glm-5.3-flash.md` (`SS/AR/UD/DP/MD/SE/CP/AP/TE-nn`),  
-> `2026-10-16-project-analysis-mimo-v2.6-flash.md` (`SSOT/UDF/ARCH/PATTERN/MOD/SEC/CP/AP/TEST-nn`),  
-> `2026-10-16-project-analysis-qwen-3.8-flash.md` (`SSOT/UDF/ARC/PAT/MOD/SEC/CP/AP/TST-nn`).  
+> **首要依据**: 四份对当前代码的独立通读: `archived/deepseek-v4.1-flash-high.md` (条目号 `PA-nn`),  
+> `glm-5.3-flash-high.md` (`SS/AR/UD/DP/MD/SE/CP/AP/TE-nn`),  
+> `mimo-v2.6-flash-high.md` (`SSOT/UDF/ARCH/PATTERN/MOD/SEC/CP/AP/TEST-nn`),  
+> `qwen-3.8-flash-xhigh.md` (`SSOT/UDF/ARC/PAT/MOD/SEC/CP/AP/TST-nn`).  
 > 四份的编号前缀有重叠: mimo 与 qwen 都用 `SSOT/UDF/MOD/SEC/CP/AP`, 只差编号是否补零; glm 与另两份都用 `CP/AP`.  
 > 所以引用一律带来源名, 例如 `qwen SSOT-01`, `mimo SSOT-1`, `glm CP1`.  
 > 报告之间冲突时以代码复核为准; 各条的文件与行号出自被引的那份报告.  
@@ -313,7 +313,7 @@ Compose 与插桩保留 4); mimo TEST-3 记仍是 JUnit 4; qwen 说本地测试�
 qwen 报告列了 8 条需要你判定的前置问题 (它的 `Q-01` 到 `Q-08`), 其中几条会改变上面某组的修法方向:
 
 - `Q-01`: `QUERY_ALL_PACKAGES` 保留并申报, 还是把过时 targetSdk 那一行改成 `<queries>` 加限定查询 (第 8 组).  
-- `Q-02`: `keys/debug.keystore` 被提交与 "不提交签名材料" 如何调和 (第 8 组).  
+- `Q-02`: `../../../keys/debug.keystore` 被提交与 "不提交签名材料" 如何调和 (第 8 组).  
 - `Q-03`: `gwpAsanMode="always"` 与 `nativeSymbolUploadEnabled` 是只在 Firebase 包要, 还是两种包都要 (第 6, 第 8 组).  
 - `Q-04`: `ShellDefault` 保留并记录前置修复, 还是删除 (第 8 组).  
 - `Q-05`: 分区指纹清单与其余反射是既有问题, 是否回头改成公开 API (第 8 组).  
@@ -323,10 +323,10 @@ qwen 报告列了 8 条需要你判定的前置问题 (它的 `Q-01` 到 `Q-08`)
 
 ## 与 issues-cn 的分歧
 
-`issues-cn` 是更早的调查; 下面这些是它与 `project-analysis-cn` 结论相反, 或者它没有覆盖的地方,  
+`issues-cn` 是更早的调查; 下面这些是它与 `2026-10-16-project-analysis-cn` 结论相反, 或者它没有覆盖的地方,  
 一律以代码复核为准:
 
-| 主题 | issues-cn | project-analysis-cn | 代码复核 |
+| 主题 | issues-cn | 2026-10-16-project-analysis-cn | 代码复核 |
 |------|-----------|---------------------|----------|
 | 加载失败边界 | #62 判 "有意接受" (UI 不 try, 契约是下层不抛) | deepseek PA-10 / glm AR9 / mimo PATTERN-1 / qwen UDF-01 记为待修 | `BaseListViewModel.kt:60-71` 仍没有失败分支; `IShell` 没有 "不抛" 声明. 没有失败分支属实; 正解是下层不抛 (与 AGENTS.md 一致), 不是让 UI 吸收异常 |
 | `myAndroid` | #09 P0, #17 P2 | deepseek PA-02 / glm SS1 / mimo SSOT-1 高, qwen SSOT-01 | 一致 |
@@ -340,7 +340,7 @@ qwen 报告列了 8 条需要你判定的前置问题 (它的 `Q-01` 到 `Q-08`)
 | 列表 key 重复导致崩溃 | #20 已修 (Prop 改用数据键) | deepseek PA-18, glm CP6 记 key 仍取自展示数据 | 立即崩溃的那条路已经关闭, 结构上仍然容易出错 |
 | `@Stable` 冗余 / 圆点颜色 / Others 红点 | #47 暂缓; #33 有意接受; #69 已修 | 未涉及或一致 | 一致, 不动 |
 
-`issues-cn` 独有, `project-analysis-cn` 没覆盖, 但代码能证实的, 仍然值得做, 只是不定高:  
+`issues-cn` 独有, `2026-10-16-project-analysis-cn` 没覆盖, 但代码能证实的, 仍然值得做, 只是不定高:  
 **#65 外链跳转** (`SettingsScreen.kt:421` 用 `resolveActivity` 判浏览器, manifest 没有 `<queries>`,  
 按平台的包可见性语义在 Android 11+ 可能判空; 动手前需要在一台真机上确认一次; qwen 把它记在 `Q-01` 里),  
 **#66 标题与数据源不符** (`os_arch` / `build_cpu_abi` / `build_stock_fingerprint` 的标题与取值来源不同),  
