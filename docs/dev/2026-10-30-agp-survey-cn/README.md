@@ -9,3 +9,4 @@
 | 调查者 | 模型 | effort | 内容 |
 |---|---|---|---|
 | WorkBuddy CN | DeepSeek-V4.1-Flash | high | [AGP 9.1 到 10.0 的新特性, 迁移指南, 以及仓库核对](workbuddy-cn-deepseek-v4.1-flash-high/README.md) |
+| MiniMax Code | MiniMax-M3.1-Flash | high | [AGP 9.1 到 10.0 的门槛, 对本仓库的要求, 以及仓库现状](minimax-code-minimax-m3.1-flash-high/README.md) |
