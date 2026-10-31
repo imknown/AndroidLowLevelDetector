@@ -25,7 +25,7 @@
 | 编号 | 文件 | 内容 | 什么时候读 |
 |---|---|---|---|
 | 01 | [01-判据](docs/agents-cn/01-判据.md) | 文档和代码谁说了算, 一句话分三类怎么判, 故意和主流不同的约定 | 要判断一条话算不算约束, 判文档和代码的分歧属于四种里的哪种, 或拿不准一份笔记的状态之前 |
-| 02 | [02-工作原则](docs/agents-cn/02-工作原则.md) | 记忆, 不许猜, 先报告后动手, 一口气做完, 每批编辑后的验证顺序 | 接到要改项目的指令之后, 动手之前 |
+| 02 | [02-工作原则](docs/agents-cn/02-工作原则.md) | 记忆, 不许猜, 先报告后动手, 一口气做完, 开发与确认的分工, 主动引导, 每批编辑后的验证顺序 | 接到要改项目的指令之后, 动手之前 |
 | 03 | [03-概览](docs/agents-cn/03-概览.md) | 项目概览, 模块细节, 架构概要 | 需要项目, 模块或架构的背景时 |
 | 04 | [04-架构](docs/agents-cn/04-架构.md) | 每项架构决定的细节和原因 | 碰导航, DI 图, 某个 ViewModel 或状态类, 列表页, 设置持久化, 或 shell/属性访问之前 |
 | 05 | [05-代码规则](docs/agents-cn/05-代码规则.md) | 代码规则, 注释和提交信息的语言, 本地化 | 要写或改代码, 加字符串资源之前 |
@@ -36,5 +36,6 @@
 | 10 | [10-分析细则](docs/agents-cn/10-分析细则.md) | `analyze-file` 与 ILS 两条通道的完整契约 (验证流程前两步) | 要依赖 `android studio analyze-file` 或 ILS 的结果之前 |
 | 11 | [11-构建与验证](docs/agents-cn/11-构建与验证.md) | 构建命令, review 各步义务, reviewer 选模型 (验证流程后两步) | 要跑构建或 Gradle 检查, 或做每批编辑后的 review 之前 |
 | 12 | [12-git](docs/agents-cn/12-git.md) | Git: 提交, trailer, 绝不提交 | 要提交, 开 PR, 或碰 `.gitignore` 之前 |
-| 13 | [13-任务工作流](docs/agents-cn/13-任务工作流.md) | spec 目录工作流, 确认与接续 | 开一个 spec 目录, 开始一个子任务, 负责人说 continue, 或关掉一个任务之前 |
-| — | [docs/requirements-cn/README.md](docs/requirements-cn/README.md) | 应用该做什么, 给谁用, 发布排期 | 要知道应用该做什么, 给谁用, 或者某项能力排在发布计划的哪一步 |
+| 13 | [13-任务工作流](docs/agents-cn/13-任务工作流.md) | spec 目录工作流, 确认与接续, 发现的判定与处理 | 开一个 spec 目录, 开始一个子任务, 负责人说 continue, 或关掉一个任务之前 |
+| 14 | [14-跨端review](docs/agents-cn/14-跨端review.md) | 把某轮 review 交给另一个 ADE/IDE 的 session 或 task: review 目录, 文件命名, 状态记录, 提示词, 收报告, 报告归宿 | 要把 review 交给另一个 ADE/IDE, 或负责人说 "review" 时 |
+| 无编号 | [docs/requirements-cn/README.md](docs/requirements-cn/README.md) | 应用该做什么, 给谁用, 发布排期 | 要知道应用该做什么, 给谁用, 或者某项能力排在发布计划的哪一步 |
