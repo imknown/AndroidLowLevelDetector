@@ -134,7 +134,7 @@ lld 的修正改成纯函数 (例如 `enrichWithLld(base, lld): MyAndroid`), 返
 从包名判断不出依赖方向, 任何 feature 都抽不出来, 单独推理不了;  
 它与第 2 组的检测项清单, 第 1 组的改成不可变是同一轮工作.
 
-**彻底修法**: 采用 `module-structure-cn.md` 里的目标结构 (那个文件标注未定, 动工前先定):  
+**彻底修法**: 采用 `docs/dev/2026-10-02-module-structure-cn/README.md` 里的目标结构 (那个文件标注未定, 动工前先定):  
 `:core` 放与平台无关的模型与工具 (含 `AndroidDataSource` 的常量, `Lld`, 日期与版本比较),  
 `:feature/*` 各自独立, 含 Screen + ViewModel + Repository + 专属 DataSource,  
 `MyApplication` 移到 `:app` 根包, `:base` 只留 `IShell` / `IProperty` 接口.  

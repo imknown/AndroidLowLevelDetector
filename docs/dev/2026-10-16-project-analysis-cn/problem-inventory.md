@@ -1495,7 +1495,7 @@ PA-05 也见第 7 组.
 
 glm 定 "高", mimo 定 "中"; qwen 把它排在判定正确性之后. 从包名判断不出依赖方向,  
 任何特性都抽不出来也单独推理不了; 它与第 2 组的检测项清单, 第 1 组的改成不可变是同一轮工作.  
-修法: 采用 `docs/dev/module-structure-cn.md` 里的目标结构 (那个文件标注目标结构尚未经负责人逐项定下,  
+修法: 采用 `docs/dev/2026-10-02-module-structure-cn/README.md` 里的目标结构 (那个文件标注目标结构尚未经负责人逐项定下,  
 动工前先定): `:core` 放与平台无关的模型与工具 (含常量表, `Lld`, 日期与版本比较),  
 `:feature/*` 各自独立 (Screen + ViewModel + Repository + 专属 DataSource),  
 `MyApplication` 移到 `:app` 根包, `:base` 只留 `IShell` / `IProperty` 接口.  
