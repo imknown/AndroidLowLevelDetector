@@ -34,7 +34,7 @@
 | 08 | [08-文档排版](docs/agents-cn/08-文档排版.md) | 标点, 换行, 禁用词, 句式的机械规则 | 写文档, 代码注释, 提交信息或回复, 或重写已有文本之前 |
 | 09 | [09-构建约定](docs/agents-cn/09-构建约定.md) | 构建约定和 CI: 禁令和细则 | 改 Gradle, 版本目录, 工具链版本, CMakeLists.txt 或 CI 之前 |
 | 10 | [10-分析细则](docs/agents-cn/10-分析细则.md) | `analyze-file` 与 ILS 两条通道的完整契约 (验证流程前两步) | 要依赖 `android studio analyze-file` 或 ILS 的结果之前 |
-| 11 | [11-构建与验证](docs/agents-cn/11-构建与验证.md) | 构建命令, review 各步义务, reviewer 选模型 (验证流程后两步) | 要跑构建或 Gradle 检查, 或做每批编辑后的 review 之前 |
+| 11 | [11-构建与验证](docs/agents-cn/11-构建与验证.md) | 构建命令, review 各步义务, reviewer 选模型, 分歧处置阶梯 | 要跑构建或 Gradle 检查, 或做每批编辑后的 review 之前 |
 | 12 | [12-git](docs/agents-cn/12-git.md) | Git: 提交, trailer, 绝不提交 | 要提交, 开 PR, 或碰 `.gitignore` 之前 |
 | 13 | [13-任务工作流](docs/agents-cn/13-任务工作流.md) | spec 目录工作流, 确认与接续, 发现的判定与处理 | 开一个 spec 目录, 开始一个子任务, 负责人说 continue, 或关掉一个任务之前 |
 | 14 | [14-跨端review](docs/agents-cn/14-跨端review.md) | 把某轮 review 交给另一个 ADE/IDE 的 session 或 task: review 目录, 文件命名, 状态记录, 提示词, 收报告, 报告归宿 | 要把 review 交给另一个 ADE/IDE, 或负责人说 "review" 时 |
