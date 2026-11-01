@@ -21,6 +21,29 @@
 把 `-ERRNO_PERMISSION_DENIED` (= -13, EACCES) 显示为 unknown, 其余落 `else` 也是 unknown. `errno` 一旦被覆盖,  
 本该 "不支持" 的结果就变 "未知", 反之亦然.
 
+下面这张时序图画 `getErrorNo()` 里 `__android_log_print` 与取返回值的先后:  
+参数求值读到真实 `errno`, 打完日志后的那次读取可能拿到被改写的值:
+
+```mermaid
+sequenceDiagram
+    participant K as Kotlin
+    participant G as getErrorNo
+    participant L as 日志调用
+    participant S as logd
+    K->>G: 调用
+    G->>L: 打日志
+    Note over L: 参数先求值
+    Note over L: 读到真实 errno
+    L->>S: 内部写
+    Note over S: 走 socket 写 logd
+    Note over S: 失败可改写 errno
+    L-->>G: 返回
+    G->>G: 再读一次
+    Note over G: errno 可能已被改写
+    G-->>K: 返回
+    Note over K: 不支持变未知
+```
+
 **修复方向**: 系统调用失败后 **立刻** 把 `errno` 存进局部变量,  
 再用该变量打日志与返回 (`int errorNo = -abs(errno);` 上移到 `__android_log_print` 之前),  
 这是 `errno` 使用的通例.

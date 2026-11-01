@@ -61,6 +61,35 @@ exported (对外导出) ≈ api/implementation 的可见性收紧 ("谁能看到
 因此现在不值得整体换构建系统, 把模块切干净,  
 未来无论迁到哪种构建系统都只是机械活.
 
+目标结构的分层与依赖方向如下图, 两个框对应 "与材料的映射" 里的两侧, 边只画原文写得出的那几条:
+
+```mermaid
+flowchart TD
+  subgraph APPSIDE["应用入口侧"]
+    APP[":app 组合根"]
+    FH[":feature/home"]
+    FO[":feature/others"]
+    FP[":feature/prop"]
+    FS[":feature/settings"]
+  end
+  subgraph CORE["共享代码侧"]
+    MDL[":core/model"]
+    CMN[":core/common"]
+    API[":core/detect-api"]
+    IMP[":core/detect-android"]
+    DAT[":core/data"]
+  end
+  BD[":binderDetector"]
+
+  APP -->|组装| FH
+  APP -->|组装| FO
+  APP -->|组装| FP
+  APP -->|组装| FS
+  FH -->|共用| DAT
+  FS -->|共用| DAT
+  IMP -->|实现| API
+```
+
 ## 待决问题 (动工前逐项定下)
 
 1. 真的添加 KMP 编译目标 (像 iosMain/desktopMain 那样的平台代码目录), 还是只取结构 (用纯 Gradle 拆模块,  

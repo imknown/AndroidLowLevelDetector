@@ -27,6 +27,22 @@
   而 `LldDataSource.fetchOnlineLldJsonStringOrThrow()` 的在线地址是 `"https://$urlPrefixLldJson/${BuildConfig.GIT_BRANCH}/app/src/main/assets/$LLD_JSON_NAME"`  
   所以分支段变成 `HEAD`, 这个 URL 指向不存在的路径, 联网刷新 lld.json 失败.
 
+下面这张图跨构建与运行两侧画分离 HEAD 的后果: `git rev-parse --abbrev-ref HEAD` 输出字面量 `HEAD`,  
+经 `BuildConfig.GIT_BRANCH` 拼进 `LldDataSource` 的在线地址, 分支段变 `HEAD`, URL 指向不存在的路径:
+
+```mermaid
+flowchart TD
+    subgraph S1[构建侧]
+        A[取分支名] -->|分离HEAD| B[输出字面量 HEAD]
+        B -->|写进| C[GIT_BRANCH]
+    end
+    subgraph S2[运行侧]
+        D[分支段 HEAD] -->|指向| E[路径不存在]
+        E -->|结果| F[联网刷新失败]
+    end
+    C -->|拼进 URL| D
+```
+
 **修复方向**: 产物名的时间戳交给 CI 在 artifact 命名上做, 构建内部保持稳定名; 分支相关值改由 CI 显式注入,  
 在线 URL 指向稳定 ref.  
 两条都得保持 configuration-cache 兼容 ([09-构建约定](../../../agents-cn/09-构建约定.md) 的约定),  

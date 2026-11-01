@@ -139,6 +139,31 @@
   归档即声明 record (见 [07-文档规则](../../agents-cn/07-文档规则.md)), 内容不再修订; 本页不保留  
 "已解决" 行.
 
+阅读说明定义的五个状态加归档出口画成下图; 原文写了流转的那几条边画出来了, 随行 与 待负责人定 两个状态原文只给定义, 没有去向:
+
+```mermaid
+stateDiagram-v2
+  state "开放" as OPEN
+  state "随行 X" as FOLLOW
+  state "待负责人定" as ASK
+  state "暂缓" as PAUSED
+  state "有意接受" as ACCEPTED
+  state "归档 archived/" as ARC
+
+  OPEN : 无不利前提, 可随时动手
+  FOLLOW : 与 X 合流, 不单独开工
+  ASK : 动手前需要负责人给结论
+  PAUSED : 负责人定先不动, 非有意接受
+  ACCEPTED : 取舍或非缺陷, 无待办
+  ARC : record, 内容不再修订
+
+  OPEN --> PAUSED : 决定先不动
+  PAUSED --> OPEN : 查清或重启
+  OPEN --> ARC : 修复或消解后
+  ACCEPTED --> ARC : 按已了结归档
+  ARC --> [*]
+```
+
 ## 问题总览表
 
 按类别分组, 组内按严重程度排列. 严重程度与状态取自各条目正文, 有出入以条目正文为准.
@@ -250,6 +275,17 @@
 两个检测块同时失败会产出同 key 的两行, `LazyColumn` 直接抛异常; #62:  
 加载失败没有任何善后处理, 异常穿透时是崩溃或永久转圈而不是错误行. 与之配套, 另一半是 #63:  
 读不到/读失败被渲染成确定的设备结论 (报 "不支持"/"32-bit"/绿, 或整页涂红).
+
+总体诊断说的 "层和层之间传的东西类型不对" 如下图, 分层方向本身是对的,  
+但从 DataSource 到 MyModelCard 传的都是已拼好文案, 带好状态色的 MyModel, 仓库因此必须拿着 Context 干活:
+
+```mermaid
+flowchart TD
+  DS["DataSource"] -->|MyModel| REP["Repository"]
+  REP -->|MyModel| VM["ViewModel"]
+  VM -->|MyModel| C["Composable / MyModelCard"]
+  REP -.->|要拿 Context| G["getMyString 99 处<br>HomeRepository 69 处"]
+```
 
 ## 已经做对的地方
 
@@ -370,3 +406,40 @@ LldFileStore 一路; 覆盖校验已定不设), 06-性能 的 #30 (修法是 Dat
 **暂缓** 条目 (#67, #66 的 binder 行, #47) 无待办, 查清或重启时回到开放,  
 列在总览表里只为防止重复讨论. 其余开放条目按上文各工作线与独立小件清单执行;  
 #37 / #59 / #60 为待完成需求 (不归档), 不占批次, 分别跟着官方滚动条组件, material3 1.5, foundation 1.13 的到位触发.
+
+修复路线的依赖如下图, 主力线串行,  
+1b 是步骤 2 的硬前置, #04 放最后;  
+先行批先于主线一切步骤, 独立小件与单独议不占主线, 暂缓无待办:
+
+```mermaid
+flowchart TD
+  P["先行的低难度修复批"]
+  subgraph S1["步骤 1 测试与检查"]
+    A["1a CI 检查"]
+    B["1b 基线快照与测试栈"]
+  end
+  subgraph S2["步骤 2 注册表引擎"]
+    C["2a 领域化"]
+    D["2b 注册表与执行模型"]
+    E["2c 编排收回"]
+  end
+  F["步骤 3 目录核对与 #42"]
+  G["#04 包结构搬移"]
+  H["#07"]
+  J["单独议: IO 声明下沉"]
+  K["独立小件, 随时可做"]
+  L["#63 剩余"]
+  M["暂缓条目, 无待办"]
+
+  P -->|先行| A
+  P -->|先行| B
+  B -->|硬前置| C
+  C --> D
+  D --> E
+  E --> F
+  F -->|放最后| G
+  P -.->|技术前置| D
+  J -.->|启动时归入| D
+  L -.->|随行| C
+  H -.->|随行| G
+```

@@ -49,6 +49,26 @@ ViewModel 侧只剩状态推导. 本任务是"UI layer 减重"这条线的最后
    - `AssetManager` 的来源已经查清: `AppGraph.kt:89-92` 的 `@Provides app: MyApplication` 把应用绑进了图,  
      所以构造器注入 `MyApplication` 不用新增绑定 (它本身就是 `Context`, `app.assets` 直接能用);  
      要注入 `Context` 或 `AssetManager` 才需要补一个 `@Provides`.
+   下面这张图画已定的候选 B: lld 取数与三级回退下沉进 LldLoader, 四个函数依次降级, 返回结果类型, 文案交给 mapper:
+
+   ```mermaid
+   flowchart TD
+       subgraph ldr["LldLoader (ui/home/datasource)"]
+           direction TB
+           l1["tryDetectOnline"]
+           l2["tryDetectOffline"]
+           l3["fetchOfflineLldOrNull"]
+           l4["getAssetLldOrNull"]
+           l1 -->|"失败"| l2
+           l2 -->|"取数"| l3
+           l3 -->|"失败"| l4
+       end
+
+       ldr -->|"返回"| rt["结果类型<br>lld 加一组错误信息<br>Found / Missing / Failed"]
+       rt -->|"文案交给"| mpp["mapper"]
+       repo["仓库<br>只管存取"]
+       ldr -.-> repo
+   ```
 
 1. 编排收回.
 
@@ -72,6 +92,17 @@ ViewModel 侧只剩状态推导. 本任务是"UI layer 减重"这条线的最后
      保的话, flow 的输出类型仍是 `PersistentList`.
    - **已定 A2** (负责人 2026-10-29). 代价是基类与三页一起动, 违反"改动最小"的直觉, 但 A1 会留下两条补丁规则,  
      等于把同一段编排留到以后再改一次, 与"不建过渡形态"的决定冲突.
+   下面这张图画已定的候选 A2: Home 的列表由 combine 把三个源汇成一条推导流, 基类只观察这条流:
+
+   ```mermaid
+   flowchart LR
+       cb["combine<br>推导"]
+       s1["设置流"] --> cb
+       s2["检测结果流"] --> cb
+       s3["刷新"] -->|"提供触发"| cb
+       cb --> mf["modelsFlow()"]
+       mf --> base["基类<br>观察一个 Flow"]
+   ```
 
 1. 两条补丁规则与补丁入口的去留.
 

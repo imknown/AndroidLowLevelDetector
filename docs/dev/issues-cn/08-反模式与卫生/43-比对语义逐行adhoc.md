@@ -32,6 +32,25 @@ android, sdkExtension, buildId,
   年月比  
   `"2026" >= "2026-09"` 也假).
 
+下面这张图画已知错例的走向: 设备只报 `YYYY-MM` 时, `detectSecurityPatch()` 的两步比较怎么先后判假, 后面的场景把同一错例带上具体串值走一遍:
+
+```mermaid
+flowchart TD
+    A[设备只报年月] -->|先整串比| B[判假]
+    B -->|退一步| C[年月被截成年份]
+    C -->|再比一次| D[也判假]
+    D -->|两次都错| E[完全同期判红]
+```
+
+Scenario: 只报 YYYY-MM 的设备与库完全同期却被判红  
+Given CDD 要求补丁级别为 YYYY-MM-DD, 该设备只报 2026-09  
+And 库里补丁串为 2026-09-05, 两者完全同期  
+When detectSecurityPatch 先做整串字典序比较  
+Then `"2026-09"` >= `"2026-09-05"` 为假  
+When 退一步比年月, getSecurityPatchYearMonth 以 substringBeforeLast('-') 取段  
+Then 设备侧取出的是年份 2026, `"2026"` >= `"2026-09"` 也为假  
+And 两次比较都错, 完全同期的设备被判红
+
 测试侧: 没有任何测试碰 `HomeRepository`. 全仓唯一有实际内容的测试类是 `base/src/test/.../base/extension/DateTimeExtTest.kt`, 测的是  
 `isLldDatetime()` 的格式契约; `app/src/test` 与 `base/src/test` 里其余仍是模板 `ExampleUnitTest`.
 

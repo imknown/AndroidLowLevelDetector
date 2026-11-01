@@ -39,8 +39,9 @@
 
 1. 结果类型.
 
-   - 引入一个统一的结果容器: `DetectResult<out T>`, 三个分支 `Found(value)`, `Missing(reason)`,  
-     `Failed(cause)`. 每个检测项的语义再用自己的类型表达, 例如 `PerformanceClassInfo` 的  
+   - 系统应引入统一的结果容器 `DetectResult<out T>`, 三个分支是 `Found(value)`, `Missing(reason)`,  
+     `Failed(cause)`.
+   - 当一个检测项要表达自己的语义时, 系统应以该条目自己的类型表达, 例如 `PerformanceClassInfo` 的  
      `Met` / `Lagging` / `NotDeclared` / `NotSupported`.
    - 为什么两层: `Failed` 与 `Missing` 的处理在每个条目都一样 (都落未知), 这一层用统一容器写得出来;  
      而"达标还是落后"只能由条目自己说清, 统一容器装不了.
@@ -87,6 +88,37 @@
    - 落点: subtask-04 期间在调用侧留一层薄 guard, 只处理"没预料到的异常" (例如探针抛出的  
      `RuntimeException`), 常规失败走 `DetectResult.Failed` 的正常返回路径, 不再依赖它.
    - subtask-05 造引擎时把这层薄 guard 收进引擎, 调用侧那层随之删掉.
+   下面这张图按三个阶段对比失败隔离 guard 的位置: 先包在仓库里, 再挪到调用侧, 最后收进引擎:
+
+   ```mermaid
+   flowchart LR
+       subgraph S1["现状"]
+           direction TB
+           c1["调用侧"] --> rp1["仓库方法"]
+           rp1 --> g1["guardedMyModel<br>HomeRepository 24 处<br>OthersRepository 36 处"]
+           g1 --> blk["造 MyModel 的 block"]
+           blk --> mm["MyModel"]
+       end
+
+       subgraph S2["subtask-04 后"]
+           direction TB
+           c2["调用侧"] --> g2["薄 guard<br>只处理没预料到的异常"]
+           g2 --> rp2["仓库方法"]
+           rp2 -->|"绝大多数失败"| fl["DetectResult.Failed<br>正常返回路径"]
+           exc["没预料到的异常<br>如探针抛出的 RuntimeException"] --> g2
+       end
+
+       subgraph S3["subtask-05 后"]
+           direction TB
+           c3["调用侧"] --> eng["引擎<br>含薄 guard"]
+           eng --> rp3["仓库方法"]
+           gone["调用侧那层删掉"]
+       end
+
+       g1 -.->|"挪到调用侧"| g2
+       g2 -.->|"收进引擎"| eng
+       g2 -.->|"随之删掉"| gone
+   ```
 
 1. 逐条单测.
 

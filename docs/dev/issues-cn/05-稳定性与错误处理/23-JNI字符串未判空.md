@@ -18,5 +18,17 @@ JNI 规范是内存不足时返回 NULL 并在 JVM 侧挂起异常, 此时 `open
 `-1` 既不是 `-2` (ENOENT) 也不是 `-13` (EACCES), 于是落进 `else` 分支显示 "未知",  
 而真正该浮上来的 OOM 被吞在返回值之后.
 
+下面这张图画 `GetStringUTFChars` 返回 NULL 后, `driverChars` 没判空, 经 `open()` 与 `getErrorNo()`  
+一路当合法字符串用, 直到打日志与 `ReleaseStringUTFChars()` 的路径:
+
+```mermaid
+flowchart TD
+    A[取字符串指针] -->|内存不足| B[返回 NULL]
+    B -->|没判空| C["open(NULL)"]
+    C -->|fd 为负| D[getErrorNo]
+    D -->|"当 %s 用"| E[打日志]
+    D -->|同一指针| F[交给释放]
+```
+
 **修复方向**: 取到 `driverChars` 后判空并直接 `return` (JVM 已挂 OOM 异常, 让 Java 层收到即可),  
 不再往下走 `open()` 与 `release()`. JNI 标准必查项.

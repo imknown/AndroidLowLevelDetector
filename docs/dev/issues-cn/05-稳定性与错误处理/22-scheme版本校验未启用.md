@@ -35,6 +35,18 @@
 对 "删键 / 改键名 / 改类型" 就是整份 `decodeFromString` 抛异常 → `lld = null` → 各行按 `lld == null` 分支落到 CRITICAL  
 (见 [#33](../archived/07-UI与无障碍/33-Unknown渲染红色.md)).
 
+下面这张图画 `Json { ignoreUnknownKeys = true }` 面对三种上游演进各自通向的失效面:
+
+```mermaid
+flowchart TD
+    S[上游演进] -->|加字段| A[不报错不崩]
+    S -->|改类型或结构| B[解析抛异常]
+    B -->|整份| C[lld 为 null]
+    C -->|各行落| D[CRITICAL]
+    S -->|只改值| E[解析成功]
+    E -->|坏值进模型| F[出错点在 toInt]
+```
+
 **严重程度说明**: `api` 串坏了不再拖垮整页: 逐条错误隔离 (`f089854a`) 之后,  
 `detectAndroid()` 的异常被它自己的 `guardedMyModel(R.string.android_info_title)` 接住,  
 降级成该探针的一行错误. 失效面从 "整页" 缩到 "一行",  

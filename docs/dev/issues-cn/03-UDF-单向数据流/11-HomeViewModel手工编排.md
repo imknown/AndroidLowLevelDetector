@@ -60,6 +60,15 @@ updateModelDetail(targetIndex, newDetail)   // ViewModel 翻自己的状态找�
 排序补丁静默放弃, 没有任何错误行说明为什么. 补偿路径还固定重读**离线**文件 (而刚才那次加载可能用的是在线数据),  
 且这个名为 payload 的动作里做磁盘写 (`copyJsonIfNeededOrThrow()`). 编排收进仓库时, 这两条路径要一起收进去.
 
+下面这张图照现状画, 讲同一条 `lld == null` 条件在加载路径与补偿路径里的相反处置:
+
+```mermaid
+flowchart TD
+    A[lld 取数为空] -->|加载路径| B[渲染含未知行]
+    A -->|补偿路径| C[静默放弃排序补丁]
+    C -->|不说明原因| D[无错误行]
+```
+
 ## 直接原因
 
 "首页有哪些条目, 什么顺序" 是仓库 (数据) 的知识, 却由 ViewModel 逐行手抄; `updateModelDetail` 暴露下标参数,  
@@ -95,6 +104,17 @@ lld 联网→离线的回退链
 (`tryDetectOnline()` / `tryDetectOffline()` / `fetchOfflineLldOrNull()` / `getAssetLldOrNull()`) 目前在  
 `HomeViewModel` 里用 try 编排失败回退, 违反 "UI 层不处理业务异常" 的约定, 随 "编排收回仓库" 一半一并处理:  
 取数与回退下沉, 或返回 wrapper 由 mapper 呈现.
+
+下面这张图画 lld 的联网到离线回退链, 四级依次是 `tryDetectOnline()`, `tryDetectOffline()`,  
+`fetchOfflineLldOrNull()`, `getAssetLldOrNull()`, 整条链由 `HomeViewModel` 用 try 编排失败回退:
+
+```mermaid
+flowchart TD
+    V[ViewModel] -->|try 包裹| A[联网取数]
+    A -->|失败| B[离线取数]
+    B -->|失败| C[读离线文件]
+    C -->|失败| D[读内置资产]
+```
 
 编排收回仓库, 更新按类型寻址:
 

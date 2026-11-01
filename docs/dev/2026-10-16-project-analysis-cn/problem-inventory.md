@@ -220,6 +220,20 @@
   执行方式本身见 PA-85 与 PA-86.
 - 出处: deepseek PA-10 (中), glm AR9 (高), mimo PATTERN-1 (中), qwen UDF-01 (未定级).
 
+startLoad() 的加载顺序, 成功路径与失败路径的对照如下图.
+
+```mermaid
+flowchart TD
+  S["setLoading(true)"] --> C["collectModels()"]
+  C -->|正常返回| M["setModels()"]
+  M -->|唯一路径| F["setLoading(false)"]
+  M --> O["onModelsLoaded()"]
+  C -->|一抛出| X["setModels() 不执行"]
+  X --> Y["isLoading 停在 true"]
+  Y -.->|到不了| F
+  Y --> Z["页面继续转圈"]
+```
+
 ### PA-15 (中) 排序补丁那一行由另一份 lld 重算, 两条写入方向靠手写计数器协调
 
 - 同一行 `OutdatedTargetSdkApk` 有两条写法: 加载流水线用本次内存里的载荷  
@@ -231,6 +245,30 @@
   `HomeViewModel.kt:78-82`, 消费点 `:54` 与 `:258-264`), 时序还要靠 `:70-77` 的注释解释.
 - 参考修法: 把已解析的 `Lld` 作为一次加载的状态保留, 补丁复用它; 排序偏好作为流输入交给构造列表那一步.
 - 出处: mimo SSOT-3 (中), mimo UDF-1 (中), qwen UDF-02 (未定级), qwen UDF-04 (未定级).
+
+同一行的两条写入方向与它们的协调方式如下图.
+
+```mermaid
+sequenceDiagram
+  participant U as 用户
+  participant VM as HomeViewModel
+  participant D as 离线文件
+  participant ROW as OutdatedTargetSdkApk 行
+
+  Note over U,ROW: 方向一: 加载流水线
+  U->>VM: 触发加载
+  VM->>ROW: 用本次内存载荷写行
+
+  Note over U,ROW: 方向二: 排序开关触发的补丁
+  U->>VM: 拨排序开关
+  VM->>D: 重读离线文件
+  Note over D: 这一路的 :159 会调 copyJsonIfNeededOrThrow, 可能重写缓存
+  D-->>VM: 另一份 lld
+  VM->>ROW: 用重读的 lld 再写同一行
+
+  Note over VM,ROW: 行颜色取决于收到哪份 lld, ViewModel 没有状态记着用的是哪份
+  Note over VM,ROW: 靠手写世代判定协调: outdatedOrderChanges 与 loadStartGeneration
+```
 
 ### PA-16 (中) `updateModelDetail(targetIndex)` 是公开的按索引写入入口
 
@@ -1595,6 +1633,19 @@ PA-117, PA-118, PA-119, PA-125.
 从高到低: 第 9 组的 "不等重构" 半段; 第 1 组; 第 2 组与第 3 组 (第 9 组的 "要等重构" 半段随第 1 到第 3 组);  
 第 4 组; 第 5 组与第 6 组; 第 7 组; 第 8 组.  
 先做第 9 组的 "不等重构" 半段, 理由是先立起防回归的测试, 让后面那些重构被验证, 而不是靠人眼.
+
+九组从高到低的次序如下图, 第 9 组 "要等重构" 的半段随第 1 到第 3 组:
+
+```mermaid
+flowchart LR
+  T9A["第 9 组 不等重构半段"] --> G1["第 1 组"]
+  G1 --> G23["第 2 组与第 3 组"]
+  G23 --> G4["第 4 组"]
+  G4 --> G56["第 5 组与第 6 组"]
+  G56 --> G7["第 7 组"]
+  G7 --> G8["第 8 组"]
+  T9B["第 9 组 要等重构半段"] -.->|随 1 到 3 组| G23
+```
 
 ## 10. 与 issues-cn 的分歧
 

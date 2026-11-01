@@ -61,6 +61,20 @@
      看不到取数阶段的异常. 异常会穿出 `detect()`, 再穿出 `collectModels()` (HomeViewModel.kt:52-65),  
      落到 `BaseListViewModel.startLoad()` 的 `viewModelScope.launch` (BaseListViewModel.kt:65-70),  
      那里没有 try/catch, 协程终止, 整份列表写不进状态, 界面停在加载态. 一行错误行都没有.
+
+     下面这张图只为已被否掉的候选 A 留档: getMounts() 的异常一路穿到 viewModelScope.launch, 中间没有一层接住, 整份列表写不进状态:
+
+     ```mermaid
+     flowchart TD
+         c0["detect() 里<br>取挂载"] --> m0["getMounts()<br>失败抛异常"]
+         m0 --> gA["guardedMyModel<br>只包住各自函数体<br>(detectSar / detectApex)"]
+         gA -->|"接不到"| o1["穿出 detect()"]
+         o1 --> o2["穿出 collectModels()"]
+         o2 --> o3["startLoad() 的<br>viewModelScope.launch<br>没有 try/catch"]
+         o3 --> o4["协程终止"]
+         o4 --> o5["整份列表写不进状态"]
+         o5 --> o6["界面停在加载态<br>一行错误行都没有"]
+     ```
    - B. `getMounts()` 返回 `MountQueryResult` (`Success(mounts)` / `Failed(exitCode)`), 两个检测各自判,  
      各渲染一行该条目的错误行. 行数不变, 失败可归因到挂载源.
    - C. 把挂载读取提到 `detect()` 的调用序列之前, 失败时只产一行源级错误行, 替换掉 SAR 与 APEX 两行.  

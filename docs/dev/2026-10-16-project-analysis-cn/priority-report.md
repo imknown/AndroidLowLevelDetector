@@ -102,6 +102,20 @@ lld 的修正改成纯函数 (例如 `enrichWithLld(base, lld): MyAndroid`), 返
 与列表里条目的身份 (deepseek PA-18) 随清单一起改;  
 `AppRoot.kt:97-116` 的 16 份重复注册 (mimo PATTERN-7) 与四条从不放第二个条目的返回栈 (mimo PATTERN-11, qwen ARC-07) 归第 3 组.
 
+第 2 组证据里的失败传播路径如下图, 检测一抛出, isLoading 收不回, 异常冲出协程, 通向一直转圈或崩溃:
+
+```mermaid
+flowchart TD
+  A["守卫外的两处 shell 调用"] -->|抛出| C["collectModels()"]
+  P["PropertyDefault"] -->|抛 Error| C
+  C -->|一抛出| L["startLoad() 的 launch"]
+  L -->|无 try/finally| E["异常冲出 viewModelScope"]
+  C -->|中断| M["setModels() 不执行"]
+  M -->|唯一路径| F["setLoading(false) 不可达"]
+  F --> R["isLoading 停在 true"]
+  R --> T["页面一直转圈"]
+```
+
 ## 第 3 组: 结构与分层的根本原因 (glm AR1, glm AR2, glm MD1, glm SS2, mimo ARCH-4, qwen ARC-01, qwen ARC-02, qwen ARC-03, qwen ARC-05, qwen MOD-02)
 
 **证据**:  
@@ -354,3 +368,16 @@ qwen 报告列了 8 条需要你判定的前置问题 (它的 `Q-01` 到 `Q-08`)
 先做第 9 组的 "不等重构" 半段, 理由是先立起防回归的测试, 让后面那些重构被验证, 而不是靠人眼.
 
 本报告只排先后. 子任务怎么切, 每个子任务怎么提交, 归开工时写的计划.
+
+九组从高到低的次序如下图, 第 9 组 "要等重构" 的半段随第 1 到第 3 组:
+
+```mermaid
+flowchart LR
+  T9A["第 9 组 不等重构半段"] --> G1["第 1 组"]
+  G1 --> G23["第 2 组与第 3 组"]
+  G23 --> G4["第 4 组"]
+  G4 --> G56["第 5 组与第 6 组"]
+  G56 --> G7["第 7 组"]
+  G7 --> G8["第 8 组"]
+  T9B["第 9 组 要等重构半段"] -.->|随 1 到 3 组| G23
+```
