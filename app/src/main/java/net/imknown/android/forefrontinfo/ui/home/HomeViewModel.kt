@@ -27,6 +27,7 @@ import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModelType
 import net.imknown.android.forefrontinfo.ui.common.toObjectOrThrow
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
+import net.imknown.android.forefrontinfo.ui.home.model.LldSource
 import net.imknown.android.forefrontinfo.ui.home.repository.HomeRepository
 import net.imknown.android.forefrontinfo.ui.settings.repository.SettingsStore
 import java.io.IOException
@@ -145,13 +146,13 @@ class HomeViewModel(
             errorMessage(R.string.lld_json_save_failed, e)
         }
 
-        return detect(lld, listOf(errorMessage), R.string.lld_json_online)
+        return detect(lld, listOf(errorMessage), LldSource.ONLINE)
     }
 
     private suspend fun tryDetectOffline(errorMessage: String?): List<MyModel> {
         val (lld, message) = fetchOfflineLldOrNull()
         val errorMessages = listOf(errorMessage, message)
-        return detect(lld, errorMessages, R.string.lld_json_offline)
+        return detect(lld, errorMessages, LldSource.OFFLINE)
     }
 
     private suspend fun fetchOfflineLldOrNull(): LldAndError {
@@ -205,12 +206,12 @@ class HomeViewModel(
     // endregion [Lld]
 
     private suspend fun detect(
-        lld: Lld?, errorMessage: List<String?>, @StringRes modeResId: Int
+        lld: Lld?, errorMessage: List<String?>, source: LldSource
     ): List<MyModel> {
         val tempModels = mutableListOf<MyModel>()
 
         withContext(Dispatchers.IO) {
-            tempModels += homeRepository.detectMode(lld, errorMessage, modeResId)
+            tempModels += homeRepository.detectMode(lld, errorMessage, source)
 
             tempModels += homeRepository.detectAndroid(lld)
             tempModels += homeRepository.detectSdkExtension(lld)

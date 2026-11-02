@@ -38,6 +38,7 @@ import net.imknown.android.forefrontinfo.ui.home.datasource.LldDataSource
 import net.imknown.android.forefrontinfo.ui.home.datasource.LldFileStore
 import net.imknown.android.forefrontinfo.ui.home.datasource.MountDataSource
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
+import net.imknown.android.forefrontinfo.ui.home.model.LldSource
 import net.imknown.android.forefrontinfo.ui.settings.datasource.AppInfoDataSource
 import net.imknown.android.forefrontinfo.ui.theme.StatusColor
 import java.io.File
@@ -63,13 +64,13 @@ class HomeRepository(
     fun copyJsonIfNeededOrThrow() = lldFileStore.copyJsonIfNeededOrThrow()
     fun getAssetLld(assets: AssetManager): Lld? = lldFileStore.getAssetLld(assets)
 
-    fun detectMode(lld: Lld?, errors: List<String?>, modeResId: Int): MyModel =
+    fun detectMode(lld: Lld?, errors: List<String?>, source: LldSource): MyModel =
         guardedMyModel(R.string.lld_json_mode_title) {
             val color: StatusColor
             val datetimeFormatted: String
             if (lld != null) {
                 datetimeFormatted = lld.version.formatToLocalZonedDatetimeString()
-                color = if (modeResId == R.string.lld_json_online) {
+                color = if (source == LldSource.ONLINE) {
                     StatusColor.NO_PROBLEM
                 } else {
                     StatusColor.CRITICAL
@@ -84,9 +85,16 @@ class HomeRepository(
                 ?.joinToString(separator = "\n\n", prefix = "\n\n")
                 .orEmpty()
 
+            // Resource IDs are only used to build the detail text; branching always
+            // goes through LldSource.
+            val modeDetailRes = when (source) {
+                LldSource.ONLINE -> R.string.lld_json_online
+                LldSource.OFFLINE -> R.string.lld_json_offline
+            }
+
             return toColoredMyModel(
                 R.string.lld_json_mode_title,
-                MyApplication.getMyString(modeResId, datetimeFormatted) + result,
+                MyApplication.getMyString(modeDetailRes, datetimeFormatted) + result,
                 color
             )
         }
