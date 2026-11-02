@@ -86,6 +86,59 @@
 - 2026-10-29: 规则侧一度写过两条 review 形态规则 (能按模型派就直接派; 只能给默认模型时才写临时文件,  
   用完删掉). 负责人随后决定不加这两条, 11, 13 与 `AGENTS.md` 已全部回到原样, 与提交 `fb2c0f21` 一致.  
   这次改动最后只留下两样: 目录改回平铺, 六个 review 文件删除.
-- 各子任务状态: subtask-01 ~ subtask-06 报告已出, 实现全部未开始.
+- 2026-11-02: subtask-01 实现 (三件全部完成, 未提交). 负责人说 "开始" (2026-11-02, 无问题清单, 按报告自查).
+  - 第 1 件: `updateModelDetail` 参数从下标改 `MyModelType`, 定位与写入落进 `modelsStateFlow.update`
+    同一个原子块; `HomeViewModel.payloadOutdatedTargetSdkVersionApk` 里翻状态找下标的代码删掉,
+    改成一行 `updateModelDetail(MyModelType.OutdatedTargetSdkApk, newDetail)`.
+  - 第 2 件: 新增 `ui/home/model/LldSource.kt` (`ONLINE` / `OFFLINE`); `detectMode` 与
+    `HomeViewModel.detect` 的形参换 `source: LldSource`, 资源 ID 只留在拼文案的 `when` 里;
+    `HomeViewModel` 的 `@StringRes` 保留 (`errorMessage` 在用).
+  - 第 3 件: `MountDataSource` 新增 `MountQueryResult` (`Success(mounts)` / `Failed(exitCode)`),
+    `getMounts` 查 `isSuccess`; `detectSar` / `detectApex` 各加一次失败判定, 失败时渲染本条目自己的
+    CRITICAL 行, 行内带 `exitCode` (仿 `PropRepository.getBuildProp` 的 `RuntimeException("exitCode=...")`
+    先例, 用 `fullMessage` 展开); ViewModel 调用点改传 `mountQuery`.
+  - 自审: 全仓 grep 旧签名 (`modeResId`, 下标版 `updateModelDetail`, `List<Mount>` 形参) 零残留;
+    资源 ID 只剩 `when` 两处引用.
+  - 验证: Gradle 三档 (`assembleFossDebug`, `testFossDebugUnitTest` + `:base:testDebugUnitTest`,
+    `lintFossDebug`) 全绿, lint `no new issues` (baseline 仍压 1 error / 6 warnings / 1 hint).
+  - 偏差: analyze-file 与 ILS 两档跳过. `android studio check` 报没有正在运行的 Studio 实例;
+    ILS 发行版过期 (`This build of kotlin-server has expired`, 退出码 7). 这两条要负责人解锁
+    (开 Studio, 或重下 ILS 发行版) 后补跑; 解锁前 review 照常走, 编译类发现已由 Gradle 三档覆盖.
+  - 观察一条: `HomeViewModel` 原第 279 行裸的 `OutdatedTargetSdkApk` (无 `MyModelType` import)
+    一直编译绿 (本次实证 `compileFossDebugKotlin` 通过), 引入自 `1e66c6f8`; 机制未查明,
+    本次改动把它换成了显式 import + 限定名, 不再依赖这个现状.
+  - 下一步动作: review 委派 (去处与模型等负责人定); analyze-file / ILS 两档等负责人解锁后补跑.
+- 2026-11-02: 验证补齐与 v1 委派. 负责人手动更新 ILS 后通道恢复: 5 个改动 `.kt` 逐一跑过,
+  4 个 `CLEAN`; `HomeRepository.kt` 3 条 `DestructuringDeclaration` 警告 (104, 446, 450 附近)
+  经 stash 对照核实为既有, 不在本次 diff 内, 不动. analyze-file 仍欠 (Studio 未开).
+  负责人定: review 走跨端 (14-跨端review), 对面用增强推理档模型, effort 默认.
+  已建 spec 目录下 `review/` (带 `.gitignore` 的 `*`), 提示词 `review-v1-prompt-2158.md`,
+  状态在 `review/state.md`, 发起时 HEAD `2104df7d`. v1 为 `等待报告`, 工作树随之冻结
+  (记录文件除外). 实现期间的新注释暂按中文写, 提交前翻译成英语 (05-代码规则).
+  下一步动作: 收 v1 报告, 按第 3 步处理发现.
+- 2026-11-02: v1 收下 (reviewer: TraeCode / DeepSeek-V4.1-Flash, effort default, 跨端独立会话;
+  head `2104df7d` 核对一致, 尾行齐全). 结论: 三件应改位置全部命中, 无漏改, 无超出范围改动,
+  实质发现 0 条. 处置:
+  - 措辞 2 条当场修: 新增注释全部翻译成英语 (BaseListViewModel, HomeRepository 三处,
+    MountDataSource, LldSource); `LldSource.kt` 注释的禁用词 `兜底` (08 禁用词表在册) 改成
+    直接点名 fallback 链函数名. 翻译属 05 定下的提交前机械步骤, 不触发 v2 (reviewer 已明说
+    不需要下一轮).
+  - 归后续单元 1 条: 挂载失败行只带 exitCode, 命令自身错误文字不可见, 归 subtask-05
+    (ShellLibSu 合并 stderr 随 2b #03 一并定). 已记 review/state.md.
+  - v1 报告另核实: 本地 `compileFossDebugKotlin` 在 reviewer 侧也跑过, 通过.
+  下一步动作: 第 4 步负责人放行 (低风险与第 5 步并一次同意); trailer 值等负责人给
+  (agent / model / effort, 12-git: 取值绝不猜); 三笔提交逐笔等同意.
+- 2026-11-02: 第 4+5 步完成, subtask-01 关闭. 负责人放行; trailer 经负责人定:
+  agent `WorkBuddy CN`, model `GLM-5.3-Flash`, effort `high`.
+  偏差: 13 第 4 步的放行理由一句, 两次询问负责人都没留 (两次都点了"我自己写"但没带文字),
+  不编造理由写入提交信息, 记在这里.
+  提交三笔 (hunk 拆分: B/D 是三件共改文件, 中间态逐一编译验证, 验证时工作树要临时退到
+  对应中间态, 编译吃的是工作树不是 index):
+  - `4c2b795d` refactor(list): 按类型寻址 (件 1).
+  - `4f2444ea` refactor(home): LldSource 枚举 (件 2).
+  - 第 3 笔: 挂载读取查 isSuccess (件 3), 见下一行提交.
+  review 目录按 14 报告归宿整体删除 (归后续单元的发现已搬进本记录).
+  下一步动作: 下一个子任务 subtask-02 (1b 基线快照与测试栈), 等负责人说开始.
+- 各子任务状态: subtask-01 实现完成未提交 (review 中); subtask-02 ~ subtask-06 报告已出, 实现未开始.
 - 未查清: JUnit 5 与当前 AGP 的兼容性, 要等 subtask-02 真正引入 Jupiter 才能验.
 - 挂起项: 无.

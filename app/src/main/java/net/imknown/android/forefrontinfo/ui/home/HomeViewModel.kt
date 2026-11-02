@@ -220,16 +220,16 @@ class HomeViewModel(
             tempModels += homeRepository.detectPerformanceClass()
             tempModels += homeRepository.detectKernel(lld)
             tempModels += homeRepository.detectAb()
-            val mounts = withContext(Dispatchers.IO) {
+            val mountQuery = withContext(Dispatchers.IO) {
                 homeRepository.getMounts()
             }
-            tempModels += homeRepository.detectSar(mounts)
+            tempModels += homeRepository.detectSar(mountQuery)
             tempModels += homeRepository.detectDynamicPartitions()
             tempModels += homeRepository.detectTrebleAndGsiCompatibility()
             tempModels += homeRepository.detectDsu()
             tempModels += homeRepository.detectMainline(lld)
             tempModels += homeRepository.detectVndk(lld)
-            tempModels += homeRepository.detectApex(mounts)
+            tempModels += homeRepository.detectApex(mountQuery)
             tempModels += homeRepository.detectDeveloperOptions()
             tempModels += homeRepository.detectAdb()
             tempModels += homeRepository.detectAdbAuthentication()

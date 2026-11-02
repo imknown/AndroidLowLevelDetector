@@ -410,8 +410,22 @@ class HomeRepository(
 
     fun getMounts() = mountDataSource.getMounts()
 
-    fun detectSar(mounts: List<MountDataSource.Mount>): MyModel =
+    fun detectSar(mountQuery: MountDataSource.MountQueryResult): MyModel =
         guardedMyModel(R.string.sar_status_title) {
+            // issues-cn #63: a failed mount read no longer folds into the success path as
+            // an empty table; this row renders its own unknown, carrying exitCode.
+            val mounts = when (mountQuery) {
+                is MountDataSource.MountQueryResult.Success -> mountQuery.mounts
+                is MountDataSource.MountQueryResult.Failed -> {
+                    val failure = RuntimeException("exitCode=${mountQuery.exitCode}")
+                    return toColoredMyModel(
+                        R.string.sar_status_title,
+                        MyApplication.getMyString(R.string.result_detect_failed, failure.fullMessage),
+                        StatusColor.CRITICAL
+                    )
+                }
+            }
+
             var isTheLegacySar = false
             var isThe2siSar = false
             var isRecoverySar = false
@@ -717,8 +731,22 @@ class HomeRepository(
             )
         }
 
-    fun detectApex(mounts: List<MountDataSource.Mount>): MyModel =
+    fun detectApex(mountQuery: MountDataSource.MountQueryResult): MyModel =
         guardedMyModel(R.string.apex_status_title) {
+            // issues-cn #63: a failed mount read no longer folds into the success path as
+            // an empty table; this row renders its own unknown, carrying exitCode.
+            val mounts = when (mountQuery) {
+                is MountDataSource.MountQueryResult.Success -> mountQuery.mounts
+                is MountDataSource.MountQueryResult.Failed -> {
+                    val failure = RuntimeException("exitCode=${mountQuery.exitCode}")
+                    return toColoredMyModel(
+                        R.string.apex_status_title,
+                        MyApplication.getMyString(R.string.result_detect_failed, failure.fullMessage),
+                        StatusColor.CRITICAL
+                    )
+                }
+            }
+
             val apexUpdatable = propertyReader.getBoolean(AndroidDataSource.PROP_APEX_UPDATABLE, Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
 
             val isFlattenedApexMounted = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && mounts.any {

@@ -21,10 +21,23 @@ class MountDataSource(private val shell: IShell) {
         val dummy1: String
     )
 
-    fun getMounts(): List<Mount> {
+    // issues-cn #63: a failed mount read no longer folds into the success path as an empty
+    // table. The result type makes the failure explicit: the two consuming entries (SAR and
+    // APEX) each render their own unknown row, carrying exitCode.
+    sealed interface MountQueryResult {
+        data class Success(val mounts: List<Mount>) : MountQueryResult
+        data class Failed(val exitCode: Int?) : MountQueryResult
+    }
+
+    fun getMounts(): MountQueryResult {
+        val result = shell.execute(CMD_MOUNT)
+        if (!result.isSuccess) {
+            return MountQueryResult.Failed(result.exitCode)
+        }
+
         val mounts = mutableListOf<Mount>()
 
-        shell.execute(CMD_MOUNT).output.forEach {
+        result.output.forEach {
             val columns = it.split(" ")
             if (columns.size == 6) {
                 val mount = Mount(columns[0], columns[1], columns[2], columns[3], columns[4], columns[5])
@@ -32,6 +45,6 @@ class MountDataSource(private val shell: IShell) {
             }
         }
 
-        return mounts
+        return MountQueryResult.Success(mounts)
     }
 }
