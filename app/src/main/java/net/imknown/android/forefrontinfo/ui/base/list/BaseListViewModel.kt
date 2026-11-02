@@ -76,9 +76,17 @@ abstract class BaseListViewModel : BaseViewModel() {
     }
 
     @MainThread
-    fun updateModelDetail(targetIndex: Int, newDetail: String) {
+    fun updateModelDetail(type: MyModelType, newDetail: String) {
+        // Type-based addressing only works for non-default values: General is the default
+        // shared by twenty-plus entries. To patch another entry in place, give it its own
+        // type value first.
         modelsStateFlow.update { list ->
-            if (list == null || targetIndex !in list.indices) {
+            if (list == null) {
+                return@update list
+            }
+
+            val targetIndex = list.indexOfFirst { it.type == type }
+            if (targetIndex == -1) {
                 return@update list
             }
 

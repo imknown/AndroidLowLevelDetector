@@ -24,6 +24,7 @@ import net.imknown.android.forefrontinfo.base.extension.fullMessage
 import net.imknown.android.forefrontinfo.base.extension.isLldDatetime
 import net.imknown.android.forefrontinfo.ui.base.list.BaseListViewModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
+import net.imknown.android.forefrontinfo.ui.base.list.MyModelType
 import net.imknown.android.forefrontinfo.ui.common.toObjectOrThrow
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.home.repository.HomeRepository
@@ -274,14 +275,6 @@ class HomeViewModel(
             ).detail
         }
 
-        val list = modelsStateFlow.value ?: return
-        val targetIndex = list.indexOfFirst {
-            it.type == OutdatedTargetSdkApk
-        }
-        if (targetIndex == -1) {
-            return
-        }
-
-        updateModelDetail(targetIndex, newDetail)
+        updateModelDetail(MyModelType.OutdatedTargetSdkApk, newDetail)
     }
 }
