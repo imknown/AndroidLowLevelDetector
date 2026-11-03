@@ -12,7 +12,7 @@ kotlinx-coroutines = "1.11.0"
 kotlinx-serialization = "1.12.0"
 
 # https://github.com/ktorio/ktor/releases
-ktor = "3.6.0"
+ktor = "3.6.1"
 
 [libraries]
 kotlinx-collections-immutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "kotlinx-collections-immutable" }
