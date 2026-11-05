@@ -5,6 +5,7 @@ import com.android.build.api.dsl.CommonExtension
 import net.imknown.android.forefrontinfo.ext.androidTestImplementation
 import net.imknown.android.forefrontinfo.ext.buildVersion
 import net.imknown.android.forefrontinfo.ext.libsAndroid
+import net.imknown.android.forefrontinfo.ext.libsThirdParty
 import net.imknown.android.forefrontinfo.ext.testImplementation
 import org.gradle.api.Project
 import org.gradle.jvm.toolchain.JavaLanguageVersion
@@ -75,9 +76,18 @@ internal fun Project.configureTest(commonExtension: CommonExtension) {
             testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         }
 
+        // Local unit tests run on the JUnit Platform (Jupiter). Instrumented tests stay on JUnit 4:
+        // the device-side AndroidJUnitRunner and androidx.test.ext:junit are both JUnit 4 based.
+        testOptions.unitTests.all {
+            it.useJUnitPlatform()
+        }
+
         dependencies {
             testImplementation(libsAndroid.findBundle("test").get())
             androidTestImplementation(libsAndroid.findBundle("androidTest").get())
+            // Interaction verification for unit tests. Kept next to the bundle wiring so every
+            // module applying this plugin sees the same test stack.
+            testImplementation(libsThirdParty.findLibrary("mockk").get())
         }
     }
 }
