@@ -4,9 +4,9 @@
 # https://developer.android.com/studio/releases
 # https://androidstudio.googleblog.com/
 # https://maven.google.com/web/index.html?q=com.android.tools.build
-androidGradlePlugin = "9.5.0"
-androidGradlePlugin-beta = "9.5.0"
-androidGradlePlugin-canary = "9.6.0-alpha02"
+androidGradlePlugin = "9.5.1"
+androidGradlePlugin-beta = "9.5.1"
+androidGradlePlugin-canary = "9.6.0-alpha03"
 
 # https://developer.android.com/studio/write/java8-support#library-desugaring
 # https://maven.google.com/web/index.html?q=desugar_jdk_libs
@@ -22,7 +22,7 @@ activity = "1.13.0"
 compose-bom = "2026.09.00"
 
 # https://developer.android.com/jetpack/androidx/releases/navigation3
-navigation = "1.2.0"
+navigation = "1.2.1"
 
 # https://developer.android.com/jetpack/androidx/releases/annotation
 annotation = "1.11.0"
