@@ -327,7 +327,7 @@ flowchart TD
 
 | 项 | 结论 | 归到哪一步 / 记到哪一条 |
 |----|------|------|
-| 0a | CI 扩跑 test + lint (#50, [09-构建约定](../../agents-cn/09-构建约定.md) 的 "CI 只构建 `assembleFossDebug`" 条款随 1a 改写). 现有测试只有 `DateTimeExtTest` 一个真实类, 检查先立, 先守存量; 测试随后续步骤长出来 (1b 的黄金数据, 2a 的逐条单测, #50 条目列的抽纯函数批); 首跑前本地清红 | 步骤 1a |
+| 0a | CI 扩跑 test + lint (#50, [09-构建约定](../../agents-cn/09-构建约定.md) 的 "CI 只构建 `assembleFossDebug`" 条款随 1a 改写). 决定时现有测试只有 `DateTimeExtTest` 一个真实类 (1b 之后另有 `MyModelTest` 与快照生成器), 检查先立, 先守存量; 测试随后续步骤长出来 (1b 的黄金数据, 2a 的逐条单测, #50 条目列的抽纯函数批); 首跑前本地清红 | 步骤 1a |
 | 0c | 只留单一写入方; 实施时 (2026-10-25) 升级为整删: `myAndroid` 全局与 `initMyAndroid()` 一并移除, 版本事实由 Home 数据侧 `AndroidVersionDataSource` 派生, known 修正只作用于显示 | 单独实施 #09 (已完成) |
 | 0d | 一次性 (步骤 2a 集中迁移全部 detect* 方法); 已立为常驻工作方式, 见 [02-工作原则](../../agents-cn/02-工作原则.md) 的 "一口气做完" 条款 ([06-检测条目](../../agents-cn/06-检测条目.md) 随 2a 改写) | 步骤 2a |
 | 0e | JUnit 5 (含 useJUnitPlatform 接线) + MockK 引入 (interface-first 是现状描述而非禁令, 规则文件的测试段随 1b 校准) + Turbine 随首个 Flow 测试进 | 步骤 1b |
@@ -351,9 +351,9 @@ flowchart TD
    一行 yaml 扩跑 `testFossDebugUnitTest` 与 `lintFossDebug`,  
    零新依赖; 首跑先在本地清红, 否则这条检查一红就会被关掉; 0a 已定扩跑, 不阻塞其余主线步. **1b 基线快照 + 测试栈**:  
    把三页每行的 (key, detail, color) 现状导出成黄金数据:  
-   行为等价重构的回归网是改造前后逐行 diff, 不是测试框架本身 (现状真实测试仅 1 类 4 方法,  
+   行为等价重构的回归网是改造前后逐行 diff, 不是测试框架本身 (1b 之前真实测试仅 1 类 4 方法,  
    检测器直读 `Build.VERSION` 静态字段, 框架拦不住字段读);  
-   测试栈按 0e 实施 (JUnit 5 + MockK; Turbine 随首个 Flow 测试进);  
+   测试栈按 0e 实施 (JUnit Jupiter + MockK; Turbine 随首个 Flow 测试进);  
    #06 的 Espresso / Compose UI 测试随检测改造完成后另立项,  
    `Build.*` 读数按 0f 逐项裁量.
 2. **注册表引擎** (#03), 拆三个可独立提交的子步: **2a 领域化 (一次性)** (#01, 兼落 #03 的三态类型),  

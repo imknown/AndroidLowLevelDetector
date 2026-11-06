@@ -51,8 +51,9 @@ When 退一步比年月, getSecurityPatchYearMonth 以 substringBeforeLast('-') 
 Then 设备侧取出的是年份 2026, `"2026"` >= `"2026-09"` 也为假  
 And 两次比较都错, 完全同期的设备被判红
 
-测试侧: 没有任何测试碰 `HomeRepository`. 全仓唯一有实际内容的测试类是 `base/src/test/.../base/extension/DateTimeExtTest.kt`, 测的是  
-`isLldDatetime()` 的格式契约; `app/src/test` 与 `base/src/test` 里其余仍是模板 `ExampleUnitTest`.
+测试侧: 没有任何测试碰 `HomeRepository`. 有实际内容的测试类有两个: `base/src/test/.../base/extension/DateTimeExtTest.kt`, 测的是  
+`isLldDatetime()` 的格式契约; `app/src/test/.../ui/base/list/MyModelTest.kt`, 测 `MyModel` 的 key 映射与默认值 (随 1b 加的测试栈).  
+两个模板 `ExampleUnitTest` 已删.
 
 **处理**: 比较语义散在各行这件事, 需要先用特征测试把现在的行为原样锁住, 再谈重新设计,  
 重新设计自然发生在检测器注册表实现时 ([#03](../01-架构与分层/03-无三态模型与注册表.md)).  
@@ -60,7 +61,7 @@ And 两次比较都错, 完全同期的设备被判红
 或者锁定时就把期望行为写成正确的, 别把 bug 钉进测试.
 
 前置不在本条: 写特征测试要先把测试基础设施补上 ([#50](../09-构建与CI/50-CI只编译不测试.md)),  
-`gradle/toml/android.toml` 的 `test` bundle 目前只有 JUnit 4 (版本取那个目录的 `junit`), 仓库里没有 JUnit 5,  
-MockK,  
-Turbine ([#06](../01-架构与分层/06-技术栈缺口.md)). 是否引入 JUnit 5 这类新依赖,  
+`gradle/toml/android.toml` 的 `test` bundle 现在是 JUnit Jupiter 与 platform launcher, MockK 也在单测 classpath 上  
+(2026-11 随 1b 落地),  
+只剩 Turbine 没引 ([#06](../01-架构与分层/06-技术栈缺口.md)). 再加新测试框架,  
 按 [09-构建约定](../../../agents-cn/09-构建约定.md) 的版本分级规则要由负责人评估后采纳, 不是本条能顺带决定的.

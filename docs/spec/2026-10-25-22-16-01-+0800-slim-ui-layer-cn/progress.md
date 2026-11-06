@@ -139,6 +139,198 @@
   - 第 3 笔: 挂载读取查 isSuccess (件 3), 见下一行提交.
   review 目录按 14 报告归宿整体删除 (归后续单元的发现已搬进本记录).
   下一步动作: 下一个子任务 subtask-02 (1b 基线快照与测试栈), 等负责人说开始.
-- 各子任务状态: subtask-01 实现完成未提交 (review 中); subtask-02 ~ subtask-06 报告已出, 实现未开始.
-- 未查清: JUnit 5 与当前 AGP 的兼容性, 要等 subtask-02 真正引入 Jupiter 才能验.
+- 2026-11-03: subtask-02 实现 (测试栈接线加快照生成器, 未提交). 负责人说开始, 问题清单为空.
+  - 第 0 步: 开工前复核报告事实. AGP 已从 RC 线升到 `9.5.0` 稳定版 (`android.toml:7`),  
+    报告里两处 "RC 线" 改掉, 抬头留了改痕; 其余事实复核后不变.
+  - 接线: `android.toml` 加 `junitJupiter` 与 `junitPlatform`,  
+    `test` bundle 改成 `["junit", "junit-jupiter", "junit-platform-launcher"]`;  
+    `thirdParty.toml` 加 `mockk = 1.14.3`; 解开 `ProjectExtensions.kt:25` 的 `libsThirdParty`;  
+    `KotlinAndroid.kt` 的 `configureTest()` 加 `testOptions.unitTests.all { it.useJUnitPlatform() }`  
+    与 `testImplementation(libsThirdParty.findLibrary("mockk").get())`.
+  - 版本更正: 第一版选了 `5.12.2` / `1.12.2`, 依据是 Maven 搜索索引 (它只返回到 5.13.0-M3).  
+    负责人指出 JUnit 已经到 6, 查 `maven-metadata.xml` 确认最新是 `6.1.3` (2026-08), 5.x 线也到 5.14.4.  
+    改成 `6.1.3` / `6.1.3` 后单测照旧全绿: `:base` 4 个, `:app` 3 个, 依赖树里也是 6.1.3.  
+    教训: 选版本要读 maven-metadata.xml, 不看搜索接口的排序结果.
+  - 存量测试: `DateTimeExtTest` 四个方法迁 Jupiter 断言; 删 `app` 与 `base` 两个 `ExampleUnitTest`.
+  - 偏差 (加了一件): 删掉 `app` 的模板单测后 `app` 一个单测都没有, Gradle 9 的  
+    `failOnNoDiscoveredTests` 默认 true 会让 `testFossDebugUnitTest` 直接红. 新增  
+    `app/src/test/.../ui/base/list/MyModelTest.kt` 三个 Jupiter 方法顶上, 内容是 `MyModel.key`  
+    的两种映射与默认 `color` / `type`, 正好是快照逐行对照用的那四个字段.
+  - 快照生成器: `app/src/androidTest/.../snapshot/ModelSnapshotTest.kt`. 走 `metroViewModelFactory`  
+    造三个 ViewModel 直接调 `collectModels()`, 不复刻仓库调用序列; 取数前把 `allowNetworkData`  
+    与 `outdatedOrderFirst` 固定为 false, 取完还原; 输出 `{page, index, key, detail, color, type}`  
+    到外部文件目录的 `snapshot/three-pages.json`.
+  - 规则文件: `04-架构.md` 的 "接口优先的可测试性" 改写, 去掉 "不是靠 mock 框架" 那句错话,  
+    补上两套测试栈的分工 (本机单测 JUnit 5, 仪器测试 JUnit 4).
+  - 验证: `testFossDebugUnitTest` 与 `:base:testDebugUnitTest` 全绿, `:base` 4 个方法全被 Jupiter  
+    发现, `:app` 3 个全绿, JUnit 5 与 AGP 9.5.0 的兼容性这一条结掉; `assembleFossDebug` 与  
+    `lintFossDebug` 全绿, lint `no new issues`, baseline 仍 1 error / 6 warnings / 1 hint;  
+    `:app:dependencies` 里 `io.mockk:mockk:1.14.3` 与 `org.junit.jupiter:junit-jupiter:6.1.3`  
+    都在 `fossDebugUnitTestRuntimeClasspath` 上.
+  - 装包: 前两台设备都装不上. 第一台 HyperOS 报 `INSTALL_FAILED_USER_RESTRICTED: Install canceled by user`  
+    (没有弹框, 是开关挡的, 手动 `adb install` 也一样); 第二台无线调试连接反复掉线, 装包时正好不在.  
+    换到第三台 Nexus 5X (LineageOS 21 / API 34) 才成. 这台 `adb install` 报 `splice failed: EINVAL`,  
+    改成 `adb push` 到 `/data/local/tmp` 再 `pm install` 才装上; Git Bash 还会把设备路径改写成 Windows  
+    路径, adb 命令要带 `MSYS_NO_PATHCONV=1`.
+  - 漏项 (实跑才发现): `androidx.test:runner` 不在仪器测试 classpath 上, `androidTest` bundle 只有  
+    `core` 与 `ext:junit`. 表现是 `am instrument` 立刻崩在  
+    `ClassNotFoundException: androidx.test.runner.AndroidJUnitRunner`. 这套仪器测试此前从没在真机上跑过,  
+    所以一直没暴露. 处置: bundle 补 `test-runner = 1.7.0`, 重装测试 APK 后跑通.
+  - 快照: 1345 行 (home 25 / others 42 / prop 1278), 落在 `baseline/three-pages.json`.  
+    `type` 列确有区分, 第 24 行是 `OutdatedTargetSdkApk`, 其余 `General`.
+  - 一致性: 连跑两次逐行对比, 行数一致, 只有 prop 页  
+    `debug.tracing.battery_stats.wifi_signal_strength` 一行变了 (3 变 2, 系统实时计数器).  
+    已记进 subtask-02 的验证节, subtask-04 对照时把这类实时计数器列为例外.
+  - 界面核对 (报告要求的人工一步): 负责人在设备上点过, 首页 25 行, Others 42 行, 与 json 一致. 已结.
+- 2026-11-04: 第 2 步 review 发起, 走跨端 (14-跨端review).  
+  负责人定: 跨端独立会话, 未提交状态进 review. 已建 spec 目录下 `review/` (带 `.gitignore` 的 `*`),  
+  状态在 `review/state.md`, 提示词 `review-v1-prompt-2100.md`, 发起时 HEAD `30fd613d`.  
+  v1 为 `等待报告`, 工作树随之冻结 (记录文件除外).
+  下一步动作: 收 v1 报告, 按第 3 步处理发现.
+- 2026-11-04: review v1 收下, 两份 (TraeCode / GLM-5.3-Flash `2116`, MiniMax Code / MiniMax-M3.1-Flash `2120`).  
+  HEAD 都是 `30fd613d`, 头尾齐. 结论: 实质发现 4 条, 无超出范围改动. 处置:
+  - `test` bundle 还挂着 JUnit 4 (两份都报, Trae 记第三档, MiniMax 记第一档): 单测里写 JUnit 4 会编译过  
+    而一个方法不跑, 与本步选方案 A 的理由冲突. 判定第一档当场修: bundle 去掉 `junit`,  
+    版本目录里那条 `junit` 也一起删 (没有别的消费者). 仪器测试那一路由 `test-ext-junit` 与  
+    `test-runner` 传递带入 JUnit 4, 两份报告都核过依赖树.
+  - `04-架构.md` 写 "JUnit 5" 与代码里的 6.1.3 不符: 改成 "JUnit Jupiter", 不带版本线,  
+    补一句单测 classpath 故意不放 JUnit 4 及其理由.
+  - `06-技术栈缺口` 与 `README:330` 的测试栈现状已不成立 (JUnit Jupiter 与 MockK 现在都在,  
+    app 也有真单测): 两处就地改, #06 不归档, 剩下缺的照旧列着.
+  - 快照生成器只给 `allowNetworkData` 留了落定断言: 照同样写法给 `outdatedOrderFirst` 补一条.
+  - 顺带: mockk `1.14.3` → `1.14.11`; `plan.md` 与 `subtask-02.md` 的 "JUnit 5" 统一成 "JUnit Jupiter";  
+    行号漂移 4 处改掉; "1345 行" 改 "1345 条记录"; "第 24 行" 改 "`index` 24 那行".
+  - 验证: 单测 4 + 3 全绿; 单测 classpath 上 `junit:junit:4` 命中数 0, `io.mockk:mockk:1.14.11` 在;  
+    仪器测试 classpath 仍有 `junit:junit:4.13.2` 与 `androidx.test:runner:1.7.0`;  
+    `assembleFossDebug` 与 `lintFossDebug` 全绿, lint `no new issues`.
+  - 归后续单元 (subtask-04): 黄金数据只覆盖离线那条路 (联网路径产出的行不在快照里);  
+    资源行的 key 是资源 id 数字, 资源表一动逐行 diff 会报假回归; prop 页实时计数器已在验证节记为例外.
+  - 补断言这条被现实纠正了一次: 原来的写法是写完直接 `assertFalse` 读 flow, 理由写在注释里  
+    ("监听器同步刷新 flow"). 实跑失败, 因为 SharedPreferences 的变更回调在非主线程发起时会被 post 到  
+    主线程, 测试线程读到的是旧值. `allowNetworkData` 那条当时白过 (设备上本来就是 false).  
+    改成轮询等落定 (`awaitSettled`, 上限 2 秒, 中间 `waitForIdleSync`), 重跑通过.
+  - 顺带实测出快照的时效边界: 隔一天重跑 1342 行 (基线 1345), 差异 829 处. 按键拆开看是  
+    `debug.tracing.*` 三行消失加 196 行内容变化 (`cache_key.*` 随机, `boot_count` 与亮度在走),  
+    其余是删行导致的下标错位. 结论: 快照是时点快照, subtask-04 要接着在设备上重生成再比.
+  - 设备侧重跑: 新写法在 Nexus 5X 上通过 (4.6 秒, `OK (1 test)`), 说明两项设置确实都落定;  
+    拉回来的快照就是上面 "时效边界" 那一组数据 (1342 行).
+  - 验证环境: 本机跑构建时遇到过一次依赖下载被截断 (构件在缓存里是完整的, 换个下载客户端同一个 URL 能拿全),  
+    与仓库状态无关. 绕开之后普通构建通过, 不用 `--offline`.  
+    全量验证: `assembleFossDebug` / 两个单测任务 / `lintFossDebug` 全绿, lint `no new issues`.  
+    本机网络环境的具体细节按要求不写进仓库; 以后再撞到时先怀疑本机链路, 别先怀疑依赖配置.
+  - 下一步动作: rev2 (delta) 已发起, 提示词 `review-v2-prompt-2218.md`, 等报告. 工作树冻结.
+- 2026-11-04: review v2 收下 (两份: TraeCode / GLM-5.3-Flash `2228`, MiniMax Code / MiniMax-M3.1-Flash `2227`).  
+  HEAD 都是 `30fd613d`, 头尾齐. 结论: v1 四条都修对; 新发现四条, 全修:
+  - 生成器把落定等待写在 `try` 外面 (MiniMax D1): 超时抛错时 `finally` 还没进来, 设备上两项设置会留在 false,  
+    下次打开 app 看到 "允许联网取数" 被关掉. 已把写设置与两次 `awaitSettled` 一起挪进 `try`.
+  - 同一类过期句在另外四份 issue 文件里 (MiniMax D2 / Trae 第一档): `#43` 两处, `#01`, `#19`,  
+    `#50` 的测试树分布表. 全部按现状就地改, 条目不归档.
+  - subtask-04 的验收还写着 "生成器随本步改一次" 与 "逐行全等" (MiniMax D3): 按本轮实测的时效边界改写,  
+    并写明生成器不用改.
+  - issues `README` 修复路线那句 "现状真实测试仅 1 类 4 方法" 与 "JUnit 5": 已改.  
+    0e 那一行是决定记录, 保留当时的叫法.
+  - 验证: 离线全量 (`assembleFossDebug` + 两个单测任务 + `lintFossDebug` + `assembleFossDebugAndroidTest`) 全绿,  
+    lint `no new issues`; 设备侧重跑 4.1 秒通过, 跑完读偏好文件  
+    `function_outdated_target_order_by_package_name_key` 仍是 true, 还原路径正常.
+  - 下一步动作: 发 v3 (delta), 只核这四条.
+- 2026-11-04: review v3 收下 (两份: TraeCode / GLM-5.3-Flash `2327`, MiniMax Code / MiniMax-M3.1-Flash `2328`).  
+  v2 四条都确认修对, 无超出范围改动. 新发现两条, 已处置:
+  - subtask-04 的验收自相矛盾 (MiniMax N1): 同一节一处写 "与 `baseline/` 对照", 另一处写 "拿基线比会把  
+    设备状态变化当成回归"; 例外只列两类共 33 行, 覆盖不住实测的 196 行. 已把对照物统一成  
+    "同一次会话里改前取的那一份", 仓库基线降为形状参考, 例外名单补到四类, 目标句跟着改口径.
+  - `#50` 那句 "随 1b 迁移到 JUnit Jupiter" 读着像模板被迁移了 (Trae 措辞): 已改写.
+  - 另有一处 (subtask-02 的 concept primer 与现状表还留着核对当时的模板描述) 判为当时的记录, 不改.
+  - 负责人要求的规则补充已落地: `07-文档规则` 的 "不带敏感信息" 补了本机环境一段  
+    (进程名与进程号, 代理地址, 端口, 内网与回环地址, 主机名, 用户名, 设备序列号, 与本机绑定的路径),  
+    `AGENTS.md` 索引那一格补 "(含本机环境)". 待负责人定: 快照里的设备 prop 值算不算本机环境信息.
+  - 下一步动作: 发 v4 (delta, 极短), 只核 N1 改写, `#50` 那句, 和 07/AGENTS 的规则补充.
+- 2026-11-04: review v4 收下 (两份: TraeCode / GLM-5.3-Flash `2342`, MiniMax Code / MiniMax-M3.1-Flash `2341`).  
+  前两处 (subtask-04 验收改写, `#50` 那句) 确认修对. 第三处翻出真问题, 已处置:
+  - **基线快照里带能定位到具体机器的值** (两份都报): prop 页九行是真实值, 不是占位,  
+    包括设备序列号两处, android id 两处, ROM 构建机名, 构建账号, 蓝牙网卡地址, adb 调试端口, 设备名.  
+    这份文件要进仓库, 与负责人 2026-11-04 的隐私要求正面冲突. 上一轮我把它判成 "产品输出, 不算", 判错了.
+  - 处置 (不按 "给规则加例外" 处理, 那样等于把序列号写进仓库): 生成器分两遍脱敏, 先从按名字命中的行  
+    取出这些值, 再把任何正文里含这些值的行一起换成 `<redacted>`; 只按 key 命中漏了两处, 序列号还藏在  
+    `persist.adb.wifi.guid` 里, Others 页的 "构建主机" 那行用资源 ID 当 key. 行位置与 key 都留着.  
+    提交的基线按同一规则就地改, 11 行被替换 (prop 10 + Others 1), 行数仍 1345.  
+    subtask-04 对照时这些行只比 key / color / type, 两边同一个生成器, 占位一致.
+  - 07 补两类边界句: 设备型号与系统版本不算本机环境 (定位设备类别, 不定位这台机器);  
+    应用自己产出的数据里若带定位值, 必须在生成时换占位, 不能靠事后脱敏或一句例外绕过去.
+  - 顺带: subtask-02 的例外名单说法与 subtask-04 对齐 (原写两类, 后者写四类); `#50` 那句主语悬空改顺.
+  - 设备侧已验: 重装后 1 次 `OK (1 test)`, 拉回的 json 里脱敏 11 行, 旧值 (序列号, android id,  
+    ROM 构建机名, adb 端口) 残留条数 0.
+  - 下一步动作: 发 v5 (只核脱敏这一处).
+- 2026-11-05: 负责人往 origin 推了 `40a8ea82` (07 加一条 "怎么判一句话是不是敏感信息" 的判据:  
+  能不能从这句话反推出一台具体的机器或一个人的网络环境; 代理工具, 代理进程, 代理地址,  
+  带用户名或本机信息的本地保存位置一律不许写). 本地快进到该提交, 07 的两份改动合成一处:  
+  该判据在前, 这轮补的派生例子 (进程名与进程号, 端口, 内网与回环地址, 主机名, 账号名, 设备序列号,  
+  网卡地址, spec 记录与 review 目录受管, 落盘只写抽象一层) 与两类边界 (型号与系统版本不算;  
+  产出数据带定位值的必须在生成时换占位) 接在后面, 没有另起一条.  
+  这一步顺带把 v5 作废了 (HEAD 变了, 按 14 的规则报告过期).  
+  下一步动作: 发 v6 (delta), 只核脱敏与 07 合并后的文本, HEAD 用 `40a8ea82`.
+- 2026-11-05: review v6 收下三份 (TraeCode / GLM-5.3-Flash `1849`, MiniMax Code / MiniMax-M3.1-Flash `1855`,  
+  WorkBuddy CN / Tencent Hunyuan Hy `1939`). 结论打架, 按 11 的分歧阶梯先走事实层:
+  - Trae 判 "脱敏干净", Hy 判 "4 字符构建账号仍留在 11 行". 实测复现 Hy: 基线里确有 11 行正文含该账号  
+    (Others 页 3 行, 加 `*.build.version.incremental` 与 `ro.build.display.id` 8 行). 事实层裁定 Hy 成立.
+  - 处置 (Hy N1 / MiniMax N1 / Hy N3): 阈值由 6 降到 4, 短账号也参与匹配; 占位文案 "**未填写**" 排除,  
+    免得被当成定位值连坐 233 行; 匹配改忽略大小写; 只含值的行改行内替换, 版本号这类产品事实留住;  
+    key 片段补成类别级 (serialnumber, wifi.guid, hostname, adb.tls.port); 加一条自检,  
+    脱敏后若还有行带这些值, 测试直接抛错.
+  - Hy N2 (规则要求生成时脱敏, 但提交的基线是事后改的): 用改好的生成器在设备上重跑一份,  
+    直接替换仓库里那份. 现在基线 1343 条 (home 25, others 42, prop 1276), 整行占位 12 行, 行内占位 10 行,  
+    旧值与账号残留 0, 文件本身就是生成时脱敏的产物.
+  - 07 收紧三处: 派生例子写成禁列并说明 "单看某一项未必定位得到机器, 凑在一起就够" (Hy N5);  
+    补 "记忆里同样只留一句抽象的事实" (Hy N6 / MiniMax N3); "两类不算" 的第一类补半句  
+    "混着定位值时只留产品事实, 定位值换占位" (Hy N4). 索引格改成 "不带敏感信息 (含本机环境与产出数据)" (Hy N7).
+  - 下一步动作: 全量验证后发 v7 (delta), 只核这几条.
+- 2026-11-05 (晚): review v7 收下三份 (TraeCode `2012`, MiniMax `2008`, WorkBuddy CN / Hy `2040`).  
+  Trae 判 "六处全部到位", Hy 与 MiniMax 各自挖出生成器的结构缺口. 按 11 的事实层, 以代码读得出的为准:
+  - 自检只查 "已收集的值有没有被替换", 集合外的东西它看不见 (Hy N1 / MiniMax N1). 改成两层:  
+    已收集值复查 + MAC 形态扫描; 并在注释与文档里写明它看不见什么.
+  - 占位排除只认简中 "未填写" (Hy N2): 改成取应用自己的本地化串 `build_not_filled`, 换语言仍成立.
+  - 阈值 4 加子串替换会切碎通用词 (Hy N3): 行内替换改成按词边界匹配.
+  - 文档三处口径 (Hy N6, MiniMax N3): 去掉过时的 `persist.adb.wifi.guid` 例子; Others 那 2 行写明是  
+    "整条正文被行内替换覆盖"; "两端" 改成 "两份快照里占位一致".
+  - 设备侧 (手机连回后补跑): 装新生成器跑一次 `OK (1 test)` 7.6 秒; 拉回 1343 条, 整行占位 12 + 行内占位 10,  
+    旧值与构建账号残留 0; 与上一份基线只差 8 行, 全是设备状态 (亮度, `cache_key.*` 随机值), 结构没变.  
+    已用这份替换仓库基线, 保持 "文件与生成器同版".
+  - 07 的两处条文歧义由负责人 2026-11-05 裁定: 产品数据里的系统服务名与每次开机都变的进程号不算;  
+    记忆两类分开记. 文本已按这两条改.
+- 2026-11-05 (深夜): review v8 收下三份 (MiniMax `2105`, TraeCode `2107`, WorkBuddy CN / Hy `2142`), HEAD 仍 `40a8ea82`.  
+  三份都判六处到位且基线干净, 另外报了几处结构问题, 已处置:
+  - 替换按词边界, 自检却按子串 (Hy N1): 同一个值两套匹配口径, 值若成了某个更长词的子段, 替换不动而自检判残留,  
+    生成器会误报抛错. 已让自检共用 `tokenRegex`; MAC 扫描也不再豁免含占位的行, 改成全表查.
+  - 07 里 "后者里若带这类值" 丢了限定词 (Hy N2): 指代成了裸的 "这类值", 与上面 "进程号不算" 读法相撞.  
+    已改回 "若带能定位到某台具体机器的值", 并把产品数据那句并进第二类, 去掉 "两类不算" 与新增句的数量张力 (Hy W2).
+  - 记忆那句补 "凭据类材料按上一条" (Hy W3).
+  - 文档与注释的边界写清 (Hy W1): 自检用同一套词边界, MAC 全表扫; subtask-02 的自检说明跟着改.
+  - 进度记录停在旧状态 (Trae 第一档, Hy W4): 本条目即是补齐, 07 裁定与两次设备侧重跑都记进来了.
+- 2026-11-05 (收口): 决定不再排 v9. 理由: v1 到 v8 共八轮, 代码侧的实质问题在 v6 ~ v8 已经出尽
+  (短账号漏网, 生成时 vs 事后脱敏, 自检与替换口径不一致), v8 之后只剩文档口径与匹配细节, 逐一改完后
+  v8 那五处我自查过: 自检与替换共用 `tokenRegex`, MAC 全表查, 07 指代改回限定说法, 记忆那句点明范围,
+  记录补上; 离线全量全绿, 设备侧用新 APK 跑 `OK (1 test)`, 新自检没有误报.
+  剩下三条归 subtask-04 (离线路径覆盖, 资源 id 键, 实时计数器例外), 已在本文件记着.
+  以后要重开 review 的条件: 生成器的 key 片段表大改, 或 subtask-04 换设备重生成时出现新的机器定位值形态.
+  八轮的走向 (报告都在 review 目录, 收口时删掉, 结论只留在这里):
+  v1 全量: JUnit 4 残留, 04 架构版本线写错, issues 现状过期, 快照断言只覆盖一项 → 全修.
+  v2 delta: 落定超时不还原设置, 四份 issue 现状过期, subtask-04 验收与时效边界冲突 → 全修.
+  v3 delta: subtask-04 验收自相矛盾, #50 一句读着像模板被迁移 → 全修.
+  v4 delta: 基线里有序列号等定位值 (我上一轮判错) → 生成器脱敏, 基线重做.
+  v5 作废: 负责人往 origin 推了 07 判据, HEAD 变了.
+  v6 delta: 4 字符构建账号仍漏 11 行 (事实层裁定) → 阈值与匹配重做, 基线重生成.
+  v7 delta: 自检只查已收集值, 占位只认简中, 子串替换会切碎通用词 → 全修; 07 两处歧义请负责人裁定.
+  v8 delta: 替换与自检口径不一致, 07 指代丢限定词 → 全修, 自查后收口.
+- 2026-11-05 (提交): subtask-02 按三笔提交 (测试栈切换 / 快照生成器与基线 / 文档与记录),  
+  拆的依据是每笔都能独立构建: 构建接线与单测迁移必须同一笔 (去 JUnit 4 的同时不迁 `DateTimeExtTest`, 编译就断),
+  生成器与基线一笔, 文档一笔.
+- 2026-11-06: 基线不再进仓库 (负责人提出: prop 每行都是 key→value, 解析路径相同, 没必要全取;  
+  看过抽样效果后又问 "不删吗"). 中间试过抽样: 按类别取 102 行 (home 25, others 42, prop 35),  
+  脚本幂等, 保留整行占位 2 行与行内占位 2 行. 试完定为不存: 对照要的是 "改造前在同一次会话里  
+  取一份全量", 那两份都在设备侧; 仓库里存全量 (1343 条, 11k 行) 随设备漂移, 存抽样只剩  
+  "给人看形状" 一点用处, 那点用处两行样例就够. `baseline/` 目录与抽样脚本都删掉, 生成器保留.  
+  生成器仍脱敏: 拉回的 json 会先落在本地临时目录, 可能被贴进文档或被误提交, 留着比事后判断便宜.  
+  subtask-02 与 subtask-04 的口径已改 (形状参考改为文档里的两行样例, 对照物是同会话改前那份).
+- 各子任务状态: subtask-01 已关闭; subtask-02 已提交并关闭 (删基线的改动待提交);  
+  subtask-03 ~ subtask-06 报告已出, 实现未开始.
+- 未查清: 无.
 - 挂起项: 无.

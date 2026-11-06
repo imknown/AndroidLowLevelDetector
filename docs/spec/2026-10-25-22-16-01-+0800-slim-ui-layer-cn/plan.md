@@ -44,7 +44,7 @@ ViewModel 侧只剩状态推导. 防回归的检查先立起来再动核心 ([#5
 
 ### subtask-02 1b 基线快照与测试栈
 
-- 范围: 引入 JUnit 5 (含 useJUnitPlatform 接线) 与 MockK; 把 Home, Others, Prop 三页每行的  
+- 范围: 引入 JUnit Jupiter (含 useJUnitPlatform 接线) 与 MockK; 把 Home, Others, Prop 三页每行的  
   (key, detail, color, type) 现状导成黄金数据, 作为行为等价重构的回归网;  
   Turbine 随首个 Flow 测试进; 规则文件的测试段随本步校准 (0e).
 - 独立性: 不动产品代码. 2a 的一次性迁移没有它就只能靠人工核对行为等价, 所以它是 2a 的硬前置.
@@ -127,7 +127,7 @@ flowchart TD
 
 ## 待学习清单
 
-- JUnit 5 平台接线, MockK, Turbine (subtask-02 起).
+- JUnit Jupiter 平台接线, MockK, Turbine (subtask-02 起).
 - `Build.*` 读数的测试手段取舍: 真机 / 模拟器, Robolectric, 探针假值 (subtask-04, 0f).
 - 注册表引擎的并发模型: 有界并发与取消传播 (subtask-05).
 - mapper 模式: 领域对象到 MyModel 的翻译只放 UI 包 (subtask-04 起).
