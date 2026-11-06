@@ -444,6 +444,15 @@
   trailer 经负责人定: agent `WorkBuddy CN`, model `DeepSeek-V4.1-Flash`, effort `high`.  
   review 目录 (四轮提示词与 8 份报告) 按 14 的归宿整体删除, 结论已在本文件与 `state.md` 里.
   下一步动作: 下一个子任务 subtask-04 (2a 领域化), 等负责人说开始.
+- 2026-11-06: CI 实跑结果回来了 (负责人手动触发). run `Android CI #407` (id 42243375884),  
+  `workflow_dispatch`, 分支 `jetpack-compose-docs`, head `081db825`, 结论 `success`, 用时 5 分 3 秒.  
+  九步全绿, 四步 Gradle 各自的耗时: assemble 3 分 45 秒, app 单测 10 秒, base 单测 2 秒, lint 45 秒.  
+  这一步结掉 subtask-03 验证里 "本地跑通不算, 要看 CI 实跑" 的缺口: 拆四步的配置在空缓存的 CI 上写对了,  
+  lint 在 CI 上也没有冒出 baseline 之外的新问题.
+  一条 notice (归后续, 不在 1a): `ubuntu-latest` 标签从 2026-10-19 起迁到 Ubuntu 26  
+  (actions/runner-images#14748). 归 #51 的 CI 硬化, 本轮不动.
+  待负责人定 (需求正文): `#50` 在 `issues-cn/README.md:245` 的状态仍写 "开放 (主线步骤 1a)", 1a 已实现并实跑通过,  
+  要不要改成已完成由负责人定.
 - 各子任务状态: subtask-01 已关闭; subtask-02 已提交并关闭;  
   subtask-03 实现与本地验证完成, 等 review; subtask-04 ~ subtask-06 报告已出, 实现未开始.
 - 未查清: 无.
