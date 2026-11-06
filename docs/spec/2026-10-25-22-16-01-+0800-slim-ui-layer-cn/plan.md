@@ -53,9 +53,9 @@ ViewModel 侧只剩状态推导. 防回归的检查先立起来再动核心 ([#5
 
 ### subtask-03 1a CI 扩跑
 
-- 范围: `android-ci.yml` 扩跑 `testFossDebug` 与 `lintFossDebug`; 首跑先在本地清红;  
-  [09-构建约定](../../agents-cn/09-构建约定.md) 的 "CI 只构建 `assembleFossDebug`" 条款随本步改写 (0a).
-- 独立性: 改一行配置加清红, 不依赖其他步. 排在 1b 之后, 让这条检查从第一天起就有黄金数据可守.
+- 范围: `android-ci.yml` 拆四步扩跑 `testFossDebugUnitTest`, `:base:testDebugUnitTest` 与 `lintFossDebug`;  
+  首跑先在本地清红; [09-构建约定](../../agents-cn/09-构建约定.md) 的 CI 一节随本步改写.
+- 独立性: 改 CI 配置与随之要改的文字, 不依赖其他步. 排在 1b 之后, 让这条检查从第一天起就有黄金数据可守.
 - 风险级别: 低 (清红的工作量首跑才知道).
 - 生疏领域: 否.
 

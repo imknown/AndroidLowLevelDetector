@@ -32,6 +32,12 @@ jobs:
     # endregion [Android SDK]
 
     # region [Gradle]
-    - name: Build with Gradle
+    - name: Assemble the Foss debug variant
       run: ./gradlew assembleFossDebug
+    - name: Run Foss debug unit tests
+      run: ./gradlew testFossDebugUnitTest
+    - name: Run base unit tests
+      run: ./gradlew :base:testDebugUnitTest
+    - name: Run Android lint
+      run: ./gradlew lintFossDebug
     # endregion [Gradle]
