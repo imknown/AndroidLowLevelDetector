@@ -20,6 +20,7 @@ import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.property.IProperty
 import net.imknown.android.forefrontinfo.base.property.impl.PropertyDefault
+import net.imknown.android.forefrontinfo.ui.home.repository.HomeRepository
 import net.imknown.android.forefrontinfo.ui.settings.repository.SettingsStore
 import okhttp3.Call
 import okhttp3.EventListener
@@ -69,6 +70,12 @@ interface AppGraph : ViewModelGraph {
     // exactly once with the first construction; MyApplication.onCreate resolves it eagerly
     // where initTheme used to sit, so pre-composition reads see seeded flows.
     val settingsStore: SettingsStore
+
+    // The repository accessor: 2a's per-entry unit tests (Robolectric) take the production
+    // instance from the graph instead of hand-building the constructor chain in the test.
+    // The second accessor after settingsStore; each new one needs a test or a non-ViewModel
+    // consumer behind it, never a bypass for ViewModel dependencies.
+    val homeRepository: HomeRepository
 
     // The graph's second external entry point: MyApplication cannot be graph-
     // constructed (the graph itself is created in its constructor), so the

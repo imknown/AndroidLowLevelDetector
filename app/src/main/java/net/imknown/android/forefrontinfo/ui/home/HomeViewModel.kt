@@ -26,6 +26,7 @@ import net.imknown.android.forefrontinfo.ui.base.list.BaseListViewModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModelType
 import net.imknown.android.forefrontinfo.ui.common.toObjectOrThrow
+import net.imknown.android.forefrontinfo.ui.home.mapper.HomeModelMapper
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.home.model.LldSource
 import net.imknown.android.forefrontinfo.ui.home.repository.HomeRepository
@@ -48,6 +49,7 @@ private data class LldAndError(val lld: Lld?, val message: String?)
 @ContributesIntoMap(AppScope::class, binding<ViewModel>())
 class HomeViewModel(
     private val homeRepository: HomeRepository,
+    private val homeModelMapper: HomeModelMapper,
     private val settingsStore: SettingsStore
 ) : BaseListViewModel() {
 
@@ -230,7 +232,9 @@ class HomeViewModel(
             tempModels += homeRepository.detectMainline(lld)
             tempModels += homeRepository.detectVndk(lld)
             tempModels += homeRepository.detectApex(mountQuery)
-            tempModels += homeRepository.detectDeveloperOptions()
+            tempModels += homeModelMapper.toDeveloperOptionsModel {
+                homeRepository.detectDeveloperOptions()
+            }
             tempModels += homeRepository.detectAdb()
             tempModels += homeRepository.detectAdbAuthentication()
             tempModels += homeRepository.detectEncryption()

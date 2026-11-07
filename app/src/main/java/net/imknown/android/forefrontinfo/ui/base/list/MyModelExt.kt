@@ -28,9 +28,9 @@ import net.imknown.android.forefrontinfo.ui.theme.StatusColor
 // region [Home]
 
 /**
- * Single-item guard, Home-only (the 24 detector methods in `HomeRepository`): a
- * failure degrades into that item's own red error row, because Home items carry dots and
- * failure is red.
+ * Single-item guard, Home-only (the `HomeRepository` detector methods still returning
+ * `MyModel` during 2a): a failure degrades into that item's own red error row, because
+ * Home items carry dots and failure is red.
  */
 inline fun guardedMyModel(@StringRes titleRes: Int, block: () -> MyModel): MyModel =
     guardedMyModel(MyModelTitle.Res(titleRes), block)

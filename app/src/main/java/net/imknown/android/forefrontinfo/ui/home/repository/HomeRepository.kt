@@ -14,12 +14,14 @@ import androidx.core.content.ContextCompat
 import androidx.webkit.WebViewCompat
 import dev.zacsweers.metro.Inject
 import io.github.g00fy2.versioncompare.Version
+import kotlinx.coroutines.CancellationException
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.extension.formatToLocalZonedDatetimeString
 import net.imknown.android.forefrontinfo.base.extension.fullMessage
 import net.imknown.android.forefrontinfo.base.shell.IShell
 import net.imknown.android.forefrontinfo.base.shell.ShellResult
+import net.imknown.android.forefrontinfo.ui.base.detect.DetectResult
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModelTitle
 import net.imknown.android.forefrontinfo.ui.base.list.MyModelType
@@ -774,20 +776,21 @@ class HomeRepository(
             )
         }
 
-    fun detectDeveloperOptions(): MyModel =
-        guardedMyModel(R.string.developer_options_status_title) {
-            val isDeveloperOptionsDisabled = Settings.Global.getInt(
-                MyApplication.instance.contentResolver,
-                Settings.Global.DEVELOPMENT_SETTINGS_ENABLED,
-                AndroidDataSource.SETTINGS_DISABLED
-            ) == AndroidDataSource.SETTINGS_DISABLED
-
-            return toColoredMyModel(
-                R.string.developer_options_status_title,
-                translateDisabled(isDeveloperOptionsDisabled),
-                isDeveloperOptionsDisabled
-            )
-        }
+    // 2a: facts only; display text and colors belong to HomeModelMapper. A failed read returns
+    // Failed normally instead of throwing (the 05 rule); unexpected exceptions are caught by the
+    // mapper's chained thin guard, and the failure DEBUG print lives there too (failureRow).
+    fun detectDeveloperOptions(): DetectResult<Boolean> = try {
+        val isDeveloperOptionsDisabled = Settings.Global.getInt(
+            MyApplication.instance.contentResolver,
+            Settings.Global.DEVELOPMENT_SETTINGS_ENABLED,
+            AndroidDataSource.SETTINGS_DISABLED
+        ) == AndroidDataSource.SETTINGS_DISABLED
+        DetectResult.Found(isDeveloperOptionsDisabled)
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        DetectResult.Failed(e)
+    }
 
     fun detectAdb(): MyModel =
         guardedMyModel(R.string.adb_debugging_status_title) {
