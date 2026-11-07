@@ -770,17 +770,15 @@ class HomeRepository(
         DetectResult.Failed(e)
     }
 
-    fun detectAdbAuthentication(): MyModel =
-        guardedMyModel(R.string.adb_authentication_status_title) {
-            val isAdbAuthenticationEnabled =
-                propertyReader.getString(AndroidDataSource.PROP_ADB_SECURE) == AndroidDataSource.SETTINGS_ENABLED.toString()
-
-            return toColoredMyModel(
-                R.string.adb_authentication_status_title,
-                translateEnabled(isAdbAuthenticationEnabled),
-                isAdbAuthenticationEnabled
-            )
-        }
+    fun detectAdbAuthentication(): DetectResult<Boolean> = try {
+        val isAdbAuthenticationEnabled =
+            propertyReader.getString(AndroidDataSource.PROP_ADB_SECURE) == AndroidDataSource.SETTINGS_ENABLED.toString()
+        DetectResult.Found(isAdbAuthenticationEnabled)
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        DetectResult.Failed(e)
+    }
 
     fun detectEncryption(): MyModel =
         guardedMyModel(R.string.encryption_status_title) {

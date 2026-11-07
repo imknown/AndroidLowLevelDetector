@@ -123,6 +123,21 @@ class HomeModelMapper(private val myApplication: MyApplication) {
         )
     }
 
+    // The ADB authentication row: enabled is the good state, the opposite direction of the
+    // two rows above.
+    fun toAdbAuthenticationModel(detect: () -> DetectResult<Boolean>): MyModel = guardedEntry(
+        R.string.adb_authentication_status_title,
+        detect
+    ) { isEnabled ->
+        coloredRow(
+            R.string.adb_authentication_status_title,
+            myApplication.getString(
+                if (isEnabled) R.string.result_enabled else R.string.result_disabled
+            ),
+            isEnabled
+        )
+    }
+
     // Two-state row color mapping: a true condition lands on NO_PROBLEM. Home-only, dots are a
     // Home-only concept (#69).
     private fun coloredRow(@StringRes titleRes: Int, detail: String, condition: Boolean): MyModel =
