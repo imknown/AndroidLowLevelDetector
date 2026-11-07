@@ -44,70 +44,6 @@ class HomeModelMapper(private val myApplication: MyApplication) {
         )
     }
 
-    // The A/B seamless update row: the detail's three segments (supported or not, the virtual
-    // A/B variant, the current slot) are all driven by the facts. A null slot suffix (absent
-    // property) renders the not-filled placeholder, the same text the old property-reader path
-    // carried into the detail.
-    fun toAbModel(detect: () -> DetectResult<AbState>): MyModel = guardedEntry(
-        R.string.ab_seamless_update_status_title,
-        detect
-    ) { (enabled, virtualAb, virtualAbRetrofit, slotSuffix) ->
-        val detail = buildString {
-            append(
-                myApplication.getString(
-                    if (enabled) R.string.result_supported else R.string.result_not_supported
-                )
-            )
-            if (enabled) {
-                if (virtualAb) {
-                    append(
-                        myApplication.getString(
-                            if (virtualAbRetrofit) R.string.virtual_ab_retrofit else R.string.virtual_ab
-                        )
-                    )
-                }
-                append(myApplication.getString(R.string.current_using_ab_slot_result, slotSuffix))
-            }
-        }
-        coloredRow(R.string.ab_seamless_update_status_title, detail, enabled)
-    }
-
-    // The dynamic partitions row: retrofit only appends text; enabled drives the two states
-    // and the color.
-    fun toDynamicPartitionsModel(
-        detect: () -> DetectResult<DynamicPartitionsState>
-    ): MyModel = guardedEntry(
-        R.string.dynamic_partitions_status_title,
-        detect
-    ) { (enabled, retrofit) ->
-        val detail = buildString {
-            append(
-                myApplication.getString(
-                    if (enabled) R.string.result_supported else R.string.result_not_supported
-                )
-            )
-            if (retrofit) {
-                append(myApplication.getString(R.string.dynamic_partitions_enabled_retrofitted))
-            }
-        }
-        coloredRow(R.string.dynamic_partitions_status_title, detail, enabled)
-    }
-
-    // The DSU row: the original else branch lands on the platform unknownName resource, not
-    // result_not_supported; replicated as is.
-    fun toDsuModel(detect: () -> DetectResult<Boolean>): MyModel = guardedEntry(
-        R.string.dsu_status_title,
-        detect
-    ) { isEnabled ->
-        coloredRow(
-            R.string.dsu_status_title,
-            myApplication.getString(
-                if (isEnabled) R.string.result_supported else androidR.string.unknownName
-            ),
-            isEnabled
-        )
-    }
-
     // The developer options row's twin: the same Settings read shape, semantics aligned
     // (disabled is the good state).
     fun toAdbModel(detect: () -> DetectResult<Boolean>): MyModel = guardedEntry(
@@ -136,6 +72,71 @@ class HomeModelMapper(private val myApplication: MyApplication) {
             ),
             isEnabled
         )
+    }
+
+    // The DSU row: the original else branch lands on the platform unknownName resource, not
+    // result_not_supported; replicated as is.
+    fun toDsuModel(detect: () -> DetectResult<Boolean>): MyModel = guardedEntry(
+        R.string.dsu_status_title,
+        detect
+    ) { isEnabled ->
+        coloredRow(
+            R.string.dsu_status_title,
+            myApplication.getString(
+                if (isEnabled) R.string.result_supported else androidR.string.unknownName
+            ),
+            isEnabled
+        )
+    }
+
+    // The dynamic partitions row: retrofit only appends text; enabled drives the two states
+    // and the color.
+    fun toDynamicPartitionsModel(
+        detect: () -> DetectResult<DynamicPartitionsState>
+    ): MyModel = guardedEntry(
+        R.string.dynamic_partitions_status_title,
+        detect
+    ) { (enabled, retrofit) ->
+        val detail = buildString {
+            append(
+                myApplication.getString(
+                    if (enabled) R.string.result_supported else R.string.result_not_supported
+                )
+            )
+            if (retrofit) {
+                append(myApplication.getString(R.string.dynamic_partitions_enabled_retrofitted))
+            }
+        }
+        coloredRow(R.string.dynamic_partitions_status_title, detail, enabled)
+    }
+
+    // The A/B seamless update row: the detail's three segments (supported or not, the virtual
+    // A/B variant, the current slot) are all driven by the facts.
+    fun toAbModel(detect: () -> DetectResult<AbState>): MyModel = guardedEntry(
+        R.string.ab_seamless_update_status_title,
+        detect
+    ) { (enabled, virtualAb, virtualAbRetrofit, slotSuffix) ->
+        val detail = buildString {
+            append(
+                myApplication.getString(
+                    if (enabled) R.string.result_supported else R.string.result_not_supported
+                )
+            )
+            if (enabled) {
+                if (virtualAb) {
+                    append(
+                        myApplication.getString(
+                            if (virtualAbRetrofit) R.string.virtual_ab_retrofit else R.string.virtual_ab
+                        )
+                    )
+                }
+                // A null slot suffix (absent property) renders the not-filled placeholder, the
+                // same text the old property-reader path carried into the detail.
+                val slotText = slotSuffix ?: myApplication.getString(R.string.build_not_filled)
+                append(myApplication.getString(R.string.current_using_ab_slot_result, slotText))
+            }
+        }
+        coloredRow(R.string.ab_seamless_update_status_title, detail, enabled)
     }
 
     // Two-state row color mapping: a true condition lands on NO_PROBLEM. Home-only, dots are a

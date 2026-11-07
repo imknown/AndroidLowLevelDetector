@@ -7,13 +7,15 @@ import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.extension.fullMessage
 import net.imknown.android.forefrontinfo.base.property.IProperty
 
-// The fallback facade over IProperty: returns placeholder values when the
-// condition is unmet or the reflective read throws, so the fallback logic
+// The fallback facade over IProperty: the text and boolean readers return placeholder values
+// when the condition is unmet or the reflective read throws, so the fallback logic
 // lives in one place instead of being copied across the 33 call sites (the
 // companion action of issues-cn #02, replacing the former top-level functions
 // and their static-slot access). Byte-equivalent to the original: condition
 // branches, try-catch, the result_not_supported / build_not_filled
-// placeholders, and the log tags are all unchanged. IProperty lives in :base
+// placeholders, and the log tags are all unchanged. The exception is [getStringOrNull]:
+// it returns null in those cases so domain objects stay free of display material.
+// IProperty lives in :base
 // (the interface module stays Metro-free); MyApplication comes from the graph
 // factory's @Provides parameter.
 @Inject
