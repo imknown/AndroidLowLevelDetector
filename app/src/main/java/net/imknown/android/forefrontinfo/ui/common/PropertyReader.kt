@@ -42,4 +42,21 @@ class PropertyReader(
         Log.w("getBooleanProperty", "$key: ${e.fullMessage}")
         false
     }
+
+    // Absence-aware variant: an absent property surfaces as null instead of the localized
+    // not-filled placeholder, so domain objects can carry facts without display material.
+    // Unlike [getString], all three degenerate outcomes (condition unmet, empty value, read
+    // failure) collapse into null; callers render their own placeholder. Empty string is the
+    // absence marker (the underlying get(key, "") returns "" when the property is missing).
+    fun getStringOrNull(key: String, condition: Boolean = true): String? {
+        if (!condition) {
+            return null
+        }
+        return try {
+            property.getStringOrThrow(key, "").ifEmpty { null }
+        } catch (e: Exception) {
+            Log.w("getStringOrNullProperty", "$key: ${e.fullMessage}")
+            null
+        }
+    }
 }
