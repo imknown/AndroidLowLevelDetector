@@ -148,6 +148,16 @@ class HomeModelMapper(private val myApplication: MyApplication) {
             color = if (condition) StatusColor.NO_PROBLEM else StatusColor.CRITICAL
         )
 
+    // The color-overload counterpart of the old toColoredMyModel: rows whose color the
+    // repository judged from richer semantics (the mode, android, performance class and kernel
+    // rows) hand the decided color straight in.
+    private fun coloredRow(@StringRes titleRes: Int, detail: String, color: StatusColor): MyModel =
+        MyModel(
+            title = MyModelTitle.Res(titleRes),
+            detail = detail,
+            color = color
+        )
+
     // Unknown row: Missing lands on unknown, same color as the failure row (the red dot is an
     // accepted trade-off, issues-cn #33).
     private fun unknownRow(@StringRes titleRes: Int, reason: String): MyModel =
