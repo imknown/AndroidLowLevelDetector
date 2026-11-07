@@ -44,6 +44,7 @@ import net.imknown.android.forefrontinfo.ui.home.model.DynamicPartitionsState
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.home.model.LldSource
 import net.imknown.android.forefrontinfo.ui.home.model.LldStatusState
+import net.imknown.android.forefrontinfo.ui.home.model.PerformanceClassInfo
 import net.imknown.android.forefrontinfo.ui.home.model.SdkExtensionState
 import net.imknown.android.forefrontinfo.ui.settings.datasource.AppInfoDataSource
 import net.imknown.android.forefrontinfo.ui.theme.StatusColor
@@ -271,33 +272,24 @@ class HomeRepository(
         securityPatch.substringBeforeLast('-')
     // endregion [SecurityPatch]
 
-    fun detectPerformanceClass(): MyModel =
-        guardedMyModel(R.string.performance_class_title) {
-            var performanceColorRes = StatusColor.CRITICAL
-
-            val result = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                val performanceClass = Build.VERSION.MEDIA_PERFORMANCE_CLASS
-                if (performanceClass == Build.VERSION.SDK_INT) {
-                    performanceColorRes = StatusColor.NO_PROBLEM
-                } else if (performanceClass == Build.VERSION.SDK_INT - 1) {
-                    performanceColorRes = StatusColor.WARNING
-                }
-
-                if (performanceClass != 0) {
-                    MyApplication.getMyString(R.string.performance_class_detail_api, performanceClass)
-                } else {
-                    MyApplication.getMyString(R.string.result_not_supported)
-                }
-            } else {
-                MyApplication.getMyString(R.string.result_not_supported)
+    fun detectPerformanceClass(): DetectResult<PerformanceClassInfo> = try {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val performanceClass = Build.VERSION.MEDIA_PERFORMANCE_CLASS
+            val level = when (performanceClass) {
+                Build.VERSION.SDK_INT -> PerformanceClassInfo.Level.Met
+                Build.VERSION.SDK_INT - 1 -> PerformanceClassInfo.Level.Lagging
+                0 -> PerformanceClassInfo.Level.NotDeclared
+                else -> PerformanceClassInfo.Level.Outdated
             }
-
-            return toColoredMyModel(
-                R.string.performance_class_title,
-                result,
-                performanceColorRes
-            )
+            DetectResult.Found(PerformanceClassInfo(performanceClass, level))
+        } else {
+            DetectResult.Found(PerformanceClassInfo(0, PerformanceClassInfo.Level.NotSupported))
         }
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        DetectResult.Failed(e)
+    }
 
     fun detectKernel(lld: Lld?): MyModel =
         guardedMyModel(R.string.linux_title) {

@@ -221,7 +221,7 @@ class HomeViewModel(
             tempModels += homeModelMapper.toSdkExtensionModel { homeRepository.detectSdkExtension(lld) }
             tempModels += homeRepository.detectBuildId(lld)
             tempModels += homeRepository.detectSecurityPatches(lld)
-            tempModels += homeRepository.detectPerformanceClass()
+            tempModels += homeModelMapper.toPerformanceClassModel { homeRepository.detectPerformanceClass() }
             tempModels += homeRepository.detectKernel(lld)
             tempModels += homeModelMapper.toAbModel { homeRepository.detectAb() }
             val mountQuery = withContext(Dispatchers.IO) {

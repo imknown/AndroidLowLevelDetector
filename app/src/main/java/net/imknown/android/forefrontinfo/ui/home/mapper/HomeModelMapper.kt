@@ -16,6 +16,7 @@ import net.imknown.android.forefrontinfo.ui.home.model.AndroidInfoState
 import net.imknown.android.forefrontinfo.ui.home.model.DynamicPartitionsState
 import net.imknown.android.forefrontinfo.ui.home.model.LldSource
 import net.imknown.android.forefrontinfo.ui.home.model.LldStatusState
+import net.imknown.android.forefrontinfo.ui.home.model.PerformanceClassInfo
 import net.imknown.android.forefrontinfo.ui.home.model.SdkExtensionState
 import net.imknown.android.forefrontinfo.ui.theme.StatusColor
 import android.R as androidR
@@ -230,6 +231,31 @@ class HomeModelMapper(private val myApplication: MyApplication) {
             myApplication.getString(R.string.android_sdk_extension_detail, current, stable),
             state.meetsStable
         )
+    }
+
+    // The performance class row: NotSupported and NotDeclared share the result_not_supported
+    // detail; the other levels carry the class number in the detail.
+    fun toPerformanceClassModel(detect: () -> DetectResult<PerformanceClassInfo>): MyModel = guardedEntry(
+        R.string.performance_class_title,
+        detect
+    ) { info ->
+        val detail = when (info.level) {
+            PerformanceClassInfo.Level.NotSupported, PerformanceClassInfo.Level.NotDeclared ->
+                myApplication.getString(R.string.result_not_supported)
+            PerformanceClassInfo.Level.Met, PerformanceClassInfo.Level.Lagging,
+            PerformanceClassInfo.Level.Outdated ->
+                myApplication.getString(
+                    R.string.performance_class_detail_api,
+                    info.performanceClass.toString()
+                )
+        }
+        val color = when (info.level) {
+            PerformanceClassInfo.Level.Met -> StatusColor.NO_PROBLEM
+            PerformanceClassInfo.Level.Lagging -> StatusColor.WARNING
+            PerformanceClassInfo.Level.NotSupported, PerformanceClassInfo.Level.NotDeclared,
+            PerformanceClassInfo.Level.Outdated -> StatusColor.CRITICAL
+        }
+        coloredRow(R.string.performance_class_title, detail, color)
     }
 
     // Two-state row color mapping: a true condition lands on NO_PROBLEM. Home-only, dots are a
