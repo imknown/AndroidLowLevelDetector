@@ -39,6 +39,7 @@ import net.imknown.android.forefrontinfo.ui.home.datasource.AndroidVersionDataSo
 import net.imknown.android.forefrontinfo.ui.home.datasource.LldDataSource
 import net.imknown.android.forefrontinfo.ui.home.datasource.LldFileStore
 import net.imknown.android.forefrontinfo.ui.home.datasource.MountDataSource
+import net.imknown.android.forefrontinfo.ui.home.model.AbState
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.home.model.LldSource
 import net.imknown.android.forefrontinfo.ui.settings.datasource.AppInfoDataSource
@@ -373,42 +374,22 @@ class HomeRepository(
             )
         }
 
-    fun detectAb(): MyModel =
-        guardedMyModel(R.string.ab_seamless_update_status_title) {
-            val isAbUpdateSupported = propertyReader.getBoolean(AndroidDataSource.PROP_AB_UPDATE)
-            val slotSuffixResult = propertyReader.getString(AndroidDataSource.PROP_SLOT_SUFFIX)
-            val isVirtualAb = propertyReader.getBoolean(AndroidDataSource.PROP_VIRTUAL_AB_ENABLED, Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-            val isAbEnable = isAbUpdateSupported || isPropertyValueNotEmpty(slotSuffixResult) || isVirtualAb
-
-            var abResult = toSupportOrNotString(isAbEnable)
-
-            if (isAbEnable) {
-                if (isVirtualAb) {
-                    val isVirtualAbRetrofit = propertyReader.getBoolean(AndroidDataSource.PROP_VIRTUAL_AB_RETROFIT, Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-                    // val isVirtualAbCompressionXorEnabled = propertyReader.getBoolean(AndroidDataSource.PROP_VIRTUAL_AB_COMPRESSION_XOR_ENABLED, Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-                    // val isVirtualAbUserspaceSnapshotsEnabled = propertyReader.getBoolean(AndroidDataSource.PROP_VIRTUAL_AB_USERSPACE_SNAPSHOTS_ENABLED, Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-                    // val isAllowNonAb = propertyReader.getBoolean(AndroidDataSource.PROP_VIRTUAL_AB_ALLOW_NON_AB, Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-                    // val isCompressionEnabled = propertyReader.getBoolean(AndroidDataSource.PROP_VIRTUAL_AB_COMPRESSION_ENABLED, Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-                    // val isIoUringEnabled = propertyReader.getBoolean(AndroidDataSource.PROP_VIRTUAL_AB_IO_URING_ENABLED, Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-
-                    abResult += MyApplication.getMyString(
-                        if (isVirtualAbRetrofit) {
-                            R.string.virtual_ab_retrofit
-                        } else {
-                            R.string.virtual_ab
-                        }
-                    )
-                }
-
-                abResult += MyApplication.getMyString(R.string.current_using_ab_slot_result, slotSuffixResult)
-            }
-
-            return toColoredMyModel(
-                R.string.ab_seamless_update_status_title,
-                abResult,
-                isAbEnable
-            )
+    fun detectAb(): DetectResult<AbState> = try {
+        val isAbUpdateSupported = propertyReader.getBoolean(AndroidDataSource.PROP_AB_UPDATE)
+        val slotSuffixResult = propertyReader.getStringOrNull(AndroidDataSource.PROP_SLOT_SUFFIX)
+        val isVirtualAb = propertyReader.getBoolean(AndroidDataSource.PROP_VIRTUAL_AB_ENABLED, Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+        val isAbEnable = isAbUpdateSupported || !slotSuffixResult.isNullOrEmpty() || isVirtualAb
+        val isVirtualAbRetrofit = if (isVirtualAb) {
+            propertyReader.getBoolean(AndroidDataSource.PROP_VIRTUAL_AB_RETROFIT, Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+        } else {
+            false
         }
+        DetectResult.Found(AbState(isAbEnable, isVirtualAb, isVirtualAbRetrofit, slotSuffixResult))
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        DetectResult.Failed(e)
+    }
 
     fun getMounts() = mountDataSource.getMounts()
 

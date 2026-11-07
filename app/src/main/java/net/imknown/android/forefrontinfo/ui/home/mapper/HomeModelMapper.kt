@@ -10,6 +10,7 @@ import net.imknown.android.forefrontinfo.base.extension.fullMessage
 import net.imknown.android.forefrontinfo.ui.base.detect.DetectResult
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModelTitle
+import net.imknown.android.forefrontinfo.ui.home.model.AbState
 import net.imknown.android.forefrontinfo.ui.theme.StatusColor
 
 /**
@@ -39,6 +40,34 @@ class HomeModelMapper(private val myApplication: MyApplication) {
             ),
             isDisabled
         )
+    }
+
+    // The A/B seamless update row: the detail's three segments (supported or not, the virtual
+    // A/B variant, the current slot) are all driven by the facts. A null slot suffix (absent
+    // property) renders the not-filled placeholder, the same text the old property-reader path
+    // carried into the detail.
+    fun toAbModel(detect: () -> DetectResult<AbState>): MyModel = guardedEntry(
+        R.string.ab_seamless_update_status_title,
+        detect
+    ) { (enabled, virtualAb, virtualAbRetrofit, slotSuffix) ->
+        val detail = buildString {
+            append(
+                myApplication.getString(
+                    if (enabled) R.string.result_supported else R.string.result_not_supported
+                )
+            )
+            if (enabled) {
+                if (virtualAb) {
+                    append(
+                        myApplication.getString(
+                            if (virtualAbRetrofit) R.string.virtual_ab_retrofit else R.string.virtual_ab
+                        )
+                    )
+                }
+                append(myApplication.getString(R.string.current_using_ab_slot_result, slotSuffix))
+            }
+        }
+        coloredRow(R.string.ab_seamless_update_status_title, detail, enabled)
     }
 
     // Two-state row color mapping: a true condition lands on NO_PROBLEM. Home-only, dots are a
