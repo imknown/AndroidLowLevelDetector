@@ -16,6 +16,7 @@ import net.imknown.android.forefrontinfo.ui.home.model.AndroidInfoState
 import net.imknown.android.forefrontinfo.ui.home.model.DynamicPartitionsState
 import net.imknown.android.forefrontinfo.ui.home.model.LldSource
 import net.imknown.android.forefrontinfo.ui.home.model.LldStatusState
+import net.imknown.android.forefrontinfo.ui.home.model.SdkExtensionState
 import net.imknown.android.forefrontinfo.ui.theme.StatusColor
 import android.R as androidR
 
@@ -211,6 +212,23 @@ class HomeModelMapper(private val myApplication: MyApplication) {
                 referenceLines[4]
             ),
             color
+        )
+    }
+
+    // The sdk extension row: a null current extension (below the declaring level) renders as
+    // result_not_supported, a null stable extension as the platform unknownName.
+    fun toSdkExtensionModel(detect: () -> DetectResult<SdkExtensionState>): MyModel = guardedEntry(
+        R.string.android_sdk_extension_title,
+        detect
+    ) { state ->
+        val current = state.currentExtension?.toString()
+            ?: myApplication.getString(R.string.result_not_supported)
+        val stable = state.stableExtension?.toString()
+            ?: myApplication.getString(androidR.string.unknownName)
+        coloredRow(
+            R.string.android_sdk_extension_title,
+            myApplication.getString(R.string.android_sdk_extension_detail, current, stable),
+            state.meetsStable
         )
     }
 

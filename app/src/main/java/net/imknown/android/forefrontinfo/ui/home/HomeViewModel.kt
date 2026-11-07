@@ -218,7 +218,7 @@ class HomeViewModel(
             }
 
             tempModels += homeModelMapper.toAndroidModel { homeRepository.detectAndroid(lld) }
-            tempModels += homeRepository.detectSdkExtension(lld)
+            tempModels += homeModelMapper.toSdkExtensionModel { homeRepository.detectSdkExtension(lld) }
             tempModels += homeRepository.detectBuildId(lld)
             tempModels += homeRepository.detectSecurityPatches(lld)
             tempModels += homeRepository.detectPerformanceClass()

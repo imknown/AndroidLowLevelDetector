@@ -44,6 +44,7 @@ import net.imknown.android.forefrontinfo.ui.home.model.DynamicPartitionsState
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.home.model.LldSource
 import net.imknown.android.forefrontinfo.ui.home.model.LldStatusState
+import net.imknown.android.forefrontinfo.ui.home.model.SdkExtensionState
 import net.imknown.android.forefrontinfo.ui.settings.datasource.AppInfoDataSource
 import net.imknown.android.forefrontinfo.ui.theme.StatusColor
 import java.io.File
@@ -127,25 +128,27 @@ class HomeRepository(
         DetectResult.Failed(e)
     }
 
-    fun detectSdkExtension(lld: Lld?): MyModel =
-        guardedMyModel(R.string.android_sdk_extension_title) {
-            val lldStableExtension = lld?.android?.stable?.extension
-
-            val [myExtension, color] = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                val myExtension = getSdkExtension(Build.VERSION.SDK_INT)
-                val color = lldStableExtension != null && myExtension >= lldStableExtension
-                myExtension to color
-            } else {
-                MyApplication.getMyString(R.string.result_not_supported) to false
-            }
-            val lldStableExtensionString = lldStableExtension?.toString()
-                ?: MyApplication.getMyString(androidR.string.unknownName)
-            return toColoredMyModel(
-                R.string.android_sdk_extension_title,
-                MyApplication.getMyString(R.string.android_sdk_extension_detail, myExtension, lldStableExtensionString),
-                color
+    fun detectSdkExtension(lld: Lld?): DetectResult<SdkExtensionState> = try {
+        val lldStableExtension = lld?.android?.stable?.extension
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val myExtension = getSdkExtension(Build.VERSION.SDK_INT)
+            DetectResult.Found(
+                SdkExtensionState(
+                    currentExtension = myExtension,
+                    stableExtension = lldStableExtension,
+                    meetsStable = lldStableExtension != null && myExtension >= lldStableExtension
+                )
+            )
+        } else {
+            DetectResult.Found(
+                SdkExtensionState(currentExtension = null, stableExtension = lldStableExtension, meetsStable = false)
             )
         }
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        DetectResult.Failed(e)
+    }
 
     fun detectBuildId(lld: Lld?): MyModel =
         guardedMyModel(R.string.android_build_id_title) {
