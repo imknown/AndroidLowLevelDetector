@@ -591,23 +591,15 @@ class HomeRepository(
     // endregion [Treble & GSI]
 
     /** {@link android.util.FeatureFlagUtils} */
-    fun detectDsu(): MyModel =
-        guardedMyModel(R.string.dsu_status_title) {
-            val isDsuEnabled = propertyReader.getBoolean(AndroidDataSource.PROP_PERSIST_DYNAMIC_SYSTEM_UPDATE, Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-                    || propertyReader.getBoolean(AndroidDataSource.PROP_DYNAMIC_SYSTEM_UPDATE, Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-            val result = MyApplication.getMyString(
-                if (isDsuEnabled) {
-                    R.string.result_supported
-                } else {
-                    androidR.string.unknownName
-                }
-            )
-            return toColoredMyModel(
-                R.string.dsu_status_title,
-                result,
-                isDsuEnabled
-            )
-        }
+    fun detectDsu(): DetectResult<Boolean> = try {
+        val isDsuEnabled = propertyReader.getBoolean(AndroidDataSource.PROP_PERSIST_DYNAMIC_SYSTEM_UPDATE, Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+                || propertyReader.getBoolean(AndroidDataSource.PROP_DYNAMIC_SYSTEM_UPDATE, Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+        DetectResult.Found(isDsuEnabled)
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        DetectResult.Failed(e)
+    }
 
     /** {@link com.android.settings.deviceinfo.firmwareversion.MainlineModuleVersionPreferenceController} */
     fun detectMainline(lld: Lld?): MyModel =

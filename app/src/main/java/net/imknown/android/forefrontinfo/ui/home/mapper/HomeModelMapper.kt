@@ -13,6 +13,7 @@ import net.imknown.android.forefrontinfo.ui.base.list.MyModelTitle
 import net.imknown.android.forefrontinfo.ui.home.model.AbState
 import net.imknown.android.forefrontinfo.ui.home.model.DynamicPartitionsState
 import net.imknown.android.forefrontinfo.ui.theme.StatusColor
+import android.R as androidR
 
 /**
  * The single translation point from domain objects to [MyModel] (issues-cn #01): the repository
@@ -90,6 +91,21 @@ class HomeModelMapper(private val myApplication: MyApplication) {
             }
         }
         coloredRow(R.string.dynamic_partitions_status_title, detail, enabled)
+    }
+
+    // The DSU row: the original else branch lands on the platform unknownName resource, not
+    // result_not_supported; replicated as is.
+    fun toDsuModel(detect: () -> DetectResult<Boolean>): MyModel = guardedEntry(
+        R.string.dsu_status_title,
+        detect
+    ) { isEnabled ->
+        coloredRow(
+            R.string.dsu_status_title,
+            myApplication.getString(
+                if (isEnabled) R.string.result_supported else androidR.string.unknownName
+            ),
+            isEnabled
+        )
     }
 
     // Two-state row color mapping: a true condition lands on NO_PROBLEM. Home-only, dots are a
