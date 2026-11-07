@@ -78,8 +78,21 @@ internal fun Project.configureTest(commonExtension: CommonExtension) {
 
         // Local unit tests run on the JUnit Platform (Jupiter). Instrumented tests stay on JUnit 4:
         // the device-side AndroidJUnitRunner and androidx.test.ext:junit are both JUnit 4 based.
-        testOptions.unitTests.all {
-            it.useJUnitPlatform()
+        testOptions.unitTests {
+            // Robolectric needs the merged app resources on the JVM to resolve R references.
+            isIncludeAndroidResources = true
+            all {
+                it.useJUnitPlatform()
+                // Robolectric's FileDescriptorInterceptor reaches jdk.internal.access.SharedSecrets and
+                // loads its native runtime; newer JDK module encapsulation blocks both without these.
+                it.jvmArgs(
+                    "--add-opens=java.base/jdk.internal.access=ALL-UNNAMED",
+                    "--enable-native-access=ALL-UNNAMED",
+                    // LauncherInterceptor (the bridge's global classloader hook) is gated behind
+                    // this platform switch; without it the test classes never route into the sandbox.
+                    "-Djunit.platform.launcher.interceptors.enabled=true"
+                )
+            }
         }
 
         dependencies {
@@ -88,6 +101,13 @@ internal fun Project.configureTest(commonExtension: CommonExtension) {
             // Interaction verification for unit tests. Kept next to the bundle wiring so every
             // module applying this plugin sees the same test stack.
             testImplementation(libsThirdParty.findLibrary("mockk").get())
+            // Robolectric fakes the Android framework on the JVM so per-entry detection tests run
+            // in CI (the primary means per 2a's adjudication table).
+            testImplementation(libsThirdParty.findLibrary("robolectric").get())
+            // The Jupiter-platform bridge that loads Robolectric (experimental upstream); it relies
+            // on the launcher-interceptor switch among the flags above. RobolectricSpikeTest is its
+            // standing smoke test.
+            testImplementation(libsThirdParty.findLibrary("junit5-robolectric-extension").get())
         }
     }
 }

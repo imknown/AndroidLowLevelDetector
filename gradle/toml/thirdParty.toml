@@ -23,6 +23,15 @@ composeLintChecks = "1.6.1"
 # https://github.com/mockk/mockk/releases
 mockk = "1.14.11"
 
+# https://github.com/robolectric/robolectric/releases
+# https://robolectric.org/compatibility_table
+robolectric = "4.17"
+
+# The Jupiter-platform bridge that loads Robolectric (experimental, upstream dormant; kept as
+# standing wiring, see the switches in the convention plugin):
+# https://github.com/apter-tech/junit5-robolectric-extension
+junit5RobolectricExtension = "0.9.0"
+
 [libraries]
 libsu = { group = "com.github.topjohnwu.libsu", name = "core", version.ref = "libsu" }
 
@@ -36,6 +45,12 @@ composeLintChecks = { group = "com.slack.lint.compose", name = "compose-lint-che
 # Unit-test doubles: only for verifying interactions, not for reaching the shell or property
 # readers (those stay behind the IProperty / IShell interfaces and their default implementations).
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+
+# Robolectric: fakes the Android framework on the JVM so per-entry detection unit tests run in CI.
+robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
+# The Jupiter-platform bridge that loads Robolectric; experimental upstream, kept as standing
+# wiring (the version key comment points at its repository).
+junit5-robolectric-extension = { group = "tech.apter.junit5.jupiter", name = "robolectric-extension", version.ref = "junit5RobolectricExtension" }
 
 # MetroX ViewModel integration: ViewModelGraph + MetroViewModelFactory
 # (metrox-viewmodel) plus the Compose side (LocalMetroViewModelFactory,
