@@ -213,7 +213,9 @@ class HomeViewModel(
         val tempModels = mutableListOf<MyModel>()
 
         withContext(Dispatchers.IO) {
-            tempModels += homeRepository.detectMode(lld, errorMessage, source)
+            tempModels += homeModelMapper.toModeModel {
+                homeRepository.detectMode(lld, errorMessage, source)
+            }
 
             tempModels += homeRepository.detectAndroid(lld)
             tempModels += homeRepository.detectSdkExtension(lld)

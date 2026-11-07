@@ -17,7 +17,6 @@ import io.github.g00fy2.versioncompare.Version
 import kotlinx.coroutines.CancellationException
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
-import net.imknown.android.forefrontinfo.base.extension.formatToLocalZonedDatetimeString
 import net.imknown.android.forefrontinfo.base.extension.fullMessage
 import net.imknown.android.forefrontinfo.base.shell.IShell
 import net.imknown.android.forefrontinfo.base.shell.ShellResult
@@ -43,6 +42,7 @@ import net.imknown.android.forefrontinfo.ui.home.model.AbState
 import net.imknown.android.forefrontinfo.ui.home.model.DynamicPartitionsState
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.home.model.LldSource
+import net.imknown.android.forefrontinfo.ui.home.model.LldStatusState
 import net.imknown.android.forefrontinfo.ui.settings.datasource.AppInfoDataSource
 import net.imknown.android.forefrontinfo.ui.theme.StatusColor
 import java.io.File
@@ -68,40 +68,15 @@ class HomeRepository(
     fun copyJsonIfNeededOrThrow() = lldFileStore.copyJsonIfNeededOrThrow()
     fun getAssetLld(assets: AssetManager): Lld? = lldFileStore.getAssetLld(assets)
 
-    fun detectMode(lld: Lld?, errors: List<String?>, source: LldSource): MyModel =
-        guardedMyModel(R.string.lld_json_mode_title) {
-            val color: StatusColor
-            val datetimeFormatted: String
-            if (lld != null) {
-                datetimeFormatted = lld.version.formatToLocalZonedDatetimeString()
-                color = if (source == LldSource.ONLINE) {
-                    StatusColor.NO_PROBLEM
-                } else {
-                    StatusColor.CRITICAL
-                }
-            } else {
-                datetimeFormatted = MyApplication.getMyString(androidR.string.unknownName)
-                color = StatusColor.CRITICAL
-            }
-
-            val result = errors.filterNotNull()
-                .takeIf { it.isNotEmpty() }
-                ?.joinToString(separator = "\n\n", prefix = "\n\n")
-                .orEmpty()
-
-            // Resource IDs are only used to build the detail text; branching always
-            // goes through LldSource.
-            val modeDetailRes = when (source) {
-                LldSource.ONLINE -> R.string.lld_json_online
-                LldSource.OFFLINE -> R.string.lld_json_offline
-            }
-
-            return toColoredMyModel(
-                R.string.lld_json_mode_title,
-                MyApplication.getMyString(modeDetailRes, datetimeFormatted) + result,
-                color
-            )
-        }
+    fun detectMode(
+        lld: Lld?, errors: List<String?>, source: LldSource
+    ): DetectResult<LldStatusState> = try {
+        DetectResult.Found(LldStatusState(lld?.version, source, errors.filterNotNull()))
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        DetectResult.Failed(e)
+    }
 
     fun detectAndroid(lld: Lld?): MyModel =
         guardedMyModel(R.string.android_info_title) {

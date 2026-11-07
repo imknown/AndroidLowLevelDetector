@@ -6,12 +6,15 @@ import kotlinx.coroutines.CancellationException
 import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
+import net.imknown.android.forefrontinfo.base.extension.formatToLocalZonedDatetimeString
 import net.imknown.android.forefrontinfo.base.extension.fullMessage
 import net.imknown.android.forefrontinfo.ui.base.detect.DetectResult
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModelTitle
 import net.imknown.android.forefrontinfo.ui.home.model.AbState
 import net.imknown.android.forefrontinfo.ui.home.model.DynamicPartitionsState
+import net.imknown.android.forefrontinfo.ui.home.model.LldSource
+import net.imknown.android.forefrontinfo.ui.home.model.LldStatusState
 import net.imknown.android.forefrontinfo.ui.theme.StatusColor
 import android.R as androidR
 
@@ -137,6 +140,33 @@ class HomeModelMapper(private val myApplication: MyApplication) {
             }
         }
         coloredRow(R.string.ab_seamless_update_status_title, detail, enabled)
+    }
+
+    // The lld mode row: online/offline wording and the color come from the source and the
+    // payload presence; the rendered fetch-failure messages (ViewModel display material by
+    // origin) are appended verbatim.
+    fun toModeModel(detect: () -> DetectResult<LldStatusState>): MyModel = guardedEntry(
+        R.string.lld_json_mode_title,
+        detect
+    ) { state ->
+        val datetimeFormatted = state.version?.formatToLocalZonedDatetimeString()
+            ?: myApplication.getString(androidR.string.unknownName)
+        val modeDetailRes = when (state.source) {
+            LldSource.ONLINE -> R.string.lld_json_online
+            LldSource.OFFLINE -> R.string.lld_json_offline
+        }
+        val joinedErrors = state.errors.takeIf { it.isNotEmpty() }
+            ?.joinToString(separator = "\n\n", prefix = "\n\n")
+            .orEmpty()
+        coloredRow(
+            R.string.lld_json_mode_title,
+            myApplication.getString(modeDetailRes, datetimeFormatted) + joinedErrors,
+            if (state.version != null && state.source == LldSource.ONLINE) {
+                StatusColor.NO_PROBLEM
+            } else {
+                StatusColor.CRITICAL
+            }
+        )
     }
 
     // Two-state row color mapping: a true condition lands on NO_PROBLEM. Home-only, dots are a
