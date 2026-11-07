@@ -108,6 +108,21 @@ class HomeModelMapper(private val myApplication: MyApplication) {
         )
     }
 
+    // The developer options row's twin: the same Settings read shape, semantics aligned
+    // (disabled is the good state).
+    fun toAdbModel(detect: () -> DetectResult<Boolean>): MyModel = guardedEntry(
+        R.string.adb_debugging_status_title,
+        detect
+    ) { isDisabled ->
+        coloredRow(
+            R.string.adb_debugging_status_title,
+            myApplication.getString(
+                if (isDisabled) R.string.result_disabled else R.string.result_enabled
+            ),
+            isDisabled
+        )
+    }
+
     // Two-state row color mapping: a true condition lands on NO_PROBLEM. Home-only, dots are a
     // Home-only concept (#69).
     private fun coloredRow(@StringRes titleRes: Int, detail: String, condition: Boolean): MyModel =

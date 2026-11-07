@@ -235,7 +235,7 @@ class HomeViewModel(
             tempModels += homeModelMapper.toDeveloperOptionsModel {
                 homeRepository.detectDeveloperOptions()
             }
-            tempModels += homeRepository.detectAdb()
+            tempModels += homeModelMapper.toAdbModel { homeRepository.detectAdb() }
             tempModels += homeRepository.detectAdbAuthentication()
             tempModels += homeRepository.detectEncryption()
             tempModels += homeRepository.detectSELinux()

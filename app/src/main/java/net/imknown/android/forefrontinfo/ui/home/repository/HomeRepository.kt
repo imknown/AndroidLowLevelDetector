@@ -757,20 +757,18 @@ class HomeRepository(
         DetectResult.Failed(e)
     }
 
-    fun detectAdb(): MyModel =
-        guardedMyModel(R.string.adb_debugging_status_title) {
-            val isAdbDebuggingDisabled = Settings.Global.getInt(
-                MyApplication.instance.contentResolver,
-                Settings.Global.ADB_ENABLED,
-                AndroidDataSource.SETTINGS_DISABLED
-            ) == AndroidDataSource.SETTINGS_DISABLED
-
-            return toColoredMyModel(
-                R.string.adb_debugging_status_title,
-                translateDisabled(isAdbDebuggingDisabled),
-                isAdbDebuggingDisabled
-            )
-        }
+    fun detectAdb(): DetectResult<Boolean> = try {
+        val isAdbDebuggingDisabled = Settings.Global.getInt(
+            MyApplication.instance.contentResolver,
+            Settings.Global.ADB_ENABLED,
+            AndroidDataSource.SETTINGS_DISABLED
+        ) == AndroidDataSource.SETTINGS_DISABLED
+        DetectResult.Found(isAdbDebuggingDisabled)
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        DetectResult.Failed(e)
+    }
 
     fun detectAdbAuthentication(): MyModel =
         guardedMyModel(R.string.adb_authentication_status_title) {
