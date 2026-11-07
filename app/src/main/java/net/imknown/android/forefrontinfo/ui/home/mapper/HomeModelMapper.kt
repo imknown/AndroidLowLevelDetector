@@ -11,6 +11,7 @@ import net.imknown.android.forefrontinfo.ui.base.detect.DetectResult
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModelTitle
 import net.imknown.android.forefrontinfo.ui.home.model.AbState
+import net.imknown.android.forefrontinfo.ui.home.model.DynamicPartitionsState
 import net.imknown.android.forefrontinfo.ui.theme.StatusColor
 
 /**
@@ -68,6 +69,27 @@ class HomeModelMapper(private val myApplication: MyApplication) {
             }
         }
         coloredRow(R.string.ab_seamless_update_status_title, detail, enabled)
+    }
+
+    // The dynamic partitions row: retrofit only appends text; enabled drives the two states
+    // and the color.
+    fun toDynamicPartitionsModel(
+        detect: () -> DetectResult<DynamicPartitionsState>
+    ): MyModel = guardedEntry(
+        R.string.dynamic_partitions_status_title,
+        detect
+    ) { (enabled, retrofit) ->
+        val detail = buildString {
+            append(
+                myApplication.getString(
+                    if (enabled) R.string.result_supported else R.string.result_not_supported
+                )
+            )
+            if (retrofit) {
+                append(myApplication.getString(R.string.dynamic_partitions_enabled_retrofitted))
+            }
+        }
+        coloredRow(R.string.dynamic_partitions_status_title, detail, enabled)
     }
 
     // Two-state row color mapping: a true condition lands on NO_PROBLEM. Home-only, dots are a

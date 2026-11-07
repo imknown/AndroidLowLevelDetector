@@ -40,6 +40,7 @@ import net.imknown.android.forefrontinfo.ui.home.datasource.LldDataSource
 import net.imknown.android.forefrontinfo.ui.home.datasource.LldFileStore
 import net.imknown.android.forefrontinfo.ui.home.datasource.MountDataSource
 import net.imknown.android.forefrontinfo.ui.home.model.AbState
+import net.imknown.android.forefrontinfo.ui.home.model.DynamicPartitionsState
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.home.model.LldSource
 import net.imknown.android.forefrontinfo.ui.settings.datasource.AppInfoDataSource
@@ -482,31 +483,22 @@ class HomeRepository(
             )
         }
 
-    fun detectDynamicPartitions(): MyModel =
-        guardedMyModel(R.string.dynamic_partitions_status_title) {
-            val isDynamicPartitions =
-                propertyReader.getBoolean(AndroidDataSource.PROP_DYNAMIC_PARTITIONS, Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-            val isDynamicPartitionsRetrofit =
-                propertyReader.getBoolean(AndroidDataSource.PROP_DYNAMIC_PARTITIONS_RETROFIT, Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-
-            // val superPartitionResult = sh(CMD_LL_DEV_BLOCK_SUPER, Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-            // val hasSuperPartition =  superPartitionResult.isSuccess
-
-            val isDynamicPartitionsEnabled = isDynamicPartitions || isDynamicPartitionsRetrofit // || hasSuperPartition
-
-            var detail = toSupportOrNotString(isDynamicPartitionsEnabled)
-            if (isDynamicPartitionsRetrofit) {
-                detail += MyApplication.getMyString(
-                    R.string.dynamic_partitions_enabled_retrofitted
-                )
-            }
-
-            return toColoredMyModel(
-                R.string.dynamic_partitions_status_title,
-                detail,
-                isDynamicPartitionsEnabled
+    fun detectDynamicPartitions(): DetectResult<DynamicPartitionsState> = try {
+        val isDynamicPartitions =
+            propertyReader.getBoolean(AndroidDataSource.PROP_DYNAMIC_PARTITIONS, Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+        val isDynamicPartitionsRetrofit =
+            propertyReader.getBoolean(AndroidDataSource.PROP_DYNAMIC_PARTITIONS_RETROFIT, Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+        DetectResult.Found(
+            DynamicPartitionsState(
+                enabled = isDynamicPartitions || isDynamicPartitionsRetrofit,
+                retrofit = isDynamicPartitionsRetrofit
             )
-        }
+        )
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        DetectResult.Failed(e)
+    }
 
     // region [Treble & GSI]
     private fun detectTreble(): MyModel = guardedMyModel(R.string.treble_status_title) {
