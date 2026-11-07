@@ -12,6 +12,7 @@ import net.imknown.android.forefrontinfo.ui.base.detect.DetectResult
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModelTitle
 import net.imknown.android.forefrontinfo.ui.home.model.AbState
+import net.imknown.android.forefrontinfo.ui.home.model.AndroidInfoState
 import net.imknown.android.forefrontinfo.ui.home.model.DynamicPartitionsState
 import net.imknown.android.forefrontinfo.ui.home.model.LldSource
 import net.imknown.android.forefrontinfo.ui.home.model.LldStatusState
@@ -166,6 +167,50 @@ class HomeModelMapper(private val myApplication: MyApplication) {
             } else {
                 StatusColor.CRITICAL
             }
+        )
+    }
+
+    // The android info row: the preview suffix and the Go mark are display material added here;
+    // the five reference lines carry nulls the mapper renders as the platform unknownName.
+    fun toAndroidModel(detect: () -> DetectResult<AndroidInfoState>): MyModel = guardedEntry(
+        R.string.android_info_title,
+        detect
+    ) { state ->
+        val previewSuffix = when {
+            !state.isPreview -> ""
+            state.canaryLabel != null -> " ${state.canaryLabel}"
+            else -> " ${myApplication.getString(R.string.android_info_preview)}"
+        }
+        val dessert = state.dessert ?: myApplication.getString(androidR.string.unknownName)
+        var mine = "${state.version}$previewSuffix, $dessert"
+        if (state.isGoEdition) {
+            mine += " (Go)"
+        }
+        val mineLine = myApplication.getString(R.string.android_info, mine, state.apiFull)
+        val referenceLines = state.referenceRows.map { row ->
+            myApplication.getString(
+                R.string.android_info,
+                row.version ?: myApplication.getString(androidR.string.unknownName),
+                row.apiFull ?: myApplication.getString(androidR.string.unknownName)
+            )
+        }
+        val color = when (state.currency) {
+            AndroidInfoState.AndroidCurrency.Latest -> StatusColor.NO_PROBLEM
+            AndroidInfoState.AndroidCurrency.Supported -> StatusColor.WARNING
+            AndroidInfoState.AndroidCurrency.Unknown, AndroidInfoState.AndroidCurrency.Outdated -> StatusColor.CRITICAL
+        }
+        coloredRow(
+            R.string.android_info_title,
+            myApplication.getString(
+                R.string.android_info_detail,
+                mineLine,
+                referenceLines[0],
+                referenceLines[1],
+                referenceLines[2],
+                referenceLines[3],
+                referenceLines[4]
+            ),
+            color
         )
     }
 

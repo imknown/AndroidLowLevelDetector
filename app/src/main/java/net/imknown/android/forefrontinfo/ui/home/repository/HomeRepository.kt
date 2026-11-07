@@ -39,6 +39,7 @@ import net.imknown.android.forefrontinfo.ui.home.datasource.LldDataSource
 import net.imknown.android.forefrontinfo.ui.home.datasource.LldFileStore
 import net.imknown.android.forefrontinfo.ui.home.datasource.MountDataSource
 import net.imknown.android.forefrontinfo.ui.home.model.AbState
+import net.imknown.android.forefrontinfo.ui.home.model.AndroidInfoState
 import net.imknown.android.forefrontinfo.ui.home.model.DynamicPartitionsState
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.home.model.LldSource
@@ -78,72 +79,53 @@ class HomeRepository(
         DetectResult.Failed(e)
     }
 
-    fun detectAndroid(lld: Lld?): MyModel =
-        guardedMyModel(R.string.android_info_title) {
-            val lldAndroid = lld?.android
-            val androidInfo = AndroidVersionDataSource.currentAndroidInfo
+    fun detectAndroid(lld: Lld?): DetectResult<AndroidInfoState> = try {
+        val lldAndroid = lld?.android
+        val androidInfo = AndroidVersionDataSource.currentAndroidInfo
 
-            // region [Mine]
-            // The lld known row corrects what this row displays only (version / dessert);
-            // the correction never reaches other detections or any global (AndroidVersionDataSource is the single source).
-            val known = lldAndroid?.known?.find {
-                it.apiFull == androidInfo.apiFull
-            }
-
-            fun String.toStableOrPreview(): String {
-                var versionTemp = this
-                if (isPreviewAndroid()) {
-                    val preview = if (Build.VERSION.CODENAME == CODENAME_CANARY) {
-                        CODENAME_CANARY.toPascalCase()
-                    } else {
-                        MyApplication.getMyString(R.string.android_info_preview)
-                    }
-                    versionTemp += " $preview"
-                }
-                return versionTemp
-            }
-
-            val version = (known?.version ?: androidInfo.version).toStableOrPreview()
-            val dessert = known?.name
-                ?: androidInfo.dessert
-                ?: MyApplication.getMyString(androidR.string.unknownName)
-            var myVersionAndDessert = "$version, $dessert"
-            if (MyApplication.instance.isGoEdition()) {
-                myVersionAndDessert += " (Go)"
-            }
-
-            val mine = MyApplication.getMyString(R.string.android_info, myVersionAndDessert, androidInfo.apiFull)
-            // endregion [Mine]
-
-            fun oneLine(android: Lld.Androids.Android?): String {
-                val version = android?.version
-                    ?: MyApplication.getMyString(androidR.string.unknownName)
-                val apiFull = android?.apiFull
-                    ?: MyApplication.getMyString(androidR.string.unknownName)
-                return MyApplication.getMyString(R.string.android_info, version, apiFull)
-            }
-
-            val latestStable = oneLine(lldAndroid?.stable)
-            val lowestSupport = oneLine(lldAndroid?.support)
-            val stablePreview = oneLine(lldAndroid?.stablePreview) // Beta
-            val latestPreview = oneLine(lldAndroid?.preview) // Canary
-            val latestInternal = oneLine(lldAndroid?.internal)
-
-            val infoDetailArgs = arrayOf(mine, latestStable, lowestSupport, stablePreview, latestPreview, latestInternal)
-
-            val color = when {
-                lld == null -> StatusColor.CRITICAL
-                isLatestStableAndroid(lld) || isLatestPreviewAndroid(lld) -> StatusColor.NO_PROBLEM
-                isSupportedByUpstreamAndroid(lld) -> StatusColor.WARNING
-                else -> StatusColor.CRITICAL
-            }
-
-            return toColoredMyModel(
-                R.string.android_info_title,
-                MyApplication.getMyString(R.string.android_info_detail, *infoDetailArgs),
-                color
-            )
+        // The lld known row corrects what this row displays only (version / dessert);
+        // the correction never reaches other detections or any global (AndroidVersionDataSource
+        // is the single source).
+        val known = lldAndroid?.known?.find {
+            it.apiFull == androidInfo.apiFull
         }
+
+        val currency = when {
+            lld == null -> AndroidInfoState.AndroidCurrency.Unknown
+            isLatestStableAndroid(lld) || isLatestPreviewAndroid(lld) -> AndroidInfoState.AndroidCurrency.Latest
+            isSupportedByUpstreamAndroid(lld) -> AndroidInfoState.AndroidCurrency.Supported
+            else -> AndroidInfoState.AndroidCurrency.Outdated
+        }
+
+        val referenceRows = listOf(
+            AndroidInfoState.AndroidReferenceRow(lldAndroid?.stable?.version, lldAndroid?.stable?.apiFull),
+            AndroidInfoState.AndroidReferenceRow(lldAndroid?.support?.version, lldAndroid?.support?.apiFull),
+            AndroidInfoState.AndroidReferenceRow(lldAndroid?.stablePreview?.version, lldAndroid?.stablePreview?.apiFull),
+            AndroidInfoState.AndroidReferenceRow(lldAndroid?.preview?.version, lldAndroid?.preview?.apiFull),
+            AndroidInfoState.AndroidReferenceRow(lldAndroid?.internal?.version, lldAndroid?.internal?.apiFull)
+        )
+
+        DetectResult.Found(
+            AndroidInfoState(
+                version = known?.version ?: androidInfo.version,
+                dessert = known?.name ?: androidInfo.dessert,
+                isPreview = isPreviewAndroid(),
+                canaryLabel = if (Build.VERSION.CODENAME == CODENAME_CANARY) {
+                    CODENAME_CANARY.toPascalCase()
+                } else {
+                    null
+                },
+                isGoEdition = MyApplication.instance.isGoEdition(),
+                apiFull = androidInfo.apiFull,
+                referenceRows = referenceRows,
+                currency = currency
+            )
+        )
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        DetectResult.Failed(e)
+    }
 
     fun detectSdkExtension(lld: Lld?): MyModel =
         guardedMyModel(R.string.android_sdk_extension_title) {
