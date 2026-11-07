@@ -23,35 +23,22 @@ class HomeModelMapper(private val myApplication: MyApplication) {
 
     /**
      * The developer options row: red while enabled, green while disabled (this setting's semantics
-     * is "enabled is the risk").
-     *
-     * This method is also the batch's UI-side thin guard: it wraps the whole fetch-and-translate
-     * chain and degrades unexpected exceptions into this entry's own failure row, so one failing
-     * entry cannot take the whole page down (the same coverage the old guardedMyModel had).
-     * [CancellationException] always rethrows: a cancelled coroutine must not become a detection
-     * failure. The failure DEBUG print lives in [failureRow], so both failure paths are covered.
-     * When the engine lands, this layer moves into it and the wrapping goes away.
-     *
-     * The Missing branch is unreachable for this entry (an unreadable value surfaces as Failed);
-     * it exists for when exhaustiveness and renders the unknown row with reason as its detail.
-     * The reason's shape is a later batch's call (spec finding 3).
+     * is "enabled is the risk"). Runs through the shared [guardedEntry] scaffold; the Missing
+     * branch is unreachable for this entry (an unreadable value surfaces as Failed) and renders
+     * the unknown row via the scaffold's default. The reason's shape is a later batch's call
+     * (spec finding 3).
      */
-    fun toDeveloperOptionsModel(detect: () -> DetectResult<Boolean>): MyModel = try {
-        when (val result = detect()) {
-            is DetectResult.Found -> coloredRow(
-                R.string.developer_options_status_title,
-                myApplication.getString(
-                    if (result.value) R.string.result_disabled else R.string.result_enabled
-                ),
-                result.value
-            )
-            is DetectResult.Missing -> unknownRow(R.string.developer_options_status_title, result.reason)
-            is DetectResult.Failed -> failureRow(R.string.developer_options_status_title, result.cause)
-        }
-    } catch (e: CancellationException) {
-        throw e
-    } catch (e: Exception) {
-        failureRow(R.string.developer_options_status_title, e)
+    fun toDeveloperOptionsModel(detect: () -> DetectResult<Boolean>): MyModel = guardedEntry(
+        R.string.developer_options_status_title,
+        detect
+    ) { isDisabled ->
+        coloredRow(
+            R.string.developer_options_status_title,
+            myApplication.getString(
+                if (isDisabled) R.string.result_disabled else R.string.result_enabled
+            ),
+            isDisabled
+        )
     }
 
     // Two-state row color mapping: a true condition lands on NO_PROBLEM. Home-only, dots are a
@@ -86,5 +73,30 @@ class HomeModelMapper(private val myApplication: MyApplication) {
             detail = myApplication.getString(R.string.result_detect_failed, e.fullMessage),
             color = StatusColor.CRITICAL
         )
+    }
+
+    // The chained thin guard's shared scaffold: a try around the whole fetch-and-render chain,
+    // degrading unexpected exceptions into the entry's own failure row; [CancellationException]
+    // always rethrows. Failed renders the failure row, Missing the unknown row (reason as the
+    // detail, unreachable for most entries and kept for exhaustiveness). The failure DEBUG print
+    // stays single-sited in [failureRow]. When the engine absorbs this scaffold (subtask-05),
+    // the wrapping at the call side goes away.
+    // onFound is the last parameter so the callers' trailing lambda binds to it (a trailing
+    // lambda always binds to the last parameter).
+    private fun <T> guardedEntry(
+        @StringRes titleRes: Int,
+        detect: () -> DetectResult<T>,
+        onMissing: (String) -> MyModel = { unknownRow(titleRes, it) },
+        onFound: (T) -> MyModel
+    ): MyModel = try {
+        when (val result = detect()) {
+            is DetectResult.Found -> onFound(result.value)
+            is DetectResult.Missing -> onMissing(result.reason)
+            is DetectResult.Failed -> failureRow(titleRes, result.cause)
+        }
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        failureRow(titleRes, e)
     }
 }
