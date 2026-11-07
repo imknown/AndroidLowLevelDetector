@@ -1190,16 +1190,6 @@ class HomeRepository(
         }
     )
 
-    private fun translateEnabled(condition: Boolean) = translateDisabled(!condition)
-
-    private fun translateDisabled(condition: Boolean) = MyApplication.getMyString(
-        if (condition) {
-            R.string.result_disabled
-        } else {
-            R.string.result_enabled
-        }
-    )
-
     private fun getPackageInfoOrNull(packageName: String) = try {
         appInfoDataSource.getPackageInfoOrThrow(MyApplication.instance.packageManager, packageName)
     } catch (e: Exception) {
