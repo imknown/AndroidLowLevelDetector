@@ -457,7 +457,77 @@
   - `#06` 的状态括号 "部分随行 #50" 改成 "测试基础设施已随 1b 与 #50 补齐"; 条目正文里  
     "且没有 CI 上必须通过的检查 (检查归 #50)" 与 "Turbine ... 与 #50 的 CI 检查同批" 两处跟着改.  
   - `#51` 的状态括号 "随行 #50" 去掉, 只留 "开放".
+- 2026-11-07: 负责人确认接续 subtask-04 (2a 领域化), 并定下节奏: 尽可能一点一点改, 每批改动最小,  
+  方便一点一点 review, 最后按最小单位一笔一笔提交 (每笔提交仍单独要负责人同意, trailer 另给).  
+  第 0 步复核完成 (HEAD `372a5de7`): subtask-04 报告全部事实重核, 漂移 7 处带批注改进报告  
+  (HomeRepository 1210→1245 行; 三个 private 辅助 :273/:507/:559→:281/:529/:581;  
+  getOutdatedTargetSdkVersionApkModel :1105→:1141, 产出行 :1162-1167→:1202; toSupportOrNotString :1185-1191→:1221;  
+  getMyString 69→71 处在 HomeRepository; toColoredMyModel 24→26 处; AppGraph 工厂 :89-92→:91),  
+  其余事实不变 (23 个产行入口, 45 处 `Build.*`, `guardedMyModel` 24 处, Others 37 get*/36 guard/:210,  
+  Prop 3 入口, MyModelExt 四段行号, MyApplication.kt:73, MyModelListScreen.kt:132).  
+  顺带把下面 "各子任务状态" 一行修正: subtask-03 已于 2026-11-06 关闭, 原文还写着等 review.  
+  下一步动作: 批次划分与 review 节奏等负责人定 (当轮回复已给三个候选), 定完开工批 1 (DetectResult 容器).
+- 2026-11-07 (批 1 实现): DetectResult 容器与单测落地, 未提交. 节奏负责人定: 每批一轮 review, 批批提交.
+  - 新增 `ui/base/detect/DetectResult.kt` (三支 `Found(value)` / `Missing(reason)` / `Failed(cause)`,  
+    报告计划改动 1 的形状) 与 `DetectResultTest.kt` (修后 5 个方法: 三个取值断言, when 穷尽,  
+    协变由第 5 个方法的显式 `DetectResult<Int>` 赋值锁定, v2 修). 纯新增, 不碰现有代码.
+  - 验证: ILS 对 `DetectResult.kt` CLEAN; 对测试文件报 11 条 UNRESOLVED, 对照存量 `MyModelTest.kt`
+    (已提交, Gradle 全绿) 同样报, 判定 ILS 解析不了 test 源集的依赖 (机制未查明), 已记进 10-分析细则;
+    测试文件的编译类发现以 Gradle 为准. analyze-file 跳过: 没有正在运行的 Studio 实例 (同 1a 的偏差),
+    要负责人开 Studio 解锁.
+  - Gradle 四任务一次跑完 170 秒 `BUILD SUCCESSFUL`: `DetectResultTest` 4 个方法全被发现 0 失败
+    (读 test-results xml 核过), lint `No errors or warnings`, baseline 仍 1 error / 6 warnings / 1 hint.
+  - Windows 通道笔记记进 11: 不带 shell 的进程调 Gradle 入口要用 `gradlew.bat`
+    (构建包装器直接调 `./gradlew` 报 WinError 193).
+  - 注释按 05 暂用中文, 本批提交确认时翻英语.
+  - 下一步动作: 收 v1 报告 (review 目录已架, 提示词 `review-v1-prompt-1038.md`, HEAD `372a5de7`),
+    处理发现后走放行与提交; 工作树冻结 (记录文件除外).
+  - reviewer 去处负责人定: 批 1 的 v1 走跨端独立会话 (对面开新 session, 模型与 effort 对面定).
+- 2026-11-07 (批 1 v1 收下, 处理发现): 四份报告 (CatPaw/LongCat 2.5 high, TraeCode/DeepSeek-V4.1-Flash default,
+  WorkBuddy/Hy4 default, MiniMax Code/M3.1-Flash on), HEAD 都是 `372a5de7`, 头尾齐. 合并判定:
+  - 修 5 处: 
+    - 协变没被测试锁住 (MiniMax 实测去 `out` 测试照样过; Hy4 RV1-01, CatPaw F-4 同源): 测试补第 5 个方法
+      `missing and failed fit a concretely typed container` (显式 `DetectResult<Int>` 赋值接 Missing/Failed);
+      第 4 个方法注释改成只说穷尽. 负向验证: 去 `out` 后 `:app:compileFossDebugUnitTestKotlin` 报
+      `INITIALIZER_TYPE_MISMATCH` 失败, 恢复后四任务全绿, 5 方法 0 失败.
+    - `subtask-04.md` 的 `toSupportOrNotString` 行号漏改 (TraeCode 与 Hy4 RV1-11 都报): 实际 `:1221-1227`,
+      已补批注. 上面 2026-11-07 复核条目里 "7 处已带批注就地改" 对这一处不成立 (当时漏了), 以本条为准.
+    - `toColoredMyModel` 口径注明 (MiniMax): 25 个调用点命中 26 行, 含 1 处 import.
+    - `DetectResult.kt` KDoc 一句 (CatPaw F-2 措辞): "文案与颜色不在这里定" 对 Missing 不成立, 改成
+      "`Missing` 的 `reason` 由仓库给, 展示文案与颜色由 mapper 定".
+    - 10-分析细则的 ILS test 源集条补 base 证据 (TraeCode 指出证据只有 app 两个文件):
+      base 的 `DateTimeExtTest.kt` 同样报 UNRESOLVED (16 条), 措辞维持全测试源集.
+  - 驳回 1 处 (MiniMax 发现 1, 判断层): 容器落 `ui/base/detect/` 被指违背分层方向. 事实层核: 它引的报告与
+    #01 原文都没有把共用容器划到 ui 外 (#01 自己的领域对象落点示例 `ui/home/model/` 就在 ui 下);
+    "63 个入口返回值按错约定走" 不成立, 各条目自己的类型落各自功能包, 共用容器只有这一个文件.
+    维持 `ui/base/detect/`, 与 `ui/base/list` (MyModel) 的共用代码惯例一致. 已在回复里给老板一行, 可否决.
+  - 归后续单元 4 处 (已记 `state.md`): 批 2 薄 guard 定 `CancellationException` 走法 (仓库 guard 在
+    `MyModelExt.kt:154` rethrow, CatPaw F-1); 批 3 开工前定 `Missing.reason` 形状 (MiniMax 发现 3);
+    mapper 批照报告口径执行 Missing 落未知 (CatPaw F-3, 与 FR-3 不冲突); 收尾批回答 `MountQueryResult`
+    要不要并进 `DetectResult` 家族 (Hy4 RV1-06).
+  - 超出范围判定 (四份都单列了同四份文档): 提交拆法采纳 "第 0 步复核批注一笔, 批 1 两个代码文件一笔,
+    10/11 通道笔记一笔"; 驳回 MiniMax 的 "通道笔记收进批 1" (判断层): 通道笔记是验证学习, 不是批 1 交付物,
+    与老板每批最小单位的规矩一致.
+  - 下一步动作: 发 v2 (delta), 提示词 `review-v2-prompt-1148.md`, 只核五处修复与修复本身的新错;
+    HEAD 仍 `372a5de7`, 工作树冻结 (记录文件除外).
+- 2026-11-07 (批 1 v2 收下, 处理发现): 三份报告 (TraeCode/DeepSeek-V4.1-Flash default, WorkBuddy/Hy4 default,
+  CatPaw/LongCat 2.5 high), HEAD 都是 `372a5de7`, 头尾齐. 三家一致: 五处修复全判修对;
+  MiniMax 发现 1 的驳回被三家独立核过, 都同意维持; 实质新发现 0 条. 新增 3 条措辞, 当场修完:
+  - `DetectResultTest.kt:7` 类注释 "装进任何条目类型的容器" 比测试证明的强 (CatPaw N-1, Hy4 RV2-01):
+    改成 "装进有具体条目类型的容器".
+  - `progress.md` 批 1 实现条还写 "4 个方法...与协变" (CatPaw N-2/N-3, Hy4 RV2-02): 就地改成 5 个方法,
+    协变记在第 5 个方法上, 标 "v2 修".
+  - `subtask-04.md` 风险节与现状表的 `toColoredMyModel` 口径不齐 (Hy4 RV2-03): 风险节改成
+    "25 处调用点 (命中 26 行, 含 1 处 import)".
+  - 归后续补 1 条 (Hy4 v2): 文档批把共用容器落哪个包写清 (`#01:86` 只管 mapper 落点).
+  - 下一步动作: v3 排不排等负责人定 (三家都明说不再要求多一轮, 三处措辞已修完; 我的意见是不排, 跳过记偏差);
+    之后批 1 放行, 注释翻英语, 三笔提交逐笔等同意.
+- 2026-11-07 (批 1 放行, 提交中): v3 跳过 (负责人定, 偏差): 三家明说不再要求多一轮, 三处措辞已修完且字面级可验证.
+  第 4 步与第 5 步并一次同意 (低风险子任务先例); 放行理由一句负责人未留, 不编造, 记此.
+  新增注释已翻英语 (05), `DetectResult.kt` ILS 复验 CLEAN. 提交拆三笔逐笔等同意:
+  第 0 步复核批注与进度记录 / 批 1 两个代码文件 / 10 与 11 通道笔记. trailer 经负责人定:
+  agent ZCode, model GLM-5.3-Flash, effort max (三笔共用).
 - 各子任务状态: subtask-01 已关闭; subtask-02 已提交并关闭;  
-  subtask-03 实现与本地验证完成, 等 review; subtask-04 ~ subtask-06 报告已出, 实现未开始.
+  subtask-03 已提交并关闭; subtask-04 ~ subtask-06 报告已出, 实现未开始.
 - 未查清: 无.
 - 挂起项: 无.

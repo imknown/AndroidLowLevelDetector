@@ -1,6 +1,8 @@
 # subtask-04 2a 领域化 (一次性)
 
 > **状态**: living. 事实核对时间 2026-10-27, 代码在 `502a6eb7`.  
+> **复核**: 2026-11-07, HEAD `372a5de7` 全量重核: 事实漂移 7 处已带批注就地改,  
+> 全部来自 1a ~ 1b 的落地改动, 无机制性变化.  
 > 任务级计划见 [plan.md](plan.md); 流程见 [13-任务工作流](../../agents-cn/13-任务工作流.md).
 
 ## 目标
@@ -26,12 +28,12 @@
 
 | 项 | 数字或位置 | 说明 |
 |---|---|---|
-| `HomeRepository` 规模 | 1210 行 | 22 个 public `detect*` 加 `getOutdatedTargetSdkVersionApkModel` 共 23 个产行入口, <br>另有 3 个 private 辅助 (`:273` `detectSecurityPatch`, `:507` `detectTreble`, `:559` `detectGsi`); 产 25 行 |
-| `getMyString` 调用 | 全项目 101 个调用点, 其中 69 处在 `HomeRepository` | 判断被就地翻成文案 |
+| `HomeRepository` 规模 | 1245 行 (复核 2026-11-07: 审计时 1210) | 22 个 public `detect*` 加 `getOutdatedTargetSdkVersionApkModel` 共 23 个产行入口, <br>另有 3 个 private 辅助 (复核 2026-11-07: `:281` `detectSecurityPatch`, `:529` `detectTreble`, `:581` `detectGsi`; 审计时 `:273`/`:507`/`:559`); 产 25 行 |
+| `getMyString` 调用 | 全项目 101 个调用点 (复核 2026-11-07, 口径: 不含 2 处定义与 3 处注释; 审计当时同口径 99), 其中 71 处在 `HomeRepository` (审计时 69) | 判断被就地翻成文案 |
 | `Build.*` 直接读 | `HomeRepository` 里 45 行 | 迁移后的可测性由它决定 |
-| `toColoredMyModel` | `HomeRepository` 里 24 处 | 颜色在仓库里定 |
-| `toSupportOrNotString` | HomeRepository.kt:1185-1191 | 判断结果当场变成两条文案之一 |
-| Others | `OthersRepository.kt` 37 个 `get*` 方法, 37 次追加 | 其中 36 个被 guard 包住, `getPartitionFingerprints` (:210) 自己按分区隔离 |
+| `toColoredMyModel` | `HomeRepository` 里 25 个调用点, 命中 26 行 (含 1 处 import; 复核 2026-11-07: 1a 件 3 加了两行挂载失败行, 审计时命中 24 行) | 颜色在仓库里定 |
+| `toSupportOrNotString` | HomeRepository.kt:1221-1227 (复核 2026-11-07: 审计时 :1185-1191) | 判断结果当场变成两条文案之一 |
+| Others | `OthersRepository.kt` 37 个 `get*` 方法, 37 次追加 (追加在 `OthersViewModel` 的 `tempModels +=`, 复核 2026-11-07) | 其中 36 个被 guard 包住, `getPartitionFingerprints` (:210) 自己按分区隔离 |
 | Prop | `PropRepository.kt` 3 个入口 | 行数与系统属性数量相关 |
 | 失败处理 | `MyModelExt.kt:35-50` (Home), `:83-98` (Others) | 现在由 `guarded*` 在仓库侧包住整个 block |
 
@@ -54,8 +56,9 @@
 
    - `HomeRepository` 的 23 个产行入口, `OthersRepository` 的 37 个 `get*`, `PropRepository` 的 3 个入口,  
      签名全部去掉 `MyModel` 返回值, 改成领域类型.
-   - 23 个入口里有一个不叫 `detect*`: `getOutdatedTargetSdkVersionApkModel` (HomeRepository.kt:1105).  
-     它是全仓唯一产出 `MyModelType.OutdatedTargetSdkApk` 的地方 (:1162-1167), 也是 subtask-01 第一件  
+   - 23 个入口里有一个不叫 `detect*`: `getOutdatedTargetSdkVersionApkModel` (HomeRepository.kt:1141,  
+     复核 2026-11-07: 审计时 :1105).  
+     它是全仓唯一产出 `MyModelType.OutdatedTargetSdkApk` 的地方 (:1202; 审计时 :1162-1167), 也是 subtask-01 第一件  
      改成按类型寻址的那一行. 按"detect 方法"去列清单会把它漏掉. 三个 private 辅助随它们各自的  
      入口一起改, 不单独算一条.
    - 判断留在仓库; 文案与颜色全部移出. `toSupportOrNotString` 删除, 由 mapper 决定文案.
@@ -66,7 +69,8 @@
    - 新增 `ui/home/mapper/HomeModelMapper.kt`, `ui/others/mapper/OthersModelMapper.kt`,  
      `ui/prop/mapper/PropModelMapper.kt`.
    - mapper 取文案的来源要先定. 应用级 Context 只有一处, `MyApplication.instance` (MyApplication.kt:73),  
-     它本身也是 `Context`. 图里已经有现成入口: `AppGraph.kt:89-92` 的工厂用 `@Provides app: MyApplication`  
+     它本身也是 `Context`. 图里已经有现成入口: `AppGraph.kt:91` 的工厂用 `@Provides app: MyApplication`  
+     (复核 2026-11-07: 审计时 `:89-92`)  
      把应用绑进图, 所以 mapper 注入 `MyApplication` 不用新增绑定; 要注入 `Context` 或 `Resources`  
      才需要补一个 `@Provides`. 推荐注入 `MyApplication`.
    - "不再用 `MyApplication.getMyString`" 指的是换成 mapper 内部的 `context.getString(...)`, 不是去掉  
@@ -188,7 +192,7 @@
 
 ## 风险
 
-- 高. 45 处 `Build.*`, 24 处 `toColoredMyModel`, 69 处 `getMyString`, 25 行展示.
+- 高. 45 处 `Build.*`, 25 处 `toColoredMyModel` 调用点 (命中 26 行, 含 1 处 import), 71 处 `getMyString` (三处均复核 2026-11-07), 25 行展示.
 - 文案与颜色的细节容易在搬迁中走样. 黄金数据是唯一能证明等价的东西, 所以 subtask-02 必须先完成.
 - 仪器测试需要设备, 与"CI 只跑 JVM 测试"的决定并存时, 这些条目在 CI 上不会被验证.  
   这一点要在报告里写清, 不能当成已验证.
