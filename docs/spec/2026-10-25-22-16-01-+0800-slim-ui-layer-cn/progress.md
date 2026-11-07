@@ -65,7 +65,7 @@
   HomeRepository.kt:568 的无参构造, KotlinAndroid.kt:79 与 :93 的写法).
   待定: 要不要再跑一次 v3. 我的意见是不跑, 这一轮改动是机械修补, 且已逐条回查; 若要跑则按 delta 方式.  
   下一步动作: 负责人定 v3 跑不跑, 然后提交.
-- 2026-10-29: v3 收口核对跑完 (结果在 v3 的结论 (已并入本记录)): 7 处修补 6 处成立, 第 7 处不成立,  
+- 2026-10-29: v3 结束时的核对跑完 (结果在 v3 的结论 (已并入本记录)): 7 处修补 6 处成立, 第 7 处不成立,  
   `subtask-04.md:9` 与 `plan.md:48`/`:71` 还写着三列. 另外报了 2 条文字不一致 (决策日期, lint 引文).  
   处置: 三处三列全改成四列 (加 `type`); `subtask-03/subtask-03.md` 的 lint 引文换成产物里的原句  
   (`No errors or warnings (...)`); 日期这条复核后不再成立, `plan.md:39` 与 `subtask-01.md:69` 现在都是  
@@ -256,7 +256,7 @@
     subtask-04 对照时这些行只比 key / color / type, 两边同一个生成器, 占位一致.
   - 07 补两类边界句: 设备型号与系统版本不算本机环境 (定位设备类别, 不定位这台机器);  
     应用自己产出的数据里若带定位值, 必须在生成时换占位, 不能靠事后脱敏或一句例外绕过去.
-  - 顺带: subtask-02 的例外名单说法与 subtask-04 对齐 (原写两类, 后者写四类); `#50` 那句主语悬空改顺.
+  - 顺带: subtask-02 的例外名单说法改成与 subtask-04 一致 (原写两类, 后者写四类); `#50` 那句主语悬空改顺.
   - 设备侧已验: 重装后 1 次 `OK (1 test)`, 拉回的 json 里脱敏 11 行, 旧值 (序列号, android id,  
     ROM 构建机名, adb 端口) 残留条数 0.
   - 下一步动作: 发 v5 (只核脱敏这一处).
@@ -305,13 +305,13 @@
   - 记忆那句补 "凭据类材料按上一条" (Hy W3).
   - 文档与注释的边界写清 (Hy W1): 自检用同一套词边界, MAC 全表扫; subtask-02 的自检说明跟着改.
   - 进度记录停在旧状态 (Trae 第一档, Hy W4): 本条目即是补齐, 07 裁定与两次设备侧重跑都记进来了.
-- 2026-11-05 (收口): 决定不再排 v9. 理由: v1 到 v8 共八轮, 代码侧的实质问题在 v6 ~ v8 已经出尽
+- 2026-11-05 (review 循环结束): 决定不再排 v9. 理由: v1 到 v8 共八轮, 代码侧的实质问题在 v6 ~ v8 已经出尽
   (短账号漏网, 生成时 vs 事后脱敏, 自检与替换口径不一致), v8 之后只剩文档口径与匹配细节, 逐一改完后
   v8 那五处我自查过: 自检与替换共用 `tokenRegex`, MAC 全表查, 07 指代改回限定说法, 记忆那句点明范围,
   记录补上; 离线全量全绿, 设备侧用新 APK 跑 `OK (1 test)`, 新自检没有误报.
   剩下三条归 subtask-04 (离线路径覆盖, 资源 id 键, 实时计数器例外), 已在本文件记着.
   以后要重开 review 的条件: 生成器的 key 片段表大改, 或 subtask-04 换设备重生成时出现新的机器定位值形态.
-  八轮的走向 (报告都在 review 目录, 收口时删掉, 结论只留在这里):
+  八轮的走向 (报告都在 review 目录, 循环结束后删掉, 结论只留在这里):
   v1 全量: JUnit 4 残留, 04 架构版本线写错, issues 现状过期, 快照断言只覆盖一项 → 全修.
   v2 delta: 落定超时不还原设置, 四份 issue 现状过期, subtask-04 验收与时效边界冲突 → 全修.
   v3 delta: subtask-04 验收自相矛盾, #50 一句读着像模板被迁移 → 全修.
@@ -319,7 +319,7 @@
   v5 作废: 负责人往 origin 推了 07 判据, HEAD 变了.
   v6 delta: 4 字符构建账号仍漏 11 行 (事实层裁定) → 阈值与匹配重做, 基线重生成.
   v7 delta: 自检只查已收集值, 占位只认简中, 子串替换会切碎通用词 → 全修; 07 两处歧义请负责人裁定.
-  v8 delta: 替换与自检口径不一致, 07 指代丢限定词 → 全修, 自查后收口.
+  v8 delta: 替换与自检口径不一致, 07 指代丢限定词 → 全修, 自查后结束本轮.
 - 2026-11-05 (提交): subtask-02 按三笔提交 (测试栈切换 / 快照生成器与基线 / 文档与记录),  
   拆的依据是每笔都能独立构建: 构建接线与单测迁移必须同一笔 (去 JUnit 4 的同时不迁 `DateTimeExtTest`, 编译就断),
   生成器与基线一笔, 文档一笔.
@@ -414,7 +414,7 @@
     `:75` 的 "它" 指代含混随第 2 处重写消失. (表头已限定时点, 格内重复四遍是冗余, 四格只留事实.)
   两份都确认第 2, 4, 5 处修对, 这部分无分歧.
   下一步动作: 三条修完, 剩下的全是文本表述. v4 排不排等负责人定; 跳过要记偏差.
-- 2026-11-06: v4 (delta) 发起. 我建议收口, 负责人要看第四轮还能挖出什么, 定排 v4.  
+- 2026-11-06: v4 (delta) 发起. 我建议结束循环, 负责人要看第四轮还能挖出什么, 定排 v4.  
   提示词 `review-v4-prompt-2309.md`, 只核 v3 的两处与现状表的时点统一; 里面写明 v3 两份的打架点与发起方的裁法,  
   并要求 reviewer 只在认为裁法本身错时按第三档报. 发起时 HEAD 仍 `bb839c00`. v4 为 `等待报告`, 工作树冻结.
   下一步动作: 收 v4 报告.
@@ -427,7 +427,7 @@
     catpaw 自己也承认 "没写参照时点", 判它不构成实质错偏松. 改成现在时: "CI 还不跑它们, 回归拦不住".
   下一步动作: 两处修完. 四轮的新发现都是上一轮修复的副产品, 已到字面级. v5 排不排等负责人定,  
   我的意见是不排, 跳过要记偏差.
-- 2026-11-06: 收口 (负责人定). 偏差: v5 跳过, 未跑. 理由: v1 到 v4 共四轮, 每轮的新发现都是上一轮修复带出来的,  
+- 2026-11-06: 结束循环 (负责人定). 偏差: v5 跳过, 未跑. 理由: v1 到 v4 共四轮, 每轮的新发现都是上一轮修复带出来的,  
   严重度从漏改错改降到一句中文读不通; v4 那两条已在事实层核过并逐条回查, 再排一轮只会产生新的措辞意见.  
   另一条事实: v3 / v4 的 reviewer 仍是 v1 / v2 用过的两个模型 (新开的 session), 换模型这层独立性没有增加.
   机械自查 (替代 v5 的核对):
@@ -569,14 +569,14 @@
   按 11 的阶梯事实层逐条核, 合并判定:
   - 修 9 处 (实质三 + 文档措辞一批):
     - guard 覆盖面 (Hy4 D2 / DeepSeek F1, 事实层成立: 旧 guard 包取数加翻译, 新的只包取数, `startLoad` 协程无 catch,
-      mapper 逃逸即整页失败): 重构为链式 — mapper 收 `detect: () -> DetectResult<Boolean>`, try 包整条链,
+      mapper 逃逸即整页失败): 重构为链式: mapper 收 `detect: () -> DetectResult<Boolean>`, try 包整条链,
       调用点无 try 一行; `detectResultCatching` 失去全部消费者, 从 `DetectResult.kt` 删除 (从未提交, 工作树内增删).
     - 失败路径丢 DEBUG 打印 (Hy4 D6 / DeepSeek F2, FR-3 AC2 原文核过: "细节进日志供排查"): mapper catch 补 printStackTrace.
     - guard 契约无测试 (Hy4 D3): 新增 `HomeModelMapperTest` 四条 (意外异常降级失败行, 取消 rethrow, Failed 分支,
       两态颜色); 单测 13→17.
     - 05 与薄 guard 冲突无记录 (Hy4 D1 / DeepSeek F3): 05 的 UI 禁令条补例外句 (过渡结构, 落 UI 包翻译层, 引擎落地收回);
       代码按已批准的报告没动, 规则补记录, 已在回复里给老板一行可否决.
-    - 04-架构 三处: 场景表对齐 subtask-04 裁量标准 (Hy4 D5: 普通系统属性归 Robolectric, 厂商改过的具体值归探针),
+    - 04-架构 三处: 场景表改成与 subtask-04 裁量标准一致 (Hy4 D5: 普通系统属性归 Robolectric, 厂商改过的具体值归探针),
       接线段补 isIncludeAndroidResources (DeepSeek F4), "兜底" 禁用词与 "假环境足够真" 措辞 (DeepSeek F6).
     - 计数漂移 (DeepSeek F5): MyModelExt 注释去数字, subtask-04 三处计数带批注更新.
     - 措辞一批: toml 与 KotlinAndroid 的过期 "spike 定去留" 句, AppGraph 访问器注释自相矛盾句, import 归位, spike 去掉多余强转.
@@ -592,7 +592,7 @@
   - N1 (实质, 两家同判第一档): 读失败走仓库转 `Failed` 的正常路径, 不经过 mapper 的 catch,
     DEBUG 打印在主路径上仍是空的, FR-3 AC2 只对没预料到的异常成立. 修法取单点: 打印从 catch 撤出,
     移进 `failureRow` 本体 (两条失败路径必经, 每条失败打一次, 无重复), KDoc 同步.
-  - N2 (措辞): guard 位置三处说法不一致 — 05 例外句的理由改成 "负责人批准的过渡结构, 只限这一层",
+  - N2 (措辞): guard 位置三处说法不一致, 05 例外句的理由改成 "负责人批准的过渡结构, 只限这一层",
     并清掉 "落在 / 落地" 两个禁用词; `HomeRepository` 注释改成 "mapper 的链式薄 guard";
     `subtask-04.md` 计划改动 4 落点下补实施注记.
   - N3 (风格): `HomeModelMapper.kt` 的 import 归位字母序.
@@ -618,18 +618,18 @@
   构建跳过两项声明都成立; Trae 判批 2 可进放行, Hy4 报两条新发现:
   - N1 (实质): 阶段图 S1 节点还写 `guardedMyModel<br>HomeRepository 24 处`, 与正文 :90 的 23 处对不上
     (批 2 迁走 1 个时正文改了, 图没跟着). 08:250 明文图文对不上就地改. 修: S1 数字 24 → 23.
-  - N2 (措辞): guard 所在层三种说法并存. 修: 归并成两套各有分工的词 — guard 所在说 "UI 侧" 与
+  - N2 (措辞): guard 所在层三种说法并存. 修: 归并成两套各有分工的词: guard 所在说 "UI 侧" 与
     "HomeModelMapper 链式接口" (:91 改 "必须挪出仓库, 由 UI 侧持有", :97 图前引句与 :124 虚线箭头改
     "挪到 UI 侧", 05 例外句改 "UI 侧的薄 guard"); 图里 c1/c2/c3 的 "调用侧" 指调用者 (ViewModel), 语义准确, 保留.
   - 验证: 纯文档改动, 构建档按 11 跳过; 代码侧沿用 (17/17, lint, ILS, 设备等价).
   - 下一步动作: 发 v5 (delta), 提示词 `review-v5-prompt-1616.md`, 只核这两处; Hy4 已预告那一轮若只剩措辞即停;
     工作树冻结 (记录文件除外).
-- 2026-11-07 (批 2 v5 收下, review 循环收口): 两份报告 (Trae/DeepSeek-V4.1-Flash default, WorkBuddy/Hy4 default),
+- 2026-11-07 (批 2 v5 收下, review 循环结束): 两份报告 (Trae/DeepSeek-V4.1-Flash default, WorkBuddy/Hy4 default),
   HEAD 都是 `18c75daf`, 头尾齐. 两处修复全判修对: 图, 正文, 代码三处都是 23 (口径注记留在正文); 说法归并被认可,
   c 节点保留正确. 剩余只有措辞, 两家都判停止条件到, 不再排轮:
   - W1 (Trae): 节标题 "失败隔离挪到调用侧" → "失败隔离挪到 UI 侧" (plan.md 无引用, 不带动别处). 已改.
   - W2 (Trae): 列表项末行 :95 的两个尾随空格删除. 已改.
-  - Hy4 N2: mapper KDoc 里的 "调用侧" 说法 — 按其判定随提交前的注释翻译处理 (05 例外), 翻译时用归并后的说法. 已落实.
+  - Hy4 N2: mapper KDoc 里的 "调用侧" 说法, 按其判定随提交前的注释翻译处理 (05 例外), 翻译时用归并后的说法. 已落实.
   - 注释翻译完成 (05 的提交前机械步骤): mapper, 三个测试文件, KotlinAndroid, thirdParty.toml, AppGraph,
     HomeRepository 的实施期中文注释全翻英语; 触及文件 grep 中文字符 0; ILS mapper CLEAN.
   - 下一步动作: 第 4 步放行与第 5 步提交 (低风险并一次同意的先例), 两笔 (接线 / 迁移), trailer 等负责人;
@@ -642,8 +642,8 @@
   (guard 覆盖面重构, DEBUG 打印单点化, 契约测试, 05 例外, 04 裁量表, 图文同步), 手工步与黄金等价过.
   下一步动作: 批 3 (Home 其余 22 条分组迁移), 开工前按组给 `Build.*` 逐项裁量表等负责人批; 等负责人说开始.
 - 2026-11-07 (批 3 裁量表批 + 实现): 负责人读完全部 22 条的取数方式后批了全表裁量与批次划分
-  (批 3 属性/Settings 组 5 条, 批 4 lld/Build 组 5 条, 批 5 混合组 4 条 — 均 Robolectric;
-  批 6 shell/挂载组 5 条 — 仪器; 批 7 混合 3 条 — encryption Robolectric, webview 与全量包列表仪器).
+  (批 3 属性/Settings 组 5 条, 批 4 lld/Build 组 5 条, 批 5 混合组 4 条, 均 Robolectric;
+  批 6 shell/挂载组 5 条, 仪器; 批 7 混合 3 条: encryption Robolectric, webview 与全量包列表仪器).
   本批五条实现, 未提交:
   - 领域类型: `ui/home/model/AbState` (四字段) 与 `DynamicPartitionsState` (两字段), 照 LldSource 先例.
   - mapper: 新增共用骨架 `guardedEntry` (onFound 末位参数, 尾随 lambda 绑它; onMissing 默认 unknownRow),
@@ -661,7 +661,7 @@
   - 下一步动作: 收 v1 报告 (review 目录已架, 提示词 `review-v1-prompt-1717.md`, HEAD `cf990ba7`),
     处理发现后放行与提交 (一笔, 本批十件); 工作树冻结 (记录文件除外).
 - 2026-11-07 (批 3 v1 收下, 处理发现): 两份报告 (WorkBuddy/DeepSeek-V4.1-Flash default, WorkBuddy/claude-opus-6
-  default — 新厂商上桌), HEAD 都是 `cf990ba7`, 头尾齐. 合并判定:
+  default, 新厂商上桌), HEAD 都是 `cf990ba7`, 头尾齐. 合并判定:
   - 修 (实质/机械): 
     - 计数过期 (两家同报第一档): subtask-04.md 现状表, 正文, 图 S1, 风险节全部按 HEAD 重算带批注
       (1199 行; 产行入口 23 中 5 条返回领域对象; 辅助 :285/:504/:556; getMyString 96/66; Build 39;
@@ -676,15 +676,15 @@
   - 顺手 (两家提示): DetectAdbTest putInt 收 helper; DetectAdbAuthenticationTest 补缺席用例;
     progress 两处数字更正 (toSupportOrNotString 五个调用点含 vndk; 注释探针 = detectAb 5 行 +
     dynamicPartitions 的 superPartition 组, Claude U2).
-  - 归后续 (DeepSeek F-3): isPropertyValueNotEmpty 的判据仍是本地化文案 (#42 遗留) — 修法要动
+  - 归后续 (DeepSeek F-3): isPropertyValueNotEmpty 的判据仍是本地化文案 (#42 遗留): 修法要动
     PropertyReader 读契约 (33 调用点), 无批次认领; 覆盖核对表 #42 的 "是" 加此限定. 记 state.md.
-  - 观察不判漏 (Claude F4): 五个新翻译方法与 Failed 路径无 CI 断言 — 沿用批 2 分工 (领域对象断言 +
+  - 观察不判漏 (Claude F4): 五个新翻译方法与 Failed 路径无 CI 断言, 沿用批 2 分工 (领域对象断言 +
     黄金数据 + 仪器), 记录在案.
   - 超出范围判定 (Claude U1): subtask-04.md 未提交 diff 是批 2 收尾记录, 按既定随本批入库, 收进.
   - 验证: ILS 四文件 CLEAN; 单测 35/35 (补两例); lint 无新问题; 黄金复验 1344=1344, 五条行逐字节等价
     (nullable 输出与占位路径逐字不变).
   - 下一步动作: 发 v2 (delta), 提示词 `review-v2-prompt-1757.md`, 核七组修复; 工作树冻结 (记录文件除外).
-- 2026-11-07 (批 3 v2 收下, 处理发现, review 循环收口): 两份报告 (WorkBuddy/DeepSeek-V4.1-Flash default,
+- 2026-11-07 (批 3 v2 收下, 处理发现, review 循环结束): 两份报告 (WorkBuddy/DeepSeek-V4.1-Flash default,
   WorkBuddy/claude-opus-6 default), HEAD 都是 `cf990ba7`, 头尾齐. 七组修复五组全对, 两组有尾:
   - 组 1 (计数): 数字全对, 但头部复核行还指 `372a5de7`, 覆盖核对表 #42 的格没改 (两家各抓一头). 已修:
     头部补 "批 2 与批 3 各自按当时的树重算过计数" 一句, "事实漂移/落地改动" 换 "过期/实施改动";
@@ -692,18 +692,108 @@
   - N1 / V2-3 (实质, Claude 抓的): getStringOrNull 把缺席, 空值, 读失败三种取值并成 null, 缺席路径输出
     逐字不变, 但空值与读失败的 detail 从旧文案 (空串 / result_not_supported) 变成 build_not_filled 占位.
     按 02 逐条摆开三案 (接受+记录 / catch 返回旧文案 / 读失败升级失败行), 负责人定 **接受新行为, 记录例外**:
-    逐行等价的例外记此 — slot 属性的空值与读失败两种取值, detail 由旧文案变为 build_not_filled 占位;
+    逐行等价的例外记此: slot 属性的空值与读失败两种取值, detail 由旧文案变为 build_not_filled 占位;
     两条边只在 A/B 设备且空值/读失败时可达, 黄金对照够不到; 领域对象不装文案的代价, 与实时计数器例外同类.
     配套: PropertyReader 的 getStringOrNull 注释改说三种退化并成 null (原句 "same semantics" 不实),
     类注释补例外句; AbState KDoc 补 "或读失败"; mapper 的 "When the engine lands" 改 "absorbs this
     scaffold" (翻译腔规避).
-  - W2: progress 里 "33 调用点" 补口径 — 类注释自称 33, 实测 `propertyReader.` 28 行 (HR 24 + 三个
+  - W2: progress 里 "33 调用点" 补口径: 类注释自称 33, 实测 `propertyReader.` 28 行 (HR 24 + 三个
     others datasource 4); 本文按类注释口径引, 差异记此.
   - 判定记档: state.md 已载 isPropertyValueNotEmpty 归后续; Claude 要求的 "判定理由留档" 即本条与 state.md.
-  - 两家都判: 剩余全是不重要措辞与记录问题, 按停止条件停, 不再排轮. 循环收口.
+  - 两家都判: 剩余全是不重要措辞与记录问题, 按停止条件停, 不再排轮. 循环结束.
   - 下一步动作: 第 4 步放行与第 5 步提交 (一笔, 代码十一件 + 两份 spec 记录), trailer 等负责人;
     review 目录按 14 删, 待负责人点头; 工作树冻结 (记录文件除外).
+- 2026-11-07 (批 3 提交, 重排, 关闭): 先按提案一笔提交 (`18dd8ba7`, 十三件); 负责人随后问能否拆细,
+  并定 **重排并定成规矩**. 因 `18dd8ba7` 未推 origin, 用备份分支 + `reset --hard` 重建十个中间态重拼,
+  每态单独编译验证, 末态与备份对账只剩预期内的 12-git 规矩一笔; 重排走样的两处 (PropertyReader 类注释的
+  v2 例外句, mapper 五方法顺序) 由 `3e95da05` 恢复; 全量测试 35/35 在重排树上复跑绿, 备份分支已删.
+  提交串 (老 → 新): `b9c64d52` 骨架收编, `315d8354` getStringOrNull, `396cc771` ab, `b4a724dc`
+  dynamicPartitions, `48de2244` dsu, `f07e4d10` adb, `1327d047` adbAuthentication, `439ef915`
+  translate 退休, `e1d2317e` spec 记录, `2f8d91dc` 12-git 规矩 (+ 末笔恢复走样两处的 `3e95da05`).
+  规矩落 12-git: 提交按最小可独立编译与验证的单元拆, 逐条迁移每条目一笔, 共用骨架与纯新增辅助各成一笔,
+  spec 记录随批内最后一笔入库. 本条目与重排记录随批 4 首笔入库.
+  下一步动作: 批 4 (lld/Build 组五条: mode, android, sdkExtension, performanceClass, kernel), 等负责人说开始.
+- 2026-11-07 (批 4 节奏修正 + 实现): 负责人修正节奏: **同类型条目一批改完, 一起走 v1/v2/v3 多轮 review,
+  提交时按条目拆细**; 12-git 的规矩句照此改写 (原句的 "实现, 验证, 提交, 再下一个" 顺序作废). 批 4 按此开工:
+  - 领域类型五个: `LldStatusState` (version/source/errors, errors 是 ViewModel 已渲染的失败消息, 原样携带),
+    `AndroidInfoState` (含 AndroidReferenceRow 与 AndroidCurrency 枚举; version 为 known 修正后的裸值,
+    preview 后缀与 Go 标记属文案归 mapper), `SdkExtensionState`, `PerformanceClassInfo` (报告点名的四态
+    之上补 Outdated 一态: class 非零又不等于 SDK/SDK-1 的分支真实存在), `KernelState` (含 KernelMatch;
+    match 循环保持旧的 "最后匹配者胜" 语义).
+  - 仓库五方法返回领域对象; detectKernel 的 `Version(checkNotNull(...))` 显式化: os.version 为 null 时
+    旧路径其实不失败 (versioncompare 1.5.0 单参构造不抛异常, 静默按 0.0 比较且 detail 渲染字面 null,
+    字节码与公开文档两头核实), 新路径显式走 Failed. 这条逐行等价例外由负责人 2026-11-07 定为接受新行为
+    并记录 (批 3 slot 例外的同类), null 路径有领域断言钉住; toSupportOrNotString 剩
+    sar/treble/apex/toybox/vndk 五个调用点保留.
+  - mapper: 补 `coloredRow` 的颜色重载 (老 toColoredMyModel 本有两个重载, 本小姐批 2 只搬了 Boolean 那个,
+    ILS 的 ARGUMENT_TYPE_MISMATCH 抓的); 五个新翻译方法; android_info_detail 的六参从 spread 改显式
+    (直连 getString 后 lint 的 StringFormatMatches 开始检查这层, spread 被当 1 个参数);
+    performance_class_detail_api 的 Int 参数 toString() (同因, 格式串是 %1$s).
+  - 测试: `LldFixture` 共享夹具 + 五个新测试类共 16 例, v1 发起时的分布 (mode 3, android 3,
+    sdkExtension 2, kernel 4, performanceClass 4); v2 前补例至 21 (kernel 6, android 6,
+    见批 4 v1 收下条). 实施排查记四案: AndroidInfo.api 是 Int 不是 String; BaseInfo 是顶层类不嵌套
+    Lld; ShadowBuild 的 API 叫 setVersionMediaPerformanceClass; **os.version 的 stage 值必须是裸版本号**
+    (本小姐自己发明了 "Linux version " 前缀, g00fy2 不扫前缀解析成 (0,0), kernel 匹配全 None, 探针三号
+    实锤, 真机返回裸版本号由 golden 数据可证); 另: 桥接件不传播 `@Config(sdk)` (PreS/PreR 两类删除;
+    低版本分支黄金数据够不到, 设备 API 34 高于 R 与 S, 覆盖缺口按批 2 分工记此).
+  - 验证: ILS 三主文件 0 ERROR (Destructuring 建议族既有); 单测 51/51 (15 类); lint 无新问题; base 绿.
+  - 欠账: 设备无线连接中途掉线, 黄金对照未跑 (设备回来补跑, 对照物仍是本会话批 2 前那份).
+  - 下一步动作: 负责人定发 review 的时序 (先补黄金对照 / 先发 review 并行); review 材料不依赖设备.
+- 2026-11-07 (批 4 黄金对照补齐 + v1 发起): 设备重连, 装批 4 包重取快照. 基线已隔约十小时, 行数 1344=1346
+  且按下标 zip 错位 (828 行), 改**按键对账**: home 页全部 25 行 (含本批五条与批 2/3 的行) detail/color/type
+  逐字节相同; prop 页差异 827 行 + 新增 3 行 / 消失 1 行, 全部为 `ro.boottime` / `init.svc` / `persist.*` /
+  `debug.tracing` / `cache_key` 设备状态家族 (PropRepository 本批未动, 类别性排除); 基线陈化的口径记此:
+  后续批次的对照物仍是 "同一次设备会话内改前改后各一份", 隔日基线只作按键级参考.
+  批 4 验证至此齐: 单测 51/51, ILS 0 ERROR, lint 无新问题, 黄金等价. v1 已发起 (review 目录已架,
+  提示词 `review-v1-prompt-2123.md`, HEAD `3e95da05`), 工作树冻结 (记录文件除外).
+- 2026-11-07 (批 4 v1 收下, 处理发现): 两份报告 (WorkBuddy/claude-opus-6 default, WorkBuddy/DeepSeek-V4.1-Flash
+  effort 会话未暴露), HEAD 都是 `3e95da05`, 头尾齐, v1 标 `已收`, 工作树解冻. 合并判定与处置:
+  - 老板定的 (实质, 两家同报): detectKernel 的 os.version 为 null 时新旧路径不等价 (主 agent 用 1.5.0 字节码复核:
+    单参构造 throwExceptions=false, null 不抛, 静默按 0.0 比较且 detail 渲染字面 null; 新路径 checkNotNull 走
+    Failed). 撞上逐行等价的验收标准且两案都站得住, 按 02 摆开, 负责人定 **方案 B: 接受新行为** (批 3 slot
+    例外的同类): 注释两处改事实, 补 null 走 Failed 的领域断言, 例外记上一条.
+  - 修 (第一档/机械): DetectKernelTest 补 `the last matching lld entry wins` (DeepSeek 发现 3a) 与
+    null 路径例; DetectAndroidTest 补 currency Latest/Supported/Outdated 三断言 (DeepSeek 发现 4, api 相对
+    `Build.VERSION.SDK_INT` 构造, 类注释记探针实测的 Robolectric 默认环境 SDK 37 / CODENAME REL);
+    删 HomeRepository 未使用 import (两家同报); review 目录补 `.gitignore` (内容 `*`, 14 的要求,
+    两家同报, 已验证 check-ignore 生效); subtask-04.md 计数按本批修完的树重算带批注 (两家同报: 1154 行,
+    入口 23 中 11/12, 辅助 :247/:459/:511, getMyString 78/48, Build 39, toColoredMyModel 14/15 行,
+    toSupportOrNotString :1140-1146, guardedMyModel 13, getOutdated :1060).
+  - 顺手 (两家提示): LldStatusState 删同包冗余 import; AndroidInfoState 的 AndroidReferenceRow KDoc 改事实
+    (只有 lld 整体缺失时才 null); DetectKernelTest 类注释破折号改冒号并补例外句; progress 破折号清零
+    (报告点名批 4 段 6 处, 同类扫出批 3 段 12 处, 一并改; 669 提到字符本身那处不算用例);
+    progress:724 调用点数改五 (vndk 再次漏记, 同批 3), :730 测试类数改五类 16 例 (PreR 残留删),
+    :734 覆盖句改事实 (低版本分支黄金数据够不到, 设备 API 34).
+  - 超出范围 O-01: 12-git 提交节奏改写, 收进不回退 (本批开工前负责人另下), 已报给负责人可否决.
+  - 观察记此: HomeModelMapper 五行 reference 用下标取值, 依赖 referenceRows 恰五项, 不动代码,
+    动该类型时把不变式写进注释 (DeepSeek). 测试名反引号内不能带点号 (`os.version` 编译器抓的, 改 os version).
+  - 验证: ILS 四文件 (HomeRepository 0 ERROR + 3 条既有 Destructuring 建议, 三模型 CLEAN); 单测 56/56
+    (15 类, 本批新增 21 例); base 绿; lint 无新问题. 偏差记录: analyze-file 本轮未跑, 项目没有开着的
+    Android Studio 实例, CLI 挂起无输出, 与批 4 本轮同口径 (ILS + 单测 + lint + base).
+  - 下一步动作: 发 v2 (delta), 提示词 `review-v2-prompt-2230.md`, 先核对五组修复再扫新增; 工作树冻结
+    (记录文件除外).
+- 2026-11-07 (批 4 v2 收下, 处理发现, review 循环结束): 两份报告 (WorkBuddy/DeepSeek-V4.1-Flash
+  effort 会话未暴露, WorkBuddy/Hy4 default), HEAD 都是 `3e95da05`, 头尾齐, v2 标 `已收`, 工作树解冻.
+  合并判定:
+  - 修复核对: 十组修复两家逐条核实全对 (含计数逐格重算, 单测 56 例数对上), 无第一档漏项, 清单之外
+    零未列出变化; v1 的应改清单合上. 两家都判停止条件到, 不再排轮.
+  - 顺手修 (v2 措辞与卫生三组):
+    - 12-git.md:21 的禁用词 `收口` (DeepSeek 1, 08 比喻组在列) 改 "review 结束后". 同类扫出
+      progress.md 里九处旧 `收口`, 一并改平实说法; 259/579 两处 `对齐` 亦同规矩 (08 改名表),
+      改 "一致"; 709/712 两处按 DeepSeek 2 指名改, 恢复提交直接点名 `3e95da05`.
+    - progress.md:732 的 "16 例" 批注为 v1 发起时的分布, 补 "v2 前补例至 21" (Hy4 W-01, 07 就地为真).
+    - DetectKernelTest null 例的 `System.clearProperty` 补 try/finally 还原 (DeepSeek 3; Hy4 W-02 判
+      观察不动, 判断层采 DeepSeek 的便宜加固, 驳 Hy4 的 "只记一笔", 记此).
+  - 观察 (不动作, 已有记录): pre-R / pre-S 分支覆盖缺口等批 6 仪器 (两家同记); LldSource.kt 修改时间
+    22:43 但内容与 HEAD 一致且不进 git status, 不算改动 (DeepSeek 核过).
+  - 验证: 单测 56/56 (15 类) 复跑绿; 本轮只动测试一处与记录文件, ILS / lint 不重跑 (测试文件以
+    Gradle 单测为准, 10 有言).
+  - 下一步动作: 第 4 步负责人放行 (留一句放行理由), 第 5 步按 12-git 拆笔提交.
+- 2026-11-07 (批 4 第 4 步放行): 负责人看了修改的代码, 说感觉没什么问题; 点名要在 Nexus 5X 真机运行
+  看效果 (批 4 包装机: 无线 adb 流式安装两度断流, 改走 push 加设备端 pm install, 装机 Success, 主活动
+  启动后无线连接掉线, 老板本机目视), 答复 "没问题". 放行理由留了, 照 14 拟写进 spec 记录笔的提交信息
+  (英语): 代码粗看过没有问题, Nexus 5X 真机运行效果也没问题. 拆笔方案已摆给负责人, 等对提交的单独同意.
 - 各子任务状态: subtask-01 已关闭; subtask-02 已提交并关闭;  
-  subtask-03 已提交并关闭; subtask-04 进行中 (批 1, 批 2 已关, 批 3 待放行提交); subtask-05 ~ subtask-06 报告已出, 实现未开始.
+  subtask-03 已提交并关闭; subtask-04 进行中 (批 1 ~ 批 3 已关, 批 4 v1 已收修复完, v2 在外); subtask-05 ~ subtask-06 报告已出, 实现未开始.
 - 未查清: 无.
 - 挂起项: 无.
