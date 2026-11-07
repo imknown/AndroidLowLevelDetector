@@ -41,6 +41,7 @@ import net.imknown.android.forefrontinfo.ui.home.datasource.MountDataSource
 import net.imknown.android.forefrontinfo.ui.home.model.AbState
 import net.imknown.android.forefrontinfo.ui.home.model.AndroidInfoState
 import net.imknown.android.forefrontinfo.ui.home.model.DynamicPartitionsState
+import net.imknown.android.forefrontinfo.ui.home.model.KernelState
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.home.model.LldSource
 import net.imknown.android.forefrontinfo.ui.home.model.LldStatusState
@@ -291,41 +292,43 @@ class HomeRepository(
         DetectResult.Failed(e)
     }
 
-    fun detectKernel(lld: Lld?): MyModel =
-        guardedMyModel(R.string.linux_title) {
-            val linuxVersionString = System.getProperty(AndroidDataSource.SYSTEM_PROPERTY_LINUX_VERSION)
-            val linuxVersion = Version(linuxVersionString)
+    fun detectKernel(lld: Lld?): DetectResult<KernelState> = try {
+        val linuxVersionString = System.getProperty(AndroidDataSource.SYSTEM_PROPERTY_LINUX_VERSION)
+        // An absent os.version fails the detection explicitly. Version(null) would not throw:
+        // the version library stores it unparsed and compares as 0.0, and the detail would
+        // render a literal "null". That silent path is deliberately not kept (batch 4 exception).
+        val linuxVersion = Version(checkNotNull(linuxVersionString))
 
-            var linuxColor = StatusColor.CRITICAL
-
-            val linux = lld?.linux
-            val versionsSupported = linux?.google?.versions
-            versionsSupported?.forEach {
-                if (linuxVersion.major == Version(it).major
-                    && linuxVersion.minor == Version(it).minor
-                ) {
-                    linuxColor = if (linuxVersion.isAtLeast(it)) {
-                        StatusColor.NO_PROBLEM
-                    } else {
-                        StatusColor.WARNING
-                    }
-
-                    return@forEach
+        val linux = lld?.linux
+        val versionsSupported = linux?.google?.versions
+        var match = KernelState.KernelMatch.None
+        versionsSupported?.forEach {
+            if (linuxVersion.major == Version(it).major
+                && linuxVersion.minor == Version(it).minor
+            ) {
+                match = if (linuxVersion.isAtLeast(it)) {
+                    KernelState.KernelMatch.Met
+                } else {
+                    KernelState.KernelMatch.Lagging
                 }
+
+                return@forEach
             }
-
-            val support = versionsSupported?.joinToString("｜")
-                ?: MyApplication.getMyString(androidR.string.unknownName)
-
-            val mainline = linux?.mainline?.version
-                ?: MyApplication.getMyString(androidR.string.unknownName)
-
-            return toColoredMyModel(
-                R.string.linux_title,
-                MyApplication.getMyString(R.string.linux_version_detail, linuxVersionString, support, mainline),
-                linuxColor
-            )
         }
+
+        DetectResult.Found(
+            KernelState(
+                linuxVersionString = linuxVersionString,
+                supportedVersions = versionsSupported,
+                mainlineVersion = linux?.mainline?.version,
+                match = match
+            )
+        )
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        DetectResult.Failed(e)
+    }
 
     fun detectAb(): DetectResult<AbState> = try {
         val isAbUpdateSupported = propertyReader.getBoolean(AndroidDataSource.PROP_AB_UPDATE)

@@ -14,6 +14,7 @@ import net.imknown.android.forefrontinfo.ui.base.list.MyModelTitle
 import net.imknown.android.forefrontinfo.ui.home.model.AbState
 import net.imknown.android.forefrontinfo.ui.home.model.AndroidInfoState
 import net.imknown.android.forefrontinfo.ui.home.model.DynamicPartitionsState
+import net.imknown.android.forefrontinfo.ui.home.model.KernelState
 import net.imknown.android.forefrontinfo.ui.home.model.LldSource
 import net.imknown.android.forefrontinfo.ui.home.model.LldStatusState
 import net.imknown.android.forefrontinfo.ui.home.model.PerformanceClassInfo
@@ -256,6 +257,28 @@ class HomeModelMapper(private val myApplication: MyApplication) {
             PerformanceClassInfo.Level.Outdated -> StatusColor.CRITICAL
         }
         coloredRow(R.string.performance_class_title, detail, color)
+    }
+
+    // The kernel row: the supported-versions list is joined here; a missing lld list renders
+    // as the platform unknownName.
+    fun toKernelModel(detect: () -> DetectResult<KernelState>): MyModel = guardedEntry(
+        R.string.linux_title,
+        detect
+    ) { state ->
+        val support = state.supportedVersions?.joinToString("｜")
+            ?: myApplication.getString(androidR.string.unknownName)
+        val mainline = state.mainlineVersion
+            ?: myApplication.getString(androidR.string.unknownName)
+        val color = when (state.match) {
+            KernelState.KernelMatch.Met -> StatusColor.NO_PROBLEM
+            KernelState.KernelMatch.Lagging -> StatusColor.WARNING
+            KernelState.KernelMatch.None -> StatusColor.CRITICAL
+        }
+        coloredRow(
+            R.string.linux_title,
+            myApplication.getString(R.string.linux_version_detail, state.linuxVersionString, support, mainline),
+            color
+        )
     }
 
     // Two-state row color mapping: a true condition lands on NO_PROBLEM. Home-only, dots are a

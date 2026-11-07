@@ -222,7 +222,7 @@ class HomeViewModel(
             tempModels += homeRepository.detectBuildId(lld)
             tempModels += homeRepository.detectSecurityPatches(lld)
             tempModels += homeModelMapper.toPerformanceClassModel { homeRepository.detectPerformanceClass() }
-            tempModels += homeRepository.detectKernel(lld)
+            tempModels += homeModelMapper.toKernelModel { homeRepository.detectKernel(lld) }
             tempModels += homeModelMapper.toAbModel { homeRepository.detectAb() }
             val mountQuery = withContext(Dispatchers.IO) {
                 homeRepository.getMounts()
