@@ -1,8 +1,9 @@
 # subtask-04 2a 领域化 (一次性)
 
 > **状态**: living. 事实核对时间 2026-10-27, 代码在 `502a6eb7`.  
-> **复核**: 2026-11-07, HEAD `372a5de7` 全量重核: 事实漂移 7 处已带批注就地改,  
-> 全部来自 1a ~ 1b 的落地改动, 无机制性变化.  
+> **复核**: 2026-11-07, HEAD `372a5de7` 全量重核: 过期事实 7 处已带批注就地改,  
+> 全部来自 1a ~ 1b 的实施改动, 无机制性变化. 此后批 2 与批 3 各自按当时的树重算过计数,  
+> 批注随各行 (现值对应 HEAD `cf990ba7` 的工作树).  
 > 任务级计划见 [plan.md](plan.md); 流程见 [13-任务工作流](../../agents-cn/13-任务工作流.md).
 
 ## 目标
@@ -28,11 +29,11 @@
 
 | 项 | 数字或位置 | 说明 |
 |---|---|---|
-| `HomeRepository` 规模 | 1245 行 (复核 2026-11-07: 审计时 1210) | 22 个 public `detect*` 加 `getOutdatedTargetSdkVersionApkModel` 共 23 个产行入口, <br>另有 3 个 private 辅助 (复核 2026-11-07: `:281` `detectSecurityPatch`, `:529` `detectTreble`, `:581` `detectGsi`; 审计时 `:273`/`:507`/`:559`); 产 25 行 |
-| `getMyString` 调用 | 全项目 101 个调用点 (复核 2026-11-07, 口径: 不含 2 处定义与 3 处注释; 审计当时同口径 99), 其中 71 处在 `HomeRepository` (审计时 69) | 判断被就地翻成文案 |
-| `Build.*` 直接读 | `HomeRepository` 里 45 行 | 迁移后的可测性由它决定 |
-| `toColoredMyModel` | `HomeRepository` 里 25 个调用点, 命中 26 行 (含 1 处 import; 复核 2026-11-07: 1a 件 3 加了两行挂载失败行, 审计时命中 24 行) | 颜色在仓库里定 |
-| `toSupportOrNotString` | HomeRepository.kt:1221-1227 (复核 2026-11-07: 审计时 :1185-1191) | 判断结果当场变成两条文案之一 |
+| `HomeRepository` 规模 | 1199 行 (批 3 后; 审计时 1210, 批 2 后 1245) | 22 个 public `detect*` 加 `getOutdatedTargetSdkVersionApkModel` 共 23 个产行入口 (批 3 后其中 5 条返回领域对象, 18 条仍直接产 `MyModel`), <br>另有 3 个 private 辅助 (批 3 后 `:285` `detectSecurityPatch`, `:504` `detectTreble`, `:556` `detectGsi`; 审计时 `:273`/`:507`/`:559`); 产 25 行 |
+| `getMyString` 调用 | 全项目 96 个调用点 (口径: 不含 2 处定义与 3 处注释; 批 3 后; 审计当时同口径 99), 其中 66 处在 `HomeRepository` (审计时 69) | 判断被就地翻成文案 |
+| `Build.*` 直接读 | `HomeRepository` 里 39 行 (批 3 后; 审计时 45) | 迁移后的可测性由它决定 |
+| `toColoredMyModel` | `HomeRepository` 里 19 个调用点, 命中 20 行 (含 1 处 import; 批 3 迁走 5 个, 批 2 迁走 1 个, 1a 件 3 加过两行, 审计时命中 24 行) | 颜色在仓库里定 |
+| `toSupportOrNotString` | HomeRepository.kt:1185-1191 (批 3 后; 批 2 时 :1221-1227, 审计时恰在同位) 五个调用点 | 判断结果当场变成两条文案之一 |
 | Others | `OthersRepository.kt` 37 个 `get*` 方法, 37 次追加 (追加在 `OthersViewModel` 的 `tempModels +=`, 复核 2026-11-07) | 其中 36 个被 guard 包住, `getPartitionFingerprints` (:210) 自己按分区隔离 |
 | Prop | `PropRepository.kt` 3 个入口 | 行数与系统属性数量相关 |
 | 失败处理 | `MyModelExt.kt:35-50` (Home), `:83-98` (Others) | 现在由 `guarded*` 在仓库侧包住整个 block |
@@ -82,31 +83,33 @@
    - 映射规则: `Found` 按条目语义给颜色, `Missing` 与 `Failed` 落未知, 颜色按该条目自己的语义定  
      (FR-3 AC2, NFR-7).
 
-1. 失败隔离挪到调用侧.
+1. 失败隔离挪到 UI 侧.
 
    - 现在 `guardedMyModel` 包住整个检测 block (MyModelExt.kt:35-39). 迁移后仓库返回 `Failed(cause)`,  
      绝大多数失败走这条正常的返回路径.
    - 现在 `guardedMyModel` 包住的是**仓库方法里造 `MyModel` 那段 block** (MyModelExt.kt:35-39),  
-     `HomeRepository` 里 24 处, `OthersRepository` 里 36 处. 仓库一旦不再返回 `MyModel`, 这层包装就  
-     没有位置了, 它必须挪到调用侧. 这一步没有"先保留原形状"的选项.
-   - 落点: subtask-04 期间在调用侧留一层薄 guard, 只处理"没预料到的异常" (例如探针抛出的  
-     `RuntimeException`), 常规失败走 `DetectResult.Failed` 的正常返回路径, 不再依赖它.
-   - subtask-05 造引擎时把这层薄 guard 收进引擎, 调用侧那层随之删掉.
-   下面这张图按三个阶段对比失败隔离 guard 的位置: 先包在仓库里, 再挪到调用侧, 最后收进引擎:
+     `HomeRepository` 里 18 处 (批 3 迁走 5 个; 批 2 后 23, 审计时 24), `OthersRepository` 里 36 处. 仓库一旦不再返回 `MyModel`, 这层包装就  
+     没有位置了, 它必须挪出仓库, 由 UI 侧持有. 这一步没有"先保留原形状"的选项.
+   - 落点: subtask-04 期间在 UI 侧留一层薄 guard, 只处理"没预料到的异常" (例如探针抛出的  
+     `RuntimeException`), 常规失败走 `DetectResult.Failed` 的正常返回路径, 不再依赖它.  
+     guard 现在写在 `HomeModelMapper` 的链式接口里, 包住取数加翻译整条链, 单条失败降级成  
+     本条目的失败行; `CancellationException` 一律原样 rethrow.
+   - subtask-05 造引擎时把这层薄 guard 收进引擎, mapper 里这层随之删掉.
+   下面这张图按三个阶段对比失败隔离 guard 的位置: 先包在仓库里, 再挪到 UI 侧, 最后收进引擎:
 
    ```mermaid
    flowchart LR
        subgraph S1["现状"]
            direction TB
            c1["调用侧"] --> rp1["仓库方法"]
-           rp1 --> g1["guardedMyModel<br>HomeRepository 24 处<br>OthersRepository 36 处"]
+           rp1 --> g1["guardedMyModel<br>HomeRepository 18 处<br>OthersRepository 36 处"]
            g1 --> blk["造 MyModel 的 block"]
            blk --> mm["MyModel"]
        end
 
        subgraph S2["subtask-04 后"]
            direction TB
-           c2["调用侧"] --> g2["薄 guard<br>只处理没预料到的异常"]
+           c2["调用侧"] --> g2["薄 guard<br>HomeModelMapper 链式接口<br>只处理没预料到的异常"]
            g2 --> rp2["仓库方法"]
            rp2 -->|"绝大多数失败"| fl["DetectResult.Failed<br>正常返回路径"]
            exc["没预料到的异常<br>如探针抛出的 RuntimeException"] --> g2
@@ -116,10 +119,10 @@
            direction TB
            c3["调用侧"] --> eng["引擎<br>含薄 guard"]
            eng --> rp3["仓库方法"]
-           gone["调用侧那层删掉"]
+           gone["mapper 里这层删掉"]
        end
 
-       g1 -.->|"挪到调用侧"| g2
+       g1 -.->|"挪到 UI 侧"| g2
        g2 -.->|"收进引擎"| eng
        g2 -.->|"随之删掉"| gone
    ```
@@ -155,7 +158,7 @@
 |---|---|---|---|
 | 三页全部检测方法领域化 | [#01](../../dev/issues-cn/01-架构与分层/01-无领域模型.md) | 是 | 无 |
 | 三态结果类型 | [#03](../../dev/issues-cn/01-架构与分层/03-无三态模型与注册表.md) 的类型部分 | 是 | 注册表引擎归 subtask-05 |
-| 文案当判断值 | [#42](../../dev/issues-cn/08-反模式与卫生/42-字符串当哨兵值.md) | 是 | 无 |
+| 文案当判断值 | [#42](../../dev/issues-cn/08-反模式与卫生/42-字符串当哨兵值.md) | 部分是 | `isPropertyValueNotEmpty` 的判据仍是本地化文案 (两处, PropertyReader 读契约归后续) |
 | 失败被折成结论 | [#63](../../dev/issues-cn/05-稳定性与错误处理/63-失败折成结论.md) | 类型层面 | 取数层的 Found/Missing/Failed 细节随条目落, 挂载已在 subtask-01 |
 | 逐条单测 | #50 的测试铺开 | 是 | 无 |
 | 需求条目 | FR-1, FR-2, FR-3, FR-6, FR-14, FR-15, NFR-7 | 是 | 无 |
@@ -192,7 +195,7 @@
 
 ## 风险
 
-- 高. 45 处 `Build.*`, 25 处 `toColoredMyModel` 调用点 (命中 26 行, 含 1 处 import), 71 处 `getMyString` (三处均复核 2026-11-07), 25 行展示.
+- 高. 39 处 `Build.*`, 19 处 `toColoredMyModel` 调用点 (命中 20 行, 含 1 处 import), 66 处 `getMyString` (批 3 后), 25 行展示.
 - 文案与颜色的细节容易在搬迁中走样. 黄金数据是唯一能证明等价的东西, 所以 subtask-02 必须先完成.
 - 仪器测试需要设备, 与"CI 只跑 JVM 测试"的决定并存时, 这些条目在 CI 上不会被验证.  
   这一点要在报告里写清, 不能当成已验证.

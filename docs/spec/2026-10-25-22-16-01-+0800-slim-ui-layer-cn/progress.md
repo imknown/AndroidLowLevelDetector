@@ -527,7 +527,183 @@
   新增注释已翻英语 (05), `DetectResult.kt` ILS 复验 CLEAN. 提交拆三笔逐笔等同意:
   第 0 步复核批注与进度记录 / 批 1 两个代码文件 / 10 与 11 通道笔记. trailer 经负责人定:
   agent ZCode, model GLM-5.3-Flash, effort max (三笔共用).
+- 2026-11-07 (批 1 提交完成, 关闭): 三笔落地, 工作树净:
+  `f1cc8757` docs(spec) 复核批注; `9e2ea131` feat(detect) 容器与单测; `18c75daf` docs(agents) 通道笔记.
+  review 目录按 14 的归宿待负责人点头后整体删除; 归后续 5 条已在本文件 (v1/v2 两条) 与 state.md.
+  下一步动作: 批 2 (mapper 基建 + 首条 Home 条目端到端), 等负责人说开始; 改前快照要在同一会话取, 开工先连设备 (Nexus 5X).
+- 2026-11-07 (批 2 前置: Robolectric spike 打通): 单测手段经负责人定 Robolectric 为主 (场景规则已收进 04-架构);
+  因三重未知 (AGP 9.5 组合, 桥接件 0.9.0 停在 2024-11, JUnit 平台 6 对 1.x), 负责人定 "验证 spike, 红了就回退".
+  - 接线: `thirdParty.toml` 加 robolectric 与 apter 桥接两条, `configureTest()` 给 `isIncludeAndroidResources`
+    与三个测试 JVM 开关. 首跑: 桥接和原生运行时都起来了, 但两个 spike 测试死于
+    `FileDescriptorInterceptor cannot access SharedSecrets` (新 JDK 模块封装), `--add-opens` + `--enable-native-access` 修掉.
+  - 第二层: `RuntimeEnvironment.getApplication()` 返回 null. 诊断跑 (类加载器指纹) 定位: 测试类没被路由进沙箱,
+    全局 LauncherInterceptor 没点火. 读上游 gradle-plugin 源码找到缺失开关
+    `-Djunit.platform.launcher.interceptors.enabled=true`, 补上后指纹全对 (application 真实创建, 测试类进沙箱).
+  - 定论: 正式断言两测试 + 存量 8 测试全绿 (10/10). 桥接件在本仓库可用 (平台 6 + AGP 9.5 + 本机 JDK),
+    `RobolectricSpikeTest` 留作常驻冒烟. experimental 采纳 (负责人批的 spike 路线) 记偏差于此.
+  - 偏差补充: Robolectric 的 JUnit 4 传递依赖因此上了单测 classpath, 04-架构 的 "故意不放" 条按现状改写
+    (没有引擎跑它, 意图不变).
+  - 下一步动作: 批 2 主体 (改前快照 → mapper 基建 + detectDeveloperOptions 迁移 + 逐条单测), 等设备连上;
+    review 轮把 spike 接线与迁移合为一批 (两笔提交: 接线 / 迁移).
+- 2026-11-07 (批 2 实现: 接线 + detectDeveloperOptions 领域化, 未提交). 负责人插上设备后按顺序走:
+  - 改前快照: 双 APK 出包, push + pm install (本机 splice 前科), 仪器测试 `OK (1 test)`, 拉回 1344 行
+    (本地临时目录, 不进仓库). 生成器的真包是 `net.imknown.android.forefrontinfo.snapshot` (androidTest 根, 不带 ui).
+  - 迁移: `AppGraph` 加 `homeRepository` 访问器 (`settingsStore` 先例, 逐条单测要生产同款实例);
+    `DetectResult` 加 `detectResultCatching` 薄 guard (CancellationException 一律 rethrow);
+    新增 `ui/home/mapper/HomeModelMapper` (`@Inject`, 注入 `MyApplication`): `toDeveloperOptionsModel`
+    三支 (两态行 / 未知行 / 失败行), 与 `toColoredMyModel` 两态重载和 `toErrorMyModel` 逐行为等价复刻;
+    `detectDeveloperOptions` 返回 `DetectResult<Boolean>` (getInt 失败转 Failed, 不抛, 05 约定);
+    `HomeViewModel` 注入 mapper, 调用点 guard + map.
+  - 单测: `DetectDeveloperOptionsTest` 三个领域契约 (关=true, 开=false, 缺省回退=true), Robolectric + 真图
+    (lazy 等扩展先建好应用). 单测 13/13 (5 + 2 + 3 + 3).
+  - 验证: ILS 五文件, 四 CLEAN + `HomeRepository` 3 条既有 DestructuringDeclaration (行号漂 4 行, 与本次无关);
+    lint `no new issues` (baseline 仍 1 error / 6 warnings / 1 hint); base 4 方法绿.
+  - 黄金数据: 改后重装重生成, 1344 = 1344 行, 差异 7 行全是已知活值类 (6 行 `cache_key.*` 每进程随机,
+    1 行 `debug.tracing.battery_stats.wifi_signal_strength` 计数器 3→2, 与 subtask-02 记过的同一行);
+    开发者选项行四列逐字节等价. 对照物是本会话改前那份, 未进仓库.
+  - 手工步已过 (负责人 2026-11-07 实机看过, "没什么问题"): 三页浏览与断网 lld 行均正常. 报告要求的这一步已结.
+  - 下一步动作: 收 v1 报告 (review 目录已架, 提示词 `review-v1-prompt-1415.md`, HEAD `18c75daf`),
+    处理发现后放行与两笔提交 (接线 / 迁移), 提交前注释翻英语; 工作树冻结 (记录文件除外).
+- 2026-11-07 (批 2 v1 收下, 处理发现): 三份报告 (WorkBuddy/Hy4 default, WorkBuddy/DeepSeek-V4.1-Flash default,
+  CatPaw/LongCat 2.5 default), HEAD 都是 `18c75daf`, 头尾齐. 三家打架: Hy4 六条, DeepSeek 六条, CatPaw 判零条实质.
+  按 11 的阶梯事实层逐条核, 合并判定:
+  - 修 9 处 (实质三 + 文档措辞一批):
+    - guard 覆盖面 (Hy4 D2 / DeepSeek F1, 事实层成立: 旧 guard 包取数加翻译, 新的只包取数, `startLoad` 协程无 catch,
+      mapper 逃逸即整页失败): 重构为链式 — mapper 收 `detect: () -> DetectResult<Boolean>`, try 包整条链,
+      调用点无 try 一行; `detectResultCatching` 失去全部消费者, 从 `DetectResult.kt` 删除 (从未提交, 工作树内增删).
+    - 失败路径丢 DEBUG 打印 (Hy4 D6 / DeepSeek F2, FR-3 AC2 原文核过: "细节进日志供排查"): mapper catch 补 printStackTrace.
+    - guard 契约无测试 (Hy4 D3): 新增 `HomeModelMapperTest` 四条 (意外异常降级失败行, 取消 rethrow, Failed 分支,
+      两态颜色); 单测 13→17.
+    - 05 与薄 guard 冲突无记录 (Hy4 D1 / DeepSeek F3): 05 的 UI 禁令条补例外句 (过渡结构, 落 UI 包翻译层, 引擎落地收回);
+      代码按已批准的报告没动, 规则补记录, 已在回复里给老板一行可否决.
+    - 04-架构 三处: 场景表对齐 subtask-04 裁量标准 (Hy4 D5: 普通系统属性归 Robolectric, 厂商改过的具体值归探针),
+      接线段补 isIncludeAndroidResources (DeepSeek F4), "兜底" 禁用词与 "假环境足够真" 措辞 (DeepSeek F6).
+    - 计数漂移 (DeepSeek F5): MyModelExt 注释去数字, subtask-04 三处计数带批注更新.
+    - 措辞一批: toml 与 KotlinAndroid 的过期 "spike 定去留" 句, AppGraph 访问器注释自相矛盾句, import 归位, spike 去掉多余强转.
+  - 驳回 (事实层): CatPaw 对 guard 覆盖面与 DEBUG 打印的 "不算发现" 判定; 其余六项 "核过不算" 的核对成立
+    (依赖树, putString(null) 行为, @SingleIn 等都核过对).
+  - 发起方自查: assertThrows lambda 触发 RETURN_VALUE_NOT_USED_COERCION 编译警告, `val _ =` 修掉.
+  - 验证: ILS 五文件 CLEAN; 单测 17/17; lint 与 base 绿; 黄金数据重做 1344=1344, 差异 6 行全是 cache_key.* 随机值,
+    开发者选项行四列逐字节等价 (链式 guard 下).
+  - 归后续补一句 (Hy4 D4): `06-检测条目` 混合状态已记, 2a 期间的新条目照新模式写, 不照旧流程.
+  - 下一步动作: 发 v2 (delta), 提示词 `review-v2-prompt-1500.md`, 核九处修复; 工作树冻结 (记录文件除外).
+- 2026-11-07 (批 2 v2 收下, 处理发现): 两份报告 (WorkBuddy/Hy4 default, Trae/DeepSeek-V4.1-Flash default),
+  HEAD 都是 `18c75daf`, 头尾齐. 判决高度一致: 九处修复八处修对, 唯一实质发现是修复 2 只修了一半.
+  - N1 (实质, 两家同判第一档): 读失败走仓库转 `Failed` 的正常路径, 不经过 mapper 的 catch,
+    DEBUG 打印在主路径上仍是空的, FR-3 AC2 只对没预料到的异常成立. 修法取单点: 打印从 catch 撤出,
+    移进 `failureRow` 本体 (两条失败路径必经, 每条失败打一次, 无重复), KDoc 同步.
+  - N2 (措辞): guard 位置三处说法不一致 — 05 例外句的理由改成 "负责人批准的过渡结构, 只限这一层",
+    并清掉 "落在 / 落地" 两个禁用词; `HomeRepository` 注释改成 "mapper 的链式薄 guard";
+    `subtask-04.md` 计划改动 4 落点下补实施注记.
+  - N3 (风格): `HomeModelMapper.kt` 的 import 归位字母序.
+  - 归后续评估一致 (06 混合状态建议连新条目写法一起进 06, 已记 state.md 的归后续清单).
+  - 验证: ILS 两文件 CLEAN (HomeRepository 3 条既有警告), 单测 17/17, lint `no new issues`, base 绿.
+    设备黄金对照本轮跳过 (只动 DEBUG 打印位置, 行输出路径未变, 等价证明沿用上一轮), 记偏差于此.
+  - 下一步动作: 发 v3 (delta), 提示词 `review-v3-prompt-1553.md`, 只核三处修复; 工作树冻结 (记录文件除外).
+- 2026-11-07 (批 2 v3 收下, 处理发现): 两份报告 (Trae/DeepSeek-V4.1-Flash default, WorkBuddy/Hy4 default),
+  HEAD 都是 `18c75daf`, 头尾齐. 判决: N1 修对 (两家一致: 打印单点盖两条路径, 无重复, FR-3 AC2 主路径成立,
+  连 xml 时间戳晚于修复时间都核了), N3 修对, N2 前两处修对.
+  - F1 (实质, Hy4 抓的): 本小姐给 `subtask-04.md` 接的括号注记违反 07 的 "原句不动接括号当更正" 禁令与 08 的
+    括号补丁句式, 且 "按 v1 review 定" 指向注定删除的 review 目录, 不是稳定引用. Trae 未报, Hy4 报, 事实层核:
+    07/08 原文在, 成立. 修法照 Hy4: 注记整段删, 原句直接重写成与代码一致的说法 (guard 现在写在 HomeModelMapper
+    的链式接口里, 包住取数加翻译整条链), "调用侧那层" 改 "mapper 里这层", 阶段图 S2/S3 两个节点同步.
+  - F2 (措辞): 05 例外句删去多余的 "不写在 ViewModel 里" 半句 (禁令划的是整个 UI 层, 豁免理由已由前半句承担).
+  - F3 (次要观察, 记录不修): 打印行为没有自动断言 (断言打印要改接 System.err), 归后续引擎批一并看.
+  - 设备黄金对照跳过: 两家独立核过跳过成立 (failureRow 三字段逐字未变, 打印只进 stderr), 不报发现.
+  - 验证: 本轮修复纯文档 (subtask-04.md, 05-代码规则.md), 构建档按 11 跳过; 代码侧沿用 v3 (17/17, lint, ILS).
+  - 下一步动作: 发 v4 (delta), 提示词 `review-v4-prompt-1607.md`, 只核 F1 重写与 F2 修剪; 两家已预告下一轮
+    若只剩措辞按停止条件停; 工作树冻结 (记录文件除外).
+- 2026-11-07 (批 2 v4 收下, 处理发现): 两份报告 (Trae/DeepSeek-V4.1-Flash default, WorkBuddy/Hy4 default),
+  HEAD 都是 `18c75daf`, 头尾齐. 两处修复全判修对 (F1 的注记三条理由逐条消失被核, 连尾随空格都在), F3 归档与
+  构建跳过两项声明都成立; Trae 判批 2 可进放行, Hy4 报两条新发现:
+  - N1 (实质): 阶段图 S1 节点还写 `guardedMyModel<br>HomeRepository 24 处`, 与正文 :90 的 23 处对不上
+    (批 2 迁走 1 个时正文改了, 图没跟着). 08:250 明文图文对不上就地改. 修: S1 数字 24 → 23.
+  - N2 (措辞): guard 所在层三种说法并存. 修: 归并成两套各有分工的词 — guard 所在说 "UI 侧" 与
+    "HomeModelMapper 链式接口" (:91 改 "必须挪出仓库, 由 UI 侧持有", :97 图前引句与 :124 虚线箭头改
+    "挪到 UI 侧", 05 例外句改 "UI 侧的薄 guard"); 图里 c1/c2/c3 的 "调用侧" 指调用者 (ViewModel), 语义准确, 保留.
+  - 验证: 纯文档改动, 构建档按 11 跳过; 代码侧沿用 (17/17, lint, ILS, 设备等价).
+  - 下一步动作: 发 v5 (delta), 提示词 `review-v5-prompt-1616.md`, 只核这两处; Hy4 已预告那一轮若只剩措辞即停;
+    工作树冻结 (记录文件除外).
+- 2026-11-07 (批 2 v5 收下, review 循环收口): 两份报告 (Trae/DeepSeek-V4.1-Flash default, WorkBuddy/Hy4 default),
+  HEAD 都是 `18c75daf`, 头尾齐. 两处修复全判修对: 图, 正文, 代码三处都是 23 (口径注记留在正文); 说法归并被认可,
+  c 节点保留正确. 剩余只有措辞, 两家都判停止条件到, 不再排轮:
+  - W1 (Trae): 节标题 "失败隔离挪到调用侧" → "失败隔离挪到 UI 侧" (plan.md 无引用, 不带动别处). 已改.
+  - W2 (Trae): 列表项末行 :95 的两个尾随空格删除. 已改.
+  - Hy4 N2: mapper KDoc 里的 "调用侧" 说法 — 按其判定随提交前的注释翻译处理 (05 例外), 翻译时用归并后的说法. 已落实.
+  - 注释翻译完成 (05 的提交前机械步骤): mapper, 三个测试文件, KotlinAndroid, thirdParty.toml, AppGraph,
+    HomeRepository 的实施期中文注释全翻英语; 触及文件 grep 中文字符 0; ILS mapper CLEAN.
+  - 下一步动作: 第 4 步放行与第 5 步提交 (低风险并一次同意的先例), 两笔 (接线 / 迁移), trailer 等负责人;
+    review 目录按 14 删, 待负责人点头.
+- 2026-11-07 (批 2 提交完成, 关闭): 负责人放行 (放行理由一句未留, 不编造, 记此), trailer 两笔同
+  (agent ZCode, model GLM-5.3-Flash, effort max):
+  `033dbd7b` build(test) 接线四件; `cf990ba7` refactor(home) 领域化八件. review 目录按 14 整体删除,
+  归后续清单已在本文件与 state.md. 工作树剩 progress 与 subtask-04 的批 2 收尾记录, 随下一笔提交入库.
+  批 2 全程: 前置 spike 一轮, 实现, v1-v5 五轮跨端 review 共 12 份报告, 实质发现全修
+  (guard 覆盖面重构, DEBUG 打印单点化, 契约测试, 05 例外, 04 裁量表, 图文同步), 手工步与黄金等价过.
+  下一步动作: 批 3 (Home 其余 22 条分组迁移), 开工前按组给 `Build.*` 逐项裁量表等负责人批; 等负责人说开始.
+- 2026-11-07 (批 3 裁量表批 + 实现): 负责人读完全部 22 条的取数方式后批了全表裁量与批次划分
+  (批 3 属性/Settings 组 5 条, 批 4 lld/Build 组 5 条, 批 5 混合组 4 条 — 均 Robolectric;
+  批 6 shell/挂载组 5 条 — 仪器; 批 7 混合 3 条 — encryption Robolectric, webview 与全量包列表仪器).
+  本批五条实现, 未提交:
+  - 领域类型: `ui/home/model/AbState` (四字段) 与 `DynamicPartitionsState` (两字段), 照 LldSource 先例.
+  - mapper: 新增共用骨架 `guardedEntry` (onFound 末位参数, 尾随 lambda 绑它; onMissing 默认 unknownRow),
+    toDeveloperOptionsModel 收编 (行为不变), 五个新翻译方法逐行等价复刻 (含 dsu 的 else 落平台
+    unknownName 一处原样).
+  - 仓库: 五方法返回 DetectResult (Failed 不抛), 删 translateDisabled/translateEnabled (零调用者),
+    注释掉的属性探针随之移除 (detectAb 的 5 行与 detectDynamicPartitions 的 superPartition 两组, git 可考古);
+    toSupportOrNotString 仍被五个调用点用 (sar, treble, vndk, apex, toybox), 保留.
+  - ViewModel: 六个调用点全部经 mapper, 行顺序未动.
+  - 实施中自查修掉三件: 尾随 lambda 误绑 onMissing (onFound 挪到参数表末位), 数据类 lambda 参数的
+    按名解构建议 (两处改解构参数, 恰好全字段使用), `android.os.SystemProperties` 是 hide 类单测编译
+    解析不了 (测试只用 ShadowSystemProperties 静态方法, 不 import).
+  - 验证: ILS 五文件 CLEAN; 单测 33/33 (17 + 本批 16); lint 无新问题; base 绿.
+  - 黄金数据: 1344 = 1344, 差异 6 行全是 cache_key.* 随机值, 本批五条行四列逐字节等价.
+  - 下一步动作: 收 v1 报告 (review 目录已架, 提示词 `review-v1-prompt-1717.md`, HEAD `cf990ba7`),
+    处理发现后放行与提交 (一笔, 本批十件); 工作树冻结 (记录文件除外).
+- 2026-11-07 (批 3 v1 收下, 处理发现): 两份报告 (WorkBuddy/DeepSeek-V4.1-Flash default, WorkBuddy/claude-opus-6
+  default — 新厂商上桌), HEAD 都是 `cf990ba7`, 头尾齐. 合并判定:
+  - 修 (实质/机械): 
+    - 计数过期 (两家同报第一档): subtask-04.md 现状表, 正文, 图 S1, 风险节全部按 HEAD 重算带批注
+      (1199 行; 产行入口 23 中 5 条返回领域对象; 辅助 :285/:504/:556; getMyString 96/66; Build 39;
+      toColoredMyModel 19/20 行; toSupportOrNotString :1185-1191; guardedMyModel 18).
+    - em dash (两家同报机械违规): mapper guardedEntry 注释的 `—` 改逗号. 本小姐自己立的规矩自己踩, 记此.
+    - KDoc 说错 guard 位置 (DeepSeek F-1): toDeveloperOptionsModel 的 KDoc 删 guard 段, 解释单点回
+      guardedEntry 并补引擎句.
+    - AbState.slotSuffix 装本地化文案 (DeepSeek F-4, 取修法一不改判): 字段改 String?; 新增
+      PropertyReader.getStringOrNull (缺席 null, 空串为 IProperty 层缺席标记, 加法不动存量 33 调用点);
+      detectAb 改用之, enabled 第三或项改 isNullOrEmpty; mapper null → build_not_filled 输出逐字不变.
+    - 测试名声称的分支没测 (DeepSeek F-2): DetectAbTest 补第六例 (只摆 retrofit 期望 false).
+  - 顺手 (两家提示): DetectAdbTest putInt 收 helper; DetectAdbAuthenticationTest 补缺席用例;
+    progress 两处数字更正 (toSupportOrNotString 五个调用点含 vndk; 注释探针 = detectAb 5 行 +
+    dynamicPartitions 的 superPartition 组, Claude U2).
+  - 归后续 (DeepSeek F-3): isPropertyValueNotEmpty 的判据仍是本地化文案 (#42 遗留) — 修法要动
+    PropertyReader 读契约 (33 调用点), 无批次认领; 覆盖核对表 #42 的 "是" 加此限定. 记 state.md.
+  - 观察不判漏 (Claude F4): 五个新翻译方法与 Failed 路径无 CI 断言 — 沿用批 2 分工 (领域对象断言 +
+    黄金数据 + 仪器), 记录在案.
+  - 超出范围判定 (Claude U1): subtask-04.md 未提交 diff 是批 2 收尾记录, 按既定随本批入库, 收进.
+  - 验证: ILS 四文件 CLEAN; 单测 35/35 (补两例); lint 无新问题; 黄金复验 1344=1344, 五条行逐字节等价
+    (nullable 输出与占位路径逐字不变).
+  - 下一步动作: 发 v2 (delta), 提示词 `review-v2-prompt-1757.md`, 核七组修复; 工作树冻结 (记录文件除外).
+- 2026-11-07 (批 3 v2 收下, 处理发现, review 循环收口): 两份报告 (WorkBuddy/DeepSeek-V4.1-Flash default,
+  WorkBuddy/claude-opus-6 default), HEAD 都是 `cf990ba7`, 头尾齐. 七组修复五组全对, 两组有尾:
+  - 组 1 (计数): 数字全对, 但头部复核行还指 `372a5de7`, 覆盖核对表 #42 的格没改 (两家各抓一头). 已修:
+    头部补 "批 2 与批 3 各自按当时的树重算过计数" 一句, "事实漂移/落地改动" 换 "过期/实施改动";
+    #42 格照 #63 写法改 "部分是", 留给后续列写明 isPropertyValueNotEmpty 两处与 PropertyReader 契约归后续.
+  - N1 / V2-3 (实质, Claude 抓的): getStringOrNull 把缺席, 空值, 读失败三种取值并成 null, 缺席路径输出
+    逐字不变, 但空值与读失败的 detail 从旧文案 (空串 / result_not_supported) 变成 build_not_filled 占位.
+    按 02 逐条摆开三案 (接受+记录 / catch 返回旧文案 / 读失败升级失败行), 负责人定 **接受新行为, 记录例外**:
+    逐行等价的例外记此 — slot 属性的空值与读失败两种取值, detail 由旧文案变为 build_not_filled 占位;
+    两条边只在 A/B 设备且空值/读失败时可达, 黄金对照够不到; 领域对象不装文案的代价, 与实时计数器例外同类.
+    配套: PropertyReader 的 getStringOrNull 注释改说三种退化并成 null (原句 "same semantics" 不实),
+    类注释补例外句; AbState KDoc 补 "或读失败"; mapper 的 "When the engine lands" 改 "absorbs this
+    scaffold" (翻译腔规避).
+  - W2: progress 里 "33 调用点" 补口径 — 类注释自称 33, 实测 `propertyReader.` 28 行 (HR 24 + 三个
+    others datasource 4); 本文按类注释口径引, 差异记此.
+  - 判定记档: state.md 已载 isPropertyValueNotEmpty 归后续; Claude 要求的 "判定理由留档" 即本条与 state.md.
+  - 两家都判: 剩余全是不重要措辞与记录问题, 按停止条件停, 不再排轮. 循环收口.
+  - 下一步动作: 第 4 步放行与第 5 步提交 (一笔, 代码十一件 + 两份 spec 记录), trailer 等负责人;
+    review 目录按 14 删, 待负责人点头; 工作树冻结 (记录文件除外).
 - 各子任务状态: subtask-01 已关闭; subtask-02 已提交并关闭;  
-  subtask-03 已提交并关闭; subtask-04 ~ subtask-06 报告已出, 实现未开始.
+  subtask-03 已提交并关闭; subtask-04 进行中 (批 1, 批 2 已关, 批 3 待放行提交); subtask-05 ~ subtask-06 报告已出, 实现未开始.
 - 未查清: 无.
 - 挂起项: 无.
