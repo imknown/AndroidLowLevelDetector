@@ -1,7 +1,7 @@
-// End-to-end self-check that the ILS warmup actually worked, i.e. that the
+// End-to-end self-check that the Kotlin LSP warmup actually worked, i.e. that the
 // Gradle sync succeeded and the analyzer can really see the project model.
 //
-// Why this exists: a failed Gradle sync does not make the ILS error out. It degrades
+// Why this exists: a failed Gradle sync does not make the Kotlin LSP error out. It degrades
 // to an incomplete model and still answers diagnostics, so a plain run on a clean
 // file prints CLEAN and looks like success while the analyzer has no project
 // model. Checking `"tool":"gradle","status":"SUCCESS"` in the log is one signal;
@@ -28,14 +28,15 @@ const path = require('path');
 const repoRoot = path.join(__dirname, '..');
 const diagnosticsScript = path.join(__dirname, 'kotlin-lsp-diagnostics.js');
 
-// The sentinel has to live inside a source root ILS actually models: a file
+// The sentinel has to live inside a source root Kotlin LSP actually models: a file
 // outside one yields no model, so documentSymbol returns 0 and the run cannot
 // tell an analyzer without a project model from a clean file. Rather than
 // hardcode one project's
 // package, find a real source root in this repo. Android puts Kotlin under
 // src/main/java as often as src/main/kotlin, so accept both. Requiring a .kt
-// already present means the directory is a source root the build registers, not
-// an empty tree ILS might skip.
+// already present means the directory holds Kotlin source (the check matches
+// directories by their src/main/java|kotlin path shape, it does not consult
+// the build), not an empty tree Kotlin LSP might skip.
 function findSourceRoot(root) {
   const srcRoots = [];
   const skip = new Set(['.git', '.gradle', '.idea', '.kotlin', 'build', 'node_modules']);
@@ -88,14 +89,14 @@ if (!sourceRoot) {
 
 // Written at the source root's top level with no package declaration, so it does
 // not depend on any one project's package layout.
-const sentinelName = 'ZzIlsSelfCheckSentinel.kt';
+const sentinelName = 'ZzKotlinLspSelfCheckSentinel.kt';
 const sentinelPath = path.join(sourceRoot, sentinelName);
 
 // Deliberately triggers a warning an analyzer with a project model reports and
 // one without it does not: FunctionName, a function named in PascalCase
 // rather than lowercase. It is not a compile error, so a build that happens to
 // compile this file is not broken by it.
-const sentinelSource = `fun IlsSelfCheckProbe() {
+const sentinelSource = `fun KotlinLspSelfCheckProbe() {
     val unused = 1
 }
 `;
@@ -134,7 +135,10 @@ function main() {
       + ' then retry. A build started from the command line is not affected: ./gradlew takes its daemon'
       + ' JVM from gradle/gradle-daemon-jvm.properties.');
   }
-  const warnMatch = /==\s*(\d+)\s*ERROR,\s*(\d+)\s*WARN,\s*(\d+)\s*INFO\s*==/.exec(out);
+  // Matches the four-severity summary kotlin-lsp-diagnostics.js prints; an
+  // UNKNOWN bucket only appears when the server returned an out-of-protocol
+  // severity, so it stays optional here.
+  const warnMatch = /==\s*(\d+)\s*ERROR,\s*(\d+)\s*WARNING,\s*(\d+)\s*INFORMATION,\s*(\d+)\s*HINT(?:,\s*(\d+)\s*UNKNOWN)?\s*==/.exec(out);
   if (!warnMatch || parseInt(warnMatch[2], 10) < 1) {
     throw new Error('sentinel did not produce the expected warnings; the analyzer may not be seeing the project model');
   }

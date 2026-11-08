@@ -1,17 +1,17 @@
-// Drive the JetBrains IntelliJ Language Server (ILS) over stdio against the
+// Drive the JetBrains Kotlin LSP (IntelliJ Language Server distribution) over stdio against the
 // warmed index cache:
 // initialize -> initialized -> didOpen -> wait intellij/ready-for-test ->
 // documentSymbol (analysis check) -> textDocument/diagnostic -> shutdown.
 //
 // Usage:
-//   node scripts/ils-diagnostics.js <path-to-kotlin-file>
+//   node scripts/kotlin-lsp-diagnostics.js <path-to-kotlin-file>
 //
 // This script has to stay one level under the repository root (the repository
 // keeps it in scripts): the project root, the index cache and the project
 // model are all derived from the script's own location, so a copy run from
 // outside that location analyses a file outside the model and answers CLEAN.
 //
-// .kt files are analyzed; a .kts Gradle build script has no ILS model, so a run
+// .kt files are analyzed; a .kts Gradle build script has no Kotlin LSP model, so a run
 // on one fails by design instead of reporting an empty pass.
 //
 // What it reports: the compiler and semantic diagnostics of the file, every
@@ -26,13 +26,13 @@
 // the server first. A second run started while one is in progress exits 1
 // naming the first pid.
 //
-// Machine specifics stay out of this repo. The ILS installation is resolved
+// Machine specifics stay out of this repo. The Kotlin LSP installation is resolved
 // from, in order:
 //   KOTLIN_LSP_SERVER  full path to intellij-server(.exe) (explicit override)
 //   KOTLIN_LSP_HOME    distribution root (the conventional user-level
 //                      environment variable); <root>/bin/intellij-server is used
 //   PATH               the intellij-server binary found on PATH
-// The ILS index cache is expected at <repo>/.kotlin/lsp-cache/<process.platform>
+// The Kotlin LSP index cache is expected at <repo>/.kotlin/lsp-cache/<process.platform>
 // (gitignored): each distribution, and the cache that distribution writes, is
 // platform-specific, so every platform warms its own directory with its own
 // bin/warmup.py.
@@ -42,7 +42,7 @@ const path = require('path');
 const { pathToFileURL } = require('url');
 
 if (!process.argv[2]) {
-  console.error('usage: node scripts/ils-diagnostics.js <path-to-kotlin-file>');
+  console.error('usage: node scripts/kotlin-lsp-diagnostics.js <path-to-kotlin-file>');
   process.exit(1);
 }
 const target = path.resolve(process.argv[2]);
@@ -63,7 +63,7 @@ const repoRoot = path.join(__dirname, '..');
 const indexDir = path.join(repoRoot, '.kotlin', 'lsp-cache', process.platform);
 if (!fs.existsSync(indexDir)) {
   console.log('WARN: no index cache at ' + indexDir + ' -- this run cold-indexes and may exceed'
-    + ' the ready timeout; warm it with <ILS distribution>/bin/warmup.py first');
+    + ' the ready timeout; warm it with <distribution>/bin/warmup.py first');
 }
 const serverExe = 'intellij-server' + (process.platform === 'win32' ? '.exe' : '');
 // X_OK is granted to every file on Windows, so this only ever rejects on the
@@ -86,16 +86,16 @@ const server = process.env.KOTLIN_LSP_SERVER
   || (process.env.KOTLIN_LSP_HOME && path.join(process.env.KOTLIN_LSP_HOME, 'bin', serverExe))
   || serverFromPathEnv();
 if (!server) {
-  console.error('ILS server not found. Set KOTLIN_LSP_SERVER (binary path) or KOTLIN_LSP_HOME (distribution root, the conventional user-level variable), or put intellij-server on PATH');
+  console.error('Kotlin LSP server not found. Set KOTLIN_LSP_SERVER (binary path) or KOTLIN_LSP_HOME (distribution root, the conventional user-level variable), or put intellij-server on PATH');
   process.exit(1);
 }
 if (!fs.existsSync(server)) {
-  console.error('ILS server not found at ' + server + ' (KOTLIN_LSP_SERVER / KOTLIN_LSP_HOME point there);'
+  console.error('Kotlin LSP server not found at ' + server + ' (KOTLIN_LSP_SERVER / KOTLIN_LSP_HOME point there);'
     + ' note that each platform ships its own distribution, whose launcher is bin/' + serverExe);
   process.exit(1);
 }
 if (!isRunnable(server)) {
-  console.error('ILS server ' + server + ' exists but is not runnable: on macOS/Linux check the execute bit'
+  console.error('Kotlin LSP server ' + server + ' exists but is not runnable: on macOS/Linux check the execute bit'
     + ' (chmod +x) and, on macOS, that the download is not quarantined');
   process.exit(1);
 }
@@ -107,7 +107,7 @@ const projectUri = pathToFileURL(repoRoot).href;
 // that loses fails in a way that looks like a code bug. The lock is created
 // atomically (flag wx) rather than checked then written, because two runs
 // starting together both pass a check-then-write. It only covers this script:
-// an IDE-hosted ILS and warmup.py write no lock for it to see.
+// an IDE-hosted Kotlin LSP and warmup.py write no lock for it to see.
 const lockFile = path.join(repoRoot, '.kotlin', 'lsp-cache', process.platform + '.lock');
 function liveLockHolderPid() {
   let pid;
@@ -131,7 +131,7 @@ function acquireLock() {
     }
     const holder = liveLockHolderPid();
     if (holder) {
-      console.error('another diagnostics run is already in progress (pid ' + holder + ', lock ' + lockFile + ')');
+      console.error('another diagnostics/plan run is already in progress (pid ' + holder + ', lock ' + lockFile + ')');
       process.exit(1);
     }
     // A lock left behind by a run that was killed hard: take it over once
@@ -163,8 +163,8 @@ function timeoutFromEnv(name, fallback) {
   const raw = Number(process.env[name]);
   return Number.isFinite(raw) && raw > 0 ? raw : fallback;
 }
-const readyTimeoutMs = timeoutFromEnv('ILS_READY_TIMEOUT_MS', 1800000);
-const callTimeoutMs = timeoutFromEnv('ILS_CALL_TIMEOUT_MS', 180000);
+const readyTimeoutMs = timeoutFromEnv('KOTLIN_LSP_READY_TIMEOUT_MS', 1800000);
+const callTimeoutMs = timeoutFromEnv('KOTLIN_LSP_CALL_TIMEOUT_MS', 180000);
 
 // spawn() fails two different ways depending on the platform and the cause: a
 // synchronous throw (e.g. Windows EFTYPE on a non-executable file) and an
@@ -176,7 +176,7 @@ try {
     stdio: ['pipe', 'pipe', 'pipe'],
   });
 } catch (e) {
-  console.error('cannot start ILS (' + e.code + '): ' + e.message);
+  console.error('cannot start Kotlin LSP (' + e.code + '): ' + e.message);
   process.exit(1);
 }
 
@@ -186,7 +186,7 @@ try {
 // the lock through the 'exit' handler.
 for (const signal of ['SIGINT', 'SIGTERM']) {
   process.on(signal, () => {
-    console.error('interrupted by ' + signal + ': stopping the ILS process');
+    console.error('interrupted by ' + signal + ': stopping the Kotlin LSP process');
     proc.kill();
     process.exit(signal === 'SIGINT' ? 130 : 143);
   });
@@ -205,7 +205,7 @@ function markClosed(info) {
   exitInfo = info;
   for (const { reject, timer, method } of pending.values()) {
     clearTimeout(timer);
-    reject(new Error(method + ': ILS ' + info));
+    reject(new Error(method + ': Kotlin LSP ' + info));
   }
   pending.clear();
 }
@@ -218,7 +218,7 @@ proc.stdout.on('data', (d) => {
   buf = Buffer.concat([buf, d]);
   pump();
 });
-proc.stderr.on('data', (d) => process.stderr.write('[ils] ' + d.toString()));
+proc.stderr.on('data', (d) => process.stderr.write('[kotlin-lsp] ' + d.toString()));
 proc.on('close', (code, signal) => markClosed('exited with code ' + code
   + (signal ? ' on signal ' + signal : '')));
 proc.stdin.on('error', () => {});
@@ -270,7 +270,7 @@ function handle(msg) {
     pending.delete(msg.id);
     // A JSON-RPC error is a failed call, not a value: resolving it let a
     // rejected request fall through to the branches that print CLEAN.
-    if (msg.error) reject(new Error(method + ': ILS error ' + msg.error.code + ' ' + msg.error.message));
+    if (msg.error) reject(new Error(method + ': Kotlin LSP error ' + msg.error.code + ' ' + msg.error.message));
     else resolve(msg.result);
   }
 }
@@ -284,7 +284,7 @@ function reply(id, result) {
 function send(method, params) {
   // A request written after the server was already gone is silently dropped by
   // the pipe, so without this it would sit out its full timeout.
-  if (exitInfo) throw new Error('cannot send ' + method + ': ILS already ' + exitInfo);
+  if (exitInfo) throw new Error('cannot send ' + method + ': Kotlin LSP already ' + exitInfo);
   const id = nextId++;
   const body = Buffer.from(JSON.stringify({ jsonrpc: '2.0', id, method, params }), 'utf8');
   proc.stdin.write(`Content-Length: ${body.length}\r\n\r\n`, 'ascii');
@@ -309,7 +309,7 @@ function waitForReady(ms) {
     const start = Date.now();
     const t = setInterval(() => {
       if (ready) { clearInterval(t); resolve(); }
-      else if (exitInfo) { clearInterval(t); reject(new Error('ILS ' + exitInfo + ' before becoming ready')); }
+      else if (exitInfo) { clearInterval(t); reject(new Error('Kotlin LSP ' + exitInfo + ' before becoming ready')); }
       else if (Date.now() - start > ms) { clearInterval(t); reject(new Error('ready-for-test timeout after ' + ms + 'ms')); }
     }, 500);
   });
@@ -319,7 +319,7 @@ function waitForReady(ms) {
   try {
     const init = await send('initialize', {
       processId: process.pid,
-      clientInfo: { name: 'ils-diagnostics' },
+      clientInfo: { name: 'kotlin-lsp-diagnostics' },
       rootUri: projectUri,
       rootPath: repoRoot,
       workspaceFolders: [{ uri: projectUri, name: path.basename(repoRoot) }],
@@ -345,7 +345,7 @@ function waitForReady(ms) {
     // would print CLEAN for a file that was never analyzed.
     if (!Array.isArray(symbols) || symbols.length === 0) {
       const why = /\.kts$/i.test(target)
-        ? 'ILS resolves no Gradle build script here, so the file was not analyzed: check it with the Gradle build instead'
+        ? 'Kotlin LSP resolves no Gradle build script here, so the file was not analyzed: check it with the Gradle build instead'
         : 'the document is not part of the project model (path or URI not recognised, or the index cache is missing)';
       throw new Error('documentSymbol returned '
         + (Array.isArray(symbols) ? '0 symbols' : String(JSON.stringify(symbols)))
@@ -359,21 +359,45 @@ function waitForReady(ms) {
     }
     const items = diag.items;
     if (items.length === 0) console.log('CLEAN (0 items)');
-    const counts = { ERROR: 0, WARN: 0, INFO: 0 };
+    // All four LSP severities print separately, nothing folds into INFO:
+    // there is no Fatal or Critical severity in LSP or in the IntelliJ
+    // severities behind this server, and an unexpected value prints as
+    // UNKNOWN(n) per item while its count goes to the UNKNOWN bucket.
+    const severityLabel = sev =>
+      ({ 1: 'ERROR', 2: 'WARNING', 3: 'INFORMATION', 4: 'HINT' })[sev] || ('UNKNOWN(' + sev + ')');
+    const severityBucket = sev =>
+      ({ 1: 'ERROR', 2: 'WARNING', 3: 'INFORMATION', 4: 'HINT' })[sev] || 'UNKNOWN';
+    const counts = { ERROR: 0, WARNING: 0, INFORMATION: 0, HINT: 0, UNKNOWN: 0 };
     for (const d of items) {
       const pos = d.range && d.range.start;
-      const sev = d.severity === 1 ? 'ERROR' : d.severity === 2 ? 'WARN' : 'INFO';
-      counts[sev]++;
-      console.log(`[${sev}] ${pos ? pos.line + 1 + ':' + (pos.character + 1) : '?'} ${d.code || ''} ${String(d.message).split('\n')[0]}`);
+      counts[severityBucket(d.severity)]++;
+      console.log(`[${severityLabel(d.severity)}] ${pos ? pos.line + 1 + ':' + (pos.character + 1) : '?'} ${d.code || ''} ${String(d.message).split('\n')[0]}`);
     }
     // Pulling the report successfully is not the same as the file being fine, so
     // an ERROR-severity item has to show up in the status rather than only in
     // stdout, which every caller would have to parse to use this as a gate.
-    if (items.length > 0) console.log(`== ${counts.ERROR} ERROR, ${counts.WARN} WARN, ${counts.INFO} INFO ==`);
+    if (items.length > 0) {
+      console.log(`== ${counts.ERROR} ERROR, ${counts.WARNING} WARNING, ${counts.INFORMATION} INFORMATION, ${counts.HINT} HINT`
+        + (counts.UNKNOWN ? `, ${counts.UNKNOWN} UNKNOWN` : '') + ' ==');
+    }
 
-    const shutdown = await send('shutdown', {});
+    // The diagnostics are already printed by now: a dead server must not turn
+    // the whole run into FAILED over its shutdown ack. send throws
+    // synchronously when the server is already gone, so this needs a real
+    // try/catch around the await; a .catch on the promise would not see it.
+    let acked = false;
+    try {
+      await send('shutdown', {});
+      acked = true;
+    } catch (e) {
+      console.log('== shutdown not acked: ' + e.message);
+    }
     notify('exit', {});
-    console.log('== shutdown ack:', JSON.stringify(shutdown));
+    if (acked) console.log('== shutdown acked ==');
+    // A server that already died has nothing left to flush and its close event
+    // has already fired, so the graceful wait below would only burn its full
+    // deadline; go straight to the status instead.
+    if (exitInfo) process.exit(counts.ERROR > 0 ? 1 : 0);
     // Give the graceful exit a deadline rather than killing on a fixed timer:
     // a kill landing while the JVM flushes its cache locks it for the next run,
     // which is the same sequence the distribution's own warmup.py follows
