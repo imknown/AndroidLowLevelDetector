@@ -46,6 +46,7 @@ import net.imknown.android.forefrontinfo.ui.home.model.KernelState
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.home.model.LldSource
 import net.imknown.android.forefrontinfo.ui.home.model.LldStatusState
+import net.imknown.android.forefrontinfo.ui.home.model.MainlineState
 import net.imknown.android.forefrontinfo.ui.home.model.PerformanceClassInfo
 import net.imknown.android.forefrontinfo.ui.home.model.SecurityPatchState
 import net.imknown.android.forefrontinfo.ui.home.model.SdkExtensionState
@@ -560,59 +561,49 @@ class HomeRepository(
     }
 
     /** {@link com.android.settings.deviceinfo.firmwareversion.MainlineModuleVersionPreferenceController} */
-    fun detectMainline(lld: Lld?): MyModel =
-        guardedMyModel(R.string.mainline_title) {
-            var versionName = MyApplication.getMyString(R.string.result_not_supported)
-            var moduleProvider = MyApplication.getMyString(androidR.string.unknownName)
-            val latestGooglePlaySystemUpdates = lld?.android?.googlePlaySystemUpdates
+    fun detectMainline(lld: Lld?): DetectResult<MainlineState> = try {
+        val latestGooglePlaySystemUpdates = lld?.android?.googlePlaySystemUpdates
 
-            fun getResult() = MyApplication.getMyString(
-                R.string.mainline_detail,
-                versionName,
-                moduleProvider,
-                latestGooglePlaySystemUpdates
-                    ?: MyApplication.getMyString(androidR.string.unknownName)
-            )
+        @SuppressLint("DiscouragedApi")
+        // com.android.internal.R.string.config_defaultModuleMetadataProvider
+        val idConfigDefaultModuleMetadataProvider = Resources.getSystem().getIdentifier(
+            "config_defaultModuleMetadataProvider", "string", "android"
+        )
 
-            @SuppressLint("DiscouragedApi")
-            // com.android.internal.R.string.config_defaultModuleMetadataProvider
-            val idConfigDefaultModuleMetadataProvider = Resources.getSystem().getIdentifier(
-                "config_defaultModuleMetadataProvider", "string", "android"
-            )
-
-            var moduleColor = StatusColor.CRITICAL
-
-            val result = if (idConfigDefaultModuleMetadataProvider != 0) {
-                try {
-                    // com.android.modulemetadata
-                    // com.google.android.modulemetadata
-                    moduleProvider = MyApplication.getMyString(idConfigDefaultModuleMetadataProvider)
-                    val packageInfo = getPackageInfoOrNull(moduleProvider)
-                    versionName = packageInfo?.versionName ?: ""
-
-                    if (latestGooglePlaySystemUpdates != null) {
-                        if (versionName >= latestGooglePlaySystemUpdates
-                            || "$versionName-01" >= latestGooglePlaySystemUpdates
-                        ) {
-                            moduleColor = StatusColor.NO_PROBLEM
-                        }
-                    }
-
-                    getResult()
-                } catch (e: Exception) {
-                    Log.w(javaClass.simpleName, "Failed to get mainline version. ${e.fullMessage}")
-                    getResult()
-                }
-            } else {
-                getResult()
+        var moduleProvider: String? = null
+        var versionName: String? = null
+        if (idConfigDefaultModuleMetadataProvider != 0) {
+            try {
+                // com.android.modulemetadata
+                // com.google.android.modulemetadata
+                moduleProvider = MyApplication.getMyString(idConfigDefaultModuleMetadataProvider)
+                val packageInfo = getPackageInfoOrNull(moduleProvider)
+                versionName = packageInfo?.versionName ?: ""
+            } catch (e: Exception) {
+                Log.w(javaClass.simpleName, "Failed to get mainline version. ${e.fullMessage}")
             }
-
-            return toColoredMyModel(
-                R.string.mainline_title,
-                result,
-                moduleColor
-            )
         }
+
+        val match = when {
+            latestGooglePlaySystemUpdates == null -> MainlineState.Match.Unknown
+            versionName != null && versionName >= latestGooglePlaySystemUpdates -> MainlineState.Match.Met
+            versionName != null && "${versionName}-01" >= latestGooglePlaySystemUpdates -> MainlineState.Match.Met
+            else -> MainlineState.Match.None
+        }
+
+        DetectResult.Found(
+            MainlineState(
+                moduleProvider = moduleProvider,
+                versionName = versionName,
+                latestGooglePlaySystemUpdates = latestGooglePlaySystemUpdates,
+                match = match
+            )
+        )
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        DetectResult.Failed(e)
+    }
 
     fun detectVndk(lld: Lld?): DetectResult<VndkState> = try {
         val vndkVersion = propertyReader.getStringOrNull(AndroidDataSource.PROP_VNDK_VERSION, Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)

@@ -18,6 +18,7 @@ import net.imknown.android.forefrontinfo.ui.home.model.DynamicPartitionsState
 import net.imknown.android.forefrontinfo.ui.home.model.KernelState
 import net.imknown.android.forefrontinfo.ui.home.model.LldSource
 import net.imknown.android.forefrontinfo.ui.home.model.LldStatusState
+import net.imknown.android.forefrontinfo.ui.home.model.MainlineState
 import net.imknown.android.forefrontinfo.ui.home.model.PerformanceClassInfo
 import net.imknown.android.forefrontinfo.ui.home.model.SecurityPatchState
 import net.imknown.android.forefrontinfo.ui.home.model.SdkExtensionState
@@ -360,6 +361,28 @@ class HomeModelMapper(private val myApplication: MyApplication) {
                 VndkState.Match.Met -> StatusColor.NO_PROBLEM
                 VndkState.Match.Lagging -> StatusColor.WARNING
                 VndkState.Match.Unknown, VndkState.Match.None -> StatusColor.CRITICAL
+            }
+        )
+    }
+
+    // The mainline row: a provider or version that was never fetched renders as the platform
+    // unknownName / result_not_supported; an installed package without a version renders the
+    // empty string verbatim.
+    fun toMainlineModel(detect: () -> DetectResult<MainlineState>): MyModel = guardedEntry(
+        R.string.mainline_title,
+        detect
+    ) { state ->
+        coloredRow(
+            R.string.mainline_title,
+            myApplication.getString(
+                R.string.mainline_detail,
+                state.versionName ?: myApplication.getString(R.string.result_not_supported),
+                state.moduleProvider ?: myApplication.getString(androidR.string.unknownName),
+                state.latestGooglePlaySystemUpdates ?: myApplication.getString(androidR.string.unknownName)
+            ),
+            when (state.match) {
+                MainlineState.Match.Met -> StatusColor.NO_PROBLEM
+                MainlineState.Match.Unknown, MainlineState.Match.None -> StatusColor.CRITICAL
             }
         )
     }
