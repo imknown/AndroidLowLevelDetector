@@ -1,7 +1,8 @@
 // Drive the JetBrains Kotlin LSP (the IntelliJ Language Server distribution)
 // over stdio for the PLANNING phase, before code is written:
 // references, definition, hover, call hierarchy, type hierarchy,
-// workspace symbols, document symbols, diagnostics.
+// workspace symbols, document symbols, diagnostics, completion,
+// signature help, inlay hints.
 //
 // Usage (one server session for all queries, batched):
 //   node scripts/kotlin-lsp-plan.js <query> [<query> ...]
@@ -11,6 +12,7 @@
 //   <file>:<line>:<col>:<method>   position query, line and col are 1-based
 //   <file>:symbols                 document symbols of the file
 //   <file>:diagnostics             diagnostics of the file, all severities
+//   <file>:inlay-hints             parameter-name and call-chain hints of the file
 //   wsymbol:<query text>           workspace-wide symbol search
 //
 // Position query methods:
@@ -23,6 +25,11 @@
 //   calls-out       outgoing call hierarchy (what it calls)
 //   type-super      supertypes of this type
 //   type-sub        subtypes of this type
+//   completion      real members the server resolves at this position: an API
+//                   that is not in the list does not exist (the anti-hallucination
+//                   check). The list may be truncated by the server (isIncomplete)
+//   signature-help  the real overload signatures at a call position, the active
+//                   one marked
 //
 // Output is one finding per line, path:line:col with 1-based numbers, so an
 // agent can act on it without parsing JSON. A symbol workspace/symbol found
@@ -56,21 +63,22 @@
 //   KOTLIN_LSP_CALL_TIMEOUT_MS        default 180000, per-request timeout
 //                                     (shared with kotlin-lsp-diagnostics.js)
 //
-// The lock file is shared with scripts/kotlin-lsp-diagnostics.js: two server
-// instances against one platform cache contend for the index, so the two
-// channels are mutually exclusive. See that script for the locking rationale.
+// The lock file is shared with scripts/kotlin-lsp-diagnostics.js and
+// scripts/kotlin-lsp-edit.js: two server instances against one platform cache
+// contend for the index, so the three client scripts are mutually exclusive.
+// See diagnostics.js for the locking rationale.
 const { spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const { pathToFileURL, fileURLToPath } = require('url');
 
 const METHODS = ['references', 'definition', 'typedef', 'implementation', 'hover',
-  'calls-in', 'calls-out', 'type-super', 'type-sub'];
+  'calls-in', 'calls-out', 'type-super', 'type-sub', 'completion', 'signature-help'];
 const SEVERITIES = { 1: 'ERROR', 2: 'WARNING', 3: 'INFORMATION', 4: 'HINT' };
 
 if (process.argv.length < 3) {
   console.error('usage: node scripts/kotlin-lsp-plan.js <query> [<query> ...]');
-  console.error('query: <file>:<line>:<col>:<method> | <file>:symbols | <file>:diagnostics | wsymbol:<text>');
+  console.error('query: <file>:<line>:<col>:<method> | <file>:symbols | <file>:diagnostics | <file>:inlay-hints | wsymbol:<text>');
   console.error('method: ' + METHODS.join(', '));
   process.exit(1);
 }
@@ -150,7 +158,7 @@ for (const token of process.argv.slice(2)) {
     queries.push({ kind: 'wsymbol', text: token.slice('wsymbol:'.length) });
     continue;
   }
-  const m = /^(.*):(symbols|diagnostics)$/i.exec(token);
+  const m = /^(.*):(symbols|diagnostics|inlay-hints)$/i.exec(token);
   if (m) {
     queries.push({ kind: m[2].toLowerCase(), file: m[1] });
     continue;
@@ -232,9 +240,10 @@ if (!sentinelPath) {
 const fileUri = p => pathToFileURL(p).href;
 const projectUri = pathToFileURL(repoRoot).href;
 
-// Two instances against one platform cache contend for the index, and the run
-// that loses fails in a way that looks like a code bug. The lock is created
-// atomically (flag wx) and taken over once when a killed run left it behind.
+// Two server instances against one platform cache contend for the index, and
+// the run that loses fails in a way that looks like a code bug. The lock is
+// created atomically (flag wx) and taken over once when a killed run left it
+// behind; all three client scripts (diagnostics, plan, edit) share it.
 const lockFile = path.join(repoRoot, '.kotlin', 'lsp-cache', process.platform + '.lock');
 function liveLockHolderPid() {
   let pid;
@@ -256,7 +265,7 @@ function acquireLock() {
     }
     const holder = liveLockHolderPid();
     if (holder) {
-      console.error('another diagnostics/plan run is already in progress (pid ' + holder
+      console.error('another diagnostics/plan/edit run is already in progress (pid ' + holder
         + ', lock ' + lockFile + ')');
       process.exit(1);
     }
@@ -302,7 +311,7 @@ for (const signal of ['SIGINT', 'SIGTERM']) {
   });
 }
 
-let buf = '';
+let buf = Buffer.alloc(0);
 let nextId = 1;
 const pending = new Map();
 let exitInfo;
@@ -364,7 +373,23 @@ function handleMessage(msg) {
   // server -> client requests with result:null across the board; ignoring
   // these stalls the handshake.
   if (msg.method !== undefined) {
-    if (msg.id !== undefined) reply(msg.id, null);
+    if (msg.id !== undefined) {
+      if (msg.method === 'workspace/configuration') {
+        // The server consults the client per LSP, and the reply must be an
+        // ARRAY with one entry per requested item: a bare null crashes
+        // consumers that expect the list (the inlay-hint options did, with
+        // -32803 "parameter raw"). The kotlin inlay-hints section is answered
+        // enabled (hints.parameters = parameter-name hints, hints.call.chains
+        // = call-chain hints); unknown sections get an empty object, i.e.
+        // nothing enabled.
+        const items = (msg.params && msg.params.items) || [];
+        reply(msg.id, items.map(item => (item && item.section === 'jetbrains.kotlin'
+          ? { hints: { parameters: true, call: { chains: true } } }
+          : {})));
+        return;
+      }
+      reply(msg.id, null);
+    }
     return;
   }
   const p = pending.get(msg.id);
@@ -377,22 +402,26 @@ function handleMessage(msg) {
   p.resolve(msg.result);
 }
 
+// Framing runs on bytes, not on a UTF-16 string: Content-Length counts bytes,
+// and a UTF-16 length disagrees the moment a frame carries a non-ASCII char
+// (inlay-hint and signature labels do). A multi-byte char split across two
+// chunks would also corrupt a string-accumulated buffer.
 function extract() {
   for (;;) {
-    const idx = buf.indexOf('\r\n\r\n');
-    if (idx < 0) return;
-    const header = buf.slice(0, idx);
+    const headerEnd = buf.indexOf('\r\n\r\n');
+    if (headerEnd < 0) return;
+    const header = buf.slice(0, headerEnd).toString('ascii');
     const m = /Content-Length: (\d+)/i.exec(header);
-    if (!m) { const nl = buf.indexOf('\n'); if (nl < 0) return; buf = buf.slice(nl + 1); continue; }
+    if (!m) { buf = buf.slice(headerEnd + 4); continue; }
     const len = parseInt(m[1], 10);
-    const start = idx + 4;
+    const start = headerEnd + 4;
     if (buf.length < start + len) return;
-    const body = buf.slice(start, start + len);
+    const body = buf.slice(start, start + len).toString('utf8');
     buf = buf.slice(start + len);
     try { handleMessage(JSON.parse(body)); } catch (e) { console.error('bad frame: ' + e.message); }
   }
 }
-proc.stdout.on('data', d => { buf += d.toString('utf8'); extract(); });
+proc.stdout.on('data', d => { buf = Buffer.concat([buf, d]); extract(); });
 
 // ---- output helpers --------------------------------------------------------
 
@@ -510,6 +539,35 @@ async function runPositionQuery(q) {
       if (printed === 0) console.log('(none: the server returned an empty hierarchy for this symbol)');
       break;
     }
+    case 'completion': {
+      const c = await send('textDocument/completion', td);
+      const items = Array.isArray(c) ? c : ((c && c.items) || []);
+      // The incomplete flag prints for empty and non-empty lists alike: an
+      // absent API in a truncated list is not proof of absence -- rerun on a
+      // narrower receiver before declaring an API hallucinated.
+      const incomplete = c && c.isIncomplete === true
+        ? ' (list flagged incomplete by the server)' : '';
+      if (items.length === 0) { console.log('(no completions)' + incomplete); break; }
+      console.log('== ' + items.length + ' completion(s)' + incomplete + ' ==');
+      for (const it of items) {
+        console.log('  ' + it.label + (it.kind !== undefined ? ' kind=' + it.kind : '')
+          + (it.detail ? ' | ' + oneLine(it.detail).slice(0, 120) : ''));
+      }
+      break;
+    }
+    case 'signature-help': {
+      const h = await send('textDocument/signatureHelp', td);
+      const sigs = (h && h.signatures) || [];
+      if (sigs.length === 0) { console.log('(no signatures)'); break; }
+      console.log('== ' + sigs.length + ' signature(s), active='
+        + (h.activeSignature !== undefined ? h.activeSignature : '?') + ', activeParam='
+        + (h.activeParameter !== undefined ? h.activeParameter : '?') + ' ==');
+      sigs.forEach((s, i) => {
+        const active = i === h.activeSignature ? ' [active]' : '';
+        console.log('  ' + s.label.replace(/\s*\n\s*/g, ' ') + active);
+      });
+      break;
+    }
     default:
       throw new Error('unhandled method ' + q.method);
   }
@@ -518,6 +576,34 @@ async function runPositionQuery(q) {
 async function runFileQuery(q) {
   const uri = fileUri(path.resolve(q.file));
   console.log('== ' + q.kind + ' ' + q.file + ' ==');
+  if (q.kind === 'inlay-hints') {
+    // Parameter-name and call-chain hints (the client answers the server's
+    // workspace/configuration with both enabled). A string label prints as is;
+    // an array of label parts joins into one line.
+    const text = fs.readFileSync(path.resolve(q.file), 'utf8');
+    // The range must reach the end of the last CONTENT line: a file without a
+    // trailing newline ends on that line, and stopping at column 0 of it would
+    // leave every hint on that line outside the range (45 of this repo's .kt
+    // files end without a newline).
+    const lines = text.split('\n');
+    const lastLine = lines.length - 1;
+    const hints = await send('textDocument/inlayHint', {
+      textDocument: { uri },
+      range: {
+        start: { line: 0, character: 0 },
+        end: { line: lastLine, character: lines[lastLine].length },
+      },
+    });
+    const list = Array.isArray(hints) ? hints : [];
+    if (list.length === 0) { console.log('(no hints)'); return; }
+    for (const h of list) {
+      const label = typeof h.label === 'string' ? h.label
+        : Array.isArray(h.label) ? h.label.map(p => p.value || '').join('')
+        : String(h.label && h.label.value || '');
+      console.log(site(uri, { start: h.position }) + ' ' + label);
+    }
+    return;
+  }
   if (q.kind === 'symbols') {
     const symbols = await send('textDocument/documentSymbol', { textDocument: { uri } });
     (function walk(list, indent) {
@@ -584,21 +670,26 @@ async function runWsymbolQuery(q) {
       else await runFileQuery(q);
     }
 
-    try { await send('shutdown', null); } catch (e) { console.error('shutdown: ' + e.message); }
+    // shutdown is a courtesy call with its own short budget: an unresponsive
+    // server must not stretch the tail, and the explicit process.exit below is
+    // what ends the run -- the server's JVM grandchild can inherit the stdio
+    // pipe handles and outlive proc.kill (which only reaches the launcher), so
+    // an open stdout pipe would otherwise hold this event loop open forever.
+    try { await send('shutdown', null, 10000); } catch (e) { console.error('shutdown: ' + e.message); }
     notify('exit', {});
-    // A server that already died has nothing left to flush and its close event
-    // has already fired, so the graceful wait below would only burn its full
-    // deadline; the exit status is already set, go straight out.
-    if (exitInfo) return;
+    if (exitInfo) process.exit(process.exitCode || 0);
     // Graceful exit with a deadline rather than a fixed kill: a kill landing
     // while the JVM flushes its cache locks it for the next run.
     await new Promise(resolve => {
       const timer = setTimeout(() => { try { proc.kill(); } catch (e) {} resolve(); }, 10000);
       proc.once('close', () => { clearTimeout(timer); resolve(); });
     });
+    process.exit(process.exitCode || 0);
   } catch (e) {
     console.error('FAILED: ' + e.message);
     try { proc.kill(); } catch (e2) {}
-    process.exitCode = 1;
+    // Same tail rule as the success path: a JVM grandchild holding the stdio
+    // pipes would keep this event loop alive past the failure report.
+    process.exit(1);
   }
 })();

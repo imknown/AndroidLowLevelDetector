@@ -103,11 +103,12 @@ if (!isRunnable(server)) {
 const fileUri = pathToFileURL(target).href;
 const projectUri = pathToFileURL(repoRoot).href;
 
-// Two instances against one platform cache contend for the index, and the run
-// that loses fails in a way that looks like a code bug. The lock is created
-// atomically (flag wx) rather than checked then written, because two runs
-// starting together both pass a check-then-write. It only covers this script:
-// an IDE-hosted Kotlin LSP and warmup.py write no lock for it to see.
+// Two server instances against one platform cache contend for the index, and
+// the run that loses fails in a way that looks like a code bug. The lock is
+// created atomically (flag wx) rather than checked then written, because two
+// runs starting together both pass a check-then-write. All three client
+// scripts (diagnostics, plan, edit) share it: an IDE-hosted Kotlin LSP and
+// warmup.py write no lock for it to see.
 const lockFile = path.join(repoRoot, '.kotlin', 'lsp-cache', process.platform + '.lock');
 function liveLockHolderPid() {
   let pid;
@@ -118,11 +119,9 @@ function liveLockHolderPid() {
   catch (e) { return e.code === 'EPERM' ? pid : 0; }
 }
 fs.mkdirSync(path.dirname(lockFile), { recursive: true });
-let lockHeld = false;
 function acquireLock() {
   try {
     fs.writeFileSync(lockFile, String(process.pid), { flag: 'wx' });
-    lockHeld = true;
     return;
   } catch (e) {
     if (e.code !== 'EEXIST') {
@@ -131,14 +130,13 @@ function acquireLock() {
     }
     const holder = liveLockHolderPid();
     if (holder) {
-      console.error('another diagnostics/plan run is already in progress (pid ' + holder + ', lock ' + lockFile + ')');
+      console.error('another diagnostics/plan/edit run is already in progress (pid ' + holder + ', lock ' + lockFile + ')');
       process.exit(1);
     }
     // A lock left behind by a run that was killed hard: take it over once
     try {
       fs.unlinkSync(lockFile);
       fs.writeFileSync(lockFile, String(process.pid), { flag: 'wx' });
-      lockHeld = true;
       return;
     } catch (e2) {
       console.error('cannot take over the stale diagnostics lock ' + lockFile + ': ' + e2.message);
@@ -147,12 +145,12 @@ function acquireLock() {
   }
 }
 acquireLock();
+// Release only when this run still owns the lock: after a takeover the lock
+// carries the new holder's pid, and an exiting loser must not delete it.
 // Reaches every exit path that runs handlers at all: the success tail, the
 // catch above, and the signal handlers below.
 process.on('exit', () => {
-  if (lockHeld) {
-    try { fs.unlinkSync(lockFile); } catch { /* already gone */ }
-  }
+  try { if (fs.readFileSync(lockFile, 'utf8') === String(process.pid)) fs.unlinkSync(lockFile); } catch { /* gone */ }
 });
 
 // The distribution's own warmup.py budgets 1800s of wall clock before it force
@@ -254,9 +252,18 @@ function handle(msg) {
   // independently picked the same id, since client and server number from one.
   if (msg.method !== undefined) {
     if (msg.id !== undefined) {
-      // server -> client request: warmup.py answers result:null across the board;
-      // ignoring these stalls the handshake
-      reply(msg.id, null);
+      if (msg.method === 'workspace/configuration') {
+        // The reply must be an ARRAY with one entry per requested item: a bare
+        // null crashes consumers that expect the list (the inlay-hint options
+        // did, with -32803). Nothing here consumes configuration, so every
+        // section gets an empty object (nothing enabled).
+        const items = (msg.params && msg.params.items) || [];
+        reply(msg.id, items.map(() => ({})));
+      } else {
+        // other server -> client requests: warmup.py answers result:null across
+        // the board; ignoring these stalls the handshake
+        reply(msg.id, null);
+      }
     }
     if (msg.method === 'intellij/ready-for-test') {
       console.log('== ready-for-test received ==');
@@ -281,19 +288,22 @@ function reply(id, result) {
   proc.stdin.write(body);
 }
 
-function send(method, params) {
+function send(method, params, timeoutMs) {
   // A request written after the server was already gone is silently dropped by
-  // the pipe, so without this it would sit out its full timeout.
+  // the pipe, so without this it would sit out its full timeout. The optional
+  // budget mirrors the other two channels: the shutdown courtesy call passes a
+  // short one, everything else runs on callTimeoutMs.
   if (exitInfo) throw new Error('cannot send ' + method + ': Kotlin LSP already ' + exitInfo);
   const id = nextId++;
+  const limit = timeoutMs || callTimeoutMs;
   const body = Buffer.from(JSON.stringify({ jsonrpc: '2.0', id, method, params }), 'utf8');
   proc.stdin.write(`Content-Length: ${body.length}\r\n\r\n`, 'ascii');
   proc.stdin.write(body);
   return new Promise((resolve, reject) => {
     const timer = setTimeout(() => {
       pending.delete(id);
-      reject(new Error('timeout waiting for ' + method + ' after ' + callTimeoutMs + 'ms'));
-    }, callTimeoutMs);
+      reject(new Error('timeout waiting for ' + method + ' after ' + limit + 'ms'));
+    }, limit);
     pending.set(id, { resolve, reject, timer, method });
   });
 }
@@ -387,7 +397,7 @@ function waitForReady(ms) {
     // try/catch around the await; a .catch on the promise would not see it.
     let acked = false;
     try {
-      await send('shutdown', {});
+      await send('shutdown', {}, 10000);
       acked = true;
     } catch (e) {
       console.log('== shutdown not acked: ' + e.message);
