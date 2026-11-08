@@ -13,6 +13,7 @@ import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModelTitle
 import net.imknown.android.forefrontinfo.ui.home.model.AbState
 import net.imknown.android.forefrontinfo.ui.home.model.AndroidInfoState
+import net.imknown.android.forefrontinfo.ui.home.model.ApexState
 import net.imknown.android.forefrontinfo.ui.home.model.BuildIdState
 import net.imknown.android.forefrontinfo.ui.home.model.DynamicPartitionsState
 import net.imknown.android.forefrontinfo.ui.home.model.GsiState
@@ -473,6 +474,31 @@ class HomeModelMapper(private val myApplication: MyApplication) {
                         GsiState.Compatibility.NotSupported -> StatusColor.CRITICAL
                     }
                 )
+            }
+        )
+    }
+
+    // The APEX row: updatable is green outright; not updatable with a mounted flattened APEX is
+    // the legacy shape, yellow plus the appended wording; neither is red.
+    fun toApexModel(detect: () -> DetectResult<ApexState>): MyModel = guardedEntry(
+        R.string.apex_status_title,
+        detect
+    ) { state ->
+        val supported = state.updatable || state.flattenedMounted
+        val isLegacyFlattenedApex = !state.updatable && state.flattenedMounted
+        var detail = myApplication.getString(
+            if (supported) R.string.result_supported else R.string.result_not_supported
+        )
+        if (isLegacyFlattenedApex) {
+            detail += myApplication.getString(R.string.apex_legacy_flattened)
+        }
+        coloredRow(
+            R.string.apex_status_title,
+            detail,
+            when {
+                state.updatable -> StatusColor.NO_PROBLEM
+                isLegacyFlattenedApex -> StatusColor.WARNING
+                else -> StatusColor.CRITICAL
             }
         )
     }

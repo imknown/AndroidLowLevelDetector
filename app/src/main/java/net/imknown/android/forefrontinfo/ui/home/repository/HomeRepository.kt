@@ -40,6 +40,7 @@ import net.imknown.android.forefrontinfo.ui.home.datasource.LldFileStore
 import net.imknown.android.forefrontinfo.ui.home.datasource.MountDataSource
 import net.imknown.android.forefrontinfo.ui.home.model.AbState
 import net.imknown.android.forefrontinfo.ui.home.model.AndroidInfoState
+import net.imknown.android.forefrontinfo.ui.home.model.ApexState
 import net.imknown.android.forefrontinfo.ui.home.model.BuildIdState
 import net.imknown.android.forefrontinfo.ui.home.model.DynamicPartitionsState
 import net.imknown.android.forefrontinfo.ui.home.model.GsiState
@@ -597,48 +598,29 @@ class HomeRepository(
         DetectResult.Failed(e)
     }
 
-    fun detectApex(mountQuery: MountDataSource.MountQueryResult): MyModel =
-        guardedMyModel(R.string.apex_status_title) {
-            // issues-cn #63: a failed mount read no longer folds into the success path as
-            // an empty table; this row renders its own unknown, carrying exitCode.
-            val mounts = when (mountQuery) {
-                is MountDataSource.MountQueryResult.Success -> mountQuery.mounts
-                is MountDataSource.MountQueryResult.Failed -> {
-                    val failure = RuntimeException("exitCode=${mountQuery.exitCode}")
-                    return toColoredMyModel(
-                        R.string.apex_status_title,
-                        MyApplication.getMyString(R.string.result_detect_failed, failure.fullMessage),
-                        StatusColor.CRITICAL
-                    )
-                }
+    // issues-cn #63: a failed mount read no longer folds into the success path as an empty
+    // table; DetectResult.Failed renders the mapper's failure row, carrying exitCode inline
+    // (expanded via fullMessage), character-identical to the old path.
+    fun detectApex(mountQuery: MountDataSource.MountQueryResult): DetectResult<ApexState> = try {
+        val mounts = when (mountQuery) {
+            is MountDataSource.MountQueryResult.Success -> mountQuery.mounts
+            is MountDataSource.MountQueryResult.Failed -> {
+                return DetectResult.Failed(RuntimeException("exitCode=${mountQuery.exitCode}"))
             }
-
-            val apexUpdatable = propertyReader.getBoolean(AndroidDataSource.PROP_APEX_UPDATABLE, Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-
-            val isFlattenedApexMounted = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && mounts.any {
-                it.mountPoint.startsWith("/apex/") && it.mountPoint.contains("@")
-            }
-
-            val isApex = apexUpdatable || isFlattenedApexMounted
-            val isLegacyFlattenedApex = !apexUpdatable && isFlattenedApexMounted
-
-            var apexEnabledResult = toSupportOrNotString(isApex)
-            if (isLegacyFlattenedApex) {
-                apexEnabledResult += MyApplication.getMyString(R.string.apex_legacy_flattened)
-            }
-
-            val apexColor = when {
-                apexUpdatable -> StatusColor.NO_PROBLEM
-                isLegacyFlattenedApex -> StatusColor.WARNING
-                else -> StatusColor.CRITICAL
-            }
-
-            return toColoredMyModel(
-                R.string.apex_status_title,
-                apexEnabledResult,
-                apexColor
-            )
         }
+
+        val apexUpdatable = propertyReader.getBoolean(AndroidDataSource.PROP_APEX_UPDATABLE, Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+
+        val isFlattenedApexMounted = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && mounts.any {
+            it.mountPoint.startsWith("/apex/") && it.mountPoint.contains("@")
+        }
+
+        DetectResult.Found(ApexState(updatable = apexUpdatable, flattenedMounted = isFlattenedApexMounted))
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        DetectResult.Failed(e)
+    }
 
     // 2a: facts only; display text and colors belong to HomeModelMapper. A failed read returns
     // Failed normally instead of throwing (the 05 rule); unexpected exceptions are caught by the

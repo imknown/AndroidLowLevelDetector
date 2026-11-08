@@ -235,7 +235,7 @@ class HomeViewModel(
             tempModels += homeModelMapper.toDsuModel { homeRepository.detectDsu() }
             tempModels += homeModelMapper.toMainlineModel { homeRepository.detectMainline(lld) }
             tempModels += homeModelMapper.toVndkModel { homeRepository.detectVndk(lld) }
-            tempModels += homeRepository.detectApex(mountQuery)
+            tempModels += homeModelMapper.toApexModel { homeRepository.detectApex(mountQuery) }
             tempModels += homeModelMapper.toDeveloperOptionsModel {
                 homeRepository.detectDeveloperOptions()
             }
