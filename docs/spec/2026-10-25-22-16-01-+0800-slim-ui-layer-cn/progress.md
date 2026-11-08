@@ -793,7 +793,87 @@
   看效果 (批 4 包装机: 无线 adb 流式安装两度断流, 改走 push 加设备端 pm install, 装机 Success, 主活动
   启动后无线连接掉线, 老板本机目视), 答复 "没问题". 放行理由留了, 照 14 拟写进 spec 记录笔的提交信息
   (英语): 代码粗看过没有问题, Nexus 5X 真机运行效果也没问题. 拆笔方案已摆给负责人, 等对提交的单独同意.
+- 2026-11-07 (批 4 第 5 步提交, 九笔): 老板同意拆笔方案后按批 3 先例重拼: 整树先存进备份分支,
+  `reset --hard` 回批 3 末梢, 逐态重拼, 每态 `compileFossDebugKotlin` + `compileFossDebugUnitTestKotlin`
+  验证后提交, 末态与备份全树对账零差异, 全量单测 56/56 与 lint 复跑绿, 备份分支已删. 途中一处编译错
+  (mapper 的条目 import 忘了跟条目同批加) 当场修掉, 不影响终态. 提交串 (老 → 新): `e8b5243b`
+  coloredRow 状态色重载, `6940b90e` LldFixture, `151bc84f` mode, `c53de15d` android, `e995e021`
+  sdkExtension, `cca25f27` performanceClass, `7f0115a2` kernel, `f8291ee6` spec 记录 (含老板放行理由),
+  `f522aed3` 12-git 规矩. 本条与各子任务状态行的更新随批 5 首笔入库.
+  下一步动作: 批 5 (buildId, securityPatches, vndk, mainline), 等负责人说开始; review 目录按 14
+  待负责人点头后删 (2026-11-08 负责人已点头, 目录已整个删掉; 归后续单元与全部判定理由在 progress
+  在案, 删前逐条核对过).
+- 2026-11-08 (批 5 实现 + v1 发起): 负责人说开始, 混合组四条按批 4 同款节奏开工 (一批改完, 多轮 review,
+  提交拆细):
+  - 领域类型四个: `BuildIdState` (含 BuildDetail 与 Match 四态; 三个分区 build id 原样携带, getString 的
+    占位串会原文进 detail, 等 #42 整治, 不新开例外), `SecurityPatchState` (行级, 双行由仓库各出一份
+    DetectResult, mapper 按序定标题: 系统在前厂商在后, 仿 referenceRows 的顺序先例), `VndkState`
+    (getStringOrNull, 缺席 null; hasVndkLite 只在有版本时读; isPropertyValueNotEmpty 的三退化与 null
+    恰好同域, 逐行等价不需要例外), `MainlineState` (provider 与 version 可空, 内层 try/catch 语义
+    保留: Log.w 加部分值照旧, 异常路径渲染等价).
+  - 判断留仓库: buildId 的日期比较提成 `isBuildIdDateHigherThanConfig` (逐字搬运, 含 preview 偏移),
+    securityPatch 的年月比较, vndk 的字符串比较 (version >= stable.api 照旧), mainline 的版本日期比较;
+    颜色判断全部落各类型的 Match 枚举.
+  - mapper 四个翻译方法; toSecurityPatchModels 返回 List<MyModel> (第一个 List 行条目), 双行各自带 guard;
+    ViewModel 四调用点经 mapper, 行顺序未动; toSupportOrNotString 剩四个调用点 (vndk 迁走).
+  - 测试: 四个新类 14 例 (buildId 4 含 preview 偏移, securityPatches 3, vndk 5, mainline 2); ShadowBuild
+    的 setId 与 setVersionCodename 钉日期比较与 preview 通道; SECURITY_PATCH 无 setter, 系统行按值
+    不可知设计, 厂商行走属性可钉; 一次跑绿, 未用探针.
+  - 验证: ILS 0 ERROR (Destructuring 建议族随 guardedEntry 方法数增长: mapper 6 → 10, repository
+    3 → 4, 同族既有噪音); 单测 70/70 (19 类, 本批 +14); lint 无新问题; analyze-file 未跑 (无 AS 实例,
+    同批 4 偏差).
+  - 欠账: 设备无线连接不稳, 批 5 黄金对照未跑 (review 不依赖设备; 对照物仍是 "同一次设备会话内改前
+    改后各一份", 设备回来补跑).
+  - v1 已发起 (review 目录已架, 提示词 `review-v1-prompt-1006.md`, HEAD `f522aed3`), 工作树冻结
+    (记录文件除外).
+- 2026-11-08 (批 5 v1 收下, 处理发现): 两份报告 (WorkBuddy CN/DeepSeek-V4.1-Flash effort 会话未暴露,
+  WorkBuddy/Tencent Hunyuan Hy default), HEAD 都是 `f522aed3`, 头尾齐, v1 标 `已收`, 工作树解冻.
+  两家独立核四条逐行等价全过, 无新例外; 合并判定:
+  - 修 (第一档, 三组):
+    - toSecurityPatchModels 的取数链在 guard 之外 (Hunyuan 发现 1): 事实成立 (detect 先求值,
+      guardedEntry 收的是已算好的结果), 但两处取数实际抛不出 (PropertyReader 内部自接), 旧实现同位置
+      也整体抛, 不是等价回归, 是 guard 契约覆盖偏差. 修法采仓库侧: detectSecurityPatches 加外层 try,
+      取数链异常转两行各自的 Failed (各行 guard 用各自标题渲染失败行); mapper 侧修法要新造 List 失败
+      行的展示决策, 弃. 修完的路径不可达 (无抛出源), 补不了用例, 记此.
+    - securityPatch 的 Lagging 与 buildId 的 Outdated 两分支无用例 (DeepSeek F1): 补两例
+      (年月相等日期落后; stable.api 99 加早日期 build id), 单测 70 → 72.
+    - assembleFossDebug 未在本批树跑过 (DeepSeek F2): 补跑通过, 不记偏差.
+  - 顺手 (记录, 两家同报): progress 各子任务状态行更新 (批 5 进行中); subtask-04.md:6 现值树说明
+    停在批 4, 改批 5.
+  - 观察记此 (不动作): 双行标题按行序定, 沿用 referenceRows 顺序先例, 引擎轮统一行的身份 (DeepSeek F5);
+    mainline 的 Met 分支 Robolectric 造不出 (需 provider 已安装且内部 config 串可解析), 测试注释已有,
+    按裁量表要求补记在此 (DeepSeek F6).
+  - 途中一编译错: 新测试把 Lld.Androids 直传给要 Lld? 的方法, 包回夹具即修.
+  - 验证: 单测 72/72 (19 类), assembleFossDebug 通过, ILS 0 ERROR (同族既有噪音); lint 不重跑
+    (改动仅仓库一处 try 包裹与测试).
+  - 下一步动作: 发 v2 (delta), 提示词 `review-v2-prompt-1048.md`, 先核对五组修复再扫新增; 工作树冻结
+    (记录文件除外).
+- 2026-11-08 (批 5 v2 收下, 处理发现, review 循环结束): 两份报告 (WorkBuddy CN/DeepSeek-V4.1-Flash,
+  WorkBuddy/Tencent Hunyuan Hy, 同 v1 的两个 reviewer 续用 delta), HEAD 都是 `f522aed3`, 头尾齐, v2 标
+  `已收`, 工作树解冻. 六组修复两家逐条核实全对 (外层 try 的取消处置与仓库其余方法同形, 正常路径逐字
+  未动), 等价没有被修复打破, 无新例外; 清单外零代码变化. 合并判定:
+  - 修 (记录同步, 三条都是第一档, 顺手改完):
+    - subtask-04.md 计数与行号停在修复前的树 (两家同报; v2 修复给仓库加 8 行): 1130 行, 辅助
+      `:257`/`:463`/`:515`, toSupportOrNotString `:1116-1122`, getOutdated `:1036`, OutdatedTargetSdkApk
+      `:1097`, 各带 "v2 修复加 8 行" 批注. 档位判定: 采 Hunyuan 的第一档 (记录同步属本单元惯例),
+      DeepSeek 的 "需求正文自己写错" 标注不成立, 处置相同.
+    - state.md 残留 v1 的旧下一步动作行, 与 v2 行并存 (Hunyuan 发现 2): 删旧行.
+    - progress 各子任务状态行停在 "v1 已收修复中" (Hunyuan 发现 3): 更新为 v2 已收.
+  - 观察记此 (不动作): 外层 catch 用同一个异常实例造两个 Failed, 一行取数失败两行一起失败, 行级隔离在
+    该不可达分支不成立 (DeepSeek F2), 与双行标题按下标 (v1 F5) 一起等引擎轮统一; lint 证据早于本轮修复
+    (DeepSeek F3), 提交前的整批检查会复跑 lint, 不记偏差.
+  - 下一步动作: 第 4 步负责人放行 (留一句放行理由; 欠的批 5 黄金对照一并问时序), 第 5 步按条目拆笔提交.
+- 2026-11-08 (批 5 黄金对照补齐): 设备重连 (无线 TLS), 欠账按 "同一次设备会话内改前改后各一份" 补齐:
+  改前包由 `git stash push -u` 露出 HEAD `f522aed3` 构建 (stash 后复原), 改后包为批 5 工作树; 两包
+  各自 pm install 后跑 `ModelSnapshotTest`, 快照落在应用外部目录, 仅留本地不进仓库 (2026-11-06 定).
+  按键对账: 1344 → 1342 行两份同数; **home 25 行与 others 42 行 (key, detail, color, type) 逐字节
+  相同, 零差异** — 批 5 四条行的真机等价就此钉死; prop 1275 行仅 4 处 detail 差异, 全部落在 cache_key
+  设备状态家族 (类别性排除), color 与 type 零差异. 途中两坑记此: androidTest APK 无需重打 (测试类
+  未动, 主类来自随装的主包); `pm install` 两个包不能合一条命令 (测试包是独立包名, 合装报
+  INSTALL_FAILED_INVALID_APK). 批 5 验证至此齐: 单测 72/72, ILS 0 ERROR, lint 无新问题 (提交前复跑),
+  打包通过, 黄金等价.
+  下一步动作: 第 4 步负责人放行 (留一句放行理由), 第 5 步按条目拆笔提交.
 - 各子任务状态: subtask-01 已关闭; subtask-02 已提交并关闭;  
-  subtask-03 已提交并关闭; subtask-04 进行中 (批 1 ~ 批 3 已关, 批 4 v1 已收修复完, v2 在外); subtask-05 ~ subtask-06 报告已出, 实现未开始.
+  subtask-03 已提交并关闭; subtask-04 进行中 (批 1 ~ 批 4 已提交关闭, 批 5 进行中: v2 已收, 循环结束); subtask-05 ~ subtask-06 报告已出, 实现未开始.
 - 未查清: 无.
 - 挂起项: 无.
