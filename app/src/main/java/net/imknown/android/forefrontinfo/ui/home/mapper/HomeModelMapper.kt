@@ -19,6 +19,7 @@ import net.imknown.android.forefrontinfo.ui.home.model.KernelState
 import net.imknown.android.forefrontinfo.ui.home.model.LldSource
 import net.imknown.android.forefrontinfo.ui.home.model.LldStatusState
 import net.imknown.android.forefrontinfo.ui.home.model.PerformanceClassInfo
+import net.imknown.android.forefrontinfo.ui.home.model.SecurityPatchState
 import net.imknown.android.forefrontinfo.ui.home.model.SdkExtensionState
 import net.imknown.android.forefrontinfo.ui.theme.StatusColor
 import android.R as androidR
@@ -310,6 +311,32 @@ class HomeModelMapper(private val myApplication: MyApplication) {
             }
         )
     }
+
+    // The two security patch rows ride in the system-then-vendor order, each keeping its own
+    // guard and title (the old per-row guardedMyModel).
+    fun toSecurityPatchModels(detect: () -> List<DetectResult<SecurityPatchState>>): List<MyModel> =
+        detect().mapIndexed { index, result ->
+            val titleRes = if (index == 0) {
+                R.string.security_patch_level_title
+            } else {
+                R.string.vendor_security_patch_level_title
+            }
+            guardedEntry(titleRes, { result }) { state ->
+                coloredRow(
+                    titleRes,
+                    myApplication.getString(
+                        R.string.security_patch_level_detail,
+                        state.patch,
+                        state.lldPatchLevel ?: myApplication.getString(androidR.string.unknownName)
+                    ),
+                    when (state.match) {
+                        SecurityPatchState.Match.Met -> StatusColor.NO_PROBLEM
+                        SecurityPatchState.Match.Lagging -> StatusColor.WARNING
+                        SecurityPatchState.Match.Unknown, SecurityPatchState.Match.None -> StatusColor.CRITICAL
+                    }
+                )
+            }
+        }
 
     // Two-state row color mapping: a true condition lands on NO_PROBLEM. Home-only, dots are a
     // Home-only concept (#69).

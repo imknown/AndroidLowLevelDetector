@@ -220,7 +220,7 @@ class HomeViewModel(
             tempModels += homeModelMapper.toAndroidModel { homeRepository.detectAndroid(lld) }
             tempModels += homeModelMapper.toSdkExtensionModel { homeRepository.detectSdkExtension(lld) }
             tempModels += homeModelMapper.toBuildIdModel { homeRepository.detectBuildId(lld) }
-            tempModels += homeRepository.detectSecurityPatches(lld)
+            tempModels += homeModelMapper.toSecurityPatchModels { homeRepository.detectSecurityPatches(lld) }
             tempModels += homeModelMapper.toPerformanceClassModel { homeRepository.detectPerformanceClass() }
             tempModels += homeModelMapper.toKernelModel { homeRepository.detectKernel(lld) }
             tempModels += homeModelMapper.toAbModel { homeRepository.detectAb() }

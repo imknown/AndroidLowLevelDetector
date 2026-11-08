@@ -47,6 +47,7 @@ import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.home.model.LldSource
 import net.imknown.android.forefrontinfo.ui.home.model.LldStatusState
 import net.imknown.android.forefrontinfo.ui.home.model.PerformanceClassInfo
+import net.imknown.android.forefrontinfo.ui.home.model.SecurityPatchState
 import net.imknown.android.forefrontinfo.ui.home.model.SdkExtensionState
 import net.imknown.android.forefrontinfo.ui.settings.datasource.AppInfoDataSource
 import net.imknown.android.forefrontinfo.ui.theme.StatusColor
@@ -235,41 +236,39 @@ class HomeRepository(
     }
 
     // region [SecurityPatch]
-    fun detectSecurityPatches(lld: Lld?): List<MyModel> {
-        val tempModels = mutableListOf<MyModel>()
-
-        val mySecurityPatch: String = Build.VERSION.SECURITY_PATCH
-        tempModels += detectSecurityPatch(lld, mySecurityPatch, R.string.security_patch_level_title)
-
-        val mySecurityPatchVendor = propertyReader.getString(AndroidDataSource.PROP_VENDOR_SECURITY_PATCH, Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
-        tempModels += detectSecurityPatch(lld, mySecurityPatchVendor, R.string.vendor_security_patch_level_title)
-
-        return tempModels
+    fun detectSecurityPatches(lld: Lld?): List<DetectResult<SecurityPatchState>> = try {
+        listOf(
+            detectSecurityPatch(lld, Build.VERSION.SECURITY_PATCH),
+            detectSecurityPatch(
+                lld,
+                propertyReader.getString(AndroidDataSource.PROP_VENDOR_SECURITY_PATCH, Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+            )
+        )
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        // A fetch-chain failure fails both rows through their own guards (each keeps its title);
+        // the current reads cannot throw, this keeps the "reads convert to Failed" contract whole.
+        listOf(DetectResult.Failed(e), DetectResult.Failed(e))
     }
 
-    private fun detectSecurityPatch(
-        lld: Lld?, mySecurityPatch: String, @StringRes titleId: Int
-    ): MyModel = guardedMyModel(titleId) {
+    private fun detectSecurityPatch(lld: Lld?, mySecurityPatch: String): DetectResult<SecurityPatchState> = try {
         val lldSecurityPatch = lld?.android?.securityPatchLevel
-        val securityPatchColor = when {
-            lldSecurityPatch == null -> StatusColor.CRITICAL
-            !isPropertyValueNotEmpty(mySecurityPatch) -> StatusColor.CRITICAL
-            mySecurityPatch >= lldSecurityPatch -> StatusColor.NO_PROBLEM
-            getSecurityPatchYearMonth(mySecurityPatch) >= getSecurityPatchYearMonth(lldSecurityPatch) -> StatusColor.WARNING
-            else -> StatusColor.CRITICAL
+        val match = when {
+            lldSecurityPatch == null -> SecurityPatchState.Match.Unknown
+            !isPropertyValueNotEmpty(mySecurityPatch) -> SecurityPatchState.Match.None
+            mySecurityPatch >= lldSecurityPatch -> SecurityPatchState.Match.Met
+            getSecurityPatchYearMonth(mySecurityPatch) >= getSecurityPatchYearMonth(lldSecurityPatch) -> SecurityPatchState.Match.Lagging
+            else -> SecurityPatchState.Match.None
         }
 
-        val infoDetailArgs = arrayOf(
-            mySecurityPatch,
-            lldSecurityPatch
-                ?: MyApplication.getMyString(androidR.string.unknownName)
+        DetectResult.Found(
+            SecurityPatchState(patch = mySecurityPatch, lldPatchLevel = lldSecurityPatch, match = match)
         )
-
-        toColoredMyModel(
-            titleId,
-            MyApplication.getMyString(R.string.security_patch_level_detail, *infoDetailArgs),
-            securityPatchColor
-        )
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        DetectResult.Failed(e)
     }
 
     private fun getSecurityPatchYearMonth(securityPatch: String) =
