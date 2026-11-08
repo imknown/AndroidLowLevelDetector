@@ -20,6 +20,7 @@ import net.imknown.android.forefrontinfo.ui.home.model.LldSource
 import net.imknown.android.forefrontinfo.ui.home.model.LldStatusState
 import net.imknown.android.forefrontinfo.ui.home.model.MainlineState
 import net.imknown.android.forefrontinfo.ui.home.model.PerformanceClassInfo
+import net.imknown.android.forefrontinfo.ui.home.model.SarState
 import net.imknown.android.forefrontinfo.ui.home.model.SecurityPatchState
 import net.imknown.android.forefrontinfo.ui.home.model.SdkExtensionState
 import net.imknown.android.forefrontinfo.ui.home.model.VndkState
@@ -383,6 +384,39 @@ class HomeModelMapper(private val myApplication: MyApplication) {
             when (state.match) {
                 MainlineState.Match.Met -> StatusColor.NO_PROBLEM
                 MainlineState.Match.Unknown, MainlineState.Match.None -> StatusColor.CRITICAL
+            }
+        )
+    }
+
+    // The SAR row: the fact's type picks the appended wording; a present-but-unmatched SAR
+    // (Unknown) renders the platform unknownName, the old else branch. Legacy and recovery are
+    // yellow, 2SI and slash green; no SAR or unmatched is red.
+    fun toSarModel(detect: () -> DetectResult<SarState>): MyModel = guardedEntry(
+        R.string.sar_status_title,
+        detect
+    ) { state ->
+        val detail = buildString {
+            append(
+                myApplication.getString(
+                    if (state.supported) R.string.result_supported else R.string.result_not_supported
+                )
+            )
+            when (state.type) {
+                SarState.SarType.Legacy -> append(" (${myApplication.getString(R.string.sar_type_legacy)})")
+                SarState.SarType.TwoSi -> append(" (${myApplication.getString(R.string.sar_type_2si)})")
+                SarState.SarType.Recovery -> append(" (${myApplication.getString(R.string.sar_type_recovery)})")
+                SarState.SarType.Slash -> append(" (${myApplication.getString(R.string.sar_type_slash)})")
+                SarState.SarType.Unknown -> append(" (${myApplication.getString(androidR.string.unknownName)})")
+                null -> Unit
+            }
+        }
+        coloredRow(
+            R.string.sar_status_title,
+            detail,
+            when (state.type) {
+                SarState.SarType.Legacy, SarState.SarType.Recovery -> StatusColor.WARNING
+                SarState.SarType.TwoSi, SarState.SarType.Slash -> StatusColor.NO_PROBLEM
+                SarState.SarType.Unknown, null -> StatusColor.CRITICAL
             }
         )
     }

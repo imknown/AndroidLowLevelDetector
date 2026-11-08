@@ -227,7 +227,7 @@ class HomeViewModel(
             val mountQuery = withContext(Dispatchers.IO) {
                 homeRepository.getMounts()
             }
-            tempModels += homeRepository.detectSar(mountQuery)
+            tempModels += homeModelMapper.toSarModel { homeRepository.detectSar(mountQuery) }
             tempModels += homeModelMapper.toDynamicPartitionsModel { homeRepository.detectDynamicPartitions() }
             tempModels += homeRepository.detectTrebleAndGsiCompatibility()
             tempModels += homeModelMapper.toDsuModel { homeRepository.detectDsu() }

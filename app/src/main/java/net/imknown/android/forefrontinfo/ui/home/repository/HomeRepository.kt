@@ -48,6 +48,7 @@ import net.imknown.android.forefrontinfo.ui.home.model.LldSource
 import net.imknown.android.forefrontinfo.ui.home.model.LldStatusState
 import net.imknown.android.forefrontinfo.ui.home.model.MainlineState
 import net.imknown.android.forefrontinfo.ui.home.model.PerformanceClassInfo
+import net.imknown.android.forefrontinfo.ui.home.model.SarState
 import net.imknown.android.forefrontinfo.ui.home.model.SecurityPatchState
 import net.imknown.android.forefrontinfo.ui.home.model.SdkExtensionState
 import net.imknown.android.forefrontinfo.ui.home.model.VndkState
@@ -353,94 +354,69 @@ class HomeRepository(
 
     fun getMounts() = mountDataSource.getMounts()
 
-    fun detectSar(mountQuery: MountDataSource.MountQueryResult): MyModel =
-        guardedMyModel(R.string.sar_status_title) {
-            // issues-cn #63: a failed mount read no longer folds into the success path as
-            // an empty table; this row renders its own unknown, carrying exitCode.
-            val mounts = when (mountQuery) {
-                is MountDataSource.MountQueryResult.Success -> mountQuery.mounts
-                is MountDataSource.MountQueryResult.Failed -> {
-                    val failure = RuntimeException("exitCode=${mountQuery.exitCode}")
-                    return toColoredMyModel(
-                        R.string.sar_status_title,
-                        MyApplication.getMyString(R.string.result_detect_failed, failure.fullMessage),
-                        StatusColor.CRITICAL
-                    )
-                }
+    // issues-cn #63: a failed mount read no longer folds into the success path as an empty
+    // table; DetectResult.Failed renders the mapper's failure row, carrying exitCode inline
+    // (expanded via fullMessage), character-identical to the old path.
+    fun detectSar(mountQuery: MountDataSource.MountQueryResult): DetectResult<SarState> = try {
+        val mounts = when (mountQuery) {
+            is MountDataSource.MountQueryResult.Success -> mountQuery.mounts
+            is MountDataSource.MountQueryResult.Failed -> {
+                return DetectResult.Failed(RuntimeException("exitCode=${mountQuery.exitCode}"))
             }
-
-            var isTheLegacySar = false
-            var isThe2siSar = false
-            var isRecoverySar = false
-            var isSlashSar = false
-
-            val isSar = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                val isLAndroid9TheLegacySar = propertyReader.getBoolean(AndroidDataSource.PROP_SYSTEM_ROOT_IMAGE)
-
-                val isTheLegacySarMount = mounts.any { (blockDevice, mountPoint) ->
-                    blockDevice == "/dev/root" && mountPoint == "/"
-                }
-
-                isTheLegacySar = isLAndroid9TheLegacySar && isTheLegacySarMount
-
-                isThe2siSar = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
-                        && mounts.none { (blockDevice, mountPoint, type) ->
-                            blockDevice != "none" && mountPoint == "/system" && type != "tmpfs"
-                        }
-
-                isRecoverySar = mounts.any {
-                    it.mountPoint == "/system_root" && it.type != "tmpfs"
-                }
-
-                isSlashSar = mounts.any {
-                    it.mountPoint == "/" && it.type != "rootfs"
-                }
-
-                isTheLegacySar || isThe2siSar || isRecoverySar || isSlashSar
-                        || Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
-            } else {
-                false
-            }
-
-            var result = toSupportOrNotString(isSar)
-
-            var color = StatusColor.CRITICAL
-            @StringRes val sarTypeRes: Int
-
-            if (isSar) {
-                when {
-                    isTheLegacySar -> {
-                        color = StatusColor.WARNING
-                        sarTypeRes = R.string.sar_type_legacy
-                    }
-                    isThe2siSar -> {
-                        color = StatusColor.NO_PROBLEM
-                        sarTypeRes = R.string.sar_type_2si
-                    }
-                    isRecoverySar -> {
-                        color = StatusColor.WARNING
-                        sarTypeRes = R.string.sar_type_recovery
-                    }
-                    isSlashSar -> {
-                        color = StatusColor.NO_PROBLEM
-                        sarTypeRes = R.string.sar_type_slash
-                    }
-                    else -> {
-                        color = StatusColor.CRITICAL
-                        sarTypeRes = androidR.string.unknownName
-                    }
-                }
-
-                val sarType = MyApplication.getMyString(sarTypeRes)
-                result += " ($sarType)"
-            }
-
-            return toColoredMyModel(
-                R.string.sar_status_title,
-                result,
-                color
-            )
         }
+
+        var isTheLegacySar = false
+        var isThe2siSar = false
+        var isRecoverySar = false
+        var isSlashSar = false
+
+        val isSar = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            val isLAndroid9TheLegacySar = propertyReader.getBoolean(AndroidDataSource.PROP_SYSTEM_ROOT_IMAGE)
+
+            val isTheLegacySarMount = mounts.any { (blockDevice, mountPoint) ->
+                blockDevice == "/dev/root" && mountPoint == "/"
+            }
+
+            isTheLegacySar = isLAndroid9TheLegacySar && isTheLegacySarMount
+
+            isThe2siSar = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+                    && mounts.none { (blockDevice, mountPoint, type) ->
+                        blockDevice != "none" && mountPoint == "/system" && type != "tmpfs"
+                    }
+
+            isRecoverySar = mounts.any {
+                it.mountPoint == "/system_root" && it.type != "tmpfs"
+            }
+
+            isSlashSar = mounts.any {
+                it.mountPoint == "/" && it.type != "rootfs"
+            }
+
+            isTheLegacySar || isThe2siSar || isRecoverySar || isSlashSar
+                    || Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+        } else {
+            false
+        }
+
+        // A supported SAR matching none of the four known shapes is the old else branch, kept as is.
+        val sarType = if (isSar) {
+            when {
+                isTheLegacySar -> SarState.SarType.Legacy
+                isThe2siSar -> SarState.SarType.TwoSi
+                isRecoverySar -> SarState.SarType.Recovery
+                isSlashSar -> SarState.SarType.Slash
+                else -> SarState.SarType.Unknown
+            }
+        } else {
+            null
+        }
+
+        DetectResult.Found(SarState(supported = isSar, type = sarType))
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        DetectResult.Failed(e)
+    }
 
     fun detectDynamicPartitions(): DetectResult<DynamicPartitionsState> = try {
         val isDynamicPartitions =
