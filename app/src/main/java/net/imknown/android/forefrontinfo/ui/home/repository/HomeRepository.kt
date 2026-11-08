@@ -49,6 +49,7 @@ import net.imknown.android.forefrontinfo.ui.home.model.LldStatusState
 import net.imknown.android.forefrontinfo.ui.home.model.PerformanceClassInfo
 import net.imknown.android.forefrontinfo.ui.home.model.SecurityPatchState
 import net.imknown.android.forefrontinfo.ui.home.model.SdkExtensionState
+import net.imknown.android.forefrontinfo.ui.home.model.VndkState
 import net.imknown.android.forefrontinfo.ui.settings.datasource.AppInfoDataSource
 import net.imknown.android.forefrontinfo.ui.theme.StatusColor
 import java.io.File
@@ -613,47 +614,29 @@ class HomeRepository(
             )
         }
 
-    fun detectVndk(lld: Lld?): MyModel =
-        guardedMyModel(R.string.vndk_built_in_title) {
-            val vndkVersionResult = propertyReader.getString(AndroidDataSource.PROP_VNDK_VERSION, Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            // val vendorVndkVersionResult = propertyReader.getString(AndroidDataSource.PROP_VENDOR_VNDK_VERSION, Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            // val productVndkVersionResult = propertyReader.getString(AndroidDataSource.PROP_PRODUCT_VNDK_VERSION, Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-
-            val hasVndkVersion = isPropertyValueNotEmpty(vndkVersionResult)
-
-            val vndkColor: StatusColor
-
-            var isVndkBuiltInResult = toSupportOrNotString(hasVndkVersion)
-            if (hasVndkVersion) {
-                val hasVndkLite = propertyReader.getBoolean(AndroidDataSource.PROP_VNDK_LITE)
-
-                vndkColor = if (lld != null) {
-                    if (
-                        (isLatestPreviewAndroid(lld) || vndkVersionResult >= lld.android.stable.api)
-                            && !hasVndkLite
-                    ) {
-                        StatusColor.NO_PROBLEM
-                    } else {
-                        StatusColor.WARNING
-                    }
-                } else {
-                    StatusColor.CRITICAL
-                }
-
-                isVndkBuiltInResult += MyApplication.getMyString(
-                    R.string.built_in_vndk_version_result,
-                    if (hasVndkLite) "$vndkVersionResult, Lite" else vndkVersionResult
-                )
-            } else {
-                vndkColor = StatusColor.CRITICAL
-            }
-
-            return toColoredMyModel(
-                R.string.vndk_built_in_title,
-                isVndkBuiltInResult,
-                vndkColor
-            )
+    fun detectVndk(lld: Lld?): DetectResult<VndkState> = try {
+        val vndkVersion = propertyReader.getStringOrNull(AndroidDataSource.PROP_VNDK_VERSION, Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        // val vendorVndkVersionResult = propertyReader.getString(AndroidDataSource.PROP_VENDOR_VNDK_VERSION, Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        // val productVndkVersionResult = propertyReader.getString(AndroidDataSource.PROP_PRODUCT_VNDK_VERSION, Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        val hasVndkLite = if (vndkVersion != null) {
+            propertyReader.getBoolean(AndroidDataSource.PROP_VNDK_LITE)
+        } else {
+            false
         }
+
+        val match = when {
+            vndkVersion == null -> VndkState.Match.None
+            lld == null -> VndkState.Match.Unknown
+            (isLatestPreviewAndroid(lld) || vndkVersion >= lld.android.stable.api) && !hasVndkLite -> VndkState.Match.Met
+            else -> VndkState.Match.Lagging
+        }
+
+        DetectResult.Found(VndkState(vndkVersion = vndkVersion, hasVndkLite = hasVndkLite, match = match))
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        DetectResult.Failed(e)
+    }
 
     fun detectApex(mountQuery: MountDataSource.MountQueryResult): MyModel =
         guardedMyModel(R.string.apex_status_title) {

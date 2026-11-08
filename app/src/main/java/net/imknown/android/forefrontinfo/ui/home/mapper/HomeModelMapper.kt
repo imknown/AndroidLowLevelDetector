@@ -21,6 +21,7 @@ import net.imknown.android.forefrontinfo.ui.home.model.LldStatusState
 import net.imknown.android.forefrontinfo.ui.home.model.PerformanceClassInfo
 import net.imknown.android.forefrontinfo.ui.home.model.SecurityPatchState
 import net.imknown.android.forefrontinfo.ui.home.model.SdkExtensionState
+import net.imknown.android.forefrontinfo.ui.home.model.VndkState
 import net.imknown.android.forefrontinfo.ui.theme.StatusColor
 import android.R as androidR
 
@@ -337,6 +338,31 @@ class HomeModelMapper(private val myApplication: MyApplication) {
                 )
             }
         }
+
+    // The VNDK row: an absent version renders as result_not_supported, a present one as the
+    // supported text plus the level line (the Lite variant marked in the level).
+    fun toVndkModel(detect: () -> DetectResult<VndkState>): MyModel = guardedEntry(
+        R.string.vndk_built_in_title,
+        detect
+    ) { state ->
+        val detail = if (state.vndkVersion == null) {
+            myApplication.getString(R.string.result_not_supported)
+        } else {
+            myApplication.getString(R.string.result_supported) + myApplication.getString(
+                R.string.built_in_vndk_version_result,
+                if (state.hasVndkLite) "${state.vndkVersion}, Lite" else state.vndkVersion
+            )
+        }
+        coloredRow(
+            R.string.vndk_built_in_title,
+            detail,
+            when (state.match) {
+                VndkState.Match.Met -> StatusColor.NO_PROBLEM
+                VndkState.Match.Lagging -> StatusColor.WARNING
+                VndkState.Match.Unknown, VndkState.Match.None -> StatusColor.CRITICAL
+            }
+        )
+    }
 
     // Two-state row color mapping: a true condition lands on NO_PROBLEM. Home-only, dots are a
     // Home-only concept (#69).

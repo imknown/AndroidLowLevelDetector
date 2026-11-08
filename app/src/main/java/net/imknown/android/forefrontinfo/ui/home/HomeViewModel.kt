@@ -232,7 +232,7 @@ class HomeViewModel(
             tempModels += homeRepository.detectTrebleAndGsiCompatibility()
             tempModels += homeModelMapper.toDsuModel { homeRepository.detectDsu() }
             tempModels += homeRepository.detectMainline(lld)
-            tempModels += homeRepository.detectVndk(lld)
+            tempModels += homeModelMapper.toVndkModel { homeRepository.detectVndk(lld) }
             tempModels += homeRepository.detectApex(mountQuery)
             tempModels += homeModelMapper.toDeveloperOptionsModel {
                 homeRepository.detectDeveloperOptions()
