@@ -46,7 +46,7 @@
 | 07 | [07-文档规则](docs/agents-cn/07-文档规则.md) | 文档怎么写, 调查与分析报告目录结构, 笔记的 living/frozen/record 状态模型, 给负责人的报告, 不带敏感信息 (含本机环境与产出数据) | 要写或改仓库里任何文字, 写调查或分析报告, 或判断一份笔记的状态之前 |
 | 08 | [08-文档排版](docs/agents-cn/08-文档排版.md) | 标点, 换行, 禁用词, 句式的机械规则 | 写文档, 代码注释, 提交信息或回复, 或重写已有文本之前 |
 | 09 | [09-构建约定](docs/agents-cn/09-构建约定.md) | 构建约定和 CI: 禁令和细则 | 改 Gradle, 版本目录, 工具链版本, CMakeLists.txt 或 CI 之前 |
-| 10 | [10-分析细则](docs/agents-cn/10-分析细则.md) | `analyze-file` 与 Kotlin LSP 两条验证通道的契约, 加规划查询通道 `kotlin-lsp-plan.js` 的契约 | 要依赖 `android studio analyze-file` 或 Kotlin LSP 的结果, 或要用 `kotlin-lsp-plan.js` 之前 |
+| 10 | [10-分析细则](docs/agents-cn/10-分析细则.md) | `analyze-file` 与 Kotlin LSP 两条验证通道的契约, 加规划查询通道 `kotlin-lsp-plan.js` 与编辑通道 `kotlin-lsp-edit.js` 的契约, 加能力盘点 | 要依赖 `android studio analyze-file` 或 Kotlin LSP 的结果, 或要用 `kotlin-lsp-plan.js` / `kotlin-lsp-edit.js` 之前 |
 | 11 | [11-构建与验证](docs/agents-cn/11-构建与验证.md) | 构建命令, review 各步义务, reviewer 选模型, 分歧处置阶梯 | 要跑构建或 Gradle 检查, 或做每批编辑后的 review 之前 |
 | 12 | [12-git](docs/agents-cn/12-git.md) | Git: 提交, trailer, 绝不提交 | 要提交, 开 PR, 或碰 `.gitignore` 之前 |
 | 13 | [13-任务工作流](docs/agents-cn/13-任务工作流.md) | spec 目录工作流, 确认与接续, 发现的判定与处理 | 开一个 spec 目录, 开始一个子任务, 负责人说 continue, 或关掉一个任务之前 |

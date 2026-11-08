@@ -996,7 +996,147 @@
 - 2026-11-08 (批 6 第 4 步放行): 负责人看代码与实机效果后放行, 放行理由留了 ("实机效果 和 改的代码
   我都看了, 没什么问题"), 照 14 拟写进 spec 记录笔的提交信息 (英语). 第 5 步拆笔方案已摆
   (六笔), 提交同意与 trailer 单独等.
+- 2026-11-08 (批 6 第 5 步提交, 六笔, 关闭): 负责人一次同意三件 (六笔拆笔 / trailer
+  agent ZCode, model GLM-5.3-Flash, effort max 六笔共用 / review 目录提交后删). 拆笔照批 4/5
+  先例重拼: 整树存进备份分支 backup-batch6, `reset --hard` 回 `355736af`, 四态条目逐态
+  compileFossDebugKotlin + compileFossDebugUnitTestKotlin + compileFossDebugAndroidTestKotlin
+  验证后提交, 末态与备份全树对账零差异, 全量单测 76/76 与 lint 复跑绿, 备份分支已删. 途中脚本两坑
+  记此: git show 在 Windows 默认 GBK 解码要显式 utf-8; 还原条件第一版写岔 (treble/gsi 该在态 2 落地
+  却多还原了一轮, toybox 该还原到态 4 却停在态 3), 编译三态各红一次当场修掉, 不影响终态.
+  提交串 (老 → 新): `71a2102d` sar, `93481dc5` treble+gsi, `b5d0751d` apex,
+  `05f30d82` toybox (含 toSupportOrNotString 删除), `ee59cfc2` spec 记录 (含老板放行理由),
+  `0968a653` 02 规划通道规矩. review 目录按 14 归宿整体删除 (归后续与判定理由已在本文件与
+  删前 state.md, 逐条核对过). Home 的 23 个产行入口至此全部返回领域对象, toSupportOrNotString
+  与 guardedMyModel 在 HomeRepository 剩 4 处 (encryption/selinux/webview/getOutdated, 即批 7).
+  本条与各子任务状态行的更新随批 7 首笔入库.
+  下一步动作: 批 7 (混合四条: encryption 走 Robolectric, selinux / webview / 全量包列表走仪器),
+  等负责人说开始; 解冻后欠账: 10-分析细则 能力盘点段 + LSP 接线 (先探针, feat(scripts) 独立成笔).
+- 2026-11-08 (LSP 接线欠账结清, 六轮探针 + 接线): 负责人中途纠正开工对象 ("我说的 LSP 的问题, 开始"),
+  批 7 的第 0 步只读了四条方法体即暂停, 未动笔. 接线按已批方案走, 探针六轮 (只读请求, 不落盘):
+  - 通的: completion (receiver 位 200 个真成员, isIncomplete=true 表示 server 可能截断),
+    signature help (真实重载加 active 标记), organize imports (命令形状, 编辑经 executeCommand +
+    applyEdit 送来), formatting (干净文件回空编辑表), will-rename 的文件 op 形状.
+  - 不通的: inlay hints (server 内部错 -32803), quickfix (诊断拉取在检查分析没跑完时回空表,
+    推送对 IDE 检查来得晚, 脚本管线喂不出可靠诊断), rename / will-rename (类改名完美: 每出现点一个
+    零宽插入; 局部改名一份文件回碎成残行的编辑集, 另一份直接拒绝 -32602; 同一能力时好时坏, 判不可信).
+  - 途中坑记此: 探针会话里打开 Gradle 模型之外的新文件 (草稿) 会触发重导入, 把后续动作请求全部拖到
+    超时; 后台命令的管道 tail 会截掉探针输出, 全量落盘才可靠; git show 在 Windows 默认 GBK 解码.
+  - 接线结果: kotlin-lsp-plan.js 加 completion 与 signature-help 两个位置查询 (completion 的
+    isIncomplete 语义写进输出与契约); 新脚本 kotlin-lsp-edit.js 收 format 与 organize-imports
+    两个写操作 (默认只打印, --apply 才写盘; applyEdit 由脚本截获自答, server 永远没有写盘一手;
+    意外文件级操作一律打印并拒接). rename / will-rename / quickfix / inlay hints 不接,
+    证据与重探时机全部写进 10-分析细则 的新能力盘点节.
+  - 验证: 两个脚本 node --check 过; plan.js 两个新查询真跑通 (mapper 的 completion 与
+    signature-help); edit.js dry run 真跑通 (format 抓到 3 处补空行编辑, organize-imports 经
+    applyEdit 截获拿到 import 块编辑, 磁盘未动); --apply 真写验证过一次 (测试文件局部改名, 写盘后
+    git diff 可见, 已还原) — 正是这次真写暴露了 rename 编辑集的垃圾形状, 催生了上面的不接决定.
+  - 文档: 10-分析细则 新增能力盘点节与编辑通道契约节, plan.js 方法表加两行, 三脚本互斥说法同步;
+    02-工作原则 的规划通道句补 completion 反幻觉用法 (可与网上检索, 官方文档和源码, 反编译互相印证);
+    AGENTS.md 索引第 10 行加编辑通道与能力盘点.
+  - 下一步动作: 等负责人对提交的同意与 trailer (拟两笔: feat(scripts) 接线,
+    docs(agents) 10/02/AGENTS 契约; 或按老板意思并一笔); 之后批 7 等说开始.
+- 2026-11-08 (老板问 warm-up 与源码, 八轮探针后改判): 老板问这些失败与 warm-up / Gradle Sync /
+  re-index 有没有关系, 并给了上游源码 (github.com/Kotlin/kotlin-lsp). 核对: 最新 release 就是本 build
+  v263.7084.0, 无升级可修. 八轮探针全是热缓存加全新会话, 失败项稳定复现, 源码逐个对质:
+  - inlay hints 改判为 **通并接线**: 病根是本小姐的客户端 — server 发 `workspace/configuration`
+    要配置, 旧客户端回 `result: null`, `InlayOptions.create` 收到 null 整表崩溃 (-32803);
+    按协议回数组 (jetbrains.kotlin 节启用 hints.parameters 与 hints.call.chains) 后, 调用位的
+    参数名提示正常出 (`25:44 mountQuery =`). 三个脚本都补了这个应答, plan.js 接了
+    `<file>:inlay-hints` 查询. 教训: warmup.py 的 "对所有 server 请求回 null" 只该管握手,
+    真被消费的请求要按协议答.
+  - type hierarchy 维持不通, 证据加硬: 上游源码里有 Kotlin 实现 (features-impl/kotlin/.../typeHierarchy)
+    但这个 build 对真有层级的密封接口也回空; 修好客户端应答后照旧, 与索引温度无关.
+  - rename 维持不可信, 源码证实编辑集是 `DiffGranularity.CHARACTER` 的文档 diff (基线一偏就撕碎),
+    拒绝来自目标提取; 修好应答后局部改名一次回 8 段垃圾 (扫到 import 块), 另一份仍拒绝.
+  - quickfix 维持喂不饱: 空诊断上下文只回 organize-imports; 上游 fixes provider 存在
+    (LSCommonInspectionFixesCodeActionProvider), 卡在脚本管线拿不到可靠诊断.
+  - 文档同步: 10-分析细则 能力盘点表全表改判 (含 warm-up 关系的结论: 与缓存温度无关), 
+    edit.js 头注释改写, plan.js 查询清单加 inlay-hints.
+  - 下一步动作: 提交等老板的同意与拆笔 (trailer 已给: ZCode / GLM-5.3-Flash / max); 批 7 等说开始.
+- 2026-11-08 (LSP 接线的自审与 review 架设): 老板点名 "不需要 review 一下 LSP 的修改吗" — 需要本小姐
+  补课, 11 的自审加委派义务不分 spec 内外. 自审 (全文重读 edit.js + diff 过一遍) 抓到:
+  - writeEdits 形参漏了 fileOps (签名只收 groups, 函数体在用), `--apply` 必炸 TypeError —
+    之前 rename --apply 验证的 exit=1 正是它, 编辑已写盘才炸, 幸好. 已修, 复验 format 与
+    organize-imports 两个 --apply 真写+还原 exit 双 0 (format 写入 3 处补空行, oi 写入 import 块
+    重排, 都 git 可见后还原).
+  - offsetOf 补行尾钳制 (server 位置越过行尾会渗到下一行, 按 LSP 建议钳到行长); edit.js 头注释补
+    退出码契约.
+  - diagnostics.js 补配置应答后的冒烟: mapper 0 ERROR 15 警告 (既有族), 通道正常.
+  review 已架 (14: 目标多数在 scripts/, 目录建 scripts/review/, 带 .gitignore): 提示词
+  `review-v1-prompt-2126.md`, 状态在 scripts/review/state.md, 发起时 HEAD `0968a653`.
+  v1 为 `等待报告`, 工作树冻结 (记录文件除外).
+  下一步动作: 收 v1 报告, 按第 3 步处理发现; 之后提交拆笔 (拟两笔) 与 trailer (ZCode /
+  GLM-5.3-Flash / max 已记) 等负责人.
+- 2026-11-08 (LSP 接线 v1 收下, 处理发现, 发 v2): 两份报告 (WorkBuddy / DeepSeek-V4.1-Flash `2134`,
+  WorkBuddy / Hy4 `2142`), HEAD 都是 `0968a653`, 头尾齐, v1 标 `已收`, 工作树解冻. 两家无分歧互补,
+  合并第一档 16 处 + DeepSeek 风险观察 1 条 + 措辞一批. 全部处置:
+  - 修 16 处 (两家并集): 10-分析细则 编辑通道不接清单删 inlay hints (改判残留自相矛盾); applyToText
+    同偏移多插入按原序 (LSP 允许同点多插, 旧排序倒序); CRLF 钳制退到 \r 前 (会拆行尾); 编辑通道节补
+    退出码与 CRLF 契约; 用法块/方法表/usage 补 `<file>:inlay-hints`; completion 空列表也打印
+    isIncomplete; 11-构建与验证 对 10 的描述更新 (该文件 v1 未进 diff, Hy4 抓的); 10 文件头按四节
+    重写; 02 completion 句补截断条件; plan.js 与 edit.js 帧解析改按字节 (UTF-16 长度对 Content-Length
+    字节数, 非 ASCII 标签挂帧, 移植 diagnostics 的 Buffer 泵); 锁注释与报错改三脚本说法; diagnostics
+    锁释放改按 pid 比较 (旧法误删接管者的锁); organize-imports 的 applyEdit 截获改显式等待 (不赌帧序);
+    inlay-hints 范围盖到末行实际长度 (45/117 的 .kt 无尾换行); edit.js 补冷索引 WARN (DeepSeek 判
+    二档, 本小姐改判第一档修掉: 本批交付物与 plan.js 对齐属单元完整性, 理由记此可否决); 措辞一批
+    (em dash, 过程性表述, 计数句, 概述补方法名).
+  - 自抓 1 处 (复验时): edit.js 与 plan.js 收尾挂起 — server 不应答 shutdown 时旧尾部等满 180 秒,
+    proc.kill 只杀启动器, JVM 孙进程继承 stdio 管道把事件循环永久吊住 (两个孤儿 java 进程实证,
+    强杀 node 后孤儿的来历); 修法 = shutdown 缩到 10 秒 + 尾部显式 process.exit.
+  - 不修: DeepSeek 风险观察 (dry 对 applyEdit 回 applied:false) — 该应答如实报告磁盘状态, server
+    视其为失败信号的风险无实证, 注释已写明语义, 维持; 老板扫一眼可否决.
+  - 验证: node --check 三脚本过; applyToText 六边界用例 (同点双插, CRLF 钳制 0:4/0:5, 混合编辑,
+    LF 钳制, 无尾换行) node -e 全过; format 干跑与 inlay-hints 真跑 exit 双 0 (修掉收尾挂起后);
+    途中强杀遗留的孤儿 java server 两个已清, 教训记 10 探针要领 (别强杀 server 进程).
+  - 发 v2 delta (提示词 `review-v2-prompt-2252.md`, 17 项修复清单 + 先核修复再扫新增 + 禁
+    --apply 与强杀), 工作树冻结 (记录文件除外).
+  - 下一步动作: 收 v2 报告, 处理发现; 之后提交拆笔 (拟两笔) 与 trailer (ZCode / GLM-5.3-Flash /
+    max 已记) 等负责人.
+- 2026-11-08 (LSP 接线 v2 收下, 处理发现, 发 v3): 两份报告 (DeepSeek-V4.1-Flash `2300`, Hy4 `2303`),
+  HEAD 都是 `0968a653`, 头尾齐, v2 标 `已收`. 判定: 17 项修复 15 项全对, 第 13 项修出新错, 第 16/17
+  项各改一半, 第一档 5 条. 全部处置:
+  - F01 (Hy4, 第一档): applyEdit 截获的 resolve 不带值, 常见帧序下 organize-imports 两个模式全拿
+    空表还 exit 0 — 本小姐 v2 的复验只跑了 format 干跑, 恰好漏过. 修法 = resolve 传值 + race 后统一
+    读 capture 变量 + 清 timer; 复验补上 organize-imports dry (编辑打印不落盘) 与 --apply (写入
+    import 块重排后还原) exit 双 0, plan.js inlay-hints 冒烟 exit 0.
+  - F02/N1 (两家同报, 第一档): 收尾显式退出只铺了成功路径, exitInfo 早退与 catch 两条照样吊; 修法 =
+    两路径都补 process.exit (plan.js 与 edit.js 各两处), catch 注明与成功路径同一条尾部规则.
+  - F03 (Hy4, 第一档): plan.js:66-68 头注释仍写两通道说法, 改三脚本.
+  - F04 (Hy4, 第一档): 10-分析细则 的 CRLF 句与 edit.js 头注释写的都是修前行为 (字节内容/差一个
+    回车), 改成现状 (从磁盘读入的文本内容应用, 越界钳到回车之前).
+  - F05/N2 (两家, 第一档措辞): 10:267 的 em dash 改冒号; 修客户端应答后已通 改 客户端按协议应答后即通.
+  - N3 并入 F04; N4 表头 落点 改 归到哪一条 (08 改名表); N5 两个对偶通道 改 另两个脚本 (DeepSeek
+    三档顺手改).
+  - 观察采纳: 畸形帧容错分支对齐 diagnostics 写法 (plan/edit 各一处); F01 顺带清 timer.
+  - 二档改判 (R1 同款理由, 可否决): diagnostics.js 的 shutdown 预算缩到 10 秒 (Hy4 判归后续,
+    三脚本收尾契约一致属本单元目标 3 的一致性范围).
+  - 不修 (观察): 02 completion 句前半与括号条件的张力留作措辞; progress 的 em dash 属历史记录原文.
+  - 超出范围: 两家都报零.
+  - 发 v3 delta (极短, 只核七组修复, 提示词 `review-v3-prompt-2315.md`), 工作树冻结 (记录文件除外).
+  - 下一步动作: 收 v3 报告, 处理发现; 之后提交拆笔 (拟两笔) 与 trailer (ZCode / GLM-5.3-Flash /
+    max 已记) 等负责人.
+- 2026-11-08 (LSP 接线 v3 收下, 处理发现, 发 v4): 两份报告 (DeepSeek-V4.1-Flash 2319,
+  Hy4 2320), HEAD 都是 0968a653, 头尾齐, v3 标 已收. 判定: 七组修复六组全对, 两组打折:
+  - F01 (Hy4, 第一档): diagnostics 的 shutdown 10 秒是空修 — 该脚本 send 签名没有第三形参,
+    传的 10000 被无视 (改调用点没查签名, 记痛). 修法 = send 加 timeoutMs 形参 (与另两脚本同形,
+    其余两参调用点不受影响), 复验诊断冒烟 0 ERROR / shutdown acked / exit 0.
+  - F02 (Hy4, 第一档后果有限): organize-imports 的 timer 清理只盖一种帧序; 修法 = race 之后
+    统一 clearTimeout, 两种到达序都盖住 (DeepSeek 的 O1 观察顺带盖掉).
+  - 措辞 (三档顺手): 10:267 双冒号与过程性表述改净 (不通的环节在客户端: ...).
+  - 超出范围: 两家都报零. DeepSeek 判不要下轮, Hy4 判要 v4 核两项; 事实层无分歧, 按行为面从 Hy4.
+  - 发 v4 delta (极短, 只核两项, 提示词 review-v4-prompt-2329.md), 工作树冻结 (记录文件除外).
+  - 下一步动作: 收 v4 报告, 处理发现; 之后提交拆笔 (拟两笔) 与 trailer (ZCode / GLM-5.3-Flash /
+    max 已记) 等负责人.
+- 2026-11-08 (LSP 接线 v4 收下, review 循环结束): 两份报告 (DeepSeek-V4.1-Flash 2334,
+  Hy4 2335), HEAD 都是 0968a653, 头尾齐, v4 标 已收. 两项修复双双核到实处 (send 签名消费
+  timeoutMs, 四个调用点三个兜底只有 shutdown 走 10000; race 后统一 clearTimeout 两种帧序都盖),
+  修出新错为零, 超出范围为零. 剩一格标点 (W1, 三档): 10:267 同格双冒号, v3 提示词的改法自己
+  带冒号属需求正文写得不精确 (判负责人裁决点), 已按 08 标点规则把第二个冒号改分号, 顺手修掉.
+  两家都判停止条件到, 不再排轮; review 循环结束 (四轮, 共 8 份报告). 以后重开 review 的条件:
+  server build 升级或真的撞上 rename / quickfix 场景 (10-分析细则 能力盘点已记).
+  下一步动作: 第 4 步负责人放行, 第 5 步拆笔提交 (拟两笔: feat(scripts) 与 docs(agents),
+  trailer ZCode / GLM-5.3-Flash / max 已记); review 目录按 14 待点头后删.
 - 各子任务状态: subtask-01 已关闭; subtask-02 已提交并关闭;  
-  subtask-03 已提交并关闭; subtask-04 进行中 (批 1 ~ 批 5 已提交关闭, 批 6 实现完在 review, 批 7 未开始); subtask-05 ~ subtask-06 报告已出, 实现未开始.
+  subtask-03 已提交并关闭; subtask-04 进行中 (批 1 ~ 批 6 已提交关闭, 批 7 未开始); subtask-05 ~ subtask-06 报告已出, 实现未开始.
 - 未查清: 无.
 - 挂起项: 无.
