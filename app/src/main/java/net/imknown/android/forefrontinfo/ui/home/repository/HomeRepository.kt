@@ -53,6 +53,7 @@ import net.imknown.android.forefrontinfo.ui.home.model.PerformanceClassInfo
 import net.imknown.android.forefrontinfo.ui.home.model.SarState
 import net.imknown.android.forefrontinfo.ui.home.model.SecurityPatchState
 import net.imknown.android.forefrontinfo.ui.home.model.SdkExtensionState
+import net.imknown.android.forefrontinfo.ui.home.model.ToyboxState
 import net.imknown.android.forefrontinfo.ui.home.model.TrebleState
 import net.imknown.android.forefrontinfo.ui.home.model.VndkState
 import net.imknown.android.forefrontinfo.ui.settings.datasource.AppInfoDataSource
@@ -756,51 +757,43 @@ class HomeRepository(
             )
         }
 
-    fun detectToybox(lld: Lld?): MyModel =
-        guardedMyModel(R.string.toybox_built_in_title) {
-            val toyboxVersionResult = shell.execute(AndroidDataSource.CMD_TOYBOX_VERSION)
-            val hasToyboxVersion = toyboxVersionResult.isSuccess
-
-            val toyboxVersion = if (hasToyboxVersion) {
-                toyboxVersionResult.output.getOrNull(0)
-                    ?: MyApplication.getMyString(androidR.string.unknownName)
-            } else {
-                toSupportOrNotString(false)
-            }
-
-            val toybox = lld?.toybox
-            val stableVersion = toybox?.stable?.version
-            val supportVersion = toybox?.support?.version
-            val masterVersion = toybox?.master?.version
-
-            val toyboxColor = if (hasToyboxVersion) {
-                val toyboxRealVersionString = toyboxVersion.replace("toybox ", "")
-                val toyboxRealVersion = Version(toyboxRealVersionString)
-                when {
-                    stableVersion != null && toyboxRealVersion.isAtLeast(stableVersion) -> StatusColor.NO_PROBLEM
-                    supportVersion != null && toyboxRealVersion.isAtLeast(supportVersion) -> StatusColor.WARNING
-                    else -> StatusColor.CRITICAL
-                }
-            } else {
-                StatusColor.CRITICAL
-            }
-
-            val infoDetailArgs = arrayOf(
-                toyboxVersion,
-                stableVersion
-                    ?: MyApplication.getMyString(androidR.string.unknownName),
-                supportVersion
-                    ?: MyApplication.getMyString(androidR.string.unknownName),
-                masterVersion
-                    ?: MyApplication.getMyString(androidR.string.unknownName)
-            )
-
-            return toColoredMyModel(
-                R.string.toybox_built_in_title,
-                MyApplication.getMyString(R.string.toybox_built_in_detail, *infoDetailArgs),
-                toyboxColor
-            )
+    fun detectToybox(lld: Lld?): DetectResult<ToyboxState> = try {
+        val toyboxVersionResult = shell.execute(AndroidDataSource.CMD_TOYBOX_VERSION)
+        val read = if (!toyboxVersionResult.isSuccess) {
+            ToyboxState.ToyboxRead.CommandFailed
+        } else {
+            toyboxVersionResult.output.getOrNull(0)
+                ?.let { ToyboxState.ToyboxRead.Version(it) }
+                ?: ToyboxState.ToyboxRead.NoOutput
         }
+
+        val toybox = lld?.toybox
+        val stableVersion = toybox?.stable?.version
+        val supportVersion = toybox?.support?.version
+        val masterVersion = toybox?.master?.version
+
+        // The version comparison only runs on a real read. The old path fed the unknown text into
+        // versioncompare when the command succeeded without output (practically always landing on
+        // the critical else); NoOutput now decides None directly (review v1 confirmed the outputs
+        // are identical on every reachable input).
+        val match = when (read) {
+            is ToyboxState.ToyboxRead.Version -> {
+                val toyboxRealVersion = Version(read.value.replace("toybox ", ""))
+                when {
+                    stableVersion != null && toyboxRealVersion.isAtLeast(stableVersion) -> ToyboxState.Match.Met
+                    supportVersion != null && toyboxRealVersion.isAtLeast(supportVersion) -> ToyboxState.Match.Lagging
+                    else -> ToyboxState.Match.None
+                }
+            }
+            ToyboxState.ToyboxRead.NoOutput, ToyboxState.ToyboxRead.CommandFailed -> ToyboxState.Match.None
+        }
+
+        DetectResult.Found(ToyboxState(read, stableVersion, supportVersion, masterVersion, match))
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        DetectResult.Failed(e)
+    }
 
     // region [WebView]
     fun detectWebView(lld: Lld?): MyModel =
@@ -1062,14 +1055,6 @@ class HomeRepository(
         result.isNotEmpty()
             && result != MyApplication.getMyString(R.string.result_not_supported)
             && result != MyApplication.getMyString(R.string.build_not_filled)
-
-    private fun toSupportOrNotString(condition: Boolean) = MyApplication.getMyString(
-        if (condition) {
-            R.string.result_supported
-        } else {
-            R.string.result_not_supported
-        }
-    )
 
     private fun getPackageInfoOrNull(packageName: String) = try {
         appInfoDataSource.getPackageInfoOrThrow(MyApplication.instance.packageManager, packageName)

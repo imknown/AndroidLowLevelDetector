@@ -25,6 +25,7 @@ import net.imknown.android.forefrontinfo.ui.home.model.PerformanceClassInfo
 import net.imknown.android.forefrontinfo.ui.home.model.SarState
 import net.imknown.android.forefrontinfo.ui.home.model.SecurityPatchState
 import net.imknown.android.forefrontinfo.ui.home.model.SdkExtensionState
+import net.imknown.android.forefrontinfo.ui.home.model.ToyboxState
 import net.imknown.android.forefrontinfo.ui.home.model.TrebleState
 import net.imknown.android.forefrontinfo.ui.home.model.VndkState
 import net.imknown.android.forefrontinfo.ui.theme.StatusColor
@@ -499,6 +500,35 @@ class HomeModelMapper(private val myApplication: MyApplication) {
                 state.updatable -> StatusColor.NO_PROBLEM
                 isLegacyFlattenedApex -> StatusColor.WARNING
                 else -> StatusColor.CRITICAL
+            }
+        )
+    }
+
+    // The toybox row: the read's three shapes each pick the first detail argument (the raw
+    // stdout line / the platform unknown / the not-supported text); the lld reference versions
+    // render the platform unknown when absent; the match decides the color.
+    fun toToyboxModel(detect: () -> DetectResult<ToyboxState>): MyModel = guardedEntry(
+        R.string.toybox_built_in_title,
+        detect
+    ) { state ->
+        val deviceVersionText = when (val read = state.read) {
+            is ToyboxState.ToyboxRead.Version -> read.value
+            ToyboxState.ToyboxRead.NoOutput -> myApplication.getString(androidR.string.unknownName)
+            ToyboxState.ToyboxRead.CommandFailed -> myApplication.getString(R.string.result_not_supported)
+        }
+        coloredRow(
+            R.string.toybox_built_in_title,
+            myApplication.getString(
+                R.string.toybox_built_in_detail,
+                deviceVersionText,
+                state.stableVersion ?: myApplication.getString(androidR.string.unknownName),
+                state.supportVersion ?: myApplication.getString(androidR.string.unknownName),
+                state.masterVersion ?: myApplication.getString(androidR.string.unknownName)
+            ),
+            when (state.match) {
+                ToyboxState.Match.Met -> StatusColor.NO_PROBLEM
+                ToyboxState.Match.Lagging -> StatusColor.WARNING
+                ToyboxState.Match.None -> StatusColor.CRITICAL
             }
         )
     }
