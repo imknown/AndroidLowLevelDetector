@@ -2,8 +2,8 @@
 
 > **状态**: living. 事实核对时间 2026-10-27, 代码在 `502a6eb7`.  
 > **复核**: 2026-11-07, HEAD `372a5de7` 全量重核: 过期事实 7 处已带批注就地改,  
-> 全部来自 1a ~ 1b 的实施改动, 无机制性变化. 此后批 2, 批 3, 批 4 与批 5 各自按当时的树重算过计数,  
-> 批注随各行 (现值对应批 5 未提交的工作树).  
+> 全部来自 1a ~ 1b 的实施改动, 无机制性变化. 此后批 2, 批 3, 批 4, 批 5 与批 6 各自按当时的树重算过计数,  
+> 批注随各行 (现值对应批 6 未提交的工作树).  
 > 任务级计划见 [plan.md](plan.md); 流程见 [13-任务工作流](../../agents-cn/13-任务工作流.md).
 
 ## 目标
@@ -29,11 +29,11 @@
 
 | 项 | 数字或位置 | 说明 |
 |---|---|---|
-| `HomeRepository` 规模 | 1130 行 (批 5 后, v2 修复加 8 行; 批 4 后 1154, 批 3 后 1199, 审计时 1210, 批 2 后 1245) | 22 个 public `detect*` 加 `getOutdatedTargetSdkVersionApkModel` 共 23 个产行入口 (批 5 后其中 15 条返回领域对象, 8 条仍直接产 `MyModel`; 批 4 后 11/12), <br>另有 3 个产行 private 辅助 (批 5 后 `:257` `detectSecurityPatch`, `:463` `detectTreble`, `:515` `detectGsi`; 批 4 后 `:247`/`:459`/`:511`, 审计时 `:273`/`:507`/`:559`) 加 1 个纯判断辅助 (`:195` `isBuildIdDateHigherThanConfig`, 批 5 新增); 产 25 行 |
-| `getMyString` 调用 | 全项目 67 个调用点 (口径: 不含 2 处定义与 3 处注释; 批 5 后; 批 4 后 78, 批 3 后 96, 审计当时同口径 99), 其中 37 处在 `HomeRepository` (批 4 后 48, 批 3 后 66, 审计时 69) | 判断被就地翻成文案 |
-| `Build.*` 直接读 | `HomeRepository` 里 39 行 (批 5 后与批 4 后同, 审计时 45) | 迁移后的可测性由它决定 |
-| `toColoredMyModel` | `HomeRepository` 里 10 个调用点, 命中 11 行 (含 1 处 import; 批 5 迁走 4 个, 批 4 迁走 5 个, 批 3 迁走 5 个, 批 2 迁走 1 个, 1a 件 3 加过两行, 审计时命中 24 行) | 颜色在仓库里定 |
-| `toSupportOrNotString` | HomeRepository.kt:1116-1122 (批 5 后, v2 修复加 8 行; 批 4 后 :1140-1146, 批 3 后 :1185-1191, 批 2 时 :1221-1227, 审计时恰在同位) 四个调用点 (批 5 迁走 vndk) | 判断结果当场变成两条文案之一 |
+| `HomeRepository` 规模 | 1055 行 (批 6 后; 批 5 后 1130, v2 修复加 8 行; 批 4 后 1154, 批 3 后 1199, 审计时 1210, 批 2 后 1245) | 22 个 public `detect*` 加 `getOutdatedTargetSdkVersionApkModel` 共 23 个产行入口 (批 6 后其中 19 条返回领域对象, 4 条仍直接产 `MyModel`; 批 5 后 15/8, 批 4 后 11/12), <br>另有 3 个产行 private 辅助 (批 6 后 `:262` `detectSecurityPatch`, `:443` `detectTreble`, `:477` `detectGsi`; 批 5 后 `:257`/`:463`/`:515`, 批 4 后 `:247`/`:459`/`:511`, 审计时 `:273`/`:507`/`:559`) 加 1 个纯判断辅助 (`:200` `isBuildIdDateHigherThanConfig`, 批 5 新增, 批 6 后行号); 产 25 行 |
+| `getMyString` 调用 | 全项目 67 个调用点 (口径: 不含 2 处定义与 3 处注释; 批 5 后; 批 4 后 78, 批 3 后 96, 审计时同口径 99), 其中 37 处在 `HomeRepository` (批 4 后 48, 批 3 后 66, 审计时 69); <br>批 6 后 56 行命中 (grep 范围 `app/src/main` + `base/src/main`, 不含 2 处定义行, 含 3 处注释行; 全部源集同法 57 行, 去注释 54 调用点, v1 核出; 含 HomeRepository 23 行) | 判断被就地翻成文案 |
+| `Build.*` 直接读 | `HomeRepository` 里 39 行 (批 6 后与批 5 后同, 本批未动 SDK_INT 行; 审计时 45) | 迁移后的可测性由它决定 |
+| `toColoredMyModel` | `HomeRepository` 里 3 个调用点, 命中 4 行 (含 1 处 import; 批 6 迁走 7 处: sar 2, apex 2, treble/gsi/toybox 各 1; 批 5 迁走 4 个, 批 4 迁走 5 个, 批 3 迁走 5 个, 批 2 迁走 1 个, 1a 件 3 加过两行, 审计时命中 24 行) | 颜色在仓库里定 |
+| `toSupportOrNotString` | 已删除 (批 6 迁走最后四个调用点: sar, treble, apex, toybox; 批 5 后在 :1116-1122, v2 修复加 8 行, 批 4 后 :1140-1146, 批 3 后 :1185-1191, 审计时恰在同位) | 判断结果当场变成两条文案之一 |
 | Others | `OthersRepository.kt` 37 个 `get*` 方法, 37 次追加 (追加在 `OthersViewModel` 的 `tempModels +=`, 复核 2026-11-07) | 其中 36 个被 guard 包住, `getPartitionFingerprints` (:210) 自己按分区隔离 |
 | Prop | `PropRepository.kt` 3 个入口 | 行数与系统属性数量相关 |
 | 失败处理 | `MyModelExt.kt:35-50` (Home), `:83-98` (Others) | 现在由 `guarded*` 在仓库侧包住整个 block |
@@ -57,9 +57,9 @@
 
    - `HomeRepository` 的 23 个产行入口, `OthersRepository` 的 37 个 `get*`, `PropRepository` 的 3 个入口,  
      签名全部去掉 `MyModel` 返回值, 改成领域类型.
-   - 23 个入口里有一个不叫 `detect*`: `getOutdatedTargetSdkVersionApkModel` (HomeRepository.kt:1036 批 5 后, v2 修复加 8 行;  
-     复核 2026-11-07: 批 4 后 :1060, 批 3 后 :1141, 审计时 :1105).  
-     它是全仓唯一产出 `MyModelType.OutdatedTargetSdkApk` 的地方 (:1097 批 5 后, v2 修复加 8 行; 批 4 后 :1121, 批 3 后 :1202, 审计时 :1162-1167), 也是 subtask-01 第一件  
+   - 23 个入口里有一个不叫 `detect*`: `getOutdatedTargetSdkVersionApkModel` (HomeRepository.kt:969 批 6 后;  
+     批 5 后 :1036, v2 修复加 8 行; 复核 2026-11-07: 批 4 后 :1060, 批 3 后 :1141, 审计时 :1105).  
+     它是全仓唯一产出 `MyModelType.OutdatedTargetSdkApk` 的地方 (:1030 批 6 后; 批 5 后 :1097, v2 修复加 8 行; 批 4 后 :1121, 批 3 后 :1202, 审计时 :1162-1167), 也是 subtask-01 第一件  
      改成按类型寻址的那一行. 按"detect 方法"去列清单会把它漏掉. 三个 private 辅助随它们各自的  
      入口一起改, 不单独算一条.
    - 判断留在仓库; 文案与颜色全部移出. `toSupportOrNotString` 删除, 由 mapper 决定文案.
@@ -88,12 +88,15 @@
    - 现在 `guardedMyModel` 包住整个检测 block (MyModelExt.kt:35-39). 迁移后仓库返回 `Failed(cause)`,  
      绝大多数失败走这条正常的返回路径.
    - 现在 `guardedMyModel` 包住的是**仓库方法里造 `MyModel` 那段 block** (MyModelExt.kt:35-39),  
-     `HomeRepository` 里 9 处 (批 3 与批 4 各迁走 5 个, 批 5 迁走 4 个; 批 2 后 23, 审计时 24), `OthersRepository` 里 36 处. 仓库一旦不再返回 `MyModel`, 这层包装就  
+     `HomeRepository` 里 4 处 (批 6 迁走 5 个: sar, treble, gsi, apex, toybox; 批 3 与批 4 各迁走 5 个, 批 5 迁走 4 个; 批 2 后 23, 审计时 24), `OthersRepository` 里 36 处. 仓库一旦不再返回 `MyModel`, 这层包装就  
      没有位置了, 它必须挪出仓库, 由 UI 侧持有. 这一步没有"先保留原形状"的选项.
    - 落点: subtask-04 期间在 UI 侧留一层薄 guard, 只处理"没预料到的异常" (例如探针抛出的  
      `RuntimeException`), 常规失败走 `DetectResult.Failed` 的正常返回路径, 不再依赖它.  
      guard 现在写在 `HomeModelMapper` 的链式接口里, 包住取数加翻译整条链, 单条失败降级成  
-     本条目的失败行; `CancellationException` 一律原样 rethrow.
+     本条目的失败行; `CancellationException` 一律原样 rethrow.  
+     两个多行方法 (`toSecurityPatchModels`, `toTrebleAndGsiModels`) 是例外形状: 取数一次在  
+     per-row guard 之外, 安全性由仓库方法不抛 (只 rethrow `CancellationException`) 保证,  
+     批 6 v1 已核.
    - subtask-05 造引擎时把这层薄 guard 收进引擎, mapper 里这层随之删掉.
    下面这张图按三个阶段对比失败隔离 guard 的位置: 先包在仓库里, 再挪到 UI 侧, 最后收进引擎:
 
@@ -102,7 +105,7 @@
        subgraph S1["现状"]
            direction TB
            c1["调用侧"] --> rp1["仓库方法"]
-           rp1 --> g1["guardedMyModel<br>HomeRepository 9 处<br>OthersRepository 36 处"]
+           rp1 --> g1["guardedMyModel<br>HomeRepository 4 处<br>OthersRepository 36 处"]
            g1 --> blk["造 MyModel 的 block"]
            blk --> mm["MyModel"]
        end

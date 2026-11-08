@@ -873,7 +873,130 @@
   INSTALL_FAILED_INVALID_APK). 批 5 验证至此齐: 单测 72/72, ILS 0 ERROR, lint 无新问题 (提交前复跑),
   打包通过, 黄金等价.
   下一步动作: 第 4 步负责人放行 (留一句放行理由), 第 5 步按条目拆笔提交.
+- 2026-11-08 (批 5 第 4+5 步, 放行与五笔提交): 负责人看代码说感觉没问题, 真机过目后一次同意提交
+  (放行理由照 14 拟进 spec 记录笔: 代码粗看过没有问题, Nexus 5X 真机运行效果也没问题). 拆笔照批 4
+  先例重拼: 整树先存进备份分支, `reset` 回批 4 末梢 `f522aed3`, 五态逐态 `compileFossDebugKotlin` +
+  `compileFossDebugUnitTestKotlin` 验证后提交, 末态与备份全树对账零差异, 全量单测 72/72 与 lint 复跑绿
+  (v2 观察的 lint 欠项就此关账), 备份分支已删. 提交串 (老 → 新): `eb72c2cf` buildId (含
+  `isBuildIdDateHigherThanConfig` 判断辅助随条目), `d9fdd170` securityPatches (含外层 try), `df1b0382`
+  vndk, `22629f55` mainline, `32618c52` spec 记录 (含老板放行理由). 本批无共用骨架与新增夹具笔.
+  本条与各子任务状态行的更新随批 6 首笔入库.
+  下一步动作: 批 6 (shell 组五条, 仪器测试), 等负责人说开始; review 目录按 14 待负责人点头后删
+  (2026-11-08 负责人已点头, 目录已整个删掉; 归后续单元与全部判定理由在 progress 在案, 删前逐条核对过).
+  负责人同批明示批 6 暂不开工, 等下次指示.
+- 2026-11-08 (接续确认): 负责人发 "continue", 会话确认接得对 (唯一未完成任务是本 spec, 批 6/7 未开始,
+  无等报告轮, 欠账与挂起项均为零). 负责人定: 批 6 仍不开工, 等明确开工令. 本条与批 5 收尾记录一起
+  随批 6 首笔入库.
+  下一步动作: 批 6 (shell 组五条, 仪器测试) 等负责人说开始; 开工先连设备 (Nexus 5X, 仪器测试要用).
+- 2026-11-08 (批 6 实现): 负责人说开工, shell/挂载组五条 (sar, treble+gsi, apex, toybox) 按批 4/5 同款节奏
+  (一批改完, 多轮 review, 提交拆细):
+  - 领域类型五个: `SarState` (supported + type?; Unknown 态保留旧 else 分支), `TrebleState`
+    (enabled + vintf?; 关闭时不碰文件系统, 与旧路径一致), `GsiState` (Compatibility 四态:
+    Compatible/NotCompatible/Unidentified/NotSupported; 旧路径用 treble 行渲染后的颜色做桥接, 改成
+    事实层判断 "Found 且 enabled" 留在仓库, 与旧色彩比较同界), `ApexState` (updatable +
+    flattenedMounted), `ToyboxState` (ToyboxRead 三态 sealed: Version/NoOutput/CommandFailed + Match).
+  - 仓库五方法返回 `DetectResult`; 挂载失败路径转 `Failed(RuntimeException("exitCode=..."))`,
+    经 mapper failureRow 渲染与旧路径逐字一致; `toSupportOrNotString` 最后四个调用点迁空, 整个删除.
+  - mapper 四方法: `toSarModel` / `toTrebleAndGsiModels` (treble 与 gsi 两行各自保留自己的 guard,
+    仿 toSecurityPatchModels 先例) / `toApexModel` / `toToyboxModel`.
+  - 两处 "逐行等价例外" 申报, 老板问拍板事时复核后撤回 (行为逐字节等价, 不构成例外):
+    gsi stdout 为空时旧路径拿 unknown 文案当首行解析, split 后第二段必为 null, toBoolean() 得 false,
+    落 NotCompatible/WARNING, 新路径按无行处理同落 NotCompatible/WARNING, 输出一致;
+    toybox 命令成功无输出时旧路径拿 unknown 文案喂 versioncompare (无数字解析成 0.0, 必落 else 的
+    critical), 新路径显式 None, detail 首参与颜色一致. 唯一的理论分岔是某 locale 的 unknown 文案
+    自身含数字或 "=true", 实际不存在. 撤回已同步 review/state.md, reviewer 若报按等价驳回;
+    负责人 2026-11-08 照准 (三件里的 1A).
+  - 仪器测试四类 (裁量表: 本组只能仪器): `DetectSarTest` / `DetectTrebleGsiTest` / `DetectApexTest` /
+    `DetectToyboxTest`. 第一版用带空格的反引号方法名, d8 DEX 阶段直接红
+    (`Space characters in SimpleName ... not allowed prior to DEX version 040`), 改驼峰后过;
+    教训记进 04-架构 (仪器测试方法名不许用带空格的反引号名, 本机单测无此约束).
+  - 自审: 旧签名全仓 grep 零残留; `toSupportOrNotString` 零命中; ViewModel 调用点全部经 mapper,
+    行顺序未动.
+  - 验证: analyze-file 偏差照旧 (无运行中的 Studio 实例, CLI 挂起无输出); Kotlin LSP:
+    五个新类型 CLEAN, `HomeViewModel` CLEAN, `HomeModelMapper` 0 ERROR 15 警告 (Destructuring
+    既有族随 guardedEntry 方法数增长), `HomeRepository` 0 ERROR 4 警告 (既有族); 实施中自抓
+    `SimplifyBooleanWithConstants` 3 条 (`toBoolean() == true` 恒真比较), 拍扁后复验干净;
+    androidTest 文件 LSP 能解析 (与单测源集不同): 0 ERROR 1 条同族建议. Gradle 全量
+    (assembleFossDebug + assembleFossDebugAndroidTest + 两个单测任务 + lintFossDebug) 全绿,
+    单测 76/76 (app 72 + base 4), lint 无新问题 (baseline 仍 1 error / 6 warnings / 1 hint).
+  - 设备: 改前包由 `git stash push -u` 露出 HEAD 构建 (15:53), 改后包为批 6 工作树 (15:57), 各自
+    push + pm install 后跑 `ModelSnapshotTest`; 按键对账 1344 = 1344, home 25 行与 others 42 行
+    (key, detail, color, type) 逐字节零差异, prop 仅 4 处 `cache_key.*` 每进程随机值 (类别性排除);
+    四类仪器测试实跑 4/4 (`OK (4 tests)`). 批 6 验证至此齐.
+  - subtask-04.md 计数按批 6 后的树重算带批注 (1055 行; 入口 23 中 19/4; 辅助 :262/:443/:477,
+    `isBuildIdDateHigherThanConfig` :200; getMyString 56 行命中/仓库 23 行; Build.* 39 未动;
+    toColoredMyModel 3 个调用点 4 行; toSupportOrNotString 已删; guardedMyModel 4 处,
+    getMyString 56 行命中的口径 v1 后补全 (app/src/main + base/src/main, 不含定义行, 含注释行;
+    全部源集 57 行 / 54 调用点, DeepSeek 发现五);
+    图 S1 同步 4 处); `getOutdatedTargetSdkVersionApkModel` :969 与 `OutdatedTargetSdkApk` :1030
+    行号更新.
+  - 规划通道补查 (老板 2026-11-08 问调查阶段用没用 Kotlin LSP, 答没用, 调查靠 grep/Read/git;
+    事后用 kotlin-lsp-plan.js 补一发只读交叉核验, 不动工作树): references 查五方法,
+    调用面与 grep 枚举完全一致 (detectSar → ViewModel:230 + DetectSarTest:25;
+    detectTreble → 仓库内 :469 一处; detectTrebleAndGsiCompatibility → ViewModel:233 +
+    DetectTrebleGsiTest:27; detectApex → ViewModel:238 + DetectApexTest:24;
+    detectToybox → ViewModel:246 + DetectToyboxTest:30), `wsymbol:toSupportOrNotString`
+    零命中, 删除干净. 教训记此: 引用核对两把工具相辅相成 (LSP 规划通道按类型系统分辨, grep 文本层
+    快而全), 要紧判定必要时互相印证, 不互斥不强制; 已落规矩 (02 的 不许猜, 负责人 2026-11-08 批,
+    措辞按老板更正: 相辅相成, 不互相取代).
+  - 负责人 2026-11-08 定三件 (1A/2A/3A): 两处等价例外申报的撤回照准; `detectSELinux` 归批 7
+    (批 7 = encryption 走 Robolectric, selinux / webview / 全量包列表走仪器, 同为真 shell 或
+    真包管理器读者), 批 7 收完 Home 的 23 个产行入口全部领域化; 批 6 review 走跨端独立会话,
+    模型与 effort 对面定.
+  - LSP 能力清单收档 (老板 2026-11-08 给了此前调查的能力清单, 对照两条脚本通道盘点): 规划七项
+    (references, definition 系, call hierarchy 双向, type hierarchy, workspace/document symbols,
+    hover) 全部已在 kotlin-lsp-plan.js, 且比清单多 typedef 与 implementation; type hierarchy 已接
+    但 ILS-263.7084.0 对 Kotlin 类实测回空, 坑在 10 在案. 写码时四样 (补全, signature help,
+    inlay hints, 诊断加快速修复) 与写完三样 (rename 含 willRename, organize imports, 格式化)
+    未接脚本, 其中 rename 与 organize imports 对 Others/Prop 收尾批 (改名挪位多) 有真实价值,
+    要不要接等老板另下指令; 编辑器向三样 (语义高亮, folding, code lens) 不做脚本化.
+    归宿: 10-分析细则 的能力盘点段, 解冻后落笔.
+  - 冻结偏差自首与处置: 02-工作原则 的两笔编辑 (规划通道句, 相辅相成更正) 发生在 v1 等待报告期间,
+    撞了 14 的冻结条款 (记录文件例外不含规则文件), 当时未记偏差, 现补记. 老板定 (提示词未发对面):
+    1601 作废重发, 新提示词 `review-v1-prompt-1703.md` 补列 02 与其范围说明,
+    并把两处已撤回例外按 "等价成立, 推演出真实分岔照常报" 的口径改写.
+  - LSP 能力接线指令 (老板 2026-11-08 定: 全量接, 分落点; 推翻本小姐 "交互件不接" 的判断,
+    老板给的用法是 API 反幻觉核对): 写码与自审用 rename 含 willRename (跨文件改名, server 算全量
+    编辑); 补全 / signature help / inlay hints 用作 API 核对 (receiver 处的 completion 列 server
+    解析出的真实成员, 想象出来的 API 不在列表; 调用位的 signature help 与 inlay hint 核对真实
+    参数表), 配合网上检索, 官方文档和源码, 反编译多路互相印证; 快速修复在诊断报四级任一时取修法,
+    先过目再落, 应用后按验证顺序复跑. 提交时刻用格式化与 optimize imports, 对当批触碰的文件执行;
+    落点取自审末尾 (review 发起前), 让每轮 diff 已是格式化后的样子, 提交那一刻幂等复跑应零差异,
+    保证放行的 diff 就是提交的 diff (Android Studio 提交框的两个勾选是同款功能, 在我们的流程里
+    插进 review 之前才不破 "放行即所提"). 落点 (2A): 只读三样扩进 kotlin-lsp-plan.js (只读不变式
+    不破), 产编辑四样进新脚本 kotlin-lsp-edit.js. 时序 (3A): 解冻后做, 先探针后接线 (七样逐样探,
+    不响就不接并把坑记进 10, type hierarchy 同款待遇), `feat(scripts)` 独立成笔不混批 6 提交串,
+    赶批 7 开工用.
+  - 下一步动作: 收 v1 报告 (review 目录已架, 提示词 `review-v1-prompt-1703.md`, HEAD `355736af`),
+    按第 3 步处理发现; 工作树冻结 (记录文件除外); 解冻后把 LSP 能力清单落进 10-分析细则.
+- 2026-11-08 (批 6 v1 收下, 处理发现, review 循环结束): 两份报告 (WorkBuddy / Tencent Hunyuan Hy
+  `1733`, WorkBuddy CN / DeepSeek-V4.1-Flash `1734`), HEAD 都是 `355736af`, 头尾齐, v1 标 `已收`,
+  工作树解冻. 两家判定一致: 五条应改位置全部命中, 逐行等价成立 (两处撤回例外被独立复核确认等价,
+  Hunyuan 还把 toybox 的理论分岔推到 "lld 参考数据损坏才可达"), 无超出范围改动未收进
+  (02-工作原则 与 progress 记录段都按提示词口径收进), 第一档 1 条, 无功能缺陷, 两家都判不需要
+  下一轮. 合并处置:
+  - 第一档 (注释翻译) 当场做完: 七份代码文件 (HomeRepository, 五个新类型, 四个仪器测试类) 的
+    新增注释全翻英语, grep 中文只剩既有 AppRoot.kt 与本地化 strings.xml; DeepSeek 独立跑过
+    compileFossDebugKotlin + compileFossDebugUnitTestKotlin 通过, 翻译后本小姐再跑三源集编译绿.
+  - 等价性提示 3 条不修码 (记录): treble 属性读取挪进开关分支 (行输出不变, 关闭时少一次读与一条
+    Log.w, 注释已按事实改写); 挂载失败行 DEBUG 多一次栈打印 (与其余四条失败行一致, 合 FR-3 AC2,
+    判接受); toTrebleAndGsiModels 取数在 per-row guard 之外 (不可达, mapper 注释与 subtask-04.md
+    计划改动 4 补了例外形状说明).
+  - 记录口径 1 条 (DeepSeek 发现五): subtask-04.md 的 getMyString 56 行命中范围写全
+    (app/src/main + base/src/main, 不含 2 处定义行, 含 3 处注释行; 全部源集 57 行 / 54 调用点);
+    其余计数两家全部核得上 (1055 行, Build.* 39, toColoredMyModel 3/4 行, guardedMyModel 4 处,
+    各行号).
+  - 归后续 2 条记 state.md: 06-检测条目 与根 AGENTS.md 索引行留收尾批; 剩余四条入口即批 7.
+  - 提示词缺陷 (Hunyuan 指出): 需求正文文件名写错 (`03-非功能需求.md` 应为
+    `03-非功能需求与路线图.md`), reviewer 未受害; 教训: 提示词里的路径也要核对.
+  - LSP 七文件复验 (翻译后): 五新类型 CLEAN, HomeRepository 0 ERROR 4 警告 (既有族),
+    mapper 0 ERROR 15 警告 (既有族), 与翻译前同界.
+  - 下一步动作: 第 4 步负责人放行 (第 5 步拆笔方案与 trailer 一并等); review 目录按 14 待点头后删;
+    解冻后欠账: 10-分析细则 能力盘点段 + LSP 接线 (探针先行).
+- 2026-11-08 (批 6 第 4 步放行): 负责人看代码与实机效果后放行, 放行理由留了 ("实机效果 和 改的代码
+  我都看了, 没什么问题"), 照 14 拟写进 spec 记录笔的提交信息 (英语). 第 5 步拆笔方案已摆
+  (六笔), 提交同意与 trailer 单独等.
 - 各子任务状态: subtask-01 已关闭; subtask-02 已提交并关闭;  
-  subtask-03 已提交并关闭; subtask-04 进行中 (批 1 ~ 批 4 已提交关闭, 批 5 进行中: v2 已收, 循环结束); subtask-05 ~ subtask-06 报告已出, 实现未开始.
+  subtask-03 已提交并关闭; subtask-04 进行中 (批 1 ~ 批 5 已提交关闭, 批 6 实现完在 review, 批 7 未开始); subtask-05 ~ subtask-06 报告已出, 实现未开始.
 - 未查清: 无.
 - 挂起项: 无.
