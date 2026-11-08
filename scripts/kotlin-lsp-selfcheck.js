@@ -26,7 +26,7 @@ const fs = require('fs');
 const path = require('path');
 
 const repoRoot = path.join(__dirname, '..');
-const diagnosticsScript = path.join(__dirname, 'ils-diagnostics.js');
+const diagnosticsScript = path.join(__dirname, 'kotlin-lsp-diagnostics.js');
 
 // The sentinel has to live inside a source root ILS actually models: a file
 // outside one yields no model, so documentSymbol returns 0 and the run cannot
