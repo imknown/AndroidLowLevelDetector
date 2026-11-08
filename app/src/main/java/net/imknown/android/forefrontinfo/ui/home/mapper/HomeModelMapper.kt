@@ -15,6 +15,7 @@ import net.imknown.android.forefrontinfo.ui.home.model.AbState
 import net.imknown.android.forefrontinfo.ui.home.model.AndroidInfoState
 import net.imknown.android.forefrontinfo.ui.home.model.BuildIdState
 import net.imknown.android.forefrontinfo.ui.home.model.DynamicPartitionsState
+import net.imknown.android.forefrontinfo.ui.home.model.GsiState
 import net.imknown.android.forefrontinfo.ui.home.model.KernelState
 import net.imknown.android.forefrontinfo.ui.home.model.LldSource
 import net.imknown.android.forefrontinfo.ui.home.model.LldStatusState
@@ -23,6 +24,7 @@ import net.imknown.android.forefrontinfo.ui.home.model.PerformanceClassInfo
 import net.imknown.android.forefrontinfo.ui.home.model.SarState
 import net.imknown.android.forefrontinfo.ui.home.model.SecurityPatchState
 import net.imknown.android.forefrontinfo.ui.home.model.SdkExtensionState
+import net.imknown.android.forefrontinfo.ui.home.model.TrebleState
 import net.imknown.android.forefrontinfo.ui.home.model.VndkState
 import net.imknown.android.forefrontinfo.ui.theme.StatusColor
 import android.R as androidR
@@ -417,6 +419,60 @@ class HomeModelMapper(private val myApplication: MyApplication) {
                 SarState.SarType.Legacy, SarState.SarType.Recovery -> StatusColor.WARNING
                 SarState.SarType.TwoSi, SarState.SarType.Slash -> StatusColor.NO_PROBLEM
                 SarState.SarType.Unknown, null -> StatusColor.CRITICAL
+            }
+        )
+    }
+
+    // The treble and GSI rows ride on one detection, fetched once here outside the per-row
+    // guards: safe because both repository halves catch their own exceptions into Failed and only
+    // rethrow CancellationException. The per-row guardedEntry then wraps each row's rendering
+    // (the old per-row guardedMyModel): treble reads its vintf layout (append-only wording for
+    // the two degraded layouts), GSI renders its four outcomes.
+    fun toTrebleAndGsiModels(
+        detect: () -> Pair<DetectResult<TrebleState>, DetectResult<GsiState>>
+    ): List<MyModel> {
+        val (trebleResult, gsiResult) = detect()
+        return listOf(
+            guardedEntry(R.string.treble_status_title, { trebleResult }) { state ->
+                val detail = buildString {
+                    append(
+                        myApplication.getString(
+                            if (state.enabled) R.string.result_supported else R.string.result_not_supported
+                        )
+                    )
+                    when (state.vintf) {
+                        TrebleState.Vintf.LegacyNoFragments ->
+                            append(myApplication.getString(R.string.treble_legacy_no_fragments))
+                        TrebleState.Vintf.Other ->
+                            append(myApplication.getString(R.string.treble_other))
+                        TrebleState.Vintf.Present, null -> Unit
+                    }
+                }
+                coloredRow(
+                    R.string.treble_status_title,
+                    detail,
+                    when (state.vintf) {
+                        TrebleState.Vintf.Present -> StatusColor.NO_PROBLEM
+                        TrebleState.Vintf.LegacyNoFragments, TrebleState.Vintf.Other -> StatusColor.WARNING
+                        null -> StatusColor.CRITICAL
+                    }
+                )
+            },
+            guardedEntry(R.string.gsi_status_title, { gsiResult }) { state ->
+                coloredRow(
+                    R.string.gsi_status_title,
+                    when (state.compatibility) {
+                        GsiState.Compatibility.Compatible -> myApplication.getString(R.string.result_compliant)
+                        GsiState.Compatibility.NotCompatible -> myApplication.getString(R.string.result_not_compliant)
+                        GsiState.Compatibility.Unidentified -> myApplication.getString(R.string.result_unidentified)
+                        GsiState.Compatibility.NotSupported -> myApplication.getString(R.string.result_not_supported)
+                    },
+                    when (state.compatibility) {
+                        GsiState.Compatibility.Compatible -> StatusColor.NO_PROBLEM
+                        GsiState.Compatibility.NotCompatible, GsiState.Compatibility.Unidentified -> StatusColor.WARNING
+                        GsiState.Compatibility.NotSupported -> StatusColor.CRITICAL
+                    }
+                )
             }
         )
     }

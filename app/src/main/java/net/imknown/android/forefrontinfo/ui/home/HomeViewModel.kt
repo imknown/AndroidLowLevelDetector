@@ -229,7 +229,9 @@ class HomeViewModel(
             }
             tempModels += homeModelMapper.toSarModel { homeRepository.detectSar(mountQuery) }
             tempModels += homeModelMapper.toDynamicPartitionsModel { homeRepository.detectDynamicPartitions() }
-            tempModels += homeRepository.detectTrebleAndGsiCompatibility()
+            tempModels += homeModelMapper.toTrebleAndGsiModels {
+                homeRepository.detectTrebleAndGsiCompatibility()
+            }
             tempModels += homeModelMapper.toDsuModel { homeRepository.detectDsu() }
             tempModels += homeModelMapper.toMainlineModel { homeRepository.detectMainline(lld) }
             tempModels += homeModelMapper.toVndkModel { homeRepository.detectVndk(lld) }

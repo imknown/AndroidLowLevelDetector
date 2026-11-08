@@ -42,6 +42,7 @@ import net.imknown.android.forefrontinfo.ui.home.model.AbState
 import net.imknown.android.forefrontinfo.ui.home.model.AndroidInfoState
 import net.imknown.android.forefrontinfo.ui.home.model.BuildIdState
 import net.imknown.android.forefrontinfo.ui.home.model.DynamicPartitionsState
+import net.imknown.android.forefrontinfo.ui.home.model.GsiState
 import net.imknown.android.forefrontinfo.ui.home.model.KernelState
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.home.model.LldSource
@@ -51,6 +52,7 @@ import net.imknown.android.forefrontinfo.ui.home.model.PerformanceClassInfo
 import net.imknown.android.forefrontinfo.ui.home.model.SarState
 import net.imknown.android.forefrontinfo.ui.home.model.SecurityPatchState
 import net.imknown.android.forefrontinfo.ui.home.model.SdkExtensionState
+import net.imknown.android.forefrontinfo.ui.home.model.TrebleState
 import net.imknown.android.forefrontinfo.ui.home.model.VndkState
 import net.imknown.android.forefrontinfo.ui.settings.datasource.AppInfoDataSource
 import net.imknown.android.forefrontinfo.ui.theme.StatusColor
@@ -436,61 +438,48 @@ class HomeRepository(
     }
 
     // region [Treble & GSI]
-    private fun detectTreble(): MyModel = guardedMyModel(R.string.treble_status_title) {
+    // The vintf manifest probes and the vendor.sku property read both happen only while treble is
+    // on; null means disabled. The old path read the property unconditionally (PropertyReader
+    // never throws, so the row is identical; treble off just skips one read and one possible
+    // Log.w, review v1 noted for the record).
+    private fun detectTreble(): DetectResult<TrebleState> = try {
         val isTrebleEnabled = propertyReader.getBoolean(AndroidDataSource.PROP_TREBLE_ENABLED, Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
 
-        var trebleResult = toSupportOrNotString(isTrebleEnabled)
-
-        val pathVendorSku = AndroidDataSource.PATH_VENDOR_VINTF_SKU.format(
-            propertyReader.getString(AndroidDataSource.PROP_VENDOR_SKU, Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-        )
-
-        val trebleColor = if (isTrebleEnabled) {
+        val vintf = if (isTrebleEnabled) {
+            val pathVendorSku = AndroidDataSource.PATH_VENDOR_VINTF_SKU.format(
+                propertyReader.getString(AndroidDataSource.PROP_VENDOR_SKU, Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+            )
             when {
                 File(pathVendorSku).exists()
                         || File(AndroidDataSource.PATH_VENDOR_VINTF).exists()
-                        || File(AndroidDataSource.PATH_VENDOR_VINTF_FRAGMENTS).exists() -> {
-                    StatusColor.NO_PROBLEM
-                }
-                File(AndroidDataSource.PATH_VENDOR_LEGACY_NO_FRAGMENTS).exists() -> {
-                    trebleResult += MyApplication.getMyString(R.string.treble_legacy_no_fragments)
-
-                    StatusColor.WARNING
-                }
-                else -> {
-                    trebleResult += MyApplication.getMyString(R.string.treble_other)
-
-                    StatusColor.WARNING
-                }
+                        || File(AndroidDataSource.PATH_VENDOR_VINTF_FRAGMENTS).exists() -> TrebleState.Vintf.Present
+                File(AndroidDataSource.PATH_VENDOR_LEGACY_NO_FRAGMENTS).exists() -> TrebleState.Vintf.LegacyNoFragments
+                else -> TrebleState.Vintf.Other
             }
         } else {
-            StatusColor.CRITICAL
+            null
         }
 
-        toColoredMyModel(
-            R.string.treble_status_title,
-            trebleResult,
-            trebleColor
-        )
+        DetectResult.Found(TrebleState(enabled = isTrebleEnabled, vintf = vintf))
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        DetectResult.Failed(e)
     }
 
-    fun detectTrebleAndGsiCompatibility(): List<MyModel> {
-        val tempModels = mutableListOf<MyModel>()
+    fun detectTrebleAndGsiCompatibility(): Pair<DetectResult<TrebleState>, DetectResult<GsiState>> {
+        val trebleResult = detectTreble()
+        // The old bridge derived this flag from the treble row's rendered color (critical means
+        // unsupported: both the failure row and the disabled row render critical). The fact-level
+        // equivalent is "Found and enabled", the same boundary as the old color comparison.
+        val isTrebleSupported = trebleResult is DetectResult.Found && trebleResult.value.enabled
 
-        val trebleModel = detectTreble()
-        tempModels += trebleModel
-        // A treble failure has already degraded into its own (critical) error row by the guard;
-        // the supported flag derives from the same color comparison as before the guards.
-        val isTrebleSupported = trebleModel.color != StatusColor.CRITICAL
-
-        tempModels += detectGsi(isTrebleSupported)
-
-        return tempModels
+        return trebleResult to detectGsi(isTrebleSupported)
     }
 
     private fun detectGsi(
-        isTrebleEnabled: Boolean
-    ): MyModel = guardedMyModel(R.string.gsi_status_title) {
+        isTrebleSupported: Boolean
+    ): DetectResult<GsiState> = try {
         val fileLdConfig = when {
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.R -> AndroidDataSource.LD_CONFIG_FILE_ANDROID_11
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.P -> AndroidDataSource.LD_CONFIG_FILE_ANDROID_9
@@ -498,30 +487,33 @@ class HomeRepository(
         }
         val cmd = AndroidDataSource.CMD_VENDOR_NAMESPACE_DEFAULT_ISOLATED.format(fileLdConfig)
         val gsiCompatibilityResult = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) shell.execute(cmd) else ShellResult()
-        val [@StringRes result, color] = if (gsiCompatibilityResult.isSuccess) {
-            val firstLine = gsiCompatibilityResult.output.getOrNull(0)
-                ?: MyApplication.getMyString(androidR.string.unknownName)
-            val lineResult = firstLine.split('=')
-            val isCompatible = lineResult.isNotEmpty()
-                    && lineResult.getOrNull(1)?.trim().toBoolean()
+        // The old path substituted the unknown text for a missing first line before parsing; it
+        // never changed the boolean (anything but "true" is false). Handled here as no line, so
+        // display material stays out of the repository.
+        val firstLine = gsiCompatibilityResult.output.getOrNull(0)
+        val compatibility = if (gsiCompatibilityResult.isSuccess) {
+            // String?.toBoolean() yields false for both absence and any non-"true" value: the same
+            // function the old path used, without a constant-true comparison.
+            val isCompatible = firstLine != null
+                    && firstLine.split('=').getOrNull(1)?.trim().toBoolean()
             if (isCompatible) {
-                R.string.result_compliant to StatusColor.NO_PROBLEM
+                GsiState.Compatibility.Compatible
             } else {
-                R.string.result_not_compliant to StatusColor.WARNING
+                GsiState.Compatibility.NotCompatible
             }
         } else {
-                if (isTrebleEnabled && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                R.string.result_unidentified to StatusColor.WARNING
+            if (isTrebleSupported && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                GsiState.Compatibility.Unidentified
             } else {
-                R.string.result_not_supported to StatusColor.CRITICAL
+                GsiState.Compatibility.NotSupported
             }
         }
 
-        toColoredMyModel(
-            R.string.gsi_status_title,
-            MyApplication.getMyString(result),
-            color
-        )
+        DetectResult.Found(GsiState(compatibility))
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        DetectResult.Failed(e)
     }
     // endregion [Treble & GSI]
 
