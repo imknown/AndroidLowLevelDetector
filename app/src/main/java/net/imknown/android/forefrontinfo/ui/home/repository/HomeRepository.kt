@@ -40,6 +40,7 @@ import net.imknown.android.forefrontinfo.ui.home.datasource.LldFileStore
 import net.imknown.android.forefrontinfo.ui.home.datasource.MountDataSource
 import net.imknown.android.forefrontinfo.ui.home.model.AbState
 import net.imknown.android.forefrontinfo.ui.home.model.AndroidInfoState
+import net.imknown.android.forefrontinfo.ui.home.model.BuildIdState
 import net.imknown.android.forefrontinfo.ui.home.model.DynamicPartitionsState
 import net.imknown.android.forefrontinfo.ui.home.model.KernelState
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
@@ -152,84 +153,86 @@ class HomeRepository(
         DetectResult.Failed(e)
     }
 
-    fun detectBuildId(lld: Lld?): MyModel =
-        guardedMyModel(R.string.android_build_id_title) {
-            val buildIdResult: String = Build.ID
-            val systemBuildIdResult = propertyReader.getString(AndroidDataSource.PROP_RO_SYSTEM_BUILD_ID, Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
-            val vendorBuildIdResult = propertyReader.getString(AndroidDataSource.PROP_RO_VENDOR_BUILD_ID, Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
-            val odmBuildIdResult = propertyReader.getString(AndroidDataSource.PROP_RO_ODM_BUILD_ID, Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+    fun detectBuildId(lld: Lld?): DetectResult<BuildIdState> = try {
+        val buildIdResult: String = Build.ID
+        val systemBuildIdResult = propertyReader.getString(AndroidDataSource.PROP_RO_SYSTEM_BUILD_ID, Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+        val vendorBuildIdResult = propertyReader.getString(AndroidDataSource.PROP_RO_VENDOR_BUILD_ID, Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+        val odmBuildIdResult = propertyReader.getString(AndroidDataSource.PROP_RO_ODM_BUILD_ID, Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
 
-            val build = lld?.android?.build
+        val lldBuild = lld?.android?.build
+        val lldDetails = lldBuild?.details?.map { BuildIdState.BuildDetail(it.id, it.revision) }
 
-            val version = build?.version
-                ?: MyApplication.getMyString(androidR.string.unknownName)
-
-            val lldDetails = build?.details
-            val builds = lldDetails?.joinToString("\n") { (id, revision) ->
-                MyApplication.getMyString(R.string.android_build_id, id, revision)
-            } ?: MyApplication.getMyString(androidR.string.unknownName)
-
-            // region [Color]
-            fun isDateHigherThanConfig(): Boolean {
-                if (lld == null) {
-                    return false
-                }
-
-                fun isBuildIdAndroid8CtsFormat(buildId: String) =
-                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
-                            && buildId.split(AndroidDataSource.BUILD_ID_SEPARATOR).size >= 3
-
-                val myBuildIdForCompare = if (
-                    isBuildIdAndroid8CtsFormat(buildIdResult) || Build.VERSION.SDK_INT < Build.VERSION_CODES.P
-                ) {
-                    buildIdResult
-                } else {
-                    systemBuildIdResult
-                }
-
-                if (!isBuildIdAndroid8CtsFormat(myBuildIdForCompare)) {
-                    return false
-                }
-
-                fun getDate(buildId: String) = buildId.split(AndroidDataSource.BUILD_ID_SEPARATOR)[1] // "250705"
-
-                val myBuildIdDate = getDate(myBuildIdForCompare)
-                val myBuildIdDateIntOrNull = myBuildIdDate.toIntOrNull()
-                    ?: return false
-
-                val lldFirstDetail = lldDetails?.getOrNull(0)
-                    ?: return false
-                val lldFirstBuildId = lldFirstDetail.id
-                val lldFirstBuildIdDate = getDate(lldFirstBuildId)
-                val lldFirstBuildIdDateIntOrNull = lldFirstBuildIdDate.toIntOrNull()
-                    ?: return false
-
-                val offset = if (isLatestStableAndroid(lld)) {
-                    0
-                } else {
-                    /** [isLatestPreviewAndroid] */
-                    250205 - 250101
-                }
-
-                return (myBuildIdDateIntOrNull + offset) >= lldFirstBuildIdDateIntOrNull
-            }
-
-            val buildIdColor = when {
-                lld == null -> StatusColor.CRITICAL
-                isDateHigherThanConfig() -> StatusColor.NO_PROBLEM
-                isLatestStableAndroid(lld) || isLatestPreviewAndroid(lld) -> StatusColor.WARNING
-                else -> StatusColor.CRITICAL
-            }
-            // endregion [Color]
-
-            val infoDetailArgs = arrayOf(buildIdResult, systemBuildIdResult, vendorBuildIdResult, odmBuildIdResult, version, builds)
-
-            return toColoredMyModel(
-                R.string.android_build_id_title,
-                MyApplication.getMyString(R.string.android_build_id_detail, *infoDetailArgs),
-                buildIdColor
-            )
+        val match = when {
+            lld == null -> BuildIdState.Match.Unknown
+            isBuildIdDateHigherThanConfig(lld, buildIdResult, systemBuildIdResult, lldDetails) -> BuildIdState.Match.Met
+            isLatestStableAndroid(lld) || isLatestPreviewAndroid(lld) -> BuildIdState.Match.Lagging
+            else -> BuildIdState.Match.Outdated
         }
+
+        DetectResult.Found(
+            BuildIdState(
+                buildId = buildIdResult,
+                systemBuildId = systemBuildIdResult,
+                vendorBuildId = vendorBuildIdResult,
+                odmBuildId = odmBuildIdResult,
+                lldBuildVersion = lldBuild?.version,
+                lldDetails = lldDetails,
+                match = match
+            )
+        )
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        DetectResult.Failed(e)
+    }
+
+    // The device build date against the lld's first detail date: a CTS-style three-segment
+    // build id carries the date in its second segment, and a device on the preview channel
+    // compares with the preview offset.
+    private fun isBuildIdDateHigherThanConfig(
+        lld: Lld,
+        buildIdResult: String,
+        systemBuildIdResult: String,
+        lldDetails: List<BuildIdState.BuildDetail>?
+    ): Boolean {
+        fun isBuildIdAndroid8CtsFormat(buildId: String) =
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
+                    && buildId.split(AndroidDataSource.BUILD_ID_SEPARATOR).size >= 3
+
+        val myBuildIdForCompare = if (
+            isBuildIdAndroid8CtsFormat(buildIdResult) || Build.VERSION.SDK_INT < Build.VERSION_CODES.P
+        ) {
+            buildIdResult
+        } else {
+            systemBuildIdResult
+        }
+
+        if (!isBuildIdAndroid8CtsFormat(myBuildIdForCompare)) {
+            return false
+        }
+
+        fun getDate(buildId: String) = buildId.split(AndroidDataSource.BUILD_ID_SEPARATOR)[1] // "250705"
+
+        val myBuildIdDate = getDate(myBuildIdForCompare)
+        val myBuildIdDateIntOrNull = myBuildIdDate.toIntOrNull()
+            ?: return false
+
+        val lldFirstDetail = lldDetails?.getOrNull(0)
+            ?: return false
+        val lldFirstBuildId = lldFirstDetail.id
+        val lldFirstBuildIdDate = getDate(lldFirstBuildId)
+        val lldFirstBuildIdDateIntOrNull = lldFirstBuildIdDate.toIntOrNull()
+            ?: return false
+
+        val offset = if (isLatestStableAndroid(lld)) {
+            0
+        } else {
+            /** [isLatestPreviewAndroid] */
+            250205 - 250101
+        }
+
+        return (myBuildIdDateIntOrNull + offset) >= lldFirstBuildIdDateIntOrNull
+    }
 
     // region [SecurityPatch]
     fun detectSecurityPatches(lld: Lld?): List<MyModel> {

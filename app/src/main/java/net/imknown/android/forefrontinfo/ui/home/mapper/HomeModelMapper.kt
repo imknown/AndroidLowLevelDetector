@@ -13,6 +13,7 @@ import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModelTitle
 import net.imknown.android.forefrontinfo.ui.home.model.AbState
 import net.imknown.android.forefrontinfo.ui.home.model.AndroidInfoState
+import net.imknown.android.forefrontinfo.ui.home.model.BuildIdState
 import net.imknown.android.forefrontinfo.ui.home.model.DynamicPartitionsState
 import net.imknown.android.forefrontinfo.ui.home.model.KernelState
 import net.imknown.android.forefrontinfo.ui.home.model.LldSource
@@ -278,6 +279,35 @@ class HomeModelMapper(private val myApplication: MyApplication) {
             R.string.linux_title,
             myApplication.getString(R.string.linux_version_detail, state.linuxVersionString, support, mainline),
             color
+        )
+    }
+
+    // The build id row: the partition ids render verbatim (a failed or unmet property read
+    // carries the placeholder it produced, until the #42 rework), and the lld details join
+    // with one entry per line.
+    fun toBuildIdModel(detect: () -> DetectResult<BuildIdState>): MyModel = guardedEntry(
+        R.string.android_build_id_title,
+        detect
+    ) { state ->
+        val builds = state.lldDetails?.joinToString("\n") { (id, revision) ->
+            myApplication.getString(R.string.android_build_id, id, revision)
+        } ?: myApplication.getString(androidR.string.unknownName)
+        coloredRow(
+            R.string.android_build_id_title,
+            myApplication.getString(
+                R.string.android_build_id_detail,
+                state.buildId,
+                state.systemBuildId,
+                state.vendorBuildId,
+                state.odmBuildId,
+                state.lldBuildVersion ?: myApplication.getString(androidR.string.unknownName),
+                builds
+            ),
+            when (state.match) {
+                BuildIdState.Match.Met -> StatusColor.NO_PROBLEM
+                BuildIdState.Match.Lagging -> StatusColor.WARNING
+                BuildIdState.Match.Unknown, BuildIdState.Match.Outdated -> StatusColor.CRITICAL
+            }
         )
     }
 
