@@ -1156,7 +1156,7 @@
     Implement (三可空字段原样携带, null 在模板里渲染字面 null 与旧一致) + lld 两版本 + Match),
     `OutdatedTargetSdkVersionApkState` (firstApiLevel 原样携带等 #42, 排序后的列表 + Order + Match 四桶).
   - 仓库: 四方法返回 `DetectResult`; `getOutdatedTargetSdkVersionApkModel` 更名
-    `getOutdatedTargetSdkVersionApkState` (:897), `MyModelType.OutdatedTargetSdkApk` 的产出随迁 mapper (:726);
+    `getOutdatedTargetSdkVersionApkState` (:906, 批 7 修复后的树; v1 review 树 :898, 见 2026-11-09 收报告条), `MyModelType.OutdatedTargetSdkApk` 的产出随迁 mapper (:726);
     encryption/selinux 里注释掉的反射探针随之移除 (git 可考古, 批 3 先例).
   - mapper 四方法 (`toEncryptionModel`/`toSELinuxModel`/`toWebViewModel`/`toOutdatedTargetSdkVersionApkModel`);
     ViewModel 五调用点经 mapper, 行顺序未动; payload 的 `.detail` 路径改经 mapper, 失败路径 detail = failureRow
@@ -1201,7 +1201,45 @@
 +  每笔中间树编译三源集, c1 额外跑 DetectEncryptionTest, c4 额外跑全量单测, 全绿.
 +  下一步动作: 按 14 收两份 v1 报告 (先核头部元数据与尾行; 报告基于注释翻译前的树, HEAD `689de48d`
 +  一致才收), 按第 3 步处理发现; 发现处理完老板点头后, review 目录按 14 整体删除.
++- 2026-11-09 (收 v1 报告两份, 处理发现): 负责人命令收报告. 两份齐 (hunyuan-hy-1852, deepseek-v4.1-flash-1857),
++  元数据块与 `REVIEW-STATUS: done` 都齐, 发起 HEAD `689de48d`; 收报告时 HEAD 已是 a593aa6d (提交先于
++  收报告的偏差所致), 处置: 代码只差五处注释翻译, 逐条按当前树重新定位后照收, 细节在 state.md.
++  合并发现, 第一档五条全修: F-01 仪器测试两条存在性断言与仓库自己的降级分支冲突, 去断言留
++  Found 加 match 穷举; F1 `maxBuiltInVersionName` 零读者, 删字段; F-02 subtask-04 两句 "现在" 改
++  "2a 之前", 去失效行号; F-03/F2 行号批注按 v1 修复后的树改 `:906`, 规模 977 改 986 (翻译加 10, 删字段减 1);
++  F-04 issues-cn README 的 Home 半边改写 `HomeModelMapper` 链式薄 guard. 措辞两条顺手修
++  (PropRepository 注释指向已删符号, DetectOutdatedTargetSdkVersionApkTest assertEquals 实参反序),
++  修后三源集编译加全量单测全绿.
++  第二档归后续: S1 (06-检测条目.md 仍写仓库返回 MyModel) 与 G-01 (issues-cn 一批旧行号) 归收尾批;
++  S2 (`DetectResult.Missing` 全仓无生产者) 归 subtask-05; G-02 (10-分析细则 format/organize 口径)
++  归收尾批. 第三档 R1 (裁量表 3 条 vs 4 条) 判不改, 记录保住当时.
++  预记判定全部落实: 三处等价性说明两边都判等价, ExampleInstrumentedTest 两边都判可删.
++  分歧两条按 11 阶梯: maxBuiltInVersionName 修不修采 deepseek (判断层, 驳 hunyuan 的 "不进修改建议");
++  停止条件采 hunyuan, 修过实质排 v2 delta (deepseek 没看到 F-01).
++  下一步动作: 生成 v2 delta 提示词交负责人发跨端; v2 收报告后无新实质发现, 走放行与拆笔提交
++  (提交需负责人单独同意; review 目录按 14 在发现处理完老板点头后删).
++- 2026-11-09 (收 v2 报告两份, 处理发现): 两份齐 (hunyuan-hy-2005, deepseek-v4.1-flash-2010),
++  元数据块与 `REVIEW-STATUS: done` 齐, 基座 HEAD `689de48d`; 两份都逐条核实 v1 六处修复全部到位,
++  修复增量没引入新问题 (各自重跑编译与单测全绿). 第一档一条: A1/V2-01 两份独立报出,
++  三处把工作树数字 986/`:906` 标成 "批 7 提交树" (提交树 a593aa6d 实际 987/`:907`),
++  已按 "批 7 修复后的树" 改标签, state.md 的 F-03 条改写三棵树算式. 措辞顺手修:
++  四处新翻注释加 mapper 两处老用法的 `bucket` (08 词表禁用) 六处全改;
++  issues-cn/README.md "批 7 起..." 括号 (写改动本身) 删去; subtask-04.md "记错 :897" 句按三棵树改写;
++  progress.md "第一档四条全修" 改 "五条" (deepseek C1, 记录入库前改对).
++  归后续: B1 (subtask-01.md 仍把 guardedMyModel 当现行机制) 归 G-01 一族收尾批;
++  progress.md 各行 `+` 开头不渲染成列表项, 全量整理归收尾批. 停止条件: 两份都判修完 A1 后只剩措辞,
++  不再要求多一轮; 是否另排 v3 交负责人定. v2 修复为注释与记录级, 主源集编译绿.
++  下一步动作: 负责人定 另排 v3 delta 或直接走放行与拆笔提交; 提交需负责人单独同意;
++  review 目录按 14 在发现处理完老板点头后删.
++- 2026-11-09 (批 7 放行与修复提交, 关闭 v1/v2 循环): 负责人一次同意放行加拆笔提交,
++  并明示跳过 13 的 "实质发现修完 delta 照排" (偏差记此), 理由: 两份 v2 reviewer 都判修完 A1 后
++  只剩措辞, 不再要求多一轮, A1 修复仅为几处记录文字. 放行理由照 14 记: 修复经两份独立报告核实,
++  无新实质发现. trailer 照 12 记负责人指定值: agent WorkBuddy CN, model GLM-5.3-Flash, effort high
++  (与 ZCode 的 ZCode/GLM-5.3-Flash/max 区分, 负责人点名). 提交串: fix(home) 批 7 的 v1/v2 修复
++  (代码六文件), docs(spec) 记录与文档修复 (progress, subtask-04, issues-cn README) 本笔.
++  下一步动作: review 目录按 14 删除前等老板点头; 归后续项已各有去处 (S1/G-01/G-02/B1 归收尾批,
++  S2 归 subtask-05, 均已记入本文件); 收尾批另含 10-分析细则 format/organize 口径改写.
 - 各子任务状态: subtask-01 已关闭; subtask-02 已提交并关闭;  
-  subtask-03 已提交并关闭; subtask-04 进行中 (批 1 ~ 批 6 已提交关闭, 批 7 已拆笔提交, v1 报告待收); subtask-05 ~ subtask-06 报告已出, 实现未开始.
+  subtask-03 已提交并关闭; subtask-04 进行中 (批 1 ~ 批 6 已提交关闭, 批 7 已提交, v1/v2 循环关闭); subtask-05 ~ subtask-06 报告已出, 实现未开始.
 - 未查清: 无.
 - 挂起项: 无.

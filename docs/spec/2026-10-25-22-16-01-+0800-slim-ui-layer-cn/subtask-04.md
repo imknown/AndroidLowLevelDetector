@@ -29,7 +29,7 @@
 
 | 项 | 数字或位置 | 说明 |
 |---|---|---|
-| `HomeRepository` 规模 | 977 行 (批 7 后; 批 6 后 1065, 批 6 记录的 1055 是 v1 注释翻译前的口径; 批 5 后 1130, v2 修复加 8 行; 批 4 后 1154, 批 3 后 1199, 审计时 1210, 批 2 后 1245) | 22 个 public `detect*` 加 `getOutdatedTargetSdkVersionApkState` 共 23 个产行入口, 批 7 后全部返回领域对象 (23/23; 批 6 后 19/4; 批 5 后 15/8, 批 4 后 11/12), <br>另有 3 个产行 private 辅助 (批 7 后 `:258` `detectSecurityPatch`, `:443` `detectTreble`, `:478` `detectGsi`; 批 6 后 `:262`/`:443`/`:477`, 批 5 后 `:257`/`:463`/`:515`, 批 4 后 `:247`/`:459`/`:511`, 审计时 `:273`/`:507`/`:559`) 加 1 个纯判断辅助 (`:196` `isBuildIdDateHigherThanConfig`, 批 5 新增, 批 7 后行号); 产 25 行 |
+| `HomeRepository` 规模 | 986 行 (批 7 修复后的树; v1 review 树 977, 注释翻译加 10 到提交树 987, v1 删 `maxBuiltInVersionName` 字段减 1; 批 6 后 1065, 批 6 记录的 1055 是 v1 注释翻译前的口径; 批 5 后 1130, v2 修复加 8 行; 批 4 后 1154, 批 3 后 1199, 审计时 1210, 批 2 后 1245) | 22 个 public `detect*` 加 `getOutdatedTargetSdkVersionApkState` 共 23 个产行入口, 批 7 后全部返回领域对象 (23/23; 批 6 后 19/4; 批 5 后 15/8, 批 4 后 11/12), <br>另有 3 个产行 private 辅助 (`:258` `detectSecurityPatch`, `:443` `detectTreble`, `:478` `detectGsi`, 三棵树同行号; 批 6 后 `:262`/`:443`/`:477`, 批 5 后 `:257`/`:463`/`:515`, 批 4 后 `:247`/`:459`/`:511`, 审计时 `:273`/`:507`/`:559`) 加 1 个纯判断辅助 (`:196` `isBuildIdDateHigherThanConfig`, 批 5 新增); 产 25 行 |
 | `getMyString` 调用 | 全项目 67 个调用点 (口径: 不含 2 处定义与 3 处注释; 批 5 后; 批 4 后 78, 批 3 后 96, 审计时同口径 99), 其中 37 处在 `HomeRepository` (批 4 后 48, 批 3 后 66, 审计时 69); <br>批 7 后 35 行命中 (同批 6 口径: `app/src/main` + `base/src/main`, 去 2 处定义行, 含注释行; 批 6 后 56; 含 HomeRepository 3 行: mainline 1 + `isPropertyValueNotEmpty` 2) | 判断被就地翻成文案 |
 | `Build.*` 直接读 | `HomeRepository` 里 39 行 (批 7 后与批 6 后, 批 5 后同, 批 7 未动 SDK_INT 行; 审计时 45) | 迁移后的可测性由它决定 |
 | `toColoredMyModel` | 已删除 (批 7 迁走最后 3 个调用点: encryption, selinux, webview, 两个重载随零消费者一并删除; 批 6 后在 HomeRepository 3 调用点命中 4 行含 1 处 import; 批 6 迁走 7 处: sar 2, apex 2, treble/gsi/toybox 各 1; 批 5 迁走 4 个, 批 4 迁走 5 个, 批 3 迁走 5 个, 批 2 迁走 1 个, 1a 件 3 加过两行, 审计时命中 24 行) | 颜色在仓库里定 |
@@ -57,8 +57,9 @@
 
    - `HomeRepository` 的 23 个产行入口, `OthersRepository` 的 37 个 `get*`, `PropRepository` 的 3 个入口,  
      签名全部去掉 `MyModel` 返回值, 改成领域类型.
-   - 23 个入口里有一个不叫 `detect*`: 批 7 后是 `getOutdatedTargetSdkVersionApkState` (HomeRepository.kt:897 批 7 后,  
+   - 23 个入口里有一个不叫 `detect*`: 批 7 后是 `getOutdatedTargetSdkVersionApkState` (HomeRepository.kt:906 批 7 修复后的树,  
      批 7 迁移时从 `getOutdatedTargetSdkVersionApkModel` 更名, 不再产 Model;  
+     v1 review 树方法在 :898 (当时批注 :897 差 1 行), 注释翻译加 9 行到提交树 :907, v1 删字段减 1 行;  
      批 6 后 :969, 批 5 后 :1036, v2 修复加 8 行; 复核 2026-11-07: 批 4 后 :1060, 批 3 后 :1141, 审计时 :1105).  
      `MyModelType.OutdatedTargetSdkApk` 的产出随批 7 落进 mapper (:726; 批 6 前一直在仓库,  
      批 6 后 :1030, 批 5 后 :1097, v2 修复加 8 行; 批 4 后 :1121, 批 3 后 :1202, 审计时 :1162-1167), 它也是 subtask-01 第一件  
@@ -87,9 +88,9 @@
 
 1. 失败隔离挪到 UI 侧.
 
-   - 现在 `guardedMyModel` 包住整个检测 block (MyModelExt.kt:35-39). 迁移后仓库返回 `Failed(cause)`,  
+   - 2a 之前 `guardedMyModel` 包住整个检测 block. 迁移后仓库返回 `Failed(cause)`,  
      绝大多数失败走这条正常的返回路径.
-   - 现在 `guardedMyModel` 包住的是**仓库方法里造 `MyModel` 那段 block** (MyModelExt.kt:35-39),  
+   - 2a 之前, `guardedMyModel` 包住的是**仓库方法里造 `MyModel` 那段 block**,  
      `HomeRepository` 里已清零 (批 7 迁走最后 4 个: encryption, selinux, webview, outdated;  
      批 6 迁走 5 个: sar, treble, gsi, apex, toybox; 批 3 与批 4 各迁走 5 个, 批 5 迁走 4 个; 批 2 后 23, 审计时 24),  
      `OthersRepository` 里 36 处. 批 7 后 `guardedMyModel`, `toErrorMyModel` 与 `toColoredMyModel` 两个重载  
