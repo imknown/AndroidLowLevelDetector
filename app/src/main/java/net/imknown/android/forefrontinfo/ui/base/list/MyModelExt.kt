@@ -6,11 +6,10 @@ import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.extension.fullMessage
-import net.imknown.android.forefrontinfo.ui.theme.StatusColor
 
 /*
  * Per-item failure isolation and row construction helpers, grouped by consumer
- * page (Home / Others / Prop / shared).
+ * page (Others / Prop / shared).
  *
  * Guards wrap item producers: a failure degrades into that item's own error row
  * instead of escaping collectModels(); CancellationException always rethrows.
@@ -18,60 +17,13 @@ import net.imknown.android.forefrontinfo.ui.theme.StatusColor
  * as non-local returns, and the shared scaffold is the inline guardedItemCore.
  *
  * Dot page semantics (issues-cn #69): the red/yellow/green dot is a Home-only
- * per-item concept; Others / Prop / Settings never render dots. Hence two
- * kinds of failure-row helper:
- * - guardedMyModel: failure row CRITICAL, because Home items have dots and failure is red;
+ * per-item concept; Others / Prop / Settings never render dots. Home's own guard
+ * lived here too (guardedMyModel, failure row CRITICAL for the red dot) until 2a
+ * moved Home's failure isolation into HomeModelMapper's chained thin guard; what
+ * remains here is the dotless pages' shape:
  * - guardedDetectFailedMyModel: colorless failure row, because dotless pages keep the
  *   plain row shape.
  */
-
-// region [Home]
-
-/**
- * Single-item guard, Home-only (the `HomeRepository` detector methods still returning
- * `MyModel` during 2a): a failure degrades into that item's own red error row, because
- * Home items carry dots and failure is red.
- */
-inline fun guardedMyModel(@StringRes titleRes: Int, block: () -> MyModel): MyModel =
-    guardedMyModel(MyModelTitle.Res(titleRes), block)
-
-inline fun guardedMyModel(title: MyModelTitle, block: () -> MyModel): MyModel =
-    guardedItemCore(block) { toErrorMyModel(title, it) }
-
-/**
- * Home's failure row: detail = "detection failed" text, status color CRITICAL,
- * used only by [guardedMyModel].
- */
-@PublishedApi
-internal fun toErrorMyModel(title: MyModelTitle, e: Exception): MyModel = MyModel(
-    title = title,
-    detail = MyApplication.getMyString(R.string.result_detect_failed, e.fullMessage),
-    color = StatusColor.CRITICAL
-)
-
-/**
- * Home's colored row: the two-state overload maps condition to green / red, since only
- * Home items carry dots; Others / Prop never use this.
- */
-fun toColoredMyModel(@StringRes titleRes: Int, detail: String?, condition: Boolean): MyModel {
-    val color = if (condition) StatusColor.NO_PROBLEM else StatusColor.CRITICAL
-    return MyModel(
-        title = MyModelTitle.Res(titleRes),
-        detail = detail.toString(),
-        color = color
-    )
-}
-
-/** Home's colored row, the overload taking the color from the caller's detection semantics. */
-fun toColoredMyModel(@StringRes titleRes: Int, detail: String?, color: StatusColor): MyModel {
-    return MyModel(
-        title = MyModelTitle.Res(titleRes),
-        detail = detail.toString(),
-        color = color
-    )
-}
-
-// endregion
 
 // region [Others]
 

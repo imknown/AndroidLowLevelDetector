@@ -11,6 +11,7 @@ import net.imknown.android.forefrontinfo.base.extension.fullMessage
 import net.imknown.android.forefrontinfo.ui.base.detect.DetectResult
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModelTitle
+import net.imknown.android.forefrontinfo.ui.base.list.MyModelType
 import net.imknown.android.forefrontinfo.ui.home.model.AbState
 import net.imknown.android.forefrontinfo.ui.home.model.AndroidInfoState
 import net.imknown.android.forefrontinfo.ui.home.model.ApexState
@@ -22,6 +23,7 @@ import net.imknown.android.forefrontinfo.ui.home.model.KernelState
 import net.imknown.android.forefrontinfo.ui.home.model.LldSource
 import net.imknown.android.forefrontinfo.ui.home.model.LldStatusState
 import net.imknown.android.forefrontinfo.ui.home.model.MainlineState
+import net.imknown.android.forefrontinfo.ui.home.model.OutdatedTargetSdkVersionApkState
 import net.imknown.android.forefrontinfo.ui.home.model.PerformanceClassInfo
 import net.imknown.android.forefrontinfo.ui.home.model.SELinuxState
 import net.imknown.android.forefrontinfo.ui.home.model.SarState
@@ -678,6 +680,50 @@ class HomeModelMapper(private val myApplication: MyApplication) {
                 WebViewState.Match.Lagging -> StatusColor.WARNING
                 WebViewState.Match.None -> StatusColor.CRITICAL
             }
+        )
+    }
+
+    // The outdated target SDK row: the only typed row (subtask-01 addresses it by
+    // [MyModelType.OutdatedTargetSdkApk]), so the MyModel is built here directly instead of via
+    // coloredRow. The first API level line joins the list without a separator (the old code
+    // appended joinToString's output straight onto it), and the order decides both the list
+    // format and the sorting the repository already applied.
+    fun toOutdatedTargetSdkVersionApkModel(
+        detect: () -> DetectResult<OutdatedTargetSdkVersionApkState>
+    ): MyModel = guardedEntry(
+        R.string.outdated_target_version_sdk_version_apk_title,
+        detect
+    ) { (firstApiLevel, outdatedApks, order, match) ->
+        var result = myApplication.getString(
+            R.string.outdated_target_version_sdk_version_apk_my_first_api_level,
+            firstApiLevel
+        )
+        if (outdatedApks.isEmpty()) {
+            result += myApplication.getString(
+                R.string.outdated_target_version_sdk_version_apk_result_none
+            )
+        } else {
+            val format = when (order) {
+                OutdatedTargetSdkVersionApkState.Order.PackageNameFirst ->
+                    R.string.outdated_target_version_sdk_version_apk_result_format_package_first
+                OutdatedTargetSdkVersionApkState.Order.TargetSdkVersionFirst ->
+                    R.string.outdated_target_version_sdk_version_apk_result_format_target_sdk_version_first
+            }
+            result += outdatedApks.joinToString("\n") { (packageName, targetSdkVersion) ->
+                "- " + myApplication.getString(format, packageName, targetSdkVersion)
+            }
+        }
+
+        MyModel(
+            title = MyModelTitle.Res(R.string.outdated_target_version_sdk_version_apk_title),
+            detail = result,
+            color = when (match) {
+                OutdatedTargetSdkVersionApkState.Match.Met -> StatusColor.NO_PROBLEM
+                OutdatedTargetSdkVersionApkState.Match.Lagging -> StatusColor.WARNING
+                OutdatedTargetSdkVersionApkState.Match.Unknown,
+                OutdatedTargetSdkVersionApkState.Match.None -> StatusColor.CRITICAL
+            },
+            type = MyModelType.OutdatedTargetSdkApk
         )
     }
 

@@ -245,9 +245,11 @@ class HomeViewModel(
             tempModels += homeModelMapper.toSELinuxModel { homeRepository.detectSELinux() }
             tempModels += homeModelMapper.toToyboxModel { homeRepository.detectToybox(lld) }
             tempModels += homeModelMapper.toWebViewModel { homeRepository.detectWebView(lld) }
-            tempModels += homeRepository.getOutdatedTargetSdkVersionApkModel(
-                lld, settingsStore.outdatedOrderFirst.value
-            )
+            tempModels += homeModelMapper.toOutdatedTargetSdkVersionApkModel {
+                homeRepository.getOutdatedTargetSdkVersionApkState(
+                    lld, settingsStore.outdatedOrderFirst.value
+                )
+            }
         }
 
         return tempModels
@@ -279,9 +281,11 @@ class HomeViewModel(
             ?: return
 
         val newDetail = withContext(Dispatchers.IO) {
-            homeRepository.getOutdatedTargetSdkVersionApkModel(
-                lld, settingsStore.outdatedOrderFirst.value
-            ).detail
+            homeModelMapper.toOutdatedTargetSdkVersionApkModel {
+                homeRepository.getOutdatedTargetSdkVersionApkState(
+                    lld, settingsStore.outdatedOrderFirst.value
+                )
+            }.detail
         }
 
         updateModelDetail(MyModelType.OutdatedTargetSdkApk, newDetail)

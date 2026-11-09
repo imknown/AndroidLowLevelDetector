@@ -9,7 +9,6 @@ import android.content.res.Resources
 import android.os.Build
 import android.provider.Settings
 import android.util.Log
-import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.webkit.WebViewCompat
 import dev.zacsweers.metro.Inject
@@ -21,11 +20,6 @@ import net.imknown.android.forefrontinfo.base.extension.fullMessage
 import net.imknown.android.forefrontinfo.base.shell.IShell
 import net.imknown.android.forefrontinfo.base.shell.ShellResult
 import net.imknown.android.forefrontinfo.ui.base.detect.DetectResult
-import net.imknown.android.forefrontinfo.ui.base.list.MyModel
-import net.imknown.android.forefrontinfo.ui.base.list.MyModelTitle
-import net.imknown.android.forefrontinfo.ui.base.list.MyModelType
-import net.imknown.android.forefrontinfo.ui.base.list.guardedMyModel
-import net.imknown.android.forefrontinfo.ui.base.list.toColoredMyModel
 import net.imknown.android.forefrontinfo.ui.common.CODENAME_CANARY
 import net.imknown.android.forefrontinfo.ui.common.PropertyReader
 import net.imknown.android.forefrontinfo.ui.common.getSdkExtension
@@ -50,6 +44,7 @@ import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.home.model.LldSource
 import net.imknown.android.forefrontinfo.ui.home.model.LldStatusState
 import net.imknown.android.forefrontinfo.ui.home.model.MainlineState
+import net.imknown.android.forefrontinfo.ui.home.model.OutdatedTargetSdkVersionApkState
 import net.imknown.android.forefrontinfo.ui.home.model.PerformanceClassInfo
 import net.imknown.android.forefrontinfo.ui.home.model.SELinuxState
 import net.imknown.android.forefrontinfo.ui.home.model.SarState
@@ -60,7 +55,6 @@ import net.imknown.android.forefrontinfo.ui.home.model.TrebleState
 import net.imknown.android.forefrontinfo.ui.home.model.VndkState
 import net.imknown.android.forefrontinfo.ui.home.model.WebViewState
 import net.imknown.android.forefrontinfo.ui.settings.datasource.AppInfoDataSource
-import net.imknown.android.forefrontinfo.ui.theme.StatusColor
 import java.io.File
 
 // Constructor injection puts the dependency chain on the signature and lets Metro build it
@@ -906,71 +900,68 @@ class HomeRepository(
 
     // The order switch arrives as a parameter: the decision is made by the ViewModel that
     // observes SettingsStore, the repository degrades to a pure function (UDF; the landing
-    // spot of issues-cn #08's fifth read path)
-    fun getOutdatedTargetSdkVersionApkModel(
+    // spot of issues-cn #08's fifth read path). The judgment stays in the repository: the
+    // filtering, the sorting and the Met/Lagging/Unknown/None buckets; the list wording and
+    // the color belong to the mapper (including the OutdatedTargetSdkApk type that
+    // subtask-01's type addressing needs).
+    fun getOutdatedTargetSdkVersionApkState(
         lld: Lld?, orderByPackageNameFirst: Boolean
-    ): MyModel =
-        guardedMyModel(R.string.outdated_target_version_sdk_version_apk_title) {
-            val packageManager = MyApplication.instance.packageManager
-            val installedApplications = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                val flags = PackageManager.ApplicationInfoFlags.of(0)
-                packageManager.getInstalledApplications(flags)
-            } else {
-                packageManager.getInstalledApplications(0)
-            }
-            var systemApkList = installedApplications.filter {
-                val systemFlags = it.flags and (ApplicationInfo.FLAG_UPDATED_SYSTEM_APP or ApplicationInfo.FLAG_SYSTEM)
-                // On pre-release builds platform apps often (not always) target CUR_DEVELOPMENT (10000);
-                // such entries stay above this threshold, lower targets are compared as usual.
-                (systemFlags > 0) && (it.targetSdkVersion < AndroidVersionDataSource.currentAndroidInfo.api)
-            }
-
-            var result = MyApplication.getMyString(
-                R.string.outdated_target_version_sdk_version_apk_my_first_api_level,
-                propertyReader.getString(AndroidDataSource.PROP_RO_PRODUCT_FIRST_API_LEVEL)
-            )
-
-            val targetSdkVersionColor = if (systemApkList.isEmpty()) {
-                result += MyApplication.getMyString(R.string.outdated_target_version_sdk_version_apk_result_none)
-
-                if (lld != null) {
-                    if (isLatestStableAndroid(lld) || isLatestPreviewAndroid(lld)) {
-                        StatusColor.NO_PROBLEM
-                    } else {
-                        StatusColor.WARNING
-                    }
-                } else {
-                    StatusColor.CRITICAL
-                }
-            } else {
-                @StringRes val format = if (orderByPackageNameFirst) {
-                    systemApkList = systemApkList.sortedBy(ApplicationInfo::packageName)
-
-                    R.string.outdated_target_version_sdk_version_apk_result_format_package_first
-                } else {
-                    systemApkList = systemApkList.sortedWith(
-                        compareBy(ApplicationInfo::targetSdkVersion, ApplicationInfo::packageName)
-                    )
-
-                    R.string.outdated_target_version_sdk_version_apk_result_format_target_sdk_version_first
-                }
-
-                result += systemApkList.joinToString("\n") { applicationInfo ->
-                    "- " + MyApplication.getMyString(
-                        format, applicationInfo.packageName, applicationInfo.targetSdkVersion
-                    )
-                }
-
-                StatusColor.CRITICAL
-            }
-
-            return MyModel(
-                title = MyModelTitle.Res(R.string.outdated_target_version_sdk_version_apk_title),
-                detail = result,
-                color = targetSdkVersionColor,
-                type = MyModelType.OutdatedTargetSdkApk
-            )
+    ): DetectResult<OutdatedTargetSdkVersionApkState> = try {
+        val packageManager = MyApplication.instance.packageManager
+        val installedApplications = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val flags = PackageManager.ApplicationInfoFlags.of(0)
+            packageManager.getInstalledApplications(flags)
+        } else {
+            packageManager.getInstalledApplications(0)
         }
+        val systemApkList = installedApplications.filter {
+            val systemFlags = it.flags and (ApplicationInfo.FLAG_UPDATED_SYSTEM_APP or ApplicationInfo.FLAG_SYSTEM)
+            // On pre-release builds platform apps often (not always) target CUR_DEVELOPMENT (10000);
+            // such entries stay above this threshold, lower targets are compared as usual.
+            (systemFlags > 0) && (it.targetSdkVersion < AndroidVersionDataSource.currentAndroidInfo.api)
+        }
+
+        val order = if (orderByPackageNameFirst) {
+            OutdatedTargetSdkVersionApkState.Order.PackageNameFirst
+        } else {
+            OutdatedTargetSdkVersionApkState.Order.TargetSdkVersionFirst
+        }
+        // The old path sorted only in the non-empty branch; sorting an empty list has no output
+        // difference, so sorting unconditionally is not a behavior change.
+        val outdatedApks = when (order) {
+            OutdatedTargetSdkVersionApkState.Order.PackageNameFirst ->
+                systemApkList.sortedBy(ApplicationInfo::packageName)
+            OutdatedTargetSdkVersionApkState.Order.TargetSdkVersionFirst ->
+                systemApkList.sortedWith(
+                    compareBy(ApplicationInfo::targetSdkVersion, ApplicationInfo::packageName)
+                )
+        }.map {
+            OutdatedTargetSdkVersionApkState.OutdatedApk(it.packageName, it.targetSdkVersion)
+        }
+
+        val match = when {
+            outdatedApks.isNotEmpty() -> OutdatedTargetSdkVersionApkState.Match.None
+            lld == null -> OutdatedTargetSdkVersionApkState.Match.Unknown
+            isLatestStableAndroid(lld) || isLatestPreviewAndroid(lld) ->
+                OutdatedTargetSdkVersionApkState.Match.Met
+            else -> OutdatedTargetSdkVersionApkState.Match.Lagging
+        }
+
+        DetectResult.Found(
+            OutdatedTargetSdkVersionApkState(
+                firstApiLevel = propertyReader.getString(
+                    AndroidDataSource.PROP_RO_PRODUCT_FIRST_API_LEVEL
+                ),
+                outdatedApks = outdatedApks,
+                order = order,
+                match = match
+            )
+        )
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        DetectResult.Failed(e)
+    }
 
     // region [Common]
     private fun isLatestStableAndroid(lld: Lld) =
