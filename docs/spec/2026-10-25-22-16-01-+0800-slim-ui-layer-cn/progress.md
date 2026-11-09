@@ -1136,7 +1136,72 @@
   server build 升级或真的撞上 rename / quickfix 场景 (10-分析细则 能力盘点已记).
   下一步动作: 第 4 步负责人放行, 第 5 步拆笔提交 (拟两笔: feat(scripts) 与 docs(agents),
   trailer ZCode / GLM-5.3-Flash / max 已记); review 目录按 14 待点头后删.
+- 2026-11-08 (LSP 接线放行与两笔提交, 关闭): 负责人一次同意放行并按两笔提交 (第 4/5 步并一次,
+  低风险先例; 放行理由未留, 不编造, 记此), trailer 两笔同 (agent ZCode, model GLM-5.3-Flash,
+  effort max). 提交串: e16413cf feat(scripts) 三脚本接线, 689de48d docs(agents) 契约与能力盘点
+  (spec 记录随此笔入库). scripts/review 按 14 整体删除 (四轮提示词与 8 份报告, 判定理由已在
+  本文件与删前 state.md). 本批全程: 八轮探针 + 六次源码对质 + 四轮 review (8 份报告),
+  接线四项 (completion / signature-help / inlay-hints / format / organize-imports), 不接四项
+  (rename / will-rename / quickfix / type hierarchy) 证据与重探时机在 10-分析细则 能力盘点.
+  下一步动作: 批 7 (混合四条: encryption 走 Robolectric, selinux / webview / 全量包列表走仪器),
+  等负责人说开始.
+- 2026-11-09 (批 7 实现 + 验证): 负责人说开始, 混合四条 (encryption, selinux, webview, 全量包列表) 按批 4/5/6 同款节奏.
+  - 第 0 步复核 (HEAD `689de48d`): 批 6 记录的 1055 行是 v1 注释翻译前的口径, `05f30d82` 树上已是 1065
+    (英语注释多占 10 行), 相关行号随漂, 其余计数全核上; 四条应改位置即 encryption/selinux/webview/getOutdated,
+    无漂移. subtask-04.md 抬头与现状表已带批注改.
+  - 领域类型四个: `EncryptionState` (Status 六桶: Active/ActivePerUser/ActiveDefaultKey/Inactive/Unsupported/Unknown;
+    转中转出与认不出的值连缺 DevicePolicyManager 一起落 Unknown, 即旧 else), `SELinuxState` (Mode 四桶;
+    命令失败但首行带 permission denied 尾缀仍报 Enforcing, 旧路径同判), `WebViewState` (isQOrLater +
+    BuiltInProvider 列表 (反射失败字段为 null, InstallState 二态) + maxBuiltInVersionName (严格比较累加) +
+    Implement (三可空字段原样携带, null 在模板里渲染字面 null 与旧一致) + lld 两版本 + Match),
+    `OutdatedTargetSdkVersionApkState` (firstApiLevel 原样携带等 #42, 排序后的列表 + Order + Match 四桶).
+  - 仓库: 四方法返回 `DetectResult`; `getOutdatedTargetSdkVersionApkModel` 更名
+    `getOutdatedTargetSdkVersionApkState` (:897), `MyModelType.OutdatedTargetSdkApk` 的产出随迁 mapper (:726);
+    encryption/selinux 里注释掉的反射探针随之移除 (git 可考古, 批 3 先例).
+  - mapper 四方法 (`toEncryptionModel`/`toSELinuxModel`/`toWebViewModel`/`toOutdatedTargetSdkVersionApkModel`);
+    ViewModel 五调用点经 mapper, 行顺序未动; payload 的 `.detail` 路径改经 mapper, 失败路径 detail = failureRow
+    文案 = 旧 `toErrorMyModel` 文案.
+  - guard 家族退休: `guardedMyModel` 双重载/`toErrorMyModel`/`toColoredMyModel` 双重载零消费者, 从 MyModelExt
+    删除 (grep + Kotlin LSP references 两把核对, `guardedItemCore` 留给 Others), 头注释同步. Home 的 23 个产行入口
+    至此全部返回领域对象, `HomeRepository` 零 `MyModel` 引用.
+  - 等价性说明 (reviewer 核对用, 未申报为例外): webview 反射失败的 packageName 不再拿占位文案去查包
+    (查了必失败), 该候选按未安装渲染, 少一次注定失败的查询与一条 Log.w, 行输出不变 (批 6 treble 同类, 判接受);
+    outdated 空表也统一排序 (旧只在非空分支排, 空表无输出差异), 有批注.
+  - 加一件 (超出报告, 批 2 先例, 可否决): 删 androidTest 模板 `ExampleInstrumentedTest` (断言包名无 `.debug`
+    后缀, 仪器测试此前从未真跑所以没暴露; 全量仪器首跑 11 例红 1 例即它, 删后 10/10; 批 2 删过它的单测孪生).
+  - 途中插曲: 测试里 `List<Pair>.sorted()` 编译红 (Pair 不实现 Comparable, 本小姐记岔), LSP 现场与 Gradle 双双抓到,
+    改方法引用比较器; 两族检查建议 (DestructingShortFormNameMismatch 指向 Pair 位置解构, DestructuringDeclaration
+    随翻译 lambda 增长) 按批 3 先例处置: 新代码全字段使用的改解构参数, 剩余归既有族 (mapper 16 警告 = 批 6 的 15 +
+    新 webview lambda 1; 仓库 4 条既有; 与批 6 已提交仪器测试同形状的 `val state = ...` 建议不追).
+  - LSP 编辑通道首用翻车, 负责人 2026-11-09 叫停 (先不再用 Kotlin LSP 做 format 与 optimize import):
+    format 对 CRLF 文件回零宽空编辑并把整文件 EOL 翻成 LF (apply 过 mapper, 手工恢复), 插入的 11 条空行里
+    3 条落在存量区域、其余落在我的 when 分支间 (全部撤除, mapper 回到纯手写 +194); organize-imports 把显式
+    import 合并成通配符 (`ui.common.*` 等, apply 过两份主文件, 全部手工恢复显式); repository format 的 72 条
+    是给存量长行折行, 判跳过. 批 6 定的 "提交时刻 format + organize" 暂停; 10-分析细则 能力盘点的
+    format/organize 两行需按本批证据改口径, 归收尾批.
+  - 验证: 三源集编译绿; 单测 82/82 (新增 `DetectEncryptionTest` 6 例, Robolectric 影子 `setStorageEncryptionStatus`
+    驱动全部分支); lint 无新问题 (baseline 仍 1 error / 6 warnings / 1 hint); Kotlin LSP 诊断: 四新类型 CLEAN,
+    mapper 0 ERROR 16 警告 (15 既有 + 1 新 lambda), 仓库 0 ERROR 4 警告 (既有族), androidTest 三新文件 0 ERROR
+    (同族建议), MyModelExt/HomeViewModel CLEAN; analyze-file 未跑 (无运行中的 Studio 实例, 同批 4 起偏差).
+  - 设备: 改前包由 `git stash push -u` 露出 HEAD 构建, 改后包为批 7 工作树, 各自 push + pm install 后跑
+    `ModelSnapshotTest`; 按键对账 1344 = 1344, home 25 行与 others 42 行四列逐字节零差异, prop 差异全为
+    `cache_key.*` 每进程随机值与亮度/计数器实时值 (类别性排除). 撤空行与恢复 import 的最终内容复跑全量 Gradle 绿,
+    重装重跑仪器 10/10 与黄金对账, 零差异结论不变.
+  - 下一步动作: 收 v1 报告 (review 目录已架, 提示词 `review-v1-prompt-0117.md`, HEAD `689de48d`),
+    按第 3 步处理发现; 工作树冻结 (记录文件除外); 注释翻英语照 05 在提交确认时做.
++- 2026-11-09 (批 7 拆笔提交, 提交先于收 review): 负责人命令先把 ZCode 写的实现原样提交,
++  不掺 reviewer 的内容; 两份 v1 报告 (deepseek-v4.1-flash 与 hunyuan-hy) 已在 review/ 目录,
++  未读未收. 偏差照实记: 13 的第 3 步 (处理发现) 跳过, 提交先走, 理由是负责人要提交与
++  review 结果分离; v1 报告若有实质发现, 修复落在提交之后的轮次. 提交前照 05 把
++  HomeRepository 批 7 新增的五处中文注释翻成英语 (上一条记的 "提交确认时做" 就是这次),
++  对 reviewer 依据的 batch7.patch 而言差异仅这五处注释. 提交串: 811fdd69 refactor(home)
++  encryption, 6a5f29b4 refactor(home) selinux, 15aa6b6b refactor(home) webview,
++  7624e82c refactor(home) outdated 加 guard 家族退休, 6f9a8fd4 test(app) 删
++  ExampleInstrumentedTest (state.md 记的负责人同意随此笔兑现), docs(spec) 本笔.
++  每笔中间树编译三源集, c1 额外跑 DetectEncryptionTest, c4 额外跑全量单测, 全绿.
++  下一步动作: 按 14 收两份 v1 报告 (先核头部元数据与尾行; 报告基于注释翻译前的树, HEAD `689de48d`
++  一致才收), 按第 3 步处理发现; 发现处理完老板点头后, review 目录按 14 整体删除.
 - 各子任务状态: subtask-01 已关闭; subtask-02 已提交并关闭;  
-  subtask-03 已提交并关闭; subtask-04 进行中 (批 1 ~ 批 6 已提交关闭, 批 7 未开始); subtask-05 ~ subtask-06 报告已出, 实现未开始.
+  subtask-03 已提交并关闭; subtask-04 进行中 (批 1 ~ 批 6 已提交关闭, 批 7 已拆笔提交, v1 报告待收); subtask-05 ~ subtask-06 报告已出, 实现未开始.
 - 未查清: 无.
 - 挂起项: 无.
