@@ -37,7 +37,7 @@ class DetectOutdatedTargetSdkVersionApkTest {
         val state = detectStateOrderByPackageNameFirst(true)
 
         val packageNames = state.outdatedApks.map { it.packageName }
-        assertEquals(packageNames, packageNames.sorted())
+        assertEquals(packageNames.sorted(), packageNames)
         assertEquals(
             OutdatedTargetSdkVersionApkState.Order.PackageNameFirst,
             state.order

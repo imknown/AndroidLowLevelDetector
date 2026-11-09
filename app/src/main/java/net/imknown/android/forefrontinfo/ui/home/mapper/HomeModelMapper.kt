@@ -538,7 +538,7 @@ class HomeModelMapper(private val myApplication: MyApplication) {
         )
     }
 
-    // The encryption row: the platform status buckets pick wording and color; the Unknown bucket
+    // The encryption row: the platform status values pick wording and color; the Unknown case
     // (transitioning or unrecognized statuses, missing DevicePolicyManager included) shares the
     // not-supported wording with Unsupported, the old else branch.
     fun toEncryptionModel(detect: () -> DetectResult<EncryptionState>): MyModel = guardedEntry(
@@ -568,7 +568,7 @@ class HomeModelMapper(private val myApplication: MyApplication) {
         coloredRow(R.string.encryption_status_title, myApplication.getString(detailRes), color)
     }
 
-    // The SELinux row: the mode buckets pick wording and color; Unknown renders the platform
+    // The SELinux row: the mode values pick wording and color; Unknown renders the platform
     // unknown name, the old else branch in both the success and the failure path.
     fun toSELinuxModel(detect: () -> DetectResult<SELinuxState>): MyModel = guardedEntry(
         R.string.selinux_status,

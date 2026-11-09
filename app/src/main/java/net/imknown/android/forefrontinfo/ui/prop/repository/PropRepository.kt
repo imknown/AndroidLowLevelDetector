@@ -98,7 +98,7 @@ class PropRepository(
     }
 
     // Failure rows keep the plain no-color row shape: the red/yellow/green dot is a
-    // Home-only concept, so this is deliberately not toErrorMyModel.
+    // Home-only concept, so this is deliberately not the Home failure row.
     private fun toDetectFailedMyModel(title: String, e: Exception): MyModel =
         toDetectFailedMyModel(MyModelTitle.Raw(title), e)
 }

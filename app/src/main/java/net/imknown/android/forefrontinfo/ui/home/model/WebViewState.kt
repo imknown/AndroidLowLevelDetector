@@ -14,9 +14,6 @@ package net.imknown.android.forefrontinfo.ui.home.model
 data class WebViewState(
     val isQOrLater: Boolean,
     val builtInProviders: List<BuiltInProvider>,
-    // The highest installed built-in version, accumulated with the same strict comparison as the
-    // old path; empty when no built-in candidate is installed with a version.
-    val maxBuiltInVersionName: String,
     val implement: Implement?,
     val stableVersion: String?,
     val betaVersion: String?,

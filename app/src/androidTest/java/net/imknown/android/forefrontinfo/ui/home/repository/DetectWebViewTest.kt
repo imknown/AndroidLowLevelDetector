@@ -32,13 +32,11 @@ class DetectWebViewTest {
         assertTrue("expected Found, got $result", result is DetectResult.Found)
         val state = (result as DetectResult.Found).value
 
-        // A normal system always exposes the provider candidates (config_webview_packages.xml)
-        // and a current implementation package.
-        assertTrue("expected built-in provider candidates", state.builtInProviders.isNotEmpty())
-        assertNotNull("expected a current implementation package", state.implement)
-
         // The match buckets are exhaustive by type; which one applies depends on the device's
-        // installed versions against the lld reference.
+        // installed versions against the lld reference. An empty candidate list and a null
+        // implementation are legal Found values: the repository degrades to them when the
+        // hidden WebViewUpdateService reflection or the current-webview lookup fails (FR-9 AC1,
+        // NFR-1), so no existence assertion goes here.
         when (state.match) {
             WebViewState.Match.Met,
             WebViewState.Match.Lagging,

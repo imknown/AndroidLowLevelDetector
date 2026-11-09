@@ -658,10 +658,10 @@ class HomeRepository(
         DetectResult.Failed(e)
     }
 
-    // The judgment stays in the repository: the platform status constants bucket into facts;
-    // transitioning or unrecognized statuses land on Unknown together (the old else branch),
-    // and a missing DevicePolicyManager lands on Unknown too; the wording and the color
-    // belong to the mapper.
+    // The judgment stays in the repository: the platform status constants map to the status
+    // facts; transitioning or unrecognized statuses land on Unknown together (the old else
+    // branch), and a missing DevicePolicyManager lands on Unknown too; the wording and the
+    // color belong to the mapper.
     fun detectEncryption(): DetectResult<EncryptionState> = try {
         val devicePolicyManager = ContextCompat.getSystemService(
             MyApplication.instance, DevicePolicyManager::class.java
@@ -681,7 +681,7 @@ class HomeRepository(
         DetectResult.Failed(e)
     }
 
-    // The judgment stays in the repository: the getenforce output buckets into facts; a failed
+    // The judgment stays in the repository: the getenforce output maps to the mode facts; a failed
     // command whose first line ends with the permission-denied suffix still reports Enforcing
     // (the old path's reading: being denied even the query means enforcing); every other
     // unreadable shape lands on Unknown; the wording and the color belong to the mapper.
@@ -752,7 +752,7 @@ class HomeRepository(
     // region [WebView]
     // The judgment stays in the repository: every built-in candidate's install state and the
     // highest installed version (accumulated with the same strict comparison as the old path),
-    // together with the Met/Lagging/None buckets against the lld reference versions; the
+    // together with the Met/Lagging/None match against the lld reference versions; the
     // wording and the color belong to the mapper. A candidate whose reflected packageName is
     // null no longer queries the package with the placeholder wording (the query would fail
     // anyway): it renders as not installed, saving one doomed query and one Log.w.
@@ -808,7 +808,6 @@ class HomeRepository(
             WebViewState(
                 isQOrLater = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q,
                 builtInProviders = builtInProviders,
-                maxBuiltInVersionName = maxBuiltInVersionName,
                 implement = implement,
                 stableVersion = lldWebViewStable,
                 betaVersion = lldWebViewBeta,
@@ -901,7 +900,7 @@ class HomeRepository(
     // The order switch arrives as a parameter: the decision is made by the ViewModel that
     // observes SettingsStore, the repository degrades to a pure function (UDF; the landing
     // spot of issues-cn #08's fifth read path). The judgment stays in the repository: the
-    // filtering, the sorting and the Met/Lagging/Unknown/None buckets; the list wording and
+    // filtering, the sorting and the Met/Lagging/Unknown/None outcomes; the list wording and
     // the color belong to the mapper (including the OutdatedTargetSdkApk type that
     // subtask-01's type addressing needs).
     fun getOutdatedTargetSdkVersionApkState(
