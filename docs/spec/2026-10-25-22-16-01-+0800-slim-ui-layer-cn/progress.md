@@ -1237,9 +1237,19 @@
 +  无新实质发现. trailer 照 12 记负责人指定值: agent WorkBuddy CN, model GLM-5.3-Flash, effort high
 +  (与 ZCode 的 ZCode/GLM-5.3-Flash/max 区分, 负责人点名). 提交串: fix(home) 批 7 的 v1/v2 修复
 +  (代码六文件), docs(spec) 记录与文档修复 (progress, subtask-04, issues-cn README) 本笔.
-+  下一步动作: review 目录按 14 删除前等老板点头; 归后续项已各有去处 (S1/G-01/G-02/B1 归收尾批,
-+  S2 归 subtask-05, 均已记入本文件); 收尾批另含 10-分析细则 format/organize 口径改写.
++  下一步动作: review 目录已按 14 删除 (老板 2026-11-09 点头, 十个文件, 判定已全数搬入本文件);
++  归后续项已各有去处 (S1/G-01/G-02/B1 归收尾批, S2 归 subtask-05, 均已记入本文件);
++  收尾批另含 10-分析细则 format/organize 口径改写.
++- 2026-11-09 (收尾批文档两件, 提交): 负责人定收尾批切法: 规则文件两件现在做, issues-cn 全量重取证
++  加 progress 排版留任务结束横向回顾, DetectResult.Missing 归 subtask-05. LSP 一条按老板方向改口径:
++  不是能力坏了待修, 而是用法要专题设计, 就算好用也不能不做核对就整文件套用 (会波及改动之外的代码);
++  10-分析细则 两行改 "停用, 脚本保留", 通道契约里被推翻的 CRLF 保证句改写, 加停用条目
++  (提交时刻 format 加 organize-imports 暂停, 重探归专题); 06-检测条目 第 2/3 步按现状分页改写
++  (Home 返回 DetectResult 加 mapper, Others/Prop 仍 MyModel), 08 只读对照全过
++  (行内代码仅泛指 Repository 被三个具体类名顶替, 标题/七步/力度词计数不变).
++  提交串: docs(agents) 10-分析细则 停用改写, docs(agents) 06 检测条目 流程改写 (progress 随此笔).
++  下一步动作: 收尾批剩余 (issues-cn 重取证, progress 排版) 留任务结束; 说开始就进 subtask-05.
 - 各子任务状态: subtask-01 已关闭; subtask-02 已提交并关闭;  
-  subtask-03 已提交并关闭; subtask-04 进行中 (批 1 ~ 批 6 已提交关闭, 批 7 已提交, v1/v2 循环关闭); subtask-05 ~ subtask-06 报告已出, 实现未开始.
+  subtask-03 已提交并关闭; subtask-04 进行中 (批 1 ~ 7 已提交关闭, 收尾批规则文件两件已提交, issues-cn 重取证与排版留任务结束); subtask-05 ~ subtask-06 报告已出, 实现未开始.
 - 未查清: 无.
 - 挂起项: 无.
