@@ -241,7 +241,7 @@ class HomeViewModel(
             }
             tempModels += homeModelMapper.toAdbModel { homeRepository.detectAdb() }
             tempModels += homeModelMapper.toAdbAuthenticationModel { homeRepository.detectAdbAuthentication() }
-            tempModels += homeRepository.detectEncryption()
+            tempModels += homeModelMapper.toEncryptionModel { homeRepository.detectEncryption() }
             tempModels += homeRepository.detectSELinux()
             tempModels += homeModelMapper.toToyboxModel { homeRepository.detectToybox(lld) }
             tempModels += homeRepository.detectWebView(lld)

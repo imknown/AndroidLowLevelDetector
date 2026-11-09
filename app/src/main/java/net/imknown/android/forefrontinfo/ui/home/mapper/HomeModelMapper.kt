@@ -16,6 +16,7 @@ import net.imknown.android.forefrontinfo.ui.home.model.AndroidInfoState
 import net.imknown.android.forefrontinfo.ui.home.model.ApexState
 import net.imknown.android.forefrontinfo.ui.home.model.BuildIdState
 import net.imknown.android.forefrontinfo.ui.home.model.DynamicPartitionsState
+import net.imknown.android.forefrontinfo.ui.home.model.EncryptionState
 import net.imknown.android.forefrontinfo.ui.home.model.GsiState
 import net.imknown.android.forefrontinfo.ui.home.model.KernelState
 import net.imknown.android.forefrontinfo.ui.home.model.LldSource
@@ -531,6 +532,36 @@ class HomeModelMapper(private val myApplication: MyApplication) {
                 ToyboxState.Match.None -> StatusColor.CRITICAL
             }
         )
+    }
+
+    // The encryption row: the platform status buckets pick wording and color; the Unknown bucket
+    // (transitioning or unrecognized statuses, missing DevicePolicyManager included) shares the
+    // not-supported wording with Unsupported, the old else branch.
+    fun toEncryptionModel(detect: () -> DetectResult<EncryptionState>): MyModel = guardedEntry(
+        R.string.encryption_status_title,
+        detect
+    ) { state ->
+        val detailRes: Int
+        val color: StatusColor
+        when (state.status) {
+            EncryptionState.Status.Active, EncryptionState.Status.ActivePerUser -> {
+                detailRes = R.string.result_encrypted
+                color = StatusColor.NO_PROBLEM
+            }
+            EncryptionState.Status.ActiveDefaultKey -> {
+                detailRes = R.string.result_encrypted_no_key_set
+                color = StatusColor.WARNING
+            }
+            EncryptionState.Status.Inactive -> {
+                detailRes = R.string.result_not_encrypted
+                color = StatusColor.CRITICAL
+            }
+            EncryptionState.Status.Unsupported, EncryptionState.Status.Unknown -> {
+                detailRes = R.string.result_not_supported
+                color = StatusColor.CRITICAL
+            }
+        }
+        coloredRow(R.string.encryption_status_title, myApplication.getString(detailRes), color)
     }
 
     // Two-state row color mapping: a true condition lands on NO_PROBLEM. Home-only, dots are a

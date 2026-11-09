@@ -43,6 +43,7 @@ import net.imknown.android.forefrontinfo.ui.home.model.AndroidInfoState
 import net.imknown.android.forefrontinfo.ui.home.model.ApexState
 import net.imknown.android.forefrontinfo.ui.home.model.BuildIdState
 import net.imknown.android.forefrontinfo.ui.home.model.DynamicPartitionsState
+import net.imknown.android.forefrontinfo.ui.home.model.EncryptionState
 import net.imknown.android.forefrontinfo.ui.home.model.GsiState
 import net.imknown.android.forefrontinfo.ui.home.model.KernelState
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
@@ -662,46 +663,28 @@ class HomeRepository(
         DetectResult.Failed(e)
     }
 
-    fun detectEncryption(): MyModel =
-        guardedMyModel(R.string.encryption_status_title) {
-            // val cryptoState = propertyReader.getString(PROP_CRYPTO_STATE)
-            val devicePolicyManager = ContextCompat.getSystemService(
-                MyApplication.instance, DevicePolicyManager::class.java
-            )
-            val storageEncryptionStatus = devicePolicyManager?.storageEncryptionStatus
-            @StringRes val result: Int
-            val color: StatusColor
-            when (storageEncryptionStatus) {
-                // DevicePolicyManager.ENCRYPTION_STATUS_ACTIVATING,
-                DevicePolicyManager.ENCRYPTION_STATUS_ACTIVE,
-                DevicePolicyManager.ENCRYPTION_STATUS_ACTIVE_PER_USER -> {
-                    result = R.string.result_encrypted
-                    color = StatusColor.NO_PROBLEM
-                }
-                DevicePolicyManager.ENCRYPTION_STATUS_ACTIVE_DEFAULT_KEY -> {
-                    result = R.string.result_encrypted_no_key_set
-                    color = StatusColor.WARNING
-                }
-                DevicePolicyManager.ENCRYPTION_STATUS_INACTIVE -> {
-                    result = R.string.result_not_encrypted
-                    color = StatusColor.CRITICAL
-                }
-                DevicePolicyManager.ENCRYPTION_STATUS_UNSUPPORTED -> {
-                    result = R.string.result_not_supported
-                    color = StatusColor.CRITICAL
-                }
-                else -> {
-                    result = R.string.result_not_supported
-                    color = StatusColor.CRITICAL
-                }
-            }
-
-            return toColoredMyModel(
-                R.string.encryption_status_title,
-                MyApplication.getMyString(result),
-                color
-            )
+    // The judgment stays in the repository: the platform status constants bucket into facts;
+    // transitioning or unrecognized statuses land on Unknown together (the old else branch),
+    // and a missing DevicePolicyManager lands on Unknown too; the wording and the color
+    // belong to the mapper.
+    fun detectEncryption(): DetectResult<EncryptionState> = try {
+        val devicePolicyManager = ContextCompat.getSystemService(
+            MyApplication.instance, DevicePolicyManager::class.java
+        )
+        val status = when (devicePolicyManager?.storageEncryptionStatus) {
+            DevicePolicyManager.ENCRYPTION_STATUS_ACTIVE -> EncryptionState.Status.Active
+            DevicePolicyManager.ENCRYPTION_STATUS_ACTIVE_PER_USER -> EncryptionState.Status.ActivePerUser
+            DevicePolicyManager.ENCRYPTION_STATUS_ACTIVE_DEFAULT_KEY -> EncryptionState.Status.ActiveDefaultKey
+            DevicePolicyManager.ENCRYPTION_STATUS_INACTIVE -> EncryptionState.Status.Inactive
+            DevicePolicyManager.ENCRYPTION_STATUS_UNSUPPORTED -> EncryptionState.Status.Unsupported
+            else -> EncryptionState.Status.Unknown
         }
+        DetectResult.Found(EncryptionState(status))
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        DetectResult.Failed(e)
+    }
 
     fun detectSELinux(): MyModel =
         guardedMyModel(R.string.selinux_status) {
