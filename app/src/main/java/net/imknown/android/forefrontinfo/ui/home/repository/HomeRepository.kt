@@ -51,6 +51,7 @@ import net.imknown.android.forefrontinfo.ui.home.model.LldSource
 import net.imknown.android.forefrontinfo.ui.home.model.LldStatusState
 import net.imknown.android.forefrontinfo.ui.home.model.MainlineState
 import net.imknown.android.forefrontinfo.ui.home.model.PerformanceClassInfo
+import net.imknown.android.forefrontinfo.ui.home.model.SELinuxState
 import net.imknown.android.forefrontinfo.ui.home.model.SarState
 import net.imknown.android.forefrontinfo.ui.home.model.SecurityPatchState
 import net.imknown.android.forefrontinfo.ui.home.model.SdkExtensionState
@@ -686,59 +687,35 @@ class HomeRepository(
         DetectResult.Failed(e)
     }
 
-    fun detectSELinux(): MyModel =
-        guardedMyModel(R.string.selinux_status) {
-            // val seLinuxClass = Class.forName("android.os.SELinux")
-            // val isSELinuxBooted = seLinuxClass
-            //     .getDeclaredMethod("isSELinuxEnabled")
-            //     .invoke(null) as Boolean
-            // val isSELinuxEnforceBooted = seLinuxClass
-            //     .getDeclaredMethod("isSELinuxEnforced")
-            //     .invoke(null) as Boolean
-            //
-            // val bootSELinuxProp = propertyReader.getString(PROP_BOOT_SELINUX)
+    // The judgment stays in the repository: the getenforce output buckets into facts; a failed
+    // command whose first line ends with the permission-denied suffix still reports Enforcing
+    // (the old path's reading: being denied even the query means enforcing); every other
+    // unreadable shape lands on Unknown; the wording and the color belong to the mapper.
+    // The commented-out reflection probes are removed with it, git history keeps them.
+    fun detectSELinux(): DetectResult<SELinuxState> = try {
+        val seLinuxStatus = shell.execute(AndroidDataSource.CMD_GETENFORCE)
+        val seLinuxStatusFirstLine = seLinuxStatus.output.getOrNull(0)
 
-            @StringRes val result: Int
-            val color: StatusColor
-
-            val seLinuxStatus = shell.execute(AndroidDataSource.CMD_GETENFORCE)
-            val seLinuxStatusResult = seLinuxStatus.output.getOrNull(0)
-
-            if (seLinuxStatus.isSuccess) {
-                when (seLinuxStatusResult) {
-                    AndroidDataSource.SELINUX_STATUS_ENFORCING -> {
-                        result = R.string.selinux_status_enforcing_mode
-                        color = StatusColor.NO_PROBLEM
-                    }
-                    AndroidDataSource.SELINUX_STATUS_PERMISSIVE -> {
-                        result = R.string.selinux_status_permissive_mode
-                        color = StatusColor.WARNING
-                    }
-                    AndroidDataSource.SELINUX_STATUS_DISABLED -> {
-                        result = R.string.result_disabled
-                        color = StatusColor.CRITICAL
-                    }
-                    else -> {
-                        result = androidR.string.unknownName
-                        color = StatusColor.CRITICAL
-                    }
-                }
-            } else {
-                if (seLinuxStatusResult?.endsWith(AndroidDataSource.CMD_ERROR_PERMISSION_DENIED) == true) {
-                    result = R.string.selinux_status_enforcing_mode
-                    color = StatusColor.NO_PROBLEM
-                } else {
-                    result = androidR.string.unknownName
-                    color = StatusColor.CRITICAL
-                }
+        val mode = if (seLinuxStatus.isSuccess) {
+            when (seLinuxStatusFirstLine) {
+                AndroidDataSource.SELINUX_STATUS_ENFORCING -> SELinuxState.Mode.Enforcing
+                AndroidDataSource.SELINUX_STATUS_PERMISSIVE -> SELinuxState.Mode.Permissive
+                AndroidDataSource.SELINUX_STATUS_DISABLED -> SELinuxState.Mode.Disabled
+                else -> SELinuxState.Mode.Unknown
             }
-
-            return toColoredMyModel(
-                R.string.selinux_status,
-                MyApplication.getMyString(result),
-                color
-            )
+        } else {
+            if (seLinuxStatusFirstLine?.endsWith(AndroidDataSource.CMD_ERROR_PERMISSION_DENIED) == true) {
+                SELinuxState.Mode.Enforcing
+            } else {
+                SELinuxState.Mode.Unknown
+            }
         }
+        DetectResult.Found(SELinuxState(mode))
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        DetectResult.Failed(e)
+    }
 
     fun detectToybox(lld: Lld?): DetectResult<ToyboxState> = try {
         val toyboxVersionResult = shell.execute(AndroidDataSource.CMD_TOYBOX_VERSION)

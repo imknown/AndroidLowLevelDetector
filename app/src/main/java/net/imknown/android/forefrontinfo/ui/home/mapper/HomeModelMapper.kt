@@ -23,6 +23,7 @@ import net.imknown.android.forefrontinfo.ui.home.model.LldSource
 import net.imknown.android.forefrontinfo.ui.home.model.LldStatusState
 import net.imknown.android.forefrontinfo.ui.home.model.MainlineState
 import net.imknown.android.forefrontinfo.ui.home.model.PerformanceClassInfo
+import net.imknown.android.forefrontinfo.ui.home.model.SELinuxState
 import net.imknown.android.forefrontinfo.ui.home.model.SarState
 import net.imknown.android.forefrontinfo.ui.home.model.SecurityPatchState
 import net.imknown.android.forefrontinfo.ui.home.model.SdkExtensionState
@@ -562,6 +563,35 @@ class HomeModelMapper(private val myApplication: MyApplication) {
             }
         }
         coloredRow(R.string.encryption_status_title, myApplication.getString(detailRes), color)
+    }
+
+    // The SELinux row: the mode buckets pick wording and color; Unknown renders the platform
+    // unknown name, the old else branch in both the success and the failure path.
+    fun toSELinuxModel(detect: () -> DetectResult<SELinuxState>): MyModel = guardedEntry(
+        R.string.selinux_status,
+        detect
+    ) { state ->
+        val detailRes: Int
+        val color: StatusColor
+        when (state.mode) {
+            SELinuxState.Mode.Enforcing -> {
+                detailRes = R.string.selinux_status_enforcing_mode
+                color = StatusColor.NO_PROBLEM
+            }
+            SELinuxState.Mode.Permissive -> {
+                detailRes = R.string.selinux_status_permissive_mode
+                color = StatusColor.WARNING
+            }
+            SELinuxState.Mode.Disabled -> {
+                detailRes = R.string.result_disabled
+                color = StatusColor.CRITICAL
+            }
+            SELinuxState.Mode.Unknown -> {
+                detailRes = androidR.string.unknownName
+                color = StatusColor.CRITICAL
+            }
+        }
+        coloredRow(R.string.selinux_status, myApplication.getString(detailRes), color)
     }
 
     // Two-state row color mapping: a true condition lands on NO_PROBLEM. Home-only, dots are a
