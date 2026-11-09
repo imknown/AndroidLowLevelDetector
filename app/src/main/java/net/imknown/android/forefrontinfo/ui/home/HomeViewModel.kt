@@ -244,7 +244,7 @@ class HomeViewModel(
             tempModels += homeModelMapper.toEncryptionModel { homeRepository.detectEncryption() }
             tempModels += homeModelMapper.toSELinuxModel { homeRepository.detectSELinux() }
             tempModels += homeModelMapper.toToyboxModel { homeRepository.detectToybox(lld) }
-            tempModels += homeRepository.detectWebView(lld)
+            tempModels += homeModelMapper.toWebViewModel { homeRepository.detectWebView(lld) }
             tempModels += homeRepository.getOutdatedTargetSdkVersionApkModel(
                 lld, settingsStore.outdatedOrderFirst.value
             )

@@ -58,10 +58,10 @@ import net.imknown.android.forefrontinfo.ui.home.model.SdkExtensionState
 import net.imknown.android.forefrontinfo.ui.home.model.ToyboxState
 import net.imknown.android.forefrontinfo.ui.home.model.TrebleState
 import net.imknown.android.forefrontinfo.ui.home.model.VndkState
+import net.imknown.android.forefrontinfo.ui.home.model.WebViewState
 import net.imknown.android.forefrontinfo.ui.settings.datasource.AppInfoDataSource
 import net.imknown.android.forefrontinfo.ui.theme.StatusColor
 import java.io.File
-import android.R as androidR
 
 // Constructor injection puts the dependency chain on the signature and lets Metro build it
 // (issues-cn #02); the DataSource params are concrete @Inject types, and IShell is an
@@ -756,109 +756,80 @@ class HomeRepository(
     }
 
     // region [WebView]
-    fun detectWebView(lld: Lld?): MyModel =
-        guardedMyModel(R.string.webview_title) {
-            val type = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                val standalone = MyApplication.getMyString(R.string.webview_standalone)
-                MyApplication.getMyString(R.string.webview_or, "Trichrome", standalone)
-            } else {
-                "Monochrome"
-            }
+    // The judgment stays in the repository: every built-in candidate's install state and the
+    // highest installed version (accumulated with the same strict comparison as the old path),
+    // together with the Met/Lagging/None buckets against the lld reference versions; the
+    // wording and the color belong to the mapper. A candidate whose reflected packageName is
+    // null no longer queries the package with the placeholder wording (the query would fail
+    // anyway): it renders as not installed, saving one doomed query and one Log.w.
+    fun detectWebView(lld: Lld?): DetectResult<WebViewState> = try {
+        val packageManager = MyApplication.instance.packageManager
 
-            val packageManager = MyApplication.instance.packageManager
-
-            var builtInResult = ""
-            var builtInVersionName = ""
-            val webViewProviderInfoList = getBuildInWebViewProvidersAndroid7()
-
-            if (webViewProviderInfoList.isEmpty()) {
-                builtInResult = MyApplication.getMyString(R.string.build_not_filled)
-            } else {
-                val lastIndex = webViewProviderInfoList.size - 1
-                webViewProviderInfoList.forEachIndexed { index, webViewProviderInfo ->
-                    builtInResult += with(webViewProviderInfo) {
-                        val packageInfo = getPackageInfoOrNull(packageName)
-                        val isInstalled = if (packageInfo != null) {
-                            packageInfo.versionName?.also {
-                                if (Version(it).isHigherThan(builtInVersionName)) {
-                                    builtInVersionName = it
-                                }
-                            } ?: MyApplication.getMyString(androidR.string.unknownName)
-                        } else {
-                            MyApplication.getMyString(R.string.webview_built_in_not_installed)
-                        }
-
-                        fun subFormat(text: String) =
-                            MyApplication.getMyString(R.string.webview_sub_format, text)
-
-                        fun subFormat(@StringRes stringRes: Int) =
-                            subFormat(MyApplication.getMyString(stringRes))
-
-                        var tempResult = packageName + subFormat(description) + subFormat(isInstalled)
-                        if (!availableByDefault) {
-                            tempResult += subFormat(R.string.webview_must_be_chosen_by_user)
-                        }
-                        if (isFallback) {
-                            tempResult += subFormat(R.string.webview_fallback)
-                        }
-                        if (signatures.isNotEmpty()) {
-                            tempResult += subFormat(R.string.webview_signed)
-                        }
-                        if (index != lastIndex) {
-                            tempResult += MyApplication.getMyString(R.string.webview_ending)
-                        }
-                        tempResult
-                    }
+        var maxBuiltInVersionName = ""
+        val builtInProviders = getBuildInWebViewProvidersAndroid7().map { webViewProviderInfo ->
+            val packageInfo = webViewProviderInfo.packageName?.let { getPackageInfoOrNull(it) }
+            val installState = if (packageInfo != null) {
+                val versionName = packageInfo.versionName
+                if (versionName != null && Version(versionName).isHigherThan(maxBuiltInVersionName)) {
+                    maxBuiltInVersionName = versionName
                 }
+                WebViewState.InstallState.Installed(versionName)
+            } else {
+                WebViewState.InstallState.NotInstalled
             }
 
-            val implementPackageInfo =
-                WebViewCompat.getCurrentWebViewPackage(MyApplication.instance)
-            val implementPackageName = implementPackageInfo?.packageName
-            val implementLabel = implementPackageInfo?.applicationInfo?.loadLabel(packageManager)
-            val implementVersionName = implementPackageInfo?.versionName
-            val implementResult = """
-                    |$implementPackageName
-                    |  $implementLabel
-                    |  $implementVersionName
-                    """.trimMargin()
-
-            val webView = lld?.webView
-            val lldWebViewStable = webView?.stable?.version
-            val lldWebViewBeta = webView?.beta?.version
-            val latestResult = MyApplication.getMyString(
-                R.string.webview_detail,
-                lldWebViewStable
-                    ?: MyApplication.getMyString(androidR.string.unknownName),
-                lldWebViewBeta
-                    ?: MyApplication.getMyString(androidR.string.unknownName)
-            )
-
-            val webViewColor = when {
-                lldWebViewStable != null && Version(builtInVersionName).isAtLeast(lldWebViewStable) -> StatusColor.NO_PROBLEM
-                lldWebViewStable != null && Version(implementVersionName).isAtLeast(lldWebViewStable) -> StatusColor.WARNING
-                else -> StatusColor.CRITICAL
-            }
-
-            return toColoredMyModel(
-                R.string.webview_title,
-                """
-                |${MyApplication.getMyString(R.string.webview_built_in_version)}: $type
-                |
-                |$builtInResult
-                |
-                |${MyApplication.getMyString(R.string.webview_implement_version)}:
-                |$implementResult
-                |
-                |$latestResult
-                """.trimMargin(),
-                webViewColor
+            WebViewState.BuiltInProvider(
+                packageName = webViewProviderInfo.packageName,
+                description = webViewProviderInfo.description,
+                availableByDefault = webViewProviderInfo.availableByDefault,
+                isFallback = webViewProviderInfo.isFallback,
+                hasSignatures = webViewProviderInfo.signatures.isNotEmpty(),
+                installState = installState
             )
         }
 
+        val implementPackageInfo =
+            WebViewCompat.getCurrentWebViewPackage(MyApplication.instance)
+        val implement = implementPackageInfo?.let {
+            WebViewState.Implement(
+                packageName = it.packageName,
+                label = it.applicationInfo?.loadLabel(packageManager),
+                versionName = it.versionName
+            )
+        }
+
+        val webView = lld?.webView
+        val lldWebViewStable = webView?.stable?.version
+        val lldWebViewBeta = webView?.beta?.version
+
+        val match = when {
+            lldWebViewStable != null && Version(maxBuiltInVersionName).isAtLeast(lldWebViewStable) ->
+                WebViewState.Match.Met
+            lldWebViewStable != null && Version(implement?.versionName).isAtLeast(lldWebViewStable) ->
+                WebViewState.Match.Lagging
+            else -> WebViewState.Match.None
+        }
+
+        DetectResult.Found(
+            WebViewState(
+                isQOrLater = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q,
+                builtInProviders = builtInProviders,
+                maxBuiltInVersionName = maxBuiltInVersionName,
+                implement = implement,
+                stableVersion = lldWebViewStable,
+                betaVersion = lldWebViewBeta,
+                match = match
+            )
+        )
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        DetectResult.Failed(e)
+    }
+
     private class WebViewProviderInfo(
-        val packageName: String,
-        val description: String,
+        val packageName: String?,
+        val description: String?,
         val availableByDefault: Boolean,
         val isFallback: Boolean,
         val signatures: Array<*>
@@ -890,7 +861,7 @@ class HomeRepository(
                     getWebViewProviderInfoMemberOrThrow(packageNameField) as String
                 } catch (e: Exception) {
                     packageNameField.log(e)
-                    MyApplication.getMyString(R.string.build_not_filled)
+                    null
                 }
 
                 val descriptionField = "description"
@@ -898,7 +869,7 @@ class HomeRepository(
                     getWebViewProviderInfoMemberOrThrow(descriptionField) as String
                 } catch (e: Exception) {
                     descriptionField.log(e)
-                    MyApplication.getMyString(R.string.build_not_filled)
+                    null
                 }
 
                 val availableByDefaultField = "availableByDefault"

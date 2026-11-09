@@ -30,6 +30,7 @@ import net.imknown.android.forefrontinfo.ui.home.model.SdkExtensionState
 import net.imknown.android.forefrontinfo.ui.home.model.ToyboxState
 import net.imknown.android.forefrontinfo.ui.home.model.TrebleState
 import net.imknown.android.forefrontinfo.ui.home.model.VndkState
+import net.imknown.android.forefrontinfo.ui.home.model.WebViewState
 import net.imknown.android.forefrontinfo.ui.theme.StatusColor
 import android.R as androidR
 
@@ -592,6 +593,92 @@ class HomeModelMapper(private val myApplication: MyApplication) {
             }
         }
         coloredRow(R.string.selinux_status, myApplication.getString(detailRes), color)
+    }
+
+    // The WebView row: the detail is one blob assembled here, segment by segment the same way the
+    // old path built it. The provider list joins with the ending text as the separator (the old
+    // code appended it between entries); an empty candidate list renders the not-filled
+    // placeholder. The implementation block interpolates its nullable fields directly: a null
+    // renders the literal "null" in the template, exactly like the old code. The match decides
+    // the color.
+    fun toWebViewModel(detect: () -> DetectResult<WebViewState>): MyModel = guardedEntry(
+        R.string.webview_title,
+        detect
+    ) { state ->
+        val type = if (state.isQOrLater) {
+            val standalone = myApplication.getString(R.string.webview_standalone)
+            myApplication.getString(R.string.webview_or, "Trichrome", standalone)
+        } else {
+            "Monochrome"
+        }
+
+        val builtInResult = if (state.builtInProviders.isEmpty()) {
+            myApplication.getString(R.string.build_not_filled)
+        } else {
+            state.builtInProviders.joinToString(
+                myApplication.getString(R.string.webview_ending)
+            ) { (packageName, description, availableByDefault, isFallback, hasSignatures, installState) ->
+                fun subFormat(text: String) =
+                    myApplication.getString(R.string.webview_sub_format, text)
+
+                fun subFormat(@StringRes stringRes: Int) =
+                    subFormat(myApplication.getString(stringRes))
+
+                val isInstalled = when (installState) {
+                    is WebViewState.InstallState.Installed ->
+                        installState.versionName
+                            ?: myApplication.getString(androidR.string.unknownName)
+                    WebViewState.InstallState.NotInstalled ->
+                        myApplication.getString(R.string.webview_built_in_not_installed)
+                }
+
+                var tempResult = (packageName
+                    ?: myApplication.getString(R.string.build_not_filled)) +
+                        subFormat(description ?: myApplication.getString(R.string.build_not_filled)) +
+                        subFormat(isInstalled)
+                if (!availableByDefault) {
+                    tempResult += subFormat(R.string.webview_must_be_chosen_by_user)
+                }
+                if (isFallback) {
+                    tempResult += subFormat(R.string.webview_fallback)
+                }
+                if (hasSignatures) {
+                    tempResult += subFormat(R.string.webview_signed)
+                }
+                tempResult
+            }
+        }
+
+        val implementResult = """
+                |${state.implement?.packageName}
+                |  ${state.implement?.label}
+                |  ${state.implement?.versionName}
+                """.trimMargin()
+
+        val latestResult = myApplication.getString(
+            R.string.webview_detail,
+            state.stableVersion ?: myApplication.getString(androidR.string.unknownName),
+            state.betaVersion ?: myApplication.getString(androidR.string.unknownName)
+        )
+
+        coloredRow(
+            R.string.webview_title,
+            """
+            |${myApplication.getString(R.string.webview_built_in_version)}: $type
+            |
+            |$builtInResult
+            |
+            |${myApplication.getString(R.string.webview_implement_version)}:
+            |$implementResult
+            |
+            |$latestResult
+            """.trimMargin(),
+            when (state.match) {
+                WebViewState.Match.Met -> StatusColor.NO_PROBLEM
+                WebViewState.Match.Lagging -> StatusColor.WARNING
+                WebViewState.Match.None -> StatusColor.CRITICAL
+            }
+        )
     }
 
     // Two-state row color mapping: a true condition lands on NO_PROBLEM. Home-only, dots are a
