@@ -1,6 +1,6 @@
 [versions]
 # https://github.com/JetBrains/kotlin/releases
-kotlin = "2.4.21"
+kotlin = "2.5.0-RC"
 
 # https://github.com/Kotlin/kotlinx.collections.immutable/releases
 kotlinx-collections-immutable = "0.5.2"
@@ -9,7 +9,7 @@ kotlinx-collections-immutable = "0.5.2"
 kotlinx-coroutines = "1.11.0"
 
 # https://github.com/Kotlin/kotlinx.serialization/releases
-kotlinx-serialization = "1.12.0"
+kotlinx-serialization = "1.13.0"
 
 # https://github.com/ktorio/ktor/releases
 ktor = "3.6.1"

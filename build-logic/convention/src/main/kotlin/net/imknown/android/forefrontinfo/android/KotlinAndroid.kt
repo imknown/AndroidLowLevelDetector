@@ -150,16 +150,16 @@ inline fun <reified T : KotlinBaseExtension> Project.configureKotlin() = configu
             "-Xreturn-value-checker=full",
             // endregion [Experimental in 2.3.0]
 
-            // region [Experimental in 2.3.20]
-            "-Xname-based-destructuring=only-syntax",
-            // endregion [Experimental in 2.3.20]
-
             // region [Experimental in 2.4.0]
             "-Xexplicit-context-arguments",
             "-Xcollection-literals",
-            "-XIntrinsic-const-evaluation",
-            "-Xallow-returns-result-of",
             // endregion [Experimental in 2.4.0]
+
+            // region [Experimental in 2.5.0]
+            "-Xcompanion-blocks-and-extensions",
+            "-Xfull-value-classes",
+            "-Xstrict-equality-for-structural-classes",
+            // endregion [Experimental in 2.5.0]
         )
     }
 }
