@@ -682,23 +682,24 @@ class HomeRepository(
     }
 
     // The judgment stays in the repository: the getenforce output maps to the mode facts; a failed
-    // command whose first line ends with the permission-denied suffix still reports Enforcing
-    // (the old path's reading: being denied even the query means enforcing); every other
-    // unreadable shape lands on Unknown; the wording and the color belong to the mapper.
+    // command whose first stderr line (ShellResult.errors) ends with the permission-denied suffix
+    // still reports Enforcing (being denied even the query means enforcing);
+    // every other unreadable shape lands on Unknown; the wording and the color belong to the mapper.
     // The commented-out reflection probes are removed with it, git history keeps them.
     fun detectSELinux(): DetectResult<SELinuxState> = try {
         val seLinuxStatus = shell.execute(AndroidDataSource.CMD_GETENFORCE)
-        val seLinuxStatusFirstLine = seLinuxStatus.output.getOrNull(0)
 
         val mode = if (seLinuxStatus.isSuccess) {
-            when (seLinuxStatusFirstLine) {
+            when (seLinuxStatus.output.getOrNull(0)) {
                 AndroidDataSource.SELINUX_STATUS_ENFORCING -> SELinuxState.Mode.Enforcing
                 AndroidDataSource.SELINUX_STATUS_PERMISSIVE -> SELinuxState.Mode.Permissive
                 AndroidDataSource.SELINUX_STATUS_DISABLED -> SELinuxState.Mode.Disabled
                 else -> SELinuxState.Mode.Unknown
             }
         } else {
-            if (seLinuxStatusFirstLine?.endsWith(AndroidDataSource.CMD_ERROR_PERMISSION_DENIED) == true) {
+            if (seLinuxStatus.errors.getOrNull(0)
+                    ?.endsWith(AndroidDataSource.CMD_ERROR_PERMISSION_DENIED) == true
+            ) {
                 SELinuxState.Mode.Enforcing
             } else {
                 SELinuxState.Mode.Unknown

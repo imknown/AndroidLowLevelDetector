@@ -104,7 +104,6 @@ open class MyApplication : Application() {
 
     private fun initShell() {
         Shell.enableVerboseLogging = BuildConfig.DEBUG
-        Shell.enableLegacyStderrRedirection = true
         Shell.setDefaultBuilder(
             Shell.Builder.create()
                 .setFlags(Shell.FLAG_NON_ROOT_SHELL)

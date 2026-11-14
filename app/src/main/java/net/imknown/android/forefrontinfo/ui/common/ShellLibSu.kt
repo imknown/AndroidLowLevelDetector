@@ -15,7 +15,9 @@ import net.imknown.android.forefrontinfo.base.shell.ShellResult
 @ContributesBinding(AppScope::class, binding<IShell>())
 object ShellLibSu : IShell {
     override fun execute(cmd: String): ShellResult {
-        val result = Shell.cmd(cmd).exec()
-        return ShellResult(result.out, result.isSuccess, result.code)
+        val stdout = mutableListOf<String>()
+        val stderr = mutableListOf<String>()
+        val result = Shell.cmd(cmd).to(stdout, stderr).exec()
+        return ShellResult(stdout, result.isSuccess, result.code, stderr)
     }
 }
