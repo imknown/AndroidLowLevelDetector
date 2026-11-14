@@ -1414,10 +1414,203 @@
   下一步动作: 提交本批 20 份文档, 要负责人单独同意; 提交信息按 12 带 trailer  
   (agent, 模型, effort 取值按 12:13 问负责人, 不猜) 与 14:158 的放行理由.  
   另一任务的 `progress.md` 不掺进提交. 提交没点头之前不提交.
+- 2026-11-14 (文档批提交落地, 补记): 收尾文档批的 20 份文件已提交为 `f732b712`  
+  (提交在另一会话完成, trailer `WorkBuddy CN (Hy4, effort: high)`; 18 份 issues-cn 重取证,  
+  本文件的排版修复, `subtask-05.md` 按当前树复核; 放行理由 "看了改动 没什么问题"  
+  已按 14:158 转述进提交信息). 前两条的 "待提交" 就此结清, subtask-04 至此全部关闭.  
+  负责人指示: kotlin-lsp-daemon 任务先不动, 其 `progress.md` 的未提交改动不掺进本任务的提交.  
+  下一步动作: subtask-05 (2b 注册表引擎) 等负责人说开始; 本补记的提交要负责人单独同意.
+- 2026-11-14 (subtask-05 开工确认, 批 1 开工): 负责人确认接续并开工; 六批方案获批  
+  (1 ShellResult.errors, 2 引擎批一次到位: Detector 类型加引擎加 Home 23 条清单,  
+  3 Others 入表, 4 Prop 入表, 5 比对语义入表并锁定, 6 规则文件); 问题清单空 (报告在案);  
+  progress 补记随 subtask-05 首笔入库 (负责人定). 第 0 步复核已做: 报告按 `f732b712` 抽点重核,  
+  全部命中零漂移, 报告不用改. 批 2 要摆开的两点已预告: guard 契约落点, Missing 生产场景 (S2).  
+  ShellLibSu 并发调查本版不做 (第一版全串行已定), 留并发单独成步.  
+  下一步动作: 批 1 实现 (ShellResult 加 errors 字段).
+- 2026-11-14 (批 1 实现: ShellResult 加 errors 字段, 未提交). 按批的方案两处改动:
+  - `base/.../shell/ShellResult.kt`: 加 `errors` 字段 (默认空表, 参数表末位), `output` 的 KDoc
+    改成 "只有 stdout; stderr 一律落 [errors]" (实施期中文, 提交前翻英语).
+  - `app/.../ui/common/ShellLibSu.kt:19`: 构造点补第 4 实参 `result.err`.
+  - `HomeRepository.kt:487` 的无参构造走默认值不动; `ShellDefault` 按报告明写不改
+    (05:36 零调用是故意的).
+  - API 反幻觉核对: `result.err` 经 javap 验 libsu 6.0.0 字节码 (`Shell.Result.getErr()` 在);
+    builder 只设 `FLAG_NON_ROOT_SHELL` (MyApplication.kt:108-110), stderr 默认收集.
+  - 全仓构造点枚举: 恰三处 (ShellLibSu:19, ShellDefault:26, HomeRepository:487), 测试源零引用.
+  - 验证: Gradle 四任务一次跑完 20 分 18 秒 `BUILD SUCCESSFUL`; app 单测 78 + base 4 全绿;
+    lint `no new issues` (baseline 仍 1 error / 6 warnings / 1 hint).
+  - 偏差: analyze-file 未跑 (无运行中的 Studio 实例, 2026-11-07 起同款); Kotlin LSP 未跑
+    (发行版再次到期, 退出码 7, 与 2026-11-02 同款, 要负责人重下发行版解锁).
+  - 批 1 不跑设备黄金对照: 纯字段新增, 行输出路径零变化 (stderr 此前被整个丢弃), 批 2 起设备照旧.
+  下一步动作: 批 1 review 委派 (去处与模型等负责人定); 批 2 等批 1 循环走完.
+- 2026-11-14 (批 1 v1 发起, 跨端): 负责人定跨端独立会话 (两轮询问同选, 第二轮是负责人要求重问后的确认).  
+  已建 spec 目录下 `review/` (带 `.gitignore` 的 `*`, check-ignore 验过), 状态在 `review/state.md`,  
+  提示词 `review-v1-prompt-1539.md`, 发起时 HEAD `f732b712`. v1 为 `等待报告`,  
+  工作树随之冻结 (记录文件除外).
+  下一步动作: 收 v1 报告, 按 13 第 3 步处理发现; 批 2 等批 1 循环走完.
+- 2026-11-14 (批 1 v1 收下, 处理发现): 两份报告 (doubao-work, 模型未自报记 unknown, effort default,  
+  `1552`; workbuddy / claude-opus-6, effort default, `1600`), 元数据块与 `REVIEW-STATUS: done` 齐,  
+  base-head 都是 `f732b712` 与当前一致, 照收. v1 标 `已收`, 工作树解冻. 合并判定:
+  - 第一档一条 (两家合流, 本小姐事实层复核成立): `errors` 恒空, `output` 实为 stdout 与 stderr  
+    的合并, 批 1 目标没落地. 根因: `MyApplication.kt:107` 开着 `enableLegacyStderrRedirection`,  
+    `Shell.cmd()` 等价单列表 `to(List)`, 该路径 `result.err` 恒 null (libsu 上游源码逐句核过);  
+    SELinux 失败分支 (`HomeRepository.kt:701`) 靠合并行为判 Enforcing. 旧注释 "Stdout + Stderr"  
+    才与事实一致, 新注释反而错了. 行为零变化本身成立 (无回归), 但 "stderr 此前被丢弃" 的前提错.  
+    本小姐当时的反幻觉核对只验了 `getErr()` 存在与 `FLAG_NON_ROOT_SHELL`, 没核 `:107` 的开关,  
+    核对有盲区, 认账.
+  - 修法两案以上都站得住又影响走向, 按 13 第 3 步停下来问: A1 真分离加 SELinux 改读 errors  
+    (行为保住), A2 真分离加接受 Unknown (语义变化), B 维持字段与构造点分离归后续.  
+  - 第三档 (需求正文 `#63` 四处过时事实: isSuccess 已查, exitCode 已消费且 `:71` 自相矛盾,  
+    stderr 是合并不是丢弃, `:72-73` 待做句与已定方案冲突) 按规矩负责人先改正文.  
+    `subtask-05.md` 的 `:38` 反判断与 `:110-113`/`:116-119` 打架, 随修法决定后一并修 (带改痕).
+  - 第二档: ShellDefault 本批不动是对的 (启用时一并改); errors 的展示消费与 IShell 假实现测试  
+    归后续; KDoc 翻英语是已登记待办.
+  - 超出范围: 两份 progress.md 记录改动判收进 (记录文件豁免; 另一任务那份维持不掺提交).
+  - 下一步动作: 等负责人定修法, `MyApplication.kt:107` 去留与 `#63` 正文修正授权;  
+    定完实施, 补验证, 发 v2 delta.
+- 2026-11-14 (批 1 A1 定案与实施, 未提交): 负责人定 A1 (真分离, SELinux 失败改读 errors 保反推),  
+  `MyApplication.kt:107` 开关删, `#63` 四处过时事实授权主 agent 只改事实句. 定案依据: 负责人把  
+  enforcing 设备 (Redmi K50, HyperOS, Android 14) 接入令实测, run-as 探针实锤应用域 `getenforce`  
+  报 `Permission denied` (反推是这类 ROM 的常态路径, 主 agent 第一轮判断错误认账); 7 个 output 读点  
+  逐消费者核过, 失败与成功无 stderr 路径的结论与 develop 一致, 唯一差别是修掉 "成功带 stderr 杂音  
+  污染解析" 的潜伏 bug. 改前 APK 已备份 (仓库外). 实施: ShellLibSu 两列表 `to(stdout, stderr)`,  
+  MyApplication 删开关, `detectSELinux` 失败分支读 errors (注释同步), ShellResult KDoc 补  
+  ShellDefault 例外. 文档修正: `#63` 三处 (时点改注, 只动事实句, 问题定义与状态列未动),  
+  subtask-05.md 两处 (现状表反判断修正, 计划改动 5 按 A1 改写, 含落点四处与 ShellDefault 打架消解).  
+  验证: Gradle 四任务 6 分 56 秒全绿, app 78 + base 4, lint 无新问题 (baseline 不变);  
+  analyze-file 与 Kotlin LSP 偏差照旧 (Studio 未开; 发行版过期待负责人重下). 改后主包已装机  
+  (改前包留备份, 黄金对照时同会话改前改后各取一份). 设备黄金对照与 SELinux 行目视等设备的  
+  USB 安装开关 (测试包被 HyperOS 挡: `INSTALL_FAILED_USER_RESTRICTED`, `pm install` 同挡).
+  下一步动作: 负责人开 USB 安装后取改前改后快照对账; 对账绿发 v2 delta.
+- 2026-11-14 (批 1 黄金对照补齐, 设备实测通道恢复): 负责人开了设备的 USB 安装开关, 测试包装上  
+  (`am instrument` 要带 `--user 0`, HyperOS 的 am 不带它报 `Invalid userId -2`; 本地给 adb 的路径  
+  在 `MSYS_NO_PATHCONV=1` 下要写盘符风格, POSIX 风格会 `failed to stat`). 同一会话改前改后各取一份:  
+  先装备份的改前包跑一次, 再装回改后包跑一次, 快照落本地临时目录 (仓库外, 2026-11-06 定).  
+  设备: enforcing 的 Redmi K50 (HyperOS, Android 14). 按键与下标四列对账: 1817 行两份同数,  
+  home 25 + others 42 四列逐字节相同; prop 1750 行仅 7 处 detail 差异, 全在已知活值家族  
+  (`cache_key.display_info` 每进程随机 5 处, `debug.tracing.screen_brightness` 与 `screen_state`  
+  两次运行间屏幕状态变了), color 与 type 零差异, 键多重集相等. **SELinux 行 (home index 21) 两侧同为  
+  "强制模式" 加 NO_PROBLEM**: 严格模式 ROM 上失败分支改读 errors 后结论逐字未变, A1 核心验证实锤.  
+  批 1 验证至此齐: 单测 78 加 base 4, Gradle 四任务, lint, 黄金等价. 欠: 手工步 (三页各翻一遍,  
+  中途刷新或切 Tab 打断一次) 等负责人有空做. 
+  下一步动作: 发 v2 delta (带两份 v1 报告路径, 应改清单, 两轮之间的修复含黄金数据), 工作树冻结.
+- 2026-11-14 (批 1 v2 发起, 跨端 delta): 提示词 `review-v2-prompt-1726.md`, 带两份 v1 报告路径,  
+  合并应改清单八项, 两轮之间的修复 (A1 四文件加两份文档修正) 与验证证据 (Gradle 四任务, 黄金对照,  
+  实测依据). 发起时 HEAD `f732b712` (只改工作树). v2 为 `等待报告`, 工作树随之冻结 (记录文件除外).  
+  下一步动作: 收 v2 报告, 按 13 第 3 步处理发现; 手工步 (三页各翻一遍加中途刷新或切 Tab 打断一次)  
+  欠着, 等负责人有空做.
+- 2026-11-14 (批 1 Kotlin LSP 验证补齐, 通道恢复): 负责人更新了 Kotlin LSP 发行版 (ILS-263.7084.0  
+  升到 271.2085.0), 通道复活. 批 1 四份改动 `.kt` 逐一跑诊断: `ShellResult.kt`, `ShellLibSu.kt`,  
+  `MyApplication.kt`, `HomeRepository.kt` 全部 CLEAN (0 items). 读法注意: 旧 build 下 HomeRepository  
+  有 3 到 4 条既有 DestructuringDeclaration 建议族, 新 build 不再报, 判为检查集随 server build 变化,  
+  不是代码变化. analyze-file 偏差照旧 (Studio 未开). 归后续: 10-分析细则 的能力盘点要按新 build 重探  
+  (rename, quickfix, type hierarchy 的重探触发条件就是 server build 升级), 10 里 "最新 release 即本  
+  build v263.7084.0" 一句已过期; 规则文件不在冻结豁免内, 改动等解冻后做, 先记在此.
+  下一步动作: 收 v2 报告, 按 13 第 3 步处理发现; 手工步欠着; 解冻后结 10 的重探与改写.
+- 2026-11-14 (更正: 本日早前的四份 LSP CLEAN 作废, LSP 通道在本仓对新 build 不可用): 负责人问 warmup  
+  补预热, 连环挖出三层. 一, `warmup.py` 默认找无扩展名的 `intellij-server`, 新发行版是 `.exe`, 第一发  
+  空跑 (退出码 0 是管道 tail 的, 脚本实际 `sys.exit`; 以后要看退出码就别套 tail). 二, `--server` 指对  
+  exe 后真跑, 但 Gradle 导入炸: `generateFirebaseReleaseComposePreviewRunfiles` 建任务抛  
+  `IllegalStateException` (Compose Preview 要求该 variant 单测开启, 实际被 beforeVariants 关了).  
+  AGP 9.5 已知 bug (issuetracker 572377862, P3): 该任务对单测被关的 variant 必炸, 炸在建任务,  
+  `enabled = false` 与 `-x` 都救不了. 三, 本仓项目侧没有任何 `beforeVariants`, 机器级 init.d 也没有,  
+  关单测的手判定是 IDE 同步自己的 (ILS 271 的新功能索要 runfiles 数据触发; 正常 `./gradlew` 构建不建  
+  这个任务, 今日两次全绿可证). `kotlin-lsp-selfcheck.js` 实锤: 哨兵报 CLEAN, 判定同步静默失败,  
+  该会话所有诊断不可信; 10 的坑单新增一种形态 (不止 "JDK 低于工具链", 还有这条 AGP 撞车).  
+  处置候选已摆负责人: 忍到 AGP 修 / 重下 263 回退 / 项目侧硬开 FirebaseRelease 单测 (大概率无效,  
+  冻结期也不能动构建文件, 不推荐). 263 已被原位更新覆盖, 回退要重下.
+  下一步动作: 等负责人定 LSP 通道方向; v2 报告照收; 解冻后 10-分析细则 更新清单再加两条 (.exe 预热坑,  
+  假 CLEAN 新形态与自检义务).
+- 2026-11-14 (LSP 通道在 AGP canary 下真正复活): 负责人定试 TOML 里停着的 canary (`9.6.0-alpha03`),  
+  `android.toml:7` 一处切齐, 按令不提交. 自检 PASSED (sync 真 live, sentinel 警告如实回来; 第一发死在  
+  `bcpkix-jdk18on-1.86.jar` 从 Maven Central 下载超时, 本机链路老毛病, 重试即过; build-logic 对 canary  
+  编译无碍); 正式 warmup 导入 SUCCESS 加全量索引; 四份改动 `.kt` 真诊断: 三份 CLEAN, HomeRepository  
+  0 ERROR 加 4 条既有 DestructuringDeclaration (92/167/387/391, 全在 A1 区域外, 旧 build 同款族).  
+  坑记两条: canary 构件拉取慢 (超时重试可过); warmup.py 在导入 SUCCESS 后仍打 "Server exited with  
+  code 1", 判读以后置自检为准. AGP canary 下 Gradle 四任务复跑中 (批 1 证据要在现状树上站得住);  
+  复跑绿则重发 v2 (提示词注明 AGP 一笔是负责人令的 LSP 试验, 不属批 1, 不审不报不提交).
+  下一步动作: 等 Gradle 复跑结果; 绿则重发 v2 并解冻等报告.
+- 2026-11-14 (canary 树复跑全绿, v2 重发): Gradle 四任务在 canary 树上 `BUILD SUCCESSFUL`  
+  6 分 20 秒 (app 78 + base 4 测试新鲜出炉, lint 无新问题). 首发曾 BUILD FAILED, 但日志被主 agent 的  
+  管道 tail 截没 (后台长构建不套 tail, 教训记此), 失败原因成了无头案; 全量落盘重跑全绿, 判偶发  
+  (疑点: 与刚被强杀的 LSP server 在 Windows 文件锁上撞车), 再犯就抓全量日志. AGP canary 不改 app  
+  运行时逻辑, 黄金对照不重跑 (对照物是 9.5.1 树上的行为, A1 等价结论不受工具链影响), 记录在案.  
+  v2 已重发: 提示词 `review-v2-prompt-1843.md` (带 AGP 排除条款: canary 一笔不审不报不提交),  
+  发起 HEAD `f732b712`, v2 (重发) 为 `等待报告`, 工作树随之冻结 (记录文件除外).
+  下一步动作: 收 v2 报告, 按 13 第 3 步处理发现; 手工步欠着; 提交时 `android.toml` 的 canary 一笔  
+  绝不掺进任何提交.
+- 2026-11-14 (LSP 节奏定案: 批量查一次当临时招): 负责人嫌单次 LSP 太慢 (23 秒起步税是结构性的,  
+  kotlin-lsp-daemon spec 的目标就是治它, 实现未开始, 仍挂起). 定: 批 2 起 LSP 验证降为**批次末尾一发**  
+  `kotlin-lsp-plan.js` 批量 `<file>:diagnostics` (一次 server 会话查全部改动文件, 起步税只交一遍,  
+  10 契约在案: "一次运行收一批查询, 同一次 server 会话里全查完"); 逐文件多连跑的旧做法停用.  
+  批 1 已跑完的不补. daemon spec 收尾后是否插队, 等批 1 关闭后另定.
+  下一步动作: 不变, 收 v2 报告.
+- 2026-11-14 (批 1 v2 收下, 处理发现): 两份齐 (doubao-work, 模型未自报, default, `1900`;  
+  workbuddy / claude-opus-6, default, `1904`), 元数据与 `REVIEW-STATUS: done` 齐, base-head  
+  `f732b712` 与当前一致, 照收. v2 (重发) 标 `已收`, 工作树解冻. 合并判定 (细节在 state.md):
+  - 代码侧两家合流全部成立: WorkBuddy 独立重走 libsu 全链路 (PendingJob, JobTask, StreamGobbler,  
+    ResultImpl 加字节码常量池) 钉死 `errors` 真有货, v1 根因消除; 七个 `output` 消费点复核无恙;  
+    删开关后全仓无隐式单列表残留.
+  - 分歧在文档档位, 按 11 阶梯: N-1 (`#63` 第 5 条自相矛盾) 事实层坐实, 但撞上前裁定 (整条归横向  
+    回顾) 与今日授权边界, 两种修法都动需求正文, 摆负责人定; N-2 (改痕与时点注违 07) 采 Doubao,  
+    批 2 v3 的 F1 先例同判, 改痕与时点注全剥, 就地写成当下真话; N-3 (行号指不到) 两家同报, 修;  
+    N-4 (落地与落点, 08 改名表) 采; N-5 / F3 / F4 (措辞与注释精度) 全修.
+  - 已修: `ShellResult.kt` KDoc 两处 (宾语补齐, 例外同上), `HomeRepository.kt` 注释删 pre-2b 历史句  
+    (历史归 git), subtask-05.md 现状表与计划改动 5 重写 (去改痕, 按当下树, 术语照现名), `#63` 第 3 条  
+    与修复方向同款去痕. 注释与文档 only, 按 11:15 跳过构建档.
+  - 第二档归后续: `IShell` 假实现补一条 SELinux 推断单测; issues-cn `README.md:347` 与 `plan.md:40`  
+    的不一致归任务结束横向回顾.
+  - 停止条件: WorkBuddy 判成立, Doubao 判修完 N-1..N-3 即停, 实质汇合为修完本轮即停;  
+    v3 按 13:211 交负责人.
+  - 超出范围: E1 本任务 progress.md 判收进 (记录豁免), E2 另一任务 progress.md 维持不掺提交.
+  下一步动作: 等负责人定 `#63` 第 5 条处置与 v3 排不排; 两条新规则已落 (见下条).
+- 2026-11-14 (两条规则落进规则文件, 负责人令): 一, LSP 批末一发批量查询的临时规则进 10-分析细则  
+  (`kotlin-lsp-daemon` 落地前有效; plan.js 批量 `diagnostics` 一条命令查全部改动文件, 逐文件多连跑  
+  停用, 跳过记偏差, 哨兵自检义务不豁免), AGENTS.md 索引第 10 行加标记; 二, reviewer 落盘报告前先  
+  自检一轮 (证据逐条回源, 应改清单重枚举), 与主 agent 自审同款, 进 11 与 14 (14 的生成提示词义务  
+  清单加一条, 以后的提示词都会带上). 两条属新单元, 提交时单独成笔, 不掺批 1.
+  下一步动作: 等负责人定 `#63` 第 5 条处置与 v3 排不排.
+- 2026-11-14 (第 5 条回退原文; v3 发起): 负责人定第 5 条**回退原文, 维持整条延后** (撤销主 agent  
+  撞进禁区的改写, 矛盾消除, 整条仍归任务结束横向回顾); 第 3 条与修复方向的去痕改写保留. v3 delta  
+  已发起: 提示词 `review-v3-prompt-1930.md` (HEAD `f732b712`), 首个带上 reviewer 落盘前自检义务的  
+  提示词; 排除条款扩到四份规则文件 (AGENTS.md, 10, 11, 14 的两条新规则) 与 AGP 一笔, 均不审不报  
+  不掺批 1. v3 为 `等待报告`, 工作树随之冻结 (记录文件除外).
+  下一步动作: 收 v3 报告, 按 13 第 3 步处理发现; 手工步欠着; 放行与拆笔提交时, canary 与规则文件  
+  四份绝不掺进批 1 的提交.
+- 2026-11-14 (批 1 v3 收下, 处理发现, review 循环待收口): 两份齐 (doubao-work, 模型未自报, default,  
+  `1941`; workbuddy / claude-opus-6, default, `1942`), 元数据与 `REVIEW-STATUS: done` 齐, base-head  
+  `f732b712` 与当前一致, 照收. v3 标 `已收`, 工作树解冻. 合并判定:
+  - v2 五项里四项修到位; 第 2 项判部分修, 剩两处 (`subtask-05.md:106` 日期标签加未定义的 A1,  
+    `:109-111` 时点注前提在当下树上为假) 加措辞一批 (F2 old path's reading, F3 例外同上指代,  
+    F4 死配置, V3-3 无先行词, V3-4 句尾否定, V3-5 新造比喻), 全部照修已落: 已定行剥标签与 A1  
+    只留当下成立的 libsu 语义, 其余逐条落 (注释与文档 only, 按 11:15 跳构建档).
+  - WorkBuddy 的落盘前自检节首次真实运转 (证据回源表, 应改清单重枚举, 机械扫描), 新义务有效.
+  - 第 5 条回退经 WorkBuddy 逐字比对与 HEAD 一致; 它与修复方向的矛盾是裁定接受的已知状态, 本轮不报.
+  - 机械自查代 delta: 改痕标记, 死配置, pre-2b, 例外同上, old path's reading, 不是边角, 落地, 落点,  
+    实施时全部零残留; 剩余日期标签全在两家点名不动的旧段; A1 唯一命中是 `#63` 图的节点编号.
+  - 停止条件: 两家判修完即停; v4 排不排交负责人 (13:211).
+  下一步动作: 等负责人定 v4 排不排; 定完走第 4 步放行与第 5 步拆笔提交 (注释翻英语; canary 与  
+  规则文件四份各单独成笔, 绝不掺批 1).
+- 2026-11-14 (v4 跳过, review 循环收口; 报告格式新规则): 负责人定 "可以停止" (偏差记 13:217: 修的  
+  全是文字活, 机械自查全零残留). 循环 v1 到 v3 共三轮六份报告收口. 负责人同批定新规则: reviewer  
+  报告最前与最后要直观给停止条件判定 — 已落 14 的收报告一节 (元数据块后第一行与 `REVIEW-STATUS:  
+  done` 前最后一行各一条 `STOP-CONDITION: met|not met (<原因>)`, 正文停止条件节照旧给理由) 加  
+  AGENTS.md 索引第 14 行; 以后的提示词照抄.
+  下一步动作: 第 4 步等负责人看 diff 放行 (留一句放行理由); 第 5 步拆笔提交等单独同意与 trailer  
+  (注释先翻英语); review 目录按 14 待负责人点头后整体删除.
+- 2026-11-14 (批 1 注释翻译完成, diff 定稿): `ShellResult.kt` 的两行中文 KDoc 翻成英语  
+  (stdout/stderr 契约加 ShellDefault 例外), 五份涉码文件 grep 中文零残留; 此后工作树不再有计划内  
+  改动, 负责人看到的 diff 即将来提交的 diff (放行即所提). 
+  下一步动作: 等负责人手工步, 放行 (留一句理由), 拆笔同意与 trailer, review 目录删除点头.
+- 2026-11-14 (批 1 第 4 步放行): 最终树出包装机 (无线 TLS 通道, mDNS 运输号), 主界面拉起并确认  
+  `topResumedActivity`; 负责人真机过目后答复 "看完了 没发现问题" (原话在案, 照 14 转述进 spec 记录笔  
+  的提交信息), 手工步 (三页加中途打断) 按这句话视为已结. 第 4 步完成, 第 5 步的拆笔同意与 trailer  
+  另行等负责人.
+  下一步动作: 等负责人拆笔方案确认, trailer (12:13 不猜), review 目录删除点头; 然后逐笔提交  
+  (canary 不提交).
 - 各子任务状态: subtask-01 已关闭; subtask-02 已提交并关闭;  
-  subtask-03 已提交并关闭; subtask-04 进行中 (批 1 ~ 7 已提交关闭, 规则文件两件已提交,  
-  progress 排版与 issues-cn 重取证已做完, 文档批三轮 review 已收, 第 4 步已放行,  
-  review 目录已删, 待提交);  
+  subtask-03 已提交并关闭; subtask-04 已提交并关闭 (批 1 ~ 7 已提交关闭, 规则文件两件已提交,  
+  收尾文档批三轮 review 已收, 第 4 步已放行, review 目录已删,  
+  20 份文档已提交为 `f732b712`, 归后续清单留任务结束横向回顾);  
   subtask-05 报告已按当前树复核, 实现未开始; subtask-06 报告已出, 实现未开始.
 - 未查清: 无.
 - 挂起项: 无.

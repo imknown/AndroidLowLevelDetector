@@ -35,7 +35,7 @@
 | Prop 条目清单 | PropViewModel.kt:28-42 | 5 个来源, 行数随系统属性数量变 |
 | 串行执行 | HomeViewModel.kt:215; 另两页同样 | 一个 `withContext(IO)` 块跑完所有条目 |
 | 取消 | 全仓只有 `loadJob` 与设置页用 `job?.isActive` 去重 | 检测块内无取消检查 |
-| shell 实现 | ui/common/ShellLibSu.kt:19; base/src/main/.../ShellResult.kt:4 | 只传 `result.out`; 注释写 "Stdout + Stderr", 与实现不符 |
+| shell 实现 | ui/common/ShellLibSu.kt:19; base/src/main/.../ShellResult.kt:4 | 只传 `result.out`; stderr 经 legacy 重定向混进其中, 注释 "Stdout + Stderr" 与实际一致 |
 | 比对语义 | ui/home/repository/HomeRepository.kt:235 (魔法算术 `250205 - 250101`), :258-278 (`detectSecurityPatch` 与 `getSecurityPatchYearMonth`), :530-572 (`detectMainline`); `isBuildIdDateHigherThanConfig` 从 :196 起 | 各写各的, 无测试 |
 | 三态类型 | ui/base/detect/DetectResult.kt | `Missing` 在测试与 `HomeModelMapper` 里被消费, main 源码无生产者 (归本子任务) |
 
@@ -103,20 +103,26 @@
 
 1. shell 的 stderr.
 
-   - **已定加字段** (负责人 2026-10-29): `ShellResult` 增加 `errors` 字段, `output` 的语义保持"只有 stdout",  
-     注释随之改成与实际一致. 解析层不受影响, 失败可归因.
+   - **已定**: `ShellResult` 加 `errors` 字段, stderr 单独存放, `output` 只剩 stdout;  
+     解析层不受影响, 失败可归因.  
+     `Shell.cmd()` 的单列表路径不填 `result.err`, 只加字段不改调用方式会让 `errors` 恒为空,  
+     所以本步连同调用方式一起改.
    - 被否掉的: 把 stderr 合并进 `output`. 改动最小, 但所有遍历 `output` 的解析  
      (getprop 的 `[k]: [v]` 折叠, `/proc/mounts` 的六列切分) 都要处理混进来的行.
-   - 落点共三处, 一个都不能漏:
+   - 改四处, 一处都不能漏:
      - `base/.../base/shell/ShellResult.kt`: 加 `errors` 字段, 改 `output` 的注释.
-     - `app/.../ui/common/ShellLibSu.kt:19`: 构造点一, 位置参数要跟着补.
-     - `base/.../base/shell/impl/ShellDefault.kt:26`: 构造点二.
+     - `app/.../ui/common/ShellLibSu.kt`: 构造点改两列表 `Shell.cmd(cmd).to(stdout, stderr)`.
+     - `app/.../base/MyApplication.kt`: 删 `Shell.enableLegacyStderrRedirection = true`  
+       (两列表路径下它不再起作用).
+     - `app/.../ui/home/repository/HomeRepository.kt` 的 `detectSELinux` 失败分支: 改读 `errors` 首行,  
+       "Permission denied 反推 Enforcing" 的结论保留 (实测严格模式 ROM 上应用域 `getenforce`  
+       报 `Permission denied` 而失败是常态, 结论与 develop 一致).
    - 另有无参构造 `ShellResult()` 在 `ui/home/repository/HomeRepository.kt:487` (API 低于 P 的守卫分支). 新字段带默认值,  
      这处不用改.
    - `ShellDefault` 的处置明写: 它按 `isSuccess` 二选一读流 (`:20-21`), 失败时把 stderr 塞进 `output`,  
      与新契约"`output` 只有 stdout"相反. 它是零调用实现, [05-代码规则](../../agents-cn/05-代码规则.md):36 写明  
      "现在没有调用方, 这是故意的", 并且已经记着"将来真要启用它, 先修那个死锁". 所以本步**不改**,  
-     也不给它加 `errors`. 这一句留在报告里, 免得实施的人顺手把它改坏.
+     也不给它加 `errors`; `ShellResult` 的 KDoc 注明它是例外.
 
 1. 规则文件.
 
