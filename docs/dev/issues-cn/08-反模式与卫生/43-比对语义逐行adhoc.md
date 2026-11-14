@@ -5,7 +5,7 @@
 > 返回 [README 索引](../README.md) · [8 · 反模式与卫生](../README.md#8--反模式与卫生).
 
 **严重程度: P1(🟡) | 修复难度: 中 (特征测试锁定, 注册表实现时迁入注册表条目)**  
-**影响文件: `HomeRepository.kt`**
+**影响文件: `ui/home/repository/HomeRepository.kt`**
 
 约 12 个 Home 行已经对参考 json (`lld.json`) 做了比对, 但各写各的, 整体没法验证, 也没有测试:  
 android, sdkExtension, buildId,  
@@ -14,7 +14,7 @@ android, sdkExtension, buildId,
 
 三处最明显的 ad hoc 写法, 都在 `HomeRepository`:
 
-- `HomeRepository.isDateHigherThanConfig()` (`detectBuildId()` 内的局部函数)  
+- `HomeRepository.isBuildIdDateHigherThanConfig()` (`:196` 的私有方法)  
   拿预览版偏移做魔法算术: `250205 - 250101`, 偏移加到  
   `myBuildIdDateIntOrNull` 上再和 `lldFirstBuildIdDateIntOrNull` 比.
 - `HomeRepository.detectMainline()` 靠补后缀的字符串比较躲版本号位数问题:  
@@ -51,8 +51,9 @@ When 退一步比年月, getSecurityPatchYearMonth 以 substringBeforeLast('-') 
 Then 设备侧取出的是年份 2026, `"2026"` >= `"2026-09"` 也为假  
 And 两次比较都错, 完全同期的设备被判红
 
-测试侧: 没有任何测试碰 `HomeRepository`. 有实际内容的测试类有两个: `base/src/test/.../base/extension/DateTimeExtTest.kt`, 测的是  
-`isLldDatetime()` 的格式契约; `app/src/test/.../ui/base/list/MyModelTest.kt`, 测 `MyModel` 的 key 映射与默认值 (随 1b 加的测试栈).  
+测试侧: `app/src/test` 与 `base/src/test` 合计 21 个测试类, 82 个方法;  
+`app/src/test/.../ui/home/repository/` 下有 16 个 `Detect*Test` 直接测 `HomeRepository` 的检测方法,  
+`DateTimeExtTest` 测 `isLldDatetime()` 的格式契约, `MyModelTest` 测 `MyModel` 的 key 映射与默认值.  
 两个模板 `ExampleUnitTest` 已删.
 
 **处理**: 比较语义散在各行这件事, 需要先用特征测试把现在的行为原样锁住, 再谈重新设计,  

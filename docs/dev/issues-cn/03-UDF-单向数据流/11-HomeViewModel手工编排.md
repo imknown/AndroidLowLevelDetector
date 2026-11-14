@@ -12,9 +12,9 @@
 
 首页条目的**顺序**这份 "数据知识" 硬编码在 ViewModel 里:  
 `HomeViewModel.collectModels()` 经 `tryDetectOnline()` / `tryDetectOffline()` 落到 `HomeViewModel.detect()`,  
-后者逐行手工累加, 全函数共 **23 行** `tempModels += homeRepository.detectXxx(...)` (23 个调用,  
-但 `detectSecurityPatches()` 与  
-`detectTrebleAndGsiCompatibility()` 各返回 2 个模型):
+后者逐行手工累加, 全函数共 **23 行** `homeModelMapper.to...Model { homeRepository.detect...() }` (23 个调用,  
+但 `toSecurityPatchModels()` 与  
+`toTrebleAndGsiModels()` 各产 2 行):
 
 ```kotlin
 private suspend fun detect(
@@ -38,8 +38,8 @@ private suspend fun detect(
 }
 ```
 
-同时数据更新走**下标寻址**: `BaseListViewModel.updateModelDetail(targetIndex: Int, newDetail: String)` 是公开 API,  
-调用方要先自己算下标 (`HomeViewModel.payloadOutdatedTargetSdkVersionApk()`):
+数据更新原先走**下标寻址**: `BaseListViewModel.updateModelDetail(targetIndex: Int, newDetail: String)` 当时是公开 API,  
+调用方原先要先自己算下标 (`HomeViewModel.payloadOutdatedTargetSdkVersionApk()`):
 
 ```kotlin
 val list = modelsStateFlow.value ?: return
@@ -71,20 +71,21 @@ flowchart TD
 
 ## 直接原因
 
-"首页有哪些条目, 什么顺序" 是仓库 (数据) 的知识, 却由 ViewModel 逐行手抄; `updateModelDetail` 暴露下标参数,  
+"首页有哪些条目, 什么顺序" 是仓库 (数据) 的知识, 却由 ViewModel 逐行手抄; `updateModelDetail` 原先暴露下标参数,  
 把 "如何定位一个条目" 的内部表示 (List 下标) 泄漏给了子类: 下标取自一次 `modelsStateFlow.value` 快照,  
-`updateModelDetail()` 改的却是它被调用那一刻的最新列表, 中间若另一次加载完成, 补丁就打到了别的条目上.
+`updateModelDetail()` 改的却是它被调用那一刻的最新列表, 中间若另一次加载完成, 补丁就打到了别的条目上.  
+现在签名收 `MyModelType` (`BaseListViewModel.kt:79`), 定位在 `modelsStateFlow.update` 一个原子块里完成.
 
-更深一层: 条目身份同时存在三套标识:  
+更深一层: 条目身份现在有两套标识:  
 `MyModelListScreen` 的 `LazyColumn` 按 `key = { it.key }` 认条目 (值是 `MyModel.key`,  
 即标题资源 ID 的字符串形式或原始标题文案),  
-补丁按 `MyModelType` 枚举匹配, 定位按列表下标. 同一个东西有三套不同的标识.
+补丁与定位都按 `MyModelType` 枚举匹配 (`BaseListViewModel.kt:79`).
 
 ## 根本原因
 
 基类 API 按实现细节 (下标) 而非语义 (哪个条目) 设计; 编排逻辑没有放到拥有列表知识的那一侧. 两处合起来,  
-加一个首页条目要同时改 ViewModel (加一行编排) 和 Repository (加一个方法),  
-且顺序知识从此有两份可能的真相 (仓库方法顺序 vs ViewModel 编排顺序).
+加一个首页条目要按 [06-检测条目](../../../agents-cn/06-检测条目.md) 改取数方法, 领域对象, mapper,  
+ViewModel 调用, 字符串与目录, 且顺序知识从此有两份可能的真相 (仓库方法顺序 vs ViewModel 编排顺序).
 
 ## 修复方案
 

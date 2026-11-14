@@ -1,6 +1,7 @@
 # subtask-05 2b 注册表引擎
 
-> **状态**: living. 事实核对时间 2026-10-27, 代码在 `502a6eb7`.  
+> **状态**: living. 事实核对时间 2026-11-12, 代码在 `2e49e217` (2a 领域化已提交).  
+> 上一次核对 2026-10-27, 代码在 `502a6eb7`.  
 > 任务级计划见 [plan.md](plan.md); 流程见 [13-任务工作流](../../agents-cn/13-任务工作流.md).
 
 ## 目标
@@ -10,13 +11,14 @@
 
 ## concept primer
 
-- 现在"有哪些检测项, 什么顺序"写在三个函数体里: `HomeViewModel.detect()` 里 23 个检测调用加一次取挂载  
-  (HomeViewModel.kt:211-241), `OthersViewModel.collectModels()` 的 37 次追加,  
-  `PropViewModel.collectModels()` 的 5 个来源.
+- 现在"有哪些检测项, 什么顺序"写在三个函数体里: `HomeViewModel.detect()` 里 23 个经 `HomeModelMapper` 的检测调用加一次取挂载  
+  (HomeViewModel.kt:210-256), `OthersViewModel.collectModels()` 的 37 次追加  
+  (OthersViewModel.kt:30-100), `PropViewModel.collectModels()` 的 5 个来源  
+  (PropViewModel.kt:28-42). Home 的仓库方法返回 `DetectResult<领域对象>`, `MyModel` 由 mapper 产出.
 - 整段检测跑在**一个** `withContext(Dispatchers.IO)` 块里, 检测方法本身都不是 suspend 函数  
-  (HomeViewModel.kt:211). 协程只在挂起点观察取消, 所以开跑之后取消要等整块返回.
+  (HomeViewModel.kt:215). 协程只在挂起点观察取消, 所以开跑之后取消要等整块返回.
 - 有些数据被多个条目共用: `lld` 是 Home 十几个条目的输入, `mounts` 被 SAR 与 APEX 两行共用  
-  (HomeViewModel.kt:221-230), 设置里的排序开关只影响一行.
+  (HomeViewModel.kt:227-230, :238), 设置里的排序开关只影响一行.
 - 有界并发不能建在共享的 shell 之上而不查它是否可并发调用: `IShell` 的实现 `ShellLibSu`  
   (ui/common/ShellLibSu.kt:16) 是单例对象, 底层 libsu 的实例能否并行执行命令, 本报告不下结论,  
   列为开工前必查项.
@@ -28,20 +30,21 @@
 
 | 项 | 位置 | 现在是什么样 |
 |---|---|---|
-| Home 条目清单 | HomeViewModel.kt:211-241 | 23 个检测调用加一次取挂载, 写在函数体里 |
-| Others 条目清单 | OthersViewModel.kt | 37 次 `tempModels +=`, 6 次包在版本判断里 |
-| Prop 条目清单 | PropViewModel.kt | 5 个来源, 行数随系统属性数量变 |
-| 串行执行 | HomeViewModel.kt:211; 另两页同样 | 一个 `withContext(IO)` 块跑完所有条目 |
+| Home 条目清单 | HomeViewModel.kt:210-256 | 23 个 `homeModelMapper.to...Model { homeRepository.detect...() }` 调用加一次取挂载, 写在函数体里 |
+| Others 条目清单 | OthersViewModel.kt:30-100 | 37 次 `tempModels +=`, 其中 6 行包在两个 SDK 版本判断里 (:43, :77) |
+| Prop 条目清单 | PropViewModel.kt:28-42 | 5 个来源, 行数随系统属性数量变 |
+| 串行执行 | HomeViewModel.kt:215; 另两页同样 | 一个 `withContext(IO)` 块跑完所有条目 |
 | 取消 | 全仓只有 `loadJob` 与设置页用 `job?.isActive` 去重 | 检测块内无取消检查 |
-| shell 实现 | ui/common/ShellLibSu.kt:16; base/src/main/.../ShellResult.kt | 只映射 `out`; 注释说 `output` 是 stdout 加 stderr, 与实现不符 |
-| 比对语义 | HomeRepository.kt:237 (魔法算术 `250205 - 250101`), :298 (`getSecurityPatchYearMonth`), :616-668 (`detectMainline`); `isDateHigherThanConfig` 从 :199 起 | 各写各的, 无测试 |
+| shell 实现 | ui/common/ShellLibSu.kt:19; base/src/main/.../ShellResult.kt:4 | 只传 `result.out`; 注释写 "Stdout + Stderr", 与实现不符 |
+| 比对语义 | ui/home/repository/HomeRepository.kt:235 (魔法算术 `250205 - 250101`), :258-278 (`detectSecurityPatch` 与 `getSecurityPatchYearMonth`), :530-572 (`detectMainline`); `isBuildIdDateHigherThanConfig` 从 :196 起 | 各写各的, 无测试 |
+| 三态类型 | ui/base/detect/DetectResult.kt | `Missing` 在测试与 `HomeModelMapper` 里被消费, main 源码无生产者 (归本子任务) |
 
 ## 计划改动
 
 1. 条目清单变成数据.
 
    - 一条 `Detector` 数据: 稳定 id, 标题 (资源 ID 或原始标题), 该条目的三态语义说明,  
-     需要的共享输入 (无 / lld / mounts), 执行函数 (返回 subtask-04 的领域类型).
+     需要的共享输入 (无 / lld / mounts), 执行函数 (返回 `DetectResult<领域对象>`, 2a 已实现).
    - 三页各一份清单, 顺序就是展示顺序. 增删条目只改清单一处.
 
 1. 执行模型.
@@ -89,10 +92,10 @@
    - 特征测试先照现状写, 但有三个已知错例不能原样锁. 处置已定 (负责人 2026-10-29):  
      第一个在本步修并锁正确行为, 第二个锁现状并另立条目, 第三个只补注释与测试说明:
      - `detectSecurityPatch`: 设备报 `YYYY-MM` 时, `substringBeforeLast('-')` 取到的是年份  
-       (HomeRepository.kt:298 与调用处 :273-296), 完全同期的设备被判红.
+       (ui/home/repository/HomeRepository.kt:277-278 与调用处 :258-266), 完全同期的设备被判红.
      - `detectMainline`: 左边是包的 `versionName` (任意格式), 右边是库里的日期  
-       (HomeRepository.kt:616-668), 量纲不同, `"3.1"` 这类版本恒判已更新.
-     - `detectBuildId`: 预览版偏移做魔法算术 `250205 - 250101` (HomeRepository.kt:237).  
+       (ui/home/repository/HomeRepository.kt:530-572), 量纲不同, `"3.1"` 这类版本恒判已更新.
+     - `detectBuildId`: 预览版偏移做魔法算术 `250205 - 250101` (ui/home/repository/HomeRepository.kt:235, `isBuildIdDateHigherThanConfig`).  
        这一处不一定错, 但要在测试里把偏移的来历写清楚, 否则以后没人敢改.
    - 不锁的范围: [#67](../../dev/issues-cn/05-稳定性与错误处理/67-检测规则方向存疑.md) 涉及的 VNDK 与 APEX 判定,  
      [#66](../../dev/issues-cn/05-稳定性与错误处理/66-标题与数据源不符.md) 的 binder 行. 这两处已定暂缓,  
@@ -108,10 +111,10 @@
      - `base/.../base/shell/ShellResult.kt`: 加 `errors` 字段, 改 `output` 的注释.
      - `app/.../ui/common/ShellLibSu.kt:19`: 构造点一, 位置参数要跟着补.
      - `base/.../base/shell/impl/ShellDefault.kt:26`: 构造点二.
-   - 另有无参构造 `ShellResult()` 在 `HomeRepository.kt:568` (API 低于 P 的守卫分支). 新字段带默认值,  
+   - 另有无参构造 `ShellResult()` 在 `ui/home/repository/HomeRepository.kt:487` (API 低于 P 的守卫分支). 新字段带默认值,  
      这处不用改.
    - `ShellDefault` 的处置明写: 它按 `isSuccess` 二选一读流 (`:20-21`), 失败时把 stderr 塞进 `output`,  
-     与新契约"`output` 只有 stdout"相反. 它是零调用实现, [05-代码规则](../../agents-cn/05-代码规则.md):31 写明  
+     与新契约"`output` 只有 stdout"相反. 它是零调用实现, [05-代码规则](../../agents-cn/05-代码规则.md):36 写明  
      "现在没有调用方, 这是故意的", 并且已经记着"将来真要启用它, 先修那个死锁". 所以本步**不改**,  
      也不给它加 `errors`. 这一句留在报告里, 免得实施的人顺手把它改坏.
 
@@ -120,11 +123,14 @@
    - [04-架构](../../agents-cn/04-架构.md) 补执行模型的说明. 本子任务新增的抽象属于架构决定, 不记下来,  
      下一个会话会重新设计一遍.
    - [06-检测条目](../../agents-cn/06-检测条目.md) 整份流程要重写, 因为它是围绕"改函数体"写的:  
-     第 2 步的"加一个 `detect...()` 方法, 返回 `MyModel`" (:9), 第 3 步的"调用顺序决定列表顺序" (:12-13),  
-     第 5 步的"目录里的顺序就是调用顺序" (:17). 清单做出来之后, 加条目是往清单加一条数据, 顺序由清单决定.
+     第 2 步现在按页分开, Home 写 `HomeRepository` 返回 `DetectResult<领域对象>` 加 `HomeModelMapper` (:9-13),  
+     第 3 步写"在功能 ViewModel 构建列表的地方调用它"与"调用顺序决定列表顺序" (:18-21),  
+     第 5 步写"目录里的顺序就是第 3 步的调用顺序" (:23-25). 清单做出来之后,  
+     加条目是往清单加一条数据, 顺序由清单决定.
    - 新增一条不变式要写进规则文件与 [检测条目目录](../../requirements-cn/04-检测条目目录.md):  
-     目录按条目 id 排, 代码里的清单按执行顺序排, 两份有序表必须一致. 这条现在哪都没有,  
-     不写下来的话, 下一个会话加条目时会把两个顺序搞岔.
+     目录按条目 id 排, 代码里的清单按执行顺序排, 两份有序表必须一致.  
+     目录现在只写了 id 与"一屏的列表顺序就是那个功能 ViewModel 构建列表的顺序" (:19-23),  
+     清单与目录一致这句话还没有明文. 不写下来的话, 下一个会话加条目时会把两个顺序搞岔.
 
 ## 有意不改
 

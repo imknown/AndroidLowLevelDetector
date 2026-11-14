@@ -46,9 +46,9 @@ list.forEach {
 数量随 Android 版本与 ROM 增减).  
 Prop 页一次加载 = 与常量数等量的**串行跨进程 binder 查询**, 外加两轮反射. 具体次数要在真机上量才知道 ("几百"  
 是按 SDK 常量数给出的量级, 不是实测值); 串行次数直接乘在加载时间上,  
-低端机上最吃紧. 整段跑在 `PropViewModel.collectModels()` 的 `withContext(Dispatchers.Default)` 里,  
-于是还与 [#16](../archived/04-并发与调度/16-阻塞调用跑在CPU线程池.md) / [#14](../archived/04-并发与调度/14-检测链用CPU线程池.md)  
-的 "阻塞调用占用 CPU 池" 叠加.
+低端机上最吃紧. 整段跑在 `PropViewModel.collectModels()` 的 `withContext(Dispatchers.IO)` 里,  
+串行次数没有变; [#16](../archived/04-并发与调度/16-阻塞调用跑在CPU线程池.md) / [#14](../archived/04-并发与调度/14-检测链用CPU线程池.md)  
+记的 "阻塞调用占用 CPU 池" 已随 IO 迁移消解.
 
 ## 根本原因
 
@@ -104,8 +104,8 @@ tempModels += propRepository.getSettings(SettingsTable.SYSTEM)
 实现时必须一起处理的三点:
 
 1. `contentResolver.query()` 是跨进程阻塞调用, 按 [05-代码规则](../../../agents-cn/05-代码规则.md) 走 `Dispatchers.IO`,  
-   不能留在现在的 `withContext(Dispatchers.Default)` 里,  
-   与 [#14](../archived/04-并发与调度/14-检测链用CPU线程池.md) 是同一件事.
+   现在的 `collectModels()` 已经在 `withContext(Dispatchers.IO)` 里, 全表查询照这个池走,  
+   池的迁移已完成, 实现时保持这个池.
 2. 三个 `CONTENT_URI` 常量与 `query()` 的 API 等级要按 **minSdk** (`gradle/toml/build.toml` 的 `minSdk`)  
    核对一遍再写 (`@RequiresApi` 或 `isAtLeast...()` 版本检查按核对结果决定).
 3. 条目集合由什么决定会变: 现在由 **SDK 常量名**决定 (`toTranslatedDetailMyModel(key, value)` 把 key 原样当标题,  

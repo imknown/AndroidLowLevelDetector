@@ -8,8 +8,8 @@
 > **基线**: 分析基线是 develop 分支 `4d570cdb` (架构体检)  
 > 与 jetpack-compose-new 分支 `a87f80e1` (Compose 迁移后复查); 这两个哈希在对象库里,  
 > 但 `a87f80e1` 与复查基线 `cb4104aa` 都不是当前分支的祖先 (compose 分支后来被重写过),  
-> 别拿它们当现状. 全部条目已于 `269727b2` 的当前代码上逐条重新取证,  
-> 与代码不符的陈述已就地改写, 已随代码修复的条目已删除.  
+> 别拿它们当现状. 本册的事实陈述按 `b2a40c0f` 的当前代码核对,  
+> 与代码不符的陈述已就地改写; 条目状态与归档另行判定.  
 > **与 [这套规则文件](../../../AGENTS.md) 的关系**: 这套规则文件 (索引在根 `AGENTS.md`) 写的是**现状的工作方式**,  
 > 本页若干条目的修复方案指向**尚未实现的目标形态** (领域模型, 检测器注册表,  
 > CI 上必须通过的检查). 两者不是同一件事, 本页的 [修复路线](#修复路线) 一节标出这条分界.  
@@ -252,12 +252,12 @@ stateDiagram-v2
 
 项目分了四层 (`Composable` → `ViewModel` → `Repository` → `DataSource`), 方向对,  
 但**层和层之间传的东西类型不对**:  
-从 DataSource 一路到 `MyModelCard`, 传的都是 `MyModel`, 即一个已经拼好翻译文案, 带好状态色 (`StatusColor`)  
-的**界面模型** (#01). 于是:
+Others 与 Prop 从 DataSource 一路到 `MyModelCard`, 传的都是 `MyModel`, 即一个已经拼好翻译文案, 带好状态色 (`StatusColor`)  
+的**界面模型** (#01). Home 的仓库返回 `DetectResult<领域对象>`, `MyModel` 由 `HomeModelMapper` 在 UI 包产出. 于是:
 
 1. 仓库本该只管取数和判断, 却必须拿着 `Context` 才能干活:  
-   `MyApplication.getMyString` 今天有 99 处限定调用 (`MyApplication` 内部已无自调用),  
-   其中 69 处在 `HomeRepository` (#01, #02).
+   `MyApplication.getMyString` 今天在 main 源集有 32 处限定调用 (`MyApplication` 内部已无自调用),  
+   其中 `HomeRepository` 3 处, `OthersRepository` 9 处, `SettingsStore` 11 处 (#01, #02).
 2. 注入渠道已随 Metro DI 接入完成,  
    依赖型静态单例已清空 (`PropertyManager` / `ShellManager` / `LldManager` 的静态槽与全局 `HttpClient` 每请求新建均不复存在);  
    `myAndroid` 全局也已删除 (#09, #17 已结): 版本事实由 Home 数据侧的 `AndroidVersionDataSource` 进程内派生一次,  
@@ -267,24 +267,25 @@ stateDiagram-v2
 现在加一个设置项要动 4~6 处  
 (`strings.xml` 及三份翻译, `SettingsStore.kt` 的 key + flow + 监听分支 + setter, 选项型再加 `arrays.xml`,  
 `SettingsViewModel.kt` 的暴露, `SettingsScreen.kt` 的行, 消费方),  
-加一个首页检测条目要动 2~3 个文件 (`HomeViewModel`,  
-`HomeRepository`, 还要小心列表下标, 见 #11). 这些不会让 App 直接崩, 但会让每次改动的心理负担越来越重.
+加一个首页检测条目要按 [06-检测条目](../../agents-cn/06-检测条目.md) 的流程走 (`HomeViewModel` 的调用,  
+`HomeRepository` 的取数方法, 领域对象, mapper, 字符串与目录, 见 #11). 这些不会让 App 直接崩, 但会让每次改动的心理负担越来越重.
 
 与分层无关, 但同级的是两类会直接伤到用户或伤到进度: Prop 页一次加载要做几百次串行跨进程查询 (#30);  
-真实测试 `app` 与 `base` 各一个类, 覆盖太薄 (#06). 崩溃链上最紧的两条: #20:  
+真实测试已有 21 个类, 82 个方法, 覆盖广度仍不够 (#06). 崩溃链上最紧的两条: #20:  
 两个检测块同时失败会产出同 key 的两行, `LazyColumn` 直接抛异常; #62:  
 加载失败没有任何善后处理, 异常穿透时是崩溃或永久转圈而不是错误行. 与之配套, 另一半是 #63:  
 读不到/读失败被渲染成确定的设备结论 (报 "不支持"/"32-bit"/绿, 或整页涂红).
 
-总体诊断说的 "层和层之间传的东西类型不对" 如下图, 分层方向本身是对的,  
-但从 DataSource 到 MyModelCard 传的都是已拼好文案, 带好状态色的 MyModel, 仓库因此必须拿着 Context 干活:
+总体诊断说的 "层和层之间传的东西类型不对" 如下图. 分层方向本身是对的,  
+Home 的仓库返回领域对象, 由 `HomeModelMapper` 产 `MyModel`;  
+Others 与 Prop 从 DataSource 到 MyModelCard 传的都是已拼好文案, 带好状态色的 MyModel, 仓库因此必须拿着 Context 干活:
 
 ```mermaid
 flowchart TD
-  DS["DataSource"] -->|MyModel| REP["Repository"]
+  DS["DataSource"] -->|MyModel| REP["Others / Prop Repository"]
   REP -->|MyModel| VM["ViewModel"]
   VM -->|MyModel| C["Composable / MyModelCard"]
-  REP -.->|要拿 Context| G["getMyString 99 处<br>HomeRepository 69 处"]
+  REP -.->|要拿 Context| G["getMyString main 源集 32 处<br>OthersRepository 9 处"]
 ```
 
 ## 已经做对的地方
@@ -313,9 +314,11 @@ flowchart TD
 
 ## 修复路线
 
-> 这条线是**尚未实现的目标形态**. 这套规则文件记的是当前工作方式 (`detect...()` 返回 `MyModel`,  
-> `collectModels()` 的调用顺序就是列表顺序,  
-> CI 分四步跑构建, test 与 lint). 走这条线等于同时改根 `AGENTS.md` 索引与 `docs/agents-cn/` 对应文件两侧,  
+> 这条线是**尚未实现的目标形态**. 这套规则文件记的是当前工作方式  
+> (Home 的 `detect...()` 返回 `DetectResult<领域对象>` 再经 mapper 产 `MyModel`,  
+> Others 与 Prop 仍返回 `MyModel`, `collectModels()` 的调用顺序就是列表顺序,  
+> CI 分四步跑构建, test 与 lint). 走这条线等于同时改根 `AGENTS.md` 索引  
+> 与 `docs/agents-cn/` 对应文件两侧,  
 > 因此开工前先与负责人确认这一层, 不要一边改代码一边留着两份互相矛盾的约定.
 
 **步骤 0 · 决定批** (零代码, 主线开工前一次定完;  
