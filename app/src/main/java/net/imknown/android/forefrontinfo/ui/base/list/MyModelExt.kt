@@ -18,9 +18,9 @@ import net.imknown.android.forefrontinfo.base.extension.fullMessage
  *
  * Dot page semantics (issues-cn #69): the red/yellow/green dot is a Home-only
  * per-item concept; Others / Prop / Settings never render dots. Home's own guard
- * lived here too (guardedMyModel, failure row CRITICAL for the red dot) until 2a
- * moved Home's failure isolation into HomeModelMapper's chained thin guard; what
- * remains here is the dotless pages' shape:
+ * lived here too (guardedMyModel, failure row CRITICAL for the red dot); Home's
+ * failure isolation now lives in the detection engine's per-entry guard
+ * (`Detector.detectAll()`). What remains here is the dotless pages' shape:
  * - guardedDetectFailedMyModel: colorless failure row, because dotless pages keep the
  *   plain row shape.
  */

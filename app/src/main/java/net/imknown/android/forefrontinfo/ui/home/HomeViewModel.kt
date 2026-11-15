@@ -22,6 +22,9 @@ import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.extension.fullMessage
 import net.imknown.android.forefrontinfo.base.extension.isLldDatetime
+import net.imknown.android.forefrontinfo.ui.base.detect.detectAll
+import net.imknown.android.forefrontinfo.ui.base.detect.detector
+import net.imknown.android.forefrontinfo.ui.base.detect.rawDetector
 import net.imknown.android.forefrontinfo.ui.base.list.BaseListViewModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModelType
@@ -213,43 +216,92 @@ class HomeViewModel(
         val tempModels = mutableListOf<MyModel>()
 
         withContext(Dispatchers.IO) {
-            tempModels += homeModelMapper.toModeModel {
-                homeRepository.detectMode(lld, errorMessage, source)
-            }
+            // Stage one: the shared inputs fetched once (the lld comes in from the caller; the
+            // outdated-order setting is read inside its own entry).
+            val mountQuery = homeRepository.getMounts()
 
-            tempModels += homeModelMapper.toAndroidModel { homeRepository.detectAndroid(lld) }
-            tempModels += homeModelMapper.toSdkExtensionModel { homeRepository.detectSdkExtension(lld) }
-            tempModels += homeModelMapper.toBuildIdModel { homeRepository.detectBuildId(lld) }
-            tempModels += homeModelMapper.toSecurityPatchModels { homeRepository.detectSecurityPatches(lld) }
-            tempModels += homeModelMapper.toPerformanceClassModel { homeRepository.detectPerformanceClass() }
-            tempModels += homeModelMapper.toKernelModel { homeRepository.detectKernel(lld) }
-            tempModels += homeModelMapper.toAbModel { homeRepository.detectAb() }
-            val mountQuery = withContext(Dispatchers.IO) {
-                homeRepository.getMounts()
-            }
-            tempModels += homeModelMapper.toSarModel { homeRepository.detectSar(mountQuery) }
-            tempModels += homeModelMapper.toDynamicPartitionsModel { homeRepository.detectDynamicPartitions() }
-            tempModels += homeModelMapper.toTrebleAndGsiModels {
-                homeRepository.detectTrebleAndGsiCompatibility()
-            }
-            tempModels += homeModelMapper.toDsuModel { homeRepository.detectDsu() }
-            tempModels += homeModelMapper.toMainlineModel { homeRepository.detectMainline(lld) }
-            tempModels += homeModelMapper.toVndkModel { homeRepository.detectVndk(lld) }
-            tempModels += homeModelMapper.toApexModel { homeRepository.detectApex(mountQuery) }
-            tempModels += homeModelMapper.toDeveloperOptionsModel {
-                homeRepository.detectDeveloperOptions()
-            }
-            tempModels += homeModelMapper.toAdbModel { homeRepository.detectAdb() }
-            tempModels += homeModelMapper.toAdbAuthenticationModel { homeRepository.detectAdbAuthentication() }
-            tempModels += homeModelMapper.toEncryptionModel { homeRepository.detectEncryption() }
-            tempModels += homeModelMapper.toSELinuxModel { homeRepository.detectSELinux() }
-            tempModels += homeModelMapper.toToyboxModel { homeRepository.detectToybox(lld) }
-            tempModels += homeModelMapper.toWebViewModel { homeRepository.detectWebView(lld) }
-            tempModels += homeModelMapper.toOutdatedTargetSdkVersionApkModel {
-                homeRepository.getOutdatedTargetSdkVersionApkState(
-                    lld, settingsStore.outdatedOrderFirst.value
-                )
-            }
+            // Stage two: the entry list is data (ids are the detection-entry catalog's HOME-NN,
+            // list order is display order), and the engine runs it serially with the per-entry
+            // guard (unexpected exceptions degrade into the entry's own failure rows).
+            val detectors = listOf(
+                detector("HOME-01", { homeRepository.detectMode(lld, errorMessage, source) }) {
+                    listOf(homeModelMapper.toModeModel(it))
+                },
+                detector("HOME-02", { homeRepository.detectAndroid(lld) }) {
+                    listOf(homeModelMapper.toAndroidModel(it))
+                },
+                detector("HOME-03", { homeRepository.detectSdkExtension(lld) }) {
+                    listOf(homeModelMapper.toSdkExtensionModel(it))
+                },
+                detector("HOME-04", { homeRepository.detectBuildId(lld) }) {
+                    listOf(homeModelMapper.toBuildIdModel(it))
+                },
+                rawDetector(
+                    "HOME-05",
+                    run = { homeModelMapper.toSecurityPatchModels(homeRepository.detectSecurityPatches(lld)) },
+                    failureRows = homeModelMapper::toSecurityPatchFailureRows
+                ),
+                detector("HOME-06", { homeRepository.detectPerformanceClass() }) {
+                    listOf(homeModelMapper.toPerformanceClassModel(it))
+                },
+                detector("HOME-07", { homeRepository.detectKernel(lld) }) {
+                    listOf(homeModelMapper.toKernelModel(it))
+                },
+                detector("HOME-08", { homeRepository.detectAb() }) {
+                    listOf(homeModelMapper.toAbModel(it))
+                },
+                detector("HOME-09", { homeRepository.detectSar(mountQuery) }) {
+                    listOf(homeModelMapper.toSarModel(it))
+                },
+                detector("HOME-10", { homeRepository.detectDynamicPartitions() }) {
+                    listOf(homeModelMapper.toDynamicPartitionsModel(it))
+                },
+                rawDetector(
+                    "HOME-11",
+                    run = { homeModelMapper.toTrebleAndGsiModels(homeRepository.detectTrebleAndGsiCompatibility()) },
+                    failureRows = homeModelMapper::toTrebleAndGsiFailureRows
+                ),
+                detector("HOME-12", { homeRepository.detectDsu() }) {
+                    listOf(homeModelMapper.toDsuModel(it))
+                },
+                detector("HOME-13", { homeRepository.detectMainline(lld) }) {
+                    listOf(homeModelMapper.toMainlineModel(it))
+                },
+                detector("HOME-14", { homeRepository.detectVndk(lld) }) {
+                    listOf(homeModelMapper.toVndkModel(it))
+                },
+                detector("HOME-15", { homeRepository.detectApex(mountQuery) }) {
+                    listOf(homeModelMapper.toApexModel(it))
+                },
+                detector("HOME-16", { homeRepository.detectDeveloperOptions() }) {
+                    listOf(homeModelMapper.toDeveloperOptionsModel(it))
+                },
+                detector("HOME-17", { homeRepository.detectAdb() }) {
+                    listOf(homeModelMapper.toAdbModel(it))
+                },
+                detector("HOME-18", { homeRepository.detectAdbAuthentication() }) {
+                    listOf(homeModelMapper.toAdbAuthenticationModel(it))
+                },
+                detector("HOME-19", { homeRepository.detectEncryption() }) {
+                    listOf(homeModelMapper.toEncryptionModel(it))
+                },
+                detector("HOME-20", { homeRepository.detectSELinux() }) {
+                    listOf(homeModelMapper.toSELinuxModel(it))
+                },
+                detector("HOME-21", { homeRepository.detectToybox(lld) }) {
+                    listOf(homeModelMapper.toToyboxModel(it))
+                },
+                detector("HOME-22", { homeRepository.detectWebView(lld) }) {
+                    listOf(homeModelMapper.toWebViewModel(it))
+                },
+                detector(
+                    "HOME-23",
+                    { homeRepository.getOutdatedTargetSdkVersionApkState(lld, settingsStore.outdatedOrderFirst.value) }
+                ) {
+                    listOf(homeModelMapper.toOutdatedTargetSdkVersionApkModel(it))
+                }
+            )
+            tempModels += detectors.detectAll()
         }
 
         return tempModels
@@ -281,11 +333,16 @@ class HomeViewModel(
             ?: return
 
         val newDetail = withContext(Dispatchers.IO) {
-            homeModelMapper.toOutdatedTargetSdkVersionApkModel {
-                homeRepository.getOutdatedTargetSdkVersionApkState(
-                    lld, settingsStore.outdatedOrderFirst.value
-                )
-            }.detail
+            // The payload path is a one-entry engine run, so the same per-entry guard applies
+            // (unexpected exceptions degrade into the entry's failure-row detail).
+            listOf(
+                detector(
+                    "HOME-23",
+                    { homeRepository.getOutdatedTargetSdkVersionApkState(lld, settingsStore.outdatedOrderFirst.value) }
+                ) {
+                    listOf(homeModelMapper.toOutdatedTargetSdkVersionApkModel(it))
+                }
+            ).detectAll().single().detail
         }
 
         updateModelDetail(MyModelType.OutdatedTargetSdkApk, newDetail)

@@ -619,9 +619,10 @@ class HomeRepository(
         DetectResult.Failed(e)
     }
 
-    // 2a: facts only; display text and colors belong to HomeModelMapper. A failed read returns
-    // Failed normally instead of throwing (the 05 rule); unexpected exceptions are caught by the
-    // mapper's chained thin guard, and the failure DEBUG print lives there too (failureRow).
+    // Facts only; display text and colors belong to HomeModelMapper. A failed read returns
+    // Failed normally instead of throwing (the 05 rule); unexpected exceptions are caught by
+    // the detection engine's per-entry guard, and the failure DEBUG print lives in
+    // HomeModelMapper.toFailureModel.
     fun detectDeveloperOptions(): DetectResult<Boolean> = try {
         val isDeveloperOptionsDisabled = Settings.Global.getInt(
             MyApplication.instance.contentResolver,

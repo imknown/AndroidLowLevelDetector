@@ -2,7 +2,6 @@ package net.imknown.android.forefrontinfo.ui.home.mapper
 
 import androidx.annotation.StringRes
 import dev.zacsweers.metro.Inject
-import kotlinx.coroutines.CancellationException
 import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
@@ -47,14 +46,14 @@ class HomeModelMapper(private val myApplication: MyApplication) {
 
     /**
      * The developer options row: red while enabled, green while disabled (this setting's semantics
-     * is "enabled is the risk"). Runs through the shared [guardedEntry] scaffold; the Missing
+     * is "enabled is the risk"). Runs through the shared [translateEntry] dispatch; the Missing
      * branch is unreachable for this entry (an unreadable value surfaces as Failed) and renders
-     * the unknown row via the scaffold's default. The reason's shape is a later batch's call
+     * the unknown row via the dispatch's default. The reason's shape is a later batch's call
      * (spec finding 3).
      */
-    fun toDeveloperOptionsModel(detect: () -> DetectResult<Boolean>): MyModel = guardedEntry(
+    fun toDeveloperOptionsModel(result: DetectResult<Boolean>): MyModel = translateEntry(
         R.string.developer_options_status_title,
-        detect
+        result
     ) { isDisabled ->
         coloredRow(
             R.string.developer_options_status_title,
@@ -67,9 +66,9 @@ class HomeModelMapper(private val myApplication: MyApplication) {
 
     // The developer options row's twin: the same Settings read shape, semantics aligned
     // (disabled is the good state).
-    fun toAdbModel(detect: () -> DetectResult<Boolean>): MyModel = guardedEntry(
+    fun toAdbModel(result: DetectResult<Boolean>): MyModel = translateEntry(
         R.string.adb_debugging_status_title,
-        detect
+        result
     ) { isDisabled ->
         coloredRow(
             R.string.adb_debugging_status_title,
@@ -82,9 +81,9 @@ class HomeModelMapper(private val myApplication: MyApplication) {
 
     // The ADB authentication row: enabled is the good state, the opposite direction of the
     // two rows above.
-    fun toAdbAuthenticationModel(detect: () -> DetectResult<Boolean>): MyModel = guardedEntry(
+    fun toAdbAuthenticationModel(result: DetectResult<Boolean>): MyModel = translateEntry(
         R.string.adb_authentication_status_title,
-        detect
+        result
     ) { isEnabled ->
         coloredRow(
             R.string.adb_authentication_status_title,
@@ -97,9 +96,9 @@ class HomeModelMapper(private val myApplication: MyApplication) {
 
     // The DSU row: the original else branch lands on the platform unknownName resource, not
     // result_not_supported; replicated as is.
-    fun toDsuModel(detect: () -> DetectResult<Boolean>): MyModel = guardedEntry(
+    fun toDsuModel(result: DetectResult<Boolean>): MyModel = translateEntry(
         R.string.dsu_status_title,
-        detect
+        result
     ) { isEnabled ->
         coloredRow(
             R.string.dsu_status_title,
@@ -113,10 +112,10 @@ class HomeModelMapper(private val myApplication: MyApplication) {
     // The dynamic partitions row: retrofit only appends text; enabled drives the two states
     // and the color.
     fun toDynamicPartitionsModel(
-        detect: () -> DetectResult<DynamicPartitionsState>
-    ): MyModel = guardedEntry(
+        result: DetectResult<DynamicPartitionsState>
+    ): MyModel = translateEntry(
         R.string.dynamic_partitions_status_title,
-        detect
+        result
     ) { (enabled, retrofit) ->
         val detail = buildString {
             append(
@@ -133,9 +132,9 @@ class HomeModelMapper(private val myApplication: MyApplication) {
 
     // The A/B seamless update row: the detail's three segments (supported or not, the virtual
     // A/B variant, the current slot) are all driven by the facts.
-    fun toAbModel(detect: () -> DetectResult<AbState>): MyModel = guardedEntry(
+    fun toAbModel(result: DetectResult<AbState>): MyModel = translateEntry(
         R.string.ab_seamless_update_status_title,
-        detect
+        result
     ) { (enabled, virtualAb, virtualAbRetrofit, slotSuffix) ->
         val detail = buildString {
             append(
@@ -163,9 +162,9 @@ class HomeModelMapper(private val myApplication: MyApplication) {
     // The lld mode row: online/offline wording and the color come from the source and the
     // payload presence; the rendered fetch-failure messages (ViewModel display material by
     // origin) are appended verbatim.
-    fun toModeModel(detect: () -> DetectResult<LldStatusState>): MyModel = guardedEntry(
+    fun toModeModel(result: DetectResult<LldStatusState>): MyModel = translateEntry(
         R.string.lld_json_mode_title,
-        detect
+        result
     ) { state ->
         val datetimeFormatted = state.version?.formatToLocalZonedDatetimeString()
             ?: myApplication.getString(androidR.string.unknownName)
@@ -189,9 +188,9 @@ class HomeModelMapper(private val myApplication: MyApplication) {
 
     // The android info row: the preview suffix and the Go mark are display material added here;
     // the five reference lines carry nulls the mapper renders as the platform unknownName.
-    fun toAndroidModel(detect: () -> DetectResult<AndroidInfoState>): MyModel = guardedEntry(
+    fun toAndroidModel(result: DetectResult<AndroidInfoState>): MyModel = translateEntry(
         R.string.android_info_title,
-        detect
+        result
     ) { state ->
         val previewSuffix = when {
             !state.isPreview -> ""
@@ -233,9 +232,9 @@ class HomeModelMapper(private val myApplication: MyApplication) {
 
     // The sdk extension row: a null current extension (below the declaring level) renders as
     // result_not_supported, a null stable extension as the platform unknownName.
-    fun toSdkExtensionModel(detect: () -> DetectResult<SdkExtensionState>): MyModel = guardedEntry(
+    fun toSdkExtensionModel(result: DetectResult<SdkExtensionState>): MyModel = translateEntry(
         R.string.android_sdk_extension_title,
-        detect
+        result
     ) { state ->
         val current = state.currentExtension?.toString()
             ?: myApplication.getString(R.string.result_not_supported)
@@ -250,9 +249,9 @@ class HomeModelMapper(private val myApplication: MyApplication) {
 
     // The performance class row: NotSupported and NotDeclared share the result_not_supported
     // detail; the other levels carry the class number in the detail.
-    fun toPerformanceClassModel(detect: () -> DetectResult<PerformanceClassInfo>): MyModel = guardedEntry(
+    fun toPerformanceClassModel(result: DetectResult<PerformanceClassInfo>): MyModel = translateEntry(
         R.string.performance_class_title,
-        detect
+        result
     ) { info ->
         val detail = when (info.level) {
             PerformanceClassInfo.Level.NotSupported, PerformanceClassInfo.Level.NotDeclared ->
@@ -275,9 +274,9 @@ class HomeModelMapper(private val myApplication: MyApplication) {
 
     // The kernel row: the supported-versions list is joined here; a missing lld list renders
     // as the platform unknownName.
-    fun toKernelModel(detect: () -> DetectResult<KernelState>): MyModel = guardedEntry(
+    fun toKernelModel(result: DetectResult<KernelState>): MyModel = translateEntry(
         R.string.linux_title,
-        detect
+        result
     ) { state ->
         val support = state.supportedVersions?.joinToString("｜")
             ?: myApplication.getString(androidR.string.unknownName)
@@ -298,9 +297,9 @@ class HomeModelMapper(private val myApplication: MyApplication) {
     // The build id row: the partition ids render verbatim (a failed or unmet property read
     // carries the placeholder it produced, until the #42 rework), and the lld details join
     // with one entry per line.
-    fun toBuildIdModel(detect: () -> DetectResult<BuildIdState>): MyModel = guardedEntry(
+    fun toBuildIdModel(result: DetectResult<BuildIdState>): MyModel = translateEntry(
         R.string.android_build_id_title,
-        detect
+        result
     ) { state ->
         val builds = state.lldDetails?.joinToString("\n") { (id, revision) ->
             myApplication.getString(R.string.android_build_id, id, revision)
@@ -324,16 +323,16 @@ class HomeModelMapper(private val myApplication: MyApplication) {
         )
     }
 
-    // The two security patch rows ride in the system-then-vendor order, each keeping its own
-    // guard and title (the old per-row guardedMyModel).
-    fun toSecurityPatchModels(detect: () -> List<DetectResult<SecurityPatchState>>): List<MyModel> =
-        detect().mapIndexed { index, result ->
+    // The two security patch rows ride in the system-then-vendor order, each with its own
+    // title (the old per-row guardedMyModel).
+    fun toSecurityPatchModels(result: List<DetectResult<SecurityPatchState>>): List<MyModel> =
+        result.mapIndexed { index, row ->
             val titleRes = if (index == 0) {
                 R.string.security_patch_level_title
             } else {
                 R.string.vendor_security_patch_level_title
             }
-            guardedEntry(titleRes, { result }) { state ->
+            translateEntry(titleRes, row) { state ->
                 coloredRow(
                     titleRes,
                     myApplication.getString(
@@ -352,9 +351,9 @@ class HomeModelMapper(private val myApplication: MyApplication) {
 
     // The VNDK row: an absent version renders as result_not_supported, a present one as the
     // supported text plus the level line (the Lite variant marked in the level).
-    fun toVndkModel(detect: () -> DetectResult<VndkState>): MyModel = guardedEntry(
+    fun toVndkModel(result: DetectResult<VndkState>): MyModel = translateEntry(
         R.string.vndk_built_in_title,
-        detect
+        result
     ) { state ->
         val detail = if (state.vndkVersion == null) {
             myApplication.getString(R.string.result_not_supported)
@@ -378,9 +377,9 @@ class HomeModelMapper(private val myApplication: MyApplication) {
     // The mainline row: a provider or version that was never fetched renders as the platform
     // unknownName / result_not_supported; an installed package without a version renders the
     // empty string verbatim.
-    fun toMainlineModel(detect: () -> DetectResult<MainlineState>): MyModel = guardedEntry(
+    fun toMainlineModel(result: DetectResult<MainlineState>): MyModel = translateEntry(
         R.string.mainline_title,
-        detect
+        result
     ) { state ->
         coloredRow(
             R.string.mainline_title,
@@ -400,9 +399,9 @@ class HomeModelMapper(private val myApplication: MyApplication) {
     // The SAR row: the fact's type picks the appended wording; a present-but-unmatched SAR
     // (Unknown) renders the platform unknownName, the old else branch. Legacy and recovery are
     // yellow, 2SI and slash green; no SAR or unmatched is red.
-    fun toSarModel(detect: () -> DetectResult<SarState>): MyModel = guardedEntry(
+    fun toSarModel(result: DetectResult<SarState>): MyModel = translateEntry(
         R.string.sar_status_title,
-        detect
+        result
     ) { state ->
         val detail = buildString {
             append(
@@ -430,17 +429,18 @@ class HomeModelMapper(private val myApplication: MyApplication) {
         )
     }
 
-    // The treble and GSI rows ride on one detection, fetched once here outside the per-row
-    // guards: safe because both repository halves catch their own exceptions into Failed and only
-    // rethrow CancellationException. The per-row guardedEntry then wraps each row's rendering
-    // (the old per-row guardedMyModel): treble reads its vintf layout (append-only wording for
-    // the two degraded layouts), GSI renders its four outcomes.
+    // The treble and GSI rows ride on one detection: the fetch happens in the entry's run lambda
+    // (the view model's list) and both repository halves catch their own exceptions into Failed
+    // and only rethrow CancellationException; chain-external exceptions are isolated by the
+    // engine's per-entry failureRows (two rows, one per title). The per-row translateEntry then
+    // dispatches each row's rendering (the old per-row guardedMyModel): treble reads its vintf
+    // layout (append-only wording for the two degraded layouts), GSI renders its four outcomes.
     fun toTrebleAndGsiModels(
-        detect: () -> Pair<DetectResult<TrebleState>, DetectResult<GsiState>>
+        result: Pair<DetectResult<TrebleState>, DetectResult<GsiState>>
     ): List<MyModel> {
-        val (trebleResult, gsiResult) = detect()
+        val (trebleResult, gsiResult) = result
         return listOf(
-            guardedEntry(R.string.treble_status_title, { trebleResult }) { state ->
+            translateEntry(R.string.treble_status_title, trebleResult) { state ->
                 val detail = buildString {
                     append(
                         myApplication.getString(
@@ -465,7 +465,7 @@ class HomeModelMapper(private val myApplication: MyApplication) {
                     }
                 )
             },
-            guardedEntry(R.string.gsi_status_title, { gsiResult }) { state ->
+            translateEntry(R.string.gsi_status_title, gsiResult) { state ->
                 coloredRow(
                     R.string.gsi_status_title,
                     when (state.compatibility) {
@@ -486,9 +486,9 @@ class HomeModelMapper(private val myApplication: MyApplication) {
 
     // The APEX row: updatable is green outright; not updatable with a mounted flattened APEX is
     // the legacy shape, yellow plus the appended wording; neither is red.
-    fun toApexModel(detect: () -> DetectResult<ApexState>): MyModel = guardedEntry(
+    fun toApexModel(result: DetectResult<ApexState>): MyModel = translateEntry(
         R.string.apex_status_title,
-        detect
+        result
     ) { state ->
         val supported = state.updatable || state.flattenedMounted
         val isLegacyFlattenedApex = !state.updatable && state.flattenedMounted
@@ -512,9 +512,9 @@ class HomeModelMapper(private val myApplication: MyApplication) {
     // The toybox row: the read's three shapes each pick the first detail argument (the raw
     // stdout line / the platform unknown / the not-supported text); the lld reference versions
     // render the platform unknown when absent; the match decides the color.
-    fun toToyboxModel(detect: () -> DetectResult<ToyboxState>): MyModel = guardedEntry(
+    fun toToyboxModel(result: DetectResult<ToyboxState>): MyModel = translateEntry(
         R.string.toybox_built_in_title,
-        detect
+        result
     ) { state ->
         val deviceVersionText = when (val read = state.read) {
             is ToyboxState.ToyboxRead.Version -> read.value
@@ -541,9 +541,9 @@ class HomeModelMapper(private val myApplication: MyApplication) {
     // The encryption row: the platform status values pick wording and color; the Unknown case
     // (transitioning or unrecognized statuses, missing DevicePolicyManager included) shares the
     // not-supported wording with Unsupported, the old else branch.
-    fun toEncryptionModel(detect: () -> DetectResult<EncryptionState>): MyModel = guardedEntry(
+    fun toEncryptionModel(result: DetectResult<EncryptionState>): MyModel = translateEntry(
         R.string.encryption_status_title,
-        detect
+        result
     ) { state ->
         val detailRes: Int
         val color: StatusColor
@@ -570,9 +570,9 @@ class HomeModelMapper(private val myApplication: MyApplication) {
 
     // The SELinux row: the mode values pick wording and color; Unknown renders the platform
     // unknown name, the old else branch in both the success and the failure path.
-    fun toSELinuxModel(detect: () -> DetectResult<SELinuxState>): MyModel = guardedEntry(
+    fun toSELinuxModel(result: DetectResult<SELinuxState>): MyModel = translateEntry(
         R.string.selinux_status,
-        detect
+        result
     ) { state ->
         val detailRes: Int
         val color: StatusColor
@@ -603,9 +603,9 @@ class HomeModelMapper(private val myApplication: MyApplication) {
     // placeholder. The implementation block interpolates its nullable fields directly: a null
     // renders the literal "null" in the template, exactly like the old code. The match decides
     // the color.
-    fun toWebViewModel(detect: () -> DetectResult<WebViewState>): MyModel = guardedEntry(
+    fun toWebViewModel(result: DetectResult<WebViewState>): MyModel = translateEntry(
         R.string.webview_title,
-        detect
+        result
     ) { state ->
         val type = if (state.isQOrLater) {
             val standalone = myApplication.getString(R.string.webview_standalone)
@@ -689,10 +689,10 @@ class HomeModelMapper(private val myApplication: MyApplication) {
     // appended joinToString's output straight onto it), and the order decides both the list
     // format and the sorting the repository already applied.
     fun toOutdatedTargetSdkVersionApkModel(
-        detect: () -> DetectResult<OutdatedTargetSdkVersionApkState>
-    ): MyModel = guardedEntry(
+        result: DetectResult<OutdatedTargetSdkVersionApkState>
+    ): MyModel = translateEntry(
         R.string.outdated_target_version_sdk_version_apk_title,
-        detect
+        result
     ) { (firstApiLevel, outdatedApks, order, match) ->
         var result = myApplication.getString(
             R.string.outdated_target_version_sdk_version_apk_my_first_api_level,
@@ -757,10 +757,11 @@ class HomeModelMapper(private val myApplication: MyApplication) {
 
     // Failure row: the "detection failed" text carries the exception's full message, matching
     // guardedMyModel's failure rendering. Both failure paths (a Failed handed over by the
-    // repository and an unexpected in-chain exception) meet here, so the print lives only in this
-    // one place: one print per failure, a stack trace to investigate in DEBUG builds
-    // (FR-3 AC2: details go to the log).
-    private fun failureRow(@StringRes titleRes: Int, e: Exception): MyModel {
+    // repository and the engine's synthesized Failed for an unexpected in-chain exception) meet
+    // here, so the print lives only in this one place: one print per failure, a stack trace to
+    // investigate in DEBUG builds (FR-3 AC2: details go to the log). Public: the engine's
+    // per-entry `failureRows` render through it too.
+    fun toFailureModel(@StringRes titleRes: Int, e: Exception): MyModel {
         if (BuildConfig.DEBUG) {
             e.printStackTrace()
         }
@@ -771,28 +772,33 @@ class HomeModelMapper(private val myApplication: MyApplication) {
         )
     }
 
-    // The chained thin guard's shared scaffold: a try around the whole fetch-and-render chain,
-    // degrading unexpected exceptions into the entry's own failure row; [CancellationException]
-    // always rethrows. Failed renders the failure row, Missing the unknown row (reason as the
-    // detail, unreachable for most entries and kept for exhaustiveness). The failure DEBUG print
-    // stays single-sited in [failureRow]. When the engine absorbs this scaffold (subtask-05),
-    // the wrapping at the call side goes away.
+    // The two multi-row entries' `failureRows` renderers: the failure rows keep each row's own
+    // title (system then vendor for the patch rows, treble then GSI), matching the entries' row
+    // shapes.
+    fun toSecurityPatchFailureRows(cause: Exception): List<MyModel> = listOf(
+        toFailureModel(R.string.security_patch_level_title, cause),
+        toFailureModel(R.string.vendor_security_patch_level_title, cause)
+    )
+
+    fun toTrebleAndGsiFailureRows(cause: Exception): List<MyModel> = listOf(
+        toFailureModel(R.string.treble_status_title, cause),
+        toFailureModel(R.string.gsi_status_title, cause)
+    )
+
+    // The shared translation dispatch: Found to the entry's row builder, Missing to the unknown
+    // row (reason as the detail; unreachable for most entries and kept for exhaustiveness),
+    // Failed to the failure row. Pure by contract: no try here, the detection engine owns the
+    // per-entry guard (the old UI thin guard retired into the engine).
     // onFound is the last parameter so the callers' trailing lambda binds to it (a trailing
     // lambda always binds to the last parameter).
-    private fun <T> guardedEntry(
+    private fun <T> translateEntry(
         @StringRes titleRes: Int,
-        detect: () -> DetectResult<T>,
+        result: DetectResult<T>,
         onMissing: (String) -> MyModel = { unknownRow(titleRes, it) },
         onFound: (T) -> MyModel
-    ): MyModel = try {
-        when (val result = detect()) {
-            is DetectResult.Found -> onFound(result.value)
-            is DetectResult.Missing -> onMissing(result.reason)
-            is DetectResult.Failed -> failureRow(titleRes, result.cause)
-        }
-    } catch (e: CancellationException) {
-        throw e
-    } catch (e: Exception) {
-        failureRow(titleRes, e)
+    ): MyModel = when (result) {
+        is DetectResult.Found -> onFound(result.value)
+        is DetectResult.Missing -> onMissing(result.reason)
+        is DetectResult.Failed -> toFailureModel(titleRes, result.cause)
     }
 }
