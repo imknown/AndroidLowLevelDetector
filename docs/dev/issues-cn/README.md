@@ -296,7 +296,7 @@ flowchart TD
   `modelsStateFlow: StateFlow<PersistentList<MyModel>?>` (加载不擦掉旧列表, UI 不闪空) +  
   `isLoadingStateFlow`, 配置变更后不重复加载, Compose 侧用 `collectAsStateWithLifecycle` 收集.
 - 逐条错误隔离已完成: 每个检测块经 guard 守卫, 失败渲染成自身标题的错误行,  
-  Home 走 `HomeModelMapper` 的链式薄 guard, Others 走  
+  Home 走检测引擎的按条目 guard (`ui/base/detect/Detector.kt` 的 `detectAll()`), Others 走  
   `guardedDetectFailedMyModel` (`ui/base/list/MyModelExt.kt`), `CancellationException` 原样上抛.
 - `lld.json` 的 `version` 格式已升级为机器可查契约: `LLD_DATETIME_FORMATTER` 固定 `Locale.US`,  
   `isLldDatetime()` 在联网数据进来时校验,  

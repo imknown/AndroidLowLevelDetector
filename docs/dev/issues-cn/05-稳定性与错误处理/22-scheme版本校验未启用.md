@@ -49,7 +49,8 @@ flowchart TD
 
 **严重程度说明**: `api` 串坏了不再拖垮整页: 逐条错误隔离 (`f089854a`) 之后,  
 `detectAndroid()` 在自己的 `catch` 里把异常转成 `DetectResult.Failed` (`HomeRepository.kt:132-136`),  
-`HomeModelMapper.guardedEntry` 再把它渲染成该探针的一行错误. 失效面从 "整页" 缩到 "一行",  
-P2 定级不变.
+`HomeModelMapper` 的翻译再把它渲染成该探针的一行错误 (意外异常由 `ui/base/detect/Detector.kt` 的  
+`detectAll()` 按条目 guard 转成失败行).  
+失效面从 "整页" 缩到 "一行", P2 定级不变.
 
 **修复方向**: 解析后校验 `scheme == SCHEME_VERSION`, 不符走明确提示与回退; `api` 字段换 `toIntOrNull` + 默认值.

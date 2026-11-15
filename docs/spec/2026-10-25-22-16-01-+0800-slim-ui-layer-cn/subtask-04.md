@@ -36,7 +36,7 @@
 | `toSupportOrNotString` | 已删除 (批 6 迁走最后四个调用点: sar, treble, apex, toybox; 批 5 后在 :1116-1122, v2 修复加 8 行, 批 4 后 :1140-1146, 批 3 后 :1185-1191, 审计时恰在同位) | 判断结果当场变成两条文案之一 |
 | Others | `OthersRepository.kt` 37 个 `get*` 方法, 37 次追加 (追加在 `OthersViewModel` 的 `tempModels +=`, 复核 2026-11-07) | 其中 36 个被 guard 包住, `getPartitionFingerprints` (:210) 自己按分区隔离 |
 | Prop | `PropRepository.kt` 3 个入口 | 行数与系统属性数量相关 |
-| 失败处理 | Home 侧 `guardedMyModel`/`toErrorMyModel`/`toColoredMyModel` 已随批 7 删除, Home 的失败隔离在 `HomeModelMapper` 的链式薄 guard; Others 侧 `MyModelExt.kt` 的 `guardedDetectFailedMyModel` 照旧 | 现在 Home 由 mapper 侧包住整条链, Others 仍由 `guarded*` 在仓库侧包住整个 block |
+| 失败处理 | Home 侧 `guardedMyModel`/`toErrorMyModel`/`toColoredMyModel` 已随批 7 删除, Home 的失败隔离在检测引擎的按条目 guard (`ui/base/detect/Detector.kt` 的 `detectAll()`); Others 侧 `MyModelExt.kt` 的 `guardedDetectFailedMyModel` 照旧 | 现在 Home 由引擎按条目包住整条链, Others 仍由 `guarded*` 在仓库侧包住整个 block |
 
 ## 计划改动
 
@@ -99,12 +99,13 @@
      这一步没有"先保留原形状"的选项.
    - 落点: subtask-04 期间在 UI 侧留一层薄 guard, 只处理"没预料到的异常" (例如探针抛出的  
      `RuntimeException`), 常规失败走 `DetectResult.Failed` 的正常返回路径, 不再依赖它.  
-     guard 现在写在 `HomeModelMapper` 的链式接口里, 包住取数加翻译整条链, 单条失败降级成  
-     本条目的失败行; `CancellationException` 一律原样 rethrow.  
-     两个多行方法 (`toSecurityPatchModels`, `toTrebleAndGsiModels`) 是例外形状: 取数一次在  
-     per-row guard 之外, 安全性由仓库方法不抛 (只 rethrow `CancellationException`) 保证,  
-     批 6 v1 已核.
-   - subtask-05 造引擎时把这层薄 guard 收进引擎, mapper 里这层随之删掉.
+     guard 现在在检测引擎里 (`ui/base/detect/Detector.kt` 的 `detectAll()`),  
+     包住取数加翻译整条链, 单条失败降级成本条目的失败行; `CancellationException` 一律原样 rethrow;  
+     `HomeModelMapper` 只做纯翻译.  
+     两个多行方法 (`toSecurityPatchModels`, `toTrebleAndGsiModels`) 是例外形状: 取数与翻译  
+     在条目的 run 链里一次完成, 链外异常由引擎的 `failureRows` 生成各自标题的失败行,  
+     批 2 v1 已核.
+   - subtask-05 的引擎已把这层薄 guard 收进引擎, mapper 里这层已删.
    下面这张图按三个阶段对比失败隔离 guard 的位置: 先包在仓库里, 再挪到 UI 侧, 最后收进引擎:
 
    ```mermaid

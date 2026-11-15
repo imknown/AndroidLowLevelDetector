@@ -1607,6 +1607,155 @@
   另行等负责人.
   下一步动作: 等负责人拆笔方案确认, trailer (12:13 不猜), review 目录删除点头; 然后逐笔提交  
   (canary 不提交).
+- 2026-11-14 (批 1 第 5 步提交, 三笔, 关闭): 负责人确认三笔拆法, trailer 定 ZCode /  
+  GLM-5.3-Flash / max, review 目录点头删除 (六份报告与四份提示词, 未被 git 跟踪, 判定理由已  
+  全数在 progress 与删前 state). 提交串 (老到新): `5785ff56` refactor(shell) 四代码文件  
+  (errors 字段, 两列表, 删 legacy 开关, SELinux 读 errors, 注释已翻英语), `b8b5c4bd` docs(spec)  
+  subtask-05 加 #63 加 progress (spec 记录随批内最后一笔入库), `58367027` docs(agents) 四份规则  
+  文件 (LSP 批末批量临时规则, reviewer 落盘前自检, 报告首尾停止条件行). 放行理由照 14 转述进  
+  前两笔的 Owner sign-off; canary (`android.toml:7`) 与 kotlin-lsp-daemon 的 progress.md 按令  
+  留在工作树不提交. 批 1 全程: 实现, 三轮六份跨端报告, 设备实测 (enforcing 真机), 黄金对照,  
+  LSP 通道事故与 canary 救援, AGP 9.5 已知 bug (issuetracker 572377862) 记录在案.
+  本条与各子任务状态行更新随批 2 首笔入库.
+  下一步动作: 批 2 (Detector 类型 + 引擎 + Home 23 条清单), 等负责人说开始; 开工先连设备取  
+  改前快照, 批 2 内两个设计点 (guard 契约落点, Missing 生产场景) 到批内摆开.
+- 2026-11-14 (批 2 开工, 两个设计点定案): 负责人说继续, 接批 2 (六批里的核心批, 方案早已获批).  
+  两个预告的设计点摆开后负责人都定 A: 一, **guard 契约落引擎** — 引擎按条目包住执行加翻译整段,  
+  mapper 变纯翻译 (收 `DetectResult` 值不再收 lambda), 单条目失败隔离与现状一致, 05 的 UI 薄 guard  
+  例外句按期收回改写; 二, **Missing 不强造生产者** — 引擎对三态直通, S2 记为 "无等价生产点, 延后到  
+  有真实场景的批次 (批 3 Others 入表时复查)", 强造必破逐行等价. 节奏照批: 一批改完, 多轮 review,  
+  提交按条目拆细; LSP 按新规批末一发批量查询.
+  下一步动作: 取改前快照 (设备在线), 通读现有结构后动笔.
+- 2026-11-14 (批 2 实现 + 验证, 未提交): 改前快照已取 (munch, 337017 字节). 实现:
+  - 新增 `ui/base/detect/Detector.kt`: `Detector` 数据 (id, run 链, failureRows 兜底), 两个工厂  
+    (`detector` 三态形状: 引擎可注入合成 Failed 走条目自己的翻译; `rawDetector` 两条多行条目的  
+    原始形状), 引擎 `List<Detector>.detectAll()` (串行, 每条目前 `ensureActive()`, 固定下标槽,  
+    unexpected 异常降级 failureRows, 取消 rethrow, 空槽 requireNotNull 报 id).
+  - `HomeModelMapper`: 23 个方法签名 lambda 改值 (`result: DetectResult<X>` 或多行条目的原始形状),  
+    `guardedEntry` 骨架改纯分发 `translateEntry` (Found/Missing/Failed 三支, 无 try), `failureRow`  
+    更名公开 `toFailureModel` (引擎兜底与多行条目 failureRows 复用), 两个内联调用点与特例重写  
+    (securityPatch 内层参数改名 row 避免遮蔽), 旧注释清零.
+  - `HomeViewModel.detect()`: 共享输入 (mounts) 提前为阶段一, 23 条清单数据化 (id 即目录的  
+    HOME-01..23, 顺序与目录一致), `detectors.detectAll()` 收口; **payload 路径**  
+    (`payloadOutdatedTargetSdkVersionApk`, 编译抓到的漏网点) 改走一次单条目引擎, 隔离语义与  
+    lambda guard 时代逐字一致, 05 的例外句保持单点.
+  - `05-代码规则`: UI 薄 guard 例外句按期收回改写 (guard 归引擎, mapper 已纯).
+  - 测试重排: HomeModelMapperTest 只留纯翻译两例 (Failed 分支, 两态颜色), 新增  
+    `DetectionEngineTest` 四例 (unexpected 降级失败行, 取消 rethrow, 清单顺序, Failed 直通) —  
+    guard 契约从 mapper 测试迁到引擎测试.
+  - 实施偏离报告草图两处 (记录在案可否决): 报告草图的 `标题` 与三态语义说明不做成运行时字段  
+    (行标题由 mapper 的行自带, 失败行走条目自己的 Failed 分支, 语义说明落 KDoc, 免得标题两处  
+    维护); HOME-05 与 HOME-11 的 failureRows 显式写两行 (标题与各自行形状一致; 这两条的链外异常  
+    今日不可达或本就无隔离 — trebleGsi 的 exec 异常今天会炸整页, 引擎反而补上了隔离).
+  - 验证: 四任务 `BUILD SUCCESSFUL` 4 分 29 秒 (单测 80 + base 4, HomeModelMapperTest 4 改 2 加  
+    DetectionEngineTest 4), lint 无新问题; LSP 批末一发 (新规首用): Detector, HomeViewModel,  
+    HomeModelMapper 三份一条命令查完, 全 CLEAN, 单会话不到半分钟; **黄金对照等价**: 1817 行  
+    两份同数, home 25 + others 42 四列逐字节相同, prop 仅 4 处 `cache_key.*` 每进程随机, 键多重集  
+    相等 — 引擎加 23 条清单产出与旧函数体逐行等价.
+  - adb 管线教训二刷: `adb shell am instrument` 的输出经管道会被吞, 裸跑才见 `OK (1 test)`;  
+    以后 instrument 一律裸跑.
+  下一步动作: 发批 2 v1 (跨端, 提示词带 STOP-CONDITION 新格式与 reviewer 自检义务), 工作树冻结.
+- 2026-11-14 (批 2 v1 发起, 跨端): review 目录重建 (批 1 的已按 14 删), 提示词  
+  `review-v1-prompt-2124.md` — 首个带首尾 `STOP-CONDITION` 行格式与 reviewer 落盘前自检义务的提示词;  
+  排除条款: AGP canary 一笔, 两份 progress.md. 发起 HEAD `58367027`. v1 为 `等待报告`,  
+  工作树随之冻结 (记录文件除外).
+  下一步动作: 收 v1 报告, 按 13 第 3 步处理发现; 手工步老板已真机过目结清.
+- 2026-11-14 (批 2 v1 收下, 处理发现, 发 v2): 两份齐 (doubao-work-desktop, 模型会话未自报, default,  
+  `2154`; WorkBuddy / Tencent Hunyuan Hy, default, `2206`), 元数据加首尾 `STOP-CONDITION` 行齐全  
+  (新格式首用生效, 两家都判 not met 并给原因), base-head `58367027` 与当前一致, 照收. v1 标 `已收`,  
+  工作树解冻. 合并判定 (细节在 state.md):
+  - 执行模型三件与 23 条清单两家全部核过成立 (doubao 逐条对目录, WorkBuddy 重枚举计数 20 加 HOME-23  
+    加两条多行 = 23); WorkBuddy 独立核了四个失败行标题资源在 strings.xml 存在, payload 的 `single()`  
+    两路径单行不炸; 两家都采信主 agent 的验证证据并各自复跑了编译与单测 (doubao: 84 例旧数, WorkBuddy  
+    转述).
+  - 第一档修完 (已落): living 文本旧 guard 说法八处 (05 例外句重写去 `落地`/叙述/来源标签加符号,  
+    HomeRepository 注释, MyModelExt 注释, mapper 三处 scaffold/guard 旧说法, 22-scheme 一处,  
+    issues-cn README 一处, subtask-05 行号 :36 改 :35); 测试补两例 (rawDetector 链异常展开两条  
+    各自标题的失败行, 条目间取消停掉后续条目) — 单测 82 加 base 4 全绿, LSP 批发五份全 CLEAN.
+  - 分歧一处按 11 阶梯: `22-scheme:52` 的 `guardedEntry` 引用, Doubao 判 record 历史不动, WorkBuddy  
+    判 living 就地改 (文件在现行目录非 archived, README:12 的维护句在案) — 采 WorkBuddy, 已就地改.
+  - 第三档 (F-01/F4): `subtask-05.md:46-48` 的五字段草图与实现的 (`id`, 链, 失败行兜底) 三形状不一致 —  
+    主 agent 判该报告是 AI 维护的 living 计划, 按当下真话就地改写 (标题与语义说明不做成运行时字段),  
+    负责人扫一眼可否决; Doubao 的两个代价 (标题两处维护只涉两条多行条目的失败兜底, 依赖声明延后到  
+    Others/Prop 有真实共享输入时) 记录在案.
+  - 第二档记档: 06/04/目录不变式句归批 6, Others/Prop 归批 3/4, 比对语义归批 5, F-10 (23 条 id 与  
+    顺序无断言锁) 归批 6 与目录对齐时一起.
+  - 新格式与自检义务生效: 两家报告的首尾 STOP-CONDITION 行与自检节都在且有用 (WorkBuddy 的自检抓到  
+    `:701` 前移这类行号漂移先例的同类问题).
+  下一步动作: 发 v2 delta (核八处文本修与两例新测试), 工作树冻结.
+- 2026-11-14 (批 2 v2 发起, 跨端 delta): 提示词 `review-v2-prompt-2228.md` (带两份 v1 报告路径,  
+  五项合并应改清单, 两轮之间的修复与验证证据; 排除条款沿用 v1). 发起 HEAD `58367027`.  
+  v2 为 `等待报告`, 工作树随之冻结 (记录文件除外).
+  下一步动作: 收 v2 报告, 按 13 第 3 步处理发现.
+- 2026-11-14 (批 2 v2 收下, 处理发现, 发 v3): 两份齐 (doubao-work-desktop, 未自报, default, `2254`;  
+  WorkBuddy / Tencent Hunyuan Hy, default, `2241`), 格式与 base-head 齐, 照收. 停止条件两家打架  
+  (Doubao met, WorkBuddy not met) — 按 11 事实层裁: 行号确实又漂 (我重写 05 的修法自己让 :35 过期成  
+  :34), 两例测试确实没锁住点名的目标 (取消例的取消源是 exec 而非 `ensureActive()` 分支, raw 例  
+  重写的 failureRows 与生产 lambda 无引用关系) — **采 WorkBuddy 的 not met**, 驳 Doubao 的 met  
+  (判轻了 F2). 合并处置 (已全部落):
+  - F1: subtask-05:125 的 05 行号引用**去掉行号**只引原文 (漂了两次的类就地终结).
+  - F2a: 取消例改名 `cancellation from the chain stops the remaining entries`; 新增  
+    `cancelling the job between entries stops the remaining ones via ensureActive` (job 在条目间  
+    被 cancel, 第一条正常完成, 断言后续条目未跑且 worker cancelled) — `ensureActive()` 分支首次  
+    有断言.
+  - F2b: 生产 failureRows 收进 mapper 公开方法 (`toSecurityPatchFailureRows`,  
+    `toTrebleAndGsiFailureRows`, 两行各自标题), ViewModel 改方法引用; 测试补两例锁这两个方法  
+    (2 行, 标题, CRITICAL), 原 raw 两行例保留为引擎机制测试 (加注释指明生产兜底在 HomeModelMapperTest).
+  - F3 (措辞): `兜底` 禁词两处清除 (subtask-05:47, 22-scheme:52), `语义说明落各条目的 KDoc` 改  
+    "落 04-检测条目目录 各条的定义里" (实现里只有一处 KDoc, 原句不实), guard 指称统一符号形式  
+    (MyModelExt 加 `Detector.detectAll()`).
+  - V2-F-03 (Doubao, 第一档): subtask-04.md 两处仍说 guard 在 mapper — 采, 就地改 (失败处理行与  
+    计划改动的 guard 落点段, 多行例外形状的安全性论据改成 run 链加引擎 failureRows).
+  - V2-F-06 (Doubao, 第三档): 05 的 "唯一例外" 与 ViewModel 六处 lld 链 try 对不上 — 采其修法一,  
+    句子写明管辖范围 ( "这一条管检测条目的失败隔离" ) 加 "lld 载入链的失败退回是数据源契约,  
+    不属这一条".
+  - 验证: 单测 85 + base 4 全绿 (DetectionEngineTest 7 例, HomeModelMapperTest 4 例), assemble 加  
+    lint 绿, LSP 批发三份 CLEAN. 途中事故记档: `:binderDetector:buildCMakeDebug` 四 ABI 连续三跑  
+    瞬间失败且零输出 (裸 ninja 正常), `--stop` 杀 daemon 后自愈 — 判 daemon 层僵尸/环境污染,  
+    非代码问题; CMake 任务在单测任务图里出现属 AGP 9.6 canary 的接线, 与本批代码无关.
+  下一步动作: 发 v3 delta (核本轮修复), 工作树冻结.
+- 2026-11-14 (批 2 v3 发起, 跨端 delta): 提示词 `review-v3-prompt-2325.md` (带两份 v2 报告路径,  
+  五项合并应改清单, 两轮之间的修复与验证证据, CMake 事故记档; 排除条款沿用). 发起 HEAD `58367027`.  
+  v3 为 `等待报告`, 工作树随之冻结 (记录文件除外).
+  下一步动作: 收 v3 报告, 按 13 第 3 步处理发现.
+- 2026-11-14 (暂停令, 语义 id 方向已定): 负责人问 Detector id 的用途后定 **换语义 id**  
+  (如 `home-detect-mode`), 但**执行先挂起** — v3 报告已落盘, 负责人令先不收不读, 整个循环暂停.  
+  暂停态: 工作树保持批 2 v2 修复后的样子不动 (树不动, v3 报告的 base-head 有效性不受影响;  
+  之后的任何树改动按 14:120 迟到规则照收, 发现按当前树判定). 语义 id 的落地时点待解除令排序  
+  (倾向: v3 处理完再改, 免得再作废一轮; 目录的语义 id 列随批 6). 恢复协议已记 state.md.
+  下一步动作: 等负责人解除令; 解除后第一步是按 14 收 v3 报告, 语义 id 改动按解除令排序.
+- 2026-11-15 (批 2 v3 收下, 处理发现, 两家 met 循环待收口): 暂停解除 (负责人报 "review 完了"),  
+  两份齐 (doubao-work-desktop, 模型会话未自报, default, `2342`; WorkBuddy / Tencent Hunyuan Hy,  
+  default, `2333`), 格式与 base-head `58367027` 齐, 照收. v3 标 `已收`, 工作树解冻. 合并判定:
+  - **两家都判 met** — v2 的两条实质缺口确认真修: WorkBuddy 的负向验证 (删 `Detector.kt:52`  
+    取消例会红, 改生产标题资源 mapper 测试会红) 首次把 `ensureActive()` 分支与生产 failureRows  
+    锁进 CI; Doubao 独立复跑单测加 lint 加 LSP 全绿.
+  - 剩余全为措辞与加固, 已全落: subtask-05 的 05 引用**去行号只引原文** (该引用漂了三次, 类终结;  
+    **更正一笔**: v2 处理时本文件曾记 "行号已去", 树里实际没落, WorkBuddy v3 抓到, 记录与树对不上  
+    的账认下); subtask-04 新文本两处 `兜底` 与将来时句清掉; mapper 注释 `fallback` 改用代码自己的  
+    名字; subtask-05 `本目录` 改 `04-检测条目目录`; 05 管辖句改 "这条例外只管..."; MyModelExt  
+    断行修. 注释与文档 only, 按 11:15 跳构建档; 机械自查 `兜底`/`guardedEntry`/行号引用/`fallback`  
+    在涉改文件零残留 (`webview_fallback` 是资源名不动).
+  - 主 agent 手伸长一次自纠: mapper 的 "(spec finding 3)" 历史引用没被点名, 擅自改写后当轮撤回.
+  - 第二档照旧: 06/04/目录不变式/id 顺序断言归批 6, Others/Prop 归批 3/4, 比对语义归批 5.
+  - 停止条件: 两家 met, 循环收口; v4 跳不跳交负责人 (13:212).
+  下一步动作: 等负责人定 v4 跳不跳 (建议跳, 记偏差); 其后按已定方向落地语义 id (表达形式建议  
+  枚举, 见当轮回复), 批 2 放行与拆笔提交、review 目录删除照旧各等单独同意.
+- 2026-11-15 (v4 跳过, 循环收口; 语义 id 方案定案): 负责人定 v4 跳过 (偏差记 13:217: 两家 met,  
+  剩余措辞已落, 机械自查零残留), 批 2 review 循环收口 (v1 到 v3 共三轮六份报告). id 表达形式的  
+  问题的结论: 语义 id 落地时用**枚举** `HomeEntryId(val id: String)` (单一出处, 声明序即展示序,  
+  Doubao F-10 的断言一行写完), 不用裸字符串或散装常量; 时序定 **先放行批 2** (HOME-NN 版, v3 的  
+  met 覆盖它), 语义 id 加枚举作为批 2 之后的紧随小单元 (自走一轮 quick review), 目录的语义 id 列  
+  随批 6.
+  下一步动作: 批 2 第 4 步等负责人 (手工步: 三页各翻一遍加中途打断; 看 diff 加一句放行理由),  
+  第 5 步拆笔与 trailer 各等单独同意, review 目录按 14 待点头后删; 之后开工语义 id 加枚举小单元.
+- 2026-11-15 (批 2 第 4 步放行): 最新树出包装机 (无线 TLS), 主界面拉起; 负责人真机过目含切 Tab  
+  与后台场景, 答复 "在设备上看完了, 没问题" (原话在案, 照 14 转述进 spec 记录笔的提交信息);  
+  顺带核清一条需求: 初次加载或刷新后立刻切 Tab 或切后台, 加载继续并落地 (三条代码证据: 每 Tab  
+  常驻 back stack 加 ViewModelStore decorator, loadJob 在 viewModelScope, 引擎 ensureActive 只对  
+  真取消响应). 手工步 (三页加打断) 按这句话视为已结. 第 4 步完成, 第 5 步的拆笔与 trailer 另行等.
+  下一步动作: 等负责人拆笔方案确认, trailer (12:13 不猜), review 目录删除点头; 然后逐笔提交  
+  (canary 不提交).
 - 各子任务状态: subtask-01 已关闭; subtask-02 已提交并关闭;  
   subtask-03 已提交并关闭; subtask-04 已提交并关闭 (批 1 ~ 7 已提交关闭, 规则文件两件已提交,  
   收尾文档批三轮 review 已收, 第 4 步已放行, review 目录已删,  
