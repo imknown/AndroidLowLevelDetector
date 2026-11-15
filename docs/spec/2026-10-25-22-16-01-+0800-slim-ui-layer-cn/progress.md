@@ -1749,6 +1749,11 @@
   随批 6.
   下一步动作: 批 2 第 4 步等负责人 (手工步: 三页各翻一遍加中途打断; 看 diff 加一句放行理由),  
   第 5 步拆笔与 trailer 各等单独同意, review 目录按 14 待点头后删; 之后开工语义 id 加枚举小单元.
+- 2026-11-15 (语义 id 小单元的文档边界盘点): 负责人问 docs/agents-cn 是否要随 id 改动 — 全目录  
+  grep `HOME-NN`/条目 id 零命中, **agents-cn 不用改** (06/04 的批 6 改写与 id 方案无关, 落笔时按  
+  语义方案写); 要动的是需求正文两处 (`04-检测条目目录` 的 id 定义加 23 行表加定档图行,  
+  `02-功能需求.md:321` 一处), 按目录自己的 "引用同批更新" 规矩归批 6 一揽子. 小单元因此零文档  
+  改动, 只动代码; 语义 id 落地后到批 6 前, 两份有序表的核对是人工 (语义 id 序列对照目录行序).
 - 2026-11-15 (批 2 第 4 步放行): 最新树出包装机 (无线 TLS), 主界面拉起; 负责人真机过目含切 Tab  
   与后台场景, 答复 "在设备上看完了, 没问题" (原话在案, 照 14 转述进 spec 记录笔的提交信息);  
   顺带核清一条需求: 初次加载或刷新后立刻切 Tab 或切后台, 加载继续并落地 (三条代码证据: 每 Tab  
@@ -1756,6 +1761,65 @@
   真取消响应). 手工步 (三页加打断) 按这句话视为已结. 第 4 步完成, 第 5 步的拆笔与 trailer 另行等.
   下一步动作: 等负责人拆笔方案确认, trailer (12:13 不猜), review 目录删除点头; 然后逐笔提交  
   (canary 不提交).
+- 2026-11-15 (批 2 第 5 步提交, 三笔, 关闭): 负责人确认拆笔, trailer 定 ZCode / GLM-5.3-Flash /  
+  max, review 目录点头删除 (三轮六份报告与三份提示词, 未被 git 跟踪, 判定理由已全数在 progress 与  
+  删前 state). 拆笔偏差记此: 原案四笔, 但笔 1 (纯新增) 与笔 2 (接线) 编译互锁 — 引擎测试依赖新  
+  mapper 签名, ViewModel 依赖 Detector — 按 12 "单元按可独立编译划" 并成一笔, 实际三笔.  
+  提交串 (老到新): `825ae078` refactor(home) 七文件 (Detector 加引擎加 23 条清单加 mapper 纯翻译  
+  加 payload 走引擎加测试重排), `cfd570ac` docs(agents) 05 例外句收回改写, `6b7a3890` docs(spec)  
+  22-scheme 加 README 加 subtask-04 加 subtask-05 加 progress. 放行理由照 14 转述进笔 1 与笔 3 的  
+  Owner sign-off; canary (`android.toml:7`) 与 kotlin-lsp-daemon 的 progress.md 按令留在工作树  
+  不提交. 批 2 全程: 两个设计点定案 (guard 归引擎, Missing 延后), 三轮九份跨端报告, enforcing  
+  真机验证, 黄金对照逐字节等价, LSP 批末一发新规落地, CMake daemon 事故记档.
+  本条与各子任务状态行更新随批 3 首笔入库.
+  下一步动作: 批 3 (Others 入表), 等负责人说开始; 批 2 后的紧随小单元是语义 id 加枚举  
+  (`HomeEntryId`), 时序等负责人定 (可插在批 3 前).
+- 2026-11-15 (语义 id 小单元实现, v1 发起, 未提交): 负责人令开工. 实现: 新增  
+  `ui/home/model/HomeEntryId.kt` — 枚举 `HomeEntryId(val id: String)` 23 项 (语义名如  
+  `home-detect-mode`, 声明序即展示序即目录行序) 加两个按枚举的 `detector`/`rawDetector` 工厂重载  
+  (转字符串喂泛型引擎, 引擎保持页无关); `HomeViewModel` 的 23 条清单与 payload 路径的 id 实参全部  
+  换枚举引用, 基础包的字符串工厂 import 随之移除.
+  实施事故自曝: 批量替换的 perl 替换串里 `\r?` 被按字面写进文件 (CR 加问号加换行), 且一个模式咬中  
+  detector 的尾随 lambda 开口, 把 22 处 `translate` 挂到了外层 listOf 上 — K2 只报外层  
+  NONE_APPLICABLE 把根错裹住, LSP 还给了假 CLEAN (同步活但模型过期), 折腾三轮才定位. 修法:  
+  python 整块重写清单与 payload 两段. 教训: 跨行结构改动不用 perl 替换串, 用整块重写; LSP 的  
+  CLEAN 在编译红时一律先自检再采信.
+  验证: compile 加单测 85 加 base 4 加 assemble 加 lint 全绿; LSP 批末一发 (枚举加 ViewModel) 全  
+  CLEAN; 黄金对照: 设备断连未跑 — 本单元 id 字符串不进 `MyModel` 不碰行输出, 批 2 的逐字节等价  
+  继续覆盖, 复查挂批 3 的设备会话 (记此不记偏差). 零文档改动 (agents-cn 零命中已盘点).
+  v1 已发起 (review 目录重建, 提示词 `review-v1-prompt-1130.md`, HEAD `6b7a3890`), v1 为  
+  `等待报告`, 工作树随之冻结 (记录文件除外).
+  下一步动作: 收 v1 报告, 按 13 第 3 步处理发现; 黄金复查挂批 3 设备会话.
+- 2026-11-15 (黄金复查就地结清): 设备重连 (无线 TLS), 语义 id 版装机, 快照裸跑 `OK (1 test)`,  
+  与批 2 基线按键对账: 1817 行两份同数, home 25 + others 42 四列逐字节相同, prop 1750 行 14 处  
+  detail 差异全在已知活值家族 (`cache_key.*` 每进程随机, 计数器, 前台应用名两次运行间变了),  
+  键多重集相等 — 语义 id 改动行为不可见, 与设计一致, 挂账的黄金复查就此结清 (冻结期设备操作  
+  不碰树, 合规).
+  下一步动作: 收 v1 报告, 按 13 第 3 步处理发现.
+- 2026-11-15 (小单元 v1 收下, 处理发现): 两份齐 (doubao-work / doubao, effort unknown (会话读不到,  
+  按 11 不猜), `1157`; workbuddy / claude-opus-6, default, `1152`), 格式与 base-head `6b7a3890` 齐,  
+  照收. 停止条件打架 (Doubao met, WorkBuddy not met) — 合并判定: 单元目标两家核过成立; 实质发现  
+  全修已落: 清单缩进 24 退 12 (整块重写残留, 两家同报), payload 超长行改清单同款双 lambda (修  
+  行宽顺带统一写法), Detector KDoc 的 HOME-NN 说法改页无关, import 字母序, 常量改名  
+  HOME_DETECT_MODE 与 id 字串对齐, HomeEntryId KDoc 改约定表述, review 目录补漏掉的 `.gitignore`  
+  (重建时漏的, 认账). 分歧一处 (测试占位标签): 判断层采折中 — 中性占位 (`entry-under-test` 等,  
+  不把页无关引擎测试耦合到 Home 枚举), Doubao 要的记录理由即本条. 第二档: 目录与 02-功能需求 的  
+  引用归批 6, 声明序断言归批 6. 验证: compile 加单测 85 加 base 4 全绿, LSP 批发三份 CLEAN,  
+  行宽与缩进机械核过.
+  下一步动作: 等负责人定 v2 跳不跳 (建议跳, 记偏差); 其后本单元放行与提交 (单笔, trailer 待给),  
+  review 目录删除待点头.
+- 2026-11-15 (v2 跳过, 循环收口; review 目录删除): 负责人定 v2 跳过 (偏差记 13:217: 两家 met 与  
+  not-met 的分歧已在事实层裁定, 发现全落, 机械自查零残留), 小单元 review 循环收口 (v1 一轮两份  
+  报告). review 目录按 14 删除 (v1 两份报告与提示词, .gitignore 随目录, 未被 git 跟踪, 判定理由  
+  已在 progress 与删前 state). 本单元的放行走 "看 diff 后放行" (负责人令): diff 已定稿  
+  (HomeEntryId.kt 新增加 HomeViewModel 换名), 等负责人过目留一句放行理由, 提交 (单笔) 与 trailer  
+  随后逐项点头.
+  下一步动作: 等负责人看 diff 放行 (留一句理由); 提交单笔与 trailer 随后逐项点头.
+- 2026-11-15 (小单元第 4 步放行): 负责人看完代码 diff, 答复 "代码看完了 没问题" (原话在案,  
+  照 14 转述进提交信息). 第 4 步完成; 提交 (单笔: HomeEntryId.kt 新增加 HomeViewModel 加  
+  Detector KDoc 加 DetectionEngineTest 占位加本 spec 记录, 按 12 "spec 记录随批内最后一笔") 与  
+  trailer 另行等点头.
+  下一步动作: 等负责人提交同意与 trailer; 提交后本单元关闭, 回批 3.
 - 各子任务状态: subtask-01 已关闭; subtask-02 已提交并关闭;  
   subtask-03 已提交并关闭; subtask-04 已提交并关闭 (批 1 ~ 7 已提交关闭, 规则文件两件已提交,  
   收尾文档批三轮 review 已收, 第 4 步已放行, review 目录已删,  

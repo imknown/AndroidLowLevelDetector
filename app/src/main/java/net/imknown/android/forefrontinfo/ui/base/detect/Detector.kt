@@ -6,7 +6,7 @@ import kotlinx.coroutines.ensureActive
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 
 /**
- * One detection entry as data: the entry's stable id (the detection-entry catalog's HOME-NN),
+ * One detection entry as data: the entry's page-specific stable id,
  * the entry's whole fetch-and-translate chain, and the rows the engine falls back to when the
  * chain throws unexpectedly. List order is display order.
  */

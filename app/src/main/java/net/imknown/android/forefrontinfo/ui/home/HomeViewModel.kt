@@ -23,15 +23,16 @@ import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.extension.fullMessage
 import net.imknown.android.forefrontinfo.base.extension.isLldDatetime
 import net.imknown.android.forefrontinfo.ui.base.detect.detectAll
-import net.imknown.android.forefrontinfo.ui.base.detect.detector
-import net.imknown.android.forefrontinfo.ui.base.detect.rawDetector
 import net.imknown.android.forefrontinfo.ui.base.list.BaseListViewModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModelType
 import net.imknown.android.forefrontinfo.ui.common.toObjectOrThrow
 import net.imknown.android.forefrontinfo.ui.home.mapper.HomeModelMapper
+import net.imknown.android.forefrontinfo.ui.home.model.HomeEntryId
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.home.model.LldSource
+import net.imknown.android.forefrontinfo.ui.home.model.detector
+import net.imknown.android.forefrontinfo.ui.home.model.rawDetector
 import net.imknown.android.forefrontinfo.ui.home.repository.HomeRepository
 import net.imknown.android.forefrontinfo.ui.settings.repository.SettingsStore
 import java.io.IOException
@@ -220,82 +221,82 @@ class HomeViewModel(
             // outdated-order setting is read inside its own entry).
             val mountQuery = homeRepository.getMounts()
 
-            // Stage two: the entry list is data (ids are the detection-entry catalog's HOME-NN,
+            // Stage two: the entry list is data (ids are the enum's semantic ids,
             // list order is display order), and the engine runs it serially with the per-entry
             // guard (unexpected exceptions degrade into the entry's own failure rows).
             val detectors = listOf(
-                detector("HOME-01", { homeRepository.detectMode(lld, errorMessage, source) }) {
+                detector(HomeEntryId.HOME_DETECT_MODE, { homeRepository.detectMode(lld, errorMessage, source) }) {
                     listOf(homeModelMapper.toModeModel(it))
                 },
-                detector("HOME-02", { homeRepository.detectAndroid(lld) }) {
+                detector(HomeEntryId.HOME_ANDROID_VERSION, { homeRepository.detectAndroid(lld) }) {
                     listOf(homeModelMapper.toAndroidModel(it))
                 },
-                detector("HOME-03", { homeRepository.detectSdkExtension(lld) }) {
+                detector(HomeEntryId.HOME_SDK_EXTENSION_VERSION, { homeRepository.detectSdkExtension(lld) }) {
                     listOf(homeModelMapper.toSdkExtensionModel(it))
                 },
-                detector("HOME-04", { homeRepository.detectBuildId(lld) }) {
+                detector(HomeEntryId.HOME_BUILD_ID, { homeRepository.detectBuildId(lld) }) {
                     listOf(homeModelMapper.toBuildIdModel(it))
                 },
                 rawDetector(
-                    "HOME-05",
+                    HomeEntryId.HOME_SECURITY_PATCH,
                     run = { homeModelMapper.toSecurityPatchModels(homeRepository.detectSecurityPatches(lld)) },
                     failureRows = homeModelMapper::toSecurityPatchFailureRows
                 ),
-                detector("HOME-06", { homeRepository.detectPerformanceClass() }) {
+                detector(HomeEntryId.HOME_PERFORMANCE_CLASS, { homeRepository.detectPerformanceClass() }) {
                     listOf(homeModelMapper.toPerformanceClassModel(it))
                 },
-                detector("HOME-07", { homeRepository.detectKernel(lld) }) {
+                detector(HomeEntryId.HOME_KERNEL, { homeRepository.detectKernel(lld) }) {
                     listOf(homeModelMapper.toKernelModel(it))
                 },
-                detector("HOME-08", { homeRepository.detectAb() }) {
+                detector(HomeEntryId.HOME_AB_UPDATE, { homeRepository.detectAb() }) {
                     listOf(homeModelMapper.toAbModel(it))
                 },
-                detector("HOME-09", { homeRepository.detectSar(mountQuery) }) {
+                detector(HomeEntryId.HOME_SAR, { homeRepository.detectSar(mountQuery) }) {
                     listOf(homeModelMapper.toSarModel(it))
                 },
-                detector("HOME-10", { homeRepository.detectDynamicPartitions() }) {
+                detector(HomeEntryId.HOME_DYNAMIC_PARTITIONS, { homeRepository.detectDynamicPartitions() }) {
                     listOf(homeModelMapper.toDynamicPartitionsModel(it))
                 },
                 rawDetector(
-                    "HOME-11",
+                    HomeEntryId.HOME_TREBLE_GSI,
                     run = { homeModelMapper.toTrebleAndGsiModels(homeRepository.detectTrebleAndGsiCompatibility()) },
                     failureRows = homeModelMapper::toTrebleAndGsiFailureRows
                 ),
-                detector("HOME-12", { homeRepository.detectDsu() }) {
+                detector(HomeEntryId.HOME_DSU, { homeRepository.detectDsu() }) {
                     listOf(homeModelMapper.toDsuModel(it))
                 },
-                detector("HOME-13", { homeRepository.detectMainline(lld) }) {
+                detector(HomeEntryId.HOME_MAINLINE, { homeRepository.detectMainline(lld) }) {
                     listOf(homeModelMapper.toMainlineModel(it))
                 },
-                detector("HOME-14", { homeRepository.detectVndk(lld) }) {
+                detector(HomeEntryId.HOME_VNDK, { homeRepository.detectVndk(lld) }) {
                     listOf(homeModelMapper.toVndkModel(it))
                 },
-                detector("HOME-15", { homeRepository.detectApex(mountQuery) }) {
+                detector(HomeEntryId.HOME_APEX, { homeRepository.detectApex(mountQuery) }) {
                     listOf(homeModelMapper.toApexModel(it))
                 },
-                detector("HOME-16", { homeRepository.detectDeveloperOptions() }) {
+                detector(HomeEntryId.HOME_DEVELOPER_OPTIONS, { homeRepository.detectDeveloperOptions() }) {
                     listOf(homeModelMapper.toDeveloperOptionsModel(it))
                 },
-                detector("HOME-17", { homeRepository.detectAdb() }) {
+                detector(HomeEntryId.HOME_ADB, { homeRepository.detectAdb() }) {
                     listOf(homeModelMapper.toAdbModel(it))
                 },
-                detector("HOME-18", { homeRepository.detectAdbAuthentication() }) {
+                detector(HomeEntryId.HOME_ADB_AUTHENTICATION, { homeRepository.detectAdbAuthentication() }) {
                     listOf(homeModelMapper.toAdbAuthenticationModel(it))
                 },
-                detector("HOME-19", { homeRepository.detectEncryption() }) {
+                detector(HomeEntryId.HOME_ENCRYPTION, { homeRepository.detectEncryption() }) {
                     listOf(homeModelMapper.toEncryptionModel(it))
                 },
-                detector("HOME-20", { homeRepository.detectSELinux() }) {
+                detector(HomeEntryId.HOME_SELINUX, { homeRepository.detectSELinux() }) {
                     listOf(homeModelMapper.toSELinuxModel(it))
                 },
-                detector("HOME-21", { homeRepository.detectToybox(lld) }) {
+                detector(HomeEntryId.HOME_TOYBOX, { homeRepository.detectToybox(lld) }) {
                     listOf(homeModelMapper.toToyboxModel(it))
                 },
-                detector("HOME-22", { homeRepository.detectWebView(lld) }) {
+                detector(HomeEntryId.HOME_WEBVIEW, { homeRepository.detectWebView(lld) }) {
                     listOf(homeModelMapper.toWebViewModel(it))
                 },
                 detector(
-                    "HOME-23",
+                    HomeEntryId.HOME_OUTDATED_TARGET_SDK_APK,
                     { homeRepository.getOutdatedTargetSdkVersionApkState(lld, settingsStore.outdatedOrderFirst.value) }
                 ) {
                     listOf(homeModelMapper.toOutdatedTargetSdkVersionApkModel(it))
@@ -336,10 +337,9 @@ class HomeViewModel(
             // The payload path is a one-entry engine run, so the same per-entry guard applies
             // (unexpected exceptions degrade into the entry's failure-row detail).
             listOf(
-                detector(
-                    "HOME-23",
-                    { homeRepository.getOutdatedTargetSdkVersionApkState(lld, settingsStore.outdatedOrderFirst.value) }
-                ) {
+                detector(HomeEntryId.HOME_OUTDATED_TARGET_SDK_APK, {
+                    homeRepository.getOutdatedTargetSdkVersionApkState(lld, settingsStore.outdatedOrderFirst.value)
+                }) {
                     listOf(homeModelMapper.toOutdatedTargetSdkVersionApkModel(it))
                 }
             ).detectAll().single().detail

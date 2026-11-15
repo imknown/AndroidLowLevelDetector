@@ -27,7 +27,7 @@ class DetectionEngineTest {
     private val mapper by lazy { HomeModelMapper(MyApplication.instance) }
 
     private fun developerOptionsDetector(exec: () -> DetectResult<Boolean>) = detector(
-        "HOME-16",
+        "entry-under-test",
         exec
     ) { result ->
         listOf(mapper.toDeveloperOptionsModel(result))
@@ -86,7 +86,7 @@ class DetectionEngineTest {
         val rows = runBlocking {
             listOf(
                 rawDetector(
-                    "HOME-05",
+                    "entry-1",
                     run = { throw IllegalStateException("probe") },
                     failureRows = { cause ->
                         listOf(
@@ -117,13 +117,13 @@ class DetectionEngineTest {
         assertThrows(CancellationException::class.java) {
             runBlocking {
                 listOf(
-                    detector<Boolean>("HOME-01", exec = { throw CancellationException("cancelled") }) {
+                    detector<Boolean>("entry-1", exec = { throw CancellationException("cancelled") }) {
                         error("first entry's translate must not run after cancellation")
                     },
                     rawDetector(
-                        "HOME-02",
+                        "entry-2",
                         run = {
-                            laterEntriesRan.add("HOME-02")
+                            laterEntriesRan.add("entry-2")
                             error("second entry must not run after cancellation")
                         },
                         failureRows = { error("unreachable") }
@@ -145,9 +145,9 @@ class DetectionEngineTest {
                 listOf(
                     developerOptionsDetector(exec = { job.cancel(); DetectResult.Found(true) }),
                     rawDetector(
-                        "HOME-02",
+                        "entry-2",
                         run = {
-                            laterEntriesRan.add("HOME-02")
+                            laterEntriesRan.add("entry-2")
                             error("second entry must not run after the job was cancelled")
                         },
                         failureRows = { error("unreachable") }
