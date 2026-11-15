@@ -1820,6 +1820,103 @@
   Detector KDoc 加 DetectionEngineTest 占位加本 spec 记录, 按 12 "spec 记录随批内最后一笔") 与  
   trailer 另行等点头.
   下一步动作: 等负责人提交同意与 trailer; 提交后本单元关闭, 回批 3.
+- 2026-11-15 (小单元第 5 步提交, 单笔, 关闭): 负责人同意提交, trailer 定 ZCode / GLM-5.3-Flash /  
+  max. 提交: `48e03cee` refactor(home) 语义 id 加枚举 (五文件: HomeEntryId.kt 新增加 HomeViewModel  
+  换名加 Detector KDoc 加测试占位加本 spec 记录). canary (`android.toml:7`) 与  
+  kotlin-lsp-daemon 的 progress.md 按令留在工作树不提交. 小单元关闭; 目录的语义 id 列随批 6.
+  本条随批 3 首笔入库.
+  下一步动作: 批 3 (Others 入表), 等负责人说开始; 开工先取黄金快照 (设备在线).
+- 2026-11-15 (批 3 开工, 两个批内设计点定案): 负责人说开始. Others 现状 37 次追加与目录 OTH-01..37  
+  一一对应, 两个 SDK 门控 (S 包 5 行, Q 包 1 行) 即报告说的 6 个版本判断. 批内定案 (按报告与等价  
+  纪律, 负责人可否决): 一, **前置条件进条目声明** — `Detector` 加 `precondition: (() -> Boolean)? =  
+  null`, 引擎在每条目取消检查之后判它, false 跳过该条目 (空槽), 判断逻辑逐字保留  
+  (`Build.VERSION.SDK_INT >= ...`); 二, **Others 的引擎兜底维持今天的语义** — Others 仓库方法自  
+  guard 不抛 (guardedDetectFailedMyModel), 条目链不会抛, `failureRows` 改可空 (缺省 null = 链异常  
+  原样上抛, 即 Others 今天的整页语义), Home 各条目照旧显式传 — 不给 Others 造无标题的通用失败行,  
+  逐行等价纪律不动.
+  下一步动作: 引擎加前置条件与可空兜底 (含引擎测试两例), OthersEntryId 枚举 37 项, Others 清单接入,  
+  改前快照设备在线随时取.
+- 2026-11-15 (批 3 实现 + 验证, 黄金对照挂起等设备): 实现: `Detector` 加 `precondition`  
+  (默认 null, 引擎在每条目取消检查之后判它, false 跳过该条目落空槽) 与可空 `failureRows`  
+  (null = 链异常原样上抛, Others 仓库自 guard 的既有语义逐字保留; Home 各条目照旧显式传);  
+  新增 `ui/others/model/OthersEntryId.kt` — 枚举 37 项 (语义名 `oth-brand`..`oth-radio-version`,  
+  声明序即展示序即 OTH-01..37 行序) 加按枚举的 `rawDetector` 重载 (无 failureRows 形状);  
+  `OthersViewModel.collectModels()` 重写为 37 条清单 (两个 SDK 门控逐字搬进 precondition),  
+  `detectAll()` 收口; 引擎测试补前置条件两例 (false 跳过且链不跑, true 照常).
+  实施要点: Others 条目全部 `rawDetector` 无三态形状 (行由仓库直接产, 无 mapper 无状态色, 与  
+  "Others 无结论" 一致); getPartitionFingerprints 的多行直接作 run 返回; getVendorSku 走系统属性  
+  无 API 门控所以 lint 只报 4 个 NewApi (SOC_MODEL/SOC_MANUFACTURER/SKU/ODM_SKU, 全 API 31) —  
+  lint 的流分析看不见前置条件数据, 修法为 "前置条件声明加 run 内同款守卫, else 不可达即哨兵  
+  error" 的组合 (四处, 注释绑定两份门控同源); 引擎工厂参数重排为 (id, precondition, run/exec,  
+  failureRows/translate) 让尾随 lambda 绑定主链.
+  验证: 四任务全绿 (`BUILD SUCCESSFUL` 4 分 15 秒, 单测 app 87 加 base 4 — DetectionEngineTest  
+  9 例含前置条件两新例, lint 无新问题); LSP 批发三份 (OthersEntryId, OthersViewModel, Detector)  
+  全 CLEAN. 途中自作两轮 perl 又留了字面 `?` 与断裂结构 (同一坑二踩), python 整块重写修掉 —  
+  教训升级: 该文件的结构性编辑一律整块重写.
+  **黄金对照挂起**: 设备无线连接三连掉 (端口轮换加 timeout), 改前基线已在手  
+  (golden-postSemanticId.json, 即批 2 加语义 id 的已提交树), 改后包已构建待装 — 设备重连后  
+  第一件事跑对照 (本批重构了 Others 执行路径, 黄金是核心等价证据, 不跳过).
+  下一步动作: 设备重连后跑黄金对照; 对账绿则发批 3 v1 (跨端).
+- 2026-11-15 (批 3 黄金对照结清, v1 发起): 设备重连 (无线调试重启后新端口), 语义加批 3 版装机,  
+  快照裸跑 `OK (1 test)`, 与批 2 加语义 id 基线按键对账: 1817 行两份同数, home 25 + others 42  
+  四列逐字节相同 (37 条清单重构后的产出与旧函数体完全一致, 6 条门控行在 API 34 上正确在列 —  
+  引擎的 precondition 跳过在生产路径上首次实战), prop 1750 行 10 处 detail 差异全在已知活值家族  
+  (`cache_key.*` 每进程随机 8 处, 计数器与传感器浮点 2 处), 键多重集相等. 改前基线即  
+  golden-postSemanticId.json (批 2 加语义 id 的已提交树), 对照成立. 批 3 验证至此齐: 单测 87 加  
+  base 4, 四任务, LSP 批发三份 CLEAN, 黄金等价. v1 已发起 (review 目录重建, 提示词  
+  `review-v1-prompt-1322.md`, HEAD `48e03cee`), v1 为 `等待报告`, 工作树随之冻结 (记录文件除外).
+  下一步动作: 收 v1 报告, 按 13 第 3 步处理发现.
+- 2026-11-15 (批 3 v1 收下, 处理发现中): 两份齐 (doubao-work / doubao, default, `1341`;  
+  WorkBuddy / claude-opus-6, effort high, `1347`), 格式与 base-head `48e03cee` 齐, 照收. v1 标  
+  `已收`, 工作树解冻. 合并判定:
+  - 发现 1 (两家同报第一档): 四个 API 31 门控条目的 run 内守卫写错位 — 守卫落在  
+    SOC_MANUFACTURER/SKU/VENDOR_SKU/ODM_SKU, SOC_MODEL 只剩一句求值后丢弃的死语句  
+    `(Build.VERSION_CODES.S)`, 而 getVendorSku 无 @RequiresApi 根本不需要守卫 (fix_gates.py 的  
+    正则 `\.(get\w+)\(\)` 误咬了 getVendorSku, 漏了形状不同的 SOC_MODEL — 实施事故记此). 两家  
+    修法分歧: Doubao 给两条路 (修对四处, 或五条都不在 run 内重复), WorkBuddy 判修对即可 —  
+    两个修法都站得住, 摆负责人定 (见当轮回复).
+  - 发现 2 (两家同报第一档): 引擎的 null failureRows 上抛分支无测试, 测试文件头注释还是旧  
+    契约 — 已修: 补 `an entry without failure rows rethrows its chain exception` 一例 (断言异常  
+    穿出且后续条目不跑), 头注释按新契约改写; 单测 88 加 base 4 全绿.
+  - O-1 (两家都报 review 目录缺 .gitignore): 事实层**驳回** — .gitignore 13:23 已建 (mtime 与  
+    check-ignore 在案), 当前树 git status 零 review 命中, 两家观察不可复现.
+  - 第二档: 目录语义 id 列加 02-功能需求:321 归批 6; MyModelExt 的 `Detector.detectAll()` 指称  
+    (实为 `List<Detector>.detectAll()`) 归后续单元.
+  - 措辞 (Detector.kt:61 行尾空格) 已顺手修.
+  下一步动作: 等负责人定发现 1 的修法方向; 定完实施, 排 v2 (两家都判要下一轮).
+- 2026-11-15 (发现 1 按选项二落地, 黄金复查, 发 v2): 负责人定**选项二** (run 内重复守卫全删 —  
+  其存在理由已被实测推翻, 仓库方法的 @RequiresApi 满足 05 字面, precondition 是唯一声明门).  
+  python 精确清理: SOC_MODEL 的死语句块整块换干净形, 三个展开块 (SOC_MANUFACTURER, SKU,  
+  VENDOR_SKU, ODM_SKU 中前三个加误咬的 VENDOR_SKU) 按捕获的方法名收拢为单行体 — 守卫重复与  
+  死语句零残留. 验证: compile 加单测 88 加 base 4 全绿; **黄金对照 PASS** (与批 2 加语义 id 基线:  
+  1817 行同数, home 25 + others 42 四列逐字节相同, prop 10 处已知活值差异) — 守卫删除行为不可见.  
+  v2 已发起 (提示词 `review-v2-prompt-1425.md`, HEAD `48e03cee`), v2 为 `等待报告`, 工作树随之  
+  冻结 (记录文件除外).
+  下一步动作: 收 v2 报告, 按 13 第 3 步处理发现.
+- 2026-11-15 (批 3 v2 发起, 跨端 delta): 提示词 `review-v2-prompt-1425.md` (带两份 v1 报告路径,  
+  五项合并应改清单, 两轮之间的修复与验证证据含黄金对照; 排除条款沿用). 发起 HEAD `48e03cee`.  
+  v2 为 `等待报告`, 工作树随之冻结 (记录文件除外).
+  下一步动作: 收 v2 报告, 按 13 第 3 步处理发现.
+- 2026-11-15 (批 3 v2 收下 — 四份覆盖两个树态, 回归已修, 循环待收口): 暂停期的两份 (守卫全删态)  
+  抓到真回归: 删守卫后 lint 涨回 4 条 NewApi (SOC_MODEL/SOC_MANUFACTURER/SKU/ODM_SKU, 全 API 31),  
+  lintFossDebug 红 — 选项二的前提 ( "无守卫 lint 照过" ) 被证伪. 主 agent 复跑确认后**恢复四处  
+  run 内守卫** (注释改写为实测理由: precondition 是数据 lint 看不见, lint 要求调用点有可见的  
+  运行时门控), lint 绿; 设备重连后黄金对照 PASS (1817 行同数, home 25 + others 42 四列逐字节  
+  相同, prop 12 处已知活值差异). 恢复后的两份 (守卫恢复态): WorkBuddy 判 met (第一档零),  
+  Doubao 剩两条即时项 — 05 例外句补 "提供 failureRows 的条目" 限定语 (已落), lint 干净环境  
+  确认 (已做: 清 lint 中间产物后重跑绿). 其余: OthersViewModel:35 注释与代码不符 (已改),  
+  Detector KDoc 的 mapIndexed 保留理由 (三家三次编译失败为证, 注释保留), 05:24 的关系说明归  
+  后续单元, API 31 以下不出行的用例锁归后续单元, O-1 (.gitignore) 事实层驳回 (在案不可复现),  
+  F4 (v2 提示词的对象清单列了 9 份无改动文件) 属提示词笔误, reviewer 们按实际 status 处理无漏审.
+  验证终态: 单测 88 加 base 4, 四任务加 lint 全绿, LSP 批发三份 CLEAN (Detector 的  
+  SimplifiableCallChain 一条 WARNING: 三种简化写法 K2 全部类型不合, 回退已审原形并 KDoc 注明),  
+  黄金对照 PASS. 循环收口待负责人定 v3 跳不跳 (主 agent 建议跳, 偏差记 13:217).
+  下一步动作: 批 3 第 4 步等负责人 (手工步加看 diff 加一句放行理由), 第 5 步拆笔与 trailer 各等  
+  单独同意, review 目录按 14 待点头后删; 之后批 4 (Prop 入表).
+- 2026-11-15 (批 3 第 4 步放行): 负责人看过设备加代码 diff, 答复 "看了设备和代码, 没问题" (原话  
+  在案, 照 14 转述进 spec 记录笔的提交信息). 第 4 步完成; 第 5 步的拆笔与 trailer 另行等点头.
+  下一步动作: 等负责人拆笔方案确认, trailer (12:13 不猜), review 目录删除点头; 然后逐笔提交  
+  (canary 不提交).
 - 各子任务状态: subtask-01 已关闭; subtask-02 已提交并关闭;  
   subtask-03 已提交并关闭; subtask-04 已提交并关闭 (批 1 ~ 7 已提交关闭, 规则文件两件已提交,  
   收尾文档批三轮 review 已收, 第 4 步已放行, review 目录已删,  
