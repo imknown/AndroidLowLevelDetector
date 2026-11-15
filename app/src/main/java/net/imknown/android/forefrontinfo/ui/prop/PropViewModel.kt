@@ -9,8 +9,11 @@ import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import net.imknown.android.forefrontinfo.ui.base.detect.detectAll
 import net.imknown.android.forefrontinfo.ui.base.list.BaseListViewModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
+import net.imknown.android.forefrontinfo.ui.prop.model.PropEntryId
+import net.imknown.android.forefrontinfo.ui.prop.model.rawDetector
 import net.imknown.android.forefrontinfo.ui.prop.repository.PropRepository
 
 // Metro wiring: the three annotations replace the former companion Factory.
@@ -25,19 +28,24 @@ class PropViewModel(
     private val propRepository: PropRepository
 ) : BaseListViewModel() {
 
-    override suspend fun collectModels(): List<MyModel> {
-        val tempModels = mutableListOf<MyModel>()
+    override suspend fun collectModels(): List<MyModel> = withContext(Dispatchers.IO) {
+        // The entry list is data (ids are the PropEntryId semantic ids;
+        // list order is the display order); every source exists on every device, so there
+        // are no preconditions.
+        val detectors = listOf(
+            rawDetector(PropEntryId.PROP_SYSTEM_PROP) { propRepository.getSystemProp() },
+            rawDetector(PropEntryId.PROP_SETTINGS_SYSTEM) {
+                propRepository.getSettings(Settings.System::class)
+            },
+            rawDetector(PropEntryId.PROP_SETTINGS_SECURE) {
+                propRepository.getSettings(Settings.Secure::class)
+            },
+            rawDetector(PropEntryId.PROP_SETTINGS_GLOBAL) {
+                propRepository.getSettings(Settings.Global::class)
+            },
+            rawDetector(PropEntryId.PROP_BUILD_PROP) { propRepository.getBuildProp() }
+        )
 
-        withContext(Dispatchers.IO) {
-            tempModels += propRepository.getSystemProp()
-
-            tempModels += propRepository.getSettings(Settings.System::class)
-            tempModels += propRepository.getSettings(Settings.Secure::class)
-            tempModels += propRepository.getSettings(Settings.Global::class)
-
-            tempModels += propRepository.getBuildProp()
-        }
-
-        return tempModels
+        detectors.detectAll()
     }
 }
