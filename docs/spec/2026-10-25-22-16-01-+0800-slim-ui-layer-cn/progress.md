@@ -1980,13 +1980,143 @@
   用例锁的出处是批 3 评审而非批 4 v1 报告) 采信并更正记录. 验证: 单测 88 加 base 4, 四任务加  
   lint 全绿 (lint 干净中间产物后重跑确认), 黄金对照 PASS (与批 2 加语义 id 基线逐字节等价,  
   prop 仅已知活值差异).
-  下一步动作: 循环收口待负责人定 v3 跳不跳 (主 agent 建议跳, 偏差记 13:217); 其后批 3 第 4 步  
-  放行与第 5 步提交逐项点头, review 目录删除待点头; 之后批 4 (Prop 入表).
-- 各子任务状态: subtask-01 已关闭; subtask-02 已提交并关闭;  
-  subtask-03 已提交并关闭; subtask-04 已提交并关闭 (批 1 ~ 7 已提交关闭, 规则文件两件已提交,  
-  收尾文档批三轮 review 已收, 第 4 步已放行, review 目录已删,  
-  20 份文档已提交为 `f732b712`, 归后续清单留任务结束横向回顾);  
-  subtask-05 进行中 (批 1 加批 2 加语义 id 小单元加批 3 已提交关闭, 批 4-6 未开始);  
+  下一步动作: 循环收口待负责人定 v3 跳不跳 (主 agent 建议跳, 偏差记 13:217); 其后批 4 的放行  
+  与提交逐项点头, review 目录删除待点头.
+- 2026-11-15 (批 4 第 5 步提交, 单笔, 关闭): 负责人令提交 (第 4 步的设备手工步与此批 diff 放行  
+  由负责人以 "提交" 一令合并给出). 提交: `5b36bd99` refactor(prop) 三文件 (PropEntryId.kt 新增  
+  加 PropViewModel 清单化加本 spec 记录). trailer 沿用今天四批一致的 ZCode / GLM-5.3-Flash /  
+  max (负责人先前每组都点名过; 如需另改是一行 amend). canary (`android.toml:7`) 与  
+  kotlin-lsp-daemon 的 progress.md 按令留在工作树不提交. 批 4 全程: PropEntryId 枚举 5 项加工厂  
+  重载, PropViewModel 清单化, v1 加 v2 两轮四份报告 (v2 两家 met), 黄金对照 PASS, 引擎无门控  
+  无 failureRows 的页无关形状三页对齐.
+  本条与各子任务状态行更新随批 5 首笔入库.
+  下一步动作: 批 5 (比对语义入表并锁定, securityPatch 修), 等负责人说开始.
+- 2026-11-15 (批 5 开工, securityPatch 修落地): 负责人说开始. 改前快照已取  
+  (golden-preBatch5.json, 设备 TLS). securityPatch 修: `getSecurityPatchYearMonth` 从  
+  `substringBeforeLast('-')` (设备报 YYYY-MM 时取到年份) 改为 `split('-').take(2).joinToString("-")`  
+  (两段归一) — 月精度设备与 lld 同月时走 Lagging (琥珀) 而非 None (红); Met 的全日期路径不动.  
+  测试补 `a vendor patch reported as year-month in the lld month is lagging not none` 一例  
+  (月精度同月 → Lagging, 老 extractor 下是 None — bug 的直接证明), DetectSecurityPatchesTest 5 例  
+  全绿. 黄金对照: 1817 行同数, home 加 others 四列逐字节相同, prop 仅 3 处 cache_key 随机 —  
+  K50 报全日期走本就正确的路径, 修复只影响月精度设备, 行为面零意外.
+  下一步动作: 批 5 主体 (11 个比对条目的比较方式搬进清单), 续接实现.
+- 2026-11-15 (securityPatch 修误删复得): 批 5 主体开工前的结构尝试还原时 `git checkout` 名单
+  过宽, 把未提交的 securityPatch 修一并抹掉 (`getSecurityPatchYearMonth` 退回旧 extractor,
+  第 5 例测试丢失). 按本文件上一条记录逐字补回: 修复 1 行加测试 12 行, diff 与记录吻合,
+  聚焦单测 5/5 绿; 补回内容与黄金对照验证过的版本逐字节相同, 黄金结论沿用.
+  `golden-preBatch5.json` 不在仓库内, 为设备会话产物; 批 5 主体的改前快照到设备会话时重取.
+- 2026-11-15 (批 5 主体样板落地: buildId 比对语义具名化): `isBuildIdDateHigherThanConfig` 与
+  两个共享辅助 `isLatestStableAndroid` 加 `isLatestPreviewAndroid` 从 `HomeRepository` 的
+  private 成员逐字搬到新文件 (同包 internal 顶层函数, 4 个调用点零改动);
+  `isSupportedByUpstreamAndroid` 留在仓库 (支持窗判断, 语义不同). 预览偏移 `250205 - 250101`
+  的来历注释落在偏移处: 机制 (预览通道设备对 lld 首条 detail 的宽限) 加出处 (5c72866f
+  Baklava 规则引入), 不编造具体日期的含义; DetectBuildIdTest 的 preview 用例补对应说明.
+  行为零变化, 现有测试断言不动. 验证: DetectBuildIdTest 5 加 DetectVndkTest 5 加
+  DetectAndroidTest 6 全绿. (样板文件先名 `LldFreshness.kt`, 随批 5 主体收口扩容更名为
+  `LldComparisons.kt`, 见下一条.)
+- 2026-11-15 (批 5 主体收口: 比对语义全部具名化加锁定): 负责人令一口气做完. 逐字提取七条:
+  securityPatch (`securityPatchMatch`, `getSecurityPatchYearMonth` 与 `isPropertyValueNotEmpty`
+  随迁), kernel (`kernelMatch`), mainline (`mainlineMatch`), vndk (`vndkMatch`), toybox
+  (`toyboxMatch`), webview (`webViewMatch`), outdatedTargetSdkApk (`outdatedTargetSdkApkMatch`),
+  全部落 `LldComparisons.kt` (样板文件更名扩容), 仓库内联 when 换具名调用. 三条判定无需提取,
+  记录在案: android (currency 的 when 走具名辅助加 `isSupportedByUpstreamAndroid`),
+  sdkExtension (一行 `meetsStable` 声明式且有测试), mode (不比任何参考数据).
+  特征测试补三份: DetectToyboxTest 4 例加 DetectWebViewTest 5 例 (纯函数直测),
+  DetectOutdatedTargetSdkTest 4 例 (直测, Robolectric 控渠道); DetectMainlineTest 补 2 例
+  直测锁已知误判 (3.1 恒绿, 空串恒红, #69 修复时先改它们). mainline 另立条目: `69-mainline量纲错位`
+  (05-稳定性与错误处理, README 索引两处已挂), 修复前置 (版本号语义规则) 写明待负责人定.
+  验证: 全量单测 108/108 (app 加 base), lintFossDebug 无新问题, assembleFossDebug 绿.
+  黄金对照欠账: 设备重连后取改前快照再对照 (securityPatch 修的黄金结论已验; 提取全部逐字
+  搬迁, 断言零改动).
+  下一步动作: 设备重连后黄金对照, 其后批 5 v1 (14 流程).
+- 2026-11-15 (负责人领域输入两笔落码落档): 一笔 buildId 预览偏移: 负责人确认最新发布的
+  预览版 buildId 比同期正式版低一点, 与偏移算术方向吻合 (设备侧加 104 宽限追平参考);
+  LldComparisons 的偏移注释从 "校准对" 改写为负责人确认的方向表述, 出处 5c72866f 照旧.
+  一笔 mainline 真实取值分布: 真机 com.google.android.modulemetadata 报日期
+  (2023-07-01), Google API 模拟器报日期加后缀 (2023-07-01 S+), 真机
+  com.android.modulemetadata 报系统版本号 (如 14) — 由此修正认识: `-01` 后缀是给月精度
+  日期补日的精度, 比较本是为日期格式设计; 闯入者是系统版本号一路, 10~19 恒红,
+  3 开头假设值恒绿. DetectMainlineTest 直测扩到 5 例按真实分布锁定
+  (月精度 Met, 模拟器格式 None, 14 恒红, 3.1 恒绿, 空串恒红), mainlineMatch 注释与
+  #69 issue (README 行同步) 按真实分布重写, 修复前置改为按包名分流等规则待负责人定.
+  验证: DetectMainlineTest 7/7 绿.
+- 2026-11-15 (批 5 黄金对照补齐, PASS): 负责人令设备连上. 按 "同一次设备会话内改前改后各一份"
+  走 stash 舞步: 改后包为批 5 工作树 (`assembleFossDebug` 加装 `ModelSnapshotTest` 拉
+  `snapshot/three-pages.json`), `git stash push -u` 露出 HEAD `5b36bd99` 构建改前双包
+  (app 加 androidTest) 复跑, `stash pop` 复原 (树 13 项与舞步前一致). 快照落
+  `D:/tmp/lld-golden-batch5/` (本地, 不进仓库, 2026-11-06 定): **1817 = 1817 行,
+  差异仅 prop 页 3 处 `cache_key.*` 随机值** (get_packages_for_uid 加 is_compat_change_enabled
+  加 package_info, 与 securityPatch 修那轮的已知随机同款), home 加 others 逐字节零差异;
+  securityPatch 修在 K50 全日期路径上零 delta, 与该轮记录互证. 批 5 验证至此齐:
+  单测 108/108, lint 无新问题, assemble 绿, 黄金 PASS.
+  顺手 (负责人问起): 字典序判定全仓扫描 — 同族地雷两处实存 (mainline 的 versionName 对日期
+  已立 #69; vndk 的 `vndkVersion >= lld.android.stable.api` 是 API 级别串比, "9" 对 "10"
+  会判错, 实际 27 起两位数时代未踩; #67 的分界写明比较手法归 #27, 故此笔归 #27),
+  apiFull 预览线 ("36" 对 "36.1") 理论地雷
+  (单数字后缀时代未踩) — 经 #27 原文核对, vndk 与 apiFull 两笔 #27 均已记录
+  (vndk 还含 "current" 恒假绿一例, apiFull 之外尚有 LldFileStore 版本串比第三处,
+  昨晚扫描只扫了 ui/home/ 未覆盖到), 非新发现, 扫描价值仅在按 #43 盘点确认归属;
+  securityPatch 整串比对是同格式日期的字典序 (CDD 钉死格式) 属正当使用;
+  其余判定走 Int 或 Version 库, 不在字典序族.
+  下一步动作: 批 5 v1 发起 (14 流程), 等负责人令.
+- 2026-11-15 (批 5 v1 发起): 负责人说开始 review. review 目录建在 spec 目录下
+  (`.gitignore` 加 `*`, 不进 git), `state.md` 与 `review-v1-prompt-2249.md` 落盘
+  (义务抄全加既定约定五条加排除条款加黄金证据加报告写死三样加工作树冻结令);
+  发起 HEAD `5b36bd99`. 委派摆况: 当前 IDE 模型清单仅本会话自身模型
+  (GLM-5.3-Flash, 同模型复用须负责人明确同意), 跨端为建议路径 (批 3/批 4 同款),
+  对面模型与 effort 由负责人开 session 时定. v1 为 `等待报告`, 工作树随之冻结
+  (记录文件除外).
+  下一步动作: 收 v1 报告 (负责人说 review 时按 14 三步分辨), 按 13 第 3 步处理发现.
+- 2026-11-15 (批 5 v1 收下, 处理发现, v2 发起): 两份报告 (Doubao Work 加 WorkBuddy
+  claude-opus-6), 停止条件均 not met, v1 标已收, 工作树解冻. 处置: #69 编号撞归档条目
+  (两家同报; 归因主 agent 扫编号漏 archived/, 非负责人决定) → 当场改号 #70 (文件名加
+  锚点加标题加 README 三处加测试名加注释指称); R import 无引用已删; LldComparisons
+  文件级 KDoc 补 securityPatch 唯一例外 (WorkBuddy F2); 补提取两处
+  (`isSupportedByUpstreamAndroid` 加 `meetsStableExtension`, 逐字, 调用点换)
+  — 与 WorkBuddy 的档 2 判定分歧, 判断层驳回其归后续 (家族补全成本近零,
+  subtask-05.md 枚举把两条目计在比对内), 驳回记录交老板扫一眼可否决; #43 living 三处
+  就地更正 (具名化现状, 位置, securityPatch 错例改已修现状, 修复前图留台账);
+  两处 em dash, 表格行拆分, VndkState.Match.Met 符号名, DetectMainlineTest 头注释,
+  progress 状态行 各自落修. 修复后全量重跑: 单测全绿加 lint 无新问题.
+  归后续: #43 测试计数过期 (档 2, 归 #43 收口); when 链本体随注册表清单位移
+  (两家一致, 归 subtask-06 与注册表落地). 档 3 待负责人: subtask-05.md:93-94 计数
+  "11 条目 (12 行)" vs Doubao 核对 10 条目 (11 行), 多算 HOME-01 (mode 不比参考值),
+  需求正文写错归负责人判.
+  下一步动作: v2 (delta) 已发起 `review-v2-prompt-2326.md` (应改清单加十项修复;
+  v1 报告全文本应随提示词携带, 实际只带了摘要, 两家 reviewer 按 14 从 review 目录
+  自行取读原文, 材料缺口未造成漏判 — 此记述为 v2 收报告时的更正), 等待报告,
+  工作树随之冻结 (记录文件除外).
+- 2026-11-15 (批 5 v2 收下, 处理发现, v3 发起): 两份报告 (Doubao Work 加 WorkBuddy
+  claude-opus-6), 停止条件均 not met, v2 标已收, 工作树解冻. 处置: DetectMainlineTest
+  两处测试体注释仍写 #69 (v1 改号漏的, 两家同报) → 改 #70; HomeRepository 的
+  isStableAndroid import 因补提取成死引用 (两家同报) → 已删; #43 形态重写
+  (就地括号更正违反 07 → 现状陈述落地, 两处 #27 死链改单层, "台账" 禁用词换记录,
+  图与场景同标修复前记录, 处理段改现状, 影响文件补 LldComparisons; Doubao 提的
+  "形态由负责人定" 在判断层驳回 — 07 对 living 写法与禁用词已有明文); README 的
+  #43 摘要行改现状; progress 对 v2 材料的记述更正 (v1 报告全文未随提示词, 14 缺口,
+  v3 起报告全文随提示词携带). 修复后全量重跑: 单测全绿加 lint 无新问题 (无行为变化,
+  黄金结论沿用). Doubao 报告尾部收口判定行缺失 (首部判定在, 元数据齐), 按收下记
+  格式偏差. WorkBuddy 自报 grep 带出同轮他报告片段未打开未引用, 采信.
+  下一步动作: v3 (delta) 已发起 `review-v3-prompt-2351.md` (v2 两份报告全文随行),
+  等待报告, 工作树随之冻结 (记录文件除外).
+- 2026-11-16 (批 5 v3 收下, review 循环收口): 两份报告 (Doubao Work 加 WorkBuddy
+  claude-opus-6). 发现完全一致两条, 全文字项: #43 残留一处 "(2026-11-15 已修)"
+  日期备注 (07 明文), progress 各子任务状态行滞后一轮 — 均已修, 顺手清了 #43 的
+  禁用词 "落地" 加前置段时态. **停止判定分歧**: Doubao not met, WorkBuddy met —
+  条文层裁定采 met (11:30 只剩不重要措辞不再要求多一轮; 发现量逐轮收敛 v1 十项,
+  v2 八项, v3 两项全文字, 符合 13:213 空转摆负责人), 不再排 v4, 驳回记录交老板
+  扫一眼可否决. WorkBuddy 落盘过午夜, 日期记 2026-11-16, HEAD 一致, 收下.
+  代码侧三轮零实质残留: 14 个具名函数, 调用点全换, 逐字搬迁无违规, 两个死 import
+  已清, #69 代码侧零命中, 锚点 i70 全仓唯一.
+  下一步动作: 批 5 第 4 步 (设备手工核对与 diff 放行) 加第 5 步 (提交) 等负责人令;
+  档 3 (subtask-05.md 计数 11 vs 10) 待老板判; Doubao 报告的模型加 effort 元数据
+  由 reviewer 自己问老板; 收口后 review 目录整个删除.
+- 各子任务状态: subtask-01 已关闭; subtask-02 已提交并关闭;
+  subtask-03 已提交并关闭; subtask-04 已提交并关闭 (批 1 ~ 7 已提交关闭, 规则文件两件已提交,
+  收尾文档批三轮 review 已收, 第 4 步已放行, review 目录已删,
+  20 份文档已提交为 `f732b712`, 归后续清单留任务结束横向回顾);
+  subtask-05 进行中 (批 1 加批 2 加语义 id 小单元加批 3 加批 4 已提交关闭, 批 5 进行中:
+  主体加黄金对照完成, review 循环 v1 ~ v3 收敛收口, 待第 4/5 步放行与提交);
   subtask-06 报告已出, 实现未开始.
 - 未查清: 无.
 - 挂起项: 无.
