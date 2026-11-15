@@ -18,9 +18,10 @@ import tech.apter.junit.jupiter.robolectric.RobolectricExtension
 
 // The engine's per-entry guard contract (moved here from the retired mapper thin guard): an
 // unexpected exception anywhere in an entry's chain degrades into that entry's own failure
-// rows, coroutine cancellation rethrows, results land in list order, and the synthesized Failed
-// rides the entry's own translation. Asserts row shape and colors only, never the exact
-// display text.
+// rows when the entry provides failureRows, and rethrows when it does not (pages whose
+// repositories guard themselves); coroutine cancellation rethrows, results land in list order,
+// and the synthesized Failed rides the entry's own translation. Asserts row shape and colors
+// only, never the exact display text.
 @ExtendWith(RobolectricExtension::class)
 class DetectionEngineTest {
 
@@ -28,7 +29,7 @@ class DetectionEngineTest {
 
     private fun developerOptionsDetector(exec: () -> DetectResult<Boolean>) = detector(
         "entry-under-test",
-        exec
+        exec = exec
     ) { result ->
         listOf(mapper.toDeveloperOptionsModel(result))
     }
@@ -156,6 +157,65 @@ class DetectionEngineTest {
             }
             worker.join()
             assertTrue(worker.isCancelled)
+        }
+
+        assertTrue(laterEntriesRan.isEmpty())
+    }
+
+    @Test
+    fun `a false precondition skips the entry without running its chain`() {
+        val rows = runBlocking {
+            listOf(
+                detector<Boolean>(
+                    "entry-1",
+                    exec = { error("a skipped entry's chain must not run") },
+                    translate = { error("unreachable") },
+                    precondition = { false }
+                ),
+                detector("entry-2", exec = { DetectResult.Found(true) }) {
+                    listOf(mapper.toDeveloperOptionsModel(it))
+                }
+            ).detectAll()
+        }
+
+        assertEquals(1, rows.size)
+        assertEquals(StatusColor.NO_PROBLEM, rows.single().color)
+    }
+
+    @Test
+    fun `a true precondition runs the entry like any other`() {
+        val rows = runBlocking {
+            listOf(
+                detector(
+                    "entry-1",
+                    exec = { DetectResult.Found(false) },
+                    translate = { listOf(mapper.toDeveloperOptionsModel(it)) },
+                    precondition = { true }
+                )
+            ).detectAll()
+        }
+
+        assertEquals(StatusColor.CRITICAL, rows.single().color)
+    }
+
+    @Test
+    fun `an entry without failure rows rethrows its chain exception`() {
+        val laterEntriesRan = mutableListOf<String>()
+
+        assertThrows(IllegalStateException::class.java) {
+            runBlocking {
+                listOf(
+                    rawDetector("entry-1", run = { throw IllegalStateException("probe") }),
+                    rawDetector(
+                        "entry-2",
+                        run = {
+                            laterEntriesRan.add("entry-2")
+                            error("second entry must not run after a rethrowing entry")
+                        },
+                        failureRows = { error("unreachable") }
+                    )
+                ).detectAll()
+            }
         }
 
         assertTrue(laterEntriesRan.isEmpty())

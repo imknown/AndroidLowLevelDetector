@@ -46,10 +46,10 @@ fun <T> detector(
     id: HomeEntryId,
     exec: () -> DetectResult<T>,
     translate: (DetectResult<T>) -> List<MyModel>
-): Detector = detector(id.id, exec, translate)
+): Detector = detector(id.id, exec = exec, translate = translate)
 
 fun rawDetector(
     id: HomeEntryId,
     run: () -> List<MyModel>,
     failureRows: (Exception) -> List<MyModel>
-): Detector = rawDetector(id.id, run, failureRows)
+): Detector = rawDetector(id.id, run = run, failureRows = failureRows)
