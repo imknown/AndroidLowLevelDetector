@@ -275,7 +275,7 @@ class HomeRepository(
     }
 
     private fun getSecurityPatchYearMonth(securityPatch: String) =
-        securityPatch.substringBeforeLast('-')
+        securityPatch.split('-').take(2).joinToString("-")
     // endregion [SecurityPatch]
 
     fun detectPerformanceClass(): DetectResult<PerformanceClassInfo> = try {

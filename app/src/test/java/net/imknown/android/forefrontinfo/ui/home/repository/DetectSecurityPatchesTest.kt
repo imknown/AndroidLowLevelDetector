@@ -69,6 +69,18 @@ class DetectSecurityPatchesTest {
     }
 
     @Test
+    fun `a vendor patch reported as year-month in the lld month is lagging not none`() {
+        ShadowSystemProperties.override(AndroidDataSource.PROP_VENDOR_SECURITY_PATCH, "2026-11")
+        val lld = lldForTests(android = lldForTests().android.copy(securityPatchLevel = "2026-11-15"))
+
+        val vendor = (repository.detectSecurityPatches(lld)[1] as DetectResult.Found).value
+
+        assertEquals("2026-11", vendor.patch)
+        assertEquals("2026-11-15", vendor.lldPatchLevel)
+        assertEquals(SecurityPatchState.Match.Lagging, vendor.match)
+    }
+
+    @Test
     fun `an unread vendor property carries its placeholder raw and is none`() {
         val vendor = (repository.detectSecurityPatches(lldForTests())[1] as DetectResult.Found).value
 
