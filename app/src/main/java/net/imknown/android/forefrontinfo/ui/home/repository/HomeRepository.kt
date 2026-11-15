@@ -14,7 +14,6 @@ import androidx.webkit.WebViewCompat
 import dev.zacsweers.metro.Inject
 import io.github.g00fy2.versioncompare.Version
 import kotlinx.coroutines.CancellationException
-import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.extension.fullMessage
 import net.imknown.android.forefrontinfo.base.shell.IShell
@@ -25,7 +24,6 @@ import net.imknown.android.forefrontinfo.ui.common.PropertyReader
 import net.imknown.android.forefrontinfo.ui.common.getSdkExtension
 import net.imknown.android.forefrontinfo.ui.common.isGoEdition
 import net.imknown.android.forefrontinfo.ui.common.isPreviewAndroid
-import net.imknown.android.forefrontinfo.ui.common.isStableAndroid
 import net.imknown.android.forefrontinfo.ui.common.toPascalCase
 import net.imknown.android.forefrontinfo.ui.home.datasource.AndroidDataSource
 import net.imknown.android.forefrontinfo.ui.home.datasource.AndroidVersionDataSource
@@ -143,7 +141,7 @@ class HomeRepository(
                 SdkExtensionState(
                     currentExtension = myExtension,
                     stableExtension = lldStableExtension,
-                    meetsStable = lldStableExtension != null && myExtension >= lldStableExtension
+                    meetsStable = meetsStableExtension(myExtension, lldStableExtension)
                 )
             )
         } else {
@@ -190,54 +188,6 @@ class HomeRepository(
         DetectResult.Failed(e)
     }
 
-    // The device build date against the lld's first detail date: a CTS-style three-segment
-    // build id carries the date in its second segment, and a device on the preview channel
-    // compares with the preview offset.
-    private fun isBuildIdDateHigherThanConfig(
-        lld: Lld,
-        buildIdResult: String,
-        systemBuildIdResult: String,
-        lldDetails: List<BuildIdState.BuildDetail>?
-    ): Boolean {
-        fun isBuildIdAndroid8CtsFormat(buildId: String) =
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
-                    && buildId.split(AndroidDataSource.BUILD_ID_SEPARATOR).size >= 3
-
-        val myBuildIdForCompare = if (
-            isBuildIdAndroid8CtsFormat(buildIdResult) || Build.VERSION.SDK_INT < Build.VERSION_CODES.P
-        ) {
-            buildIdResult
-        } else {
-            systemBuildIdResult
-        }
-
-        if (!isBuildIdAndroid8CtsFormat(myBuildIdForCompare)) {
-            return false
-        }
-
-        fun getDate(buildId: String) = buildId.split(AndroidDataSource.BUILD_ID_SEPARATOR)[1] // "250705"
-
-        val myBuildIdDate = getDate(myBuildIdForCompare)
-        val myBuildIdDateIntOrNull = myBuildIdDate.toIntOrNull()
-            ?: return false
-
-        val lldFirstDetail = lldDetails?.getOrNull(0)
-            ?: return false
-        val lldFirstBuildId = lldFirstDetail.id
-        val lldFirstBuildIdDate = getDate(lldFirstBuildId)
-        val lldFirstBuildIdDateIntOrNull = lldFirstBuildIdDate.toIntOrNull()
-            ?: return false
-
-        val offset = if (isLatestStableAndroid(lld)) {
-            0
-        } else {
-            /** [isLatestPreviewAndroid] */
-            250205 - 250101
-        }
-
-        return (myBuildIdDateIntOrNull + offset) >= lldFirstBuildIdDateIntOrNull
-    }
-
     // region [SecurityPatch]
     fun detectSecurityPatches(lld: Lld?): List<DetectResult<SecurityPatchState>> = try {
         listOf(
@@ -257,13 +207,7 @@ class HomeRepository(
 
     private fun detectSecurityPatch(lld: Lld?, mySecurityPatch: String): DetectResult<SecurityPatchState> = try {
         val lldSecurityPatch = lld?.android?.securityPatchLevel
-        val match = when {
-            lldSecurityPatch == null -> SecurityPatchState.Match.Unknown
-            !isPropertyValueNotEmpty(mySecurityPatch) -> SecurityPatchState.Match.None
-            mySecurityPatch >= lldSecurityPatch -> SecurityPatchState.Match.Met
-            getSecurityPatchYearMonth(mySecurityPatch) >= getSecurityPatchYearMonth(lldSecurityPatch) -> SecurityPatchState.Match.Lagging
-            else -> SecurityPatchState.Match.None
-        }
+        val match = securityPatchMatch(mySecurityPatch, lldSecurityPatch)
 
         DetectResult.Found(
             SecurityPatchState(patch = mySecurityPatch, lldPatchLevel = lldSecurityPatch, match = match)
@@ -274,8 +218,6 @@ class HomeRepository(
         DetectResult.Failed(e)
     }
 
-    private fun getSecurityPatchYearMonth(securityPatch: String) =
-        securityPatch.split('-').take(2).joinToString("-")
     // endregion [SecurityPatch]
 
     fun detectPerformanceClass(): DetectResult<PerformanceClassInfo> = try {
@@ -306,20 +248,7 @@ class HomeRepository(
 
         val linux = lld?.linux
         val versionsSupported = linux?.google?.versions
-        var match = KernelState.KernelMatch.None
-        versionsSupported?.forEach {
-            if (linuxVersion.major == Version(it).major
-                && linuxVersion.minor == Version(it).minor
-            ) {
-                match = if (linuxVersion.isAtLeast(it)) {
-                    KernelState.KernelMatch.Met
-                } else {
-                    KernelState.KernelMatch.Lagging
-                }
-
-                return@forEach
-            }
-        }
+        val match = kernelMatch(linuxVersion, versionsSupported)
 
         DetectResult.Found(
             KernelState(
@@ -550,12 +479,7 @@ class HomeRepository(
             }
         }
 
-        val match = when {
-            latestGooglePlaySystemUpdates == null -> MainlineState.Match.Unknown
-            versionName != null && versionName >= latestGooglePlaySystemUpdates -> MainlineState.Match.Met
-            versionName != null && "${versionName}-01" >= latestGooglePlaySystemUpdates -> MainlineState.Match.Met
-            else -> MainlineState.Match.None
-        }
+        val match = mainlineMatch(versionName, latestGooglePlaySystemUpdates)
 
         DetectResult.Found(
             MainlineState(
@@ -581,12 +505,7 @@ class HomeRepository(
             false
         }
 
-        val match = when {
-            vndkVersion == null -> VndkState.Match.None
-            lld == null -> VndkState.Match.Unknown
-            (isLatestPreviewAndroid(lld) || vndkVersion >= lld.android.stable.api) && !hasVndkLite -> VndkState.Match.Met
-            else -> VndkState.Match.Lagging
-        }
+        val match = vndkMatch(vndkVersion, hasVndkLite, lld)
 
         DetectResult.Found(VndkState(vndkVersion = vndkVersion, hasVndkLite = hasVndkLite, match = match))
     } catch (e: CancellationException) {
@@ -728,21 +647,7 @@ class HomeRepository(
         val supportVersion = toybox?.support?.version
         val masterVersion = toybox?.master?.version
 
-        // The version comparison only runs on a real read. The old path fed the unknown text into
-        // versioncompare when the command succeeded without output (practically always landing on
-        // the critical else); NoOutput now decides None directly (review v1 confirmed the outputs
-        // are identical on every reachable input).
-        val match = when (read) {
-            is ToyboxState.ToyboxRead.Version -> {
-                val toyboxRealVersion = Version(read.value.replace("toybox ", ""))
-                when {
-                    stableVersion != null && toyboxRealVersion.isAtLeast(stableVersion) -> ToyboxState.Match.Met
-                    supportVersion != null && toyboxRealVersion.isAtLeast(supportVersion) -> ToyboxState.Match.Lagging
-                    else -> ToyboxState.Match.None
-                }
-            }
-            ToyboxState.ToyboxRead.NoOutput, ToyboxState.ToyboxRead.CommandFailed -> ToyboxState.Match.None
-        }
+        val match = toyboxMatch(read, stableVersion, supportVersion)
 
         DetectResult.Found(ToyboxState(read, stableVersion, supportVersion, masterVersion, match))
     } catch (e: CancellationException) {
@@ -753,9 +658,9 @@ class HomeRepository(
 
     // region [WebView]
     // The judgment stays in the repository: every built-in candidate's install state and the
-    // highest installed version (accumulated with the same strict comparison as the old path),
-    // together with the Met/Lagging/None match against the lld reference versions; the
-    // wording and the color belong to the mapper. A candidate whose reflected packageName is
+    // highest installed version (accumulated with the same strict comparison as the old path);
+    // the Met/Lagging/None match is named in LldComparisons.kt and the wording and the color
+    // belong to the mapper. A candidate whose reflected packageName is
     // null no longer queries the package with the placeholder wording (the query would fail
     // anyway): it renders as not installed, saving one doomed query and one Log.w.
     fun detectWebView(lld: Lld?): DetectResult<WebViewState> = try {
@@ -798,13 +703,7 @@ class HomeRepository(
         val lldWebViewStable = webView?.stable?.version
         val lldWebViewBeta = webView?.beta?.version
 
-        val match = when {
-            lldWebViewStable != null && Version(maxBuiltInVersionName).isAtLeast(lldWebViewStable) ->
-                WebViewState.Match.Met
-            lldWebViewStable != null && Version(implement?.versionName).isAtLeast(lldWebViewStable) ->
-                WebViewState.Match.Lagging
-            else -> WebViewState.Match.None
-        }
+        val match = webViewMatch(maxBuiltInVersionName, implement?.versionName, lldWebViewStable)
 
         DetectResult.Found(
             WebViewState(
@@ -902,9 +801,9 @@ class HomeRepository(
     // The order switch arrives as a parameter: the decision is made by the ViewModel that
     // observes SettingsStore, the repository degrades to a pure function (UDF; the landing
     // spot of issues-cn #08's fifth read path). The judgment stays in the repository: the
-    // filtering, the sorting and the Met/Lagging/Unknown/None outcomes; the list wording and
-    // the color belong to the mapper (including the OutdatedTargetSdkApk type that
-    // subtask-01's type addressing needs).
+    // filtering and the sorting; the Met/Lagging/Unknown/None match is named in
+    // LldComparisons.kt, and the list wording and the color belong to the mapper (including
+    // the OutdatedTargetSdkApk type that subtask-01's type addressing needs).
     fun getOutdatedTargetSdkVersionApkState(
         lld: Lld?, orderByPackageNameFirst: Boolean
     ): DetectResult<OutdatedTargetSdkVersionApkState> = try {
@@ -940,13 +839,7 @@ class HomeRepository(
             OutdatedTargetSdkVersionApkState.OutdatedApk(it.packageName, it.targetSdkVersion)
         }
 
-        val match = when {
-            outdatedApks.isNotEmpty() -> OutdatedTargetSdkVersionApkState.Match.None
-            lld == null -> OutdatedTargetSdkVersionApkState.Match.Unknown
-            isLatestStableAndroid(lld) || isLatestPreviewAndroid(lld) ->
-                OutdatedTargetSdkVersionApkState.Match.Met
-            else -> OutdatedTargetSdkVersionApkState.Match.Lagging
-        }
+        val match = outdatedTargetSdkApkMatch(outdatedApks, lld)
 
         DetectResult.Found(
             OutdatedTargetSdkVersionApkState(
@@ -965,20 +858,6 @@ class HomeRepository(
     }
 
     // region [Common]
-    private fun isLatestStableAndroid(lld: Lld) =
-        isStableAndroid() && Build.VERSION.SDK_INT >= lld.android.stable.api.toInt()
-
-    private fun isLatestPreviewAndroid(lld: Lld) =
-        isPreviewAndroid() && AndroidVersionDataSource.currentAndroidInfo.apiFull >= lld.android.preview.apiFull
-
-    private fun isSupportedByUpstreamAndroid(lld: Lld) =
-        isStableAndroid() && Build.VERSION.SDK_INT >= lld.android.support.api.toInt()
-
-    private fun isPropertyValueNotEmpty(result: String) =
-        result.isNotEmpty()
-            && result != MyApplication.getMyString(R.string.result_not_supported)
-            && result != MyApplication.getMyString(R.string.build_not_filled)
-
     private fun getPackageInfoOrNull(packageName: String) = try {
         appInfoDataSource.getPackageInfoOrThrow(MyApplication.instance.packageManager, packageName)
     } catch (e: Exception) {

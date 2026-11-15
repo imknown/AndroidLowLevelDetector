@@ -71,6 +71,9 @@ class DetectBuildIdTest {
 
     @Test
     fun `the preview channel offset lifts an earlier build to met`() {
+        // The preview grace window (250205 - 250101, see LldComparisons.kt): the preview-channel
+        // device's 250601 plus the offset reaches the lld's 250705, which the stable channel
+        // (offset 0) judges lagging in the case above.
         ShadowBuild.setId("BP1.250601.001")
         ShadowBuild.setVersionCodename("Baklava")
         stagePartitionBuildIds("BP1.250601.001")
