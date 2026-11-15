@@ -113,9 +113,13 @@ flowchart TD
 
 报告开头是一个元数据块, 一行一个字段: reviewer 的 agent, 模型, effort, 轮次, scope, 发起时的 HEAD hash, 日期.  
 对面读不到自己的 effort 时, 写它模型的默认 effort; 发起方也可以把负责人定下的值写死在提示词里让它照抄.  
+模型或 effort 读不到, 拿不准, 或者会话自报不清时, 按 [12-git](12-git.md) 的 trailer 规矩同款处理:  
+不编, 不猜, 也不自己写 `unknown`: 能如实自报的部分照写 (例如 "会话读不到 effort, 写默认档"),  
+报告照常落盘, 然后由 reviewer 自己问负责人这个字段该怎么改, 并按负责人的答复修正报告的元数据  
+(此过程没有主 agent 参与).  
 元数据块之后的第一行, 与 `REVIEW-STATUS: done` 之前的最后一行, 各给一条停止条件判定  
 (负责人 2026-11-14 定): `STOP-CONDITION: met` 或 `STOP-CONDITION: not met (<一句话原因>)`,  
-让主 agent 与负责人不读正文就知道下一轮该不该排; 正文里的停止条件一节照旧给判定理由.  
+让主 agent 与负责人不用读正文就知道下一轮该不该排; 正文里的停止条件一节照旧给判定理由.  
 报告最后一行固定是 `REVIEW-STATUS: done`.
 
 收报告时核对头部和尾部:
