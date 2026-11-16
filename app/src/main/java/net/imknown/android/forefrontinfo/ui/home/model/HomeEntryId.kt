@@ -9,8 +9,8 @@ import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 /**
  * The Home detection entries' stable ids. The declaration order is the display order the Home
  * list assembles (the view model's detector list follows it) and matches the row order of the
- * detection-entry catalog; the [id] strings are the code-facing join key until the catalog
- * carries them too.
+ * detection-entry catalog; the [id] strings are the same strings the catalog's semantic-id
+ * column carries.
  */
 enum class HomeEntryId(val id: String) {
     HOME_DETECT_MODE("home-detect-mode"),
