@@ -2111,12 +2111,107 @@
   下一步动作: 批 5 第 4 步 (设备手工核对与 diff 放行) 加第 5 步 (提交) 等负责人令;
   档 3 (subtask-05.md 计数 11 vs 10) 待老板判; Doubao 报告的模型加 effort 元数据
   由 reviewer 自己问老板; 收口后 review 目录整个删除.
+- 2026-11-16 (批 5 第 4/5 步按 git 证据补记, 批 5 关闭): 上一次记录的下一步停在"批 5 第 4/5 步等
+  负责人令", 而树上这几步已经做完: 四笔提交 `96b61a01` (securityPatch 修), `83642e40`
+  (LldComparisons 具名化), `054c1e02` (三份特征测试加 DetectMainlineTest 五例), `bd15387a`
+  (#70 加 README 加 #43 加本 spec 记录), 提交信息里的 Owner sign-off 写 "commit ordered directly
+  by the owner"; review 目录已不存在 (Test-Path 为假). 本条只按 git 与工作树写成, 不靠会话回忆.
+  补记缺口的责任在这里记一笔: 那几步做完之后没有更新本记录.
+  下一步动作: 批 6 (规则文件与目录).
+- 2026-11-16 (批 6 实现: 规则文件, 目录, 声明序断言): 五件与两处连带.
+  一, `docs/agents-cn/06-检测条目.md` 整份重写: 流程改成"枚举加语义 id, 清单加一条 `Detector`",
+  第 3 步写明 `precondition` 与 `failureRows` 的含义出处, 并写明调用点仍留一句可见的运行时判断
+  (Android lint 看不见写在数据里的判断); 第 5 步改成填同一个语义 id, 并写明枚举声明序与目录行序
+  由 `DetectionEntryOrderTest` 核对; 图按新流程重画.
+  二, `docs/agents-cn/04-架构.md` 新增"检测执行模型"一节: 两阶段, 第一版全串行与并发待查的理由,
+  每条目前 `ensureActive()`, `failureRows` 与传 null 时的上抛, `precondition` 与 `run` 里同源判断,
+  附执行图.
+  三, `docs/requirements-cn/04-检测条目目录.md`: 三张表各加"语义 id"列 (65 条与三份枚举逐项相等),
+  "条目 id"那一段改成两个标识, 写明枚举声明序, 代码清单, 目录行序三者指向同一条序列.
+  四, `docs/requirements-cn/02-功能需求.md` 的检测模式行指称改成 `HOME-01` 加语义 id
+  `home-detect-mode`.
+  五, 新增 `app/src/test/.../ui/base/detect/DetectionEntryOrderTest.kt` 三例, 锁三页 23/37/5 项 id 序列.
+  连带: `subtask-05.md` 的两处"现在"改成改写之前的形态并去掉行号 (引用和行号对不上的老毛病, 类终结);
+  同文件"目录按条目 id 排"那段按现在的形态改写.
+  重写对照 (08 五项只读): 行内代码只在旧版有的两项 (`detect()` 与 `tempModels += ...` 片段) 是机制替换,
+  只在新版有的是新符号与新路径; 标题 1 到 1, 列表项 9 到 12 (第 3 步加了三条子项), 引用行 2 到 2;
+  力度词 必须 0 到 1 (第 5 步那句一致性要求), 任何 1 到 1, 其余不变; 新增行零禁用词, 零 CJK 标点.
+  验证: 四任务全绿 (`BUILD SUCCESSFUL`, 11 分 52 秒); 单测 app 110 例 (新增 3 例) 加 base 4 例,
+  零失败; Kotlin LSP 批发一份 (测试文件) CLEAN, 按 10 测试源集不可信, 编译与单测以 Gradle 为准.
+  偏差: analyze-file 档跳过一轮, `android studio check` 报无运行中的 Studio 实例, 通道跑不了;
+  负责人开 Android Studio 与项目之后补跑.
+  档 3 仍在: `subtask-05.md` 的计数"11 条目 12 行"对代码的 10 条目 11 行 (多算 HOME-01),
+  待负责人判, 本轮未动那句计数.
+  下一步动作: 批 6 review (reviewer 去处与模型待负责人定), 之后第 4 步放行与第 5 步提交各等单独同意.
+- 2026-11-16 (两件定案: 档 3 计数, 批 6 review 由负责人自己看): 负责人定两件.
+  一, 档 3 判为报告写错: `subtask-05.md` 的计数改成 10 个条目 11 行, 并写明 HOME-01 只报数据来源,
+  不比参考值. 按代码逐个数过一遍: LldComparisons 的十个 match 各有调用点, 第 11 个对不上.
+  二, 批 6 的 review 不委派, 由负责人自己过一遍 diff. 11 写明低风险子任务可由负责人亲自 review;
+  本子任务整体是高风险, 这一批是四份文档加一条纯断言测试, 负责人知情并这样选.
+  下一步动作: 等负责人看完 diff 留一句放行理由 (第 4 步); 第 5 步的拆笔与 trailer 另等单独同意.
+- 2026-11-16 (批 6 v1 发起, 跨端): review 目录建在 spec 目录下 (`state.md` 加提示词加 `.gitignore` 内容一行 `*`,
+  不进 git, check-ignore 在案); `review-v1-prompt-1953.md` 落盘 (义务抄全, 五件目标, 事实对照,
+  排除项, 验证证据, 报告写死三样, 工作树冻结令, 开场白). 发起 HEAD `bd15387a`.
+  委派摆况: 本会话没有能给 review 用的独立上下文 (create_agent 只到整任务的 OrganizerAgent,
+  不是 review 通道), 跨端是前几批的路; 对面 agent 与模型由负责人开 session 时定, 本会话的模型清单取不到.
+  v1 为 `等待报告`, 工作树随之冻结 (记录文件除外).
+  下一步动作: 收 v1 报告 (负责人说 review 时按 14 分辨三步收), 收到后按 13 第 3 步处理发现.
+- 2026-11-16 (批 6 v1 收: 两份报告, 十条发现全成立, 已修): 跨端两份, mavis (MiniMax-M3.1-Flash) 与
+  WorkBuddy (GLM-5.3-Flash), 两份元数据里的 HEAD 都是 `bd15387a`; 后者的尾部第二条 `STOP-CONDITION` 缺一行,
+  按 14 头尾不齐本不算收, 负责人说 review 完了, 且它的三条发现与前者逐条重合, 没有新信息,
+  并入本轮判定, 缺的那行登记备查.
+  合并去重十条, 逐条回源核证据, 十条全部成立. 第九条之外全部一档; 第八条 (稳定 id 的说法)
+  判为计划报告自己写错, 不是需求正文, 本单元可改.
+  修法要点: 06 第 3 步按页分两支 (Others 与 Prop 的 `rawDetector` 只有 id 与 run 两个参数, 没有 `failureRows`,
+  照旧文档写会编译不过); Home 的清单在 `detect()` 不在 `collectModels()`; 第 2 步删掉 `guardedEntry`
+  (全仓零命中, mapper 现在是纯翻译, 隔离在引擎的按条目 guard); 04 的共享输入按页写 (Home 取 `mounts`,
+  `lld` 由调用方传入, 设置值在条目内读且补偿路径再读一次, Others 与 Prop 无共享输入);
+  `precondition` 与 `run` 的同源判断收窄成"条目调的 API 有版本要求时"; 三份枚举 KDoc 的
+  "until the catalog carries them too" 改成与目录的语义 id 列同值; 目录模板表拆出语义 id 一行;
+  测试表述改说实话 (期望表是目录行序的副本), 不走"测试读 markdown"那条路, 理由: 绑仓库路径与解析格式,
+  目录挪位置或换机器跑都要跟着处理; `subtask-05.md:46` 的稳定 id 说法与"顺序由清单决定"那句各改一处.
+  验证: 本轮只改文档与三处 KDoc 注释, 按 11:15 跳过构建档; 新增行零禁用词, 零 CJK 标点.
+  `gradle/toml/android.toml` (9.6.0-alpha03) 与另一个 spec 的 progress 判为超出范围, 提交时不带上.
+  下一步动作: 排 v2 (delta) 提示词 (先核对十条是否真修, 再扫新增改动).
+- 2026-11-16 (批 6 v2 delta 发起): `review-v2-prompt-2011.md` 落盘: 任务顺序 (先逐条核对十条是否真修,
+  再扫两轮之间的新增), 上一轮应改清单十条, 两轮之间的修复清单十条, 事实对照, 排除项, 验证证据,
+  报告写死三样 (点明上一轮有一份漏了最后那条 `STOP-CONDITION`), 工作树冻结令; 附录是 v1 第一份报告全文.
+  HEAD 仍是 `bd15387a`, 工作树继续冻结.
+  下一步动作: 收 v2 报告, 按 13 第 3 步处理发现.
+- 2026-11-16 (批 6 v2 收: 上一轮十条全真修, 两处新发现已修): 跨端两份, mavis (MiniMax-M3.1-Flash) 与
+  WorkBuddy (GLM-5.3-Flash), 头尾都齐, 元数据里的 HEAD 都是 `bd15387a`; 两份都判上一轮的十条真修.
+  新发现两处, 回源核过都成立. 一, 06 第 3 步的示例在修清单位置那条时把 `lld` 实参删了, 与
+  `detectKernel(lld: Lld?)` 的签名对不上, 照抄编译不过; 已加回, 形状与 `HomeViewModel.kt:248` 的实际调用一致.
+  二, 图里第 3 步的标签还写着 "按需写 precondition 与 failureRows" 这句通则, 与正文按页分开的说法不一致,
+  只看图的人会在 Others 与 Prop 上写 `failureRows`; 已改成按页的话.
+  两份都判构建档按 11:15 跳过成立, 不要求补跑.
+  下一步动作: 排 v3 (delta, 范围只核这两处与那十条有没有被碰回去).
+- 2026-11-16 (批 6 v3 delta 发起): `review-v3-prompt-2019.md` 落盘: 任务顺序 (先核 v2 两条是否真修,
+  再核十条有没有被碰回去, 再扫新增), 两条应改清单, 两处修复清单, 本批目标与事实对照, 排除项,
+  报告写死三样, 冻结令; 附录是 v2 第一份报告全文. HEAD 仍 `bd15387a`, 工作树继续冻结.
+  下一步动作: 收 v3 报告, 收敛后等负责人给放行理由.
+- 2026-11-16 (批 6 v3 收: 停止条件 met, review 循环结束): 两份 (mavis 与 WorkBuddy) 都判 `met`.
+  v2 的两条真修, v1 那十条没有回归; 新扫一条措辞级: 图标签写 "Others 与 Prop 只写 precondition",
+  对 Prop 差半步, Prop 的 `rawDetector` 连 `precondition` 参数都没有, 也没有平台门; 两份给的建议是同一句.
+  已把标签改成 "Home 多行条目写 failureRows, Others 写 precondition, Prop 无平台门". 工作树解冻.
+  三轮累计: v1 十条 (含一条计划报告写错), v2 两处 (示例丢 `lld`, 图标签), v3 一条措辞; 全部已修.
+  下一步动作: 负责人过一遍这批改动并留放行理由 (第 4 步); 放行后删 review 目录 (14 的报告归宿),
+  再等提交的拆笔与 trailer 单独点头.
+- 2026-11-16 (批 6 第 4 步放行, 第 5 步提交, review 目录删除): 负责人看过这批改动, 说没问题并令提交;
+  放行理由按 14 写进每笔提交信息 (`Owner sign-off: reviewed by the owner, no issues found; commit ordered.`).
+  trailer 三样由负责人定: agent `Doubao Work`, 模型 `DeepSeek V4.1 Flash`, effort `high`.
+  拆四笔 (按 12 的最小可独立验证单元): 规则文件 (06 加 04), 目录与需求正文 (目录加 02-功能需求),
+  单测与三份枚举 KDoc, 本记录 (subtask-05 加 progress).
+  review 目录三轮收完之后整个删掉 (它不进 git, 删前 state.md 里没有待交负责人的归后续项).
+  下一步动作: subtask-05 关; 之后再等负责人说 subtask-06 开工.
 - 各子任务状态: subtask-01 已关闭; subtask-02 已提交并关闭;
   subtask-03 已提交并关闭; subtask-04 已提交并关闭 (批 1 ~ 7 已提交关闭, 规则文件两件已提交,
   收尾文档批三轮 review 已收, 第 4 步已放行, review 目录已删,
   20 份文档已提交为 `f732b712`, 归后续清单留任务结束横向回顾);
-  subtask-05 进行中 (批 1 加批 2 加语义 id 小单元加批 3 加批 4 已提交关闭, 批 5 进行中:
-  主体加黄金对照完成, review 循环 v1 ~ v3 收敛收口, 待第 4/5 步放行与提交);
+  subtask-05 进行中 (批 1 加批 2 加语义 id 小单元加批 3 加批 4 加批 5 已提交关闭, 批 6 已实现:
+  06 重写加 04 执行模型加目录语义 id 列与不变式加 02-功能需求指称加声明序单测,
+  档 3 已判并改成 10 条目 11 行, 批 6 已实现, v1 加 v2 加 v3 已收, 停止条件 met (三轮共十一条发现全修),
+  之后放行与提交各等单独同意);
   subtask-06 报告已出, 实现未开始.
 - 未查清: 无.
 - 挂起项: 无.
