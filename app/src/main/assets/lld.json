@@ -1,15 +1,15 @@
 {
   "scheme": 1,
-  "version": "2026-11-13 09:40 +0800",
+  "version": "2026-11-16 08:30 +0800",
   "android": {
     "securityPatchLevel": "2026-11-05",
     "googlePlaySystemUpdates": "2026-11-01",
     "build": {
       "version": "2026-11-11",
       "details": [
-        { "id": "CP4A.261105.040.B2", "revision": "CA carriers" },
-        { "id": "CP4A.261105.040.D1", "revision": "-" },
-        { "id": "CP4A.261105.040.A1", "revision": "-" }
+        { "id": "CP4A.261105.040.B2", "revision": "Canada" },
+        { "id": "CP4A.261105.040.D1", "revision": "Global" },
+        { "id": "CP4A.261105.040.A1", "revision": "Global" }
       ]
     },
     "stable": {
@@ -52,7 +52,7 @@
   },
   "linux": {
     "google": { "versions": [ "6.18.63", "6.12.117", "6.6.162", "6.1.192", "5.15.225", "5.10.274" ] },
-    "mainline": { "version": "7.4-rc2" }
+    "mainline": { "version": "7.4-rc3" }
   },
   "toybox": {
     "stable": { "version": "0.8.13" },
