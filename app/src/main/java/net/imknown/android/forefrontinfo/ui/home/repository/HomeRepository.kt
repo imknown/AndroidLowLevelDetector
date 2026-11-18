@@ -67,12 +67,9 @@ class HomeRepository(
     private val mountDataSource: MountDataSource,
     private val appInfoDataSource: AppInfoDataSource
 ) {
-    // Since subtask-06 batch 1 the load path goes through LldLoader. These three stay for the
-    // two paths that still need them: the patch path uses the first two (and the asset fallback
-    // through getAssetLld), and the three per-entry instrumented tests use getAssetLld as their
-    // fixture. All of them go away with the patch path in batch 3, except getAssetLld.
-    fun fetchOfflineLldFileOrThrow() = lldFileStore.savedLldJsonFileOrThrow
-    fun copyJsonIfNeededOrThrow() = lldFileStore.copyJsonIfNeededOrThrow()
+    // Since subtask-06 batch 1 the load path goes through LldLoader, and since batch 3 the patch
+    // path is gone too. What is left is the bundled payload as a fixture for the three per-entry
+    // instrumented tests.
     fun getAssetLld(assets: AssetManager): Lld? = lldFileStore.getAssetLld(assets)
 
     fun detectMode(
@@ -798,14 +795,12 @@ class HomeRepository(
     }
     // endregion [WebView]
 
-    // The order switch arrives as a parameter: the decision is made by the ViewModel that
-    // observes SettingsStore, the repository degrades to a pure function (UDF; the landing
-    // spot of issues-cn #08's fifth read path). The judgment stays in the repository: the
-    // filtering and the sorting; the Met/Lagging/Unknown/None match is named in
-    // LldComparisons.kt, and the list wording and the color belong to the mapper (including
-    // the OutdatedTargetSdkApk type that subtask-01's type addressing needs).
+    // The judgment stays in the repository: which APKs count as outdated and the
+    // Met/Lagging/Unknown/None match (named in LldComparisons.kt). The user's order preference is
+    // a display parameter: the mapper sorts this list and picks the detail's format from it, so
+    // the repository returns the list unsorted and takes no order argument at all.
     fun getOutdatedTargetSdkVersionApkState(
-        lld: Lld?, orderByPackageNameFirst: Boolean
+        lld: Lld?
     ): DetectResult<OutdatedTargetSdkVersionApkState> = try {
         val packageManager = MyApplication.instance.packageManager
         val installedApplications = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -821,21 +816,7 @@ class HomeRepository(
             (systemFlags > 0) && (it.targetSdkVersion < AndroidVersionDataSource.currentAndroidInfo.api)
         }
 
-        val order = if (orderByPackageNameFirst) {
-            OutdatedTargetSdkVersionApkState.Order.PackageNameFirst
-        } else {
-            OutdatedTargetSdkVersionApkState.Order.TargetSdkVersionFirst
-        }
-        // The old path sorted only in the non-empty branch; sorting an empty list has no output
-        // difference, so sorting unconditionally is not a behavior change.
-        val outdatedApks = when (order) {
-            OutdatedTargetSdkVersionApkState.Order.PackageNameFirst ->
-                systemApkList.sortedBy(ApplicationInfo::packageName)
-            OutdatedTargetSdkVersionApkState.Order.TargetSdkVersionFirst ->
-                systemApkList.sortedWith(
-                    compareBy(ApplicationInfo::targetSdkVersion, ApplicationInfo::packageName)
-                )
-        }.map {
+        val outdatedApks = systemApkList.map {
             OutdatedTargetSdkVersionApkState.OutdatedApk(it.packageName, it.targetSdkVersion)
         }
 
@@ -847,7 +828,6 @@ class HomeRepository(
                     AndroidDataSource.PROP_RO_PRODUCT_FIRST_API_LEVEL
                 ),
                 outdatedApks = outdatedApks,
-                order = order,
                 match = match
             )
         )

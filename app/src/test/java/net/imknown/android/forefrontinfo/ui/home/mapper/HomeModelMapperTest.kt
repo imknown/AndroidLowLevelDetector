@@ -5,7 +5,9 @@ import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.ui.base.detect.DetectResult
 import net.imknown.android.forefrontinfo.ui.base.list.MyModelTitle
 import net.imknown.android.forefrontinfo.ui.theme.StatusColor
+import net.imknown.android.forefrontinfo.ui.home.model.OutdatedTargetSdkVersionApkState
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import tech.apter.junit.jupiter.robolectric.RobolectricExtension
@@ -62,5 +64,45 @@ class HomeModelMapperTest {
             rows.map { it.title }
         )
         assertEquals(listOf(StatusColor.CRITICAL, StatusColor.CRITICAL), rows.map { it.color })
+    }
+
+    // The order switch is a render parameter for this one row: the mapper sorts the repository's
+    // list and picks the detail's format from it, so switching never re-detects.
+    @Test
+    fun `the outdated target row lists packages by name when the switch is on`() {
+        val state = OutdatedTargetSdkVersionApkState(
+            firstApiLevel = "31",
+            outdatedApks = listOf(
+                OutdatedTargetSdkVersionApkState.OutdatedApk("zzz.pkg", 33),
+                OutdatedTargetSdkVersionApkState.OutdatedApk("aaa.pkg", 30)
+            ),
+            match = OutdatedTargetSdkVersionApkState.Match.None
+        )
+
+        val detail = mapper.toOutdatedTargetSdkVersionApkModel(DetectResult.Found(state), true).detail
+
+        assertTrue(
+            detail.indexOf("aaa.pkg") < detail.indexOf("zzz.pkg"),
+            "package-name order expects aaa.pkg before zzz.pkg, got: $detail"
+        )
+    }
+
+    @Test
+    fun `the outdated target row lists packages by target sdk when the switch is off`() {
+        val state = OutdatedTargetSdkVersionApkState(
+            firstApiLevel = "31",
+            outdatedApks = listOf(
+                OutdatedTargetSdkVersionApkState.OutdatedApk("aaa.pkg", 33),
+                OutdatedTargetSdkVersionApkState.OutdatedApk("zzz.pkg", 30)
+            ),
+            match = OutdatedTargetSdkVersionApkState.Match.None
+        )
+
+        val detail = mapper.toOutdatedTargetSdkVersionApkModel(DetectResult.Found(state), false).detail
+
+        assertTrue(
+            detail.indexOf("zzz.pkg") < detail.indexOf("aaa.pkg"),
+            "target-sdk order expects zzz.pkg before aaa.pkg, got: $detail"
+        )
     }
 }

@@ -6,7 +6,6 @@ import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.ui.base.detect.DetectResult
 import net.imknown.android.forefrontinfo.ui.home.datasource.AndroidVersionDataSource
 import net.imknown.android.forefrontinfo.ui.home.model.OutdatedTargetSdkVersionApkState
-import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -16,6 +15,10 @@ import org.junit.runner.RunWith
 // (spec 2026-10-25-22-16-01, subtask-04 batch 7): this entry scans the full installed package
 // list, so per the means table it is instrumented-only; exact values are covered by each
 // batch's golden snapshot comparison.
+//
+// Since subtask-06 batch 3 the repository returns the list unsorted and the mapper sorts it from
+// the user's order preference, so the two sorting assertions moved to HomeModelMapperTest and
+// this test keeps what belongs to the repository: the filter and the match buckets.
 @RunWith(AndroidJUnit4::class)
 class DetectOutdatedTargetSdkVersionApkTest {
 
@@ -24,47 +27,16 @@ class DetectOutdatedTargetSdkVersionApkTest {
     }
     private val repository by lazy { app.appGraph.homeRepository }
 
-    private fun detectStateOrderByPackageNameFirst(orderByPackageNameFirst: Boolean) =
-        repository.getAssetLld(app.assets).let { lld ->
-            assertNotNull("the bundled lld must load", lld)
-            val result = repository.getOutdatedTargetSdkVersionApkState(lld, orderByPackageNameFirst)
-            assertTrue("expected Found, got $result", result is DetectResult.Found)
-            (result as DetectResult.Found).value
-        }
-
-    @Test
-    fun packageNameFirstOrderSortsByPackageName() {
-        val state = detectStateOrderByPackageNameFirst(true)
-
-        val packageNames = state.outdatedApks.map { it.packageName }
-        assertEquals(packageNames.sorted(), packageNames)
-        assertEquals(
-            OutdatedTargetSdkVersionApkState.Order.PackageNameFirst,
-            state.order
-        )
-    }
-
-    @Test
-    fun targetSdkVersionFirstOrderSortsBySdkThenPackageName() {
-        val state = detectStateOrderByPackageNameFirst(false)
-
-        // The same comparator shape the repository applies for this order.
-        val sorted = state.outdatedApks.sortedWith(
-            compareBy(
-                OutdatedTargetSdkVersionApkState.OutdatedApk::targetSdkVersion,
-                OutdatedTargetSdkVersionApkState.OutdatedApk::packageName
-            )
-        )
-        assertEquals(sorted, state.outdatedApks)
-        assertEquals(
-            OutdatedTargetSdkVersionApkState.Order.TargetSdkVersionFirst,
-            state.order
-        )
+    private fun detectState() = repository.getAssetLld(app.assets).let { lld ->
+        assertNotNull("the bundled lld must load", lld)
+        val result = repository.getOutdatedTargetSdkVersionApkState(lld)
+        assertTrue("expected Found, got $result", result is DetectResult.Found)
+        (result as DetectResult.Found).value
     }
 
     @Test
     fun everyListedApkTargetsBelowTheCurrentApiLevel() {
-        val state = detectStateOrderByPackageNameFirst(true)
+        val state = detectState()
 
         val currentApi = AndroidVersionDataSource.currentAndroidInfo.api
         assertTrue(
@@ -80,5 +52,21 @@ class DetectOutdatedTargetSdkVersionApkTest {
             OutdatedTargetSdkVersionApkState.Match.Unknown,
             OutdatedTargetSdkVersionApkState.Match.None -> Unit
         }
+    }
+
+    @Test
+    fun everyListedApkIsASystemApp() {
+        val state = detectState()
+        val packageManager = app.packageManager
+
+        assertTrue(
+            "every listed apk must be a system app",
+            state.outdatedApks.all { apk ->
+                val info = packageManager.getApplicationInfo(apk.packageName, 0)
+                info.flags and
+                    (android.content.pm.ApplicationInfo.FLAG_SYSTEM or
+                        android.content.pm.ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) > 0
+            }
+        )
     }
 }

@@ -697,16 +697,36 @@ class HomeModelMapper(private val myApplication: MyApplication) {
     }
 
     // The outdated target SDK row: the only row with its own [MyModelType], so the MyModel is
-    // built here directly instead of via coloredRow (the type is what the list uses as its
-    // content type hint). The first API level line joins the list without a separator (the old
-    // code appended joinToString's output straight onto it), and the order decides both the list
-    // format and the sorting the repository already applied.
+    // built here directly instead of via coloredRow. The type has two readers: the order switch
+    // finds this row by it when re-rendering, and the list uses it as the content type hint. The first API level line joins the list without a separator (the old code
+    // appended joinToString's output straight onto it). This row is the one place where a settings
+    // value is a render parameter: the order switch decides both the list order and the detail's
+    // format here, so switching it re-renders this row and never re-detects.
     fun toOutdatedTargetSdkVersionApkModel(
-        result: DetectResult<OutdatedTargetSdkVersionApkState>
+        result: DetectResult<OutdatedTargetSdkVersionApkState>,
+        orderByPackageNameFirst: Boolean
     ): MyModel = translateEntry(
         R.string.outdated_target_version_sdk_version_apk_title,
         result
-    ) { (firstApiLevel, outdatedApks, order, match) ->
+    ) { (firstApiLevel, outdatedApks, match) ->
+        val order = if (orderByPackageNameFirst) {
+            OutdatedTargetSdkVersionApkState.Order.PackageNameFirst
+        } else {
+            OutdatedTargetSdkVersionApkState.Order.TargetSdkVersionFirst
+        }
+        // The old path sorted inside the repository; the comparator is the same, only the place
+        // moved, so the rendered list is unchanged.
+        val apks = when (order) {
+            OutdatedTargetSdkVersionApkState.Order.PackageNameFirst ->
+                outdatedApks.sortedBy(OutdatedTargetSdkVersionApkState.OutdatedApk::packageName)
+            OutdatedTargetSdkVersionApkState.Order.TargetSdkVersionFirst ->
+                outdatedApks.sortedWith(
+                    compareBy(
+                        OutdatedTargetSdkVersionApkState.OutdatedApk::targetSdkVersion,
+                        OutdatedTargetSdkVersionApkState.OutdatedApk::packageName
+                    )
+                )
+        }
         var result = myApplication.getString(
             R.string.outdated_target_version_sdk_version_apk_my_first_api_level,
             firstApiLevel
@@ -722,7 +742,7 @@ class HomeModelMapper(private val myApplication: MyApplication) {
                 OutdatedTargetSdkVersionApkState.Order.TargetSdkVersionFirst ->
                     R.string.outdated_target_version_sdk_version_apk_result_format_target_sdk_version_first
             }
-            result += outdatedApks.joinToString("\n") { (packageName, targetSdkVersion) ->
+            result += apks.joinToString("\n") { (packageName, targetSdkVersion) ->
                 "- " + myApplication.getString(format, packageName, targetSdkVersion)
             }
         }

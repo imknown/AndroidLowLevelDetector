@@ -1,7 +1,5 @@
 package net.imknown.android.forefrontinfo.ui.home
 
-import androidx.annotation.MainThread
-import androidx.annotation.StringRes
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,34 +8,16 @@ import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
 import dev.zacsweers.metrox.viewmodel.ViewModelKey
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import net.imknown.android.forefrontinfo.BuildConfig
-import net.imknown.android.forefrontinfo.R
-import net.imknown.android.forefrontinfo.base.MyApplication
-import net.imknown.android.forefrontinfo.base.extension.fullMessage
-import net.imknown.android.forefrontinfo.ui.base.detect.detectAll
 import net.imknown.android.forefrontinfo.ui.base.list.BaseListViewModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModelType
-import net.imknown.android.forefrontinfo.ui.common.toObjectOrThrow
-import net.imknown.android.forefrontinfo.ui.home.datasource.LldLoader
-import net.imknown.android.forefrontinfo.ui.home.mapper.HomeModelMapper
-import net.imknown.android.forefrontinfo.ui.home.model.HomeEntryId
-import net.imknown.android.forefrontinfo.ui.home.model.Lld
-import net.imknown.android.forefrontinfo.ui.home.model.LldFailure
-import net.imknown.android.forefrontinfo.ui.home.model.LldSource
-import net.imknown.android.forefrontinfo.ui.home.model.detector
-import net.imknown.android.forefrontinfo.ui.home.model.rawDetector
-import net.imknown.android.forefrontinfo.ui.home.repository.HomeRepository
+import net.imknown.android.forefrontinfo.ui.home.detect.HomeDetectionRequest
+import net.imknown.android.forefrontinfo.ui.home.detect.HomeDetectionResult
+import net.imknown.android.forefrontinfo.ui.home.detect.HomeDetectorCatalog
 import net.imknown.android.forefrontinfo.ui.settings.repository.SettingsStore
-
-private data class LldAndError(val lld: Lld?, val message: String?)
 
 // Stable (not Immutable): instance identity never changes and UI-visible state lives in the
 // observed StateFlow; SavedStateHandle is restore-only storage, never read for composition,
@@ -52,244 +32,48 @@ private data class LldAndError(val lld: Lld?, val message: String?)
 @ViewModelKey
 @ContributesIntoMap(AppScope::class, binding<ViewModel>())
 class HomeViewModel(
-    private val homeRepository: HomeRepository,
-    private val homeModelMapper: HomeModelMapper,
-    private val lldLoader: LldLoader,
+    private val detectorCatalog: HomeDetectorCatalog,
     private val settingsStore: SettingsStore
 ) : BaseListViewModel() {
 
-    override suspend fun collectModels(): List<MyModel> {
-        // Stamp this load with the current preference generation (compared in onModelsLoaded)
-        loadStartGeneration = outdatedOrderChanges.value
+    // The last completed run. Its rows are what is on screen, and the domain object it kept for
+    // the outdated-target row is what the order switch re-renders from.
+    private var lastRun: HomeDetectionResult? = null
 
+    init {
+        // The order switch is a display parameter, not a detection input: switching it re-renders
+        // one row against the last run's data and never starts a run, requests the network or
+        // touches the disk. With nothing on screen it does nothing, and the next run renders that
+        // row with whatever value is current at that moment. drop(1) skips the StateFlow's
+        // initial value, which is the value the first run already used.
+        viewModelScope.launch {
+            settingsStore.outdatedOrderFirst.drop(1).collect { orderByPackageNameFirst ->
+                val run = lastRun ?: return@collect
+                if (modelsStateFlow.value == null) return@collect
+                val detail = detectorCatalog.outdatedRowDetail(run, orderByPackageNameFirst)
+                    ?: return@collect
+                updateModelDetail(MyModelType.OutdatedTargetSdkApk, detail)
+            }
+        }
+    }
+
+    override suspend fun collectModels(): List<MyModel> {
         // One-shot read of the hot flow's current value: seeded synchronously at store
         // construction, so first() returns immediately without suspending
         val allowNetwork = settingsStore.allowNetworkData.first()
 
-        // The online / saved / bundled fallback lives in the loader; it reports failures as
-        // reasons and the mapper renders their text.
-        val load = lldLoader.load(allowNetwork)
-        return detect(load.lld, load.failures, load.source)
-    }
+        val run = detectorCatalog.detect(HomeDetectionRequest(allowNetwork))
+        lastRun = run
 
-    // region [Outdated order switch]
-    // The order switch's single source of truth is the store (SP is the persisted truth,
-    // Settings writes through it); this ViewModel folds the store's flow into a generation
-    // counter: it only counts "how many times it changed", and StateFlow's equality
-    // conflation collapses rapid toggles into one recompute (which reads the latest stored
-    // value anyway). The hand-written OnSharedPreferenceChangeListener (its registration,
-    // unregistration and the onCleared cleanup) disappears entirely. The two source-swap
-    // behavior deltas are argued in the subtask-04 report: same-value writes are folded twice
-    // over (SP skips unchanged keys, StateFlow equality-folds), and the one initial emission
-    // a subscription gets is absorbed by Rule 1's short-circuit / at most one invisible
-    // redundant recompute in Rule 2.
-    private val outdatedOrderChanges = MutableStateFlow(0)
-
-    // The preference generation a load started building its list with; compared when that
-    // list lands (onModelsLoaded).
-    private var loadStartGeneration = 0
-
-    init {
-        // Rule 1 (live update): a toggle while any list is on screen (the initial data, or the
-        // still-visible previous data during a pull-to-refresh) re-syncs that entry at once.
-        // Before the first load lands there is nothing to patch, and the load itself reads the
-        // current preference anyway.
-        viewModelScope.launch {
-            settingsStore.outdatedOrderFirst.collect {
-                outdatedOrderChanges.update { it + 1 }
-                if (modelsStateFlow.value != null) {
-                    payloadOutdatedTargetSdkVersionApk()
-                }
-            }
+        // The run rendered that row with the value it read when it started. If the switch moved
+        // while the run was going, render that one row again with the value that is current now:
+        // the row must show the switch as it stands when the data arrives. Pure sorting, and the
+        // detection is reused, so nothing is fetched twice.
+        val currentOrder = settingsStore.outdatedOrderFirst.value
+        return if (run.orderByPackageNameFirst == currentOrder) {
+            run.rows
+        } else {
+            detectorCatalog.rowsWithOutdatedRow(run, currentOrder)
         }
-    }
-    // endregion [Outdated order switch]
-
-    // region [Lld]
-    private suspend fun fetchOfflineLldOrNull(): LldAndError {
-        try {
-            withContext(Dispatchers.IO) {
-                homeRepository.copyJsonIfNeededOrThrow()
-            }
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            val lld = getAssetLldOrNull()
-
-            val errorMessage = errorMessage(R.string.lld_json_save_failed, e)
-
-            return LldAndError(lld, errorMessage)
-        }
-
-        val lldAndError = try {
-            val lld = withContext(Dispatchers.IO) {
-                homeRepository.fetchOfflineLldFileOrThrow().toObjectOrThrow<Lld>()
-            }
-
-            LldAndError(lld, null)
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            val lld = getAssetLldOrNull()
-
-            val errorMessage = errorMessage(R.string.lld_json_parse_failed, e)
-
-            LldAndError(lld, errorMessage)
-        }
-
-        return lldAndError
-    }
-
-    // Last link of the offline fallback chain: even the built-in asset read failing must not
-    // escape: a null lld renders as the "unknown" row, not a crash.
-    private suspend fun getAssetLldOrNull(): Lld? = try {
-        withContext(Dispatchers.IO) {
-            homeRepository.getAssetLld(MyApplication.instance.assets)
-        }
-    } catch (e: CancellationException) {
-        throw e
-    } catch (e: Exception) {
-        if (BuildConfig.DEBUG) {
-            e.printStackTrace()
-        }
-        null
-    }
-    // endregion [Lld]
-
-    private suspend fun detect(
-        lld: Lld?, failures: List<LldFailure>, source: LldSource
-    ): List<MyModel> {
-        val tempModels = mutableListOf<MyModel>()
-
-        withContext(Dispatchers.IO) {
-            // Stage one: the shared inputs fetched once (the lld comes in from the caller; the
-            // outdated-order setting is read inside its own entry).
-            val mountQuery = homeRepository.getMounts()
-
-            // Stage two: the entry list is data (ids are the enum's semantic ids,
-            // list order is display order), and the engine runs it serially with the per-entry
-            // guard (unexpected exceptions degrade into the entry's own failure rows).
-            val detectors = listOf(
-                detector(HomeEntryId.HOME_DETECT_MODE, { homeRepository.detectMode(lld, failures, source) }) {
-                    listOf(homeModelMapper.toModeModel(it))
-                },
-                detector(HomeEntryId.HOME_ANDROID_VERSION, { homeRepository.detectAndroid(lld) }) {
-                    listOf(homeModelMapper.toAndroidModel(it))
-                },
-                detector(HomeEntryId.HOME_SDK_EXTENSION_VERSION, { homeRepository.detectSdkExtension(lld) }) {
-                    listOf(homeModelMapper.toSdkExtensionModel(it))
-                },
-                detector(HomeEntryId.HOME_BUILD_ID, { homeRepository.detectBuildId(lld) }) {
-                    listOf(homeModelMapper.toBuildIdModel(it))
-                },
-                rawDetector(
-                    HomeEntryId.HOME_SECURITY_PATCH,
-                    run = { homeModelMapper.toSecurityPatchModels(homeRepository.detectSecurityPatches(lld)) },
-                    failureRows = homeModelMapper::toSecurityPatchFailureRows
-                ),
-                detector(HomeEntryId.HOME_PERFORMANCE_CLASS, { homeRepository.detectPerformanceClass() }) {
-                    listOf(homeModelMapper.toPerformanceClassModel(it))
-                },
-                detector(HomeEntryId.HOME_KERNEL, { homeRepository.detectKernel(lld) }) {
-                    listOf(homeModelMapper.toKernelModel(it))
-                },
-                detector(HomeEntryId.HOME_AB_UPDATE, { homeRepository.detectAb() }) {
-                    listOf(homeModelMapper.toAbModel(it))
-                },
-                detector(HomeEntryId.HOME_SAR, { homeRepository.detectSar(mountQuery) }) {
-                    listOf(homeModelMapper.toSarModel(it))
-                },
-                detector(HomeEntryId.HOME_DYNAMIC_PARTITIONS, { homeRepository.detectDynamicPartitions() }) {
-                    listOf(homeModelMapper.toDynamicPartitionsModel(it))
-                },
-                rawDetector(
-                    HomeEntryId.HOME_TREBLE_GSI,
-                    run = { homeModelMapper.toTrebleAndGsiModels(homeRepository.detectTrebleAndGsiCompatibility()) },
-                    failureRows = homeModelMapper::toTrebleAndGsiFailureRows
-                ),
-                detector(HomeEntryId.HOME_DSU, { homeRepository.detectDsu() }) {
-                    listOf(homeModelMapper.toDsuModel(it))
-                },
-                detector(HomeEntryId.HOME_MAINLINE, { homeRepository.detectMainline(lld) }) {
-                    listOf(homeModelMapper.toMainlineModel(it))
-                },
-                detector(HomeEntryId.HOME_VNDK, { homeRepository.detectVndk(lld) }) {
-                    listOf(homeModelMapper.toVndkModel(it))
-                },
-                detector(HomeEntryId.HOME_APEX, { homeRepository.detectApex(mountQuery) }) {
-                    listOf(homeModelMapper.toApexModel(it))
-                },
-                detector(HomeEntryId.HOME_DEVELOPER_OPTIONS, { homeRepository.detectDeveloperOptions() }) {
-                    listOf(homeModelMapper.toDeveloperOptionsModel(it))
-                },
-                detector(HomeEntryId.HOME_ADB, { homeRepository.detectAdb() }) {
-                    listOf(homeModelMapper.toAdbModel(it))
-                },
-                detector(HomeEntryId.HOME_ADB_AUTHENTICATION, { homeRepository.detectAdbAuthentication() }) {
-                    listOf(homeModelMapper.toAdbAuthenticationModel(it))
-                },
-                detector(HomeEntryId.HOME_ENCRYPTION, { homeRepository.detectEncryption() }) {
-                    listOf(homeModelMapper.toEncryptionModel(it))
-                },
-                detector(HomeEntryId.HOME_SELINUX, { homeRepository.detectSELinux() }) {
-                    listOf(homeModelMapper.toSELinuxModel(it))
-                },
-                detector(HomeEntryId.HOME_TOYBOX, { homeRepository.detectToybox(lld) }) {
-                    listOf(homeModelMapper.toToyboxModel(it))
-                },
-                detector(HomeEntryId.HOME_WEBVIEW, { homeRepository.detectWebView(lld) }) {
-                    listOf(homeModelMapper.toWebViewModel(it))
-                },
-                detector(
-                    HomeEntryId.HOME_OUTDATED_TARGET_SDK_APK,
-                    { homeRepository.getOutdatedTargetSdkVersionApkState(lld, settingsStore.outdatedOrderFirst.value) }
-                ) {
-                    listOf(homeModelMapper.toOutdatedTargetSdkVersionApkModel(it))
-                }
-            )
-            tempModels += detectors.detectAll()
-        }
-
-        return tempModels
-    }
-
-    private fun errorMessage(@StringRes messageId: Int, cause: Exception): String {
-        if (BuildConfig.DEBUG) {
-            cause.printStackTrace()
-        }
-        return MyApplication.getMyString(messageId, cause.fullMessage)
-    }
-
-    // Rule 2 (load landing): a toggle while the list was being built (initial load or
-    // pull-to-refresh) is not covered by Rule 1's patch of the old list:
-    // the builder read the preference at some point mid-build,
-    // so the freshly landed entry can lag one toggle behind.
-    // Re-sync it with the current stored value in that case.
-    override fun onModelsLoaded() {
-        if (outdatedOrderChanges.value != loadStartGeneration) {
-            viewModelScope.launch {
-                payloadOutdatedTargetSdkVersionApk()
-            }
-        }
-    }
-
-    @MainThread
-    suspend fun payloadOutdatedTargetSdkVersionApk() {
-        val lld = fetchOfflineLldOrNull().lld
-            ?: return
-
-        val newDetail = withContext(Dispatchers.IO) {
-            // The payload path is a one-entry engine run, so the same per-entry guard applies
-            // (unexpected exceptions degrade into the entry's failure-row detail).
-            listOf(
-                detector(HomeEntryId.HOME_OUTDATED_TARGET_SDK_APK, {
-                    homeRepository.getOutdatedTargetSdkVersionApkState(lld, settingsStore.outdatedOrderFirst.value)
-                }) {
-                    listOf(homeModelMapper.toOutdatedTargetSdkVersionApkModel(it))
-                }
-            ).detectAll().single().detail
-        }
-
-        updateModelDetail(MyModelType.OutdatedTargetSdkApk, newDetail)
     }
 }

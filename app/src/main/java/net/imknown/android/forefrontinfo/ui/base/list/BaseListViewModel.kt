@@ -33,14 +33,6 @@ abstract class BaseListViewModel : BaseViewModel() {
 
     abstract suspend fun collectModels(): List<MyModel>
 
-    /**
-     * Runs on the main thread right after each load's data lands. Override to reconcile state
-     * that may have changed in the world while the list was being built: the freshly built
-     * list can only embed the world as it was at some point mid-build (e.g. a Settings
-     * switch toggled during a pull-to-refresh).
-     */
-    protected open fun onModelsLoaded() {}
-
     private var loadJob: Job? = null
 
     fun init() {
@@ -66,7 +58,6 @@ abstract class BaseListViewModel : BaseViewModel() {
             setLoading(true)
             val list = collectModels()
             setModels(list)
-            onModelsLoaded()
         }
     }
 
