@@ -19,6 +19,8 @@ import net.imknown.android.forefrontinfo.ui.home.model.DynamicPartitionsState
 import net.imknown.android.forefrontinfo.ui.home.model.EncryptionState
 import net.imknown.android.forefrontinfo.ui.home.model.GsiState
 import net.imknown.android.forefrontinfo.ui.home.model.KernelState
+import net.imknown.android.forefrontinfo.ui.home.model.LldFailure
+import net.imknown.android.forefrontinfo.ui.home.model.LldFailureReason
 import net.imknown.android.forefrontinfo.ui.home.model.LldSource
 import net.imknown.android.forefrontinfo.ui.home.model.LldStatusState
 import net.imknown.android.forefrontinfo.ui.home.model.MainlineState
@@ -160,31 +162,42 @@ class HomeModelMapper(private val myApplication: MyApplication) {
     }
 
     // The lld mode row: online/offline wording and the color come from the source and the
-    // payload presence; the rendered fetch-failure messages (ViewModel display material by
-    // origin) are appended verbatim.
+    // payload presence; the failure reasons collected by the loader are rendered here, in fetch
+    // order, exactly as the chain reported them.
     fun toModeModel(result: DetectResult<LldStatusState>): MyModel = translateEntry(
         R.string.lld_json_mode_title,
         result
-    ) { state ->
-        val datetimeFormatted = state.version?.formatToLocalZonedDatetimeString()
+    ) { (version, source, failures) ->
+        val datetimeFormatted = version?.formatToLocalZonedDatetimeString()
             ?: myApplication.getString(androidR.string.unknownName)
-        val modeDetailRes = when (state.source) {
+        val modeDetailRes = when (source) {
             LldSource.ONLINE -> R.string.lld_json_online
             LldSource.OFFLINE -> R.string.lld_json_offline
         }
-        val joinedErrors = state.errors.takeIf { it.isNotEmpty() }
-            ?.joinToString(separator = "\n\n", prefix = "\n\n")
+        val joinedFailures = failures.takeIf { it.isNotEmpty() }
+            ?.joinToString(separator = "\n\n", prefix = "\n\n") { it.messageText() }
             .orEmpty()
         coloredRow(
             R.string.lld_json_mode_title,
-            myApplication.getString(modeDetailRes, datetimeFormatted) + joinedErrors,
-            if (state.version != null && state.source == LldSource.ONLINE) {
+            myApplication.getString(modeDetailRes, datetimeFormatted) + joinedFailures,
+            if (version != null && source == LldSource.ONLINE) {
                 StatusColor.NO_PROBLEM
             } else {
                 StatusColor.CRITICAL
             }
         )
     }
+
+    // One line per failure: the message resource puts its own blank lines around the %s where the
+    // cause text goes (the exception's full message, as the loader captured it).
+    private fun LldFailure.messageText(): String = myApplication.getString(
+        when (reason) {
+            LldFailureReason.Fetch -> R.string.lld_json_fetch_failed
+            LldFailureReason.Parse -> R.string.lld_json_parse_failed
+            LldFailureReason.Save -> R.string.lld_json_save_failed
+        },
+        causeMessage
+    )
 
     // The android info row: the preview suffix and the Go mark are display material added here;
     // the five reference lines carry nulls the mapper renders as the platform unknownName.
@@ -683,10 +696,10 @@ class HomeModelMapper(private val myApplication: MyApplication) {
         )
     }
 
-    // The outdated target SDK row: the only typed row (subtask-01 addresses it by
-    // [MyModelType.OutdatedTargetSdkApk]), so the MyModel is built here directly instead of via
-    // coloredRow. The first API level line joins the list without a separator (the old code
-    // appended joinToString's output straight onto it), and the order decides both the list
+    // The outdated target SDK row: the only row with its own [MyModelType], so the MyModel is
+    // built here directly instead of via coloredRow (the type is what the list uses as its
+    // content type hint). The first API level line joins the list without a separator (the old
+    // code appended joinToString's output straight onto it), and the order decides both the list
     // format and the sorting the repository already applied.
     fun toOutdatedTargetSdkVersionApkModel(
         result: DetectResult<OutdatedTargetSdkVersionApkState>

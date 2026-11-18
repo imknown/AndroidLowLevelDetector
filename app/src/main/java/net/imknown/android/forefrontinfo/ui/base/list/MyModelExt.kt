@@ -12,7 +12,7 @@ import net.imknown.android.forefrontinfo.base.extension.fullMessage
  * page (Others / Prop / shared).
  *
  * Guards wrap item producers: a failure degrades into that item's own error row
- * instead of escaping collectModels(); CancellationException always rethrows.
+ * instead of escaping the page's detection run; CancellationException always rethrows.
  * All guards are inline so the bare `return` statements in blocks keep working
  * as non-local returns, and the shared scaffold is the inline guardedItemCore.
  *

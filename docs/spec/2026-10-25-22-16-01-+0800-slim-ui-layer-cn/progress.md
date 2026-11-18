@@ -2204,14 +2204,107 @@
   单测与三份枚举 KDoc, 本记录 (subtask-05 加 progress).
   review 目录三轮收完之后整个删掉 (它不进 git, 删前 state.md 里没有待交负责人的归后续项).
   下一步动作: subtask-05 关; 之后再等负责人说 subtask-06 开工.
+- 2026-11-16 (subtask-06 开工: 报告重核加两笔实现, 未提交): 负责人说"开始 subtask-06".
+  开工前按 13 第 0 步把过期报告改过 (事实核对从 2026-10-27 `502a6eb7` 前移到 `17e807d2`), 改了什么:
+  行号全部前移 (collectModels :60, lld 链 :109-212, detect() :214-309, Rule 1 :92-105,
+  Rule 2 :318-329, 补丁入口 :331-349); "23 行手抄" 的说法删掉 — 批 3 之后清单已经是数据;
+  原报告预测的"屏幕五处要跟着改"作废并写明理由 (基类把 Loading/Loaded 折回两个 StateFlow,
+  屏幕公开面不变, `MyModelListScreen.kt` 一行未动); 补了 LldFailure 的类型位置, 黄金数据入口
+  (ModelSnapshotTest) 那条消费者, 以及"设置变化会整页重算"这条既定代价.
+  实现走 A2, 分两笔:
+  一, 基类契约换流: `abstract fun modelsFlow(): Flow<ListUpdate>` 加 `ListUpdate.Loading` /
+  `Loaded`, `refreshTick` 加一即刷新, 内层 `channelFlow` 加 `collectLatest` 是被取消的点
+  (选它不选 `flatMapLatest`/`transformLatest`/`mapLatest`: 三个在 kotlinx-coroutines 里还标
+  experimental, 按 05 不自己采用; 先写成 `flatMapLatest` 时 LSP 报 OPT_IN_USAGE, 已改).
+  三页改成 `listUpdates(refreshTick) { detectModels() }`, Home 的补丁路径本笔先留着, 行为不变.
+  `ModelSnapshotTest` 改成收 `modelsFlow()` 第一条 `Loaded` (它原来调 `collectModels()`).
+  二, 编排收回: 新增 `ui/home/detect/HomeDetectorCatalog.kt` (23 条清单加共享输入加请求类型),
+  `ui/home/datasource/LldLoader.kt` (三级回退, 返回 `LldLoad(lld, source, failures)`),
+  `ui/home/model/LldFailure.kt` (拉取/解析/写入三值原因加 cause 文本); `LldStatusState.errors`
+  改成 `failures`; `HomeRepository.detectMode` 换签名, 删掉四个 lld 直通方法 (消费者只有
+  HomeViewModel), `lldDataSource` 构造参数随之不再需要, `getAssetLld` 留下 (三份仪器测试拿它当夹具);
+  Home 改成 combine(allowNetworkData, outdatedOrderFirst, refreshTick) 纯推导;
+  删 Rule 1, Rule 2, `payloadOutdatedTargetSdkVersionApk`, `errorMessage`, lld 链四个函数,
+  `detect()`; 基类删 `onModelsLoaded` 与 `updateModelDetail` (全仓 grep 过, 消费者只有那处补丁).
+  文档: 04-架构 的 BaseListViewModel / 检测执行模型 / Lld.json 数据流, 06-检测条目 的清单位置两处,
+  05-代码规则 的 `lld` 那条括注, 08-文档排版 的示例标识符, `LldSource` 与 `MyModelExt` 的注释.
+  `DetectModeTest` 三例跟着新签名改 (第三例从"过滤 null"改成"失败按链序透传").
+  验证 (改完最后一轮之后的数): 四任务全绿 (`BUILD SUCCESSFUL`, 4 分 45 秒); 单测 app 110 例加 base 4 例,
+  零失败; lint `no new issues` (baseline 仍压 1 error / 6 warnings / 1 hint); Kotlin LSP 批发一发
+  查 12 个主源文件, 0 ERROR, 新三份文件 `CLEAN`, mapper 剩 15 条 `DestructuringDeclaration`
+  是存量 (改前 16 条, 本次把 `toModeModel` 的参数改成解构少了一条), 两份测试文件的编译类发现以 Gradle 为准.
+  偏差: analyze-file 档整批跳过, `android studio check` 拿不到运行中的 Studio 实例 (同批 6),
+  负责人开 Studio 与项目之后可补跑.
+  下一步动作: review 委派 (去处与模型待负责人定); 黄金对照要不要再导一份同设备快照, 也待定;
+  `listUpdates` 的取消语义没有单测, 要测得起 `kotlinx-coroutines-test`, 是否引入等负责人定.
+- 2026-11-16: subtask-05 关闭 (批 6 四笔已提交为 `17e807d2`, 第 4 步已放行, review 目录已删).
+- 2026-11-16 (规则修订加提交拆分改判): 负责人问 12 有没有要求批次细, 查证结果是 `12-git` 的 Git 一节
+  已有"提交按最小可独立编译与验证的单元拆 ... 不把几个可独立验证的单元并进一笔", 但只写在提交流程里,
+  没有明说覆盖不走 spec 的普通改动. 负责人令补一条, 已加在 `12-git` 那条后面: 这条不限 spec 流程,
+  普通改动同样拆到最小可独立编译与验证的单元, 判断只用一句"这笔单独拿出去能不能编译并且验得起来";
+  `AGENTS.md` 第 12 行索引的内容摘要加上"提交拆到最小可独立验证的单元". 这一笔是独立的文档改动, 自成一笔提交.
+  同批改判本子任务的提交拆分: 从"两次"改成按 12 的算法五笔 (契约换流, 删补丁, lld 下沉, 清单搬出,
+  规则文件与记录). 2026-10-29 那次"两次提交"只覆盖了第一笔, 其余三个单元当时没单列.
+  代码不用重写, 工作树内容就是最终形态; 逐笔重放与逐笔构建放到提交阶段, review 仍整批一轮.
+  下一步动作: 进 review (去处与模型待负责人定); 黄金对照要不要再导一份同设备快照, 也待定;
+  `listUpdates` 的取消语义没有单测, 要测得引 `kotlinx-coroutines-test`, 是否引入等负责人定.
+- 2026-11-17 (subtask-06 v1 收下, 四条一档已修): 负责人说 review 完了. 两份报告跨端, mavis (MiniMax-M3.1-Flash)
+  与 trae (glm-5.3-flash), 头尾都齐, 都判 `STOP-CONDITION: met`. 合并去重四条一档, 逐条回源核过, 全成立, 全修:
+  一, `03-概览` 还写 `loadJob` 去重 (两家同报) → 改成 `refreshTick` 加一触发新推导并取消在跑的那一轮.
+  二, `13` 的 `子任务再拆批` 把 12 的判据与跨文件例子抄了一遍 (两家同报, 我在 22:59 已记待改) → 收成一句指针.
+  三, `AppGraph.kt:183-185` 注释还提 `HomeViewModel` 的 `tryDetectOnline` (trae 报) → 改指 `LldLoader.loadOnline`;
+  自审同一文件 `:107` 还提 `loadJob` 去重 (两家都没报) → 一并改.
+  四, `subtask-06.md` 第二批删除清单没写死, 单拿出去编译不过 (mavis 报) → 五批的删除清单写到函数级.
+  二档 (记在这里, 归后续): `docs/dev/issues-cn/` 四份正文还在描述改前的代码, 归 subtask-06 收尾时更新;
+  检测序列内部的取消检查与有界并发归 #03 的注册表引擎.
+  三档 (负责人问 UI 上怎么操作出来, 核完驳回): mavis 报 FR-5 的 AC2 与连点刷新对不上. 按 11 的分歧处置
+  阶梯先走事实层: 项目用的 material3 1.4.0, `PullToRefresh.kt:327` 的 `onRelease()` 第一行是
+  `if (isRefreshing) return 0f`, 而 `onRefresh()` 只在这个函数里被调, 所以界面上刷新期间再下拉根本调不到
+  `refresh()`. 连点只跑一轮, AC2 照旧成立, 需求正文不动. 提示词第四节那条"连点从忽略改成取消重开"是按
+  代码层写的, 界面上不可达; `subtask-06.md` 已改正并写明 AC2 成立.
+  基线偏差: 发起 HEAD `17e807d2`, 收报告时 HEAD 是 `e728acf1` (多 6 笔, 其中 `9318f6b8` 改 android.toml 的
+  canary 行); 两棵树只差 `android.toml` 与 `thirdParty.toml` 的依赖行, 都在排除项里. 按 14 该作废重发,
+  这次没作废: 四条发现全部在当前树复核成立, 两份独立复核都写明 review 对象不受影响. 交负责人可否决.
+  验证: 本轮只改文档与注释, 按 11 的"只改文档或注释跳过构建档"跳过四档; 另跑一次 `compileFossDebugKotlin`
+  确认注释改动没碰坏编译.
+  下一步动作: 等负责人给第 4 步放行理由, 然后按五批提交 (trailer 三样等负责人给).
+- 2026-11-16 (规则修订改到 13, v1 作废重发): 负责人澄清上一句的本意是 spec 设计层面的细:
+  设计子任务时要把它再拆成尽可能细的批, 一次只改一批, 每批各自走 v1/v2/v3 的 review 循环, 再进下一批
+  (subtask-05 就是这么走的, 六批加一个语义 id 小单元). 据此改 `13-任务工作流`: 新增 `子任务再拆批` 一节
+  (批清单写进 `subtask-NN.md`, 批就是一笔提交, 拆法照 12 的算法, 批不能省, 进度记录一批一行);
+  主循环那一节的循环单位从子任务改成批 (第 0 步改"一批开始时的对照", 第 2 步改"按这一批的目标",
+  第 5 步改"提交这一批", 主循环图两个节点跟着改); `AGENTS.md` 第 13 行摘要补"子任务再拆批".
+  12-git 那条 (提交拆细不限 spec 流程) 保留: 它管的是提交, 与 13 这条管 spec 设计各一层, 不冲突;
+  负责人若只要一处, 撤这条即可.
+  偏差: 上面这两处规则文件是在 v1 (`review-v1-prompt-2209.md`) 发起之后改的, 违反了"有轮在外时工作树不动".
+  处置: 按 14 作废 2209 那轮, 重发 `review-v1-prompt-2215.md` (第 5 件目标改成"五批"并写明规则改动两处),
+  状态记在 `review/state.md`. HEAD 仍是 `17e807d2`.
+  另一条偏差: 13 新条要求每批各自走一遍 0 到 5 步, 而这次五批的实现是一次写完的, 只有一轮 review 覆盖五批的
+  diff (提交阶段才按五批拆). 拆成五轮跨端 review 的代价是五个 session, 所以先按一轮走, 交负责人可否决.
+  待改 (v1 收完之后在处理发现那一轮一起改, 现在树冻结不再破第二次): 13 的 `子任务再拆批` 里
+  "拆法照 12-git 的算法: 拆到最小可独立编译与验证的单元 ... 跨文件的同一逻辑改动算一批, 拆开中间那一笔就编译不过"
+  这两句把 12 的判据与跨文件例子抄了一遍, 违 07 的"一条规定只在管它的那份文件里写一遍".
+  改成一句指针: "一批就是一笔提交. 拆法照 [12-git] 的算法, 只是把单元看成批: 一批不跟下一批并成一笔,
+  也不把一批拆成几笔."
+  下一步动作: 收 2215 那轮的报告, 收到后按 13 第 3 步处理发现.
+- 2026-11-16 (subtask-06 v1 发起, 跨端): 负责人令按五笔走之后发起. review 目录建在 spec 目录下
+  (`state.md` 加提示词加 `.gitignore` 内容一行 `*`, 不进 git, check-ignore 在案);
+  `review-v1-prompt-2209.md` 落盘 (义务抄全, 五件目标, 事实对照表, 三条已知行为差异, 排除项,
+  验证证据, 报告写死三样, 冻结令, 开场白).
+  委派摆况: 本会话里没有能给 review 用的独立上下文, 跨端是前几批走的路; 对面 agent 与模型由负责人
+  开 session 时定, 本会话的模型清单取不到. 发起 HEAD `17e807d2`.
+  v1 为 `等待报告`, 工作树随之冻结 (记录文件除外).
+  下一步动作: 收 v1 报告 (负责人说 review 时按 14 的三步分辨), 收到后按 13 第 3 步处理发现.
 - 各子任务状态: subtask-01 已关闭; subtask-02 已提交并关闭;
   subtask-03 已提交并关闭; subtask-04 已提交并关闭 (批 1 ~ 7 已提交关闭, 规则文件两件已提交,
   收尾文档批三轮 review 已收, 第 4 步已放行, review 目录已删,
   20 份文档已提交为 `f732b712`, 归后续清单留任务结束横向回顾);
-  subtask-05 进行中 (批 1 加批 2 加语义 id 小单元加批 3 加批 4 加批 5 已提交关闭, 批 6 已实现:
-  06 重写加 04 执行模型加目录语义 id 列与不变式加 02-功能需求指称加声明序单测,
-  档 3 已判并改成 10 条目 11 行, 批 6 已实现, v1 加 v2 加 v3 已收, 停止条件 met (三轮共十一条发现全修),
-  之后放行与提交各等单独同意);
-  subtask-06 报告已出, 实现未开始.
+  subtask-05 已提交并关闭 (批 1 加批 2 加语义 id 小单元加批 3 加批 4 加批 5 加批 6 全部提交,
+  review 三轮已收完, 停止条件 met, 第 4 步已放行);
+  subtask-06 进行中 (报告已按 `17e807d2` 重核; 五批的实现已写完, 四档验证全绿, LSP 0 ERROR;
+  v1 (full) 两份报告已收, 四条一档已修, 二档两项已记, 三档一条按事实层驳回 (material3 1.4.0
+  `PullToRefresh.kt:327` 挡掉刷新中的手势, AC2 照旧成立), 基线偏差待负责人否;
+  下一步等第 4 步放行理由与五批提交的 trailer).
 - 未查清: 无.
-- 挂起项: 无.
+- 挂起项: `gradle/toml/android.toml` (9.6.0-alpha03) 与另一个 spec 的 progress 仍在工作树里,
+  前一轮已判超出范围, 提交时不带上.
