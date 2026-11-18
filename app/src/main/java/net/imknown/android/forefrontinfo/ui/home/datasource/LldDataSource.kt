@@ -9,11 +9,11 @@ import io.ktor.http.headers
 import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.base.extension.isChinaMainlandTimezone
 
-// HttpClient is injected from the graph (the AppGraph httpClient binding):
-// the () -> HttpClient provider form defers resolution, constructed on the
-// first real request, zero footprint if the network toggle is never enabled;
-// once built it is cached with the graph and the connection pool is reused
-// across refreshes (issues-cn #16 second half).
+// HttpClient is injected from the graph (the AppGraph httpClient binding) as a
+// () -> HttpClient provider, and called once per request on purpose: the system
+// proxy is read when the client is built, so a cached client would keep using
+// the proxy it saw at build time. Zero footprint while the network toggle stays
+// off (issues-cn #16 second half).
 @Inject
 class LldDataSource(
     private val httpClient: () -> HttpClient,

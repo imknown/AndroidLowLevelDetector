@@ -2461,6 +2461,19 @@
   设备验证另记: 错代理冷启动显示"离线 + 在线数据获取失败 + UnknownHostException", 与 develop 一致;
   "刷新后仍显示在线"未能在设备上复现 (adb 注入的手势触发不了下拉刷新), 已有的静态与冷启动证据都指向
   与本次改动无关, 待负责人手动刷新后再定.
+- 2026-11-19 (修复: HttpClient 单例把代理固化在构建那一刻): 负责人报"先在线成功, 再配错误代理, 下拉刷新,
+  仍显示在线"; develop 同步骤显示离线. 诊断日志 (临时加在 LldLoader 与 LldDataSource, 查完已还原) 给出:
+  同一进程内把全局代理设成 `127.0.0.1:1` 或 `a.com:1332`, `LldLoader` 仍返回 `source=ONLINE failures=[]`,
+  Ktor 日志显示请求真打到了 gitee 并 302 到 giteeusercontent (284 毫秒, 含 3523 字节正文);
+  而杀进程冷启动 (新 client) 时代理生效, 113 毫秒就 `ConnectException` 并降到离线.
+  根因: `AppGraph.httpClient()` 带 `@SingleIn`, client 在创建时把系统代理固化, 之后系统代理再变也不读;
+  develop 是每次请求新建 client, 所以每次都读. 这与 subtask-06 无关, 是 `846e1ed8` (2026-10-02) 改单例带来的.
+  修法 (负责人选甲): 去掉 `@SingleIn`, provider 保持 `() -> HttpClient`, `LldDataSource` 每次请求调用一次.
+  代价是每次请求一个连接池, 一次检测只有一个请求, 可接受.
+  复验: 无代理冷启动在线 → 设 `a.com:1332` → 下拉刷新 → 显示"离线 + 在线数据获取失败 + UnknownHostException".
+  四档全绿 (5 分 01 秒), lint `no new issues`.
+  同类问题排查: 全仓 `@SingleIn` 只剩 ViewModel 工厂 (无环境快照); 两处 `by lazy` 缓存的分别是 `Build` 读数与
+  缓存文件路径, 都不随运行变化; 网络时区判断 (`isChinaMainlandTimezone`) 每次请求现算. 未发现第二处.
 - 各子任务状态: subtask-01 已关闭; subtask-02 已提交并关闭;
   subtask-03 已提交并关闭; subtask-04 已提交并关闭 (批 1 ~ 7 已提交关闭, 规则文件两件已提交,
   收尾文档批三轮 review 已收, 第 4 步已放行, review 目录已删,

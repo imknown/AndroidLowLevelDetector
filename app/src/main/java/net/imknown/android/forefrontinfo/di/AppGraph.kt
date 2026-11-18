@@ -7,7 +7,6 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Provides
-import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metrox.viewmodel.ViewModelGraph
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
@@ -110,18 +109,17 @@ object HttpClientContainer {
     private const val HTTP_REQUEST_TIMEOUT_MILLIS = 15_000L
     private const val HTTP_CONNECT_TIMEOUT_MILLIS = 10_000L
     private const val HTTP_SOCKET_TIMEOUT_MILLIS = 10_000L
-    // The project's single HttpClient binding (issues-cn #16 second half):
-    // the OkHttp engine config moved verbatim from LldDataSource
-    // (TrafficStats tagging / Wi-Fi PAC proxy fallback / debug Logging),
-    // logic untouched. @SingleIn caches the client with the graph; resolved
-    // lazily through the () -> HttpClient provider injected in
-    // LldDataSource, so it is built on the first real request and the pool
-    // is reused across refreshes.
-    // Behavior change from the old per-request client: client.use {}'s
-    // close-after-use is gone: Metro does no close, the process lifetime
-    // is the client lifetime, a net win for this single-request use case.
+    // The HttpClient provider (issues-cn #16 second half): the OkHttp engine
+    // config moved verbatim from LldDataSource (TrafficStats tagging / Wi-Fi PAC
+    // proxy fallback / debug Logging), logic untouched.
+    // Deliberately NOT @SingleIn: the system proxy is read when the client is
+    // built, and a cached client keeps using whatever proxy it saw at build time
+    // (seen on device: enable a bad proxy mid-process, refresh, and the request
+    // still goes direct). The provider is injected in LldDataSource as
+    // () -> HttpClient and called once per request, so each request picks up the
+    // proxy of that moment; a connection pool per request is a fair price for a
+    // request per detection.
     @Provides
-    @SingleIn(AppScope::class)
     fun httpClient(): HttpClient = HttpClient(OkHttp) {
         engine {
             config {
