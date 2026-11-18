@@ -2295,16 +2295,181 @@
   开 session 时定, 本会话的模型清单取不到. 发起 HEAD `17e807d2`.
   v1 为 `等待报告`, 工作树随之冻结 (记录文件除外).
   下一步动作: 收 v1 报告 (负责人说 review 时按 14 的三步分辨), 收到后按 13 第 3 步处理发现.
+- 2026-11-17 (subtask-06 判为做歪, 决定重做): 负责人在讨论里指出两处违背需求, 逐条核过都成立:
+  一, 切排序开关触发整页重算, 违背 FR-17 (`02-功能需求.md:377`) 与 03 的 Q10 (只重排那一行, 别的什么都不动);
+  二, 连点刷新改成取消在跑的那一轮再重开, 违背 FR-5 的 AC2 与 FR-13 (多余的手势不能启动重复的检测).
+  同时确认 develop 的形状就是正解: 一次 suspend 调用加 `loadJob` 去重, 加 `updateModelDetail` 改一行.
+  负责人定的重做方向: 基类保持 suspend 形状 (不做流, 不用 `channelFlow`); 排序挪进 mapper;
+  改一行的逻辑放 Home; 联网开关下次检测才生效; 任何开关切换都不触发检测; 重做后重发 v1.
+  处置: 先 `git diff` 出补丁 `/d/tmp/subtask06-draft.patch`, 三份新文件打包 `/d/tmp/subtask06-newfiles.tgz`,
+  再 `git stash push -u` 把草稿整份收起 (stash@{0}, 名字写了 superseded by redesign), 工作树回到 HEAD.
+  `review/` 目录被 gitignore, 原地留着.
+  重写: `plan.md` 的子任务 06 范围那段; `subtask-06.md` 整份 (目标, concept primer, 触发源表,
+  现状与证据, 四块改动, 四批, 覆盖核对, 验证, 风险). 其余文件暂不动, 等设计确认后按批改.
+  旧的两份 v1 报告: 四条一档里 `03-概览` 与 `08` 两处随重做回退, `13` 与 `AppGraph` 两处保留;
+  按负责人定的, 重做之后重发 v1, 旧轮记作废.
+  下一步动作: 等负责人看 `plan.md` 与 `subtask-06.md` 的新稿; 确认后按 13 的计划确认走一遍,
+  再按四批动代码. 草稿 stash 在最后一批提交之后再 drop.
+- 2026-11-17 (更正 10-29 那条记录的归属): 负责人要追"当初为什么选把基类改成观察一条数据流",
+  查到 2026-10-29 20:39 的会话原话. 当时我给的是七行推荐表, 第 2 行写"基类 A2, 理由: A1 做完那两条
+  补丁规则还在, 本步目标只完成一半; A2 才真删掉", 没有写任何代价 (没写切一次排序开关要重跑 23 条,
+  也没写联网时会重新下载参考数据并写盘). 负责人回"这六个问题 都按照你的推荐来".
+  所以该项是"我推荐, 负责人整体采纳", 10-29 那条记成"负责人定"不准确, 推荐来源被抹掉了.
+  同时澄清一处同名不同物: 报告批审阅里的"A2"指 A 档第 2 条发现 (mockk 依赖写错),
+  与候选方案"改成观察一条数据流"无关, 追溯时别混.
+  旧的 10-29 条目保持原样, 以本条为准.
+- 2026-11-18 (八条待定项答复与文档改动): 负责人逐条答复: 1 全改; 2 放行; 3 07 报告等 06 第三批之后写;
+  4 需求正文由我补; 5 issues 路线段改掉; 6 四批照序; 7 提交层等代码完成; 8 规则修订等 06 一起.
+  已改:
+  一, `plan.md` 八处: 06 的"23 个仓库方法逐行手抄"改成"23 条清单搬出 (逐行调用在 2b 已成清单)";
+  04 的 `getMyString` 数字补"领域化之前 99/69, 现在 38/1"; 删掉已不存在的 `toColoredMyModel`;
+  05 的"并发有上限"改成"第一版全串行, 有界并发另立条目", 风险句去掉"加并发";
+  "03 的 Q10"改成通名; 06 的"目标在这一步完成"改成"06 与 07 两步完成";
+  待学习清单的 Turbine 标注未引入; 01 那件补一句"06 会取代它".
+  二, `docs/dev/issues-cn/README.md` 的 2c 段: 把 `combine(settings, 检测源, refresh)` 纯推导
+  改成"设置不参与推导, 排序开关只重排那一行, 联网开关下次检测生效", 并写明这是 2026-11-18 的修正,
+  原因是原写法与需求第 17 条冲突; `SettingsStore` 可观察基础那条与 #08/#10 链接保留.
+  三, 需求正文: 功能需求第 8 条加 AC4 "切换开关本身不触发刷新, 新值在下一次检测时生效";
+  非功能需求第 3 条补"一次输入变化只重算相关条目, 不卡顿不掉帧"; 新增第 9 条资源 (省内存 CPU 电,
+  不重复取数与计算) 与第 10 条网络 (只有下拉刷新, 开启联网后的下一次检测, 进入界面时发请求, 切任何开关都不发);
+  `docs/requirements-cn/README.md` 的编号范围改成 NFR-1 ... NFR-10.
+  更正一条我自己的说法: 上一轮说"需求缺'切开关不触发刷新'的明文", 对排序开关不成立.
+  需求第 17 条 2026-11-01 就写了三句: 切换时只改 Home 那一行, 别的什么都不动; 列表已加载完时立刻更新;
+  首次加载没结束时按新顺序显示. 所以排序开关不用补句, 只补了联网开关那一条 (第 8 条 AC4).
+  下一步动作: 等负责人定"设计稿要不要单独派一轮 review"; 定了就按四批开工, 第一批是 lld 下沉.
+- 2026-11-18 (设计稿 review 折中发起): 负责人选折中: 只把 `subtask-06.md` 的触发源表与分批两段交给
+  reviewer, 不做全稿 review. 理由: 这两段不随代码挪动; 行号与逐条清单留给第一批的代码 review 一起核.
+  发起 `review-v2-prompt-1926.md` (scope 记为 partial: 触发源表与分批), HEAD `e728acf1`, 状态记在
+  `review/state.md`. 提示词里把四类要审的东西写死: 触发源是否齐全, 开关行为表是否覆盖需求第 17 条的三句,
+  四批边界是否成立 (尤其第二批与第三批之间"两条路径同时存在"的中间态), 以及设计缺口 (那一条检测失败时怎么办).
+  工作树随之冻结 (记录文件除外).
+  下一步动作: 收 v2 报告, 处理发现后按四批开工第一批 (lld 下沉).
+- 2026-11-18 (v2 收下, 六条文档修正): 负责人说 review 完了. 两份报告 (mavis / MiniMax-M3.1-Flash,
+  trae / glm-5.3-flash), 头尾齐, 都判 met, HEAD 都是 `e728acf1`. 合并去重六条, 全在文档层改完:
+  一, 触发源表补"在跑时再进入不并发启动第二次", 表下加注"去重是两个入口共用的基类规则" (两家同报);
+  二, 表下加注"那一条检测失败时保持旧行不动, 不改写成未知行" (两家同报, 与风险节对齐);
+  三, 计划改动第 3 条写死取值: 只在检测结束渲染与开关变化重渲染两处读调用那一刻的当前值, mapper 保持纯;
+  四, 第二批补"catalog 注入 `SettingsStore`, 检测开始时读一次排序值传给仓库 (与改前同一时机, 行为不变)",
+  第三批才换成渲染时读, 两批边界因此清楚;
+  五, 删掉"第一批与第二批的顺序可以换"与依赖句的矛盾, 写明三类依赖都是硬的;
+  六, 第四批清单补三份需求正文 (`02-功能需求.md`, `03-非功能需求与路线图.md`, `requirements-cn/README.md`).
+  驳回一条: trae 判"第一批编译闭合", 事实层不成立. 第一批要删 `fetchOfflineLldOrNull` 与仓库两个直通,
+  而补丁入口 (`HomeViewModel.kt:331-349`) 正在用它们, 补丁要到第三批才删, 所以第一批单独拿出去会红.
+  mavis 的同一判断成立; 这条不是措辞分歧, 是 trae 没核那三处调用点, 记在 `review/state.md`.
+  两份也都确认了两件不成立: 触发源入口不多不少; 四批粒度没有该并或该拆的.
+  待负责人定一条: 第一批里补丁路径怎么拿 lld (两个走法见对话), 定了改分批一节, 然后开工第一批.
+- 2026-11-18 (第一批完成: lld 下沉): 负责人选乙 (第一批只换加载那一侧, 补丁路径原样留到第三批).
+  从 stash 取回七份文件: `LldLoader.kt`, `LldFailure.kt`, `LldStatusState.kt` (改 failures),
+  `HomeModelMapper.kt` (文案归 mapper), `DetectModeTest.kt`, `LldSource.kt` 与 `MyModelExt.kt` 的注释.
+  手工改三处:
+  一, `HomeViewModel`: 构造器加 `LldLoader`; `collectModels` 改成 `lldLoader.load(allowNetwork)` 后
+  直接 `detect(load.lld, load.failures, load.source)`; 删 `tryDetectOnline` / `tryDetectOffline`
+  与随之无用的 `IOException` / `isLldDatetime` 两个 import; `detect` 的第二个参数从 `List<String?>`
+  换成 `List<LldFailure>`.
+  二, `HomeRepository`: 删 `fetchOnlineLldJsonStringOrThrow` 与 `saveLldJsonFileOrThrow` 两个直通与
+  `lldDataSource` 构造参数; 保留 `copyJsonIfNeededOrThrow` / `fetchOfflineLldFileOrThrow` / `getAssetLld`
+  并注明只服务补丁路径与仪器测试; `detectMode` 换签名收 `List<LldFailure>`.
+  三, `AppGraph` 的 HttpTimeout 注释改指 `LldLoader.loadOnline`.
+  自审一处: `LldAndError.message` 在第一批之后无人读 (补丁只用 `.lld`), 属暂时死字段,
+  每次切开关仍会白拼一次文案. 按乙"补丁路径原样"没动它, 第三批随补丁一起删, 记在这里.
+  验证: 四档全绿 (13 分 32 秒); 单测 app 110 例加 base 4 例, 零失败; lint `no new issues`;
+  Kotlin LSP 查七个改动文件全部 `CLEAN`, 0 ERROR.
+  下一步: 第二批 (清单搬出), 或先派第一批的 review, 节奏待负责人定.
+- 2026-11-18 (第一批 review 发起): 负责人选 A, 第一批单独派 review 再开第二批. 发起
+  `review-v3-prompt-2018.md` (scope full, HEAD `e728acf1`), 点名四件必核: 五个失败档与原因顺序的等价性,
+  三条文案资源的 `%s` 与换行逐字对照, 补丁路径与基类契约是否原样, 以及"`LldAndError.message` 无人读"
+  这处算临时状态还是本批该删. 工作树随之冻结 (记录文件除外).
+  下一步动作: 收 v3 报告, 处理完开第二批.
+- 2026-11-18 (v3 收下, 第一批处理完): 两份报告 (mavis / MiniMax-M3.1-Flash, trae / glm-5.3-flash) 都判 met,
+  一档 0 条, 三档 0 条. 三处结论一致: 七档失败处置与原因顺序等价, 三条文案逐字一致,
+  补丁路径与基类契约未动. 处理三条措辞级:
+  一, `HomeRepository.kt:70` 注释说"these two"却列了三个, `getAssetLld` 的消费者是三份仪器测试 → 逐句写明;
+  二, `HomeModelMapper.kt` 那段说 `MyModelType` 只作 contentType 提示, 但补丁路径现在还在用它寻址 →
+  改成"现在两个读者, 第三批之后只剩后者";
+  三, `subtask-06.md` 那句"只服务补丁路径"改成"服务补丁的取数, 其中 `message` 已无人读, 第三批整包删".
+  二档三条备查: 补丁路径重复取数与写盘 (归第三批), 两套取数链并存 (归第三批), loader 没有单测
+  (归第三批两套链合并之后, 或单开小单元给两个数据源抽接口).
+  验证: 本轮只改注释与文档, 按 11 跳过四档, 跑了一次 `:app:compileFossDebugKotlin`, 绿.
+  下一步动作: 等负责人说开第二批 (清单搬出).
+- 2026-11-18 (第二批完成: 清单搬出): 新增 `ui/home/detect/HomeDetectorCatalog.kt` (23 条清单,
+  共享输入 lld 与 `getMounts()`, 请求类型只带网络开关); `HomeViewModel` 的 `detect()` 整个删除,
+  `collectModels` 变成 `detectorCatalog.detect(HomeDetectionRequest(allowNetwork))` 一行,
+  构造器把 `LldLoader` 换成 `HomeDetectorCatalog`, 去掉 `LldLoader` / `LldFailure` / `LldSource` /
+  `rawDetector` 四个 import 并加 catalog 两个.
+  按设计, 第二批的 catalog 自己注入 `SettingsStore`, 在 `detect` 开头读一次排序值传给仓库
+  (与改前同一时机, 所以行为不变), 代码注释写明第三批会把这处挪到渲染时读.
+  验证: 四档全绿 (6 分 28 秒); 单测 app 110 例加 base 4 例零失败; lint `no new issues`;
+  LSP 查 catalog 与 HomeViewModel 两份文件 `CLEAN`, 0 ERROR.
+  下一步动作: 第二批的 review 节奏待负责人定 (照 A 逐批派, 还是与第三批合并一轮).
+- 2026-11-18 (第三批完成, 二加三批 review 发起): 负责人选 B (第二与第三批合并一轮 review), 先把第三批做完.
+  第三批改动:
+  一, `OutdatedTargetSdkVersionApkState` 去掉 `order` 字段, 注释改成"顺序是展示参数, 不是设备事实".
+  二, `HomeRepository.getOutdatedTargetSdkVersionApkState(lld)` 不再收排序参数, 不再排序, 只过滤与判 match;
+  删 `copyJsonIfNeededOrThrow` 与 `fetchOfflineLldFileOrThrow` 两个直通 (补丁删了没人用), 保留 `getAssetLld`.
+  三, `HomeModelMapper.toOutdatedTargetSdkVersionApkModel(result, orderByPackageNameFirst)` 加排序参数,
+  两个 comparator 与原仓库逐字相同, 只是位置从仓库搬到 mapper.
+  四, `HomeDetectorCatalog.detect` 返回 `HomeDetectionResult(rows, orderByPackageNameFirst, outdatedTargetSdk)`;
+  过期 targetSdk 那一条的 exec 用 `.also { outdatedTargetSdk = it }` 留住领域对象; 新增 `outdatedRowDetail`
+  与 `rowsWithOutdatedRow` 两个方法.
+  五, `HomeViewModel` 重写: 只剩 `collectModels` (调 catalog, 记住结果, 落地时若开关已变则用当前值重渲染那一行)
+  与 `init` 里监听的开关 (有数据才重渲染, 走 `updateModelDetail`); 删 Rule 1, Rule 2, 补丁入口, 四个 lld 函数,
+  `errorMessage`, `LldAndError`, `outdatedOrderChanges`, `loadStartGeneration`, 构造器只剩 catalog 与 settingsStore.
+  六, 与设计稿的一处偏离: 原稿写"基类 `setModels` 改 protected 并删 `updateModelDetail`", 实现改成"基类不动,
+  `updateModelDetail` 留着重渲染" — 它按 type 找行, 列表为空与失败行都会自然不动, 正好是要的语义, 改动更小.
+  `subtask-06.md` 已按实现改, review 里请 reviewer 判这个偏离.
+  七, 测试: 仪器测试删两条排序断言 (排序已不在仓库), 保留过滤与 match, 新增"列出的都是系统应用";
+  mapper 的 JVM 测试两条, 验开关两档的排序. 单测从 110 涨到 112.
+  验证: 四档全绿 (6 分 30 秒); app 112 例加 base 4 例零失败; lint `no new issues`; LSP 五文件 `CLEAN`.
+  发起 `review-v4-prompt-2123.md` (full, HEAD `e728acf1`), 工作树随之冻结.
+  下一步动作: 收 v4 报告, 处理完做第四批 (文档与记录), 然后谈提交.
+- 2026-11-18 (v4 收下, 第三批处理完): 两份报告 (mavis / MiniMax-M3.1-Flash, trae / glm-5.3-flash) 都判 met.
+  两家独立核到同一批结论: 排序搬家等价 (comparator 逐字相同), 开关不触发检测, 落地取值两段兜住
+  需求第 17 条第三句, 失败行不被洗白, 补丁路径零残留, 清单仍 23 条且顺序不变, 测试覆盖没变薄 (112 例).
+  处理四条:
+  一, 删基类的 `onModelsLoaded()` 钩子与调用点 (两家同报, 设计稿列了但实现漏了), 全仓零残留;
+  二, catalog 两处 KDoc 把"失败为 null"改成实际机制 (失败是 `Failed` 非 null, 失败行不带那个 type
+  所以重渲染落空), null 只作防御 (trae 报);
+  三, mapper 注释补"type 也是重渲染的寻址键" (mavis 报, 措辞级);
+  四, `subtask-06.md` 分批节的"基类放开写入入口"改成"删基类的钩子" (与正文一致).
+  二档两条备查: 重渲染路径无单测 (要 `kotlinx-coroutines-test`, 归那个待定项); catalog 的 23 条顺序
+  无机器断言 (后续给测试加一条, 或让清单由 `HomeEntryId.entries` 生成).
+  验证: 删钩子后编译两套源集通过, `onModelsLoaded` 全仓零命中.
+  下一步动作: 第四批 (文档与记录) 收尾.
+- 2026-11-18 (第四批完成: 文档与记录): 内容与落点:
+  一, `04-架构`: `BaseListViewModel` 节删掉 `onModelsLoaded` 那句, 补"`updateModelDetail` 按类型找行,
+  列表为空与失败行都不动, Home 的排序开关就靠它"; 检测执行模型节把 Home 的清单指到
+  `ui/home/detect/HomeDetectorCatalog.kt` (Others 与 Prop 注明暂留 `collectModels()`, 归 07), 共享输入改成
+  "catalog 里一次取 lld 与 mounts, 排序值只传给那一条", 图里 P1 标签跟着改; Lld.json 节补 `LldLoader`
+  的三级回退与失败原因.
+  二, `06-检测条目`: 清单位置改成 `HomeDetectorCatalog.detect()`, 图标签同步.
+  三, 三份 issue 各加一行"现状 (2026-11-18)": #11 已修, #03 部分 (Home 已入表, 另两页归 07),
+  #15 部分 (每条前查取消已做, 有界并发待定); README 修复路线表的状态列同步这三条.
+  四, 从 stash 取回规则修订四份: `12-git` 的提交拆细条, `13` 的 `子任务再拆批` 与循环单位改批,
+  `05` 的 lld 括注, `AGENTS.md` 两行摘要.
+  五, `subtask-06.md` 补"结果"节 (四批落地内容, 三批验证数字, review 结论, 两处偏离) 并更新已定清单.
+  六, 需求正文三份已在 11-18 早先改好, 随本批提交.
+  验证: 本轮只改文档, 按 11 跳过构建档.
+  下一步动作: 等负责人给第 4 步放行理由与 trailer 三样, 然后按批提交; 提交前要定的是提交拆几笔.
+- 2026-11-18 (负责人放行与提交): 负责人说"改动大体看了一遍, 没什么问题", 据此放行; trailer 三样给定为
+  WorkBuddy CN / DeepSeek V4.1 Flash / High. 提交按负责人选的"丙"拆五笔:
+  1 规则修订 `38c2e639`; 2 第一批 lld 下沉 `775cbd12` (按丙重放: 先从最终态备份, 退回只含第一批的形状,
+  编译加单测通过后提交, 再恢复最终态); 3 第二三批编排收回 `db558018`; 4 需求正文 `75f187f4`;
+  5 本笔, spec 与架构文档.
+  重放过程记录: 退回时把 `OutdatedTargetSdkVersionApkState`, 基类与两份测试回到 HEAD, 删掉 catalog,
+  mapper 从 stash 取第一批形状; repo 与 HomeViewModel 由 HEAD 内容重放第一批编辑. 中途遇到一处
+  `getAssetLld` 重载重复 (重放脚本插入了一段含同名方法的代码), 去重后编译通过.
+  设备验证另记: 错代理冷启动显示"离线 + 在线数据获取失败 + UnknownHostException", 与 develop 一致;
+  "刷新后仍显示在线"未能在设备上复现 (adb 注入的手势触发不了下拉刷新), 已有的静态与冷启动证据都指向
+  与本次改动无关, 待负责人手动刷新后再定.
 - 各子任务状态: subtask-01 已关闭; subtask-02 已提交并关闭;
   subtask-03 已提交并关闭; subtask-04 已提交并关闭 (批 1 ~ 7 已提交关闭, 规则文件两件已提交,
   收尾文档批三轮 review 已收, 第 4 步已放行, review 目录已删,
   20 份文档已提交为 `f732b712`, 归后续清单留任务结束横向回顾);
   subtask-05 已提交并关闭 (批 1 加批 2 加语义 id 小单元加批 3 加批 4 加批 5 加批 6 全部提交,
   review 三轮已收完, 停止条件 met, 第 4 步已放行);
-  subtask-06 进行中 (报告已按 `17e807d2` 重核; 五批的实现已写完, 四档验证全绿, LSP 0 ERROR;
-  v1 (full) 两份报告已收, 四条一档已修, 二档两项已记, 三档一条按事实层驳回 (material3 1.4.0
-  `PullToRefresh.kt:327` 挡掉刷新中的手势, AC2 照旧成立), 基线偏差待负责人否;
-  下一步等第 4 步放行理由与五批提交的 trailer).
+  subtask-06 重做中 (判为做歪: 设置触发整页重算, 连点刷新改成取消重开; 草稿已 stash, 工作树回到 HEAD;
+  `plan.md` 与 `subtask-06.md` 按"回到 develop 形状加排序只重排一行"重写, 等负责人确认设计;
+  旧 v1 两份报告待重做后重发).
 - 未查清: 无.
 - 挂起项: `gradle/toml/android.toml` (9.6.0-alpha03) 与另一个 spec 的 progress 仍在工作树里,
   前一轮已判超出范围, 提交时不带上.

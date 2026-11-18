@@ -2,6 +2,11 @@
 
 # 11 HomeViewModel 手工编排 23 个仓库方法
 
+> **现状 (2026-11-18)**: 已修掉. Home 的 23 条清单搬进 `ui/home/detect/HomeDetectorCatalog.kt`,
+> lld 取数与回退搬进 `ui/home/datasource/LldLoader.kt`, 排序开关改成只重渲染那一行;
+> `HomeViewModel` 只剩"跑一轮"与"开关变化时重渲染". 下面记的是修之前的代码与判断.
+
+
 > 返回 [README 索引](../README.md) · [3 · UDF · 单向数据流](../README.md#3--udf--单向数据流).
 
 **严重程度: P1 | 修复难度: 中**  

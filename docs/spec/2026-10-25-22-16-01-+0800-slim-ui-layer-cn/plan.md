@@ -30,7 +30,7 @@ ViewModel 侧只剩状态推导. 防回归的检查先立起来再动核心 ([#5
   1. #11 前半: `BaseListViewModel.updateModelDetail()` 的公开参数从下标改为 `MyModelType`,  
      条目定位收进 `modelsStateFlow.update` 这一个原子块;  
      `HomeViewModel.payloadOutdatedTargetSdkVersionApk()` 删掉自己翻状态找下标的代码.  
-     不碰 "调用顺序就是列表顺序" 约定.
+     不碰 "调用顺序就是列表顺序" 约定. 这一项在 subtask-06 会被"按显示参数重排一行"取代, 届时删除.
   2. #44 第 1 处: 引入 `LldSource` 枚举, `HomeRepository.detectMode()` 的颜色判别改用它,  
      `HomeViewModel.detect()` / `tryDetectOnline()` / `tryDetectOffline()` 的 `modeResId` 参数跟着换,  
      资源 ID 只在拼文案时用.
@@ -65,48 +65,58 @@ ViewModel 侧只剩状态推导. 防回归的检查先立起来再动核心 ([#5
   翻译成 MyModel 的 mapper 放 UI 包且只放在那里;  
   [#42](../../dev/issues-cn/08-反模式与卫生/42-字符串当哨兵值.md) 的 "拿翻译文案当判断值" 坏模式随新结构消除;  
   逐条配真单测 (`Build.*` 读数按 0f 逐项裁量);  
-  `toColoredMyModel` / `toTranslatedDetailMyModel` 里 MyApplication 取不到值时的默认处理移入 mapper;  
+  `toTranslatedDetailMyModel` 里 MyApplication 取不到值时的默认处理移入 mapper;  
   [06-检测条目](../../agents-cn/06-检测条目.md) 与 0d 条款随本步改写.  
   不走渐进, 全部迁完, 不留过渡形态.
 - 独立性: 依赖 subtask-02 的黄金数据. 验收标准: 三页每行 (key, detail, color, type) 与快照逐行一致.
-- 风险级别: 高 (核心逻辑; `getMyString` 全项目 99 处调用点, 其中 69 处在 HomeRepository).  
+- 风险级别: 高 (核心逻辑; 领域化之前 `getMyString` 全项目 99 处调用点, 其中 69 处在 HomeRepository; 现在 38 处, HomeRepository 1 处).  
   Settings 页的 Version 行不在本步, 它是 #44 第 2 处, 在独立小件清单里.
 - 生疏领域: 部分 (测试手段按 0f 可能新引入 Robolectric 或仪器测试).
 
 ### subtask-05 2b 注册表引擎
 
 - 范围: 每个检测项变成清单里的一条数据 (含执行函数), 引擎统一执行 (#03);  
-  并发有上限 ([#15](../../dev/issues-cn/04-并发与调度/15-检测串行不感知取消.md)), 可取消, 展示顺序固定;  
+  第一版全部串行, 有界并发另立条目 ([#15](../../dev/issues-cn/04-并发与调度/15-检测串行不感知取消.md)), 可取消, 展示顺序固定;  
   Others / Prop 仿 Home 一并入表 (0g);  
   [#43](../../dev/issues-cn/08-反模式与卫生/43-比对语义逐行adhoc.md) 的比对语义随条目入表并用特征测试锁定,  
   限已定语义 (#67 与 #66 的 binder 行不锁); `ShellLibSu` 合并 stderr 随本步定.
 - 独立性: 依赖 subtask-04 的领域对象. 引擎按 0h 已定的方向造, 以质量与可维护性为准.
-- 风险级别: 高 (新抽象加并发).
+- 风险级别: 高 (新抽象).
 - 生疏领域: 是 (注册表引擎是本仓库没有过的新设计).
 
 ### subtask-06 2c 编排收回
 
-- 范围: #11 后半加它的迁移清单: 23 个仓库方法的逐行手抄随目录变成数据清单一并消失,  
-  ViewModel 侧改为 combine(settings, 检测源, refresh) 纯推导;  
-  lld 联网到离线的回退链 (`tryDetectOnline` / `tryDetectOffline` / `fetchOfflineLldOrNull` /  
-  `getAssetLldOrNull`) 下沉, 取数与回退进仓库, 或返回结果类型由 mapper 呈现 (UI 不 try 约定);  
-  补偿路径的固定重读离线文件与磁盘写一并收进; 不建 `collectHomeModels()` 过渡形态.  
+- 范围: #11 后半加它的迁移清单: 23 条条目清单从 ViewModel 搬出 (逐行调用在 2b 已经变成清单);  
+  检测仍是一次 `suspend collectModels()` 调用, 与 develop 同形, 不改成为流;  
+  lld 联网到离线的回退链 (四个函数) 下沉到 `LldLoader`, 返回结果类型, 行文案由 mapper 呈现 (UI 不 try 约定);  
+  排序开关按需求第 17 条与第三份需求文档"还没定的问题"表第十行做成"只重排那一行": 用本轮已取到的数据重渲染, 不重读离线文件,  
+  不发起检测, 不发网络; 联网开关不实时, 下次检测开始时读一次.  
+  不建 `collectHomeModels()` 过渡形态.  
   编排与 "用例" 逻辑默认放仓库与注册表引擎, UseCase 层按需增设.  
   根 AGENTS.md 索引与 docs/agents-cn 对应文件随本步改写.
-- 独立性: 依赖 subtask-05. 本任务的目标 (UI layer 减重) 在这一步完成.
+- 独立性: 依赖 subtask-05. 本任务的目标 (UI layer 减重) 在 06 与 07 两步完成.
 - 风险级别: 高 (UDF 主路径重排).
+- 生疏领域: 否.
+
+### subtask-07 Others 与 Prop 的注册表化 (#03 剩余)
+
+- 范围: Others 的 37 条与 Prop 的 5 条从各自 ViewModel 的 `collectModels()` 搬到各自的清单类,  
+  与 Home 的 `HomeDetectorCatalog` 同形, 复用 subtask-05 的引擎; 条目内容, 顺序与行文案都不变.
+- 独立性: 依赖 subtask-06 定下的"清单类加请求类型"形状; 不依赖 06 的排序开关改动.  
+  66 条里没有带展示参数的条目, 所以不需要 06 那条特例通路.
+- 风险级别: 中 (机械搬迁, 42 条, 无行为变化).
 - 生疏领域: 否.
 
 ## 覆盖对照
 
 修复路线各项到子任务的归属: 先行批剩余 → subtask-01; 1b → subtask-02; 1a → subtask-03;  
-2a → subtask-04; 2b → subtask-05; 2c → subtask-06.
+2a → subtask-04; 2b → subtask-05; 2c → subtask-06; #03 在 Others 与 Prop 两页的余项 → subtask-07.
 
 不在本任务范围的路线项: 独立小件清单 (#19 字典序, #30, #34, #38, #39, #44 第 2 处,  
 #22 ~ #29, #65, #52, #51, #55), 目录核对 (步骤 3), #04 包结构搬移. 它们有自己的排期,  
 不因本任务顺带改动.
 
-下面这张图把主线六个子任务排成依赖图: 实线是独立性字段写明的硬前置, 虚线是只有排队理由的主线顺序, 边标签写理由; 不在本任务范围的路线项不进图:
+下面这张图把主线七个子任务排成依赖图: 实线是独立性字段写明的硬前置, 虚线是只有排队理由的主线顺序, 边标签写理由; 不在本任务范围的路线项不进图:
 
 ```mermaid
 flowchart TD
@@ -116,6 +126,7 @@ flowchart TD
     st04["subtask-04<br>2a 领域化"]
     st05["subtask-05<br>2b 注册表引擎"]
     st06["subtask-06<br>2c 编排收回"]
+    st07["subtask-07<br>#03 在 Others 与 Prop 两页"]
 
     st01 -.->|"主线排队"| st02
     st02 -.->|"黄金数据可守"| st03
@@ -123,11 +134,12 @@ flowchart TD
     st02 ==>|"黄金数据"| st04
     st04 ==>|"领域对象"| st05
     st05 ==>|"引擎与清单"| st06
+    st06 ==>|"清单类与请求类型的形状"| st07
 ```
 
 ## 待学习清单
 
-- JUnit Jupiter 平台接线, MockK, Turbine (subtask-02 起).
+- JUnit Jupiter 平台接线, MockK (subtask-02 起). Turbine 未引入, 首个 Flow 测试出现时再评估.
 - `Build.*` 读数的测试手段取舍: 真机 / 模拟器, Robolectric, 探针假值 (subtask-04, 0f).
 - 注册表引擎的并发模型: 有界并发与取消传播 (subtask-05).
 - mapper 模式: 领域对象到 MyModel 的翻译只放 UI 包 (subtask-04 起).
