@@ -21,21 +21,21 @@ import net.imknown.android.forefrontinfo.BuildConfig
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.base.extension.fullMessage
-import net.imknown.android.forefrontinfo.base.extension.isLldDatetime
 import net.imknown.android.forefrontinfo.ui.base.detect.detectAll
 import net.imknown.android.forefrontinfo.ui.base.list.BaseListViewModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 import net.imknown.android.forefrontinfo.ui.base.list.MyModelType
 import net.imknown.android.forefrontinfo.ui.common.toObjectOrThrow
+import net.imknown.android.forefrontinfo.ui.home.datasource.LldLoader
 import net.imknown.android.forefrontinfo.ui.home.mapper.HomeModelMapper
 import net.imknown.android.forefrontinfo.ui.home.model.HomeEntryId
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
+import net.imknown.android.forefrontinfo.ui.home.model.LldFailure
 import net.imknown.android.forefrontinfo.ui.home.model.LldSource
 import net.imknown.android.forefrontinfo.ui.home.model.detector
 import net.imknown.android.forefrontinfo.ui.home.model.rawDetector
 import net.imknown.android.forefrontinfo.ui.home.repository.HomeRepository
 import net.imknown.android.forefrontinfo.ui.settings.repository.SettingsStore
-import java.io.IOException
 
 private data class LldAndError(val lld: Lld?, val message: String?)
 
@@ -54,6 +54,7 @@ private data class LldAndError(val lld: Lld?, val message: String?)
 class HomeViewModel(
     private val homeRepository: HomeRepository,
     private val homeModelMapper: HomeModelMapper,
+    private val lldLoader: LldLoader,
     private val settingsStore: SettingsStore
 ) : BaseListViewModel() {
 
@@ -65,11 +66,10 @@ class HomeViewModel(
         // construction, so first() returns immediately without suspending
         val allowNetwork = settingsStore.allowNetworkData.first()
 
-        return if (allowNetwork) {
-            tryDetectOnline()
-        } else {
-            tryDetectOffline(null)
-        }
+        // The online / saved / bundled fallback lives in the loader; it reports failures as
+        // reasons and the mapper renders their text.
+        val load = lldLoader.load(allowNetwork)
+        return detect(load.lld, load.failures, load.source)
     }
 
     // region [Outdated order switch]
@@ -106,61 +106,6 @@ class HomeViewModel(
     // endregion [Outdated order switch]
 
     // region [Lld]
-    private suspend fun tryDetectOnline(): List<MyModel> {
-        val lldString = try {
-            withContext(Dispatchers.IO) {
-                homeRepository.fetchOnlineLldJsonStringOrThrow()
-            }
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            val errorMessage = errorMessage(R.string.lld_json_fetch_failed, e)
-            return tryDetectOffline(errorMessage)
-        }
-
-        val lld = try {
-            withContext(Dispatchers.IO) {
-                lldString.toObjectOrThrow<Lld>()
-            }
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            val errorMessage = errorMessage(R.string.lld_json_parse_failed, e)
-            return tryDetectOffline(errorMessage)
-        }
-
-        // The upstream `version` string is outside this app's control; the format contract is
-        // machine-checked (LLD_DATETIME_FORMATTER). An unexpected format means the payload
-        // cannot be trusted, so degrade to the built-in offline data instead of blowing up in
-        // the middle of detect().
-        if (!lld.version.isLldDatetime()) {
-            val errorMessage = errorMessage(
-                R.string.lld_json_parse_failed,
-                IOException("Unsupported lld.version format: ${lld.version}")
-            )
-            return tryDetectOffline(errorMessage)
-        }
-
-        val errorMessage = try {
-            withContext(Dispatchers.IO) {
-                homeRepository.saveLldJsonFileOrThrow(lldString)
-            }
-            null
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            errorMessage(R.string.lld_json_save_failed, e)
-        }
-
-        return detect(lld, listOf(errorMessage), LldSource.ONLINE)
-    }
-
-    private suspend fun tryDetectOffline(errorMessage: String?): List<MyModel> {
-        val (lld, message) = fetchOfflineLldOrNull()
-        val errorMessages = listOf(errorMessage, message)
-        return detect(lld, errorMessages, LldSource.OFFLINE)
-    }
-
     private suspend fun fetchOfflineLldOrNull(): LldAndError {
         try {
             withContext(Dispatchers.IO) {
@@ -212,7 +157,7 @@ class HomeViewModel(
     // endregion [Lld]
 
     private suspend fun detect(
-        lld: Lld?, errorMessage: List<String?>, source: LldSource
+        lld: Lld?, failures: List<LldFailure>, source: LldSource
     ): List<MyModel> {
         val tempModels = mutableListOf<MyModel>()
 
@@ -225,7 +170,7 @@ class HomeViewModel(
             // list order is display order), and the engine runs it serially with the per-entry
             // guard (unexpected exceptions degrade into the entry's own failure rows).
             val detectors = listOf(
-                detector(HomeEntryId.HOME_DETECT_MODE, { homeRepository.detectMode(lld, errorMessage, source) }) {
+                detector(HomeEntryId.HOME_DETECT_MODE, { homeRepository.detectMode(lld, failures, source) }) {
                     listOf(homeModelMapper.toModeModel(it))
                 },
                 detector(HomeEntryId.HOME_ANDROID_VERSION, { homeRepository.detectAndroid(lld) }) {

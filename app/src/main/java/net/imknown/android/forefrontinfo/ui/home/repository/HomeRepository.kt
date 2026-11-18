@@ -27,7 +27,6 @@ import net.imknown.android.forefrontinfo.ui.common.isPreviewAndroid
 import net.imknown.android.forefrontinfo.ui.common.toPascalCase
 import net.imknown.android.forefrontinfo.ui.home.datasource.AndroidDataSource
 import net.imknown.android.forefrontinfo.ui.home.datasource.AndroidVersionDataSource
-import net.imknown.android.forefrontinfo.ui.home.datasource.LldDataSource
 import net.imknown.android.forefrontinfo.ui.home.datasource.LldFileStore
 import net.imknown.android.forefrontinfo.ui.home.datasource.MountDataSource
 import net.imknown.android.forefrontinfo.ui.home.model.AbState
@@ -39,6 +38,7 @@ import net.imknown.android.forefrontinfo.ui.home.model.EncryptionState
 import net.imknown.android.forefrontinfo.ui.home.model.GsiState
 import net.imknown.android.forefrontinfo.ui.home.model.KernelState
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
+import net.imknown.android.forefrontinfo.ui.home.model.LldFailure
 import net.imknown.android.forefrontinfo.ui.home.model.LldSource
 import net.imknown.android.forefrontinfo.ui.home.model.LldStatusState
 import net.imknown.android.forefrontinfo.ui.home.model.MainlineState
@@ -63,22 +63,22 @@ import java.io.File
 class HomeRepository(
     private val shell: IShell,
     private val propertyReader: PropertyReader,
-    private val lldDataSource: LldDataSource,
     private val lldFileStore: LldFileStore,
     private val mountDataSource: MountDataSource,
     private val appInfoDataSource: AppInfoDataSource
 ) {
-    fun fetchOfflineLldFileOrThrow() = lldDataSource.fetchOfflineLldFileOrThrow()
-    suspend fun fetchOnlineLldJsonStringOrThrow() = lldDataSource.fetchOnlineLldJsonStringOrThrow()
-
-    fun saveLldJsonFileOrThrow(lldString: String) = lldFileStore.saveLldJsonFileOrThrow(lldString)
+    // Since subtask-06 batch 1 the load path goes through LldLoader. These three stay for the
+    // two paths that still need them: the patch path uses the first two (and the asset fallback
+    // through getAssetLld), and the three per-entry instrumented tests use getAssetLld as their
+    // fixture. All of them go away with the patch path in batch 3, except getAssetLld.
+    fun fetchOfflineLldFileOrThrow() = lldFileStore.savedLldJsonFileOrThrow
     fun copyJsonIfNeededOrThrow() = lldFileStore.copyJsonIfNeededOrThrow()
     fun getAssetLld(assets: AssetManager): Lld? = lldFileStore.getAssetLld(assets)
 
     fun detectMode(
-        lld: Lld?, errors: List<String?>, source: LldSource
+        lld: Lld?, failures: List<LldFailure>, source: LldSource
     ): DetectResult<LldStatusState> = try {
-        DetectResult.Found(LldStatusState(lld?.version, source, errors.filterNotNull()))
+        DetectResult.Found(LldStatusState(lld?.version, source, failures))
     } catch (e: CancellationException) {
         throw e
     } catch (e: Exception) {

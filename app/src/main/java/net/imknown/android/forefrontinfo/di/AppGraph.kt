@@ -181,8 +181,8 @@ object HttpClientContainer {
         }
 
         // All three tiers surface as IOException subclasses (HttpRequestTimeoutException /
-        // ConnectTimeoutException / SocketTimeoutException), so HomeViewModel's
-        // tryDetectOnline catches them via catch (e: Exception) and degrades to offline.
+        // ConnectTimeoutException / SocketTimeoutException), so LldLoader.loadOnline catches
+        // them via catch (e: Exception) and degrades to the saved copy.
         install(HttpTimeout) {
             requestTimeoutMillis = HTTP_REQUEST_TIMEOUT_MILLIS
             connectTimeoutMillis = HTTP_CONNECT_TIMEOUT_MILLIS
