@@ -47,3 +47,12 @@
   两份都提到的 `08` 块末行规则 (块的最后一行不带尾随空格) 已按规则重排四份文件.  
   下一步: 等外部 subtask-06 重写落地并提交后, 进入 subtask-01 的实现循环;  
   两份报告与 `progress.md` 仍未提交, 等实现那一笔一起入库.
+- 2026-11-19: 负责人问是否提交, 已按 `13` 提交两份子任务报告与 `plan.md` 的修订,
+  提交 `6a954418` (`docs(spec): add the JUnit 4 migration subtask reports`).
+  实现仍等外部 subtask-06 重写落地.
+- 2026-11-19: 外部 slim-ui subtask-06 的重写已推到远端 (origin/jetpack-compose-docs 新增
+  10 笔, 含 `e728acf1` 批次 6 记录, `775cbd12` 与 `db558018` 两笔重构, `05ed190e` 把
+  subtask-06 记为重写). 按负责人指示先 stash 再 rebase, 本地 3 笔换成 `2340ac53`,
+  `9d5b8e7d`, `e63d57a9`; 同步后 `:app:testFossDebugUnitTest` 通过 (3m10s).
+  远端新增的测试仍全部用 Jupiter, 实现 subtask-01 时一并转换.
+- 下一步动作: 按 subtask-01 开工 (负责人放行后).
