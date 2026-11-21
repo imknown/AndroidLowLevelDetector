@@ -12,7 +12,7 @@
 // write.
 //
 // Deliberately NOT wired, probed on ILS-263.7084.0 (evidence in
-// 10-分析细则.md):
+// 10-代码分析规则.md):
 // - rename / will-rename: the rename computation is inconsistent on this
 //   build. A class rename returned clean zero-width insertions at every
 //   occurrence; local-variable renames returned shredded garbage edit sets

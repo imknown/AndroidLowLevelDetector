@@ -46,7 +46,7 @@
 // for any diagnostics query that returned at least one severity=1 item;
 // 0 otherwise; 130 or 143 when interrupted by SIGINT/SIGTERM, like the
 // diagnostics channel. This matches the verification contract in
-// docs/agents-cn/10-分析细则.md: Warning and below are printed, not gated.
+// docs/agents-cn/10-代码分析规则.md: Warning and below are printed, not gated.
 //
 // Cross platform: Windows, Linux and macOS run the same code. The server
 // binary is resolved per platform (intellij-server.exe only on win32), the
@@ -172,7 +172,7 @@ if (queries.length === 0) {
 }
 
 // Position targets must be .kt: Kotlin LSP builds no model for .kts Gradle build
-// scripts and answers nothing meaningful for them (see 10-分析细则.md).
+// scripts and answers nothing meaningful for them (see 10-代码分析规则.md).
 for (const q of queries) {
   const file = q.file;
   if (file && !/\.(kt)$/i.test(file)) {
