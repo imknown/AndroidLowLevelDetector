@@ -140,7 +140,7 @@ flowchart TD
 
 ## 待学习清单
 
-- JUnit Jupiter 平台接线, MockK (subtask-02 起). Turbine 未引入, 首个 Flow 测试出现时再评估.
-- `Build.*` 读数的测试手段取舍: 真机 / 模拟器, Robolectric, 探针假值 (subtask-04, 0f).
-- 注册表引擎的并发模型: 有界并发与取消传播 (subtask-05).
-- mapper 模式: 领域对象到 MyModel 的翻译只放 UI 包 (subtask-04 起).
+- 已清空 (2026-11-22, 任务结束). 去处: JUnit Jupiter 加 MockK 加 Robolectric 接线与  
+  mapper 模式已随 subtask-02 与 subtask-04 进仓库; 注册表引擎的并发模型建了第一版 (串行),  
+  有界并发归 [#15](../../dev/issues-cn/04-并发与调度/15-检测串行不感知取消.md);  
+  Turbine 未引入, 首个 Flow 测试出现时再评估.
