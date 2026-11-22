@@ -1,0 +1,63 @@
+# 任务清单: junit4-test-stack
+
+> **状态**: living. 流程见 [13-工作流](../../agents-cn/13-工作流.md);  
+> 每 task 一笔提交, 顺序执行, 拆法照 [12-Git](../../agents-cn/12-Git.md) 的单元算法.
+
+## 记录
+
+- 2026-11-22: 目录按新工作流改造. 旧 `plan.md` 与 2 份 subtask 报告的方案与判据重组进  
+  1-requirements.md, 2-design.md 与本清单; 旧 `progress.md` 删除 (六份一起删, 负责人 2026-11-22 定).  
+  旧文件原文: `ff3ed754` (plan 加 progress), `40841c6a` (2 份报告).
+- 旧流程已完成的确认, 供接续对账: 报告批经四轮 review 循环结束  
+  (v1 两轮, 首轮因 HEAD 变化作废重发; v2, v3, v4 delta, 每轮 workbuddy 与 mavis 两份独立 reviewer, v4 双 met),  
+  负责人 2026-11-18 确认计划并定下  
+  外部冲突顺序 ("等外部重写先实施完成再开工"), 2026-11-19 外部重写实施完成并 rebase 完成.  
+  三份新产物由这些已过审材料重组, 重组后的文本是新文本: 要不要再走一轮文档 review 循环, 由负责人定  
+  (照走或按低风险合并确认, 二选一记一行).
+- 提交切分 (来自旧 plan): task 1 一笔, task 2 一笔, 都按 Conventional Commits 加 trailer.
+- 挂起项: 无.
+- 下一步动作: 负责人过三份产物并确认 (确认即授权本清单内各 task 的提交), 说开始后进 task 1  
+  (开工先按 design 的恢复动作核对 HEAD 与工作树).
+
+## 任务清单
+
+- [ ] **task 1 依赖与测试源码切到 JUnit 4** (低风险; 一笔提交).  
+  凭什么是独立 task: 删依赖与改测试必须同一笔, 拆开会出现编译不过的中间态.  
+  目标: 本地单测从 "Jupiter 6.1.3 加桥接包" 切到 "JUnit 4.13.2 加 Robolectric 原生 runner",  
+  删掉 Jupiter 与平台接线, 25 个测试类跟着换 import 与注解, 行为与断言语义不变.  
+  动哪些文件: `gradle/toml/android.toml`: 版本键改 4.13.2 加注释, 删 jupiter 与 platform launcher 两条,  
+  换 `junit` 库条目, `test` bundle 改 `["junit"]`; `gradle/toml/thirdParty.toml`: 删桥接包版本键与库条目;  
+  `build-logic/.../KotlinAndroid.kt`: 改注释, 删 `useJUnitPlatform()` 与 launcher interceptor 开关与  
+  桥接依赖, 保留 `--add-opens` 与 `--enable-native-access`; 25 个测试类: 20 个桥接类换  
+  `@RunWith(RobolectricTestRunner::class)` 与 `org.junit.Assert.*`, 5 个纯 JVM 类只换 import 与 `@Test`;  
+  类清单见 design.  
+  怎么验证: 开工先按 design 的恢复动作核对 HEAD 与工作树, 外部新增或改过的仍在用 Jupiter 的测试当场改;  
+  `./gradlew :app:testFossDebugUnitTest :base:testDebugUnitTest` 期望 25 类 111 方法 0 失败  
+  (外部新增的测试计入后按实际数核对); `./gradlew assembleFossDebug` 与 `./gradlew lintFossDebug`;  
+  对照 Robolectric 官方九条 `--add-opens` 核 JVM 开关, 只补实际需要的并同步注释, 补完后的条数记进结果  
+  (task 2 落笔以它为准); grep `tech.apter` 与 `org.junit.jupiter` 在 `app/src`, `base/src`,  
+  `build-logic/`, `gradle/toml/*.toml` 零残留.  
+  对应 design: 依赖与接线切换; 落实 R-1, R-2.
+- [ ] **task 2 文档与事实一致** (低风险; 一笔提交, 只改文字不跑构建).  
+  凭什么是独立 task: 只改文字不碰代码, 不需要构建, 可以单独提交与核对.  
+  目标: living 文档的测试栈现状句, 测试计数, 与缺口句改成改造后的事实; 历史决定记载与 dated 报告不动.  
+  动哪些文件: `docs/agents-cn/05-项目架构.md` (64-73 与 75-82 两段),  
+  `docs/dev/issues-cn/01-架构与分层/06-技术栈缺口.md` (9-14, 19, 20-23, 27, 41, 42),  
+  `docs/dev/issues-cn/08-反模式与卫生/43-比对语义逐行adhoc.md` (54, 64),  
+  `docs/dev/issues-cn/README.md` (268), `docs/dev/issues-cn/01-架构与分层/01-无领域模型.md` (80),  
+  `docs/dev/issues-cn/05-稳定性与错误处理/19-版本合并残留弱点.md` (24-25); 逐处改法见 design 的表格.  
+  怎么验证: 逐条对照官方文档与改完后的代码现状; grep `tech.apter` 与 `org.junit.jupiter` 在  
+  `docs/agents-cn/05-项目架构.md` 与 `docs/dev/issues-cn/` 零残留; `Jupiter`, `useJUnitPlatform`,  
+  `platform launcher` 三个说法在被改的六份文档里逐句核  
+  (`README.md:330`, `:353`, `docs/dev/issues-cn/archived/09-构建与CI/50-CI只编译不测试.md:32` 三处历史记载除外);  
+  计数以 task 1 实际结果为准 (外部新增测试计入后按实际数写).  
+  对应 design: 文档与事实一致; 落实 R-3.
+
+## 验收
+
+- 本地单测与仪器测试统一 JUnit 4, 25 类 111 方法 (按实际数) 全绿, 断言语义不变 (R-1).
+- 桥接包与 Jupiter 平台接线删净, Robolectric 走原生 runner (R-2).
+- 六份 living 文档与事实一致, 历史记载与 dated 报告原样 (R-3).
+- 技术补充项: `assembleFossDebug` 与 `lintFossDebug` 绿; JVM 开关对照官方九条补齐;  
+  Gradle 测试过滤与报告行为差异实跑核对.
+- 判定格式与改动归属照 [13-工作流](../../agents-cn/13-工作流.md) 的 `测试与验收` 一节执行.
