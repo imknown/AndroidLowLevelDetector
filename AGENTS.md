@@ -62,4 +62,5 @@
 | 12 | [12-Git](docs/agents-cn/12-Git.md) | Git: 提交, 提交拆到最小可独立验证的单元, trailer, 绝不提交 | 提交, 开 PR, 或者碰 `.gitignore` 之前 |
 | 13 | [13-工作流](docs/agents-cn/13-工作流.md) | spec 目录工作流, 确认, 接续, subtask 拆出 substep, 各 substep 走完 0 到 5 步, 发现判定, 处理 | 开 spec 目录, 开始 subtask 或者 substep, 负责人发出 continue 指令, 关闭任务之前 |
 | 14 | [14-跨端 Review](<docs/agents-cn/14-跨端 Review.md>) | 某轮 review 交给另一家 ADE/IDE 的 session, task: review 目录, 文件命名, 状态记录, 提示词, 收取报告 (报告首尾各自直观给出停止条件判定; reviewer 元数据读不到, trailer 字段一律依据 Git 提交规则 ([12-Git](docs/agents-cn/12-Git.md)) 处理: 不编, 不猜, 报告后自己确认负责人意见), 报告归宿 | 要把 review 交给另一家 ADE/IDE; 负责人发出 "review" 指令之后 |
+| 15 | [15-review 检查表](docs/agents-cn/15-review检查表.md) | 任务结束横向回顾收出的检查表: 行号指针重核, 收报告条与判定条两条记录, 口径与术语变更后全仓 grep, 断行量行尾字节, 全局改名按类 grep | 每轮 review 发起与判定条落笔之前; 改动移动行数, 改口径或术语, 全局改名之后 |
 | 无编号 | [docs/requirements-cn/README.md](docs/requirements-cn/README.md) | 应用职责, 目标用户, 发布排期 | 需要知道应用职责, 目标用户, 或者能力的排期位置 |
