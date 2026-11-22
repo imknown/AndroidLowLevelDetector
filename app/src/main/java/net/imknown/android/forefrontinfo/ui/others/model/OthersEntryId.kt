@@ -6,7 +6,7 @@ import net.imknown.android.forefrontinfo.ui.base.list.MyModel
 
 /**
  * The Others detection entries' stable ids. Declaration order is the display order the Others
- * list assembles (the view model's detector list follows it) and matches the row order of the
+ * list assembles (the page's detector list follows it) and matches the row order of the
  * detection-entry catalog; the [id] strings are the same strings the catalog's semantic-id
  * column carries. The rows are plain information: no three-state results, no colors.
  */

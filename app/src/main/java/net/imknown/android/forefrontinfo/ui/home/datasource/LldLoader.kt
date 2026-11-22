@@ -26,10 +26,10 @@ data class LldLoad(
 )
 
 /**
- * The lld fallback chain, moved out of HomeViewModel (issues-cn #11's second half): online when the
+ * The lld fallback chain, moved out of HomeViewModel (issues-cn #11 (now archived)): online when the
  * user allows network, then the saved copy in the private files dir, then the bundled asset. The
  * chain is a data-source contract, so it lives here rather than in the UI layer, which is not
- * allowed to handle business exceptions (05-代码规则).
+ * allowed to handle business exceptions (07-代码规则).
  *
  * It never throws: [load] reports every failure as an [LldFailure] reason, and the mapper turns
  * those into the row's text. A null payload is not an error either; it renders as the unknown row.

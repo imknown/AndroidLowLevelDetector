@@ -31,7 +31,7 @@ node 自身只占 0.31 秒 CPU. 下面这几项固定开销是现版代码可核
 
 - 在: `scripts/kotlin-lsp-shared.js` (新增), `scripts/kotlin-lsp-daemon.js` (新增),  
   `scripts/kotlin-lsp-plan.js`, `scripts/kotlin-lsp-diagnostics.js`, `scripts/kotlin-lsp-edit.js`,  
-  `scripts/kotlin-lsp-selfcheck.js`, `docs/agents-cn/10-分析细则.md`, `docs/agents-cn/11-构建与验证.md`,  
+  `scripts/kotlin-lsp-selfcheck.js`, `docs/agents-cn/10-代码分析规则.md`, `docs/agents-cn/11-构建与验证.md`,  
   `docs/agents-cn/14-跨端review.md`.
 - 不在: 全机多项目共用 (负责人 2026-11-09 定不做); 自动下载与安装新版本 (要负责人单独同意);  
   编辑器界面向能力.
@@ -102,7 +102,7 @@ stateDiagram-v2
   子任务 8 要交一条能直接复制的启动命令, 它是唯一入口.
 - 客户端连不上 daemon 时报错退出 (非 0), 打印明确原因和那条启动命令; 这次没跑 LSP 要写进报告,  
   绝不能退 0 让流程读成假 `CLEAN`. `10-分析细则` 的义务正文不动, 只在常驻会话一节补这一情形.
-- 同一个 JVM 只用 `JAVA_HOME` 指的那个 JDK 做 Gradle 同步, 与 [10-分析细则](../../agents-cn/10-分析细则.md) 记的前提一致.
+- 同一个 JVM 只用 `JAVA_HOME` 指的那个 JDK 做 Gradle 同步, 与 [10-分析细则](../../agents-cn/10-代码分析规则.md) 记的前提一致.
 - server 这一版对 `type hierarchy` 的探针结论在原型里就不通, 子任务 7 仍要真发请求留一条记录.  
   `rename`, `quickfix`, `format`, `organize-imports` 的现状也都要在子任务 7 里重探, 旧结论只当对照.
 - 原型里常驻会话能喂真实诊断, `codeAction` 回过 4 条诊断对应的 4 个动作.  
@@ -178,7 +178,7 @@ stateDiagram-v2
    判据: 干跑不写盘; `--apply` 在临时副本上写入后逐行核对, 仓库里的代码不受影响;  
    `--apply` 之后照旧要 `git diff` 核一眼; 临时副本验完删掉, workspace 仍是单根.
 7. **能力回归矩阵** (高风险, 生疏, 对应负责人提的"大量例子").  
-   按 [10-分析细则](../../agents-cn/10-分析细则.md) 的能力盘点逐样跑一遍, 每样一条记录: 能力, 命令, 期望, 实际, 结论.  
+   按 [10-分析细则](../../agents-cn/10-代码分析规则.md) 的能力盘点逐样跑一遍, 每样一条记录: 能力, 命令, 期望, 实际, 结论.  
    覆盖 references, definition 系, typedef, implementation, call hierarchy 双向, type hierarchy,  
    workspace/document symbols, hover, completion, signature help, inlay hints, diagnostics,  
    format, organize imports, 以及 rename 与 quickfix 的现状复查.  
@@ -190,7 +190,7 @@ stateDiagram-v2
    quickfix 发 `codeAction` 接 `executeCommand` 收 `WorkspaceEdit`;  
    type hierarchy 发 `prepareTypeHierarchy`, 有结果再发 supertypes 与 subtypes,  
    回空就把后续两种请求未发和原因记进矩阵, 不留空行.  
-   探针照 [10-分析细则](../../agents-cn/10-分析细则.md) 的 `能力盘点` 一节: 只读不落盘,  
+   探针照 [10-分析细则](../../agents-cn/10-代码分析规则.md) 的 `能力盘点` 一节: 只读不落盘,  
    会话里不打开 Gradle 模型之外的新文件, rename 首次计算按 180 秒预算.  
    矩阵在这个 spec 目录, 结论回写 10 的能力盘点, 停用与未接的条目按结果改判.  
    判定某个未接能力可接时, 只写清所需条件, 接入实现归后续任务.  

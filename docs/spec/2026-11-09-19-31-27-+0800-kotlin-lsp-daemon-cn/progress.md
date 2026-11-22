@@ -1,13 +1,13 @@
 # progress: kotlin-lsp-daemon
 
-> **状态**: living. 更新规则见 [13-任务工作流](../../agents-cn/13-任务工作流.md) 的 进度记录 一节.
+> **状态**: living. 更新规则见 [13-任务工作流](../../agents-cn/13-工作流.md) 的 进度记录 一节.
 
 - 2026-11-09: 任务开启. 负责人把先前按"独立改动"开工的 kotlin-lsp 常驻会话提速改为 spec 流程.
 - 偏差 (记录在案): 开 spec 目录之前已经动过一轮独立实现, 按负责人当时的选择做了一部分.
   现状都在工作树里, 未提交, 不算已批准的实现; 计划确认后按 `plan.md` 重新收编或重做.
   - 新增 `scripts/kotlin-lsp-shared.js` 与 `scripts/kotlin-lsp-daemon.js`.
   - `kotlin-lsp-plan.js`, `kotlin-lsp-diagnostics.js`, `kotlin-lsp-edit.js` 已改成 daemon 客户端.
-  - `docs/agents-cn/10-分析细则.md` 与 `11-构建与验证.md` 的既有修订, 加 `kotlin-lsp-edit.js` 注释.
+  - `docs/agents-cn/10-代码分析规则.md` 与 `11-构建与验证.md` 的既有修订, 加 `kotlin-lsp-edit.js` 注释.
 - 原型实测 (2026-11-09, 热缓存):
   - 冷启动一次约 18 秒, 之后单文件诊断 0.29 秒, 规划查询 0.24 秒.
   - 常驻会话里重复 `didClose` 与 `didOpen` 后, `documentSymbol` 立刻恢复; 改文本走 `didChange` 时诊断追上要 7.7-8.9 秒, 走重新打开只要 1.8-2.3 秒.
