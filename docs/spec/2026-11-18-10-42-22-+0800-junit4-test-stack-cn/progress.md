@@ -24,23 +24,23 @@
   已标作废并重发 `review-v1-prompt-1007.md` (HEAD `4aeb2fef`).
 - 作废轮的报告不按已收登记, 但发现经主 agent 回源核对后折进两份报告:  
   06:22-23 的 classpath 句补进 subtask-02; `RobolectricSpikeTest` 头注释补进 subtask-01;  
-  验证排除名单补 `README.md:338`; androidTest 文件数改 8, 断言方法种数改 6,  
+  验证排除名单补 `README.md:330`; androidTest 文件数改 8, 断言方法种数改 6,  
   桥接类子目录写清; 43:55 按口径重数为 16, 原文保持不动 (计划里的"重数后改准"已改掉).
 - 归后续单元: slim-ui spec 的正文仍写 Jupiter, 本单元不碰; 那个 spec 正在被外部重写,  
   落地或收口时由它自己更新测试栈表述.
 - 2026-11-19: 重发的报告批 v1 已收 (workbuddy 1022 与 mavis 1023, 都判 not met).  
   处理: `gradle/toml/review/` 的处置写进 subtask-01 的有意不改; 桥接类子目录分布改成  
   三处 (2/1/17); `DetectionEngineTest` 的 `assertThrows` 移进改动 4; `--add-opens` 改成  
-  "只补实际需要的并同步注释"; 04-架构 补"整句改写"与两个数目; subtask-02 覆盖核对表补一行;  
+  "只补实际需要的并同步注释"; 05-项目架构 补"整句改写"与两个数目; subtask-02 覆盖核对表补一行;  
   四份文件按 08 补两个尾随空格. v2 (delta) 已发起 `review-v2-prompt-1033.md`,  
   等待报告, 工作树随之冻结 (记录文件除外).
 - 2026-11-19: 报告批 v2 已收 (workbuddy 1039 判 met, mavis 1039 判 not met).  
   处理 mavis 两条: `06:41` 的改法改成 "JUnit 4 与 MockK 已就位" (1b 落的是 Jupiter 与  
-  MockK, 不能写成随 1b 落地); 04-架构 的开关数目改成以 subtask-01 补完后的实际条数为准,  
+  MockK, 不能写成随 1b 落地); 05-项目架构 的开关数目改成以 subtask-01 补完后的实际条数为准,  
   subtask-01 的验证加同步一句. v3 (delta) 已发起 `review-v3-prompt-1041.md`, 等待报告,  
   工作树随之冻结 (记录文件除外).
 - 2026-11-19: 报告批 v3 已收 (workbuddy 1054 判 met, mavis 1046 判 not met).  
-  处理: subtask-01 的验证不再让人改 `04-架构.md`, 改成把开关条数记进本子任务的结果,  
+  处理: subtask-01 的验证不再让人改 `05-项目架构.md`, 改成把开关条数记进本子任务的结果,  
   由 subtask-02 落笔; 41 行那条补两个尾随空格, 四份文件复查缺空格为 0.  
   v4 (delta) 已发起 `review-v4-prompt-1057.md`, 等待报告, 工作树随之冻结 (记录文件除外).
 - 2026-11-19: 报告批 v4 已收, 两份都判 met, 报告批 review 循环收口.  

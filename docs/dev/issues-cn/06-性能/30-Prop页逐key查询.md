@@ -103,7 +103,7 @@ rawDetector(PropEntryId.PROP_SETTINGS_SYSTEM) { propRepository.getSettings(Setti
 
 实现时必须一起处理的三点:
 
-1. `contentResolver.query()` 是跨进程阻塞调用, 按 [05-代码规则](../../../agents-cn/05-代码规则.md) 走 `Dispatchers.IO`,  
+1. `contentResolver.query()` 是跨进程阻塞调用, 按 [07-代码规则](../../../agents-cn/07-代码规则.md) 走 `Dispatchers.IO`,  
    现在的 `PropDetectorCatalog.detect()` 已经在 `withContext(Dispatchers.IO)` 里, 全表查询照这个池走,  
    池的迁移已完成, 实现时保持这个池.
 2. 三个 `CONTENT_URI` 常量与 `query()` 的 API 等级要按 **minSdk** (`gradle/toml/build.toml` 的 `minSdk`)  

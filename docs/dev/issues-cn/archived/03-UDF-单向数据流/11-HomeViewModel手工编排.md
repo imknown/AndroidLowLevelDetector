@@ -7,7 +7,7 @@
 > `HomeViewModel` 只剩"跑一轮"与"开关变化时重渲染". 下面记的是修之前的代码与判断.
 
 
-> 返回 [README 索引](../README.md) · [3 · UDF · 单向数据流](../README.md#3--udf--单向数据流).
+> 返回 [README 索引](../../README.md) · [3 · UDF · 单向数据流](../../README.md#3--udf--单向数据流).
 
 **严重程度: P1 | 修复难度: 中**  
 **影响文件: `ui/home/HomeViewModel.kt`, `ui/home/repository/HomeRepository.kt`,  
@@ -89,23 +89,23 @@ flowchart TD
 ## 根本原因
 
 基类 API 按实现细节 (下标) 而非语义 (哪个条目) 设计; 编排逻辑没有放到拥有列表知识的那一侧. 两处合起来,  
-加一个首页条目要按 [06-检测条目](../../../agents-cn/06-检测条目.md) 改取数方法, 领域对象, mapper,  
+加一个首页条目要按 [08-检测条目](../../../../agents-cn/08-检测条目.md) 改取数方法, 领域对象, mapper,  
 ViewModel 调用, 字符串与目录, 且顺序知识从此有两份可能的真相 (仓库方法顺序 vs ViewModel 编排顺序).
 
 ## 修复方案
 
-**动手前先与负责人确认约定**: 把编排整体移进 `HomeRepository.collectHomeModels()` 与 [06-检测条目](../../../agents-cn/06-检测条目.md) 相反:  
+**动手前先与负责人确认约定**: 把编排整体移进 `HomeRepository.collectHomeModels()` 与 [08-检测条目](../../../../agents-cn/08-检测条目.md) 相反:  
 那份流程写明检测项由 `ViewModel.collectModels()` 调用,  
 **调用顺序就是列表顺序**. 下面的仓库化仍是目标形态,  
 但采纳它等于同时改这条约定, 所以不能直接自行实施.
 
-**与修复路线的关系**: [README 修复路线](../README.md#修复路线) 把本条目拆成两半排期:  
+**与修复路线的关系**: [README 修复路线](../../README.md#修复路线) 把本条目拆成两半排期:  
 "更新按类型寻址" 一半 (`updateModelDetail` 改按类型 + 补偿路径收回) 不碰该约定, 列入独立小件先行;  
-"编排收回仓库" 一半在走完整条主线时并入注册表引擎那一步 ([#03](../01-架构与分层/03-无三态模型与注册表.md)),  
+"编排收回仓库" 一半在走完整条主线时并入注册表引擎那一步 ([#03](../../01-架构与分层/03-无三态模型与注册表.md)),  
 不单独建 `collectHomeModels()` 过渡形态,  
 下面列出的改法仅在注册表长期搁置时作为独立路径使用.
 
-**迁移清单再添一项 (UI 不 try 约定, 见 [05-代码规则](../../../agents-cn/05-代码规则.md))**:  
+**迁移清单再添一项 (UI 不 try 约定, 见 [07-代码规则](../../../../agents-cn/07-代码规则.md))**:  
 lld 联网→离线的回退链  
 (`tryDetectOnline()` / `tryDetectOffline()` / `fetchOfflineLldOrNull()` / `getAssetLldOrNull()`) 目前在  
 `HomeViewModel` 里用 try 编排失败回退, 违反 "UI 层不处理业务异常" 的约定, 随 "编排收回仓库" 一半一并处理:  
@@ -168,7 +168,7 @@ fun updateModelDetail(type: MyModelType, newDetail: String) {
 updateModelDetail(MyModelType.OutdatedTargetSdkApk, newDetail)
 ```
 
-`modeResId` 换成 `LldSource` 枚举见 [#44](../08-反模式与卫生/44-资源ID当逻辑值.md) (顺带消掉资源 ID 判别).  
-[#01](../01-架构与分层/01-无领域模型.md) 全部做完之后还可以更进一步: 把每个检测项做成独立的 `Detector`,  
+`modeResId` 换成 `LldSource` 枚举见 [#44](../../08-反模式与卫生/44-资源ID当逻辑值.md) (顺带消掉资源 ID 判别).  
+[#01](../../01-架构与分层/01-无领域模型.md) 全部做完之后还可以更进一步: 把每个检测项做成独立的 `Detector`,  
 顺序由一个列表持有: 增删条目只改列表一处,  
-即 [#03](../01-架构与分层/03-无三态模型与注册表.md) 的注册表引擎.
+即 [#03](../../01-架构与分层/03-无三态模型与注册表.md) 的注册表引擎.

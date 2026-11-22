@@ -1,7 +1,7 @@
 # 全 JUnit 4 测试栈改造 (junit4-test-stack)
 
 > **状态**: **living** (spec 任务, 进行中). 任务级计划, 流程见  
-> [13-任务工作流](../../agents-cn/13-任务工作流.md).
+> [13-工作流](../../agents-cn/13-工作流.md).
 
 ## 负责人预写 (AI 开始之前)
 
@@ -39,7 +39,7 @@
 
 - 依赖目录与约定插件的测试接线切到 JUnit 4.
 - 25 个测试类换 runner 与断言来源.
-- 文档与事实一致: `04-架构`, `06-技术栈缺口`, `43-比对语义逐行adhoc`, `README`,  
+- 文档与事实一致: `05-项目架构`, `06-技术栈缺口`, `43-比对语义逐行adhoc`, `README`,  
   `01-无领域模型`, `19-版本合并残留弱点` 里断言测试栈现状, 测试计数, 以及把已就位依赖  
   写成缺口的句子.
 
@@ -68,18 +68,18 @@
   只补实际需要的, 并同步 `KotlinAndroid.kt:86-87` 的注释;  
   grep `tech.apter` 与 `org.junit.jupiter` 零残留的范围限定为 `app/src`, `base/src`,  
   `build-logic/` 与 `gradle/toml/*.toml`;  
-  `04-架构.md` 由 subtask-02 自己的验证管 (那里有一条同样的 grep); 不含 spec 目录  
+  `05-项目架构.md` 由 subtask-02 自己的验证管 (那里有一条同样的 grep); 不含 spec 目录  
   (记录性质的正文按 `07` 保持原样, 上一轮的 `gradle/toml/review/` 处理完即删).
 
 ### subtask-02 文档与事实一致
 
-- **范围**: `docs/agents-cn/04-架构.md` 的测试段 (64-73) 改成"单一 JUnit 4 方言",  
+- **范围**: `docs/agents-cn/05-项目架构.md` 的测试段 (64-73) 改成"单一 JUnit 4 方言",  
   以及同文件 75-82 那段 Robolectric 桥接说明 (要改成原生 runner, 三个 JVM 开关里  
   launcher interceptor 那条随之删掉); `docs/dev/issues-cn/01-架构与分层/06-技术栈缺口.md`  
   的 :14 与 :20-23 的 JUnit 描述, :27 的测试计数 (25 类, 111 个方法), 以及它把  
   Robolectric 列进 "缺" (19) 与 "待补齐" (42) 的错句; `docs/dev/issues-cn/08-反模式与卫生/43-比对语义逐行adhoc.md`  
   的 :54 (:64) 现状断言句, 并核对 :55 的 "16 个 Detect*Test"  
-  (按 "直接测 HomeRepository 的检测方法" 的口径实数为 16, 与原文一致, 不需要改); `docs/dev/issues-cn/README.md:276`,  
+  (按 "直接测 HomeRepository 的检测方法" 的口径实数为 16, 与原文一致, 不需要改); `docs/dev/issues-cn/README.md:268`,  
   `docs/dev/issues-cn/01-架构与分层/01-无领域模型.md:80`,  
   `docs/dev/issues-cn/05-稳定性与错误处理/19-版本合并残留弱点.md:24-25` 的过期测试计数;  
   同文件 :41 的 "JUnit Jupiter 与 MockK 已随 1b 落地" 改成 JUnit 4 与 MockK 已就位,  
@@ -90,15 +90,15 @@
 - **有意不改**: `docs/dev/2026-10-16-project-analysis-cn/` 与  
   `docs/dev/2026-10-30-agp-survey-cn/` 下的分析报告,  
   `docs/spec/2026-10-25-...-slim-ui-layer-cn/` 的 plan 与 subtask 报告,  
-  `docs/dev/issues-cn/README.md:361` 与 `:338`, `docs/dev/issues-cn/09-构建与CI/50-CI只编译不测试.md:32`  
+  `docs/dev/issues-cn/README.md:353` 与 `:330`, `docs/dev/issues-cn/archived/09-构建与CI/50-CI只编译不测试.md:32`  
   这几处记 1b 与 0e 那次决定的句子 (记的是当时怎么定的, 不是当前现状).
 - **凭什么是独立的一步**: 只改文字, 不碰代码, 不需要构建, 可以单独提交与核对.
 - **风险级别**: 低, 机械.
 - **生疏领域**: 否.
 - **验证**: 逐条对照官方文档与改完后的代码现状; grep `tech.apter` 与  
-  `org.junit.jupiter` 在 `docs/agents-cn/04-架构.md` 与 `docs/dev/issues-cn/` 零残留;  
+  `org.junit.jupiter` 在 `docs/agents-cn/05-项目架构.md` 与 `docs/dev/issues-cn/` 零残留;  
   另按 `Jupiter`, `useJUnitPlatform`, `platform launcher` 三个说法在被改的六份文档里  
-  逐句核, "有意不改" 的 `README.md:338` 与 `:361` 及 `50-CI只编译不测试.md:32`  
+  逐句核, "有意不改" 的 `README.md:330` 与 `:353` 及 `docs/dev/issues-cn/archived/09-构建与CI/50-CI只编译不测试.md:32`  
   排除在外;  
   不跑构建.
 
@@ -126,21 +126,21 @@
 ## review 的处置 (v1 到 v4)
 
 - 第一档四处已当场改计划: grep 验证口径限定范围; `43-比对语义逐行adhoc.md:64` 的现状  
-  断言挂进 subtask-02; "有意不改" 补上 `50-CI只编译不测试.md:32`, `README.md:338` 与 `:361`,  
+  断言挂进 subtask-02; "有意不改" 补上 `docs/dev/issues-cn/archived/09-构建与CI/50-CI只编译不测试.md:32`, `README.md:330` 与 `:353`,  
   以及 `2026-10-30-agp-survey-cn/`; `--add-opens` 从待学习移进 subtask-01 的验证.
 - 第二档一条: slim-ui spec 的正文仍写 Jupiter, 本单元不碰, 记进 `progress.md` 的归后续.
 - 第三档两件 (06 的 Robolectric 缺口, 43:55 的 16 与 19) 与四处过期计数,  
   负责人 2026-11-18 定: 收进 subtask-02. 2026-11-19 按口径重数后, 43:55 的 16 是准的  
   (16 个直接调检测方法, 3 个只调 match 函数), 该句保持原文, 只把 54 行计数与这句的  
   复核结论写进报告.
-- `README.md:338` 那句 "JUnit 5" 是 0e 那次决定的记载, 按"有意不改"保留, 不在  
+- `README.md:330` 那句 "JUnit 5" 是 0e 那次决定的记载, 按"有意不改"保留, 不在  
   subtask-02 的范围里.
-- v2 两条第一档: subtask-01 的 grep 范围移出 `04-架构.md` 并写明两个字符串;  
-  `README.md:338` 的处置两节改成一致.
+- v2 两条第一档: subtask-01 的 grep 范围移出 `05-项目架构.md` 并写明两个字符串;  
+  `README.md:330` 的处置两节改成一致.
 - v3 一条第一档 (workbuddy 判 met, mavis 判 not met, 分歧按事实层核过): `06-技术栈缺口.md:41`  
   说 "JUnit Jupiter 已随 1b 落地", 与同文件 :14 改完后的 JUnit 4 说法相反, 不宜留在  
   "有意不改". 采 mavis 的修法, 把它收进 subtask-02 改成 JUnit 4, 并给 subtask-02 的验证  
-  补一条针对 `04-架构.md` 与 `docs/dev/issues-cn/` 的 grep.
+  补一条针对 `05-项目架构.md` 与 `docs/dev/issues-cn/` 的 grep.
 - v4: 两份报告都判 met, workbuddy 撤回了 v3 的判定. 三条精度备注按"顺手改"处理:  
   06 的范围补 :14 与 :20-23 的行号; 验证加 `Jupiter` / `useJUnitPlatform` /  
   `platform launcher` 三个说法的逐句核对; 本节标题的轮次范围改到 v4,  

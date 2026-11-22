@@ -1,7 +1,7 @@
 # subtask-02 文档与事实一致
 
 > **状态**: living. 事实核对时间 2026-11-18, 代码在 `17b450b9`.  
-> 任务级计划见 [plan.md](plan.md); 流程见 [13-任务工作流](../../agents-cn/13-任务工作流.md).
+> 任务级计划见 [plan.md](plan.md); 流程见 [13-工作流](../../agents-cn/13-工作流.md).
 
 ## 目标
 
@@ -22,7 +22,7 @@
 
 | 文件 | 位置 | 现在的句子 |
 |---|---|---|
-| `docs/agents-cn/04-架构.md` | 64-73 | "测试栈分两套. 本机单测跑 JUnit Jupiter ... 单测 classpath 上故意不放 JUnit 4 ... 写了 JUnit 4 风格的测试也只能编译, 不会执行" |
+| `docs/agents-cn/05-项目架构.md` | 64-73 | "测试栈分两套. 本机单测跑 JUnit Jupiter ... 单测 classpath 上故意不放 JUnit 4 ... 写了 JUnit 4 风格的测试也只能编译, 不会执行" |
 | 同上 | 75-82 | "它经 Jupiter 平台的 `RobolectricExtension` 桥接加载 ... 三个测试 JVM 开关" |
 | `docs/dev/issues-cn/01-架构与分层/06-技术栈缺口.md` | 9-14 | "已就位 ... JUnit Jupiter 与 JUnit Platform launcher (本机单测)" |
 | 同上 | 19 | "缺 ... Espresso, Robolectric, Compose UI 测试" |
@@ -40,7 +40,7 @@
 
 ## 计划改动
 
-1. `docs/agents-cn/04-架构.md`
+1. `docs/agents-cn/05-项目架构.md`
    - 64-73 行改成单一 JUnit 4 方言: 本地单测与仪器测试同一套断言. 65-67 是一个整句  
      (括号挂在句中), 整体改写, 不要按"删两句"去拆; 保留 MockK 的用法边界.
    - 75-82 行改成 Robolectric 原生 runner (`@RunWith(RobolectricTestRunner::class)`),  
@@ -67,20 +67,20 @@
    - 55 行: 按 "直接测 `HomeRepository` 的检测方法" 的口径实数为 16  
      (另 3 个只测 match 函数), 与原文一致, 保持不动.
    - 64 行: 改成 `test` bundle 现在是 `junit`, Robolectric 走原生 runner.
-4. 计数三处: `README.md:276`, `01-无领域模型.md:80`, `19-版本合并残留弱点.md:24-25`  
+4. 计数三处: `README.md:268`, `01-无领域模型.md:80`, `19-版本合并残留弱点.md:24-25`  
    统一改成 25 类 111 个方法 (写明 app 24 类 107 个, base 1 类 4 个).
 5. 核对 subtask-01 改过的 `gradle/toml/android.toml` 注释, 确保与文档口径一致.
 
 ## 有意不改
 
-- `docs/dev/issues-cn/README.md:338` 与 `:361`: 记 0e 与 1b 那次决定的路线表行与步骤说明.
-- `docs/dev/issues-cn/09-构建与CI/50-CI只编译不测试.md:32`: 记 1b 那次改动的历史叙述.
+- `docs/dev/issues-cn/README.md:330` 与 `:353`: 记 0e 与 1b 那次决定的路线表行与步骤说明.
+- `docs/dev/issues-cn/archived/09-构建与CI/50-CI只编译不测试.md:32`: 记 1b 那次改动的历史叙述.
 - `docs/dev/2026-10-16-project-analysis-cn/` 与 `docs/dev/2026-10-30-agp-survey-cn/`:  
   dated 分析报告, 按 `07` 保持原状.
 - `docs/spec/2026-10-25-...-slim-ui-layer-cn/`: 另一个 spec 的正文, 归它自己更新.
-- 扫描过但确认不用改: `README.md:180` ("测试基础设施已随 1b 与 #50 补齐", 讲基础设施是否  
+- 扫描过但确认不用改: `README.md:179` ("测试基础设施已随 1b 与 #50 补齐", 讲基础设施是否  
   补齐, 与框架更替无关), `24-杂项隐患.md:66` (未来时态的修法描述),  
-  `50-CI只编译不测试.md:22-28` (测试源集分布表, 逐行核实仍准确),  
+  `docs/dev/issues-cn/archived/09-构建与CI/50-CI只编译不测试.md:22-28` (测试源集分布表, 逐行核实仍准确),  
   `43-比对语义逐行adhoc.md:66` ("只剩 Turbine 没引", 改造后仍成立).
 
 ## 覆盖核对表
@@ -98,10 +98,10 @@
 ## 验证
 
 - 逐条对照官方文档与改完后的代码现状.
-- grep `tech.apter` 与 `org.junit.jupiter` 在 `docs/agents-cn/04-架构.md` 与  
+- grep `tech.apter` 与 `org.junit.jupiter` 在 `docs/agents-cn/05-项目架构.md` 与  
   `docs/dev/issues-cn/` 零残留.
 - 另按 `Jupiter`, `useJUnitPlatform`, `platform launcher` 三个说法在被改的六份文档里逐句核,  
-  `README.md:338` 与 `:361` 及 `50-CI只编译不测试.md:32` 排除在外.
+  `README.md:330` 与 `:353` 及 `docs/dev/issues-cn/archived/09-构建与CI/50-CI只编译不测试.md:32` 排除在外.
 - 不跑构建.
 
 ## 风险与回滚
