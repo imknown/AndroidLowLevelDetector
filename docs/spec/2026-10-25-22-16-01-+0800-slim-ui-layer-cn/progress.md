@@ -2526,6 +2526,272 @@
   本文件上面两条记录里的旧行号按 07 不回改, 在此更正: "66 条" 那处在 `:107`, 报告里已同步.  
 - 2026-11-19 (提交前核到一处敏感信息): 本文件 11-19 的诊断记录里写着代理地址与端口, 按 07 属禁列.  
   负责人决定本次不清, 随本笔提交一起入库, 以后不在这类记录里再写具体值.  
+- 2026-11-21 (批 1 第 0 步材料交出): concept primer 六行, 覆盖核对表, 空问题清单, 验收标准  
+  (主标准三条来源标明, 技术补充项另列) 与方案取舍 (无取舍, 低风险机械搬迁) 已给负责人.  
+  交接指令里四处逐字照抄与 `ModelSnapshotTest` "不改照跑" 的说法都亲手核过: 前者与  
+  `OthersViewModel.kt` 行号逐一相符, 后者经 `metroViewModelFactory.create(OthersViewModel::class)`  
+  造对象 (`ModelSnapshotTest.kt:77, :94-95`), 只依赖 Metro 图, 构造参数换掉它感知不到.  
+- 2026-11-21 (trailer 三值定): 负责人逐项给定 agent `ZCode`, 模型 `GLM-5.3-Flash`, effort `max`;  
+  本 spec 的提交 trailer 写 `Generated with ZCode (GLM-5.3-Flash, effort: max)`.  
+- 2026-11-21 (批 1 目标句定): 两种写法摆开后负责人选乙完整句; `subtask-07.md` 分批节第一批那句  
+  补成 "Others 的 37 条搬进 `OthersDetectorCatalog`, ViewModel 只剩一行, 行为与行序不变",  
+  这处改动随本 subtask 最后一笔入库.
+- 2026-11-21 (改前黄金快照取到): 两个 APK (`assembleFossDebug` 与 `assembleFossDebugAndroidTest`)  
+  构建安装到设备 (走 mDNS 那条连接), `ModelSnapshotTest` 通过, `three-pages.json` 拉回本 spec 目录  
+  新建的 `snapshot/` (目录里 `*` 的 `.gitignore`, 照 `review/` 的既有惯例, 不入库), 存为  
+  `three-pages-before-batch1.json`. 基线 1817 行 (home 25, others 42, prop 1750), 与交接指令给的  
+  基线一致. 对照口径按 subtask-04 的结论: 改后快照与本份间隔越短越好, 实时计数器类的行按例外名单解释.  
+- 2026-11-22 (批 1 实现): 新增 `ui/others/detect/OthersDetectorCatalog.kt`: `@Inject` 构造注入  
+  `OthersRepository`, `suspend fun detect(): List<MyModel>`, 体内 `withContext(Dispatchers.IO)`  
+  包 37 条加 `detectAll()`; 6 处 `precondition` 与 4 处 `run` 内重复门连 region 注释逐字搬,  
+  新增的类级注释按 07 的例外在实施期写中文, 提交前翻英文. `OthersViewModel` 构造参数换成  
+  `detectorCatalog`, `collectModels()` 只剩一行, 删 9 个不再用的 import, Metro 三注解与顶部注释不动.  
+  自审: 搬运块与 HEAD 逐字节相同 (diff 为空), 37 条 6 门 4 重复门计数全中; `OthersViewModel(`  
+  无直接构造点, 造对象全走 Metro 图 (`ModelSnapshotTest` 经 factory.create).  
+- 2026-11-22 (批 1 验证): analyze-file 照旧报 "No running Android Studio instance has project open"  
+  (偏差, 与 11-19 记的是同一处, 本档记跳过); Kotlin LSP 自检通过后按改动末尾一发批量 diagnostics,  
+  两文件 `CLEAN (0 items)` 退出码 0; Gradle 四条一笔跑完 `BUILD SUCCESSFUL in 7m 6s`.  
+- 2026-11-22 (改后黄金快照对照): 重装两个 APK, `ModelSnapshotTest` 通过, 拉回  
+  `three-pages-after-batch1.json`. 行数前后一致 (1817; home 25, others 42, prop 1750).  
+  逐行比 `(key, detail, color, type)`: others 42 行零差异, home 25 行零差异; prop 12 处 detail 差异,  
+  全是设备状态行, 按键归类: `next_alarm_formatted` (闹钟时间随日子变), `screen_brightness` (亮度  
+  26 变 9), 9 处 `cache_key.*` (每次开机轮换的缓存键), `sys.oem_unlock_allowed` (1 变 0),  
+  无一处碰检测逻辑. 批 1 只动 others 的代码路径, others 与 home 全同, 判定通过.  
+  手工翻页那步留给负责人: 新 APK 已装在设备上, Others 页翻一遍, 行数与改前一致 (42 行).  
+- 2026-11-22 (批 1 v1 跨端 review 发起): 老一轮 (计划报告 review) 的文件按 14 清掉  
+  (两轮提示词加四份报告加 state.md, 发现全有去处: 五条第一档修了, 两条第三档负责人 11-19 落定,  
+  `#15` 归后续单元在册), 目录只留 `.gitignore`. 新一轮 v1 full: 提示词  
+  `review-v1-prompt-1016.md`, 发起 HEAD `e13acd82`, `state.md` 记 `等待报告`,  
+  工作树随之冻结 (进度记录与 state.md 除外). 报告份数由负责人放几家算几家.  
+- 2026-11-22 (批 1 v1 收报告): 四份都核过元数据块与末行 `REVIEW-STATUS: done`, HEAD 都是  
+  `e13acd82`, 全部收下, 全写 `STOP-CONDITION: met`.  
+  - workbuddy / DeepSeek V4.1 Flash / 默认档 (会话读不到, reviewer 请负责人定档位) / v1 / full,  
+    报告 `review-v1-report-workbuddy-deepseek-v4.1-flash-1029.md`.  
+  - MiniMax Code / MiniMax-M3.1-Flash / high / v1 / full,  
+    报告 `review-v1-report-minimax-code-minimax-m3.1-flash-1038.md`.  
+  - OpenCode / LongCat 2.5 Free / 默认档 (会话读不到) / v1 / full,  
+    报告 `review-v1-report-opencode-longcat-2.5-free-1044.md`.  
+  - Kilo / baidu/ernie-5.5-flash-preview:free / default (读不到, 按默认档记) / v1 / full,  
+    报告 `review-v1-report-kilo-baidu-ernie-5.5-flash-preview-free-1049.md`.  
+- 2026-11-22 (批 1 v1 判定与停止): 第一档无; 四家用四条独立路径核实搬运块逐字节相同  
+  (md5, SHA256, 7238 字节等值比, 123 行逐行比), 37 条 6 门 4 重复门, 行序与目录一致,  
+  ViewModel 一行, import 删净, 消费者零影响. 第二档一条: `OthersEntryId.kt:8-9` 的括注  
+  "(the view model's detector list follows it)" 随本单元过期, 只有 MiniMax 报, 事实层核过,  
+  判归批 3 (批 3 的第 0 步把它列进范围请负责人), 顺带核过 `PropEntryId.kt` 无同款.  
+  第三档一条: `subtask-07.md:45, :75, :76` 写 `04-架构` 与 `06-检测条目`, 重编号后已是  
+  `05-项目架构.md` 与 `08-检测条目.md`, 行号仍对得上, workbuddy 与 MiniMax 同报, 归负责人定.  
+  措辞级三条: 新类 KDoc 写改动本身 (有 Home 同款先例, 翻英文时顺手改), 文件末尾换行 (不动),  
+  构造参数名与 HEAD 一致 (不动). 四家全 met 且零实质发现, 按 13 的 `review 循环何时停`,  
+  review 循环停止, 不排 v2. 工作树解冻.  
+- 2026-11-22 (第三档处置): 负责人选现在改; `subtask-07.md` 的 `:45`, `:75`, `:76` 三处改成  
+  `05-项目架构.md` 与 `08-检测条目.md` (含 `:45` 行内那句 "06 的图节点 S3" 改 "08"), 随记录入库.  
+  执行时 grep 又发现 `:24` 的 "04-架构:134" 同类 (四家 review 都没点到), 按规矩放进要问的清单,  
+  不并进同一次修改.  
+- 2026-11-22 (手工翻页用 adb 代做): 负责人令在设备上跑一遍验证. 冷重启应用, 进 Other 页,  
+  从顶滚到底采 5 屏 uiautomator dump, 按行缝合成 42 行, 与黄金快照 others 段逐行比:  
+  行序与 detail 全同 (快照里脱敏的行接受任意真值, 属脱敏机制的预期). 页面渲染正常, 无崩溃无空行.  
+  过程留痕: 标签切换不重置列表滚动位置, 冷重启才能回顶; `input swipe` 时长 300ms 在这台设备不生效,  
+  800ms 才滚动.  
+- 2026-11-22 (答 "满足原始需求文档吗" 时新发现一处): `04-检测条目目录.md:23` 前半句  
+  "一屏的清单在它的功能 ViewModel 里排" 是描述现状的话, 对 Others 随本步过期, 对 Home  
+  早在 subtask-06 就过期; 后半句 "目录的行序必须是同一个顺序" 是硬标准, 不受影响.  
+  这句在需求正文里, 判第三档归负责人: 要不要随批 3 一起改, 还是归 #03/#30 那类后续单元,  
+  放进要问的清单, 不并进任何修改.  
+- 2026-11-22 (批 1 放行与提交): 负责人放行, 留的话是 "看了代码 和 实际效果, 没问题"  
+  (第 4 步与第 5 步并成一次同意). 新类 KDoc 翻英文, 顺手按措辞级发现改成讲现状的表述  
+  ("The others page's detection list (the others part of issues-cn #03): ..."), 翻译后 LSP  
+  复查 `CLEAN (0 items)`. 提交 `15715974`, 只含两个 `.kt` (149 加 4 行增删), spec 记录  
+  (本文件与 `subtask-07.md`) 随批 3 入库. 批 1 关闭.  
+- 2026-11-22 (批 2 开工, 改前快照取到): 负责人令开始批 2. 设备装的就是 HEAD `15715974`,  
+  此时取批 2 的改前快照间隔最短: `ModelSnapshotTest` 通过, 拉回 `three-pages-before-batch2.json`,  
+  1817 行 (home 25, others 42, prop 1750). 批 2 的第 0 步材料当轮交出, 等负责人说开始才动代码.  
+- 2026-11-22 (批 2 目标句定): 第 0 步材料交出后, 负责人选照批 1 的乙句式对齐;  
+  `subtask-07.md` 分批节第二批那句补成 "Prop 的 5 条搬进 `PropDetectorCatalog`,  
+  ViewModel 只剩一行, 行为与行序不变", 这处改动随本 subtask 最后一笔入库.  
+- 2026-11-22 (批 2 实现): 新增 `ui/prop/detect/PropDetectorCatalog.kt`: `@Inject` 构造注入  
+  `PropRepository`, `suspend fun detect(): List<MyModel>`, 体内 `withContext(Dispatchers.IO)`  
+  包 5 条加 `detectAll()`; 零 `precondition`, 三处 `Settings.*::class` 实参随条目搬,  
+  类级注释中文待提交前翻英文. `PropViewModel` 构造参数换 `detectorCatalog`,  
+  `collectModels()` 只剩一行, 删 7 个 import, Metro 三注解与顶部注释不动.  
+  自审: 搬运块与 HEAD 逐字节相同 (diff 为空), 5 条零门, `PropViewModel(` 无直接构造点.  
+- 2026-11-22 (批 2 验证): analyze-file 照旧报没有运行中的实例 (同一处偏差, 记跳过);  
+  Kotlin LSP 自检通过后批量 diagnostics, 两文件 `CLEAN (0 items)` 退出码 0;  
+  Gradle 四条一笔 `BUILD SUCCESSFUL in 5m 44s`.  
+- 2026-11-22 (批 2 改后黄金快照对照): 重装两 APK, 快照测试通过, `three-pages-after-batch2.json`  
+  与改前逐行比: home 25 与 others 42 零差异; prop 5 处 detail 差异全是设备状态行  
+  (`screen_brightness` 6 变 10, `debug.tracing.screen_brightness` 随动, `cache_key` 三处),  
+  行数 1750 一致, 判定通过.  
+- 2026-11-22 (批 2 真机翻页用 adb 代做): 冷启动进属性页, 快进滚动 61 次到底, 沿途 14 个抽样点,  
+  170 行 `(key, value)` 按 key 回快照核对: 全对 (1 行脱敏放行, 0 值差异, 无 key 缺失), 滚动无崩溃.  
+  说明: 逐行全量已在快照层核过, 屏上核的是渲染层抽样, 首屏与底部都在抽样内.  
+- 2026-11-22 (批 2 v1 跨端 review 发起): 老一轮 (批 1 review) 的文件按 14 清掉 (提示词加四份报告,  
+  发现全有去处且批 1 已提交), 目录只留 `.gitignore`. 新一轮 v1 full: 提示词  
+  `review-v1-prompt-1153.md`, 发起 HEAD `15715974`, `state.md` 记 `等待报告`,  
+  工作树随之冻结 (进度记录与 state.md 除外). 报告份数由负责人放几家算几家.  
+- 2026-11-22 (批 2 v1 收报告): 四份都核过元数据块与末行 `REVIEW-STATUS: done`, HEAD 都是  
+  `15715974`, 全部收下, 全写 `STOP-CONDITION: met`.  
+  - WorkBuddy / DeepSeek-V4.1-Flash / 默认档 (会话读不到, reviewer 请负责人定) / v1 / full,  
+    报告 `review-v1-report-workbuddy-deepseek-v4.1-flash-1201.md`.  
+  - MiniMax Code / MiniMax-M3.1-Flash (thinking) / high / v1 / full,  
+    报告 `review-v1-report-minimax-code-minimax-m3.1-flash-1200.md`.  
+  - OpenCode / LongCat 2.5 Free / 默认档 (会话读不到) / v1 / full,  
+    报告 `review-v1-report-opencode-longcat-2.5-free-1207.md`.  
+  - kilo / baidu/ernie-5.5-flash-preview:free / default (读不到, 按默认档记) / v1 / full,  
+    报告 `review-v1-report-kilo-baidu-ernie-5.5-flash-preview-free-1200.md`.  
+- 2026-11-22 (批 2 v1 判定与停止): 第一档无; 四家独立核实搬运块逐字节相同 (md5, 872 字符,  
+  872 字节, Compare-Object 四条路), 5 条零门, 行序与目录一致, ViewModel 一行, 7 个 import 删净,  
+  消费者零影响; MiniMax 还自己重算了两份黄金快照, 与发起结论一致. 第二档无新增 (复核 #15 归其单元;  
+  `subtask-07.md` 现状表 Prop 行仍指搬走前位置, WorkBuddy 与 MiniMax 提醒批 3 处理, 判归批 3 第 0 步).  
+  第三档两条: `04-检测条目目录.md:23` 前半句 (四家同报, 已在挂起项); `subtask-07.md:93` 分批节  
+  "(`04`, `06` 两处)" 未随改号 (只有 kilo 报, 事实层核过, 与 `:24` 同类). 措辞级: WorkBuddy 自撤  
+  裸引用一条 (三十余处先例), 撤回成立. 四家全 met 且零实质发现, 按 13 的 `review 循环何时停`,  
+  review 循环停止, 不排 v2. 工作树解冻.  
+- 2026-11-22 (批 2 真机验证再跑一遍, 负责人令): 批 2 的 APK 已在设备, 冷启动进属性页, 快进滚动  
+  61 次到底无崩溃, 14 个抽样点完整核过 170 行 `(key, value)` (148 个不同 key), 零值差异; 3 处  
+  边界伪差是 key 在屏幕底边而值在下屏, 跳过后由相邻样本覆盖. 配对方法改进: 先按已知 key 字典配对,  
+  不再依赖奇偶交替 (奇偶法会被屏幕边缘的半行推歪).  
+- 2026-11-22 (三件待答落定): 负责人逐件给定. `subtask-07.md:24` 与 `:93` 两处现在改, 已改  
+  ("05-项目架构:134" 与 "(`05-项目架构`, `08-检测条目` 两处"), 全文裸写旧名清零 (`grep` 核过);  
+  `04-检测条目目录.md:23` 前半句随批 3 改 (措辞如 "在它那页的检测清单类里排", 后半句硬标准原样),  
+  已从待答转成批 3 范围, 批 3 第 0 步列出.  
+- 2026-11-22 (批 2 放行与提交): 负责人放行, 留的话是 "看了代码 和 实际效果, 没问题"  
+  (第 4 步与第 5 步并成一次同意). 新类 KDoc 翻英文, 与批 1 同款讲现状的表述  
+  ("The prop page's detection list (the prop part of issues-cn #03): ..."), 翻译后 LSP 复查  
+  `CLEAN (0 items)`. 提交 `17d0ca91`, 只含两个 `.kt` (43 加 3 行增删), spec 记录随批 3 入库.  
+  批 2 关闭.  
+- 2026-11-22 (批 3 第 0 步材料交出, 三件开放项落定): 负责人逐件给定: 需求目录 `:23` 前半句  
+  用拟的措辞 "一屏的清单在它那页的检测清单类里排" (后半句硬标准原样); `subtask-07.md` 现状表的  
+  Prop 行留原样 (抬头已钉 `bc6cfaa6`, 新位置写进结果节); `#30` 的影响文件表把  
+  `ui/prop/PropViewModel.kt` 换成 `ui/prop/detect/PropDetectorCatalog.kt`.  
+  五份文件各处的现状原文已逐处核出. 等负责人说开始才动文档.  
+- 2026-11-22 (批 3 实现): 五份文档的位置描述追平, 每处只改过期陈述其余逐字保留:  
+  `05-项目架构.md:125` 改三份清单类并列; `08-检测条目.md:27` 与 `:48` 图节点改清单类;  
+  `03-无三态模型与注册表.md` 现状头更新为三页已入表 (日期随内容到 2026-11-22);  
+  `README.md:178` 状态列改 "部分 (三页已入表, 剩三态类型与有界并发)", `:321` 调用顺序句  
+  改 "清单类的清单顺序就是列表顺序"; `30-Prop页逐key查询.md` 五处 (`:8-9` 影响文件表按  
+  负责人决定替换, `:25/:49/:100/:107` 换 `PropDetectorCatalog.detect()`);  
+  `04-检测条目目录.md:23` 前半句按负责人定的措辞改. `subtask-07.md` 补结果节.  
+  `#15` 正文按计划不动.  
+- 2026-11-22 (偏差): 文档批按 11-构建与验证 跳过构建四档与 analyze-file/Kotlin LSP  
+  (没碰代码), 自审加委派 review 照走.  
+- 2026-11-22 (执行中新发现): `30-Prop页逐key查询.md:106` 引的 "05-代码规则" 是改号前的  
+  规则文件名 (同类旧名, 在 issues-cn 正文里, 本批范围只覆盖 #30 的五处位置描述),  
+  放进要问的清单: 归重编号清理单元还是老板现在定, 不并进本批修改.  
+- 2026-11-22 (批 3 自审): diff 九个块逐块核过, 每块只动过期的那句, 行内代码只增不减  
+  (替换掉的都是过期名); 范围内扫尾: 规则文件与需求目录 `collectModels` 清零, issues 剩余两处  
+  在 `#03` 的修前叙事里 (现状头承载, 按计划不动).  
+- 2026-11-22 (批 3 v1 跨端 review 发起): 老一轮 (批 2 review) 的文件按 14 清掉, 目录只留  
+  `.gitignore`. 新一轮 v1 full: 提示词 `review-v1-prompt-1309.md`, 发起 HEAD `17d0ca91`,  
+  `state.md` 记 `等待报告`, 工作树随之冻结 (进度记录与 state.md 除外). 文档批的 review  
+  参照物是需求正文. 报告份数由负责人放几家算几家.  
+- 2026-11-22 (批 3 v1 收报告): 三份都核过元数据块与末行 `REVIEW-STATUS: done`, HEAD 都是  
+  `17d0ca91`, 全部收下, 三家全写 `STOP-CONDITION: not met` (抓到的是记录事实问题, 不是措辞).  
+  - WorkBuddy / DeepSeek-V4.1-Flash / 默认档 / v1 / full,  
+    报告 `review-v1-report-workbuddy-deepseek-v4.1-flash-1326.md`.  
+  - kilo / baidu/ernie-5.5-flash-preview:free / default / v1 / full,  
+    报告 `review-v1-report-kilo-baidu-ernie-5.5-flash-preview-free-1323.md`.  
+  - MiniMax Code / MiniMax-M3.1-Flash / high / v1 / full,  
+    报告 `review-v1-report-minimax-code-minimax-m3.1-flash-1422.md`.  
+- 2026-11-22 (批 3 v1 判定与修复): 合并去重后第一档六条, 全部修掉:  
+  1. 结果节 prop 快照计数张冠李戴 (kilo 与 MiniMax 同报): 批 1 十二处, 批 2 五处, 已分批写清.  
+  2. `subtask-07.md:24` 行号被本批自己的 `05-项目架构.md` 改动顶偏一行 (workbuddy 与 MiniMax  
+     同报): `:134` 改 `:135`, 事实层核过 (那句现仍在 135 行).  
+  3. 进度记录末尾状态摘要过期 (kilo): 已重写, 工作树改动按 `git status` 列全.  
+  4. `README.md:178` 状态列把有界并发写进 #03 的余项 (workbuddy 报, `README.md:193` 证实  
+     有界并发挂 #15 名下): 已改 "剩三态类型".  
+  5. `#30:101` 的片段 `tempModels += ...` 与改过的 `:100` 注释对不上 (workbuddy): 片段改为  
+     裸调用, 去掉退役的 `tempModels` 包装.  
+  6. 结果节 "无范围偏离" 与紧随的偏离句互相打脸 (workbuddy): 已改 "偏离一处, 已获负责人  
+     同意" (修在结果节重写里, v2 补记这条账).  
+  第二档: `OthersEntryId.kt:9` 归口悬空 (三家同报) 加 MiniMax 新发现 `HomeEntryId.kt:11`  
+  同款括注 (事实层核过): 两处都归后续动代码的单元, 排期时由负责人点名; 批 1 v1 判  
+  "归批 3 第 0 步列出" 的原判定就此改道 (批 3 纯文档接不住). 第三档两件归负责人:  
+  "入表" 措辞 (workbuddy 判措辞级, MiniMax 判第三档, 两读都站得住, 停下来问);  
+  OthersEntryId 的归口 (人家的判定如上, 老板可否决). 措辞级顺手改: 结果节 "落地" 改  
+  "完成" (02 改名表), `README.md:321` 改 "条目顺序", `08-检测条目.md:27` 补全路径,  
+  结果节补 HOME-01..23 加同构说明加现状表整表钉 `bc6cfaa6` 的说明.  
+  事实层驳回一条: workbuddy 记 "进度记录写五处旧文件名, diff 里 7 行, 少两处"; 原文数的是  
+  五个位置 (`:24, :45, :75, :76, :93`), diff 的 7 行里 `:4` 与 `:130` 是链接修复不属改号  
+  (行号以 grep 实测为准, v2 报的 `:3` 与 `:127` 差一行), 口径混了, 不改账.  
+- 2026-11-22 (批 3 措辞落定): "入表" 换 plain 说法, 负责人定: `README.md:178` 改 "部分  
+  (三页的清单都在各自的清单类里, 剩三态类型)", `#03` 现状头改 "三页的清单都在各自的清单类里".  
+  执行中又见一处同类词: `README.md:371` 的 "随条目入表" 说的是 #43 的比对语义, 另一句话  
+  另一件事, 不并进修改, 记在要问的清单.  
+- 2026-11-22 (批 3 v2 delta 发起): 提示词 `review-v2-prompt-1429.md`, 带三样 (v1 三份报告全文,  
+  各自应改清单在报告内, 修复清单八条), 加负责人已定与已驳回的口径; HEAD 仍 `17d0ca91`,  
+  `state.md` 记 `等待报告`, 工作树随之冻结 (进度记录与 state.md 除外).  
+- 2026-11-22 (批 3 v2 收报告): 三份都核过元数据块与末行 `REVIEW-STATUS: done`, HEAD 都是  
+  `17d0ca91`, 全部收下, 三家全写 `STOP-CONDITION: not met` (抓的是这轮修复自己带进的问题).  
+  - WorkBuddy / DeepSeek-V4.1-Flash / 默认档 / v2 / delta,  
+    报告 `review-v2-report-workbuddy-deepseek-v4.1-flash-1442.md`.  
+  - kilo / baidu/ernie-5.5-flash-preview:free / default / v2 / delta,  
+    报告 `review-v2-report-kilo-baidu-ernie-5.5-flash-preview-free-1444.md`.  
+  - MiniMax Code / MiniMax-M3.1-Flash / high / v2 / delta,  
+    报告 `review-v2-report-minimax-code-minimax-m3.1-flash-1443.md`.  
+- 2026-11-22 (批 3 v2 判定与修复): 合并去重后第一档三条, 全部修掉:  
+  1. `08-检测条目.md:27-28` 断行违规 (三家同报): 两行缺尾随两空格加断点在 "与" 后切开并列结构,  
+     已重排 (断在第二个路径的逗号后, 尾随空格补齐, 字节核过).  
+  2. 批 3 v1 判定条少记一条 (workbuddy 与 MiniMax 同报, "五条" 实为六条): 已补第六条并改口六条,  
+     `state.md` 同步.  
+  3. 进度记录挂起项与落定条相反 (workbuddy 与 kilo 同报): 挂起项改 "随条目入表" 与 `#30:106`  
+     两件, 与下一步动作对齐 (本条一并执行).  
+  第三档两件归负责人 (两读都站得住): `#03` 的 "剩" 要不要写回注册表引擎 (`README.md:178` 对  
+  `03-无三态模型与注册表.md:13/:40` 三处口径); `subtask-07.md:76` 的两个指针 (`:27-29`, `:48`)  
+  被本批加行顶偏后的口径 (随现行还是钉改前, 要与 `:24` 已改现行的口径成文一致).  
+  措辞级顺手改: `#30:101` 片段改成 `rawDetector(...)` 的真实形状 (workbuddy 与 MiniMax),  
+  结果节 "同构" 括注与正文拆台改 "形状一致" (workbuddy). 事实层两条对齐: workbuddy 与 kilo  
+  都确认 v1 驳回成立 (workbuddy 撤回); MiniMax 指出 v2 提示词把 "随条目入表" 位置写成  
+  `30-Prop页逐key查询.md:371`, 实际在 `README.md:371`, 提示词笔误记档 (任务材料不改).  
+- 2026-11-22 (批 3 v2 两件口径落定): 负责人逐件给定. 注册表引擎算已兑现 (清单成数据加  
+  `detectAll()` 统一执行就是引擎第一版, 串行是有意的, 有界并发归 #15 不重复计):  
+  `03-无三态模型与注册表.md:40` 就地改为 "**书面目标**: 注册表引擎已建第一版 (三页的清单入  
+  各自的清单类, 引擎统一执行, 第一版串行); 剩三态语义; 有界并发归 #15", `README.md:178`  
+  的 "剩三态类型" 不动. 指针口径随现行: `subtask-07.md:76` 的 `:27-29` 与 `:48` 改 `:27-30`  
+  与 `:49` (`:75` 的 `:125` 仍在句内不动), 结果节的钉存说明扩成口径成文 ("现状表 (`:45-48`)  
+  整表钉在 `bc6cfaa6`, 行内指针也是改前的; 其余指针随现行").  
+- 2026-11-22 (批 3 v3 收报告): 三份都核过元数据块与末行 `REVIEW-STATUS: done`, HEAD 都是  
+  `17d0ca91`, 全部收下, 三家全写 `STOP-CONDITION: not met` (抓的是上轮修复带进的记录与排版问题).  
+  - WorkBuddy / DeepSeek-V4.1-Flash / 默认档 / v3 / delta,  
+    报告 `review-v3-report-workbuddy-deepseek-v4.1-flash-1510.md`.  
+  - kilo / baidu/ernie-5.5-flash-preview:free / default / v3 / delta,  
+    报告 `review-v3-report-kilo-baidu-ernie-5.5-flash-preview-free-1521.md`.  
+  - MiniMax Code / MiniMax-M3.1-Flash / high / v3 / delta,  
+    报告 `review-v3-report-minimax-code-minimax-m3.1-flash-1512.md`.  
+- 2026-11-22 (批 3 v3 判定与修复): 合并去重后第一档三条, 全部修掉 (字节核过):  
+  1. `03-无三态模型与注册表.md:41` 的 #15 链接断链 (三家同报, 新写少一层 `../`): 已补.  
+  2. `progress.md:2713` 的破折号 (workbuddy v2 报, 上轮修复清单漏了它): 已改 `;`; 同句行号  
+     按 kilo v3 的更正改 `:4` 与 `:130` (grep 实测, workbuddy v2 原报的 `:3` 与 `:127` 差一行).  
+  3. 进度记录末尾摘要两处过期 (三家同报): 状态行改 "六条全修, v3 待收判", 挂起项与下一步  
+     动作对齐.  
+  第三档一件: `#03:13` 的 "修复: 注册表引擎 + 三态结果类型" 在已兑现口径下过期, 按 boss 的  
+  已兑现裁定延伸改成 "剩余修复: 三态结果类型 (注册表引擎已建第一版)" (可否决). 措辞级改四处:  
+  `08-检测条目.md:27` 改 "Others 的在 ... Prop 的在 ..." 句式, 结果节换行断在分号后, 钉存  
+  说明 `:45-48` 改 `:45-49` (MiniMax), 判定条 "两条已修一件待口径" 改 "全部修掉" (kilo);  
+  口径记录里的 `[#15](...)` 省略链接改纯文本 (workbuddy). `state.md` 的 v2 判定节与实际同步.  
+  三家一致: "清单在哪" 的实质已查干净, 剩收尾.  
+- 2026-11-22 (批 3 v4 收报告): 三份都核过元数据块与末行 `REVIEW-STATUS: done`, HEAD 都是  
+  `17d0ca91`, 全部收下.  
+  - WorkBuddy / DeepSeek-V4.1-Flash / 默认档 / v4 / delta,  
+    报告 `review-v4-report-workbuddy-deepseek-v4.1-flash-1546.md`.  
+  - kilo / baidu/ernie-5.5-flash-preview:free / default / v4 / delta,  
+    报告 `review-v4-report-kilo-baidu-ernie-5.5-flash-preview-free-1546.md`.  
+  - MiniMax Code / MiniMax-M3.1-Flash / high / v4 / delta,  
+    报告 `review-v4-report-minimax-code-minimax-m3.1-flash-1546.md`.  
+- 2026-11-22 (批 3 v4 判定与循环停): workbuddy 与 kilo 判 met (第一档零), MiniMax 判 not met,  
+  报一条第一档: `progress.md` 缺 "批 3 v3 收报告" 那条 (每轮收报告的核过项该落档, v3 只有判定  
+  条) — 属实, 已补 (与前四条收报告记录同款). 其余是记录小 slip 与措辞级, 已顺手改: `state.md`  
+  三处 (v1 判定五条改六条补第六条, 驳回行号 `:3`/`:127` 改 `:4`/`:130` 以 grep 实测为准, 轮次表  
+  占位符填实际文件名), `08-检测条目.md:27` 第一个冒号改逗号 (kilo 措辞级), `subtask-07.md:170`  
+  钉存范围改 "与本单元相关的五行 (`:45-49`)" (workbuddy 细节: "整表" 与五行范围对不上).  
+  MiniMax 备查一条: 根 `AGENTS.md` 速记的 "括号一整段绝不断行" 与 02 的绝不断行清单有出入  
+  (`AGENTS.md` 自写以 02 为准), 记录不改, 归负责人备查. workbuddy 细节 2 (结果节括号跨行)  
+  记录不改 (全仓既有文档多处同款, 02 未禁). 循环停: 实质发现修完, 剩措辞与第三档确认, 交负责人  
+  定是否再排一轮. 留负责人两件: `#03:13` 延伸 (剩余修复句) 认可与否决 (kilo 第三档); 三态余项的  
+  术语 ("三态结果类型" / "三态语义" / "三态类型" 指同一件) 要不要统一 (workbuddy 措辞级).  
+- 2026-11-22 (批 3 收尾两件落定): 负责人逐件给定. `#03:13` 的延伸改动认可 (维持 "剩余修复:  
+  三态结果类型 (注册表引擎已建第一版)"); 三态术语统一成 "三态结果类型": `03-无三态模型与  
+  注册表.md:40` 的 "剩三态语义" 与 `README.md:178` 的 "剩三态类型" 各改一词, `:13` 原样.  
+  至此批 3 四轮 review 的发现全部处置完, 实质清零, 待第 4 步放行与第 5 步提交.  
 - 各子任务状态: subtask-01 已关闭; subtask-02 已提交并关闭;  
   subtask-03 已提交并关闭; subtask-04 已提交并关闭 (批 1 ~ 7 已提交关闭, 规则文件两件已提交,  
   文档批三轮 review 已收, 第 4 步已放行, review 目录已删,  
@@ -2534,9 +2800,18 @@
   review 三轮已收完, 停止条件 met, 第 4 步已放行);  
   subtask-06 已提交并关闭 (四批已完成, 两处偏离见报告; 五笔提交 `38c2e639`, `775cbd12`, `db558018`,  
   `75f187f4`, `05ed190e`; 11-19 另修 HttpClient 单例把代理固化那处, 提交 `bc6cfaa6`);  
-  subtask-07 进行中 (计划报告 `subtask-07.md` 已定稿, v1 与 v2 两份报告都收了, v2 两家判 met,  
-  review 循环已停, 两条待定已定; 未开工).  
+  subtask-07 进行中 (计划报告定稿; 批 1 提交关闭 `15715974`, 批 2 提交关闭 `17d0ca91`;  
+  批 3 已实现, 四轮 review: v1 六条, v2 三条, v3 三条第一档全修, v4 两家 met 一家报一条  
+  记录档已补, 循环停, 待第 4 步放行与第 5 步提交).  
 - 未查清: 无.  
-- 挂起项: 无. 工作树里相对 HEAD 的改动是 `plan.md`, `subtask-07.md` 与这份进度记录本身.  
-- 下一步动作: 等负责人说 "开始批 1" (Others 37 条搬进 `OthersDetectorCatalog`).  
-  批 1 的第 0 步要给负责人 5 到 10 行 concept primer, 问题清单 (可以为空) 与覆盖核对表.
+- 挂起项: 两件在要问的清单, 都归清理单元或老板另定, 不阻塞批 3: `README.md:371` 的  
+  "随条目入表" (#43 的句子) 与 `30-Prop页逐key查询.md:106` 的旧规则文件名. 备查一件:  
+  根 `AGENTS.md` 速记的 "括号一整段绝不断行" 与 02 的清单有出入 (`AGENTS.md` 自写以 02 为准),  
+  MiniMax v4 提出, 归负责人备查. 批 3 留负责人两件: `#03:13` 延伸认可与否决, 三态术语要不要统一.  
+- 工作树里相对 HEAD `17d0ca91` 的改动: 六份活文档 (`05-项目架构`, `08-检测条目`,  
+  `03-无三态模型与注册表`, `README`, `30-Prop页逐key查询`, `04-检测条目目录`),  
+  `subtask-07.md` (两处链接修复加五处旧文件名加两句批目标句加结果节), 这份进度记录;  
+  `snapshot/` 目录带 `*` 的 `.gitignore`, git 看不见.  
+- 下一步动作: 等负责人定批 3 留下的两件 (`#03:13` 延伸, 三态术语统一), 给第 4 步放行  
+  (留一句理由, 可与第 5 步并成一次同意), 第 5 步提交 (批 3 一笔带全部 spec 记录, trailer  
+  `Generated with ZCode (GLM-5.3-Flash, effort: max)`).

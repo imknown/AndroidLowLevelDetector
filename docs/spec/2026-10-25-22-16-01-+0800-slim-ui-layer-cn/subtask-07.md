@@ -1,7 +1,7 @@
 # subtask-07 Others 与 Prop 的注册表化
 
 > **状态**: living. 事实核对时间 2026-11-19, 代码在 `bc6cfaa6`.  
-> 任务级计划见 [plan.md](plan.md); 流程见 [13-任务工作流](../../agents-cn/13-任务工作流.md).
+> 任务级计划见 [plan.md](plan.md); 流程见 [13-工作流](../../agents-cn/13-工作流.md).
 
 ## 目标
 
@@ -21,7 +21,7 @@ Others 的 37 条与 Prop 的 5 条检测条目清单, 从各自 ViewModel 的 `
 - 清单类进依赖图靠 `@Inject` 构造器注入. ViewModel 的构造参数换成清单类, `metroViewModel` 解析照旧,  
   入口 `AppRoot.kt:111-112` 不动.
 - 清单类的输入: Home 有一个网络开关 (所以有 `HomeDetectionRequest`), Others 与 Prop 没有任何输入.  
-  04-架构:134 写的就是 "Others 与 Prop: 没有共享输入, 每条自己取".
+  05-项目架构:135 写的就是 "Others 与 Prop: 没有共享输入, 每条自己取".
 - 清单的顺序就是展示顺序, 而 `OthersEntryId` / `PropEntryId` 的声明序已经锁在  
   `DetectionEntryOrderTest` 里. 搬迁时照 ViewModel 现有顺序抄, 不重排.
 
@@ -42,7 +42,7 @@ Others 的 37 条与 Prop 的 5 条检测条目清单, 从各自 ViewModel 的 `
 | 界面入口 | AppRoot.kt:111-112 | `metroViewModel<OthersViewModel>()` / `<PropViewModel>()`, 不碰构造 |
 | 快照生成器 | ModelSnapshotTest.kt:90-100 | 经工厂造三个 ViewModel 直接调 `collectModels()`, 只依赖构造签名 |
 | 顺序锁 | DetectionEntryOrderTest.kt:18-107 | 锁三页枚举的声明序, 不锁清单 |
-| 清单位置的现状描述 | 04-架构.md:125, 06-检测条目.md:27-29, :48 | 两份都写明 Others 与 Prop 的清单还在 `collectModels()` 里; 06 的图节点 S3 另有同样一句 |
+| 清单位置的现状描述 | 05-项目架构.md:125, 08-检测条目.md:27-29, :48 | 两份都写明 Others 与 Prop 的清单还在 `collectModels()` 里; 08 的图节点 S3 另有同样一句 |
 | #03 的现状句 | issues-cn/01-架构与分层/03-无三态模型与注册表.md:5-7 | 写着 "另两页归 subtask-07 (搬进各自的清单类)" |
 | 路线表状态 | issues-cn/README.md:178, :321 | :178 是状态列 "部分 (Home 已入表, 另两页归 subtask-07)"; :321 是修复路线引言里 "`collectModels()` 的调用顺序就是列表顺序" |
 | Prop 页性能条目的位置描述 | issues-cn/06-性能/30-Prop页逐key查询.md:8-9, :25, :49, :100, :107 | 五处把 Prop 的检测位置写在 `PropViewModel.collectModels()`, 影响文件表在 `:8-9` |
@@ -72,8 +72,8 @@ Others 的 37 条与 Prop 的 5 条检测条目清单, 从各自 ViewModel 的 `
 
 1. 文档.
 
-   - `04-架构` 的检测执行模型一节 (`:125`): 三页清单的位置改成三份清单类并列, 删掉 "(subtask-07 搬出)" 的括注.
-   - `06-检测条目` 两处: 第 3 步正文 (`:27-29`) 与第 7 步之后那张图的 S3 节点 (`:48`).
+   - `05-项目架构` 的检测执行模型一节 (`:125`): 三页清单的位置改成三份清单类并列, 删掉 "(subtask-07 搬出)" 的括注.
+   - `08-检测条目` 两处: 第 3 步正文 (`:27-30`) 与第 7 步之后那张图的 S3 节点 (`:49`).
    - `issues-cn` 的 #03 现状头 (`:5-7`) 与 README 两处: `:178` 的状态列, 加上 `:321` 修复路线引言里  
      "`collectModels()` 的调用顺序就是列表顺序" 那句.
    - `issues-cn/06-性能/30-Prop页逐key查询.md` 五处位置描述: `:8-9` 的影响文件表加新文件路径,  
@@ -88,9 +88,9 @@ Others 的 37 条与 Prop 的 5 条检测条目清单, 从各自 ViewModel 的 `
 
 一批一笔提交, 每批单独拿出来都能编译并通过验证:
 
-- 第一批: Others 的 37 条搬进 `OthersDetectorCatalog`, ViewModel 改一行. 行为不变.
-- 第二批: Prop 的 5 条搬进 `PropDetectorCatalog`, ViewModel 改一行. 行为不变.
-- 第三批: 文档与记录 (`04`, `06` 两处, `issues-cn` 三份文件, 本报告, 进度记录).
+- 第一批: Others 的 37 条搬进 `OthersDetectorCatalog`, ViewModel 只剩一行, 行为与行序不变.
+- 第二批: Prop 的 5 条搬进 `PropDetectorCatalog`, ViewModel 只剩一行, 行为与行序不变.
+- 第三批: 文档与记录 (`05-项目架构`, `08-检测条目` 两处, `issues-cn` 三份文件, 本报告, 进度记录).
 
 两批之间没有依赖, 换序也能编. 分两批的理由是各自的 diff 与 review 材料小一号, 出问题只看一份清单.  
 第三批依赖前两批的最终形状, 不换序.
@@ -127,7 +127,7 @@ Others 的 37 条与 Prop 的 5 条检测条目清单, 从各自 ViewModel 的 `
 
 - `./gradlew assembleFossDebug`, `./gradlew testFossDebugUnitTest :base:testDebugUnitTest`,  
   `./gradlew lintFossDebug`.
-- analyze-file 与 Kotlin LSP 两档按 [10](../../agents-cn/10-分析细则.md) 跑, 每批点名自己那两个 `.kt` 文件,  
+- analyze-file 与 Kotlin LSP 两档按 [10](../../agents-cn/10-代码分析规则.md) 跑, 每批点名自己那两个 `.kt` 文件,  
   两批一共四个: 批 1 是 `OthersDetectorCatalog.kt` 与 `OthersViewModel.kt`,  
   批 2 是 `PropDetectorCatalog.kt` 与 `PropViewModel.kt`.  
   analyze-file 要 Android Studio 实例在跑, 本机这一档历来报 "没有运行中的实例, CLI 挂起无输出",  
@@ -147,6 +147,29 @@ Others 的 37 条与 Prop 的 5 条检测条目清单, 从各自 ViewModel 的 `
 - `withContext(Dispatchers.IO)` 忘在 ViewModel 或清单类都不留, 会让 shell 与属性读取跑在主线程.  
   照 Home 的形状写, 别自己重新安排.
 - 清单类不加 `@SingleIn`. Home 的也没加, 每次注入新建实例, 与现状一致.
+
+## 结果
+
+- 三批全部完成 (2026-11-22). 代码: 新增 `ui/others/detect/OthersDetectorCatalog.kt` (37 条)  
+  与 `ui/prop/detect/PropDetectorCatalog.kt` (5 条), 两个 ViewModel 各剩一行调用,  
+  三份清单类的形状一致 (都是 `@Inject` 构造加一个 `suspend detect()`;  
+  Home 的多收一个请求类型并返回结果类型); 三份清单的顺序与目录的 HOME-01..23, OTH-01..37 和 PROP-01..05  
+  逐一对应 (四家 review 各自独立核对).
+- 提交: 批 1 `15715974`, 批 2 `17d0ca91`, 批 3 (本笔, 文档与记录) 随本节入库.
+- 验证: 两批代码各跑 Kotlin LSP (两文件 `CLEAN (0 items)`) 与 Gradle 四条 (全绿);  
+  黄金快照改前改后逐行比, 两批的 home 与 others 段都零差异; prop 段的差异全是  
+  设备状态行, 批 1 十二处 (闹钟时间一条, 亮度一条, `cache_key` 九条,  
+  `sys.oem_unlock_allowed` 一条), 批 2 五处 (亮度两条, `cache_key` 三条);  
+  真机 Others 页 42 行逐行全对, Prop 页滚动到底抽样 170 行全对.  
+  analyze-file 两批都因本机没有运行中的实例记偏差.
+- review: 两批代码各一轮 v1 full, 各四个 reviewer, 四家全 met, 第一档零,  
+  review 循环均停, 未排 v2. 归后续动代码的单元: `OthersEntryId.kt:9` 与  
+  `HomeEntryId.kt:11` 的过期括注 (排期时由负责人点名); `#15` 正文归 #15 的实施单元.  
+  需求目录 `:23` 前半句与 `#30` 的影响文件表已在本批处理.
+- 与计划的偏离: 偏离一处, 已获负责人同意: `#30` 的影响文件表把 `PropViewModel`  
+  替换成清单类 (计划原文是 "加新文件路径"). 指针口径 (负责人定): 报告现状表里与本单元  
+  相关的五行 (`:45-49`) 钉在 `bc6cfaa6`, 行内指针也是改前的; 其余指针随现行.  
+  Prop 行的旧位置由本节的新位置陈述承载.
 
 ## 需要老板定
 
