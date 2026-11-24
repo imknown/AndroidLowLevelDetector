@@ -9,11 +9,16 @@
 
 ## 现状前提
 
+本节记的是 task 1 开工前的状态 (`f0c7c6f1` 之前, HEAD `7e941277`), 是这次改造的依据;  
+本文件里的行号都指改动前的位置.
+
 - 本地单测走 Jupiter 6.1.3, 由 `useJUnitPlatform()` 接线  
   (`build-logic/.../KotlinAndroid.kt:85`), 依赖在 `gradle/toml/android.toml:51` 的 `junit` 键与 `test` bundle.
-- 25 个测试类 111 个方法 (`app/src/test` 24 类 107 方法, `base/src/test` 1 类 4 方法);  
+- 26 个测试类 116 个方法 (`app/src/test` 25 类 112 方法, `base/src/test` 1 类 4 方法);  
   其中 20 个类靠桥接包把 Robolectric 抬进 Jupiter 平台, 该包最后发布 2024-11-18, 上游最后提交 2025-06;  
-  Robolectric 4.18 删掉了桥接包还继承着的 `TextLayoutModeConfigurer`, 升级因此被卡.
+  Robolectric 4.18 删掉了桥接包还继承着的 `TextLayoutModeConfigurer`, 升级因此被卡.  
+  计数按 2026-11-23 的 HEAD `7e941277` 核过, 比 plan 写作时多一个 `DetectionEntryOrderTest`  
+  (提交 `cd9ea63a`, 3 个方法, 纯 JVM 测试).
 - 官方口径: Android 本地单测要求 JUnit 4 (developer.android.com/training/testing/local-tests),  
   仪器测试要求 JUnit 4 加 `AndroidJUnitRunner`, Compose UI 测试用 `ui-test-junit4`;  
   Robolectric 官方用法就是 `junit:junit:4.13.2` 加 `@RunWith(RobolectricTestRunner::class)`;  
@@ -23,6 +28,8 @@
   其余一个实参或尾随 lambda. 换 JUnit 4 参数顺序一致, 是纯机械替换.
 - plan 写作时的 HEAD 是 `9318f6b8`; 之后外部 subtask-06 重写已实施完成并提交  
   (本地已 rebase, 2026-11-19 核过 `:app:testFossDebugUnitTest` 绿).  
+  开工前的 HEAD 是 `7e941277`, 只升 AGP, navigation, lifecycle, Gradle wrapper 与 daemon JVM 证书,  
+  没碰测试栈.  
   task 1 开工时先重新核对 HEAD 与工作树 (见 design 的外部冲突一节).
 - `gradle/toml/review/` 是上一轮 toml 任务的 review 目录, 保留到负责人处理完 Robolectric 后续项再删,  
   两个 task 都不碰.
@@ -32,20 +39,22 @@
 **依赖与接线切换** (task 1):
 
 - `gradle/toml/android.toml`: 版本键 `junit` 改 `"4.13.2"`, 上方注释写明本地单测与仪器测试统一 JUnit 4,  
-  Robolectric 走原生 runner; 删 `junit-jupiter` 与 `junit-platform-launcher` 两条库条目,  
+  Robolectric 走原生 runner, 注释用英文; 删 `junit-jupiter` 与 `junit-platform-launcher` 两条库条目,  
+  连同解释 launcher 的两行注释 (98-99) 一起删,  
   换成 `junit = { group = "junit", name = "junit", version.ref = "junit" }`;  
   `test` bundle 改成 `["junit"]`.
 - `gradle/toml/thirdParty.toml`: 删 `junit5RobolectricExtension` 版本键与桥接包库条目及各自注释.
-- `build-logic/.../KotlinAndroid.kt`: 注释改成 "本地单测与仪器测试都用 JUnit 4, Robolectric 用原生 runner";  
-  删 `it.useJUnitPlatform()`; 删 launcher interceptor 开关与注释, 保留 `--add-opens` 与  
-  `--enable-native-access` (按验证那条对照 Robolectric 官方九条补齐, 同步重写 86-87 行注释);  
+- `build-logic/.../KotlinAndroid.kt`: 注释改成英文,  
+  例如 "Local unit tests and instrumented tests both use JUnit 4; Robolectric runs on its native runner";  
+  删 `it.useJUnitPlatform()`; 删 launcher interceptor 开关与注释,  
+  保留 `--add-opens` 与 `--enable-native-access` (按验证那条对照 Robolectric 官方九条补齐, 同步重写 86-87 行注释);  
   删桥接包依赖与注释. mockk 与 robolectric 4.17 不动.
-- 25 个测试类换 import 与注解: 20 个桥接类 `@ExtendWith(RobolectricExtension::class)` 换  
+- 26 个测试类换 import 与注解: 20 个桥接类 `@ExtendWith(RobolectricExtension::class)` 换  
   `@RunWith(RobolectricTestRunner::class)` (import `org.robolectric.RobolectricTestRunner`),  
   断言 import `org.junit.jupiter.api.Assertions.*` 换 `org.junit.Assert.*`,  
   `org.junit.jupiter.api.Test` 换 `org.junit.Test`; `DetectionEngineTest` 的 3 处 `assertThrows` 用  
-  `org.junit.Assert.assertThrows` (签名兼容); 5 个纯 JVM 类  
-  (`DetectResultTest`, `MyModelTest`, `DetectToyboxTest`, `DetectWebViewTest`, `base` 的 `DateTimeExtTest`) 只换 import 与 `@Test`,  
+  `org.junit.Assert.assertThrows` (签名兼容); 6 个纯 JVM 类  
+  (`DetectResultTest`, `MyModelTest`, `DetectToyboxTest`, `DetectWebViewTest`, `DetectionEntryOrderTest`, `base` 的 `DateTimeExtTest`) 只换 import 与 `@Test`,  
   断言调用一行不动. 20 个桥接类清单: DetectionEngineTest, RobolectricSpikeTest, HomeModelMapperTest,  
   DetectAbTest, DetectAdbAuthenticationTest, DetectAdbTest, DetectAndroidTest, DetectBuildIdTest,  
   DetectDeveloperOptionsTest, DetectDsuTest, DetectDynamicPartitionsTest, DetectEncryptionTest,  
@@ -74,12 +83,14 @@
 | `docs/dev/issues-cn/05-稳定性与错误处理/19-版本合并残留弱点.md` | 24-25 | 21 类 82 方法 |
 
 改法: 05-项目架构 改成单一 JUnit 4 方言: 65-67 整句改写, 不拆; 75-82 改原生 runner, 删桥接说明与  
-launcher interceptor 句, "三样" 改实际条数; #06 的 14 行改 `JUnit 4`, 20-23 改 bundle 只挂 `junit`  
-并删 `useJUnitPlatform()` 句, 19 与 42 从缺与待补里删 Robolectric, 27 行计数改 25 类 111 方法,  
+launcher interceptor 句, "四样" 改实际条数, 78 行 "三个测试 JVM 开关" 改 "两个", 79 行末的  
+"还有" 一并删掉; #06 的 14 行改 `JUnit 4`, 20-23 改 bundle 只挂 `junit` 并删 `useJUnitPlatform()` 句,  
+22-23 改成本机单测的 JUnit 4 由版本目录给 (仪器侧仍由两个 androidx 构件传递),  
+19 与 42 从缺与待补里删 Robolectric, 27 行计数改 26 类 116 方法,  
 41 行改 "JUnit 4 与 MockK 已就位" (1b 落的是 Jupiter 与 MockK, JUnit 4 是本 spec 落的, 不能写成随 1b);  
 43 的 54 行计数改, 55 行保持原样 (按 "直接测检测方法" 口径实数 16, 已核准), 64 行改 `junit`;  
-README:268, #01:80, #19:24-25 三处计数统一 25 类 111 方法 (写明 app 24/107, base 1/4);  
-核对 task 1 改过的 catalog 注释与文档口径一致.
+docs/dev/issues-cn/README.md:268, #01:80, #19:24-25 三处计数统一 26 类 116 方法  
+(写明 app 25/112, base 1/4); 核对 task 1 改过的 catalog 注释与文档口径一致.
 
 ## 方案取舍
 
@@ -88,12 +99,12 @@ README:268, #01:80, #19:24-25 三处计数统一 25 类 111 方法 (写明 app 2
 
 ## 覆盖映射
 
-R-1 → task 1 的依赖切换加 25 类替换加全量单测; R-2 → task 1 的桥接与平台删除;  
+R-1 → task 1 的依赖切换加 26 类替换加全量单测; R-2 → task 1 的桥接与平台删除;  
 R-3 → task 2 的文档清单加 grep 验证.
 
 ## 待学习清单
 
-- 去掉 `useJUnitPlatform()` 之后, Gradle 的测试过滤与报告行为有无差异, 实际跑一遍核对.
+- 无. 测试过滤与报告行为已在验收时核对: 构建脚本没有 Test filter 配置, 报告按 25 加 1 个 suite 正常产出.
 
 ## 外部冲突与顺序
 
@@ -103,4 +114,5 @@ R-3 → task 2 的文档清单加 grep 验证.
   仍在用 Jupiter 的当场改成 JUnit 4, 再按 task 1 范围动手; 外部改动动了本 spec 范围里的测试文件时,  
   应改清单按新状态重新枚举. 外部改动实施后, 预写里旧测试要重跑的那条风险  
   由 task 1 的全量验证一并覆盖.
-- 不碰: `docs/spec/2026-10-25-22-16-01-+0800-slim-ui-layer-cn/` 下的任何文件 (归那个任务自己更新).
+- 不碰: `docs/spec/archived/2026-10-25-22-16-01-+0800-slim-ui-layer-cn/` 下的文件;  
+  那个 spec 已归档, 整个目录是 record, 保持原样.

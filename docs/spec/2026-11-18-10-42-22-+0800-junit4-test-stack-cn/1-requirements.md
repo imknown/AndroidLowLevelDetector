@@ -17,11 +17,12 @@
 工具链任务, docs/requirements-cn 的全局需求正文不覆盖; 验收标准来源一律标明.
 
 **R-1 统一 JUnit 4**  
-本地单测与仪器测试全部 JUnit 4, 不用 JUnit 5 和 6 及其相关依赖; 25 个测试类 111 个测试方法  
-(app 24 类 107 方法, base 1 类 4 方法) 行为与断言语义不变.  
-来源: 负责人预写的 "打算" 加 plan.md 范围.  
-验收: `:app:testFossDebugUnitTest` 与 `:base:testDebugUnitTest` 25 类 111 方法 0 失败;  
-grep `tech.apter` 与 `org.junit.jupiter` 在 `app/src`, `base/src`, `build-logic/`, `gradle/toml/*.toml` 零残留.
+本地单测与仪器测试全部 JUnit 4, 不用 JUnit 5 和 6 及其相关依赖; 26 个测试类 116 个测试方法  
+(app 25 类 112 方法, base 1 类 4 方法) 行为与断言语义不变.  
+来源: 负责人预写的 "打算" 加 plan.md 范围; 计数按 2026-11-23 的仓库现状核对, 外部新增的  
+`DetectionEntryOrderTest` (3 个方法) 已计入.  
+验收: `:app:testFossDebugUnitTest` 与 `:base:testDebugUnitTest` 26 类 116 方法 0 失败;  
+grep `tech.apter`, `org.junit.jupiter` 与 `org.junit.platform` 在 `app/src`, `base/src`, `build-logic/`, `gradle/toml/*.toml` 零残留.
 
 **R-2 解除升级卡点**  
 删掉停更的桥接包 `tech.apter.junit5.jupiter:robolectric-extension:0.9.0` 与 Jupiter 平台接线  
@@ -34,7 +35,7 @@ grep `tech.apter` 与 `org.junit.jupiter` 在 `app/src`, `base/src`, `build-logi
 **R-3 文档与事实一致**  
 living 文档里断言测试栈现状, 测试计数, 以及把已就位依赖写成缺口的句子, 改成改造后的事实  
 (`docs/agents-cn/05-项目架构.md`, `docs/dev/issues-cn/` 的 #06, #43, README, #01, #19);  
-历史决定的记载 (`README.md:330`, `:353`, `docs/dev/issues-cn/archived/09-构建与CI/50-CI只编译不测试.md:32`)  
+历史决定的记载 (`docs/dev/issues-cn/README.md:330`, `:353`, `docs/dev/issues-cn/archived/09-构建与CI/50-CI只编译不测试.md:32`)  
 与 dated 分析报告 (`docs/dev/2026-10-16-project-analysis-cn/`, `docs/dev/2026-10-30-agp-survey-cn/`) 保持原样.  
 来源: plan.md 范围加负责人 2026-11-18 的决定.  
 验收: `tech.apter` 与 `org.junit.jupiter` 在 `docs/agents-cn/05-项目架构.md` 与 `docs/dev/issues-cn/` 零残留;  
@@ -44,5 +45,5 @@ living 文档里断言测试栈现状, 测试计数, 以及把已就位依赖写
 
 - `assembleFossDebug` 与 `lintFossDebug` 绿.
 - 换 runner 后对照 Robolectric 官方 "Running with Java 17 and higher" 的九条 `--add-opens` 核一遍,  
-  只补实际需要的, 并同步 `KotlinAndroid.kt` 的注释; 补完后的开关条数记进 task 1 的结果.
+  只补实际需要的, 并同步 `KotlinAndroid.kt` 的注释; 补完后的开关条数记进验收.
 - 去掉 `useJUnitPlatform()` 之后 Gradle 的测试过滤与报告行为有无差异, 实跑核对 (待学习清单项).
