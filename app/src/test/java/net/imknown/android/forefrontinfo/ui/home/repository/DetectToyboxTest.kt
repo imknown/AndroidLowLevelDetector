@@ -1,8 +1,8 @@
 package net.imknown.android.forefrontinfo.ui.home.repository
 
 import net.imknown.android.forefrontinfo.ui.home.model.ToyboxState
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
+import org.junit.Assert.assertEquals
+import org.junit.Test
 
 // The domain contract of toyboxMatch: the version ladder runs only on a real read; a build
 // at or above the lld's stable version is met, one at or above only the support version is

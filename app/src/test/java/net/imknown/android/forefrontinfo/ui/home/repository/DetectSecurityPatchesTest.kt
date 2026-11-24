@@ -6,17 +6,17 @@ import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.ui.base.detect.DetectResult
 import net.imknown.android.forefrontinfo.ui.home.datasource.AndroidDataSource
 import net.imknown.android.forefrontinfo.ui.home.model.SecurityPatchState
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.Assert.assertEquals
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 import org.robolectric.shadows.ShadowSystemProperties
-import tech.apter.junit.jupiter.robolectric.RobolectricExtension
 
 // The domain contract of detectSecurityPatches: two rows ride in the system-then-vendor order,
 // each with its own result; the vendor value is a raw property read (an unread property
 // carries the placeholder it produced, until the #42 rework) while the system value is the
 // platform's SECURITY_PATCH, which the Robolectric environment does not let tests stage.
-@ExtendWith(RobolectricExtension::class)
+@RunWith(RobolectricTestRunner::class)
 class DetectSecurityPatchesTest {
 
     private val repository by lazy { MyApplication.instance.appGraph.homeRepository }

@@ -3,8 +3,8 @@ package net.imknown.android.forefrontinfo.ui.base.detect
 import net.imknown.android.forefrontinfo.ui.home.model.HomeEntryId
 import net.imknown.android.forefrontinfo.ui.others.model.OthersEntryId
 import net.imknown.android.forefrontinfo.ui.prop.model.PropEntryId
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
+import org.junit.Assert.assertEquals
+import org.junit.Test
 
 // Locks the three pages' entry id sequences against the row order of the detection-entry
 // catalog (docs/requirements-cn/04-检测条目目录.md). The enum declaration order is the display

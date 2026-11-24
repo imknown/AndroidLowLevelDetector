@@ -4,16 +4,16 @@ import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.ui.base.detect.DetectResult
 import net.imknown.android.forefrontinfo.ui.home.datasource.AndroidDataSource
 import net.imknown.android.forefrontinfo.ui.home.model.VndkState
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.Assert.assertEquals
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 import org.robolectric.shadows.ShadowSystemProperties
-import tech.apter.junit.jupiter.robolectric.RobolectricExtension
 
 // The domain contract of detectVndk: the built-in VNDK version uses the absence-aware read
 // (null when absent or unread), the Lite flag is only read when a version exists, and the
 // match compares the version against the lld's stable API (string comparison, as before).
-@ExtendWith(RobolectricExtension::class)
+@RunWith(RobolectricTestRunner::class)
 class DetectVndkTest {
 
     private val repository by lazy { MyApplication.instance.appGraph.homeRepository }

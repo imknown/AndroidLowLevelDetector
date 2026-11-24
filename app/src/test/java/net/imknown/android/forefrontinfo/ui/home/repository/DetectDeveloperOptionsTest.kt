@@ -4,16 +4,16 @@ import android.provider.Settings
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.ui.base.detect.DetectResult
 import net.imknown.android.forefrontinfo.ui.home.datasource.AndroidDataSource
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-import tech.apter.junit.jupiter.robolectric.RobolectricExtension
+import org.junit.Assert.assertEquals
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 
 // The domain contract of detectDeveloperOptions (2a per-entry test, Robolectric as the primary
 // means): asserts DetectResult only, never display text. The repository instance comes from the
 // graph (AppGraph.homeRepository, the production wiring); lazy defers the lookup until the
 // extension has built the application.
-@ExtendWith(RobolectricExtension::class)
+@RunWith(RobolectricTestRunner::class)
 class DetectDeveloperOptionsTest {
 
     private val repository by lazy { MyApplication.instance.appGraph.homeRepository }

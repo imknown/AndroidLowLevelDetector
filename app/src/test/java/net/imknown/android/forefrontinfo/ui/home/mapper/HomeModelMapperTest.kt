@@ -6,16 +6,16 @@ import net.imknown.android.forefrontinfo.ui.base.detect.DetectResult
 import net.imknown.android.forefrontinfo.ui.base.list.MyModelTitle
 import net.imknown.android.forefrontinfo.ui.theme.StatusColor
 import net.imknown.android.forefrontinfo.ui.home.model.OutdatedTargetSdkVersionApkState
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-import tech.apter.junit.jupiter.robolectric.RobolectricExtension
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 
 // The pure translation contract: the three branches render their own colors. No try here, the
 // detection engine owns the per-entry guard (its contract lives in DetectionEngineTest).
 // Asserts row shape and colors only, never the exact display text.
-@ExtendWith(RobolectricExtension::class)
+@RunWith(RobolectricTestRunner::class)
 class HomeModelMapperTest {
 
     private val mapper by lazy { HomeModelMapper(MyApplication.instance) }
@@ -82,8 +82,8 @@ class HomeModelMapperTest {
         val detail = mapper.toOutdatedTargetSdkVersionApkModel(DetectResult.Found(state), true).detail
 
         assertTrue(
-            detail.indexOf("aaa.pkg") < detail.indexOf("zzz.pkg"),
-            "package-name order expects aaa.pkg before zzz.pkg, got: $detail"
+            "package-name order expects aaa.pkg before zzz.pkg, got: $detail",
+            detail.indexOf("aaa.pkg") < detail.indexOf("zzz.pkg")
         )
     }
 
@@ -101,8 +101,8 @@ class HomeModelMapperTest {
         val detail = mapper.toOutdatedTargetSdkVersionApkModel(DetectResult.Found(state), false).detail
 
         assertTrue(
-            detail.indexOf("zzz.pkg") < detail.indexOf("aaa.pkg"),
-            "target-sdk order expects zzz.pkg before aaa.pkg, got: $detail"
+            "target-sdk order expects zzz.pkg before aaa.pkg, got: $detail",
+            detail.indexOf("zzz.pkg") < detail.indexOf("aaa.pkg")
         )
     }
 }

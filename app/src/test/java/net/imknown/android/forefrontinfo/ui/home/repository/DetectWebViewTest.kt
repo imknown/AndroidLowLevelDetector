@@ -1,8 +1,8 @@
 package net.imknown.android.forefrontinfo.ui.home.repository
 
 import net.imknown.android.forefrontinfo.ui.home.model.WebViewState
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
+import org.junit.Assert.assertEquals
+import org.junit.Test
 
 // The domain contract of webViewMatch: the built-in providers' highest version at or above
 // the lld stable version is met; otherwise the implementing package reaching the stable

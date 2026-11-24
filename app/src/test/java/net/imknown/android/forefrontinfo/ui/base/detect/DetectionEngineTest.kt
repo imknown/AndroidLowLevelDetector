@@ -9,12 +9,12 @@ import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.ui.base.list.MyModelTitle
 import net.imknown.android.forefrontinfo.ui.home.mapper.HomeModelMapper
 import net.imknown.android.forefrontinfo.ui.theme.StatusColor
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-import tech.apter.junit.jupiter.robolectric.RobolectricExtension
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertThrows
+import org.junit.Assert.assertTrue
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 
 // The engine's per-entry guard contract (moved here from the retired mapper thin guard): an
 // unexpected exception anywhere in an entry's chain degrades into that entry's own failure
@@ -22,7 +22,7 @@ import tech.apter.junit.jupiter.robolectric.RobolectricExtension
 // repositories guard themselves); coroutine cancellation rethrows, results land in list order,
 // and the synthesized Failed rides the entry's own translation. Asserts row shape and colors
 // only, never the exact display text.
-@ExtendWith(RobolectricExtension::class)
+@RunWith(RobolectricTestRunner::class)
 class DetectionEngineTest {
 
     private val mapper by lazy { HomeModelMapper(MyApplication.instance) }

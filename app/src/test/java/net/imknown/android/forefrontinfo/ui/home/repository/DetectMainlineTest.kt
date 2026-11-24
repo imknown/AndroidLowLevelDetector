@@ -3,11 +3,11 @@ package net.imknown.android.forefrontinfo.ui.home.repository
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.ui.base.detect.DetectResult
 import net.imknown.android.forefrontinfo.ui.home.model.MainlineState
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNull
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-import tech.apter.junit.jupiter.robolectric.RobolectricExtension
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 
 // The domain contract of detectMainline: the provider and version nullability follows the
 // framework config lookup (the Robolectric environment decides whether the internal resource
@@ -16,7 +16,7 @@ import tech.apter.junit.jupiter.robolectric.RobolectricExtension
 // The comparison's dimension mismatch (a versionName against a date) is a known defect,
 // locked as-is per the #43 disposition and owned by #70: the direct mainlineMatch cases
 // pin the misjudgments so the future fix flips them visibly.
-@ExtendWith(RobolectricExtension::class)
+@RunWith(RobolectricTestRunner::class)
 class DetectMainlineTest {
 
     private val repository by lazy { MyApplication.instance.appGraph.homeRepository }

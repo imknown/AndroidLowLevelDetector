@@ -2,16 +2,16 @@ package net.imknown.android.forefrontinfo.ui.home.repository
 
 import net.imknown.android.forefrontinfo.ui.home.model.OutdatedTargetSdkVersionApkState
 import net.imknown.android.forefrontinfo.ui.home.model.OutdatedTargetSdkVersionApkState.Match
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-import tech.apter.junit.jupiter.robolectric.RobolectricExtension
+import org.junit.Assert.assertEquals
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 
 // The domain contract of outdatedTargetSdkApkMatch: a non-empty outdated list is none (the
 // rows carry the information), an empty device with no lld is unknown, an empty device on
 // the latest (stable or preview) Android is met, and an empty device below both lld bars is
 // lagging.
-@ExtendWith(RobolectricExtension::class)
+@RunWith(RobolectricTestRunner::class)
 class DetectOutdatedTargetSdkTest {
 
     @Test

@@ -1,8 +1,8 @@
 package net.imknown.android.forefrontinfo.ui.base.list
 
 import net.imknown.android.forefrontinfo.ui.theme.StatusColor
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
+import org.junit.Assert.assertEquals
+import org.junit.Test
 
 // The row identity contract both the list UI and the golden snapshot compare on.
 class MyModelTest {

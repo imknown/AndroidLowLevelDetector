@@ -3,15 +3,15 @@ package net.imknown.android.forefrontinfo.ui.home.repository
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.ui.base.detect.DetectResult
 import net.imknown.android.forefrontinfo.ui.home.datasource.AndroidDataSource
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.Assert.assertEquals
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 import org.robolectric.shadows.ShadowSystemProperties
-import tech.apter.junit.jupiter.robolectric.RobolectricExtension
 
 // The domain contract of detectDsu: either of the two flags turns it on; both absent means off
 // (the property reader's default for booleans).
-@ExtendWith(RobolectricExtension::class)
+@RunWith(RobolectricTestRunner::class)
 class DetectDsuTest {
 
     private val repository by lazy { MyApplication.instance.appGraph.homeRepository }

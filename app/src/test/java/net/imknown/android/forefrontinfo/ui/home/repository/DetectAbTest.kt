@@ -4,16 +4,16 @@ import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.ui.base.detect.DetectResult
 import net.imknown.android.forefrontinfo.ui.home.datasource.AndroidDataSource
 import net.imknown.android.forefrontinfo.ui.home.model.AbState
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.Assert.assertEquals
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 import org.robolectric.shadows.ShadowSystemProperties
-import tech.apter.junit.jupiter.robolectric.RobolectricExtension
 
 // The domain contract of detectAb: three independent switches (the master flag, the slot suffix,
 // virtual A/B) OR into enabled; the retrofit variant is only read when virtual A/B is on. An
 // absent property surfaces as null (the absence-aware property read), not as display text.
-@ExtendWith(RobolectricExtension::class)
+@RunWith(RobolectricTestRunner::class)
 class DetectAbTest {
 
     private val repository by lazy { MyApplication.instance.appGraph.homeRepository }

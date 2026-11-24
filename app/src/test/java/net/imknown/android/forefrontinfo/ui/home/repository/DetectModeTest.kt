@@ -6,15 +6,15 @@ import net.imknown.android.forefrontinfo.ui.home.model.LldFailure
 import net.imknown.android.forefrontinfo.ui.home.model.LldFailureReason
 import net.imknown.android.forefrontinfo.ui.home.model.LldSource
 import net.imknown.android.forefrontinfo.ui.home.model.LldStatusState
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-import tech.apter.junit.jupiter.robolectric.RobolectricExtension
+import org.junit.Assert.assertEquals
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 
 // The domain contract of detectMode: the payload version passes through (null when the lld is
 // missing), the source is carried, and the failures arrive as reasons in fetch order (the mapper,
 // not the repository, turns them into text).
-@ExtendWith(RobolectricExtension::class)
+@RunWith(RobolectricTestRunner::class)
 class DetectModeTest {
 
     private val repository by lazy { MyApplication.instance.appGraph.homeRepository }

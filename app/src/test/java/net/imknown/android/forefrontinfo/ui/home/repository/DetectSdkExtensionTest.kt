@@ -4,15 +4,15 @@ import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.ui.base.detect.DetectResult
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
 import net.imknown.android.forefrontinfo.ui.home.model.SdkExtensionState
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-import tech.apter.junit.jupiter.robolectric.RobolectricExtension
+import org.junit.Assert.assertEquals
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 
 // The domain contract of detectSdkExtension on a level that declares extensions: the current
 // value comes from the platform extension table (its absolute value is shadow-dependent and
 // not asserted), the stable value from the lld, and the meets judgment is the repository's.
-@ExtendWith(RobolectricExtension::class)
+@RunWith(RobolectricTestRunner::class)
 class DetectSdkExtensionTest {
 
     private val repository by lazy { MyApplication.instance.appGraph.homeRepository }

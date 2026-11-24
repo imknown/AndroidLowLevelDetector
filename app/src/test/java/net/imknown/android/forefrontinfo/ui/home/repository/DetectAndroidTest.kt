@@ -6,11 +6,11 @@ import net.imknown.android.forefrontinfo.ui.base.detect.DetectResult
 import net.imknown.android.forefrontinfo.ui.home.datasource.AndroidVersionDataSource
 import net.imknown.android.forefrontinfo.ui.home.model.AndroidInfoState
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-import tech.apter.junit.jupiter.robolectric.RobolectricExtension
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 
 // The domain contract of detectAndroid: a missing lld means the Unknown currency and the
 // device's own version/dessert; a matching known row corrects the version and dessert; the
@@ -19,7 +19,7 @@ import tech.apter.junit.jupiter.robolectric.RobolectricExtension
 // codename (probed: SDK 37, CODENAME REL), so the stable branches are reachable and the
 // preview branch is not; bars are built relative to Build.VERSION.SDK_INT to stay independent
 // of that default.
-@ExtendWith(RobolectricExtension::class)
+@RunWith(RobolectricTestRunner::class)
 class DetectAndroidTest {
 
     private val repository by lazy { MyApplication.instance.appGraph.homeRepository }

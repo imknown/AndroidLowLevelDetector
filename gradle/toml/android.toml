@@ -43,12 +43,11 @@ webkit = "1.18.0"
 
 # https://developer.android.com/training/testing/local-tests#dependencies
 # region [Test]
-# JUnit 4 is deliberately absent here: local unit tests run on the JUnit Platform only, and a
-# JUnit 4 test on this classpath would compile but never run. The instrumented side still gets
-# JUnit 4 transitively through androidx.test.ext:junit and androidx.test:runner.
-# https://github.com/junit-team/junit-framework/releases
-# JUnit 6 puts Jupiter and the platform on one version line, so a single entry covers both.
-junit = "6.1.3"
+# Local unit tests and instrumented tests both use JUnit 4. Robolectric runs on its native
+# runner (@RunWith(RobolectricTestRunner::class)); the instrumented side gets JUnit 4
+# transitively through androidx.test.ext:junit and androidx.test:runner.
+# https://github.com/junit-team/junit4/releases
+junit = "4.13.2"
 # endregion [Test]
 
 # https://developer.android.com/jetpack/androidx/releases/test
@@ -94,10 +93,7 @@ savedState = { group = "androidx.savedstate", name = "savedstate", version.ref =
 
 webkit = { group = "androidx.webkit", name = "webkit", version.ref = "webkit" }
 
-junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit" }
-# Gradle runs the Jupiter engine through the platform launcher; without it the engine is on the
-# classpath but never discovered, so the unit test task finds nothing to run.
-junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform-launcher", version.ref = "junit" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
 test-core = { group = "androidx.test", name = "core", version.ref = "test-core" }
 test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "test-ext-junit" }
 test-runner = { group = "androidx.test", name = "runner", version.ref = "test-runner" }
@@ -111,7 +107,7 @@ annotation = ["annotation", "annotation-experimental"]
 lifecycle = ["lifecycle-runtime", "lifecycle-viewmodel", "lifecycle-viewmodel-savedstate"]
 compose = ["compose-ui", "compose-ui-graphics", "compose-ui-tooling-preview", "compose-material3", "activity-compose", "lifecycle-runtime-compose", "lifecycle-viewmodel-compose", "navigation3-runtime", "navigation3-ui", "lifecycle-viewmodel-navigation3"]
 
-test = ["junit-jupiter", "junit-platform-launcher"]
+test = ["junit"]
 androidTest = ["test-core", "test-ext-junit", "test-runner"]
 
 [plugins]

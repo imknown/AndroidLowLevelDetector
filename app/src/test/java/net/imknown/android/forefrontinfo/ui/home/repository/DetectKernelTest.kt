@@ -5,11 +5,11 @@ import net.imknown.android.forefrontinfo.ui.base.detect.DetectResult
 import net.imknown.android.forefrontinfo.ui.home.datasource.AndroidDataSource
 import net.imknown.android.forefrontinfo.ui.home.model.KernelState
 import net.imknown.android.forefrontinfo.ui.home.model.Lld
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-import tech.apter.junit.jupiter.robolectric.RobolectricExtension
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 
 // The domain contract of detectKernel: the os.version read goes through the JVM system
 // properties (staged with System.setProperty: the Android property shadow is a different
@@ -18,7 +18,7 @@ import tech.apter.junit.jupiter.robolectric.RobolectricExtension
 // judgment follows the lld's version order (last matching major+minor wins, as before).
 // An absent os.version fails the detection (batch 4 equivalence exception, recorded in the
 // spec progress); a non-null value is always carried, however oddly it parses.
-@ExtendWith(RobolectricExtension::class)
+@RunWith(RobolectricTestRunner::class)
 class DetectKernelTest {
 
     private val repository by lazy { MyApplication.instance.appGraph.homeRepository }

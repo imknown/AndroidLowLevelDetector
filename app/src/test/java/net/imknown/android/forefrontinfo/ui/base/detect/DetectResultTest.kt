@@ -1,8 +1,8 @@
 package net.imknown.android.forefrontinfo.ui.base.detect
 
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertSame
-import org.junit.jupiter.api.Test
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertSame
+import org.junit.Test
 
 // Shape contract: three exhaustive branches, and Missing/Failed fit a concretely typed container via Nothing.
 class DetectResultTest {

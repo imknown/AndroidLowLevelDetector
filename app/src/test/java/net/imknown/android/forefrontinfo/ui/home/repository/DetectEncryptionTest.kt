@@ -4,17 +4,17 @@ import android.app.admin.DevicePolicyManager
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.ui.base.detect.DetectResult
 import net.imknown.android.forefrontinfo.ui.home.model.EncryptionState
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.Assert.assertEquals
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
-import tech.apter.junit.jupiter.robolectric.RobolectricExtension
 
 // The domain contract of detectEncryption (spec 2026-10-25-22-16-01, subtask-04 batch 7): the
 // status read rides on DevicePolicyManager, whose Robolectric shadow drives every branch, so
 // per the means table this entry is a Robolectric unit test. Exact wording and color belong to
 // the mapper and are covered by the golden snapshot comparison.
-@ExtendWith(RobolectricExtension::class)
+@RunWith(RobolectricTestRunner::class)
 class DetectEncryptionTest {
 
     private val repository by lazy { MyApplication.instance.appGraph.homeRepository }

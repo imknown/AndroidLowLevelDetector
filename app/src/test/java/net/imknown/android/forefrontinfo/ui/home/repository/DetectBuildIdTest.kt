@@ -4,18 +4,18 @@ import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.ui.base.detect.DetectResult
 import net.imknown.android.forefrontinfo.ui.home.datasource.AndroidDataSource
 import net.imknown.android.forefrontinfo.ui.home.model.BuildIdState
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.Assert.assertEquals
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 import org.robolectric.shadows.ShadowBuild
 import org.robolectric.shadows.ShadowSystemProperties
-import tech.apter.junit.jupiter.robolectric.RobolectricExtension
 
 // The domain contract of detectBuildId: the device's own Build.ID and the three partition ids
 // ride raw (an unread property carries the placeholder it produced, until the #42 rework); the
 // freshness judgment compares the CTS-style date segment against the lld's first detail, with
 // the preview-channel offset added on the preview side.
-@ExtendWith(RobolectricExtension::class)
+@RunWith(RobolectricTestRunner::class)
 class DetectBuildIdTest {
 
     private val repository by lazy { MyApplication.instance.appGraph.homeRepository }

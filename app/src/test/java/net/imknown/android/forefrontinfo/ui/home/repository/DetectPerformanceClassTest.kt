@@ -4,15 +4,15 @@ import android.os.Build
 import net.imknown.android.forefrontinfo.base.MyApplication
 import net.imknown.android.forefrontinfo.ui.base.detect.DetectResult
 import net.imknown.android.forefrontinfo.ui.home.model.PerformanceClassInfo
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.Assert.assertEquals
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 import org.robolectric.shadows.ShadowBuild
-import tech.apter.junit.jupiter.robolectric.RobolectricExtension
 
 // The domain contract of detectPerformanceClass on a level that declares the class: the media
 // performance class is staged through the Robolectric shadow.
-@ExtendWith(RobolectricExtension::class)
+@RunWith(RobolectricTestRunner::class)
 class DetectPerformanceClassTest {
 
     private val repository by lazy { MyApplication.instance.appGraph.homeRepository }
