@@ -131,7 +131,7 @@ Others 的 37 条与 Prop 的 5 条检测条目清单, 从各自 ViewModel 的 `
   两批一共四个: 批 1 是 `OthersDetectorCatalog.kt` 与 `OthersViewModel.kt`,  
   批 2 是 `PropDetectorCatalog.kt` 与 `PropViewModel.kt`.  
   analyze-file 要 Android Studio 实例在跑, 本机这一档历来报 "没有运行中的实例, CLI 挂起无输出",  
-  这处按 13 的偏差记录留一行.
+  这处按 13 的偏差处理.
 - 逐条对照, 每批各自做一遍: 新清单与搬之前的 ViewModel 清单逐行比, 核四样. 条目顺序, 语义 id,  
   调的仓库方法与实参, `precondition` 与 `run` 内重复门. Others 应是 37 条加 6 处 `precondition`,  
   Prop 应是 5 条零 `precondition`.
@@ -161,7 +161,7 @@ Others 的 37 条与 Prop 的 5 条检测条目清单, 从各自 ViewModel 的 `
   设备状态行, 批 1 十二处 (闹钟时间一条, 亮度一条, `cache_key` 九条,  
   `sys.oem_unlock_allowed` 一条), 批 2 五处 (亮度两条, `cache_key` 三条);  
   真机 Others 页 42 行逐行全对, Prop 页滚动到底抽样 170 行全对.  
-  analyze-file 两批都因本机没有运行中的实例记偏差.
+  analyze-file 两批都没跑成, 本机没有运行中的实例.
 - review: 两批代码各一轮 v1 full, 各四个 reviewer, 四家全 met, 第一档零,  
   review 循环均停, 未排 v2. 归后续动代码的单元: `OthersEntryId.kt:9` 与  
   `HomeEntryId.kt:11` 的过期括注 (排期时由负责人点名); `#15` 正文归 #15 的实施单元.  
