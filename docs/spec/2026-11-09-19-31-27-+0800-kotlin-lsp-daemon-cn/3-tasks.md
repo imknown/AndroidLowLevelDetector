@@ -1,7 +1,9 @@
 # 任务清单: kotlin-lsp-daemon
 
 > **状态**: living. 流程见 [13-工作流](../../agents-cn/13-工作流.md);  
-> 每 task 一笔提交, 顺序执行, 拆法照 [12-Git](../../agents-cn/12-Git.md) 的单元算法.
+> 每个 task 一笔检查点提交, 落在本地临时分支 `wip/2026-11-09-19-31-27-+0800-kotlin-lsp-daemon-cn` 上,  
+> 不 push; 顺序执行, 拆法照 [12-Git](../../agents-cn/12-Git.md) 的单元算法,  
+> 总 review 结束后重排成最终提交.
 
 ## 任务清单
 

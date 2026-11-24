@@ -60,7 +60,7 @@
 | 10 | [10-代码分析规则](docs/agents-cn/10-代码分析规则.md) | `analyze-file`, Kotlin LSP 两条验证通道的契约, 加规划查询通道 `kotlin-lsp-plan.js`, 编辑通道 `kotlin-lsp-edit.js` 的契约, 加能力盘点, 加改动末尾一发批量查询临时规则 (`kotlin-lsp-daemon` 实施前) | 依赖 `android studio analyze-file` 或者 Kotlin LSP 结果, 或者使用 `kotlin-lsp-plan.js` / `kotlin-lsp-edit.js` 之前 |
 | 11 | [11-构建与验证](docs/agents-cn/11-构建与验证.md) | 构建命令, review 各步义务, reviewer 选模型, 分歧处置的三层顺序 | 跑构建或者 Gradle 检查, 或者做各单元改完后的 review 之前 |
 | 12 | [12-Git](docs/agents-cn/12-Git.md) | Git: 提交, 提交拆到最小可独立验证的单元, trailer, 绝不提交 | 提交, 开 PR, 或者碰 `.gitignore` 之前 |
-| 13 | [13-工作流](docs/agents-cn/13-工作流.md) | spec 目录工作流: 原始需求与需求分析, 1-requirements/2-design/3-tasks 三份产物各自 review 与确认, 执行期逐 task 自查提交, 总 review 循环, 测试与验收, 接续, 归档 | 开 spec 目录, 进入新阶段, 负责人发出 continue 指令, 关闭任务之前 |
+| 13 | [13-工作流](docs/agents-cn/13-工作流.md) | spec 目录工作流: 原始需求与需求分析, 1-requirements/2-design/3-tasks 三份产物各自 review 与确认, 执行期逐 task 自查与检查点提交, 总 review 循环, 测试与验收, 重排成最终提交, 接续, 归档 | 开 spec 目录, 进入新阶段, 负责人发出 continue 指令, 关闭任务之前 |
 | 14 | [14-跨端 Review](<docs/agents-cn/14-跨端 Review.md>) | 某轮 review 交给另一家 ADE/IDE 的 session, task: review 目录, 文件命名, 状态记录, 提示词, 收取报告 (报告首尾各自直观给出停止条件判定; reviewer 元数据读不到, trailer 字段一律依据 Git 提交规则 ([12-Git](docs/agents-cn/12-Git.md)) 处理: 不编, 不猜, 报告后自己确认负责人意见), 报告归宿 | 要把 review 交给另一家 ADE/IDE; 负责人发出 "review" 指令之后 |
 | 15 | [15-review 检查表](docs/agents-cn/15-review检查表.md) | 任务结束横向回顾收出的检查表: 行号指针重核, 收报告条与判定条两条记录, 口径与术语变更后全仓 grep, 断行量行尾字节, 全局改名按类 grep | 每轮 review 发起与判定条落笔之前; 改动移动行数, 改口径或术语, 全局改名之后 |
 | 无编号 | [docs/requirements-cn/README.md](docs/requirements-cn/README.md) | 应用职责, 目标用户, 发布排期 | 需要知道应用职责, 目标用户, 或者能力的排期位置 |
