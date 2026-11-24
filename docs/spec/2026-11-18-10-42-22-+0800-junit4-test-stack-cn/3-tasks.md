@@ -22,7 +22,7 @@
   对照 Robolectric 官方九条 `--add-opens` 核 JVM 开关, 只补实际需要的并同步注释;  
   grep `tech.apter`, `org.junit.jupiter`, `org.junit.platform`, `Jupiter` 与 `useJUnitPlatform` 在 `app/src`, `base/src`, `build-logic/`, `gradle/toml/*.toml` 零残留.  
   对应 design: 依赖与接线切换; 落实 R-1, R-2.
-- [ ] **task 2 文档与事实一致** (低风险; 一笔提交, 只改文字不跑构建).  
+- [x] **task 2 文档与事实一致** (低风险; 一笔提交, 只改文字不跑构建).  
   凭什么是独立 task: 只改文字不碰代码, 不需要构建, 可以单独提交与核对.  
   目标: living 文档的测试栈现状句, 测试计数, 与缺口句改成改造后的事实; 历史决定记载与 dated 报告不动.  
   动哪些文件: `docs/agents-cn/05-项目架构.md` (64-73 与 75-82 两段),  

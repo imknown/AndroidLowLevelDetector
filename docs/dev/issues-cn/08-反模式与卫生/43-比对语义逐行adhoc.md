@@ -51,7 +51,7 @@ When 退一步比年月, getSecurityPatchYearMonth 以 substringBeforeLast('-') 
 Then 设备侧取出的是年份 2026, `"2026"` >= `"2026-09"` 也为假  
 And 两次比较都错, 完全同期的设备被判红
 
-测试侧: `app/src/test` 与 `base/src/test` 合计 21 个测试类, 82 个方法;  
+测试侧: `app/src/test` 与 `base/src/test` 合计 26 个测试类, 116 个方法;  
 `app/src/test/.../ui/home/repository/` 下有 16 个 `Detect*Test` 直接测 `HomeRepository` 的检测方法,  
 `DateTimeExtTest` 测 `isLldDatetime()` 的格式契约, `MyModelTest` 测 `MyModel` 的 key 映射与默认值.  
 两个模板 `ExampleUnitTest` 已删.
@@ -61,7 +61,7 @@ And 两次比较都错, 完全同期的设备被判红
 ([#03](../01-架构与分层/03-无三态模型与注册表.md)), 届时测试断言随语义走.
 
 前置原本不在本条: 特征测试需要测试基础设施 ([#50](../archived/09-构建与CI/50-CI只编译不测试.md)),  
-该设施已随 1b 就位, `gradle/toml/android.toml` 的 `test` bundle 现在是 JUnit Jupiter 与 platform launcher,  
+该设施已随 1b 就位, `gradle/toml/android.toml` 的 `test` bundle 现在挂 `junit`,  
 MockK 也在单测 classpath 上,  
 只剩 Turbine 没引 ([#06](../01-架构与分层/06-技术栈缺口.md)). 再加新测试框架,  
 按 [09-构建约定](../../../agents-cn/09-构建约定.md) 的版本分级规则要由负责人评估后采纳, 不是本条能顺带决定的.
