@@ -45,3 +45,21 @@
 - 技术补充项: `assembleFossDebug` 与 `lintFossDebug` 绿; JVM 开关对照官方九条补齐;  
   Gradle 测试过滤与报告行为差异实跑核对.
 - 判定格式与改动归属照 [13-工作流](../../agents-cn/13-工作流.md) 的 `测试与验收` 一节执行.
+
+### 判定 (2026-11-23)
+
+- **R-1 满足**: `:app:testFossDebugUnitTest` 25 个 suite 112 个测试, `:base:testDebugUnitTest`  
+  1 个 suite 4 个测试, 合计 26 类 116 方法, 0 失败 0 错误 (结果 XML 时间 16:15 与 16:14);  
+  断言只有 `HomeModelMapperTest` 的 2 处参数顺序调整, 断言语义不变; 仪器测试  
+  `assembleFossDebugAndroidTest` 与 `assembleDebugAndroidTest` 编译通过, androidTest APK 已产出;  
+  四个范围 grep 五个关键词零残留.  
+- **R-2 满足**: `thirdParty.toml` 的桥接包版本键与库条目删净; 20 个测试类在  
+  `@RunWith(RobolectricTestRunner::class)` 上跑通全量单测; 平台接线与 launcher 开关删净.  
+- **R-3 满足**: 六份 living 文档改到与事实一致; 五个关键词只剩三处历史记载  
+  (`docs/dev/issues-cn/README.md:330`, `:353`, `docs/dev/issues-cn/archived/09-构建与CI/50-CI只编译不测试.md:32`);  
+  计数统一 26 类 116 方法, 三处写明构成; 历史记载与 dated 报告原样.  
+- **技术补充项**: `assembleFossDebug` 与 `lintFossDebug` 绿, lint 报告是 "No errors or warnings",  
+  被基线挡掉的 1 error 与 6 warnings 是旧账; JVM 开关对照官方九条后保留 1 条 `--add-opens` 加  
+  `--enable-native-access`, 全量单测绿; 测试过滤与报告行为没有差异 (构建脚本无 Test filter 配置).  
+- **改动归属**: 两笔 task 提交与后续修复都能归到 R-1, R-2, R-3, 技术补充项或负责人的新指令  
+  (显式 import); 超出范围的改动无. analyze-file 已补跑, 0 个 ERROR, 检查级发现都是改动前就有的.
