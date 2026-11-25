@@ -25,7 +25,7 @@ mockk = "1.14.12"
 
 # https://github.com/robolectric/robolectric/releases
 # https://robolectric.org/compatibility_table
-robolectric = "4.17"
+robolectric = "4.18.1"
 
 [libraries]
 libsu = { group = "com.github.topjohnwu.libsu", name = "core", version.ref = "libsu" }
