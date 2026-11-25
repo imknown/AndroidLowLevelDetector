@@ -1,6 +1,6 @@
-# AGP 调查 (创建于 2026-10-30)
+# 构建工具链调查 (创建于 2026-10-30)
 
-> **状态**: **living**. 这个目录收关于 AGP 的调查. 每多一次调查, 在下面那张表里加一行.
+> **状态**: **living**. 这个目录收关于 AGP 与 Gradle 的调查. 每多一次调查, 在下面那张表里加一行.
 
 外层目录名上的日期只表示目录创建时间. 里面一次调查一个子目录, 子目录名按 `agent-模型-effort` 排.  
 换个 agent, 换个模型, 或者换个 effort 再查一遍, 另起一个子目录, 别盖掉上一份.  
@@ -11,3 +11,4 @@
 | WorkBuddy CN | DeepSeek-V4.1-Flash | high | 2026-10-30 | [AGP 9.1 到 10.0 的新特性, 迁移指南, 以及仓库核对](workbuddy-cn-deepseek-v4.1-flash-high/README.md) |
 | MiniMax Code | MiniMax-M3.1-Flash | high | 2026-10-30 | [AGP 9.1 到 10.0 的门槛, 对本仓库的要求, 以及仓库现状](minimax-code-minimax-m3.1-flash-high/README.md) |
 | TRAE CN | GLM-5.3-Flash | high | 2026-11-04 | [AGP 9.1 到 9.6 与 10.0 的新特性, 迁移指南, 以及仓库核对](trae-cn-glm-5.3-flash-high/README.md) |
+| Doubao Work | DeepSeek-V4.1-Flash | high | 2026-11-25 | [AGP 9.5.2 与 Gradle 9.0 到 10.0 的版本现状, 适配判定, 以及仓库核对](doubao-work-deepseek-v4.1-flash-high/README.md) |
