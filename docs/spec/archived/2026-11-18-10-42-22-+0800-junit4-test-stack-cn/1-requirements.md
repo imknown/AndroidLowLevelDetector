@@ -36,7 +36,7 @@ grep `tech.apter`, `org.junit.jupiter` 与 `org.junit.platform` 在 `app/src`, `
 living 文档里断言测试栈现状, 测试计数, 以及把已就位依赖写成缺口的句子, 改成改造后的事实  
 (`docs/agents-cn/05-项目架构.md`, `docs/dev/issues-cn/` 的 #06, #43, README, #01, #19);  
 历史决定的记载 (`docs/dev/issues-cn/README.md:330`, `:353`, `docs/dev/issues-cn/archived/09-构建与CI/50-CI只编译不测试.md:32`)  
-与 dated 分析报告 (`docs/dev/2026-10-16-project-analysis-cn/`, `docs/dev/2026-10-30-agp-survey-cn/`) 保持原样.  
+与 dated 分析报告 (`docs/dev/2026-10-16-project-analysis-cn/`, `docs/dev/archived/2026-10-30-agp-survey-cn/`) 保持原样.  
 来源: plan.md 范围加负责人 2026-11-18 的决定.  
 验收: `tech.apter` 与 `org.junit.jupiter` 在 `docs/agents-cn/05-项目架构.md` 与 `docs/dev/issues-cn/` 零残留;  
 `Jupiter`, `useJUnitPlatform`, `platform launcher` 三个说法在被改的六份文档里逐句核 (上面三个历史记载处除外).
