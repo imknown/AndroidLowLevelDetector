@@ -2,6 +2,8 @@ package net.imknown.android.forefrontinfo.android.app
 
 import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.api.dsl.CommonExtension
+import com.android.build.api.variant.ApplicationAndroidComponentsExtension
+import com.android.build.api.variant.BuildConfigField
 import net.imknown.android.forefrontinfo.android.configureAndroid
 import net.imknown.android.forefrontinfo.ext.androidPlugin
 import net.imknown.android.forefrontinfo.ext.buildVersion
@@ -11,6 +13,7 @@ import org.gradle.api.plugins.BasePluginExtension
 import org.gradle.api.provider.ProviderFactory
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.getByType
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -28,21 +31,31 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
     }
 
     private fun Project.configureName() {
+        val appVersionCode = buildVersion("versionCode").toInt()
+        val appVersionName = buildVersion("versionName")
+        val currentDatetime = getCurrentDatetime()
+        val currentGitBranchName = runCatching {
+            providers.executeOrThrow("git", "rev-parse", "--abbrev-ref", "HEAD").ifEmpty { UNKNOWN }
+        }.getOrDefault(UNKNOWN)
+
         configure<ApplicationExtension> {
             defaultConfig {
-                versionCode = buildVersion("versionCode").toInt()
-                versionName = buildVersion("versionName")
-
-                val currentDatetime = getCurrentDatetime()
-                val currentGitBranchName = runCatching {
-                    providers.executeOrThrow("git", "rev-parse", "--abbrev-ref", "HEAD").ifEmpty { UNKNOWN }
-                }.getOrDefault(UNKNOWN)
-                this@configureName.configure<BasePluginExtension> {
-                    archivesName.set("lld-$versionName-$versionCode-$currentDatetime-$currentGitBranchName")
-                }
-
-                buildConfigField("String", "GIT_BRANCH", "\"$currentGitBranchName\"")
+                versionCode = appVersionCode
+                versionName = appVersionName
             }
+        }
+
+        configure<BasePluginExtension> {
+            archivesName.set("lld-$appVersionName-$appVersionCode-$currentDatetime-$currentGitBranchName")
+        }
+
+        // AGP 10.0 removes the eager VariantDimension.buildConfigField(), leaving this variant API
+        // as the only supported way to add a field.
+        extensions.getByType<ApplicationAndroidComponentsExtension>().onVariants { variant ->
+            variant.buildConfigFields?.put(
+                "GIT_BRANCH",
+                BuildConfigField("String", "\"$currentGitBranchName\"", null),
+            )
         }
     }
 
