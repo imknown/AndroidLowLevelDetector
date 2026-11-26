@@ -85,15 +85,12 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = true
-            isShrinkResources = true
+            // Turns on R8 code shrinking plus optimized resource shrinking in one switch.
+            optimization {
+                enable = true
+            }
 
             signingConfig = signingConfigs.named(name).get()
-
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro",
-            )
         }
 
         debug {
