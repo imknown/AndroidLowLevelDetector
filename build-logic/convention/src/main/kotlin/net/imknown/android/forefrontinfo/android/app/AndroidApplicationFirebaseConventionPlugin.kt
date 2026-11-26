@@ -36,10 +36,6 @@ class AndroidApplicationFirebaseConventionPlugin : Plugin<Project> {
                     configure<CrashlyticsExtension> {
                         nativeSymbolUploadEnabled = true
                     }
-
-                    if (isMinifyEnabled) {
-                        proguardFiles += file("proguard-firebase-rules.pro")
-                    }
                 }
             }
 

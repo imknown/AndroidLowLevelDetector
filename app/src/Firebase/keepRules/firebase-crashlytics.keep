@@ -1,0 +1,9 @@
+# Keep rules for the Firebase flavor. The file lives in src/Firebase, so the Foss flavor never
+# sees it: Foss does not ship Crashlytics at all.
+#
+# https://firebase.google.com/docs/crashlytics/get-deobfuscated-reports-new-sdk?platform=android
+
+# Keep file names and line numbers so Crashlytics can render readable stack traces.
+-keepattributes SourceFile,LineNumberTable
+# Keep custom exception classes so their names survive obfuscation.
+-keep public class * extends java.lang.Exception
