@@ -89,6 +89,7 @@
   · [#49 lint 死资源 (7 删 2 留)](archived/08-反模式与卫生/49-lint死资源.md) ·  
   [#53 Compose 开关 (扩展声明)](archived/09-构建与CI/53-Compose开关.md)  
   · [#54 构建配置的隐患点位](archived/09-构建与CI/54-构建脚枪.md) ·  
+  [#71 调查笔记里的旧构建写法引用失效 (有意接受)](archived/09-构建与CI/71-调查笔记引用失效.md) ·  
   [#56 License 行 (有意接受)](archived/10-权限与合规/56-License行不合规.md) ·  
   [#57 foss 纯度防护](archived/10-权限与合规/57-foss纯度防护.md) ·  
   [#58 无 root 层](archived/10-权限与合规/58-无root层.md)  
