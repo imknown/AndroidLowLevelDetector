@@ -111,7 +111,7 @@ task-1 与 task-5 按各自条目里的例外执行.
     归档清单里 (无死链).
   - 失败退路: 负责人真机不接受官方默认观感, 恢复整个文件与两个调用点, 停下问负责人 (设计 4).
 
-- [ ] **task-5: computedStateOf 写法约定进规则文件** (R-5, 设计 5)
+- [x] **task-5: computedStateOf 写法约定进规则文件** (R-5, 设计 5)
   - 目标: `docs/agents-cn/07-代码规则.md` 的 代码规则 一节加一条 bullet:  
     "Compose 派生状态: 不需要缓存行为时默认 `computedStateOf`; 需要缓存时才用 `derivedStateOf`."  
     (官方判据, 判据原文出处见设计 5.)
