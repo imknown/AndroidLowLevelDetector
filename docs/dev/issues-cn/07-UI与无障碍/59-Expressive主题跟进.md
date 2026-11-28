@@ -29,3 +29,6 @@
 配色 / 动效 / 形状一套走,  
 `Type.kt` 排版随之重新调制. 动手时 Expressive 重写 `Theme.kt` 会覆盖 #31 注释保留的那四套对比度 scheme (已归档,  
 见 [#31](../archived/06-性能/31-主题死配色.md)), 删除或恢复均以重调后的方案为准, 不受其约束.
+
+**随本条一起调研的未立项想法**: 负责人提过 `ListItem` 的自定义能力有限, Home/Others/Prop 的列表条目以后可能不走 `ListItem`,  
+按自定义方式参考 Material 3 Expressive 风格重做. 想法未细想未调查, 立项与否在 Expressive 重调立项时一起定.
