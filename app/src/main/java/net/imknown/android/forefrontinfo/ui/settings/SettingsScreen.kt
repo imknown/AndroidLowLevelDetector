@@ -212,15 +212,15 @@ private fun SettingsContent(
                     }
                     val uri = stringResource(link.uri) // resolved during composition: click callbacks are not a composable context
                     ListItem(
-                        headlineContent = { Text(stringResource(link.title)) },
                         supportingContent = { Text(stringResource(link.summary)) },
                         colors = ListItemDefaults.colors(containerColor = Color.Transparent),
                         modifier = Modifier.clickable { openInExternal(context, uri) },
-                    )
+                    ) {
+                        Text(stringResource(link.title))
+                    }
                 }
                 HorizontalDivider(color = dividerColor, thickness = dividerThickness)
                 ListItem(
-                    headlineContent = { Text(stringResource(R.string.about_version_title)) },
                     supportingContent = {
                         version?.let { v ->
                             Text(
@@ -234,7 +234,9 @@ private fun SettingsContent(
                     },
                     colors = ListItemDefaults.colors(containerColor = Color.Transparent),
                     modifier = Modifier.clickable { onVersionClick() },
-                )
+                ) {
+                    Text(stringResource(R.string.about_version_title))
+                }
             }
         }
     }
@@ -298,11 +300,12 @@ private fun SettingsChoiceRow(
     modifier: Modifier = Modifier, // conventional parameter: caller constraints
 ) {
     ListItem(
-        headlineContent = { Text(stringResource(title)) },
         supportingContent = { Text(stringResource(summary)) },
         colors = ListItemDefaults.colors(containerColor = Color.Transparent), // follows the row card background
         modifier = modifier.clickable { onClick() },
-    )
+    ) {
+        Text(stringResource(title))
+    }
 }
 
 // stringArrayResource caches nothing: it re-reads the resource on every call and returns a fresh Array, so
@@ -367,9 +370,9 @@ private fun SettingsSwitchRow(
     modifier: Modifier = Modifier, // conventional parameter: caller constraints
 ) {
     // Hand-rolled instead of a ListItem: ListItem reads a wrapping summary as a three-line item and
-    // pins its trailing slot to the top, which left both switches off-center. Metrics below are
-    // ListItem's three-line ones (88dp min height, 16dp / 12dp padding, bodyLarge + bodyMedium, 16dp
-    // gap), so only the trailing alignment differs from a ListItem row.
+    // pins its trailing slot to the top, which left both switches off-center. The metrics below are
+    // this row's own values (88dp min height, 16dp / 12dp padding, bodyLarge + bodyMedium, 16dp
+    // gap).
     // The row is the single tap target, so the ripple starts under the finger even on the switch; a
     // switch handling its own taps would swallow them and ripple inside its own small bounds.
     Row(

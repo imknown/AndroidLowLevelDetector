@@ -49,7 +49,7 @@ task-1 与 task-5 按各自条目里的例外执行.
     `grep -n "仍属\|仍实验" docs/dev/issues-cn/07-UI与无障碍/38-工具栏不随滚动隐藏.md` 零命中.
   - 失败退路: 删 `@OptIn` 后编译报实验 API 错误, 恢复注解, 停下问负责人 (设计 3).
 
-- [ ] **task-3: ListItem 三处迁到非交互新重载** (R-2, 设计 2)
+- [x] **task-3: ListItem 三处迁到非交互新重载** (R-2, 设计 2)
   - 目标: `ui/settings/SettingsScreen.kt:214, 222, 300` 三处迁到尾随 `content` lambda 的非交互新重载  
     (设计 2 定案: 非交互重载, 手挂 clickable 原样保留);  
     `colors = ListItemDefaults.colors(containerColor = Color.Transparent)` 实参保持;  
