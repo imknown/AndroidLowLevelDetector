@@ -463,7 +463,7 @@ private fun SettingsContentPreview() {
                 id = R.string.about_version_summary,
                 versionName = "1.18.8",
                 versionCode = 73,
-                assetLldVersion = "2026.09.00",
+                assetLldVersion = "2026-11-28 09:30:15 +0800",
                 distributor = "Google Play",
                 installer = "com.android.vending",
                 firstInstallTime = "2026-01-01 00:00",
