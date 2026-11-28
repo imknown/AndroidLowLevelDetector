@@ -19,7 +19,7 @@ activity = "1.13.0"
 
 # https://developer.android.com/jetpack/androidx/releases/compose
 # https://developer.android.com/develop/ui/compose/bom/bom-mapping
-compose-bom = "2026.09.00"
+compose-bom = "2026.11.01"
 
 # https://developer.android.com/jetpack/androidx/releases/navigation3
 navigation = "1.2.2"

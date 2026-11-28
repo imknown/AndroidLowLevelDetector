@@ -11,7 +11,7 @@
 改过的全部 `.kt` 文件, 首次使用或怀疑同步状态时先跑 `scripts/kotlin-lsp-selfcheck.js`;  
 task-1 与 task-5 按各自条目里的例外执行.
 
-- [ ] **task-1: compose-bom 升到 2026.11.01** (R-1, 设计 1)
+- [x] **task-1: compose-bom 升到 2026.11.01** (R-1, 设计 1)
   - 目标: `gradle/toml/android.toml` 的 `compose-bom` 条目落 2026.11.01 (工作区里已改好, 本 task 提交它).
   - 凭什么是独立 task: 单值单点的构建改动, 单独编译与验证都成立; task-2 到 task-4 的代码迁移依赖  
     1.5.0 的构件, 必须排在它后面. 改动的是 Gradle 版本目录的 TOML, IDE 分析面里只回文件级检查,  
