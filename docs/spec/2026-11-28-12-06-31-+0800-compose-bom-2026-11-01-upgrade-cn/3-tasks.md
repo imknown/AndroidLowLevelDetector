@@ -25,7 +25,7 @@ task-1 与 task-5 按各自条目里的例外执行.
   - 失败退路: 解析结果不对, 编译或测试红, 或非 baseline 的 lint 红, 停下问负责人, 不改工具链与范围;  
     清红若牵动本次范围外的代码, 也停下问负责人. lint baseline 新命中按上面清红, 不属停机项 (设计 1).
 
-- [ ] **task-2: 清理 AppRoot 的过期实验性注解** (R-3, 设计 3)
+- [x] **task-2: 清理 AppRoot 的过期实验性注解** (R-3, 设计 3)
   - 目标: 删 `ui/AppRoot.kt:142` 的 `@OptIn(ExperimentalMaterial3Api::class)`, 它的行尾注释,  
     与 `:11` 的 import; 同步改 `docs/dev/issues-cn/07-UI与无障碍/38-工具栏不随滚动隐藏.md` 的  
     "动手前须知" 段整段改, 已知四处 (第 29 到 33 行), 其余三句照原样: 第 29 到 30 行整句改写  

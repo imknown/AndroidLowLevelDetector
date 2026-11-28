@@ -8,7 +8,6 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -139,7 +138,6 @@ fun AppRoot() {
  * wires navigation3 and real ViewModels (shell commands, SP reads) so it cannot run in a
  * preview; this shell is the previewable part, same split as SettingsScreen/SettingsContent.
  */
-@OptIn(ExperimentalMaterial3Api::class) // TopAppBar is still an experimental API in m3 1.4.0
 @Composable
 private fun AppRootShell(
     currentTabIndex: Int,
