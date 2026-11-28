@@ -2,6 +2,7 @@ package net.imknown.android.forefrontinfo.ui.base.list
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.nonInteractiveScrollbar
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -29,7 +31,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.ScrollBarMode
-import net.imknown.android.forefrontinfo.ui.common.nonInteractiveScrollbar
 import net.imknown.android.forefrontinfo.ui.theme.AppTheme
 
 // The scroll bar mode reaches this screen as a per-flow CompositionLocal (same form as
@@ -109,13 +110,20 @@ internal fun MyModelListContent(
             )
         },
     ) {
+        val indicatorState = listState.scrollIndicatorState
         LazyColumn(
             state = listState,
             modifier = Modifier
                 .fillMaxSize()
                 // Legacy base_list_fragment.xml: android:background="?attr/colorSurfaceContainer"
                 .background(MaterialTheme.colorScheme.surfaceContainer)
-                .nonInteractiveScrollbar(listState, enabled = scrollBarMode.drawsScrollBar),
+                .then(
+                    if (scrollBarMode.drawsScrollBar && indicatorState != null) {
+                        Modifier.nonInteractiveScrollbar(indicatorState, Orientation.Vertical)
+                    } else {
+                        Modifier
+                    }
+                ),
             // Top/bottom 12dp is content design (not insets compensation);
             // top bar / bottom bar / system bars are handled by Scaffold innerPadding
             contentPadding = PaddingValues(vertical = dimensionResource(R.dimen.item_divider_space_vertical)),

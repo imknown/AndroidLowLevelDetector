@@ -69,7 +69,7 @@ task-1 与 task-5 按各自条目里的例外执行.
   - 失败退路: 编译报错或真机目检见叠两层点击 (不应发生, 非交互重载内部无交互), 回退弃用重载,  
     停下问负责人 (设计 2).
 
-- [ ] **task-4: 滚动条换官方组件并删除自绘实现** (R-4, 设计 4)
+- [x] **task-4: 滚动条换官方组件并删除自绘实现** (R-4, 设计 4)
   - 目标: 删 `ui/common/ScrollBarExt.kt` 整个文件; `ui/base/list/MyModelListScreen.kt:118` 与  
     `ui/settings/SettingsScreen.kt:160` 改为取 `listState.scrollIndicatorState` (可空),  
     `scrollBarMode.drawsScrollBar` 为真且 state 非空时挂  

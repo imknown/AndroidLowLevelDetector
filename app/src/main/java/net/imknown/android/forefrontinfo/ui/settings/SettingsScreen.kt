@@ -7,6 +7,7 @@ import androidx.annotation.ArrayRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
@@ -31,6 +32,7 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.nonInteractiveScrollbar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -60,7 +62,6 @@ import net.imknown.android.forefrontinfo.R
 import net.imknown.android.forefrontinfo.base.ScrollBarMode
 import net.imknown.android.forefrontinfo.ui.base.ext.toast
 import net.imknown.android.forefrontinfo.ui.base.list.LocalScrollBarMode
-import net.imknown.android.forefrontinfo.ui.common.nonInteractiveScrollbar
 import net.imknown.android.forefrontinfo.ui.settings.repository.SettingsRepository
 import net.imknown.android.forefrontinfo.ui.theme.AppTheme
 
@@ -151,13 +152,20 @@ private fun SettingsContent(
     val dividerThickness = 1.5.dp
 
     val listState = rememberLazyListState()
+    val indicatorState = listState.scrollIndicatorState
 
     LazyColumn(
         state = listState,
         modifier = modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.surfaceContainer) // page background = same as the first three list pages
-            .nonInteractiveScrollbar(listState, enabled = scrollBarMode.drawsScrollBar),
+            .then(
+                if (scrollBarMode.drawsScrollBar && indicatorState != null) {
+                    Modifier.nonInteractiveScrollbar(indicatorState, Orientation.Vertical)
+                } else {
+                    Modifier
+                }
+            ),
         // horizontal 12dp is part of the content design (not insets compensation); top bar / bottom bar / system bars are handled by Scaffold innerPadding
         contentPadding = PaddingValues(
             start = groupHorizontalPadding,

@@ -33,13 +33,14 @@ import net.imknown.android.forefrontinfo.ui.common.initMyAndroid
 [#09](../archived/02-SSOT-唯一数据来源/09-myAndroid可变单例.md)) 消失, 环已开,  
 只剩 `ui.common → base` 单向 (`PropertyReader`, `ShellLibSu`).
 
-同时 `ui/common/` 成了大杂烩: 这个包现有 5 个文件, 其中 4 个是与 UI 毫无关系的底层设施:  
+同时 `ui/common/` 成了大杂烩: 这个包现有 4 个文件, 全部是与 UI 毫无关系的底层设施:  
 `ShellLibSu` (shell 实现), `JsonExt` (序列化),  
 `AndroidVersionExt` (版本判断扩展, 原 `myAndroid` 全局已删), `PropertyReader` (属性回退门面,  
-原 `PropertyExt` 顶层函数收拢成的类). 唯一的例外是 `ScrollBarExt.kt`:  
-它确实是 Compose 的 `Modifier.nonInteractiveScrollbar()` 扩展, 就该放在 UI 层.  
-原来挤在这个包里的真 UI 扩展 `ViewExt.setScrollBarMode` 是另一类问题, 那个文件已随 `fcc048d5` 删除,  
-它的替代品正是如今这个合规的 `ScrollBarExt.kt`. 包名承诺的 "common = UI 通用工具", 对 4 个文件里的内容都不成立.
+原 `PropertyExt` 顶层函数收拢成的类).  
+原来挤在这个包里的真 UI 扩展 `ViewExt.setScrollBarMode` 是另一类问题, 那个文件已随 `fcc048d5` 删除;  
+它的替代品 `ScrollBarExt.kt` 也已删除, 滚动条由 material3 官方的  
+`Modifier.nonInteractiveScrollbar` 提供 (见 [#37](../07-UI与无障碍/37-滚动条可拖动是stub.md)).  
+包名承诺的 "common = UI 通用工具", 对 4 个文件里的内容都不成立.
 
 ## 直接原因
 
@@ -66,7 +67,7 @@ app/src/main/java/net/imknown/android/forefrontinfo/
 │   └── shell/                  # ShellLibSu(实现)
 ├── data/...                      # 各功能的 repository / datasource(原样保留按功能分包)
 └── ui/
-    ├── common/                 # 只留真 UI 工具: ScrollBarExt, ToastExt (后者现在 ui/base/ext/)
+    ├── common/                 # 只留真 UI 工具: ToastExt (现在 ui/base/ext/)
     └── ...(各功能包不变)
 ```
 
