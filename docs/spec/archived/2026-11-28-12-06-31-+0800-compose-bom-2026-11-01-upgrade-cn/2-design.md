@@ -118,11 +118,6 @@
 
 五个设计点都按机械改动处理, 不摆两案: 设计 1 是单值单点; 设计 2 的重载选择已在该节定死并给了理由  
 (候选摆开同节); 设计 3 是删注解; 设计 4 是删文件换官方组件, 观感口径负责人已定; 设计 5 是单条文档约定.  
-生疏领域: 没有, 但有两件还没查清的事实列在待学习清单, 分别由 R-1 与 R-2 的真机目检给出预期,  
-不影响本设计的任何决定.
-
-## 待学习清单
-
-- Compose 1.13 懒布局的窗口预取默认策略 (R-1 真机目检时手上要有预期).
-- 新 `ListItem` 重载的默认 shapes 与 contentPadding 数值 (material3 1.5.0 的 `ListItemDefaults`,  
-  sources jar 在本机 Gradle 缓存里, artifact 坐标 `androidx.compose.material3:material3-android:1.5.0`).
+生疏领域: 没有. 待学习清单已清: `ListItem` 重载的默认 shapes 与 contentPadding 在执行 task-3 时  
+从 material3 1.5.0 sources 核清, 数值进了代码注释与 review 记录; Compose 1.13 懒布局的窗口预取  
+默认策略没有查, 真机目检没有用到它.
