@@ -7,7 +7,7 @@
 判定日: 2026-11-04. 仓库侧的证据是当场核过的 (文件路径加行号);  
 官方要求的数字抄自 [01](01-agp-9-1-to-9-6.md) 到 [03](03-agp-10-0.md), 属转述未核.
 
-按 [09-构建约定](../../../../agents-cn/09-构建约定.md) 的禁令, 本篇不复述仓库自己的版本号,  
+按 [09-构建约定](../../../../../agents-cn/09-构建约定.md) 的禁令, 本篇不复述仓库自己的版本号,  
 只点名真值源文件或 key; 外面世界的版本号照留在句子里.
 
 ## 仓库的真值源
@@ -40,42 +40,42 @@
 
 ## 逐条证据 (当场核过)
 
-- AGP 取值: [android.toml](../../../../../gradle/toml/android.toml) 第 7 到 9 行,  
+- AGP 取值: [android.toml](../../../../../../gradle/toml/android.toml) 第 7 到 9 行,  
   `androidGradlePlugin`, `androidGradlePlugin-beta`, `androidGradlePlugin-canary` 三个 key.
-- KGP 取值与抬升机制: [kotlin.toml](../../../../../gradle/toml/kotlin.toml) 第 3 行的 `kotlin`;  
-  [build.gradle.kts](../../../../../build.gradle.kts) 第 14 到 18 行的 `buildscript` 块,  
+- KGP 取值与抬升机制: [kotlin.toml](../../../../../../gradle/toml/kotlin.toml) 第 3 行的 `kotlin`;  
+  [build.gradle.kts](../../../../../../build.gradle.kts) 第 14 到 18 行的 `buildscript` 块,  
   注释点名 AGP 9.0 的 KGP 运行时依赖升级.
-- 构建栈取值: [build.toml](../../../../../gradle/toml/build.toml) 的  
+- 构建栈取值: [build.toml](../../../../../../gradle/toml/build.toml) 的  
   `minSdk`, `compileSdk`, `compileSdkMinor`, `compileSdkExtension`, `targetSdk`,  
   `buildTools`, `ndk`, `cmake`, `javaToolchain`.
-- Gradle 取值: [gradle-wrapper.properties](../../../../../gradle/wrapper/gradle-wrapper.properties)  
+- Gradle 取值: [gradle-wrapper.properties](../../../../../../gradle/wrapper/gradle-wrapper.properties)  
   的 `distributionUrl` 与 `distributionSha256Sum`.
-- daemon JDK 取值: [gradle-daemon-jvm.properties](../../../../../gradle/gradle-daemon-jvm.properties)  
+- daemon JDK 取值: [gradle-daemon-jvm.properties](../../../../../../gradle/gradle-daemon-jvm.properties)  
   的 `toolchainVersion` 与 `toolchainVendor`.
-- 退路旗标: [gradle.properties](../../../../../gradle.properties) 全文没有  
+- 退路旗标: [gradle.properties](../../../../../../gradle.properties) 全文没有  
   `android.newDsl`, `android.newDsl.optOut`, `android.builtInKotlin`;  
   全仓库 grep 这三个词也无命中.
 - 内置 Kotlin: 全仓库 grep `org.jetbrains.kotlin.android` 与 `kotlin-android` 无命中;  
   根 `build.gradle.kts` 的 plugins 块只挂 application, library, compose, serialization,  
   google-services, crashlytics. 仓库已在内置 Kotlin 上.
-- 新 DSL: [KotlinAndroid.kt](../../../../../build-logic/convention/src/main/kotlin/net/imknown/android/forefrontinfo/android/KotlinAndroid.kt)  
+- 新 DSL: [KotlinAndroid.kt](../../../../../../build-logic/convention/src/main/kotlin/net/imknown/android/forefrontinfo/android/KotlinAndroid.kt)  
   第 3 到 4 行 import 的是 `com.android.build.api.dsl` 的 `ApplicationBaseFlavor` 与  
-  `CommonExtension`; [AndroidApplicationConventionPlugin.kt](../../../../../build-logic/convention/src/main/kotlin/net/imknown/android/forefrontinfo/android/app/AndroidApplicationConventionPlugin.kt)  
+  `CommonExtension`; [AndroidApplicationConventionPlugin.kt](../../../../../../build-logic/convention/src/main/kotlin/net/imknown/android/forefrontinfo/android/app/AndroidApplicationConventionPlugin.kt)  
   第 31 行 configure 的是 `ApplicationExtension`. 全仓库 grep 旧 DSL 符号  
   (`BaseExtension`, `applicationVariants`, `variantFilter`, `Transform`, `deviceProvider`,  
   `testServer`, `sdkDirectory`, `ndkDirectory`, `bootClasspath`, `adbExecutable`,  
   `registerJavaGeneratingTask`, `registerResGeneratingTask`, `getCompileClasspath`)  
   在 `.kts` 与 build-logic 的 `.kt` 里均无命中.
-- 唯一的 10.0 移除清单命中: [AndroidApplicationConventionPlugin.kt](../../../../../build-logic/convention/src/main/kotlin/net/imknown/android/forefrontinfo/android/app/AndroidApplicationConventionPlugin.kt)  
+- 唯一的 10.0 移除清单命中: [AndroidApplicationConventionPlugin.kt](../../../../../../build-logic/convention/src/main/kotlin/net/imknown/android/forefrontinfo/android/app/AndroidApplicationConventionPlugin.kt)  
   第 44 行, `defaultConfig` 块里急切写入的 `buildConfigField("String", "GIT_BRANCH", ...)`.  
   全仓库 grep `buildConfigField` 与 `resValue` 只有这一处命中.
 - R8 重打包的影响面: 反射调用点全表  
-  ([PropertyDefault.kt](../../../../../base/src/main/java/net/imknown/android/forefrontinfo/base/property/impl/PropertyDefault.kt)  
+  ([PropertyDefault.kt](../../../../../../base/src/main/java/net/imknown/android/forefrontinfo/base/property/impl/PropertyDefault.kt)  
   第 8 与 11, 16 行, 目标 `android.os.SystemProperties`;  
-  [HomeRepository.kt](../../../../../app/src/main/java/net/imknown/android/forefrontinfo/ui/home/repository/HomeRepository.kt)  
+  [HomeRepository.kt](../../../../../../app/src/main/java/net/imknown/android/forefrontinfo/ui/home/repository/HomeRepository.kt)  
   第 1073 到 1082 行, 目标 `android.webkit.WebViewUpdateService` 与  
   `android.webkit.WebViewProviderInfo`;  
-  [SettingsDataSource.kt](../../../../../app/src/main/java/net/imknown/android/forefrontinfo/ui/prop/datasource/SettingsDataSource.kt)  
+  [SettingsDataSource.kt](../../../../../../app/src/main/java/net/imknown/android/forefrontinfo/ui/prop/datasource/SettingsDataSource.kt)  
   第 23 行, 目标是 androidx 的 Settings 类),  
   没有一处反射指向本仓库自身类; 全仓库 grep `ServiceLoader` 无命中.
 - 动态 feature: 全仓库 grep `dynamicFeatures` 无命中.
