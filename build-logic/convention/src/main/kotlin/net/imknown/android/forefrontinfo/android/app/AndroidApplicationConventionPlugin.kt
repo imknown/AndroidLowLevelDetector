@@ -37,6 +37,9 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
         val currentGitBranchName = runCatching {
             providers.executeOrThrow("git", "rev-parse", "--abbrev-ref", "HEAD").ifEmpty { UNKNOWN }
         }.getOrDefault(UNKNOWN)
+        // BuildConfig.GIT_BRANCH keeps the raw branch name: the lld.json online URL uses it
+        // as a path segment.
+        val archivesBranchName = currentGitBranchName.replace('/', '-')
 
         configure<ApplicationExtension> {
             defaultConfig {
@@ -46,7 +49,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
         }
 
         configure<BasePluginExtension> {
-            archivesName.set("lld-$appVersionName-$appVersionCode-$currentDatetime-$currentGitBranchName")
+            archivesName.set("lld-$appVersionName-$appVersionCode-$currentDatetime-$archivesBranchName")
         }
 
         // AGP 10.0 removes the eager VariantDimension.buildConfigField(), leaving this variant API
